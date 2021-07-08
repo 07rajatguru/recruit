@@ -406,6 +406,28 @@ class ModuleWisePermissionsSeeder extends Seeder
 
 			array('id' => '169','module_id' => '13','name' => 'display-user-benchmark', 'display_name' => 'Display User Benchmark List','description' => 'Display User Benchmark List.', 'created_at' => '2020-07-08 16:00:00', 'updated_at' => '2020-07-08 16:00:00'),
 
+			// Contactsphere Permissions
+
+			array('id' => '171','module_id' => '14','name' => 'display-contactsphere', 'display_name' => 'View Contactsphere List','description' => 'View Contactsphere List.', 'created_at' => '2021-07-08 16:00:00', 'updated_at' => '2021-07-08 16:00:00'),
+
+			array('id' => '172','module_id' => '14','name' => 'display-user-wise-contactsphere', 'display_name' => 'View Contactsphere List Userwise','description' => 'View Contactsphere List Userwise.', 'created_at' => '2021-07-08 16:00:00', 'updated_at' => '2021-07-08 16:00:00'),
+
+			array('id' => '173','module_id' => '14','name' => 'contactsphere-add', 'display_name' => ' Add Contactsphere','description' => 'Add Contactsphere.', 'created_at' => '2021-07-08 16:00:00', 'updated_at' => '2021-07-08 16:00:00'),
+
+			array('id' => '174','module_id' => '14','name' => 'contactsphere-edit', 'display_name' => 'Edit Contactsphere','description' => 'Edit Contactsphere.', 'created_at' => '2021-07-08 16:00:00', 'updated_at' => '2021-07-08 16:00:00'),
+
+			array('id' => '175','module_id' => '14','name' => 'contactsphere-delete', 'display_name' => 'Delete Contactsphere','description' => 'Delete Contactsphere.', 'created_at' => '2021-07-08 16:00:00', 'updated_at' => '2021-07-08 16:00:00'),
+
+			array('id' => '176','module_id' => '14','name' => 'contactsphere-to-lead', 'display_name' => 'Convert Contactsphere To Lead','description' => 'Convert Contactsphere To Lead.', 'created_at' => '2021-07-08 16:00:00', 'updated_at' => '2021-07-08 16:00:00'),
+
+			array('id' => '177','module_id' => '14','name' => 'hold-contactsphere', 'display_name' => 'Hold Contactsphere','description' => 'Hold Contactsphere.', 'created_at' => '2021-07-08 16:00:00', 'updated_at' => '2021-07-08 16:00:00'),
+
+			array('id' => '178','module_id' => '14','name' => 'display-hold-contactsphere', 'display_name' => 'View Hold Contactsphere','description' => 'View Hold Contactsphere.', 'created_at' => '2021-07-08 16:00:00', 'updated_at' => '2021-07-08 16:00:00'),
+
+			array('id' => '179','module_id' => '14','name' => 'forbid-contactsphere', 'display_name' => 'Forbid Contactsphere','description' => 'Forbid Contactsphere.', 'created_at' => '2021-07-08 16:00:00', 'updated_at' => '2021-07-08 16:00:00'),
+
+			array('id' => '180','module_id' => '14','name' => 'display-forbid-contactsphere', 'display_name' => 'View Forbid Contactsphere','description' => 'View Forbid Contactsphere.', 'created_at' => '2021-07-08 16:00:00', 'updated_at' => '2021-07-08 16:00:00'),
+
 			// Add Salary Permission
 
 			array('id' => '181','module_id' => '13','name' => 'display-salary', 'display_name' => 'Display Salary Information','description' => 'Display Salary Information.', 'created_at' => '2021-06-09 18:00:00', 'updated_at' => '2021-06-09 18:00:00'),
@@ -415,6 +437,18 @@ class ModuleWisePermissionsSeeder extends Seeder
 			array('id' => '182','module_id' => '1','name' => 'display-recruitment-dashboard', 'display_name' => 'Display Recruitment Dashboard','description' => 'Display Recruitment Dashboard.', 'created_at' => '2021-06-15 15:00:00', 'updated_at' => '2021-06-15 15:00:00'),
 
 			array('id' => '183','module_id' => '1','name' => 'display-hr-advisory-dashboard', 'display_name' => 'Display HR Advisory Dashboard','description' => 'Display HR Advisory Dashboard.', 'created_at' => '2021-06-15 15:00:00', 'updated_at' => '2021-06-15 15:00:00'),
+
+			// Add Ticket Discussion Permissions
+
+			array('id' => '184','module_id' => '15','name' => 'ticket-add', 'display_name' => 'Add Ticket','description' => 'Add Ticket.', 'created_at' => '2021-08-08 18:30:00', 'updated_at' => '2021-07-08 18:30:00'),
+
+			array('id' => '185','module_id' => '15','name' => 'ticket-edit', 'display_name' => 'Edit Ticket','description' => 'Edit Ticket.', 'created_at' => '2021-08-08 18:30:00', 'updated_at' => '2021-07-08 18:30:00'),
+
+			array('id' => '186','module_id' => '15','name' => 'ticket-delete', 'display_name' => 'Delete Ticket','description' => 'Delete Ticket.', 'created_at' => '2021-08-08 18:30:00', 'updated_at' => '2021-07-08 18:30:00'),
+
+			array('id' => '187','module_id' => '15','name' => 'display-ticket', 'display_name' => 'Display Tickets List','description' => 'Display Tickets List.', 'created_at' => '2021-08-08 18:30:00', 'updated_at' => '2021-07-08 18:30:00'),
+
+			array('id' => '188','module_id' => '15','name' => 'display-user-wise-ticket', 'display_name' => 'Display User wise Tickets List','description' => 'Display User wise Tickets List.', 'created_at' => '2021-08-08 18:30:00', 'updated_at' => '2021-07-08 18:30:00'),
 		);
         DB::table("permissions")->insert($data);
     }

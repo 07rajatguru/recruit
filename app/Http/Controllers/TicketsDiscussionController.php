@@ -7,6 +7,8 @@ use App\TicketsDiscussion;
 use App\TicketsDiscussionDoc;
 use App\User;
 use App\Events\NotificationMail;
+use App\TicketDiscussionPost;
+use App\TicketsDiscussionPostDoc;
 
 class TicketsDiscussionController extends Controller
 {
@@ -89,12 +91,19 @@ class TicketsDiscussionController extends Controller
 
         // get superadmin email id
         $superadminuserid = getenv('SUPERADMINUSERID');
+
+        $cc1 = 'info@adlertalent.com';
+        $cc2 = 'saloni@trajinfotech.com';
+        $cc3 = 'dhara@trajinfotech.com';
+
         $superadminemail = User::getUserEmailById($superadminuserid);
+
+        $cc_users_array = array($superadminemail,$cc1,$cc2,$cc3);
 
         $module = "Tickets Discussion";
         $sender_name = $user_id;
         $to = $loggedin_useremail;
-        $cc = $superadminemail;
+        $cc = implode(",",$cc_users_array);
 
         $subject = "Tickets Discussion - " . $question_type;
         $message = "Tickets Discussion - " . $question_type;
@@ -230,6 +239,121 @@ class TicketsDiscussionController extends Controller
         $ticket_discussion = TicketsDiscussion::find($tickets_discussion_id);
         $post = $ticket_discussion->post()->orderBy('created_at', 'desc')->get();
 
-        return view('adminlte::ticketDiscussion.remarks',compact('user_id','id','ticket_discussion','post'));
+        return view('adminlte::ticketDiscussion.remarks',compact('user_id','tickets_discussion_id','ticket_discussion','post'));
+    }
+
+    public function writePost(Request $request, $tickets_discussion_id) {
+
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $tickets_discussion_id = $input['tickets_discussion_id'];
+        $content = $input['content'];
+
+        if(isset($user_id) && $user_id > 0) {
+
+            $post = new TicketDiscussionPost();
+            $post->content = $content;
+            $post->user_id = $user_id;
+            $post->tickets_discussion_id = $tickets_discussion_id;
+            $post->created_at = time();
+            $post->updated_at = time();
+            $post->save();
+        }
+
+        $post_id = $post->id;
+
+        $upload_documents = $request->file('upload_documents');
+
+        if (isset($upload_documents) && sizeof($upload_documents) > 0) {
+
+            foreach ($upload_documents as $k => $v) {
+
+                if (isset($v) && $v->isValid()) {
+
+                    $file_name = $v->getClientOriginalName();
+                    $file_extension = $v->getClientOriginalExtension();
+                    $file_realpath = $v->getRealPath();
+                    $file_size = $v->getSize();
+
+                    $dir = 'uploads/ticket_discussion/' . $tickets_discussion_id . '/';
+
+                    if (!file_exists($dir) && !is_dir($dir)) {
+
+                        mkdir($dir, 0777, true);
+                        chmod($dir, 0777);
+                    }
+
+                    $v->move($dir, $file_name);
+
+                    $file_path = $dir . $file_name;
+
+                    $ticket_discussion_doc = new TicketsDiscussionPostDoc();
+                    $ticket_discussion_doc->tickets_discussion_id = $tickets_discussion_id;
+                    $ticket_discussion_doc->post_id = $post_id;
+                    $ticket_discussion_doc->file = $file_path;
+                    $ticket_discussion_doc->name = $file_name;
+                    $ticket_discussion_doc->size = $file_size;
+                    $ticket_discussion_doc->uploaded_by = $user_id;
+                    $ticket_discussion_doc->created_at = date('Y-m-d');
+                    $ticket_discussion_doc->updated_at = date('Y-m-d');
+                    $ticket_discussion_doc->save();
+                }
+            }
+        }
+
+        // get loggedin_user_email_id
+        $loggedin_useremail = User::getUserEmailById($user_id);
+
+        // get superadmin email id
+        $superadminuserid = getenv('SUPERADMINUSERID');
+
+        $cc1 = 'info@adlertalent.com';
+        $cc2 = 'saloni@trajinfotech.com';
+        $cc3 = 'dhara@trajinfotech.com';
+
+        $superadminemail = User::getUserEmailById($superadminuserid);
+
+        $cc_users_array = array($superadminemail,$cc1,$cc2,$cc3);
+
+        $module = "Tickets Discussion Comment";
+        $sender_name = $user_id;
+        $to = $loggedin_useremail;
+        $cc = implode(",",$cc_users_array);
+
+        $subject = "Tickets Discussion Comment";
+        $message = "Tickets Discussion Comment";
+        $module_id = $post_id;
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+        return redirect()->route('ticket.remarks',[$tickets_discussion_id]);
+    }
+
+    public function updateRemarks(Request $request, $tickets_discussion_id,$post_id) {
+
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $tickets_discussion_id = $input['tickets_discussion_id'];
+
+        $response = TicketDiscussionPost::updatePost($post_id,$input["content"]);
+        $returnValue["success"] = true;
+        $returnValue["message"] = "Content Updated";
+        $returnValue["id"] = $post_id;
+
+       return redirect()->route('ticket.remarks',[$tickets_discussion_id]);
+    }
+
+    public function postDestroy($id) {
+
+        $response['returnvalue'] = 'invalid';
+        $res = TicketDiscussionPost::deletePost($id);
+
+        if($res) {
+            $response['returnvalue'] = 'valid';
+        }
+
+        $tickets_discussion_id = $_POST['tickets_discussion_id'];
+
+        return json_encode($response);exit;
     }
 }

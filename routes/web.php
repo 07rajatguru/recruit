@@ -3183,33 +3183,18 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'TicketsDiscussionController@remarks'
     ]);
 
-    Route::post('ticket/{client_id}/post',[
+    Route::post('ticket/{tickets_discussion_id}/post',[
         'as'=>'ticket.post.write',
         'uses'=>'TicketsDiscussionController@writePost'
     ]);
 
-    Route::post('post/update/{client_id}/{post_id}',[
+    Route::post('post/update/{tickets_discussion_id}/{post_id}',[
         'as'=>'ticket.post.update',
-        'uses'=>'TicketsDiscussionController@updateClientRemarks'
-    ]);
-
-    Route::post('post/{post_id}',[
-        'as'=>'post.comments.write',
-        'uses'=>'TicketsDiscussionController@writeComment'
+        'uses'=>'TicketsDiscussionController@updateRemarks'
     ]);
 
     Route::post('ticket/post/delete/{id}',[
         'as'=>'ticket.reviewdestroy',
         'uses'=>'TicketsDiscussionController@postDestroy'
-    ]);
-
-    Route::post('ticket/comment/delete/{id}',[
-        'as'=>'ticket.commentdelete',
-        'uses'=>'TicketsDiscussionController@commentDestroy'
-    ]);
-
-    Route::post('ticket/comment/update',[
-        'as'=>'ticket.commentupdate',
-        'uses'=>'TicketsDiscussionController@updateComment'
     ]);
 });

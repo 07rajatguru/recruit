@@ -45,12 +45,12 @@
             <tr>
                 <td>{{ ++$i }}</td>
                 <td>
-                    <a class="fa fa-circle" href="{{ route('ticket.show',$value['id']) }}"></a>
-                    <a class="fa fa-edit" href="{{ route('ticket.edit',$value['id']) }}"></a>
+                    <a class="fa fa-circle" href="{{ route('ticket.show',$value['id']) }}" title="Show"></a>
+                    <a class="fa fa-edit" href="{{ route('ticket.edit',$value['id']) }}" title="Edit"></a>
 
                     @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'ticket','display_name'=>'Ticket'])
 
-                    <a title="Remarks" class="fa fa-plus"  href="{{ route('ticket.remarks',$value['id']) }}"></a>
+                    <a class="fa fa-plus" href="{{ route('ticket.remarks',$value['id']) }}" title="Remarks"></a>
                 </td>
                 <td>{{ $value['question_type'] }}</td>
                 <td>{{ $value['added_by'] }}</td>

@@ -8,6 +8,10 @@ class TicketsDiscussion extends Model
 {
     public $table = "tickets_discussion";
 
+    public function post() {
+        return $this->hasMany('App\TicketDiscussionPost','tickets_discussion_id');
+    }
+
     public static function getAllDetails() {
 
         $query = TicketsDiscussion::query();

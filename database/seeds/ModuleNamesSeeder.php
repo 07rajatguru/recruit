@@ -41,6 +41,10 @@ class ModuleNamesSeeder extends Seeder
 			array('id' => '12','name' => 'Process','description' => 'Process Manual Module', 'created_at' => '2020-07-20 13:00:00', 'updated_at' => '2020-07-20 13:00:00','status' => '1'),
 
 			array('id' => '13','name' => 'Admin','description' => 'Admin Panel', 'created_at' => '2020-07-20 13:00:00', 'updated_at' => '2020-07-20 13:00:00','status' => '0'),
+
+			array('id' => '14','name' => 'Contactsphere','description' => 'Contactsphere Module', 'created_at' => '2021-07-08 16:00:00', 'updated_at' => '2021-07-08 16:00:00','status' => '1'),
+
+			array('id' => '15','name' => 'Ticket Discussion','description' => 'Ticket Discussion Module', 'created_at' => '2021-07-08 16:00:00', 'updated_at' => '2021-07-08 16:00:00','status' => '1'),
 		);
 
 		DB::table("module")->insert($data);
