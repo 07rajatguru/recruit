@@ -739,5 +739,40 @@ class CandidateBasicInfo extends Model
         $candidate['company_name'] = $response->company_name;
 
         return $candidate;
-    }   
+    }
+
+    public static function getAllCandidates($from_date,$to_date) {
+
+        $query = CandidateBasicInfo::query();
+        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
+        $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.email as email','users.name as owner','users.id as owner_id','candidate_basicinfo.mobile as mobile','candidate_basicinfo.created_at as created_at');
+       
+        if(isset($from_date) && $from_date != NULL) {
+            $query = $query->orwhere('candidate_basicinfo.created_at','>=',"$from_date");
+            $query = $query->Where('candidate_basicinfo.created_at','<=',"$to_date");
+        }
+
+        $query = $query->where('candidate_otherinfo.login_candidate','=',"0");
+        $query = $query->where('candidate_basicinfo.autoscript_status','=',"0");
+        $query = $query->orderBy('candidate_basicinfo.id','DESC');
+        $res = $query->get();
+
+        $candidate_array = array();
+        $i = 0;
+
+        foreach ($res as $key => $value) {
+
+            $candidate_array[$i]['id'] = $value->id;
+            $candidate_array[$i]['full_name'] = $value->fname;
+            $candidate_array[$i]['owner_id'] = $value->owner_id;
+            $candidate_array[$i]['owner'] = $value->owner;
+            $candidate_array[$i]['email'] = $value->email;
+            $candidate_array[$i]['mobile'] = $value->mobile;
+            $candidate_array[$i]['created_at'] = date('d-m-Y',strtotime($value->created_at));
+            
+            $i++;
+        }
+        return $candidate_array;
+    }
 }

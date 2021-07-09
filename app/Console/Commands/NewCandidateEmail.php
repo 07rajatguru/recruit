@@ -42,11 +42,11 @@ class NewCandidateEmail extends Command
         $from_date = date("Y-m-d 00:00:00");
         $to_date = date("Y-m-d 23:59:59");
 
-        $candidate_details = CandidateBasicInfo::getAllCandidatesDetails(0,0,NULL,'','',NULL,'','','','',$from_date,$to_date);
+        $today_candidate_details = CandidateBasicInfo::getAllCandidates($from_date,$to_date);
 
-        if(isset($candidate_details) && sizeof($candidate_details) > 0) {
+        if(isset($today_candidate_details) && sizeof($today_candidate_details) > 0) {
 
-            foreach ($candidate_details as $key => $value) {
+            foreach ($today_candidate_details as $key => $value) {
 
                 $module = "New Candidate AutoScript Mail";
                 $sender_name = $value['owner_id'];
@@ -54,6 +54,32 @@ class NewCandidateEmail extends Command
                 $subject = 'Thanks for your application - Adler Talent Solution';
                 $message = "<tr><td>" . $value['owner'] . " added new Candidate </td></tr>";
                 $module_id = $value['id'];
+
+                $cc = '';
+
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+            }
+        }
+
+        // Get Candidates of Yesterdays if Any Added After 8 PM
+
+        $yesterday_from_date = date('Y-m-d 00:00:00',strtotime("-1 days"));
+        $yesterday_to_date = date("Y-m-d 23:59:59", strtotime("-1 days"));
+        
+        $yesterday_candidate_details = CandidateBasicInfo::getAllCandidates($yesterday_from_date,$yesterday_to_date);
+
+        print_r($yesterday_candidate_details);exit;
+
+        if(isset($yesterday_candidate_details) && sizeof($yesterday_candidate_details) > 0) {
+
+            foreach ($yesterday_candidate_details as $key1 => $value1) {
+
+                $module = "New Candidate AutoScript Mail";
+                $sender_name = $value1['owner_id'];
+                $to = $value1['email'];
+                $subject = 'Thanks for your application - Adler Talent Solution';
+                $message = "<tr><td>" . $value1['owner'] . " added new Candidate </td></tr>";
+                $module_id = $value1['id'];
 
                 $cc = '';
 
