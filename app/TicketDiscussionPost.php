@@ -36,4 +36,22 @@ class TicketDiscussionPost extends Model
         $response = static::find($id)->update(['content' => $data]);
         return $response;
     }
+
+    public static function getTicketPostDetailsById($post_id) {
+
+        $query = TicketDiscussionPost::query();
+        $query = $query->leftjoin('users','users.id','=','ticket_discussion_post.user_id');
+        $query = $query->select('ticket_discussion_post.*','users.name as added_by');
+        $query = $query->where('ticket_discussion_post.id','=',$post_id);
+        $response = $query->first();
+
+        $ticket_post_res = array();
+
+        $ticket_post_res['id'] = $response->id;
+        $ticket_post_res['content'] = $response->content;
+        $ticket_post_res['added_by'] = $response->added_by;
+        $ticket_post_res['tickets_discussion_id'] = $response->tickets_discussion_id;
+    
+        return $ticket_post_res;
+    }
 }

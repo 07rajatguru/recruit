@@ -8,8 +8,14 @@
 
 @section('content')
 
+    @if ($message = Session::get('success'))
+        <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
+    
     <div class="col-lg-12 col-md-12 margin-tb">
-        <div class="pull-left">
+        <div class="pull-left" style="margin-left:15px;">
             <h3>{{ $ticket_discussion['question_type'] }}</h3>
         </div>
     </div>
@@ -55,18 +61,6 @@
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script type="text/javascript">
 
-    function showcommentbox(post_id) {
-
-        $("#comment_"+post_id).select2({'placeholder' : 'Select Remark','width':'100%'});
-
-        if($(".comment-"+post_id).is(':hidden')) {
-            $(".comment-"+post_id).show();
-        }
-        else {
-            $(".comment-"+post_id).hide();
-        }
-    }
-
     function deletePost(id) {
 
         msg = "Are you sure ?";
@@ -90,65 +84,6 @@
                     }
                     else {
                         alert("Error while Deleting Remarks.");
-                    }
-                    window.location.reload();
-                }
-            });
-        }
-    }
-
-    function updateCommentReply(id) {
-
-        var csrf_token = $("#csrf_token").val();
-        var super_admin_userid = $("#super_admin_userid").val();
-        var hidden_clientid = $("#hidden_clientid").val();
-
-        if(id > 0) {
-
-            var content = $("#update-comment-textarea-"+id).val();
-            jQuery.ajax({
-
-                url:'/client/comment/update',
-                type:"POST",
-                dataType:'json',
-                data : {content:content,id:id,_token:csrf_token,super_admin_userid:super_admin_userid,client_id:hidden_clientid},
-
-                success: function(response) {
-
-                    if (response.returnvalue == 'valid') {
-                        alert("Data updated Succesfully.");
-                    }
-                    else {
-                        alert("Error while updating comment");
-                    }
-                    window.location.reload();
-                }
-            });
-        }
-    }
-
-    function deleteComment(id) {
-
-        msg = "Are you sure ?";
-        var confirmvalue = confirm(msg);
-        var csrf_token = $("#csrf_token").val();
-        var hidden_clientid = $("#hidden_clientid").val();
-
-        if(confirmvalue) {
-
-            jQuery.ajax({
-                url:'/client/comment/delete/'+id,
-                type:"POST",
-                dataType:'json',
-                data : {client_id:hidden_clientid,_token:csrf_token},
-
-                success: function(response) {
-
-                    if (response.returnvalue == 'valid') {
-                        alert("Comment Deleted Succesfully.");
-                    }
-                    else {
-                        alert("Error while Deleting Comment.");
                     }
                     window.location.reload();
                 }

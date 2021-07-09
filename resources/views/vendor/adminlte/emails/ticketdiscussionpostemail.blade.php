@@ -34,10 +34,10 @@
                                 {{ $ticket_res['status'] }} </p>
                                 <p style="margin:8px 0; line-height:1.5;"><b>Question Type : </b> 
                                 {{ $ticket_res['question_type'] }} </p>
-                                <p style="margin:8px 0; line-height:1.5;"><b>Description : </b> 
-                                {{ $ticket_res['description'] }}</p>
-                                <p style="margin:8px 0; line-height:1.5;"><b>Ticket Added By : </b> 
-                                {{ $ticket_res['added_by'] }}</p>
+                                <p style="margin:8px 0; line-height:1.5;"><b>Comment : </b> 
+                                {{ $post_res['content'] }} </p>
+                                <p style="margin:8px 0; line-height:1.5;"><b>Comment Added By : </b>
+                                {{ $post_res['added_by'] }} </p>
                             </td>
                         </tr>
                     </table>

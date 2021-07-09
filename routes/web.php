@@ -3129,54 +3129,68 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:user-benchmark-delete']
     ]);
 
-    // Customer Support routes
+    // Ticket Discussion routes
 
     Route::get('ticket-discussion',[
         'as' => 'ticket.index',
-        'uses' => 'TicketsDiscussionController@index'
+        'uses' => 'TicketsDiscussionController@index',
+        'middleware' => ['permission:display-ticket|display-user-wise-ticket|ticket-add|ticket-edit|ticket-delete']
     ]);
 
     Route::get('ticket-discussion/create',[
         'as' => 'ticket.create',
-        'uses' => 'TicketsDiscussionController@create'
+        'uses' => 'TicketsDiscussionController@create',
+        'middleware' => ['permission:ticket-add']
     ]);
 
     Route::post('ticket-discussion/create',[
         'as' => 'ticket.store',
-        'uses' => 'TicketsDiscussionController@store'
+        'uses' => 'TicketsDiscussionController@store',
+        'middleware' => ['permission:ticket-add']
     ]);
 
     Route::get('ticket-discussion/{id}',[
         'as'=>'ticket.show',
-        'uses'=>'TicketsDiscussionController@show'
+        'uses'=>'TicketsDiscussionController@show',
+        'middleware' => ['permission:display-ticket|display-user-wise-ticket']
     ]);
 
     Route::get('ticket-discussion/{id}/edit',[
         'as' => 'ticket.edit',
-        'uses' => 'TicketsDiscussionController@edit'
+        'uses' => 'TicketsDiscussionController@edit',
+        'middleware' => ['permission:ticket-edit']
     ]);
 
     Route::patch('ticket-discussion/{id}',[
         'as' => 'ticket.update',
-        'uses' => 'TicketsDiscussionController@update'
+        'uses' => 'TicketsDiscussionController@update',
+        'middleware' => ['permission:ticket-edit']
     ]);
 
     Route::post('ticket-discussion/upload/{id}', [
         'as' => 'ticketattachments.upload',
-        'uses' => 'TicketsDiscussionController@upload'
+        'uses' => 'TicketsDiscussionController@upload',
+        'middleware' => ['permission:ticket-edit']
     ]);
     
     Route::delete('ticket-discussion/destroy/{id}', [
         'as' => 'ticketattachments.destroy',
-        'uses' => 'TicketsDiscussionController@attachmentsDestroy'
+        'uses' => 'TicketsDiscussionController@attachmentsDestroy',
+        'middleware' => ['permission:ticket-delete']
     ]);
 
     Route::delete('ticket-discussion/{id}',[
         'as' => 'ticket.destroy',
-        'uses' => 'TicketsDiscussionController@destroy'
+        'uses' => 'TicketsDiscussionController@destroy',
+        'middleware' => ['permission:ticket-delete']
     ]);
 
-    // Client Remarks Section Start
+    Route::post('ticket/status', [
+        'as' => 'ticket.status',
+        'uses' => 'TicketsDiscussionController@changeTicketstatus',
+    ]);
+
+    // Ticket Remarks Routes
 
     Route::get('ticket/{id}/remarks', [
         'as' => 'ticket.remarks',
@@ -3188,7 +3202,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses'=>'TicketsDiscussionController@writePost'
     ]);
 
-    Route::post('post/update/{tickets_discussion_id}/{post_id}',[
+    Route::post('ticket-post/update/{tickets_discussion_id}/{post_id}',[
         'as'=>'ticket.post.update',
         'uses'=>'TicketsDiscussionController@updateRemarks'
     ]);

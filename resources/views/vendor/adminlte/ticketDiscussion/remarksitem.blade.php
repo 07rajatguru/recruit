@@ -30,7 +30,7 @@
             <ul>
                 <div class="auth-links">
 
-                    @if((isset(Auth::user()->id) && $per_post->user->id == \Auth::user()->id))
+                    @permission(('display-ticket'))
                         <li>
                             <a href="#" title="Edit Post" data-toggle="modal" data-target="#update-review-{{$per_post->id }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
                         </li>
@@ -38,7 +38,17 @@
                         <li>
                             <a href="javascript:void(0);" title="Dlete Post" onclick="deletePost({{$per_post->id }})"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         </li>
-                    @endif
+                    @else
+                        @if((isset(Auth::user()->id) && $per_post->user->id == \Auth::user()->id))
+                            <li>
+                                <a href="#" title="Edit Post" data-toggle="modal" data-target="#update-review-{{$per_post->id }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                            </li>
+
+                            <li>
+                                <a href="javascript:void(0);" title="Dlete Post" onclick="deletePost({{$per_post->id }})"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                            </li>
+                        @endif
+                    @endpermission
                 </div>
             </ul>
         </div>
@@ -46,9 +56,39 @@
            <div class="date-time">
                 <span>{{ $post_date }}</span>
             </div>
-        </div>   
+        </div>  
     </div>
 </div>
+
+@if(isset($post_doc) && sizeof($post_doc)>0)
+    <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+        <div class="box-header  col-md-6 ">
+            <h3 class="box-title">Attachments</h3>
+        </div>
+
+        <div class="box-header col-md-8"></div>
+
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <table class="table table-bordered">
+                <tr>
+                    <th>Download</th>
+                    <th>File Name</th>
+                </tr>
+                                    
+                @foreach($post_doc as $key => $value)
+                    <tr>
+                        <td>
+                            <a download href="{{ $value['url'] }}" ><i class="fa fa-fw fa-download"></i></a>&nbsp;
+                        </td>
+                        <td>
+                            <a target="_blank" href="{{ $value['url'] }}"> {{ $value['name'] }}</a>
+                        </td>
+                </tr>
+                @endforeach
+            </table>
+        </div>
+    </div>
+@endif                 
 
 <div class="clearfix"></div>
 

@@ -10,7 +10,7 @@
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-            <h2>Tickets List ({{ $count or '0' }})</h2>
+            <h2>Ticket List ({{ $count or '0' }})</h2>
         </div>
         <div class="pull-right">
             <a class="btn btn-success" href="{{ route('ticket.create') }}">Add New Ticket</a>
@@ -33,8 +33,10 @@
 <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="ticket_table">
     <thead>
         <tr>
-	       <th>No</th>
-           <th width="280px">Action</th>
+	       <th width="5%">No</th>
+           <th width="8%">Action</th>
+           <th>Module</th>
+           <th>Status</th>
 	       <th>Question Type</th>
            <th>Added By</th>
 	    </tr>
@@ -50,8 +52,12 @@
 
                     @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'ticket','display_name'=>'Ticket'])
 
-                    <a class="fa fa-plus" href="{{ route('ticket.remarks',$value['id']) }}" title="Remarks"></a>
+                    @include('adminlte::partials.ticketstatus', ['data' => $value, 'name' => 'ticket'])
+
+                    <a class="fa fa-plus" href="{{ route('ticket.remarks',$value['id']) }}" title="Add Comment" target="_blank"></a>
                 </td>
+                <td>{{ $value['module_name'] }}</td>
+                <td>{{ $value['status'] }}</td>
                 <td>{{ $value['question_type'] }}</td>
                 <td>{{ $value['added_by'] }}</td>
             </tr>

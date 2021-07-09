@@ -6,7 +6,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="comment-area">
                 <div class="form-group">
-                    {!! Form::text('content', null, ['id' => 'content','class' => 'form-control','required' => true,'placeholder' => 'Add Remarks','style' => 'width:635px']) !!}
+                    {!! Form::text('content', null, ['id' => 'content','class' => 'form-control','required' => true,'placeholder' => 'Add Comment','style' => 'width:635px']) !!}
                 </div>
                 <div class="form-group">
                     <input type="file" name="upload_documents[]" multiple tabindex="2" />
@@ -15,7 +15,7 @@
         </div>
 
         <div class="button-area">
-            <button class="btn btn-primary btn-md-2">Post Remarks</button>
+            <button class="btn btn-primary btn-md-2">Post Comment</button>
         </div>
 
     {!! Form::close() !!}

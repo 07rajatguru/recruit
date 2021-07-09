@@ -3,7 +3,10 @@
         <div class="comment-page">
             @foreach($post as $p)
                 <div class="m-post-row">
-                    @include('adminlte::ticketDiscussion.remarksitem', array('per_post' => $p))
+                    <?php
+                        $post_doc = App\TicketsDiscussionPostDoc::getTicketPostDocsById($p->id);
+                    ?>
+                    @include('adminlte::ticketDiscussion.remarksitem', array('per_post' => $p,'post_doc' => $post_doc))
                 </div>
             @endforeach
         </div>

@@ -40,6 +40,14 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <table class="table table-bordered">
                     <tr>
+                        <th>Module :</th>
+                        <td>{{ $ticket_res['module_name'] }}</td>
+                    </tr>
+                    <tr>
+                        <th>Status :</th>
+                        <td>{{ $ticket_res['status'] }}</td>
+                    </tr>
+                    <tr>
                         <th>Question Type :</th>
                         <td>{{ $ticket_res['question_type'] }}</td>
                     </tr>
