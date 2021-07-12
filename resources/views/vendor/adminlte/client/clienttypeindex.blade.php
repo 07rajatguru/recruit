@@ -19,23 +19,27 @@
         <div class="col-md-12 margin-tb">
             <div class="pull-right">
 
+                @permission(('display-client'))
+                    <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#accountmanagermodal" onclick="client_account_manager()" title="Change Account Manager">Change Account Manager
+                    </button>
+                @endpermission
+
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#changestatus" onclick="change_status()" title="Change Status">Change Status</button>
+
+                <a class="btn btn-primary" href="{{ route('client.index') }}" title="Back">Back</a>
+                <br/><br/>
+
                 @if($source == 'Left')
 
                 @else
                     @permission(('display-account-manager-wise-client'))
-                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal" onclick="client_emails_notification()">Send Mail</button>
+                        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal" onclick="client_emails_notification()" title="Send Mail">Send Mail</button>
                     @endpermission
                 @endif
 
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#changestatus" onclick="change_status()">Change Status</button>
-
-                @permission(('display-client'))
-                    <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#accountmanagermodal" onclick="client_account_manager()">Change Account Manager
-                    </button>
-
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#secondlineammodal" onclick="second_line_client_am()">Change 2nd Line AM</button>
+                @permission(('display-account-manager-wise-client'))
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#secondlineammodal" onclick="second_line_client_am()" title="Change 2nd Line AM">Change 2nd Line AM</button>
                 @endpermission
-                <a class="btn btn-primary" href="{{ route('client.index') }}">Back</a>
             </div>
 
             <div class="pull-left">
@@ -119,7 +123,6 @@
 
                 <th>Status</th>
                 <th>City</th>
-                <th>Remarks</th>
                 <th>New AM</th>
             </tr>
         </thead>

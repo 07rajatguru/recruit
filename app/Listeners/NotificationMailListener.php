@@ -73,7 +73,15 @@ class NotificationMailListener
         $emailnotification->to = $to;
         $emailnotification->cc = $cc;
         $emailnotification->subject = $subject;
-        $emailnotification->message = $body;
+
+        if($module == "Client Bulk Email" || $module == "Lead Bulk Email" | $module == "Contact Bulk Email") {
+
+            $emailnotification->message = $message;
+        }
+        else {
+
+            $emailnotification->message = $body;
+        }
         $emailnotification->module_id = $module_id;
         $emailnotification->save();
     }

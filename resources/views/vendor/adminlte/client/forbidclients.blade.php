@@ -47,7 +47,6 @@
 
                 <th>Status</th>
                 <th>City</th>
-                <th>Remarks</th>
                 <th>New AM</th>
             </tr>
         </thead>

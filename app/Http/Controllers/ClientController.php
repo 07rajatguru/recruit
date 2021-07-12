@@ -261,7 +261,7 @@ class ClientController extends Controller
 
                 $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
 
-                $days_array = ClientTimeline::getDetailsByClientId($value['id']);
+                $days_array = ClientTimeline::getTimelineDetailsByClientId($value['id']);
 
                 $timeline_view = \View::make('adminlte::partials.client_timeline_view', ['data' => $value,'days_array' => $days_array]);
                 $timeline = $timeline_view->render();
@@ -296,11 +296,11 @@ class ClientController extends Controller
 
             if($category_perm) {
 
-                $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
+                $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$value['second_line_am']);
             }
             else {
 
-                $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
+                $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$value['second_line_am']);
             }
 
             $clients[$i] = $data;
@@ -633,7 +633,7 @@ class ClientController extends Controller
 
                 $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
 
-                $days_array = ClientTimeline::getDetailsByClientId($value['id']);
+                $days_array = ClientTimeline::getTimelineDetailsByClientId($value['id']);
 
                 $timeline_view = \View::make('adminlte::partials.client_timeline_view', ['data' => $value,'days_array' => $days_array]);
                 $timeline = $timeline_view->render();
@@ -669,19 +669,19 @@ class ClientController extends Controller
             if($category_perm) {
 
                 if($source == 'Forbid') {
-                    $data = array(++$j,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
+                    $data = array(++$j,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$value['second_line_am']);
                 }
                 else {
-                    $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
+                    $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$value['second_line_am']);
                 }
             }
             else {
 
                 if($source == 'Forbid') {
-                    $data = array(++$j,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
+                    $data = array(++$j,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$value['second_line_am']);
                 }
                 else {
-                    $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$latest_remarks,$value['second_line_am']);
+                    $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$value['second_line_am']);
                 }
             }
 
@@ -2471,7 +2471,7 @@ class ClientController extends Controller
 
                 $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
 
-                $days_array = ClientTimeline::getDetailsByClientId($value['id']);
+                $days_array = ClientTimeline::getTimelineDetailsByClientId($value['id']);
 
                 $timeline_view = \View::make('adminlte::partials.client_timeline_view', ['data' => $value,'days_array' => $days_array]);
                 $timeline = $timeline_view->render();
@@ -2504,10 +2504,10 @@ class ClientController extends Controller
             }
 
             if($category_perm) {
-                $data = array(++$j,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$latest_remarks);
+                $data = array(++$j,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address']);
             }
             else {
-                $data = array(++$j,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$latest_remarks);
+                $data = array(++$j,$action,$am_name,$company_name,$contact_point,$client_status,$value['address']);
             }
 
             $clients[$i] = $data;
@@ -2616,13 +2616,14 @@ class ClientController extends Controller
         $client_location = ClientBasicinfo::getBillingCityOfClientByID($client_id);
         $post = $client->post()->orderBy('created_at', 'desc')->get();
 
-        $days_array = ClientTimeline::getDetailsByClientId($id);
+        $days_array = ClientTimeline::getTimelineDetailsByClientId($id);
         $client_remarks = ClientRemarks::getAllClientRemarksData();
+        $client_remarks['other'] = 'Others';
 
-        if($user_id == $super_admin_userid || $user_id == $manager_user_id) {
+        /*if($user_id == $super_admin_userid || $user_id == $manager_user_id) {
 
-            $client_remarks['other'] = 'Others';    
-        }
+            $client_remarks['other'] = 'Others';
+        }*/
         
         $client_remarks_edit = ClientRemarks::getAllClientRemarksData();
 
@@ -2641,7 +2642,7 @@ class ClientController extends Controller
         if(isset($user_id) && $user_id > 0) {
 
             // If remarks not added then add that only by superadmin
-            if ($user_id == $super_admin_userid || $user_id == $manager_user_id) {
+           /* if ($user_id == $super_admin_userid || $user_id == $manager_user_id) {
                 // Check remark found or not
                 $client_remark_check = ClientRemarks::checkClientRemark($content);
                 if (isset($client_remark_check) && $client_remark_check != '' ) {
@@ -2652,7 +2653,7 @@ class ClientController extends Controller
                     $client_remarks->remarks = $content;
                     $client_remarks->save();
                 }
-            }
+            }*/
 
             $post = new Post();
             $post->content = $content;

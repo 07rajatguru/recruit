@@ -18,21 +18,21 @@
     <div class="row">
         <div class="col-md-12 margin-tb">
             <div class="pull-right">
-                @permission(('display-account-manager-wise-client'))
-                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal" onclick="client_emails_notification()">Send Mail</button>
-                @endpermission
 
-                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#changestatus" onclick="change_status()">Change Status</button>
+                <a class="btn btn-success" href="{{ route('client.create') }}" title="Add New Client">Add New Client</a>
 
                 @permission(('display-client'))
-                    <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#accountmanagermodal" onclick="client_account_manager()">Change Account Manager
-                    </button>
+                    <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#accountmanagermodal" onclick="client_account_manager()" title="Change Account Manager">Change Account Manager</button>
                 @endpermission
-                
+
                 @permission(('display-account-manager-wise-client'))
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#secondlineammodal" onclick="second_line_client_am()">Change 2nd Line AM</button>
+
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#changestatus" onclick="change_status()" title="Change Status">Change Status</button> <br/><br/>
+
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal" onclick="client_emails_notification()" title="Send Mail">Send Mail</button>
+
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#secondlineammodal" onclick="second_line_client_am()" title="Change 2nd Line AM">Change 2nd Line AM</button>
                 @endpermission
-                <a class="btn btn-success" href="{{ route('client.create') }}">Add New Client</a>
             </div>
             
             <div class="pull-left">
@@ -43,19 +43,19 @@
 
     <div class="row">
         <div class="col-md-12">
-            <div class="col-md-2 col-sm-4">
+            <div class="col-md-2" style="width: 12%;">
                 <a href="{{ route('client.list','Active') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#5cb85c;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Active Clients">Active({{ $active }})</div></a>
             </div>
 
-            <div class="col-md-2 col-sm-4">
+            <div class="col-md-2" style="width: 12%;">
                 <a href="{{ route('client.list','Passive') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#d9534f;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Passive Clients">Passive({{ $passive }}) </div></a>
             </div>
 
-            <div class="col-md-2 col-sm-4">
+            <div class="col-md-2" style="width: 12%;">
                 <a href="{{ route('client.list','Leaders') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#337ab7;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Leaders Clients">Leaders({{ $leaders }})</div></a>
             </div>
 
-            <div class="col-md-2 col-sm-4">
+            <div class="col-md-2" style="width: 12%;">
                 <a href="{{ route('client.list','Left') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#5bc0de;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Left Clients">Left({{ $left }}) </div>
                 </a>
             </div>
@@ -153,7 +153,6 @@
 
                 <th>Status</th>
                 <th>City</th>
-                <th>Remarks</th>
                 <th>New AM</th>
             </tr>
         </thead>

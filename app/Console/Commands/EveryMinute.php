@@ -427,7 +427,7 @@ class EveryMinute extends Command
                 foreach($client_ids_array as $key => $value) {
 
                     $client = ClientBasicinfo::getClientDetailsById($value);
-                    $client_history = ClientTimeline::getDetailsByClientId($value);
+                    $client_history = ClientTimeline::getTimelineDetailsByClientId($value);
 
                     if(isset($client_history[1]['user_id']) && $client_history[1]['user_id'] >= '0') {
 
