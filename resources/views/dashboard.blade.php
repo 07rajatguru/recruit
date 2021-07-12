@@ -169,12 +169,12 @@
         @if(isset($dashboard_users) && sizeof($dashboard_users) > 0)
             <div class="row">
                 <div class="col-lg-12 col-xs-12">
-                    <div class="box box-info">
+                    <div class="box box-default collapsed-box" style="border-top-color:#00c0ef;">
                         <div class="box-header with-border">
                             <h3 class="box-title">Members</h3>
                             <div class="box-tools pull-right">
                                 <span class="label label-success">{{ $total_dashboard_users }} Members</span>
-                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
+                                <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
                                 <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                             </div>
                         </div>
