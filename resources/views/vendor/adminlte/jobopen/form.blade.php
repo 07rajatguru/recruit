@@ -731,6 +731,11 @@
                 }
             }
 
+            if(action == 'edit') {
+
+                $("#industry_id").select2();
+            }
+
             $("#target_date").datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
@@ -760,7 +765,7 @@
             $("#client_id").select2();
             $("#job_description").wysihtml5();
             $("#desired_candidate").wysihtml5();
-            $("#industry_id").select2();
+            
 
             /*$("#candidate_tracker").bind('change', function() {
 
@@ -844,6 +849,10 @@
                         }
 
                         $("#hiring_manager_id").select2();
+
+                        document.getElementById("industry_id").value = response.industry_id;
+
+                        $("#industry_id").select2();
                     }
                 });
 

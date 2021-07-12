@@ -4177,6 +4177,7 @@ class JobOpenController extends Controller
         $response['answer'] = $answer;
         $response['am_id'] = $client['account_manager_id'];
         $response['user_id'] = $user_id;
+        $response['industry_id'] = $client['industry_id'];
 
         echo json_encode($response);exit;
     }
