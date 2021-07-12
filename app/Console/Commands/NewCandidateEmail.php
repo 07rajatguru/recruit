@@ -68,8 +68,6 @@ class NewCandidateEmail extends Command
         
         $yesterday_candidate_details = CandidateBasicInfo::getAllCandidates($yesterday_from_date,$yesterday_to_date);
 
-        print_r($yesterday_candidate_details);exit;
-
         if(isset($yesterday_candidate_details) && sizeof($yesterday_candidate_details) > 0) {
 
             foreach ($yesterday_candidate_details as $key1 => $value1) {
