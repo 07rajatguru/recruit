@@ -16,8 +16,8 @@
             </div>
 
             <div class="pull-right">
-                <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#searchmodal" onclick="contacts_emails_notification()">Send Mail</button>
                 <a class="btn btn-success" href="{{ route('contactsphere.add') }}">Add New Contact</a>
+                <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#searchmodal" onclick="contacts_emails_notification()">Send Mail</button>
                 <a class="btn btn-primary" href="{{ route('contactsphere.importExport') }}">Import Contacts</a>
                 <a class="btn btn-success" href="javascript:void(0);" onClick="export_data()">Export Contacts</a>
             </div>

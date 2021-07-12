@@ -205,7 +205,7 @@
                 "name": {
                     required: true
                 },
-                "designation": {
+               /* "designation": {
                     required: true
                 },
                 "company": {
@@ -219,13 +219,13 @@
                 },
                 "personal_id": {
                     required: true
-                },
+                },*/
             },
             messages: {
                 "name": {
                     required: "Name is Required Field."
                 },
-                "designation": {
+                /*"designation": {
                     required: "Designation is Required Field."
                 },
                 "company": {
@@ -239,7 +239,7 @@
                 },
                 "personal_id": {
                     required: "Personal Id is Required Field."
-                },
+                },*/
             }
         });
 
