@@ -130,7 +130,13 @@ class ProcessController extends Controller
 
 		$action = 'add';
 
-        $department_res = Department::orderBy('id','ASC')->get();
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $operations = getenv('OPERATIONS');
+        $strategy = getenv('STRATEGY_DEPT');
+        $type_array = array($recruitment,$hr_advisory,$operations,$strategy);
+
+        $department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
         $departments = array();
 
         if(sizeof($department_res) > 0) {
@@ -207,6 +213,15 @@ class ProcessController extends Controller
                 $process_visible_users->user_id = $value;
                 $process_visible_users->save();
             }
+
+            // Add superadmin user id of management department
+ 
+            $superadminuserid = getenv('SUPERADMINUSERID');
+
+            $process_visible_users = new ProcessVisibleUser();
+            $process_visible_users->process_id = $process_id;
+            $process_visible_users->user_id = $superadminuserid;
+            $process_visible_users->save();
         }
 
         // Check Process Manual for all users or not and update select_all field in database
@@ -290,7 +305,13 @@ class ProcessController extends Controller
             }
         }
 
-        $department_res = Department::orderBy('id','ASC')->get();
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $operations = getenv('OPERATIONS');
+        $strategy = getenv('STRATEGY_DEPT');
+        $type_array = array($recruitment,$hr_advisory,$operations,$strategy);
+
+        $department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
         $departments = array();
 
         if(sizeof($department_res) > 0) {
@@ -363,6 +384,15 @@ class ProcessController extends Controller
                 $process_visible_users->user_id = $value;
                 $process_visible_users->save();
             }
+
+            // Add superadmin user id of management department
+ 
+            $superadminuserid = getenv('SUPERADMINUSERID');
+
+            $process_visible_users = new ProcessVisibleUser();
+            $process_visible_users->process_id = $process_id;
+            $process_visible_users->user_id = $superadminuserid;
+            $process_visible_users->save();
         }
 
         // Check Process Manual for all users or not and update select_all field in database

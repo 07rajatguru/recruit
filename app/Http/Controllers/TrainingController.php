@@ -130,7 +130,13 @@ class TrainingController extends Controller
 
         $action = 'add';
 
-        $department_res = Department::orderBy('id','ASC')->get();
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $operations = getenv('OPERATIONS');
+        $strategy = getenv('STRATEGY_DEPT');
+        $type_array = array($recruitment,$hr_advisory,$operations,$strategy);
+
+        $department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
         $departments = array();
 
         if(sizeof($department_res) > 0) {
@@ -201,11 +207,20 @@ class TrainingController extends Controller
 
             foreach ($users as $key => $value) {
 
-                $training_visible_users = new TrainingVisibleUser;
+                $training_visible_users = new TrainingVisibleUser();
                 $training_visible_users->training_id = $training_id;
                 $training_visible_users->user_id = $value;
                 $training_visible_users->save();
             }
+
+            // Add superadmin user id of management department
+ 
+            $superadminuserid = getenv('SUPERADMINUSERID');
+
+            $training_visible_users = new TrainingVisibleUser();
+            $training_visible_users->training_id = $training_id;
+            $training_visible_users->user_id = $superadminuserid;
+            $training_visible_users->save();
         }
 
         // Check training material for all users or not and update select_all field in daatabase
@@ -287,7 +302,14 @@ class TrainingController extends Controller
             }
         }
 
-        $department_res = Department::orderBy('id','ASC')->get();
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $operations = getenv('OPERATIONS');
+        $strategy = getenv('STRATEGY_DEPT');
+        $type_array = array($recruitment,$hr_advisory,$operations,$strategy);
+
+        $department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
+
         $departments = array();
 
         if(sizeof($department_res) > 0) {
@@ -356,11 +378,20 @@ class TrainingController extends Controller
 
             foreach ($users as $key => $value) {
 
-                $training_visible_users = new TrainingVisibleUser;
+                $training_visible_users = new TrainingVisibleUser();
                 $training_visible_users->training_id = $training_id;
                 $training_visible_users->user_id = $value;
                 $training_visible_users->save();
             }
+
+            // Add superadmin user id of management department
+ 
+            $superadminuserid = getenv('SUPERADMINUSERID');
+
+            $training_visible_users = new TrainingVisibleUser();
+            $training_visible_users->training_id = $training_id;
+            $training_visible_users->user_id = $superadminuserid;
+            $training_visible_users->save();
         }
 
         // Check training material for all users or not and update select_all field in daatabase
