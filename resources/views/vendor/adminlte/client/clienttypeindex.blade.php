@@ -331,7 +331,7 @@
                         }
                     }
                     else {
-                        if ( Data[10] != "0" ) {
+                        if ( Data[8] != "0" ) {
                             $('td', Row).css('background-color', '#E8E8E8');
                         }
                         else {
@@ -347,7 +347,7 @@
                 table.columns( [9] ).visible( false );
             }
             else {
-                table.columns( [10] ).visible( false );
+                table.columns( [8] ).visible( false );
             }
 
             $('#allcb').change(function() {
