@@ -22,4 +22,18 @@ class RoleUser extends Model
     	}
     	return $user_id;
     }
+
+    public static function getRoleIdByUserId($user_id) {
+
+        $query = RoleUser::query();
+        $query = $query->where('user_id',$user_id);
+        $query = $query->select('role_id');
+        $res = $query->first();
+
+        $role_id = 0;
+        if (isset($res) && $res != '') {
+            $role_id = $res->role_id;
+        }
+        return $role_id;
+    }
 }

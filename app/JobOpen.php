@@ -1522,7 +1522,7 @@ class JobOpen extends Model
         $job_status = array($job_onhold,$job_us,$job_client);
 
         $job = JobOpen::query();
-        $job = $job->select('job_openings.id','job_openings.created_at');
+        $job = $job->select('job_openings.id','job_openings.created_at','job_openings.hiring_manager_id');
         $job = $job->where('job_openings.open_to_all_date','>=',"$date");
         $job = $job->where('job_openings.open_to_all_date','<=',"$date_time");
         $job = $job->whereNotIn('priority',$job_status);
@@ -1533,7 +1533,9 @@ class JobOpen extends Model
         $job_data = array();
         $i = 0;
         foreach ($job_res as $key => $value) {
+            
             $job_data[$i]['id'] = $value->id;
+            $job_data[$i]['hiring_manager_id'] = $value->hiring_manager_id;
             $job_data[$i]['created_at'] = $value->created_at;
             $i++;
         }

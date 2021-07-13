@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use App\Notifications;
 use App\JobAssociateCandidates;
+use App\RoleUser;
 
 class InterviewController extends Controller
 {
@@ -511,10 +512,29 @@ class InterviewController extends Controller
         $viewVariable['type'] = Interview::getTypeArray();
         $viewVariable['status'] = Interview::getCreateInterviewStatus();
 
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $management = getenv('MANAGEMENT');
-        $type_array = array($recruitment,$hr_advisory,$management);
+        // Set users dropdown
+
+        // Get HR Role id from env
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
+
+        if($hr_role_id == $get_role_id) {
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $operations = getenv('OPERATIONS');
+            $management = getenv('MANAGEMENT');
+            $type_array = array($recruitment,$hr_advisory,$operations,$management);
+        }
+        else {
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $management = getenv('MANAGEMENT');
+            $type_array = array($recruitment,$hr_advisory,$management);
+        }
 
         $users_array = User::getAllUsers($type_array);
         $users = array();
@@ -540,8 +560,6 @@ class InterviewController extends Controller
         $viewVariable['round'] = Interview::getSelectRound();
         $viewVariable['interview_round'] = '';
         $viewVariable['action'] = 'add';
-
-
 
         return view('adminlte::interview.create', $viewVariable,compact('user_id'));
     }
@@ -671,10 +689,29 @@ class InterviewController extends Controller
         $viewVariable['status'] = Interview::getEditInterviewStatus();
         $viewVariable['round'] = Interview::getSelectRound();
 
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $management = getenv('MANAGEMENT');
-        $type_array = array($recruitment,$hr_advisory,$management);
+        // Set users dropdown
+        
+        // Get HR Role id from env
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
+
+        if($hr_role_id == $get_role_id) {
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $operations = getenv('OPERATIONS');
+            $management = getenv('MANAGEMENT');
+            $type_array = array($recruitment,$hr_advisory,$operations,$management);
+        }
+        else {
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $management = getenv('MANAGEMENT');
+            $type_array = array($recruitment,$hr_advisory,$management);
+        }
 
         $users_array = User::getAllUsers($type_array);
         $users = array();

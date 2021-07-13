@@ -30,6 +30,7 @@ use App\Notifications;
 use Illuminate\Support\Facades\File;
 use App\CandidateOtherInfo;
 use App\Department;
+use App\RoleUser;
 
 class JobOpenController extends Controller
 {
@@ -972,10 +973,27 @@ class JobOpenController extends Controller
         }
 
         // For account manager
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $management = getenv('MANAGEMENT');
-        $type_array = array($recruitment,$hr_advisory,$management);
+
+        // Get HR Role id from env
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
+
+        if($hr_role_id == $get_role_id) {
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $operations = getenv('OPERATIONS');
+
+            $type_array = array($recruitment,$hr_advisory,$operations);
+        }
+        else {
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $type_array = array($recruitment,$hr_advisory);
+        }
 
         $users_array = User::getAllUsers($type_array,'Yes');
         $users = array();
@@ -1250,6 +1268,15 @@ class JobOpenController extends Controller
                     $job_visible_users->user_id = $value;
                     $job_visible_users->save();
                 }
+
+                // Add superadmin user id of management department
+ 
+                $superadminuserid = getenv('SUPERADMINUSERID');
+
+                $job_visible_users = new JobVisibleUsers();
+                $job_visible_users->job_id = $job_id;
+                $job_visible_users->user_id = $superadminuserid;
+                $job_visible_users->save();
             }
 
             \DB::statement("UPDATE job_openings SET open_to_all = '0' where id=$job_id");
@@ -1667,10 +1694,27 @@ class JobOpenController extends Controller
         }
 
         // For account manager
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $management = getenv('MANAGEMENT');
-        $type_array = array($recruitment,$hr_advisory,$management);
+
+        // Get HR Role id from env
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($loggedin_user_id);
+
+        if($hr_role_id == $get_role_id) {
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $operations = getenv('OPERATIONS');
+
+            $type_array = array($recruitment,$hr_advisory,$operations);
+        }
+        else {
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $type_array = array($recruitment,$hr_advisory);
+        }
 
         $users_array = User::getAllUsers($type_array,'Yes');
         $users = array();
@@ -1875,10 +1919,26 @@ class JobOpenController extends Controller
         }
 
         // For account manager
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $management = getenv('MANAGEMENT');
-        $type_array = array($recruitment,$hr_advisory,$management);
+
+        // Get HR Role id from env
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
+
+        if($hr_role_id == $get_role_id) {
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $operations = getenv('OPERATIONS');
+            $type_array = array($recruitment,$hr_advisory,$operations);
+        }
+        else {
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $type_array = array($recruitment,$hr_advisory);
+        }
 
         $users_array = User::getAllUsers($type_array,'Yes');
         $users = array();
@@ -2149,45 +2209,19 @@ class JobOpenController extends Controller
                 $job_visible_users->user_id = $value;
                 $job_visible_users->save();
             }
+
+            // Add superadmin user id of management department
+ 
+            $superadminuserid = getenv('SUPERADMINUSERID');
+
+            $job_visible_users = new JobVisibleUsers();
+            $job_visible_users->job_id = $job_id;
+            $job_visible_users->user_id = $superadminuserid;
+            $job_visible_users->save();
         }
-
-        // Get job_visible_user count and check to all users then update open_to_all field
-
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $management = getenv('MANAGEMENT');
-        $type_array = array($recruitment,$hr_advisory,$management);
-
-        $users_array = User::getAllUsers($type_array,'Yes');
-        $users_id = array();
         
-        if(isset($users_array) && sizeof($users_array) > 0) {
-
-            foreach ($users_array as $k1 => $v1) {
-                               
-                $user_details = User::getAllDetailsByUserID($k1);
-
-                if($user_details->type == '2') {
-                    if($user_details->hr_adv_recruitemnt == 'Yes') {
-                        $users_id[$k1] = $v1;
-                    }
-                }
-                else {
-                    $users_id[$k1] = $v1;
-                }    
-            }
-        }
-
-        $user_count = sizeof($users_id);
-
-        $job_users = sizeof($users);
-        if ($job_users == $user_count) {
-            //\DB::statement("UPDATE job_openings SET open_to_all = '1' where id=$job_id");
-        }
-        else {
-            \DB::statement("UPDATE job_openings SET open_to_all = '0' where id=$job_id");
-        }
-
+        \DB::statement("UPDATE job_openings SET open_to_all = '0' where id=$job_id");
+        
         $upload_type = $request->upload_type;
         $file = $request->file('file');
 
@@ -2297,10 +2331,26 @@ class JobOpenController extends Controller
         }
 
         // For account manager
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $management = getenv('MANAGEMENT');
-        $type_array = array($recruitment,$hr_advisory,$management);
+
+        // Get HR Role id from env
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
+
+        if($hr_role_id == $get_role_id) {
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $operations = getenv('OPERATIONS');
+            $type_array = array($recruitment,$hr_advisory,$operations);
+        }
+        else {
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $type_array = array($recruitment,$hr_advisory);
+        }
 
         $users_array = User::getAllUsers($type_array,'Yes');
         $users = array();
@@ -2596,6 +2646,15 @@ class JobOpenController extends Controller
                     $job_visible_users->user_id = $value;
                     $job_visible_users->save();
                 }
+
+                // Add superadmin user id of management department
+ 
+                $superadminuserid = getenv('SUPERADMINUSERID');
+
+                $job_visible_users = new JobVisibleUsers();
+                $job_visible_users->job_id = $job_id;
+                $job_visible_users->user_id = $superadminuserid;
+                $job_visible_users->save();
             }
 
             \DB::statement("UPDATE job_openings SET open_to_all = '0' where id=$job_id");
@@ -2922,10 +2981,27 @@ class JobOpenController extends Controller
         $type = Interview::getTypeArray();
         $status = Interview::getCreateInterviewStatus();
 
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $management = getenv('MANAGEMENT');
-        $type_array = array($recruitment,$hr_advisory,$management);
+        // For get users listing
+
+        // Get HR Role id from env
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
+
+        if($hr_role_id == $get_role_id) {
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $operations = getenv('OPERATIONS');
+            $type_array = array($recruitment,$hr_advisory,$operations);
+        }
+        else {
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $type_array = array($recruitment,$hr_advisory);
+        }
 
         $users_array = User::getAllUsers($type_array);
         $users = array();

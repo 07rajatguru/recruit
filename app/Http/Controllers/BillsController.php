@@ -19,6 +19,7 @@ use App\Events\NotificationMail;
 use App\BillsLeadEfforts;
 use App\BillDate;
 //use PDF;
+use App\RoleUser;
 
 class BillsController extends Controller
 {
@@ -923,10 +924,29 @@ class BillsController extends Controller
 
         $job_id = 0;
 
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $management = getenv('MANAGEMENT');
-        $type_array = array($recruitment,$hr_advisory,$management);
+        // Set users dropdown
+
+        // Get HR Role id from env
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
+
+        if($hr_role_id == $get_role_id) {
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $operations = getenv('OPERATIONS');
+            $management = getenv('MANAGEMENT');
+            $type_array = array($recruitment,$hr_advisory,$operations,$management);
+        }
+        else {
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $management = getenv('MANAGEMENT');
+            $type_array = array($recruitment,$hr_advisory,$management);
+        }
 
         $users_array = User::getAllUsers($type_array);
         $users = array();
@@ -1329,11 +1349,30 @@ class BillsController extends Controller
 
         $job_id = $bnm->job_id;
         $candidate_id = $bnm->candidate_id;
-        
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $management = getenv('MANAGEMENT');
-        $type_array = array($recruitment,$hr_advisory,$management);
+
+        // Set users dropdown
+
+        // Get HR Role id from env
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
+
+        if($hr_role_id == $get_role_id) {
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $operations = getenv('OPERATIONS');
+            $management = getenv('MANAGEMENT');
+            $type_array = array($recruitment,$hr_advisory,$operations,$management);
+        }
+        else {
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $management = getenv('MANAGEMENT');
+            $type_array = array($recruitment,$hr_advisory,$management);
+        }
 
         $users_array = User::getAllUsers($type_array);
         $users = array();
@@ -1991,10 +2030,29 @@ class BillsController extends Controller
         $job_id = $bnm->job_id;
         $candidate_id = $bnm->candidate_id;
 
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $management = getenv('MANAGEMENT');
-        $type_array = array($recruitment,$hr_advisory,$management);
+        // Set users dropdown
+
+        // Get HR Role id from env
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
+
+        if($hr_role_id == $get_role_id) {
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $operations = getenv('OPERATIONS');
+            $management = getenv('MANAGEMENT');
+            $type_array = array($recruitment,$hr_advisory,$operations,$management);
+        }
+        else {
+
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $management = getenv('MANAGEMENT');
+            $type_array = array($recruitment,$hr_advisory,$management);
+        }
 
         $users_array = User::getAllUsers($type_array);
         $users = array();
