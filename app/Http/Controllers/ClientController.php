@@ -600,7 +600,7 @@ class ClientController extends Controller
             $action = '';
             $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
            
-            if($all_perm || $value['client_owner']) {
+            if($edit_perm || $value['client_owner']) {
 
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
             }
