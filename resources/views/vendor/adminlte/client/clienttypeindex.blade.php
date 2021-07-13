@@ -79,14 +79,14 @@
                 </div>
             @endpermission
 
-            @permission(('display-standard-client-list'))
+            @permission(('display-moderate-client-list'))
                 <div class="col-md-2">
                     <a href="{{ route('client.list','Moderate') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#D3D3D3;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Moderate Clients">Moderate ({{ $mode_cat }})</div>
                     </a>
                 </div>
             @endpermission
 
-            @permission(('display-moderate-client-list'))
+            @permission(('display-standard-client-list'))
                 <div class="col-md-2">
                     <a href="{{ route('client.list','Standard') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00CED1;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Standard Clients">Standard ({{ $std_cat }})</div>
                     </a>
