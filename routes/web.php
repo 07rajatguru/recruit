@@ -168,7 +168,7 @@ Route::get('report/weekly' ,[
 
 Route::group(['middleware' => ['auth']], function () {
 
-    // All Dashboard
+    // Dashboard
 
     Route::any('/dashboard', array (
         'uses' => 'HomeController@dashboard'
@@ -184,8 +184,6 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HomeController@dashboardMonthwise'
     ]);
 
-    // All Dashboard End
-
     // Recruitment Dashboard
     
     Route::any('/recruitment-dashboard', array (
@@ -195,7 +193,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/recruitment-dashboard/opentoalljob',[
         'as' => 'recruitment.opentoalljob',
-        'uses' => 'HomeController@recruitmentOpentoAllJob'
+        'uses' => 'HomeController@recruitmentOpentoAllJob',
+        'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
     ]);
 
     Route::get('/recruitment-jobs',[
@@ -210,13 +209,6 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
     ]);
 
-    Route::any('/recruitment-dashboard/monthwise',[
-        'as' => 'recruitment.dashboardmonthwise',
-        'uses' => 'HomeController@dashboardMonthwise'
-    ]);
-
-    // Recruitment Dashboard End
-
     // HR Advisory Dashboard
     
     Route::any('/hr-advisory-dashboard', array (
@@ -226,7 +218,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('/hr-advisory-dashboard/opentoalljob',[
         'as' => 'hr-advisory.opentoalljob',
-        'uses' => 'HomeController@hrAdvisoryOpentoAllJob'
+        'uses' => 'HomeController@hrAdvisoryOpentoAllJob',
+        'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
     ]);
 
     Route::get('/hr-advisory-jobs',[
@@ -241,12 +234,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
     ]);
 
-    Route::any('/hr-advisory-dashboard/monthwise',[
-        'as' => 'hr-advisory.dashboardmonthwise',
-        'uses' => 'HomeController@dashboardMonthwise'
-    ]);
-
-    // HR Advisory Dashboard End
+    // Attendance
 
     Route::any('/home', array (
         'middleware' => ['permission:display-attendance-of-all-users-in-admin-panel|display-attendance-by-loggedin-user-in-admin-panel'],
@@ -272,6 +260,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('home/export',[
         'as'=>'home.export',
         'uses'=>'HomeController@export']);
+
 
     // test mail route
     Route::get('/testmail',[
@@ -2049,6 +2038,11 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('todos/{id}', [
         'as' => 'todos.complete',
         'uses' => 'ToDosController@complete',
+    ]);
+
+    Route::get('getUsersByTodoID', [
+        'as' => 'getusers.bytodoid',
+        'uses' => 'ToDosController@getUsersByTodoID',
     ]);
 
     // To do's Routes End
