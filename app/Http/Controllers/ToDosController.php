@@ -20,6 +20,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Input;
 use App\Notifications;
+use App\Department;
 
 class ToDosController extends Controller
 {
@@ -378,6 +379,26 @@ class ToDosController extends Controller
 
         $selected_users = array();
 
+        // Set Department
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $operations = getenv('OPERATIONS');
+        $strategy = getenv('STRATEGY_DEPT');
+        $type_array = array($recruitment,$hr_advisory,$operations,$strategy);
+
+        $department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
+
+        $departments = array();
+
+        if(sizeof($department_res) > 0) {
+            foreach($department_res as $r) {
+                $departments[$r->id] = $r->name;
+            }
+        }
+        
+        $selected_departments = array();
+        $todo_id = 0;
+
         $viewVariable = array();
         $viewVariable['client'] = $typeArr;
         $viewVariable['status'] = $status;
@@ -393,6 +414,9 @@ class ToDosController extends Controller
         $viewVariable['status_id'] = $yet_to_start;
         $viewVariable['reminder_id'] = '';
         $viewVariable['cc_user_id'] = '0' ;
+        $viewVariable['departments'] = $departments;
+        $viewVariable['selected_departments'] = $selected_departments;
+        $viewVariable['todo_id'] = $todo_id;
 
         return view('adminlte::toDo.create', $viewVariable);
     }
@@ -418,6 +442,7 @@ class ToDosController extends Controller
 
         $frequency_type = $request->frequency_type;
         $start_date = $request->start_date;
+        $department_ids = $request->department_ids;
 
         $toDos = new ToDos();
         $toDos->subject = $subject;
@@ -443,6 +468,9 @@ class ToDosController extends Controller
         else {
             $toDos->cc_user = NULL;
         }
+
+        $toDos->department_ids = implode(",", $department_ids);
+
         $validator = \Validator::make(Input::all(),$toDos::$rules);
 
         if($validator->fails()){
@@ -613,6 +641,26 @@ class ToDosController extends Controller
 
         $todoTypeArr = array('1' => 'Job Opening', '2' =>  'Interview','3' => 'Client','4' => 'Candidate', '5' => 'Other');
 
+        // Set Department
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $operations = getenv('OPERATIONS');
+        $strategy = getenv('STRATEGY_DEPT');
+        $type_array = array($recruitment,$hr_advisory,$operations,$strategy);
+
+        $department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
+
+        $departments = array();
+
+        if(sizeof($department_res) > 0) {
+            foreach($department_res as $r) {
+                $departments[$r->id] = $r->name;
+            }
+        }
+        
+        $selected_departments = explode(",",$toDos->department_ids);
+        $todo_id = $id;
+
         $viewVariable = array();
         $viewVariable['toDos'] = $toDos;
         $viewVariable['task_owner'] = $toDos->task_owner;
@@ -633,6 +681,9 @@ class ToDosController extends Controller
         $viewVariable['cc_user_id'] = $toDos->cc_user;
         $viewVariable['reminder_id'] = $reminder_id;
         $viewVariable['start_date']  = $dateClass->changeYMDHMStoDMYHMS($toDos->start_date);
+        $viewVariable['departments'] = $departments;
+        $viewVariable['selected_departments'] = $selected_departments;
+        $viewVariable['todo_id'] = $todo_id;
         
         return view('adminlte::toDo.edit', $viewVariable);
     }
@@ -655,6 +706,7 @@ class ToDosController extends Controller
         $frequency_type = $request->get('frequency_type');
         $users = $request->user_ids;
         $start_date = $request->get('start_date');
+        $department_ids = $request->department_ids;
         
         $toDos = ToDos::find($id);
         if(isset($task_owner))
@@ -688,6 +740,8 @@ class ToDosController extends Controller
         else {
             $toDos->start_date = NULL;
         }
+
+        $toDos->department_ids = implode(",", $department_ids);
 
         $validator = \Validator::make(Input::all(),$toDos::$rules);
 
@@ -1334,5 +1388,46 @@ class ToDosController extends Controller
             $todos = Todos::getAllTodosdash($todo_ids,15);
         }
         return json_encode($todos);
+    }
+
+    public function getUsersByTodoID() {
+
+        $department_ids = $_GET['department_selected_items'];
+        $todo_id = $_GET['todo_id'];
+
+        $users = User::getUsersByDepartmentIDArray($department_ids);
+
+        $todo_user_res = \DB::table('todo_associated_users')
+        ->join('users','users.id','=','todo_associated_users.user_id')
+        ->select('users.id as user_id', 'users.name as name')
+        ->where('todo_associated_users.todo_id',$todo_id)->get();
+
+        $selected_users = array();
+        $i=0;
+
+        foreach ($todo_user_res as $key => $value) {
+            $selected_users[$i] = $value->user_id;
+            $i++;       
+        }
+
+        $data = array();
+        $j=0;
+
+        foreach ($users as $key => $value) {
+
+            if(in_array($value['id'], $selected_users)) {
+                $data[$j]['checked'] = '1';
+            }
+            else {
+                $data[$j]['checked'] = '0';
+            }
+            
+            $data[$j]['id'] = $value['id'];
+            $data[$j]['type'] = $value['type'];
+            $data[$j]['name'] = $value['name'];
+
+            $j++;
+        }
+        return $data;exit;
     }
 }

@@ -30,7 +30,13 @@ class HolidaysController extends Controller
     	$action = 'add';
 
         // Set Department
-        $department_res = Department::orderBy('id','ASC')->get();
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $operations = getenv('OPERATIONS');
+        $strategy = getenv('STRATEGY_DEPT');
+        $type_array = array($recruitment,$hr_advisory,$operations,$strategy);
+
+        $department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
 
         $departments = array();
 
@@ -112,7 +118,14 @@ class HolidaysController extends Controller
         $action = 'edit';
 
         // Set Department
-        $department_res = Department::orderBy('id','ASC')->get();
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $operations = getenv('OPERATIONS');
+        $strategy = getenv('STRATEGY_DEPT');
+        $type_array = array($recruitment,$hr_advisory,$operations,$strategy);
+
+        // Set Department
+        $department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
 
         $departments = array();
 
