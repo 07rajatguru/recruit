@@ -258,6 +258,9 @@
                     },
                     "user_ids[]": {
                         required: true
+                    },
+                    "department_ids[]": {
+                        required: true
                     }
                 },
                 messages: {
@@ -272,6 +275,9 @@
                     },
                     "user_ids[]": {
                         required: "Users is required."
+                    },
+                    "department_ids[]": {
+                        required: "Please Select Department."
                     }
                 }
             });
