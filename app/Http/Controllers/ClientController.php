@@ -2161,13 +2161,21 @@ class ClientController extends Controller
         $user =  \Auth::user();
         $all_perm = $user->can('display-client');
         $userwise_perm = $user->can('display-account-manager-wise-client');
+        
+        if($department_id == 0) {
 
-        if($all_perm) {
-            $response = ClientBasicinfo::getMonthWiseClientByUserId($user->id,1,$month,$year,$department_id);
-            $count = sizeof($response);
+            if($all_perm) {
+                $response = ClientBasicinfo::getMonthWiseClientByUserId($user->id,1,$month,$year,$department_id);
+                $count = sizeof($response);
+            }
+            else if($userwise_perm) {
+                $response = ClientBasicinfo::getMonthWiseClientByUserId($user->id,0,$month,$year,$department_id);
+                $count = sizeof($response);
+            }
         }
-        else if($userwise_perm) {
-            $response = ClientBasicinfo::getMonthWiseClientByUserId($user->id,0,$month,$year,$department_id);
+        else {
+
+            $response = ClientBasicinfo::getMonthWiseClientByUserId($user->id,1,$month,$year,$department_id);
             $count = sizeof($response);
         }
 

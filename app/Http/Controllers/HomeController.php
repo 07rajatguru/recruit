@@ -801,7 +801,7 @@ class HomeController extends Controller
         return json_encode($data);
     }
 
-    public function recruitmentDashboard() {
+/*    public function recruitmentDashboard() {
 
         $user = \Auth::user();
         $user_id =  $user->id;
@@ -1049,6 +1049,166 @@ class HomeController extends Controller
             }
         }
 
+        $viewVariable = array();
+        $viewVariable['toDos'] = $toDos;
+        $viewVariable['interviews'] = $interviews;
+        $viewVariable['interviewCount'] = $interviews_cnt;
+        $viewVariable['jobCount'] = $job;
+        $viewVariable['clientCount'] = $client;
+        $viewVariable['candidatejoinCount'] = $candidatecount;
+        $viewVariable['associatedCount'] = $associate_count;
+        $viewVariable['interviewAttendCount'] = $interview_attend;
+        $viewVariable['shortlisted_count'] = $shortlisted_count;
+        $viewVariable['month'] = $month;
+        $viewVariable['year'] = $year;
+        $viewVariable['department_id'] = $department_id;
+
+        return view('hr-advisory-dashboard',$viewVariable);
+    }
+
+    public function hrAdvisoryOpentoAllJob() {
+
+        $user = \Auth::user();
+        $user_id = \Auth::user()->id;
+        $display_jobs = $user->can('display-jobs-open-to-all');
+
+        $department_id = getenv('HRADVISORY');
+
+        if($display_jobs) {
+            $job_opened = JobOpen::getOpenToAllJobs(10,$user_id,$department_id);
+        }
+        else {
+            $job_opened = array();
+        }
+        return json_encode($job_opened);
+    }*/
+
+    public function recruitmentDashboard() {
+
+        $user = \Auth::user();
+        $user_id =  $user->id;
+
+        // get assigned to todos
+        $assigned_todo_ids = ToDos::getTodoIdsByUserId($user_id);
+        $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user_id);
+
+        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids);
+        $toDos = array();
+
+        if(isset($todo_ids) && sizeof($todo_ids)>0) {
+            $toDos = ToDos::getAllTodosdash($todo_ids,7);
+        }
+
+        $month = date('m');
+        $year = date('Y');
+        $department_id = getenv('RECRUITMENT');
+
+        // Client Count
+        $client = DB::table('client_basicinfo')
+        ->whereRaw('MONTH(created_at) = ?',[$month])->whereRaw('YEAR(created_at) = ?',[$year])
+        ->where('delete_client','=',0)->where('department_id','=',$department_id)->count();
+
+        // Job Count
+        $job = JobOpen::getAllJobsCountByDepartment(1,$user_id,'',$department_id);
+
+        // Cvs Associated this month
+        $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year,$department_id);
+        $associate_count = $associate_monthly_response['cvs_cnt'];
+
+        // Cvs Shortlisted this month
+        $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted(0,$month,$year,$department_id);
+
+        // Interview Attended this month
+        $interview_attended_list = Interview::getAttendedInterviews(1,$user_id,$month,$year,$department_id);
+        $interview_attend = sizeof($interview_attended_list);
+
+        // Candidate Join this month
+        $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year,$department_id);
+
+        // Interview Count
+        $interviews = Interview::getDashboardInterviews(1,$user_id,$department_id);
+        $interviews_cnt = sizeof($interviews);
+
+        $viewVariable = array();
+        $viewVariable['toDos'] = $toDos;
+        $viewVariable['interviews'] = $interviews;
+        $viewVariable['interviewCount'] = $interviews_cnt;
+        $viewVariable['jobCount'] = $job;
+        $viewVariable['clientCount'] = $client;
+        $viewVariable['candidatejoinCount'] = $candidatecount;
+        $viewVariable['associatedCount'] = $associate_count;
+        $viewVariable['interviewAttendCount'] = $interview_attend;
+        $viewVariable['shortlisted_count'] = $shortlisted_count;
+        $viewVariable['month'] = $month;
+        $viewVariable['year'] = $year;
+        $viewVariable['department_id'] = $department_id;
+
+        return view('recruitment-dashboard',$viewVariable);
+    }
+
+    public function recruitmentOpentoAllJob() {
+
+        $user = \Auth::user();
+        $user_id = \Auth::user()->id;
+        $display_jobs = $user->can('display-jobs-open-to-all');
+
+        $department_id = getenv('RECRUITMENT');
+
+        if($display_jobs) {
+            $job_opened = JobOpen::getOpenToAllJobs(10,$user_id,$department_id);
+        }
+        else {
+            $job_opened = array();
+        }
+        return json_encode($job_opened);
+    }
+
+    public function hrAdvisoryDashboard() {
+
+        $user = \Auth::user();
+        $user_id =  $user->id;
+
+        // get assigned to todos
+        $assigned_todo_ids = ToDos::getTodoIdsByUserId($user_id);
+        $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user_id);
+
+        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids);
+        $toDos = array();
+
+        if(isset($todo_ids) && sizeof($todo_ids)>0) {
+            $toDos = ToDos::getAllTodosdash($todo_ids,7);
+        }
+
+        $month = date('m');
+        $year = date('Y');
+        $department_id = getenv('HRADVISORY');
+
+        // Client Count
+        $client = DB::table('client_basicinfo')
+        ->whereRaw('MONTH(created_at) = ?',[$month])->whereRaw('YEAR(created_at) = ?',[$year])
+        ->where('delete_client','=',0)->where('department_id','=',$department_id)->count();
+
+        // Job Count
+        $job = JobOpen::getAllJobsCountByDepartment(1,$user_id,'',$department_id);
+
+        // Cvs Associated this month
+        $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year,$department_id);
+        $associate_count = $associate_monthly_response['cvs_cnt'];
+
+        // Cvs Shortlisted this month
+        $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted(0,$month,$year,$department_id);
+
+        // Interview Attended this month
+        $interview_attended_list = Interview::getAttendedInterviews(1,$user_id,$month,$year,$department_id);
+            $interview_attend = sizeof($interview_attended_list);
+
+        // Candidate Join this month
+        $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year,$department_id);
+
+        // Interview Count
+        $interviews = Interview::getDashboardInterviews(1,$user_id,$department_id);
+        $interviews_cnt = sizeof($interviews);
+        
         $viewVariable = array();
         $viewVariable['toDos'] = $toDos;
         $viewVariable['interviews'] = $interviews;

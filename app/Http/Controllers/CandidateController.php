@@ -342,16 +342,22 @@ class CandidateController extends Controller
         $display_all_count = $user->can('display-all-count');
         $display_userwise_count = $user->can('display-userwise-count');
 
-        if($display_all_count) {
+        if($department_id == 0) {
 
+            if($display_all_count) {
+
+                $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,1,$month,$year,$department_id);   
+            }
+            else if($display_userwise_count) {
+
+                $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,0,$month,$year,$department_id);
+            }
+        }
+        else {
             $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,1,$month,$year,$department_id);
-            $count = sizeof($response);
         }
-        else if($display_userwise_count) {
 
-            $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,0,$month,$year,$department_id);
-            $count = sizeof($response);
-        }
+        $count = sizeof($response);
         
         return view('adminlte::candidate.candidatejoin', array('candidates' => $response,'count' => $count));
     }

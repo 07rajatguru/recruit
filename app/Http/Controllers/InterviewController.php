@@ -470,11 +470,17 @@ class InterviewController extends Controller
         $all_perm = $user->can('display-interviews');
         $userwise_perm = $user->can('display-interviews-by-loggedin-user');
 
-        if($all_perm) {
-            $attended_interview = Interview::getAttendedInterviews(1,$user->id,$month,$year,$department_id);
+        if($department_id == 0) {
+
+            if($all_perm) {
+                $attended_interview = Interview::getAttendedInterviews(1,$user->id,$month,$year,$department_id);
+            }
+            else if($userwise_perm) {
+                $attended_interview = Interview::getAttendedInterviews(0,$user->id,$month,$year,$department_id);
+            }
         }
-        else if($userwise_perm) {
-            $attended_interview = Interview::getAttendedInterviews(0,$user->id,$month,$year,$department_id);
+        else {
+            $attended_interview = Interview::getAttendedInterviews(1,$user->id,$month,$year,$department_id);
         }
 
         $count = sizeof($attended_interview);

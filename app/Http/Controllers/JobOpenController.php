@@ -3986,18 +3986,20 @@ class JobOpenController extends Controller
         $all_jobs_perm = $user->can('display-jobs');
         $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
 
-        if($all_jobs_perm) {
-            $response = JobAssociateCandidates::getAssociatedCvsByUseridMonthWise(0,$month,$year,$department_id);
-            $count = sizeof($response);
-        }
-        else if($user_jobs_perm) {
-            $response = JobAssociateCandidates::getAssociatedCvsByUseridMonthWise($user_id,$month,$year,$department_id);
-            $count = sizeof($response);
+        if($department_id == 0) {
+
+            if($all_jobs_perm) {
+                $response = JobAssociateCandidates::getAssociatedCvsByUseridMonthWise(0,$month,$year,$department_id);
+            }
+            else if($user_jobs_perm) {
+                $response = JobAssociateCandidates::getAssociatedCvsByUseridMonthWise($user_id,$month,$year,$department_id);
+            }
         }
         else {
-            $response = '';
-            $count = '';
-        }  
+            $response = JobAssociateCandidates::getAssociatedCvsByUseridMonthWise(0,$month,$year,$department_id);
+        }
+
+        $count = sizeof($response);
 
         $short_month_name = date("M", mktime(0, 0, 0, $month, 10)); 
         return view ('adminlte::jobopen.associatedcvs',compact('response','count','short_month_name','year'));
@@ -4217,20 +4219,23 @@ class JobOpenController extends Controller
         $all_jobs_perm = $user->can('display-jobs');
         $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
 
-        if($all_jobs_perm) {
-            $response = JobAssociateCandidates::getShortlistedCvsByUseridMonthWise(0,$month,$year,$department_id);
-            $count = sizeof($response);
-        }
-        else if($user_jobs_perm) {
-            $response = JobAssociateCandidates::getShortlistedCvsByUseridMonthWise($user_id,$month,$year,$department_id);
-            $count = sizeof($response);
+        if($department_id == 0) {
+
+            if($all_jobs_perm) {
+                $response = JobAssociateCandidates::getShortlistedCvsByUseridMonthWise(0,$month,$year,$department_id);
+            }
+            else if($user_jobs_perm) {
+                $response = JobAssociateCandidates::getShortlistedCvsByUseridMonthWise($user_id,$month,$year,$department_id);
+            }
         }
         else {
-            $response = '';
-            $count = '';
-        }  
+            $response = JobAssociateCandidates::getShortlistedCvsByUseridMonthWise(0,$month,$year,$department_id);
+        }
 
-        $short_month_name = date("M", mktime(0, 0, 0, $month, 10)); 
+        $count = sizeof($response);
+
+        $short_month_name = date("M", mktime(0, 0, 0, $month, 10));
+        
         return view ('adminlte::jobopen.shortlistedcvs',compact('response','count','short_month_name','year'));
     }
 
@@ -4877,17 +4882,9 @@ class JobOpenController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
-        $all_jobs_perm = $user->can('display-jobs');
-        $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
-
         $department_id = getenv('RECRUITMENT');
 
-        if($all_jobs_perm) {
-            $count = JobOpen::getAllJobsCountByDepartment(1,$user_id,'',$department_id);
-        }
-        else if ($user_jobs_perm) {
-            $count = JobOpen::getAllJobsCountByDepartment(0,$user_id,'',$department_id);
-        }
+        $count = JobOpen::getAllJobsCountByDepartment(1,$user_id,'',$department_id);
 
         return view('adminlte::jobopen.recruitment-jobs', compact('count'));
     }
@@ -4905,21 +4902,10 @@ class JobOpenController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
-        $all_jobs_perm = $user->can('display-jobs');
-        $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
-
         $department_id = getenv('RECRUITMENT');
-
-        if($all_jobs_perm) {
             
-            $job_response = JobOpen::getAllJobsByDepartment(1,$user_id,$limit,$offset,$search,$order_column_name,$type,$department_id);
-            $count = JobOpen::getAllJobsCountByDepartment(1,$user_id,$search,$department_id);
-        }
-        else if ($user_jobs_perm) {
-
-            $job_response = JobOpen::getAllJobsByDepartment(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$department_id);
-            $count = JobOpen::getAllJobsCountByDepartment(0,$user_id,$department_id);
-        }
+        $job_response = JobOpen::getAllJobsByDepartment(1,$user_id,$limit,$offset,$search,$order_column_name,$type,$department_id);
+        $count = JobOpen::getAllJobsCountByDepartment(1,$user_id,$search,$department_id);
 
         $jobs = array();
         $i = 0;$j = 0;
@@ -4955,17 +4941,9 @@ class JobOpenController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
-        $all_jobs_perm = $user->can('display-jobs');
-        $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
-
         $department_id = getenv('HRADVISORY');
 
-        if($all_jobs_perm) {
-            $count = JobOpen::getAllJobsCountByDepartment(1,$user_id,'',$department_id);
-        }
-        else if ($user_jobs_perm) {
-            $count = JobOpen::getAllJobsCountByDepartment(0,$user_id,'',$department_id);
-        }
+        $count = JobOpen::getAllJobsCountByDepartment(1,$user_id,'',$department_id);
 
         return view('adminlte::jobopen.hr-advisory-jobs', compact('count'));
     }
@@ -4983,21 +4961,10 @@ class JobOpenController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
-        $all_jobs_perm = $user->can('display-jobs');
-        $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
-
         $department_id = getenv('HRADVISORY');
 
-        if($all_jobs_perm) {
-            
-            $job_response = JobOpen::getAllJobsByDepartment(1,$user_id,$limit,$offset,$search,$order_column_name,$type,$department_id);
-            $count = JobOpen::getAllJobsCountByDepartment(1,$user_id,$search,$department_id);
-        }
-        else if ($user_jobs_perm) {
-
-            $job_response = JobOpen::getAllJobsByDepartment(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$department_id);
-            $count = JobOpen::getAllJobsCountByDepartment(0,$user_id,$department_id);
-        }
+        $job_response = JobOpen::getAllJobsByDepartment(1,$user_id,$limit,$offset,$search,$order_column_name,$type,$department_id);
+        $count = JobOpen::getAllJobsCountByDepartment(1,$user_id,$search,$department_id);
 
         $jobs = array();
         $i = 0;$j = 0;
