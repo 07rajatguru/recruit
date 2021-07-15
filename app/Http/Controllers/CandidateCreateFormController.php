@@ -252,7 +252,7 @@ class CandidateCreateFormController extends Controller
                 $module_id = $candidate_id;
                 $cc = 'info@adlertalent.com';
 
-                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+                //event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
                 // Add Entry in email notifications for autoscript email
 
@@ -265,7 +265,7 @@ class CandidateCreateFormController extends Controller
 
                 $cc = '';
 
-                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+                //event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
                 return redirect('candidate/add/'.$applicant_job_id)->with('success','Your Details Saved Successfully.');
             }
@@ -280,7 +280,7 @@ class CandidateCreateFormController extends Controller
                 $module_id = $candidate_id;
                 $cc = 'info@adlertalent.com';
 
-                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+                //event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
                 // Add Entry in email notifications for autoscript email
 
@@ -293,7 +293,7 @@ class CandidateCreateFormController extends Controller
 
                 $cc = '';
 
-                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+                //event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
                 return redirect()->route('candidate.createf')->with('success','Your Details Saved Successfully.');
             }
