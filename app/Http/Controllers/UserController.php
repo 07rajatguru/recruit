@@ -712,6 +712,8 @@ class UserController extends Controller
         $user->cv_report = $set_cv_report;
         $user->interview_report = $set_interview_report;
         $user->lead_report = $set_lead_report;
+        $user->account_manager = $account_manager;
+        $user->status = $status;
         $user->save();
         
         // Send email notification when user information is update
@@ -754,13 +756,13 @@ class UserController extends Controller
             $input['new_value_array'] = $new_value_array;
             $input['old_value_array'] = $old_value_array;
 
-            \Mail::send('adminlte::emails.userupdatemail', $input, function ($message) use($input){
+            /*\Mail::send('adminlte::emails.userupdatemail', $input, function ($message) use($input){
                     
                 $message->from($input['from_address'], $input['from_name']);
                 $message->to($input['to'])->cc($input['cc'])->subject($input['subject']);
             });
 
-            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));*/
         } 
 
         if (isset($status) && $status == 'Active') {
