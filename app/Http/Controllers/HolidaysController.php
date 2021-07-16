@@ -12,7 +12,7 @@ use App\Department;
 
 class HolidaysController extends Controller
 {
-    public function index(){
+    public function index() {
   
     	$holidays = Holidays::getAllholidaysList();
     	$count = sizeof($holidays);
@@ -24,8 +24,6 @@ class HolidaysController extends Controller
 
     	$type = Holidays::getHolidaysType();
         $type_id = '';
-    	$users = User::getAllUsers();
-		$selected_users = array();
 
     	$action = 'add';
 
@@ -49,7 +47,7 @@ class HolidaysController extends Controller
         $selected_departments = array();
         $holiday_id = 0;
 
-    	return view('adminlte::holidays.create',compact('action','type','type_id','users','selected_users','departments','selected_departments','holiday_id'));
+    	return view('adminlte::holidays.create',compact('action','type','type_id','departments','selected_departments','holiday_id'));
     }
 
     public function store(Request $request) {
@@ -95,22 +93,12 @@ class HolidaysController extends Controller
         return redirect()->route('holidays.index')->with('success','Holiday Created Successfully');
     }
 
-    public function edit($id){
+    public function edit($id) {
 
         $type = Holidays::getHolidaysType();
-        $users = User::getAllUsers();
         $dateClass = new Date();
 
         $holidays = Holidays::find($id);
-
-        $holidays_users = HolidaysUsers::where('holiday_id',$id)->get();
-        $selected_users = array();
-        if (isset($holidays_users) && $holidays_users != '') {
-            foreach ($holidays_users as $key => $value) {
-                $selected_users[] = $value->user_id;
-            }
-        }
-
         $from_date = $dateClass->changeYMDHMStoDMYHMS($holidays->from_date);
         $to_date = $dateClass->changeYMDHMStoDMYHMS($holidays->to_date);
         $type_id = $holidays->type;
@@ -138,10 +126,10 @@ class HolidaysController extends Controller
         $selected_departments = explode(",",$holidays->department_ids);
         $holiday_id = $id;
 
-        return view('adminlte::holidays.edit',compact('action','type','type_id','users','selected_users','holidays','from_date','to_date','departments','selected_departments','holiday_id'));
+        return view('adminlte::holidays.edit',compact('action','type','type_id','holidays','from_date','to_date','departments','selected_departments','holiday_id'));
     }
 
-    public function update(Request $request,$id){
+    public function update(Request $request,$id) {
 
         $dateClass = new Date();
 
@@ -181,7 +169,7 @@ class HolidaysController extends Controller
         return redirect()->route('holidays.index')->with('success','Holiday Updated Successfully');
     }
 
-    public function destroy($id){
+    public function destroy($id) {
 
         HolidaysUsers::where('holiday_id',$id)->delete();
         Holidays::where('id',$id)->delete();

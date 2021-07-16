@@ -855,13 +855,13 @@
                         $("#industry_id").select2();
                     }
                 });
-
-                var super_admin_user_id = $("#super_admin_user_id").val();
-                $("input[value='" + super_admin_user_id + "']").prop('checked', true);
-
-                var loggedin_user_id = $("#loggedin_user_id").val();
-                $("input[value='" + loggedin_user_id + "']").prop('checked', true);
             }
+
+            /*var super_admin_user_id = $("#super_admin_user_id").val();
+            $("input[value='" + super_admin_user_id + "']").prop('checked', true);*/
+
+            var loggedin_user_id = $("#loggedin_user_id").val();
+            $("input[value='" + loggedin_user_id + "']").prop('checked', true);
         }
 
         function displayUsers(department_id) {

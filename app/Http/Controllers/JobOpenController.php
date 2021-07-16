@@ -2994,13 +2994,15 @@ class JobOpenController extends Controller
             $recruitment = getenv('RECRUITMENT');
             $hr_advisory = getenv('HRADVISORY');
             $operations = getenv('OPERATIONS');
-            $type_array = array($recruitment,$hr_advisory,$operations);
+            $management = getenv('MANAGEMENT');
+            $type_array = array($recruitment,$hr_advisory,$operations,$management);
         }
         else {
 
             $recruitment = getenv('RECRUITMENT');
             $hr_advisory = getenv('HRADVISORY');
-            $type_array = array($recruitment,$hr_advisory);
+            $management = getenv('MANAGEMENT');
+            $type_array = array($recruitment,$hr_advisory,$management);
         }
 
         $users_array = User::getAllUsers($type_array);
