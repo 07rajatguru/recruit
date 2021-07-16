@@ -36,6 +36,8 @@ class TicketsDiscussion extends Model
             $tickets_res[$i]['status'] = $value->status;
             $tickets_res[$i]['question_type'] = $value->question_type;
             $tickets_res[$i]['added_by'] = $value->added_by;
+            $tickets_res[$i]['added_date'] = date('d-m-Y', strtotime("$value->created_at"));
+
             $i++;
         }
         return $tickets_res;

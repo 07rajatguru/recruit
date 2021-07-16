@@ -18,6 +18,22 @@
     </div>
 </div>
 
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-2" style="width: 12%;">
+                <a href="{{ route('client.list','Active') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#e87992;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Active Clients">Open ()</div></a>
+            </div>
+
+            <div class="col-md-2" style="width: 12%;">
+                <a href="{{ route('client.list','Passive') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#5bc0de;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Passive Clients">In Progress () </div></a>
+            </div>
+
+            <div class="col-md-2" style="width: 12%;">
+                <a href="{{ route('client.list','Leaders') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#5cb85c;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Leaders Clients">Closed ()</div></a>
+            </div>
+        </div>
+    </div><br/>
+
 @if ($message = Session::get('success'))
     <div class="alert alert-success">
         <p>{{ $message }}</p>
@@ -39,6 +55,7 @@
            <th>Status</th>
 	       <th>Question Type</th>
            <th>Added By</th>
+           <th>Added Date</th>
 	    </tr>
     </thead>
     <tbody>
@@ -60,6 +77,7 @@
                 <td>{{ $value['status'] }}</td>
                 <td>{{ $value['question_type'] }}</td>
                 <td>{{ $value['added_by'] }}</td>
+                <td>{{ $value['added_date'] }}</td>
             </tr>
         @endforeach
     </tbody>
