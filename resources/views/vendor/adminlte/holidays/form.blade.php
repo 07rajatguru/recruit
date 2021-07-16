@@ -201,6 +201,9 @@
                     "user_ids[]" : {
                         required: true,
                     },
+                    "department_ids[]": {
+                        required: true
+                    }
                 },
                 messages: {
                     "title": {
@@ -218,6 +221,9 @@
                     "user_ids[]" : {
                         required: "User is required field",
                     },
+                    "department_ids[]": {
+                        required: "Please Select Department."
+                    }
                 }
             });
         });
