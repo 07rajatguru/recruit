@@ -12,7 +12,7 @@
 
             <div class="modal-body">
                 <strong>Select Ticket Status :</strong> <br>
-                {!! Form::select('ticketstatus',$status,$data['status'], array('id'=>'ticketstatus','class' => 'form-control')) !!}
+                {!! Form::select('ticketstatus',$status_array,$data['status'], array('id'=>'ticketstatus','class' => 'form-control')) !!}
             </div>
 
             <div class="modal-footer">

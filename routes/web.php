@@ -3143,6 +3143,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:ticket-add']
     ]);
 
+    Route::get('ticket/{status}', [
+        'as' => 'ticketdiscussion.status',
+        'uses' => 'TicketsDiscussionController@getAllTicketsByStatus',
+        'middleware' => ['permission:display-ticket|display-user-wise-ticket']
+    ]);
+
     Route::get('ticket-discussion/{id}',[
         'as'=>'ticket.show',
         'uses'=>'TicketsDiscussionController@show',

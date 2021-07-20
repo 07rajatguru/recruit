@@ -28,6 +28,8 @@
                     <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 20px 50px 54px;">
                         <tr>
                             <td>
+                                <p style="margin:8px 0; line-height:1.5;"><b>Ticket No. : </b> 
+                                {{ $ticket_res['ticket_no'] }} </p>
                                 <p style="margin:8px 0; line-height:1.5;"><b>Module Name : </b> 
                                 {{ $ticket_res['module_name'] }} </p>
                                 <p style="margin:8px 0; line-height:1.5;"><b>Ticket Status : </b> 

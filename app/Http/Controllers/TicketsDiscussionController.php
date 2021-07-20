@@ -21,57 +21,127 @@ class TicketsDiscussionController extends Controller
 
         if($all_perm) {
 
-            $tickets_res = TicketsDiscussion::getAllDetails(1,$user->id);
+            $tickets_res = TicketsDiscussion::getAllTicketDetails(1,$user->id,NULL);
         }
         else if($userwise_perm) {
 
-            $tickets_res = TicketsDiscussion::getAllDetails(0,$user->id);
+            $tickets_res = TicketsDiscussion::getAllTicketDetails(0,$user->id,NULL);
         }
 
         $count = sizeof($tickets_res);
-
-        $status = array();
-        $status['Open'] = 'Open';
-        $status['In Progress'] = 'In Progress';
-        $status['Closed'] = 'Closed';
         
-        return view('adminlte::ticketDiscussion.index',compact('tickets_res','count','status'));
+        $i = 0;
+        $open = '';
+        $in_progress = '';
+        $closed = '';
+
+        foreach($tickets_res as $ticket) {
+
+            if($ticket['status'] == 'Open') {
+                $open++;
+            }
+            else if ($ticket['status'] == 'In Progress') {
+                $in_progress++;
+            }
+            else if($ticket['status'] == 'Closed') {
+                $closed++;
+            }
+        }
+
+        $status_array = TicketsDiscussion::ticketStatus();
+
+        return view('adminlte::ticketDiscussion.index',compact('tickets_res','count','open','in_progress','closed','status_array'));
     }
+
+    public function getAllTicketsByStatus($status) {
+
+        $user =  \Auth::user();
+        $all_perm = $user->can('display-ticket');
+        $userwise_perm = $user->can('display-user-wise-ticket');
+
+        if($all_perm) {
+
+            $all_tickets_res = TicketsDiscussion::getAllTicketDetails(1,$user->id);
+            $tickets_res = TicketsDiscussion::getAllTicketDetails(1,$user->id,$status);
+        }
+        else if($userwise_perm) {
+
+            $all_tickets_res = TicketsDiscussion::getAllTicketDetails(0,$user->id);
+            $tickets_res = TicketsDiscussion::getAllTicketDetails(0,$user->id,$status);
+        }
+
+        $count = sizeof($tickets_res);
+        
+        $i = 0;
+        $open = '';
+        $in_progress = '';
+        $closed = '';
+
+        foreach($all_tickets_res as $ticket) {
+
+            if($ticket['status'] == 'Open') {
+                $open++;
+            }
+            else if ($ticket['status'] == 'In Progress') {
+                $in_progress++;
+            }
+            else if($ticket['status'] == 'Closed') {
+                $closed++;
+            }
+        }
+
+        $status_array = TicketsDiscussion::ticketStatus();
+
+        return view('adminlte::ticketDiscussion.ticketstatusindex',compact('tickets_res','count','open','in_progress','closed','status','status_array'));
+    }
+
 
     public function create() {
 
         $action = 'add';
 
-        $question_type = array();
-        $question_type['Type 1'] = 'Type 1';
-        $question_type['Type 2'] = 'Type 2';
-        $question_type['Type 3'] = 'Type 3';
-
-        $selected_question_type = '';
-
         $modules = Module::getModules();
         $selected_module = '';
 
-        $status = array();
-        $status['Open'] = 'Open';
-        $status['In Progress'] = 'In Progress';
-        $status['Closed'] = 'Closed';
+        $question_type = TicketsDiscussion::ticketTicketQuestionType();
+        $selected_question_type = '';
 
+        $status = TicketsDiscussion::ticketStatus();
         $selected_status = '';
 
-        return view('adminlte::ticketDiscussion.create',compact('action','question_type','selected_question_type','modules','selected_module','status','selected_status'));
+        $max_id = TicketsDiscussion::find(\DB::table('tickets_discussion')->max('id'));
+
+        if(isset($max_id->id) && $max_id->id != '') {
+            $incr_value = $max_id->id + 1; 
+        }
+        else {
+            $incr_value = 1;
+        }
+
+        if($incr_value < 10) {
+
+            $ticket_no = 'E2HTIC0' . $incr_value;
+        }
+        else {
+
+            $ticket_no = 'E2HTIC' . $incr_value;
+        }
+
+        return view('adminlte::ticketDiscussion.create',compact('action','question_type','selected_question_type','modules','selected_module','status','selected_status','ticket_no'));
     }
 
     public function store(Request $request) {
 
         $user_id = \Auth::user()->id;
 
+        $ticket_no = $request->input('ticket_no');
         $module_id = $request->input('module_id');
         $status = $request->input('status');
         $question_type = $request->input('question_type');
         $description = $request->input('description');
 
         $ticket_discussion = new TicketsDiscussion();
+        $ticket_discussion->ticket_no = $ticket_no;
         $ticket_discussion->module_id = $module_id;
         $ticket_discussion->status = $status;
         $ticket_discussion->question_type = $question_type;
@@ -138,8 +208,8 @@ class TicketsDiscussionController extends Controller
         $to = $loggedin_useremail;
         $cc = implode(",",$cc_users_array);
 
-        $subject = "Ticket Discussion - " . $question_type;
-        $message = "Ticket Discussion - " . $question_type;
+        $subject = "Ticket Discussion - " . $ticket_no;
+        $message = "Ticket Discussion - " . $ticket_no;
         $module_id = $tickets_discussion_id;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
@@ -161,34 +231,30 @@ class TicketsDiscussionController extends Controller
         
         $ticket_res = TicketsDiscussion::find($id);
 
-        $question_type = array();
-        $question_type['Type 1'] = 'Type 1';
-        $question_type['Type 2'] = 'Type 2';
-        $question_type['Type 3'] = 'Type 3';
-
-        $selected_question_type = $ticket_res->question_type;
-
         $modules = Module::getModules();
         $selected_module = $ticket_res->module_id;
 
-        $status = array();
-        $status['Open'] = 'Open';
-        $status['In Progress'] = 'In Progress';
-        $status['Closed'] = 'Closed';
+        $question_type = TicketsDiscussion::ticketTicketQuestionType();
+        $selected_question_type = $ticket_res->question_type;
 
+        $status = TicketsDiscussion::ticketStatus();
         $selected_status = $ticket_res->status;
 
-        return view('adminlte::ticketDiscussion.edit',compact('action','question_type','selected_question_type','ticket_res','modules','selected_module','status','selected_status'));
+        $ticket_no = $ticket_res->ticket_no;
+
+        return view('adminlte::ticketDiscussion.edit',compact('action','question_type','selected_question_type','ticket_res','modules','selected_module','status','selected_status','ticket_no'));
     }
 
     public function update(Request $request,$id) {
 
+        $ticket_no = $request->input('ticket_no');
         $module_id = $request->input('module_id');
         $status = $request->input('status');
         $question_type = $request->input('question_type');
         $description = $request->input('description');
 
         $ticket_discussion = TicketsDiscussion::find($id);
+        $ticket_discussion->ticket_no = $ticket_no;
         $ticket_discussion->module_id = $module_id;
         $ticket_discussion->status = $status;
         $ticket_discussion->question_type = $question_type;
@@ -349,6 +415,10 @@ class TicketsDiscussionController extends Controller
             }
         }
 
+        // Get Ticket informations
+
+        $ticket_res = TicketsDiscussion::getTicketDetailsById($tickets_discussion_id);
+
         // get loggedin_user_email_id
         $loggedin_useremail = User::getUserEmailById($user_id);
 
@@ -368,8 +438,8 @@ class TicketsDiscussionController extends Controller
         $to = $loggedin_useremail;
         $cc = implode(",",$cc_users_array);
 
-        $subject = "Ticket Discussion Comment";
-        $message = "Ticket Discussion Comment";
+        $subject = "Ticket Discussion Comment - " . $ticket_res['ticket_no'];
+        $message = "Ticket Discussion Comment - " . $ticket_res['ticket_no'];
         $module_id = $post_id;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));

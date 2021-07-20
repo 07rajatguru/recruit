@@ -10,7 +10,7 @@
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-            <h2>Ticket List ({{ $count or '0' }})</h2>
+            <h2>{{ $status }} Ticket List ({{ $count or '0' }})</h2>
         </div>
         <div class="pull-right">
             <a class="btn btn-success" href="{{ route('ticket.create') }}">Add New Ticket</a>
@@ -88,7 +88,6 @@
 
                     <a class="fa fa-plus" href="{{ route('ticket.remarks',$value['id']) }}" title="Add Comment" target="_blank"></a>
                 </td>
-
                 <td>{{ $value['ticket_no'] }}</td>
                 <td>{{ $value['module_name'] }}</td>
                 <td>{{ $value['status'] }}</td>

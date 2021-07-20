@@ -36,6 +36,11 @@
 
                     <div class="">
 
+                        <div class="form-group">
+                            <strong>Ticket No.: <span class = "required_fields">*</span> </strong>
+                            {!! Form::text('ticket_no',$ticket_no, array('id' => 'ticket_no','class' => 'form-control','tabindex' => '1','readonly' => 'true')) !!}
+                        </div>
+
                         <div class="form-group {{ $errors->has('module_id') ? 'has-error' : '' }}">
                             <strong>Select Module: <span class = "required_fields">*</span> </strong>
                             {!! Form::select('module_id',$modules,$selected_module, array('id'=>'module_id','class' => 'form-control','tabindex' => '1')) !!}

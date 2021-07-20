@@ -16,7 +16,7 @@
     
     <div class="col-lg-12 col-md-12 margin-tb">
         <div class="pull-left" style="margin-left:15px;">
-            <h3>{{ $ticket_discussion['question_type'] }}</h3>
+            <h3>{{ $ticket_discussion['ticket_no'] }}</h3>
         </div>
     </div>
 

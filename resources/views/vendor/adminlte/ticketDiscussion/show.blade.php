@@ -23,7 +23,7 @@
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-            <h2>Ticket Details</h2>
+            <h2>{{ $ticket_res['ticket_no'] }}</h2>
         </div>
         <div class="pull-right">
             <a class="btn btn-primary" href="{{ route('ticket.index') }}">Back</a>
