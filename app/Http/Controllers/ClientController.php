@@ -229,7 +229,7 @@ class ClientController extends Controller
             $action = '';
             $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
         
-            if($edit_perm || $value['client_owner']) {
+            if($edit_perm) {
 
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
             }
@@ -600,7 +600,7 @@ class ClientController extends Controller
             $action = '';
             $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
            
-            if($edit_perm || $value['client_owner']) {
+            if($edit_perm) {
 
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
             }
@@ -1928,7 +1928,7 @@ class ClientController extends Controller
             event(new NotificationMail($module,$sender_name,$to,$subject,$body_message_2,$module_id,$cc));
         }
 
-        \DB::statement("UPDATE email_template SET `user_id`=$user_id, `name`='$template_nm', `subject`='$email_subject', `email_body`='$email_body', `updated_at` = '$updated_at' where `id` = '$email_template_id'"); 
+        //\DB::statement("UPDATE email_template SET `user_id`=$user_id, `name`='$template_nm', `subject`='$email_subject', `email_body`='$email_body', `updated_at` = '$updated_at' where `id` = '$email_template_id'"); 
 
         return redirect()->route('client.index')->with('success','Email Sent Successfully.');
     }
@@ -2448,7 +2448,7 @@ class ClientController extends Controller
             $action = '';
             $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
         
-            if($edit_perm || $value['client_owner']) {
+            if($edit_perm) {
 
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
             }
