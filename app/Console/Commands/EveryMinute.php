@@ -1236,16 +1236,30 @@ class EveryMinute extends Command
 
                             $type_array[$j] = $value1['interview_type'];
 
-                            // Candidate Attachment
-                            $attachment = CandidateUploadedResume::getCandidateAttachment($value1['candidate_id']);
+                            // Candidate Attachments
+                            $attachments = CandidateUploadedResume::getCandidateAttachment($value1['candidate_id']);
 
-                            if (isset($attachment) && $attachment != '') {
-                                $file_path = public_path() . "/" . $attachment->file;
+                            if(isset($attachments) && sizeof($attachments) > 0) {
+
+                                $file_path_all = array();
+                                $i=0;
+
+                                foreach ($attachments as $attach_key => $attach_val) {
+
+                                    if (isset($attach_val) && $attach_val != '') {
+
+                                        $file_path = public_path() . "/" . $attach_val->file;
+                                    }
+                                    else {
+                                        $file_path = '';
+                                    }
+                                    
+                                    $file_path_all[$i] = $file_path;
+                                    $i++;
+                                }
                             }
-                            else {
-                                $file_path = '';
-                            }
-                            $file_path_array[$j] = $file_path;
+
+                            $file_path_array[$j] = $file_path_all;
 
                             $j++;
                         }
@@ -1268,7 +1282,10 @@ class EveryMinute extends Command
                         foreach ($input['file_path'] as $key => $value) {
 
                             if(isset($value) && $value != '') {
-                                $message->attach($value);
+
+                                foreach ($value as $k1 => $v1) {
+                                    $message->attach($v1);
+                                }
                             }
                         }
                     }
@@ -1296,16 +1313,30 @@ class EveryMinute extends Command
 
                             $type_array[$j] = $value1['interview_type'];
 
-                            // Candidate Attachment
-                            $attachment = CandidateUploadedResume::getCandidateAttachment($value1['candidate_id']);
+                            // Candidate Attachments
+                            $attachments = CandidateUploadedResume::getCandidateAttachment($value1['candidate_id']);
 
-                            if (isset($attachment) && $attachment != '') {
-                                $file_path = public_path() . "/" . $attachment->file;
+                            if(isset($attachments) && sizeof($attachments) > 0) {
+
+                                $file_path_all = array();
+                                $i=0;
+
+                                foreach ($attachments as $attach_key => $attach_val) {
+
+                                    if (isset($attach_val) && $attach_val != '') {
+
+                                        $file_path = public_path() . "/" . $attach_val->file;
+                                    }
+                                    else {
+                                        $file_path = '';
+                                    }
+                                    
+                                    $file_path_all[$i] = $file_path;
+                                    $i++;
+                                }
                             }
-                            else {
-                                $file_path = '';
-                            }
-                            $file_path_array[$j] = $file_path;
+
+                            $file_path_array[$j] = $file_path_all;
 
                             $j++;
                         }
@@ -1329,7 +1360,10 @@ class EveryMinute extends Command
                         foreach ($input['file_path'] as $key => $value) {
 
                             if(isset($value) && $value != '') {
-                                $message->attach($value);
+
+                                foreach ($value as $k1 => $v1) {
+                                    $message->attach($v1);
+                                }
                             }
                         }
                     }
@@ -1347,6 +1381,7 @@ class EveryMinute extends Command
                     $type_array = array();
                     $file_path_array = array();
                     $j=0;
+
                     $interviews = array();
 
                     foreach ($interview_ids_array as $k1 => $v1) {
@@ -1357,18 +1392,30 @@ class EveryMinute extends Command
 
                             $type_array[$j] = $get_interview_by_id->interview_type;
 
-                            // Candidate Attachment
-                            $attachment = CandidateUploadedResume::getCandidateAttachment($get_interview_by_id->candidate_id);
+                            // Candidate Attachments
+                            $attachments = CandidateUploadedResume::getCandidateAttachment($get_interview_by_id->candidate_id);
 
-                            if (isset($attachment) && $attachment != '') {
-                                    $file_path = public_path() . "/" . $attachment->file;
+                            if(isset($attachments) && sizeof($attachments) > 0) {
+
+                                $file_path_all = array();
+                                $i=0;
+
+                                foreach ($attachments as $attach_key => $attach_val) {
+
+                                    if (isset($attach_val) && $attach_val != '') {
+
+                                        $file_path = public_path() . "/" . $attach_val->file;
+                                    }
+                                    else {
+                                        $file_path = '';
+                                    }
+                                    
+                                    $file_path_all[$i] = $file_path;
+                                    $i++;
+                                }
                             }
-                            else {
-                                    $file_path = '';
-                            }
 
-                            $file_path_array[$j] = $file_path;
-
+                            $file_path_array[$j] = $file_path_all;
                             $interviews[$j] = $get_interview_by_id;
                         }
                         $j++;
@@ -1432,7 +1479,10 @@ class EveryMinute extends Command
                             foreach ($input['file_path'] as $key => $value) {
 
                                 if(isset($value) && $value != '') {
-                                    $message->attach($value);
+
+                                    foreach ($value as $k1 => $v1) {
+                                        $message->attach($v1);
+                                    }
                                 }
                             }
                         }

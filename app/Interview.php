@@ -1027,12 +1027,25 @@ class Interview extends Model
         $cemail = $candidate_response->email;
 
         // Candidate Attachment
-        $attachment = CandidateUploadedResume::getCandidateAttachment($candidate_id);
-        if (isset($attachment) && $attachment != '') {
-            $file_path = public_path() . "/" . $attachment->file;
-        }
-        else {
-            $file_path = '';
+        $attachments = CandidateUploadedResume::getCandidateAttachment($candidate_id);
+        $file_path_array = array();
+        $j=0;
+
+        if (isset($attachments) && $attachments != '') {
+
+            foreach ($attachments as $key => $value) {
+
+                if (isset($value) && $value != '') {
+
+                    $file_path = public_path() . "/" . $value->file;
+                }
+                else {
+                    $file_path = '';
+                }
+                
+                $file_path_array[$j] = $file_path;
+                $j++;
+            }
         }
 
         $interview = Interview::getInterviewById($interview_id);
@@ -1087,7 +1100,10 @@ class Interview extends Model
         $input['candidate_location'] = $interview->candidate_location;
         $input['company_name'] = $interview->client_name;
         $input['interview_location'] = $interview->interview_location;
-        $input['file_path'] = $file_path;
+
+        if (isset($file_path_array) && sizeof($file_path_array) > 0) {
+            $input['file_path'] = $file_path_array;
+        }
 
         \Mail::send('adminlte::emails.interviewschedule', $input, function ($message) use($input) {
 
@@ -1102,8 +1118,14 @@ class Interview extends Model
                 $message->to($input['to_address'])->subject('Interview Schedule for '.$input['company_name'].' Position in '. $input['city']);
             }
 
-            if (isset($input['file_path']) && $input['file_path'] != '') {
-                $message->attach($input['file_path']);
+            if (isset($input['file_path']) && sizeof($input['file_path']) > 0) {
+
+                foreach ($input['file_path'] as $k1 => $v1) {
+
+                    if(isset($v1) && $v1 != '') {
+                        $message->attach($v1);
+                    }
+                }
             }
         });
     }
@@ -1127,13 +1149,26 @@ class Interview extends Model
         $cmobile = $candidate_response->mobile;
         $cemail = $candidate_response->email;
 
-        // Candidate Attachment
-        $attachment = CandidateUploadedResume::getCandidateAttachment($interview_data['candidate_id']);
-        if (isset($attachment) && $attachment != '') {
-            $file_path = public_path() . "/" . $attachment->file;
-        }
-        else {
-            $file_path = '';
+        // Candidate Attachments
+        $attachments = CandidateUploadedResume::getCandidateAttachment($interview_data['candidate_id']);
+        $file_path_array = array();
+        $j=0;
+
+        if (isset($attachments) && $attachments != '') {
+
+            foreach ($attachments as $k1 => $v1) {
+
+                if (isset($v1) && $v1 != '') {
+
+                    $file_path = public_path() . "/" . $v1->file;
+                }
+                else {
+                    $file_path = '';
+                }
+                
+                $file_path_array[$j] = $file_path;
+                $j++;
+            }
         }
 
         $interview = Interview::getInterviewById($value);
@@ -1182,7 +1217,13 @@ class Interview extends Model
         $interview_details['skype_id'] = $interview->skype_id;
         $interview_details['candidate_location'] = $interview->candidate_location;
         $interview_details['interview_location'] = $interview->interview_location;
-        $interview_details['file_path'] = $file_path;
+
+        if (isset($file_path_array) && sizeof($file_path_array) > 0) {
+            $interview_details['file_path'] = $file_path_array;
+        }
+        else {
+            $interview_details['file_path'] = '';
+        }
 
         if(isset($secondline_client_owner_email) && $secondline_client_owner_email != '') {
             $interview_details['secondline_client_owner_email'] = $secondline_client_owner_email;

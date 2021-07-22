@@ -40,7 +40,7 @@
                            @if(isset($company_desc) && $company_desc != '')
                                 {!! $company_desc !!}
                            @endif
-                            <br/>For more details about our company, please visit : <a href="https://adlertalent.com/">www.adlertalent.com</a>
+                           
                         </p>
                         <p><b><u> As per our telephonic conversation, please find the details below:</u></b></p>
                         <p><b>Company Name : </b>{{ $company_name }}</p>

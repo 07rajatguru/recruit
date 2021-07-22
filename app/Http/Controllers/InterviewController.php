@@ -1057,7 +1057,10 @@ class InterviewController extends Controller
                 foreach ($input['file_path'] as $key => $value) {
 
                     if(isset($value) && $value != '') {
-                        $message->attach($value);
+                        
+                        foreach ($value as $k1 => $v1) {
+                            $message->attach($v1);
+                        }
                     }
                 }
             }
