@@ -3211,4 +3211,42 @@ Route::group(['middleware' => ['auth']], function () {
         'as'=>'ticket.reviewdestroy',
         'uses'=>'TicketsDiscussionController@postDestroy'
     ]);
+
+    // Work Planning Routes
+
+    Route::get('work-planning',[
+        'as' => 'workplanning.index',
+        'uses' => 'WorkPlanningController@index',
+        'middleware' => ['permission:display-work-planning|work-planning-add|work-planning-edit|work-planning-delete']
+    ]);
+
+    Route::get('work-planning/add',[
+        'as' => 'workplanning.create',
+        'uses' => 'WorkPlanningController@create',
+        'middleware' => ['permission:work-planning-add']
+    ]);
+
+    Route::post('work-planning/add',[
+        'as' => 'workplanning.store',
+        'uses' => 'WorkPlanningController@store',
+        'middleware' => ['permission:work-planning-add']
+    ]);
+
+    Route::get('work-planning/edit/{id}',[
+        'as' => 'workplanning.edit',
+        'uses' => 'WorkPlanningController@edit',
+        'middleware' => ['permission:work-planning-edit']
+    ]);
+
+    Route::patch('work-planning/edit/{id}',[
+        'as' => 'workplanning.update',
+        'uses' => 'WorkPlanningController@update',
+        'middleware' => ['permission:work-planning-edit']
+    ]);
+
+    Route::delete('work-planning/{id}',[
+        'as' => 'workplanning.destroy',
+        'uses' => 'WorkPlanningController@destroy',
+        'middleware' => ['permission:work-planning-delete']
+    ]);
 });
