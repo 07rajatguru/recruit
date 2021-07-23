@@ -50,7 +50,10 @@ class EligibilityReportController extends Controller
             $next_year = $year_data[2]; // [result : 2019]
             $next_month = $year_data[3]; // [result : 3]
 
-            $users = User::getAllUsersForEligibilityReport();
+            $combine_next_year = $next_year."-".$next_month;
+            $new_next_year = date('Y-m-d',strtotime("last day of $combine_next_year"));
+
+            $users = User::getAllUsersForEligibilityReport($new_next_year);
 
             // For Quater wise[Q1, Q2, Q3, Q4]
             for ($m=$current_month; $m <= 15 ; $m=$m+3) {
@@ -151,6 +154,20 @@ class EligibilityReportController extends Controller
                 $eligible_detail[$value][$year] = $data;
             }
 
+            if(isset($eligible_data) && $eligible_data != '') {
+
+            }
+            else {
+                $eligible_data = array();
+            }
+
+            if(isset($eligible_detail) && $eligible_detail != '') {
+
+            }
+            else {
+                $eligible_detail = array();
+            }
+
         	return view('adminlte::reports.eligibilityreport',compact('year_array','year','eligible_data','eligible_detail'));
         }
         else {
@@ -187,7 +204,10 @@ class EligibilityReportController extends Controller
                 $next_year = $year_data[2];
                 $next_month = $year_data[3];
 
-                $users = User::getAllUsersForEligibilityReport();
+                $combine_next_year = $next_year."-".$next_month;
+                $new_next_year = date('Y-m-d',strtotime("last day of $combine_next_year"));
+
+                $users = User::getAllUsersForEligibilityReport($new_next_year);
 
                 // For Quater wise[Q1, Q2, Q3, Q4]
                 for ($m=$current_month; $m <= 15 ; $m=$m+3) {

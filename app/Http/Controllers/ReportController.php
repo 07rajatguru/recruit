@@ -616,15 +616,21 @@ class ReportController extends Controller
             foreach ($users as $key => $value) {
 
                 $user_details = User::getAllDetailsByUserID($key);
-                $cr_yr = explode('-', $current);
-                $nt_yr = explode('-', $next);
 
-                $user_created_at_yr = date('Y',strtotime($user_details->created_at));
+                $user_created_at = date('Y-m-d',strtotime($user_details->created_at));
 
-                if($cr_yr[0] >= $user_created_at_yr || $nt_yr[0] >= $user_created_at_yr) {
+                if($user_created_at <= $next_year) {
 
                     $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
                 }
+            }
+
+            if(isset($personwise_data) && $personwise_data != '') {
+
+            }
+            else {
+
+                $personwise_data = array();
             }
 
             return view('adminlte::reports.personwise-report',compact('personwise_data','year_array','year'));
@@ -636,15 +642,21 @@ class ReportController extends Controller
             foreach ($users as $key => $value) {
 
                 $user_details = User::getAllDetailsByUserID($key);
-                $cr_yr = explode('-', $current);
-                $nt_yr = explode('-', $next);
+                
+                $user_created_at = date('Y-m-d',strtotime($user_details->created_at));
 
-                $user_created_at_yr = date('Y',strtotime($user_details->created_at));
-
-                if($cr_yr[0] >= $user_created_at_yr || $nt_yr[0] >= $user_created_at_yr) {
+                if($user_created_at <= $next_year) {
 
                     $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
                 }
+            }
+
+            if(isset($personwise_data) && $personwise_data != '') {
+
+            }
+            else {
+
+                $personwise_data = array();
             }
             
             return view('adminlte::reports.personwise-report',compact('personwise_data','year_array','year'));
@@ -709,15 +721,21 @@ class ReportController extends Controller
                 foreach ($users as $key => $value) {
 
                     $user_details = User::getAllDetailsByUserID($key);
-                    $cr_yr = explode('-', $current);
-                    $nt_yr = explode('-', $next);
+                    
+                    $user_created_at = date('Y-m-d',strtotime($user_details->created_at));
 
-                    $user_created_at_yr = date('Y',strtotime($user_details->created_at));
-
-                    if($cr_yr[0] >= $user_created_at_yr || $nt_yr[0] >= $user_created_at_yr) {
+                    if($user_created_at <= $next_year) {
 
                         $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
                     }
+                }
+
+                if(isset($personwise_data) && $personwise_data != '') {
+
+                }
+                else {
+
+                    $personwise_data = array();
                 }
                 
                 $sheet->loadview('adminlte::reports.personwise-reportexport')->with('personwise_data',$personwise_data);

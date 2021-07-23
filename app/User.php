@@ -591,7 +591,7 @@ class User extends Authenticatable
         return $userArr;
     }
 
-    public static function getAllUsersForEligibilityReport() {
+    public static function getAllUsersForEligibilityReport($next_year=NULL) {
 
         $status = 'Inactive';
         $status_array = array($status);
@@ -601,6 +601,10 @@ class User extends Authenticatable
         $type_array = array($recruitment,$hr_advisory);
         
         $user_query = User::query();
+
+        if(isset($next_year) && $next_year != NULL) {
+            $user_query = $user_query->where('created_at','<=',$next_year);
+        }
 
         $user_query = $user_query->whereNotIn('status',$status_array);
         $user_query = $user_query->whereIn('type',$type_array);
