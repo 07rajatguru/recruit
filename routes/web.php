@@ -3217,7 +3217,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('work-planning',[
         'as' => 'workplanning.index',
         'uses' => 'WorkPlanningController@index',
-        'middleware' => ['permission:display-work-planning|work-planning-add|work-planning-edit|work-planning-delete']
+        'middleware' => ['permission:display-work-planning|display-user-wise-work-planning|work-planning-add|work-planning-edit|work-planning-delete']
     ]);
 
     Route::get('work-planning/add',[
