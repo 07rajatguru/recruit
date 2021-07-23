@@ -397,7 +397,7 @@ class ClientBasicinfo extends Ardent
         return $clientArray;
     }
 
-    public static function getLoggedInUserClients($user_id) {
+    public static function getLoggedInUserClients($user_id,$next_year=NULL) {
 
         $client_query = ClientBasicinfo::query();
         $client_query = $client_query->join('client_address','client_address.client_id','=','client_basicinfo.id');
@@ -409,6 +409,10 @@ class ClientBasicinfo extends Ardent
             $client_query = $client_query->where('client_basicinfo.account_manager_id','=',$user_id);
             $client_query = $client_query->orwhere('client_basicinfo.second_line_am','=',$user_id);
         }        
+
+        if(isset($next_year) && $next_year != NULL) {
+            $client_query = $client_query->where('client_basicinfo.created_at','<=',$next_year);
+        }
 
         $client_query = $client_query->select('client_basicinfo.*','client_address.client_id','client_address.billing_city');
 

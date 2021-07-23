@@ -36,6 +36,7 @@
 	    @endpermission
     </div>
     <br/>
+
     <div class="col-xs-12 col-sm-12 col-md-12">
 		<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="personwise-report" style="border: 2px solid black;">
 			<thead>
@@ -52,51 +53,59 @@
 				</tr>
 			</thead>
 			<?php $j = 0;?>
-			@foreach($personwise_data as $key => $value)
-			<?php $i = 0;?>
-				<tbody>
-					<tr>
-						<td colspan="9" style="text-align: center;background-color: #FFFF66;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{$key}}</b></td>
-					</tr>
-				</tbody>
-				<tbody id="data_{{$j}}" style="display: none;">
-					@if(isset($value) && sizeof($value) >0)
-						@foreach($value as $k => $v)
+			@if(isset($personwise_data) && sizeof($personwise_data) >0)
+				@foreach($personwise_data as $key => $value)
+				<?php $i = 0;?>
+					<tbody>
+						<tr>
+							<td colspan="9" style="text-align: center;background-color: #FFFF66;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{$key}}</b></td>
+						</tr>
+					</tbody>
+					<tbody id="data_{{$j}}" style="display: none;">
+						@if(isset($value) && sizeof($value) >0)
+							@foreach($value as $k => $v)
+								<tr>
+									<td style="border: 1px solid black;text-align: center;">{{ ++$i }}</td>
+									<td style="border: 1px solid black;">{{ $v['candidate_name'] }}</td>
+									<td style="border: 1px solid black;">{{ $v['company_name'] }}</td>
+									<td style="border: 1px solid black;">{{ $v['position'] }}</td>
+									<td style="border: 1px solid black;">{{ $v['salary_offered'] }}</td>
+									<td style="border: 1px solid black;">{{ $v['person_billing'] }}</td>
+									<td style="border: 1px solid black;">{{ $v['joining_date'] }}</td>
+									<td style="border: 1px solid black;">{{ $v['efforts'] }}</td>
+									<td style="border: 1px solid black;"></td>
+								</tr>
+							@endforeach
 							<tr>
-								<td style="border: 1px solid black;text-align: center;">{{ ++$i }}</td>
-								<td style="border: 1px solid black;">{{ $v['candidate_name'] }}</td>
-								<td style="border: 1px solid black;">{{ $v['company_name'] }}</td>
-								<td style="border: 1px solid black;">{{ $v['position'] }}</td>
-								<td style="border: 1px solid black;">{{ $v['salary_offered'] }}</td>
-								<td style="border: 1px solid black;">{{ $v['person_billing'] }}</td>
-								<td style="border: 1px solid black;">{{ $v['joining_date'] }}</td>
-								<td style="border: 1px solid black;">{{ $v['efforts'] }}</td>
+								<td style="border: 1px solid black;text-align: center;"></td>
+								<td style="border: 1px solid black;"></td>
+								<td style="border: 1px solid black;"></td>
+								<td style="border: 1px solid black;text-align: center;"><b>Total</b></td>
+								<td style="border: 1px solid black;">{{ $v['total_salary_offered'] }}</td>
+								<td style="border: 1px solid black;">{{ $v['total_billing'] }}</td>
+								<td style="border: 1px solid black;"></td>
+								<td style="border: 1px solid black;"></td>
 								<td style="border: 1px solid black;"></td>
 							</tr>
-						@endforeach
+						@else
 						<tr>
-							<td style="border: 1px solid black;text-align: center;"></td>
-							<td style="border: 1px solid black;"></td>
-							<td style="border: 1px solid black;"></td>
-							<td style="border: 1px solid black;text-align: center;"><b>Total</b></td>
-							<td style="border: 1px solid black;">{{ $v['total_salary_offered'] }}</td>
-							<td style="border: 1px solid black;">{{ $v['total_billing'] }}</td>
-							<td style="border: 1px solid black;"></td>
-							<td style="border: 1px solid black;"></td>
+							<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
+							<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
+							<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
+							<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
 							<td style="border: 1px solid black;"></td>
 						</tr>
-					@else
+						@endif
+					</tbody>
+				<?php $j++;?>
+				@endforeach
+			@else
+				<tbody>
 					<tr>
-						<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
-						<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
-						<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
-						<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
-						<td style="border: 1px solid black;"></td>
+						<td colspan="9" style="text-align: center;border: 2px solid black;" class="button">No Data Found.</td>
 					</tr>
-					@endif
 				</tbody>
-			<?php $j++;?>
-			@endforeach
+			@endif
 		</table>
 	</div>
 

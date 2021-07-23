@@ -37,23 +37,26 @@
     </div>
     <br/>
     
-		<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="clientwise-report" style="border: 2px solid black;">
-			<thead>
-				<tr style="background-color: #7598d9">
-					<th style="border: 2px solid black;text-align: center;">Sr.No</th>
-					<th style="border: 2px solid black;text-align: center;">Candidate Name</th>
-					<th style="border: 2px solid black;text-align: center;">Client Owner</th>
-					<th style="border: 2px solid black;text-align: center;">Position / Dept</th>
-					<th style="border: 2px solid black;text-align: center;">Salary offered <br/> (fixed)</th>
-					<th style="border: 2px solid black;text-align: center;">Billing</th>
-					<th style="border: 2px solid black;text-align: center;">GST <br/> @ 18%</th>
-					<th style="border: 2px solid black;text-align: center;">Invoice</th>
-					<th style="border: 2px solid black;text-align: center;">Joining Date</th>
-					<th style="border: 2px solid black;text-align: center;">Efforts With</th>
-					<th style="border: 2px solid black;text-align: center;">Contact Person</th>
-					<th style="border: 2px solid black;text-align: center;">Status</th>
-				</tr>
-			</thead>
+	<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="clientwise-report" style="border: 2px solid black;">
+		<thead>
+			<tr style="background-color: #7598d9">
+				<th style="border: 2px solid black;text-align: center;">Sr.No</th>
+				<th style="border: 2px solid black;text-align: center;">Candidate Name</th>
+				<th style="border: 2px solid black;text-align: center;">Client Owner</th>
+				<th style="border: 2px solid black;text-align: center;">Position / Dept</th>
+				<th style="border: 2px solid black;text-align: center;">Salary offered <br/> (fixed)
+				</th>
+				<th style="border: 2px solid black;text-align: center;">Billing</th>
+				<th style="border: 2px solid black;text-align: center;">GST <br/> @ 18%</th>
+				<th style="border: 2px solid black;text-align: center;">Invoice</th>
+				<th style="border: 2px solid black;text-align: center;">Joining Date</th>
+				<th style="border: 2px solid black;text-align: center;">Efforts With</th>
+				<th style="border: 2px solid black;text-align: center;">Contact Person</th>
+				<th style="border: 2px solid black;text-align: center;">Status</th>
+			</tr>
+		</thead>
+
+		@if(isset($clientwise_data) && sizeof($clientwise_data) > 0)
 			<?php $j = 0;?>
 			@foreach($clientwise_data as $key => $value)
 			<?php $i = 0;?>
@@ -66,7 +69,8 @@
 					@if(isset($value) && sizeof($value) >0)
 						@foreach($value as $k => $v)
 							<tr>
-								<td style="border: 1px solid black;text-align: center;">{{ ++$i }}</td>
+								<td style="border: 1px solid black;text-align: center;">{{ ++$i }}
+								</td>
 								<td style="border: 1px solid black;">{{ $v['candidate_name'] }}</td>
 								<td style="border: 1px solid black;">{{ $v['owner_name'] }}</td>
 								<td style="border: 1px solid black;">{{ $v['position'] }}</td>
@@ -81,26 +85,34 @@
 							</tr>
 						@endforeach
 					@else
-					<tr>
-						<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
-						<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
-						<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
-						<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
-						<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
-						<td style="border: 1px solid black;"></td>
-					</tr>
+						<tr>
+							<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
+							<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
+							<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
+							<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
+							<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
+							<td style="border: 1px solid black;"></td>
+						</tr>
 					@endif
 				</tbody>
 				<?php $j++;?>
 			@endforeach
-		</table>
-	
+		@else
+			<tbody>
+				<tr>
+					<td colspan="12" style="text-align: center;border: 2px solid black;" class="button">No Data Found.</td>
+				</tr>
+			</tbody>
+		@endif
+	</table>
 @stop
 
 @section('customscripts')
 <script type="text/javascript">
-	$(document).ready(function(){
-		$(".button").click(function(){
+
+	$(document).ready(function() {
+
+		$(".button").click(function()     {
 
 			var $toggle = $(this);
 			var id = "#data_" + $toggle.data('id');
@@ -108,7 +120,8 @@
 		});
 	});
 
-	function select_data(){
+	function select_data() {
+
         var year = $("#year").val();
 
         var url = '/clientwise-report';
@@ -122,7 +135,7 @@
         form.submit();
     }
 
-    function export_data(){
+    function export_data() {
         var year = $("#year").val();
 
         var url = '/clientwise-report/export';

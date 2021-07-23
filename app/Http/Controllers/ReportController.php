@@ -625,9 +625,6 @@ class ReportController extends Controller
 
                     $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
                 }
-                else {
-                    $personwise_data[$value] = array();
-                }
             }
 
             return view('adminlte::reports.personwise-report',compact('personwise_data','year_array','year'));
@@ -648,11 +645,8 @@ class ReportController extends Controller
 
                     $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
                 }
-                else {
-                    $personwise_data[$value] = array();
-                }
             }
-
+            
             return view('adminlte::reports.personwise-report',compact('personwise_data','year_array','year'));
         }
         else {
@@ -921,12 +915,23 @@ class ReportController extends Controller
             $current_year = date('Y-m-d',strtotime("first day of $current"));
             $next_year = date('Y-m-d',strtotime("last day of $next"));
 
-            $clients = ClientBasicinfo::getLoggedInUserClients(0);
+            $clients = ClientBasicinfo::getLoggedInUserClients(0,$next_year);
+
             foreach ($clients as $key => $value) {
+
                 $client_name = $value->name.' - '.$value->billing_city;
                 $c_name = $value->name;
                 $clientwise_data[$client_name] = Bills::getClientwiseReportData($c_name,$current_year,$next_year);
             }
+
+            if(isset($clientwise_data) && $clientwise_data != '') {
+
+            }
+            else {
+
+                $clientwise_data = array();
+            }
+
             return view('adminlte::reports.clientwise-report',compact('year_array','year','clientwise_data'));
         }
         else {
@@ -962,12 +967,23 @@ class ReportController extends Controller
                 $current_year = date('Y-m-d',strtotime("first day of $current"));
                 $next_year = date('Y-m-d',strtotime("last day of $next"));
 
-                $clients = ClientBasicinfo::getLoggedInUserClients(0);
+                $clients = ClientBasicinfo::getLoggedInUserClients(0,$next_year);
+
                 foreach ($clients as $key => $value) {
+
                     $client_name = $value->name.' - '.$value->billing_city;
                     $c_name = $value->name;
                     $clientwise_data[$client_name] = Bills::getClientwiseReportData($c_name,$current_year,$next_year);
                 }
+
+                if(isset($clientwise_data) && $clientwise_data != '') {
+
+                }
+                else {
+
+                    $clientwise_data = array();
+                }
+
                 $sheet->loadview('adminlte::reports.clientwise-reportexport')->with('clientwise_data',$clientwise_data);
             });
         })->export('xls');
