@@ -11,126 +11,212 @@
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
             @if( $action == 'edit')
-                <h2>Edit Ticket Details</h2>
+                <h2>Edit Work Planning Sheet</h2>
             @else
-                <h2>Add New Ticket</h2>
+                <h2>Add Work Planning</h2>
             @endif
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary" href="{{ route('ticket.index') }}">Back</a>
+            <a class="btn btn-primary" href="{{ route('workplanning.index') }}">Back</a>
         </div>
     </div>
 </div>
 
-    @if($action == 'edit')
-        {!! Form::model($ticket_res,['method' => 'PATCH', 'files' => true, 'route' => ['ticket.update', $ticket_res['id']],'id'=>'ticket_form', 'autocomplete' => 'off']) !!}
-    @else
-        {!! Form::open(['files' => true, 'route' => 'ticket.store','id'=>'ticket_form', 'autocomplete' => 'off']) !!}
-    @endif
+@if($action == 'edit')
+    {!! Form::model($work_planning_res,['method' => 'PATCH', 'files' => true, 'route' => ['workplanning.update', $work_planning_res['id']],'id'=>'work_planning_form', 'autocomplete' => 'off']) !!}
+@else
+    {!! Form::open(['files' => true, 'route' => 'workplanning.store','id'=>'work_planning_form', 'autocomplete' => 'off']) !!}
+@endif
 
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <div class="box-header col-md-6"></div>
-                <div class="col-xs-12 col-sm-12 col-md-12">
+<div class="row">
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+            <div class="box-header col-md-6"></div>
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="">
 
-                    <div class="">
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class="form-group {{ $errors->has('work_type') ? 'has-error' : '' }}">
+                            <strong>Select Work Location : <span class = "required_fields">*</span>
+                            </strong>
+                            {!! Form::select('work_type',$work_type,$selected_work_type, array('id'=>'work_type','class' => 'form-control','tabindex' => '1')) !!}
+                            @if ($errors->has('work_type'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('work_type') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                    </div>
 
+                    <div class="col-xs-4 col-sm-4 col-md-4">
                         <div class="form-group">
-                            <strong>Ticket No.: <span class = "required_fields">*</span> </strong>
-                            {!! Form::text('ticket_no',$ticket_no, array('id' => 'ticket_no','class' => 'form-control','tabindex' => '1','readonly' => 'true')) !!}
+                            <strong>Logged-in Time : </strong>
+                            {!! Form::text('loggedin_time',$loggedin_time, array('id' => 'loggedin_time','class' => 'form-control','tabindex' => '2','readonly' => 'true')) !!}
                         </div>
+                    </div>
 
-                        <div class="form-group {{ $errors->has('module_id') ? 'has-error' : '' }}">
-                            <strong>Select Module: <span class = "required_fields">*</span> </strong>
-                            {!! Form::select('module_id',$modules,$selected_module, array('id'=>'module_id','class' => 'form-control','tabindex' => '1')) !!}
-                            @if ($errors->has('module_id'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('module_id') }}</strong>
-                                </span>
-                            @endif
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class="form-group">
+                            <strong>Logged-out Time : </strong>
+                            {!! Form::text('loggedout_time',$loggedout_time, array('id' => 'loggedout_time','class' => 'form-control','tabindex' => '3','readonly' => 'true')) !!}
                         </div>
+                    </div>
 
-                        <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
-                            <strong>Select Status: <span class = "required_fields">*</span> </strong>
-                            {!! Form::select('status',$status,$selected_status, array('id'=>'status','class' => 'form-control','tabindex' => '2')) !!}
-                            @if ($errors->has('status'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('status') }}</strong>
-                                </span>
-                            @endif
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class="form-group">
+                            <strong>Work Planning Time : </strong>
+                            {!! Form::text('work_planning_time',null, array('id' => 'work_planning_time','class' => 'form-control','tabindex' => '4','readonly' => 'true')) !!}
                         </div>
+                    </div>
 
-                        <div class="form-group {{ $errors->has('question_type') ? 'has-error' : '' }}">
-                            <strong>Select Question Type : <span class = "required_fields">*</span> </strong>
-                            {!! Form::select('question_type',$question_type,$selected_question_type,array('id'=>'question_type','class' => 'form-control','tabindex' => '3' )) !!}
-                            @if ($errors->has('question_type'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('question_type') }}</strong>
-                                </span>
-                            @endif
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class="form-group">
+                            <strong>Work Planning Status Time : </strong>
+                            {!! Form::text('work_planning_status_time',null, array('id' => 'work_planning_status_time','class' => 'form-control','tabindex' => '5','readonly' => 'true')) !!}
                         </div>
+                    </div>
 
-                        <div class="form-group {{ $errors->has('description') ? 'has-error' : '' }}">
-                            <strong>Description : <span class = "required_fields">*</span></strong>
-                                {!! Form::textarea('description',null, array('id'=>'description','rows'=>'5','placeholder' => 'Description','class' => 'form-control', 'tabindex' => '4' )) !!}
-                            @if ($errors->has('description'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('description') }}</strong>
-                                </span>
-                            @endif
+                    <div class="col-xs-4 col-sm-4 col-md-4">
+                        <div class="form-group">
+                            <strong>Remaining Time : </strong>
+                            {!! Form::text('remaining_time',null, array('id' => 'remaining_time','class' => 'form-control','tabindex' => '6','readonly' => 'true')) !!}
                         </div>
-
-                        @if($action == "add")
-                            <div class="form-group">
-                                <strong>Upload Documents :</strong>
-                                <input type="file" name="upload_documents[]" multiple class="form-control" tabindex="4" />
-                            </div>
-                        @endif
                     </div>
                 </div>
             </div>
         </div>
-     
-       <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            {!! Form::submit(isset($ticket_res) ? 'Update' : 'Submit', ['class' => 'btn btn-primary']) !!}
+    </div>
+
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+            <div class="box-header col-md-6"></div>
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                @if($action == 'add')
+                    <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="work_planning_table" style="border:1px solid black;">
+                        <thead>
+                            <tr style="border:1px solid black;">
+                               <th width="5%" style="border:1px solid black;">Sr No.</th>
+                               <th style="border:1px solid black;">Description</th>
+                               <th style="border:1px solid black;">Projected Time</th>
+                               <th style="border:1px solid black;">Actual Time </th>
+                               <th style="border:1px solid black;">Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>    
+                            <?php $tabindex = 6; ?>
+                            @for($i=1; $i<=5; $i++)
+                                <tr style="border:1px solid black;">
+                                    <td style="border:1px solid black;text-align: center;">{{ $i }}
+                                    </td>
+
+                                    <td style="border:1px solid black;">
+                                        {!!Form::textarea('description[]',null, array('placeholder' => 'Description','id' => 'description_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'rows' => 3)) !!}
+                                    </td>
+
+                                    <td style="border:1px solid black;">
+                                        {!! Form::text('projected_time[]',null, array('placeholder' => 'Projected Time','id' => 'projected_time_'.$i,'class' => 'form-control','tabindex' => $tabindex++)) !!}
+                                    </td>
+
+                                    <td style="border:1px solid black;">
+                                        {!! Form::text('actual_time[]',null, array('placeholder' => 'Actual Time','id' => 'actual_time_'.$i,'class' => 'form-control','tabindex' => $tabindex++)) !!}
+                                    </td>
+
+                                    <td style="border:1px solid black;">
+                                        {!!Form::textarea('remarks[]',null, array('placeholder' =>'Remarks','id' => 'remarks_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'rows' => 3)) !!}
+                                    </td>
+                                </tr>
+                            @endfor
+                        </tbody>
+                        <tbody><div class="add_row_div"></div></tbody>
+                    </table>
+                @endif
+            </div>
+            
+            <div class="productclass" style="margin-left:500px;">
+                <button type="button" disabled="true" class="btn btn-primary" id="remove_row" onclick="RemoveRow();">Remove</button>
+                <button type="button" class="btn btn-primary" onclick="AddRow();">Add</button>
+            </div><br/>
         </div>
     </div>
+     
+    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+        {!! Form::submit(isset($work_planning_res) ? 'Update' : 'Submit', ['class' => 'btn btn-primary']) !!}
+    </div>
+
+    @if( $action == 'add')
+        <input type="hidden" id="row_cnt" name="row_cnt" value="6">
+    @endif
+
+    @if($action == 'edit')
+        <input type="hidden" value="{!! $id !!}" name="work_planning_id" id="voucher_id">
+        <input type="hidden" id="row_cnt" name="row_cnt" value="0">
+    @endif
+</div>
 
 {!! Form::close() !!}
 
 @section('customscripts')
 <script type="text/javascript">
+
     $(document).ready(function() {
 
-        $("#module_id").select2();
-        $("#status").select2();
-        $("#question_type").select2();
+        $("#work_type").select2();
 
         // automaticaly open the select2 when it gets focus
         jQuery(document).on('focus', '.select2', function() {
             jQuery(this).siblings('select').select2('open');
         });
-
-        $("#ticket_form").validate({
-
-            rules: {
-                "question_type": {
-                    required: true
-                },
-                "description": {
-                    required: true
-                }
-            },
-            messages: {
-                "question_type": {
-                    required: "Question Type is Required Field."
-                },
-                "description": {
-                    required: "Description is Required Field."
-                }
-            }
-        });
     });
+
+    function AddRow() {   
+
+        var row_cnt = $("#row_cnt").val();
+
+        var html = '';
+
+        html += '<tr style="border:1px solid black;" class="row_'+row_cnt+'">';
+
+        html += '<td style="border:1px solid black;text-align: center;width: 60px;">'+row_cnt+'</td>';
+
+        html += '<td style="border:1px solid black;width: 378px;">';
+        html += '<textarea name="description[]" placeholder="Description" id="description_'+row_cnt+'" class="form-control" rows="3"></textarea>';
+        html += '</td>';
+
+        html += '<td style="border:1px solid black;width: 200px;">';
+        html += '<input type="text" class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" placeholder="Projected Time");">';
+        html += '</td>';
+
+        html += '<td style="border:1px solid black;width: 200px;">';
+        html += '<input type="text" class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" placeholder="Actual Time");">';
+        html += '</td>';
+
+        html += '<td style="border:1px solid black;width: 377px;">';
+        html += '<textarea name="remarks[]" placeholder="Remarks" id="remarks_'+row_cnt+'" class="form-control" rows="3"></textarea>';
+        html += '</td>';
+
+        html += '</tr>';
+
+        $(".add_row_div").append(html);
+
+        var row_cnt_new = parseInt(row_cnt)+1;
+        $("#row_cnt").val(row_cnt_new);
+
+        document.getElementById("remove_row").disabled = false;
+    }
+
+    function RemoveRow() {
+
+        var row_cnt = $("#row_cnt").val();
+
+        if(row_cnt == 5) {
+            return false;
+        }
+
+        var row_cnt_new = parseInt(row_cnt)-1;
+        $(".row_" + row_cnt_new).remove();
+        $("#row_cnt").val(row_cnt_new);
+
+    }
+
 </script>
 @endsection

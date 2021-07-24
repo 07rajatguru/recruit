@@ -44,7 +44,7 @@
     </thead>
     <tbody>
         <?php $i=0; ?>
-        @foreach ($response as $key => $value)
+        @foreach ($work_planning_res as $key => $value)
             <tr>
                 <td>{{ ++$i }}</td>
                 <td>

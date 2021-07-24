@@ -173,4 +173,26 @@ class UsersLog extends Model
 
         return $count;
     }
+
+    public static function getUserLogInTime($user_id,$date) {
+
+        $date_class = new Date();
+
+        $query = UsersLog::query();
+        $query = $query->select('users_log.*',\DB::raw('min(time) as login'),\DB::raw('max(time) as logout'));
+        $query = $query->where('user_id',$user_id);
+        $query = $query->where('date','=',$date);
+        $res = $query->get();
+
+        $user_attendance = array();
+
+        foreach ($res as $key => $value) {
+
+            $user_attendance['user_id'] = $value->user_id;
+            $user_attendance['login'] = $value->login;
+            $user_attendance['logout'] = $value->logout;
+        }
+
+        return $user_attendance;
+    }
 }
