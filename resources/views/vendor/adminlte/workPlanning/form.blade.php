@@ -65,14 +65,14 @@
                     <div class="col-xs-4 col-sm-4 col-md-4">
                         <div class="form-group">
                             <strong>Work Planning Time : </strong>
-                            {!! Form::text('work_planning_time',null, array('id' => 'work_planning_time','class' => 'form-control','tabindex' => '4','readonly' => 'true')) !!}
+                            {!! Form::text('work_planning_time',$loggedin_time, array('id' => 'work_planning_time','class' => 'form-control','tabindex' => '4','readonly' => 'true')) !!}
                         </div>
                     </div>
 
                     <div class="col-xs-4 col-sm-4 col-md-4">
                         <div class="form-group">
                             <strong>Work Planning Status Time : </strong>
-                            {!! Form::text('work_planning_status_time',null, array('id' => 'work_planning_status_time','class' => 'form-control','tabindex' => '5','readonly' => 'true')) !!}
+                            {!! Form::text('work_planning_status_time',$loggedout_time, array('id' => 'work_planning_status_time','class' => 'form-control','tabindex' => '5','readonly' => 'true')) !!}
                         </div>
                     </div>
 
@@ -102,10 +102,11 @@
                                <th style="border:1px solid black;">Remarks</th>
                             </tr>
                         </thead>
+
                         <tbody>    
                             <?php $tabindex = 6; ?>
                             @for($i=1; $i<=5; $i++)
-                                <tr style="border:1px solid black;">
+                                <tr class="row_{{ $i }}" style="border:1px solid black;">
                                     <td style="border:1px solid black;text-align: center;">{{ $i }}
                                     </td>
 
@@ -126,13 +127,15 @@
                                     </td>
                                 </tr>
                             @endfor
+                            @for($j=6; $j<=20; $j++)
+                                <tr class="row_{{ $j }}" style="border:1px solid black;"></tr>
+                            @endfor
                         </tbody>
-                        <tbody><div class="add_row_div"></div></tbody>
                     </table>
                 @endif
             </div>
             
-            <div class="productclass" style="margin-left:500px;">
+            <div style="margin-left:500px;">
                 <button type="button" disabled="true" class="btn btn-primary" id="remove_row" onclick="RemoveRow();">Remove</button>
                 <button type="button" class="btn btn-primary" onclick="AddRow();">Add</button>
             </div><br/>
@@ -148,7 +151,7 @@
     @endif
 
     @if($action == 'edit')
-        <input type="hidden" value="{!! $id !!}" name="work_planning_id" id="voucher_id">
+        <input type="hidden" value="{!! $id !!}" name="work_planning_id" id="work_planning_id">
         <input type="hidden" id="row_cnt" name="row_cnt" value="0">
     @endif
 </div>
@@ -174,11 +177,9 @@
 
         var html = '';
 
-        html += '<tr style="border:1px solid black;" class="row_'+row_cnt+'">';
-
         html += '<td style="border:1px solid black;text-align: center;width: 60px;">'+row_cnt+'</td>';
 
-        html += '<td style="border:1px solid black;width: 378px;">';
+        html += '<td style="border:1px solid black;width: 381px;">';
         html += '<textarea name="description[]" placeholder="Description" id="description_'+row_cnt+'" class="form-control" rows="3"></textarea>';
         html += '</td>';
 
@@ -194,9 +195,7 @@
         html += '<textarea name="remarks[]" placeholder="Remarks" id="remarks_'+row_cnt+'" class="form-control" rows="3"></textarea>';
         html += '</td>';
 
-        html += '</tr>';
-
-        $(".add_row_div").append(html);
+        $(".row_"+row_cnt).append(html);
 
         var row_cnt_new = parseInt(row_cnt)+1;
         $("#row_cnt").val(row_cnt_new);
@@ -208,14 +207,15 @@
 
         var row_cnt = $("#row_cnt").val();
 
-        if(row_cnt == 5) {
+        if(row_cnt == 6) {
+
+            document.getElementById("remove_row").disabled = true;
             return false;
         }
 
         var row_cnt_new = parseInt(row_cnt)-1;
         $(".row_" + row_cnt_new).remove();
         $("#row_cnt").val(row_cnt_new);
-
     }
 
 </script>

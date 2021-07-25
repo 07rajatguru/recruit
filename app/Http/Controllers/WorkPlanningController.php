@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Input;
 use App\WorkPlanning;
 use App\WorkPlanningList;
 use App\UsersLog;
@@ -66,360 +67,102 @@ class WorkPlanningController extends Controller
 
         $user_id = \Auth::user()->id;
 
-        $ticket_no = $request->input('ticket_no');
-        $module_id = $request->input('module_id');
-        $status = $request->input('status');
-        $question_type = $request->input('question_type');
-        $description = $request->input('description');
+        $work_type = $request->input('work_type');
+        $loggedin_time = $request->input('loggedin_time');
+        $loggedout_time = $request->input('loggedout_time');
+        $work_planning_time = $request->input('work_planning_time');
+        $work_planning_status_time = $request->input('work_planning_status_time');
 
-        $ticket_discussion = new TicketsDiscussion();
-        $ticket_discussion->ticket_no = $ticket_no;
-        $ticket_discussion->module_id = $module_id;
-        $ticket_discussion->status = $status;
-        $ticket_discussion->question_type = $question_type;
-        $ticket_discussion->description = $description;
-        $ticket_discussion->added_by = $user_id;
-        $ticket_discussion->save();
+        $work_planning = new WorkPlanning();
+        $work_planning->work_type = $work_type;
+        $work_planning->loggedin_time = $loggedin_time;
+        $work_planning->loggedout_time = $loggedout_time;
+        $work_planning->work_planning_time = $work_planning_time;
+        $work_planning->work_planning_status_time = $work_planning_status_time;
+        $work_planning->added_date = date('Y-m-d');
+        $work_planning->added_by = $user_id;
+        $work_planning->save();
 
-        $upload_documents = $request->file('upload_documents');
+        $work_planning_id = $work_planning->id;
 
-        $tickets_discussion_id = $ticket_discussion->id;
+        // Add Listing Rows
+        $description = array();
+        $description = Input::get('description');
 
-        if (isset($upload_documents) && sizeof($upload_documents) > 0) {
+        $projected_time = array();
+        $projected_time = Input::get('projected_time');
 
-            foreach ($upload_documents as $k => $v) {
+        $actual_time = array();
+        $actual_time = Input::get('actual_time');
 
-                if (isset($v) && $v->isValid()) {
+        $remarks = array();
+        $remarks = Input::get('remarks');
 
-                    $file_name = $v->getClientOriginalName();
-                    $file_extension = $v->getClientOriginalExtension();
-                    $file_realpath = $v->getRealPath();
-                    $file_size = $v->getSize();
+        for($j = 0; $j < count($description); $j++) {
 
-                    $dir = 'uploads/ticket_discussion/' . $tickets_discussion_id . '/';
+            if($description[$j]!='') {
 
-                    if (!file_exists($dir) && !is_dir($dir)) {
-
-                        mkdir($dir, 0777, true);
-                        chmod($dir, 0777);
-                    }
-
-                    $v->move($dir, $file_name);
-
-                    $file_path = $dir . $file_name;
-
-                    $ticket_discussion_doc = new TicketsDiscussionDoc();
-                    $ticket_discussion_doc->tickets_discussion_id = $tickets_discussion_id;
-                    $ticket_discussion_doc->file = $file_path;
-                    $ticket_discussion_doc->name = $file_name;
-                    $ticket_discussion_doc->size = $file_size;
-                    $ticket_discussion_doc->uploaded_by = $user_id;
-                    $ticket_discussion_doc->created_at = date('Y-m-d');
-                    $ticket_discussion_doc->updated_at = date('Y-m-d');
-                    $ticket_discussion_doc->save();
-                }
+                $work_planning_list = new WorkPlanningList();
+                $work_planning_list->work_planning_id = $work_planning_id;
+                $work_planning_list->description = $description[$j];
+                $work_planning_list->projected_time = $projected_time[$j];
+                $work_planning_list->actual_time = $actual_time[$j];
+                $work_planning_list->remarks = $remarks[$j];
+                $work_planning_list->added_by = $user_id;
+                $work_planning_list->save();
             }
         }
 
-        // get loggedin_user_email_id
-        $loggedin_useremail = User::getUserEmailById($user_id);
-
-        // get superadmin email id
-        $superadminuserid = getenv('SUPERADMINUSERID');
-
-        $cc1 = 'info@adlertalent.com';
-        $cc2 = 'saloni@trajinfotech.com';
-        $cc3 = 'dhara@trajinfotech.com';
-
-        $superadminemail = User::getUserEmailById($superadminuserid);
-
-        $cc_users_array = array($superadminemail,$cc1,$cc2,$cc3);
-
-        $module = "Ticket Discussion";
-        $sender_name = $user_id;
-        $to = $loggedin_useremail;
-        $cc = implode(",",$cc_users_array);
-
-        $subject = "Ticket Discussion - " . $ticket_no;
-        $message = "Ticket Discussion - " . $ticket_no;
-        $module_id = $tickets_discussion_id;
-
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
-
-        return redirect()->route('ticket.index')->with('success','Ticket Generated Successfully.');
+        return redirect()->route('workplanning.index')->with('success','Work Planning Add Successfully.');
     }
 
     public function show($id) {
 
-        $ticket_res = TicketsDiscussion::getTicketDetailsById($id);
-        $ticket_res_doc = TicketsDiscussionDoc::getTicketDocsById($id);
-
-        return view('adminlte::ticketDiscussion.show',compact('ticket_res','ticket_res_doc'));
+        return view('adminlte::workplanning.show');
     }
 
     public function edit($id) {
 
         $action = 'edit';
-        
-        $ticket_res = TicketsDiscussion::find($id);
 
-        $modules = Module::getModules();
-        $selected_module = $ticket_res->module_id;
+        $work_planning_res = WorkPlanning::find($id);
 
-        $question_type = TicketsDiscussion::ticketTicketQuestionType();
-        $selected_question_type = $ticket_res->question_type;
+        $work_type = WorkPlanning::getWorkType();
+        $selected_work_type = $work_planning_res->work_type;
 
-        $status = TicketsDiscussion::ticketStatus();
-        $selected_status = $ticket_res->status;
+        $user_id = \Auth::user()->id;
 
-        $ticket_no = $ticket_res->ticket_no;
+        // Get Logged in Log out Time
+        $loggedin_time = $work_planning_res->loggedin_time;
+        $loggedout_time = $work_planning_res->loggedout_time;
 
-        return view('adminlte::ticketDiscussion.edit',compact('action','question_type','selected_question_type','ticket_res','modules','selected_module','status','selected_status','ticket_no'));
+        return view('adminlte::workPlanning.create',compact('id','action','work_planning_res','work_type','selected_work_type','loggedin_time','loggedout_time'));
     }
 
     public function update(Request $request,$id) {
 
-        $ticket_no = $request->input('ticket_no');
-        $module_id = $request->input('module_id');
-        $status = $request->input('status');
-        $question_type = $request->input('question_type');
-        $description = $request->input('description');
+        $work_type = $request->input('work_type');
+        $loggedin_time = $request->input('loggedin_time');
+        $loggedout_time = $request->input('loggedout_time');
+        $work_planning_time = $request->input('work_planning_time');
+        $work_planning_status_time = $request->input('work_planning_status_time');
 
-        $ticket_discussion = TicketsDiscussion::find($id);
-        $ticket_discussion->ticket_no = $ticket_no;
-        $ticket_discussion->module_id = $module_id;
-        $ticket_discussion->status = $status;
-        $ticket_discussion->question_type = $question_type;
-        $ticket_discussion->description = $description;
-        $ticket_discussion->save();
+        $work_planning = WorkPlanning::find($id);
+        $work_planning->work_type = $work_type;
+        $work_planning->loggedin_time = $loggedin_time;
+        $work_planning->loggedout_time = $loggedout_time;
+        $work_planning->work_planning_time = $work_planning_time;
+        $work_planning->work_planning_status_time = $work_planning_status_time;
+        $work_planning->save();
 
-        return redirect()->route('ticket.index')->with('success','Ticket Updated Successfully.');
+        return redirect()->route('workplanning.index')->with('success','Work Planning Updated Successfully.');
     }
 
     public function destroy($id) {
 
-        $path = "uploads/ticket_discussion/" . $id . "/";
-        $files = glob($path . "/*");
+        WorkPlanningList::where('work_planning_id','=',$id)->delete();
+        WorkPlanning::where('id','=',$id)->delete();
 
-        foreach ($files as $file_nm) {
-            unlink($file_nm);
-        }
-
-        if(is_dir($path)) {
-            rmdir($path);
-        }
-
-        TicketsDiscussionDoc::where('tickets_discussion_id','=',$id)->delete();
-        TicketsDiscussion::where('id','=',$id)->delete();
-
-        return redirect()->route('ticket.index')->with('success','Ticket Deleted Successfully.');
-    }
-
-    public function upload(Request $request) {
-
-        $user_id = \Auth::user()->id;
-        $upload_documents = $request->file('file');
-
-        $tickets_discussion_id = $request->id;
-
-        if (isset($upload_documents) && sizeof($upload_documents) > 0) {
-
-            foreach ($upload_documents as $k => $v) {
-
-                if (isset($v) && $v->isValid()) {
-
-                    $file_name = $v->getClientOriginalName();
-                    $file_extension = $v->getClientOriginalExtension();
-                    $file_realpath = $v->getRealPath();
-                    $file_size = $v->getSize();
-
-                    $dir = 'uploads/ticket_discussion/' . $tickets_discussion_id . '/';
-
-                    if (!file_exists($dir) && !is_dir($dir)) {
-
-                        mkdir($dir, 0777, true);
-                        chmod($dir, 0777);
-                    }
-
-                    $v->move($dir, $file_name);
-
-                    $file_path = $dir . $file_name;
-
-                    $ticket_discussion_doc = new TicketsDiscussionDoc();
-                    $ticket_discussion_doc->tickets_discussion_id = $tickets_discussion_id;
-                    $ticket_discussion_doc->file = $file_path;
-                    $ticket_discussion_doc->name = $file_name;
-                    $ticket_discussion_doc->size = $file_size;
-                    $ticket_discussion_doc->uploaded_by = $user_id;
-                    $ticket_discussion_doc->created_at = date('Y-m-d');
-                    $ticket_discussion_doc->updated_at = date('Y-m-d');
-                    $ticket_discussion_doc->save();
-                }
-            }
-        }
-        return redirect()->route('ticket.show',[$tickets_discussion_id])->with('success','Attachment Uploaded Successfully.');
-    }
-
-    public function attachmentsDestroy($docid,Request $request) {
-
-        $tickets_discussion_doc = \DB::table('tickets_discussion_doc')
-        ->select('tickets_discussion_doc.*')->where('id','=',$docid)->first();
-
-        if(isset($tickets_discussion_doc)) {
-
-            $path = 'uploads/ticket_discussion/' . $tickets_discussion_doc->tickets_discussion_id . '/' . $tickets_discussion_doc->name;
-            unlink($path);
-        }
-
-        $tickets_discussion_id = $tickets_discussion_doc->tickets_discussion_id;
-        TicketsDiscussionDoc::where('id',$docid)->delete();
-
-        return redirect()->route('ticket.show',[$tickets_discussion_id])->with('success','Attachment Deleted Successfully.');
-    }
-
-    public function remarks($id) {
-
-        $user_id = \Auth::user()->id;
-        $tickets_discussion_id = $id;
-
-        $ticket_discussion = TicketsDiscussion::find($tickets_discussion_id);
-        $post = $ticket_discussion->post()->orderBy('created_at', 'desc')->get();
-
-        return view('adminlte::ticketDiscussion.remarks',compact('user_id','tickets_discussion_id','ticket_discussion','post'));
-    }
-
-    public function writePost(Request $request, $tickets_discussion_id) {
-
-        $input = $request->all();
-        $user_id = $input['user_id'];
-        $tickets_discussion_id = $input['tickets_discussion_id'];
-        $content = $input['content'];
-
-        if(isset($user_id) && $user_id > 0) {
-
-            $post = new TicketDiscussionPost();
-            $post->content = $content;
-            $post->user_id = $user_id;
-            $post->tickets_discussion_id = $tickets_discussion_id;
-            $post->created_at = time();
-            $post->updated_at = time();
-            $post->save();
-        }
-
-        $post_id = $post->id;
-
-        $upload_documents = $request->file('upload_documents');
-
-        if (isset($upload_documents) && sizeof($upload_documents) > 0) {
-
-            foreach ($upload_documents as $k => $v) {
-
-                if (isset($v) && $v->isValid()) {
-
-                    $file_name = $v->getClientOriginalName();
-                    $file_extension = $v->getClientOriginalExtension();
-                    $file_realpath = $v->getRealPath();
-                    $file_size = $v->getSize();
-
-                    $dir = 'uploads/ticket_discussion/' . $tickets_discussion_id . '/';
-
-                    if (!file_exists($dir) && !is_dir($dir)) {
-
-                        mkdir($dir, 0777, true);
-                        chmod($dir, 0777);
-                    }
-
-                    $v->move($dir, $file_name);
-
-                    $file_path = $dir . $file_name;
-
-                    $ticket_discussion_doc = new TicketsDiscussionPostDoc();
-                    $ticket_discussion_doc->tickets_discussion_id = $tickets_discussion_id;
-                    $ticket_discussion_doc->post_id = $post_id;
-                    $ticket_discussion_doc->file = $file_path;
-                    $ticket_discussion_doc->name = $file_name;
-                    $ticket_discussion_doc->size = $file_size;
-                    $ticket_discussion_doc->uploaded_by = $user_id;
-                    $ticket_discussion_doc->created_at = date('Y-m-d');
-                    $ticket_discussion_doc->updated_at = date('Y-m-d');
-                    $ticket_discussion_doc->save();
-                }
-            }
-        }
-
-        // Get Ticket informations
-
-        $ticket_res = TicketsDiscussion::getTicketDetailsById($tickets_discussion_id);
-
-        // get loggedin_user_email_id
-        $loggedin_useremail = User::getUserEmailById($user_id);
-
-        // get superadmin email id
-        $superadminuserid = getenv('SUPERADMINUSERID');
-
-        $cc1 = 'info@adlertalent.com';
-        $cc2 = 'saloni@trajinfotech.com';
-        $cc3 = 'dhara@trajinfotech.com';
-
-        $superadminemail = User::getUserEmailById($superadminuserid);
-
-        $cc_users_array = array($superadminemail,$cc1,$cc2,$cc3);
-
-        $module = "Ticket Discussion Comment";
-        $sender_name = $user_id;
-        $to = $loggedin_useremail;
-        $cc = implode(",",$cc_users_array);
-
-        $subject = "Ticket Discussion Comment - " . $ticket_res['ticket_no'];
-        $message = "Ticket Discussion Comment - " . $ticket_res['ticket_no'];
-        $module_id = $post_id;
-
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
-
-        return redirect()->route('ticket.remarks',[$tickets_discussion_id]);
-    }
-
-    public function updateRemarks(Request $request, $tickets_discussion_id,$post_id) {
-
-        $input = $request->all();
-        $user_id = $input['user_id'];
-        $tickets_discussion_id = $input['tickets_discussion_id'];
-
-        $response = TicketDiscussionPost::updatePost($post_id,$input["content"]);
-        $returnValue["success"] = true;
-        $returnValue["message"] = "Content Updated";
-        $returnValue["id"] = $post_id;
-
-       return redirect()->route('ticket.remarks',[$tickets_discussion_id])->with('success','Ticket Comment Updated Successfully.');
-    }
-
-    public function postDestroy($id) {
-
-        $response['returnvalue'] = 'invalid';
-        $res = TicketDiscussionPost::deletePost($id);
-
-        if($res) {
-            $response['returnvalue'] = 'valid';
-        }
-
-        $tickets_discussion_id = $_POST['tickets_discussion_id'];
-
-        return json_encode($response);exit;
-    }
-
-    public function changeTicketstatus(Request $request) {
-
-        $ticketstatus = $request->get('ticketstatus');
-        $id = $request->get('id');
-        $status_ticket = TicketsDiscussion::find($id);
-        $status = '';
-
-        if (isset($ticketstatus) && $ticketstatus != ''){
-            $status = $ticketstatus;
-        }
-        $status_ticket->status = $status;
-        $status_ticket->save();
-
-        return redirect()->route('ticket.index')->with('success', 'Ticket Status Updated Successfully.');
+        return redirect()->route('workplanning.index')->with('success','Work Planning Deleted Successfully.');
     }
 }

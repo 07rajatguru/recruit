@@ -52,6 +52,12 @@
                     <a class="fa fa-edit" href="{{ route('workplanning.edit',$value['id']) }}" title="Edit"></a>
                     @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'workplanning','display_name'=>'Work Planning'])
                 </td>
+
+                <td>{{ $value['added_by'] }}</td>
+                <td>{{ $value['work_type'] }}</td>
+                <td>{{ $value['added_date'] }}</td>
+                <td>{{ $value['loggedin_time'] }}</td>
+                <td>{{ $value['loggedout_time'] }}</td>
             </tr>
         @endforeach
     </tbody>
@@ -65,7 +71,7 @@
             var table = jQuery('#work_planning_table').DataTable({
                 responsive: true,
                 stateSave : true,
-                "order" : [0,'desc'],
+                "order" : [4,'desc'],
                 "columnDefs": [ {orderable: false, targets: [1]} ]
             });
 

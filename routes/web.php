@@ -3232,6 +3232,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:work-planning-add']
     ]);
 
+    Route::get('work-planning/{id}', [
+        'as' => 'workplanning.show',
+        'uses' => 'WorkPlanningController@show',
+        'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
+    ]);
+
     Route::get('work-planning/edit/{id}',[
         'as' => 'workplanning.edit',
         'uses' => 'WorkPlanningController@edit',
