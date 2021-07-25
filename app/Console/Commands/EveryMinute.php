@@ -1258,6 +1258,10 @@ class EveryMinute extends Command
                                     $i++;
                                 }
                             }
+                            else {
+
+                                $file_path_all = array();
+                            }
 
                             $file_path_array[$j] = $file_path_all;
 
@@ -1334,6 +1338,10 @@ class EveryMinute extends Command
                                     $file_path_all[$i] = $file_path;
                                     $i++;
                                 }
+                            }
+                            else {
+
+                                $file_path_all = array();
                             }
 
                             $file_path_array[$j] = $file_path_all;
@@ -1413,6 +1421,10 @@ class EveryMinute extends Command
                                     $file_path_all[$i] = $file_path;
                                     $i++;
                                 }
+                            }
+                            else {
+
+                                $file_path_all = array();
                             }
 
                             $file_path_array[$j] = $file_path_all;
