@@ -562,7 +562,8 @@ class CandidateController extends Controller
                         chmod($dir, 0777);
                     }
                     $temp_file_name = trim($fileResumeNameArray[0]);
-                    $fileResumeNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
+                    //$fileResumeNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
+                    $fileResumeNewName = $temp_file_name .'.'.$extention;
                     $fileResume->move($dir,$fileResumeNewName);
 
                     $fileResumeNewPath = $dir.$fileResumeNewName;
@@ -639,7 +640,8 @@ class CandidateController extends Controller
                         chmod($dir, 0777);
                     }
                     $temp_file_name = trim($fileCoverLatterNameArray[0]);
-                    $fileCoverLatterNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
+                    $fileCoverLatterNewName = $temp_file_name .'.'.$extention;
+                    //$fileCoverLatterNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
                     $fileCoverLatter->move($dir,$fileCoverLatterNewName);
 
                     $fileCoverLatterNewPath = $dir.$fileCoverLatterNewName;
@@ -679,7 +681,8 @@ class CandidateController extends Controller
                         }
 
                         $temp_file_name = trim($fileOthersNameArray[0]);
-                        $fileOthersNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
+                        $fileOthersNewName = $temp_file_name .'.'.$extention;
+                        //$fileOthersNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
                         $v->move($dir,$fileOthersNewName);
 
                         $fileOthersNewPath = $dir.$fileOthersNewName;
@@ -980,15 +983,8 @@ class CandidateController extends Controller
                         }
 
                         $temp_file_name = trim($fileNameArray[0]);
-
-                        if($candidate_upload_type == 'Candidate Formatted Resume') {
-                            //$fileNewName = $temp_file_name . "_Adler".'.'.$extention;
-                            $fileNewName = $temp_file_name .'.'.$extention;
-                        }
-                        else {
-                            $fileNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
-                        }
-
+                        $fileNewName = $temp_file_name .'.'.$extention;
+                        
                         $file->move($dir,$fileNewName);
 
                         $fileNewPath = $dir.$fileNewName;
@@ -1201,14 +1197,7 @@ class CandidateController extends Controller
             }
 
             $temp_file_name = trim($fileNameArray[0]);
-
-            if($candidate_upload_type == 'Candidate Formatted Resume') {
-                //$fileNewName = $temp_file_name . "_Adler".'.'.$extention;
-                $fileNewName = $temp_file_name .'.'.$extention;
-            }
-            else {
-                $fileNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
-            }
+            $fileNewName = $temp_file_name .'.'.$extention;
             
             $file->move($dir,$fileNewName);
 
@@ -1517,7 +1506,7 @@ class CandidateController extends Controller
                             chmod($dirNew, 0777);
                         }
                         $temp_file_name = trim($fileNameArray[0]);
-                        $fileNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
+                        $fileNewName = $temp_file_name.'.'.$extention;
 
                         rename($fileNewPath,$dirNew.$fileNewName);
 
@@ -1922,7 +1911,7 @@ class CandidateController extends Controller
             }
             
             $temp_file_name = trim($fileNameArray[0]);
-            $fileNewName = $temp_file_name.date('ymdhhmmss').'.'.$extention;
+            $fileNewName = $temp_file_name .'.'.$extention;
             $file->move($dir,$fileNewName);
 
             $fileNewPath = $dir.$fileNewName;

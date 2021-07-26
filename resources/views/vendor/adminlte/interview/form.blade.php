@@ -17,14 +17,6 @@
         </div>
         <div class="pull-right">
         @if( $action == 'edit')
-            @if( $source == 'index')
-                <a class="btn btn-primary" href="{{ route('interview.index') }}">Back</a>
-            @elseif( $source == 'tti')
-                <a class="btn btn-primary" href="{{ route('interview.todaytomorrow') }}">Back</a>
-            @else( $source == 'ai')
-                <a class="btn btn-primary" href="{{ route('interview.index') }}">Back</a>
-            @endif
-        @else
             <a class="btn btn-primary" href="{{ route('interview.index') }}">Back</a>
         @endif
         </div>
