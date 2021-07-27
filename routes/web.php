@@ -3232,7 +3232,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:work-planning-add']
     ]);
 
-    Route::get('work-planning/{id}', [
+    Route::get('work-planning/{id}/show', [
         'as' => 'workplanning.show',
         'uses' => 'WorkPlanningController@show',
         'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
@@ -3254,5 +3254,10 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'workplanning.destroy',
         'uses' => 'WorkPlanningController@destroy',
         'middleware' => ['permission:work-planning-delete']
+    ]);
+
+    Route::get('work-planning/getlist',[
+        'as' => 'workplanning.getlist',
+        'uses' => 'WorkPlanningController@getAddedList',
     ]);
 });

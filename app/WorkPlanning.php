@@ -12,7 +12,7 @@ class WorkPlanning extends Model
 
         $work_type = array();
         
-        $work_type['WEH'] = 'WFH';
+        $work_type['WFH'] = 'WFH';
         $work_type['WFO'] = 'WFO';
 
         return $work_type;
@@ -44,6 +44,52 @@ class WorkPlanning extends Model
             $work_planning_res[$i]['loggedout_time'] = $value->loggedout_time;
             
             $i++;
+        }
+        return $work_planning_res;
+    }
+
+    public static function getWorkPlanningDetailsById($id) {
+
+        $query = WorkPlanning::query();
+        $query = $query->leftjoin('users','users.id','=','work_planning.added_by');
+        $query = $query->where('work_planning.id',$id);
+        $query = $query->select('work_planning.*','users.first_name as fnm','users.last_name as lnm');
+        $response = $query->first();
+
+        $work_planning_res = array();
+
+        if(isset($response) && $response != '') {
+
+            $work_planning_res['id'] = $response->id;
+            $work_planning_res['added_by'] = $response->fnm . " " . $response->lnm;
+            $work_planning_res['work_type'] = $response->work_type;
+            $work_planning_res['added_date'] = date('d-m-Y', strtotime("$response->added_date"));
+            $work_planning_res['loggedin_time'] = $response->loggedin_time;
+            $work_planning_res['loggedout_time'] = $response->loggedout_time;
+
+            // Convert Time
+            $utc_wp = $response->work_planning_time;
+            $dt_wp = new \DateTime($utc_wp);
+            $tz_wp = new \DateTimeZone('Asia/Kolkata');
+
+            $dt_wp->setTimezone($tz_wp);
+            $work_planning_time = $dt_wp->format('H:i:s');
+            $work_planning_res['work_planning_time'] = $work_planning_time;
+
+            if($response->work_planning_status_time == '') {
+
+                $work_planning_res['work_planning_status_time'] = $response->work_planning_status_time;
+            }
+            else {
+                
+                $utc_wp_status = $response->work_planning_status_time;
+                $dt_wp_status = new \DateTime($utc_wp_status);
+                $tz_wp_status = new \DateTimeZone('Asia/Kolkata'); // or whatever zone you're after
+
+                $dt_wp_status->setTimezone($tz_wp_status);
+                $work_planning_status_time = $dt_wp_status->format('H:i:s');
+                $work_planning_res['work_planning_status_time'] = $work_planning_status_time;
+            }
         }
         return $work_planning_res;
     }
