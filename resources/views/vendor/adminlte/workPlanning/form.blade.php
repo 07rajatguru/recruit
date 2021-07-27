@@ -66,7 +66,7 @@
                     <div class="col-xs-4 col-sm-4 col-md-4">
                         <div class="form-group">
                             <strong>Status Time : </strong>
-                            {!! Form::text('work_planning_status_time',null, array('id' => 'work_planning_status_time','class' => 'form-control','tabindex' => '5','readonly' => 'true')) !!}
+                            {!! Form::text('work_planning_status_time',$loggedout_time, array('id' => 'work_planning_status_time','class' => 'form-control','tabindex' => '5','readonly' => 'true')) !!}
                         </div>
                     </div>
 
@@ -273,7 +273,7 @@
         html += '</td>';
 
         html += '<td style="border:1px solid black;width: 200px;">';
-        html += '<input type="text" class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" placeholder="Projected Time");">';
+        html += '<input type="text" class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" placeholder="Projected Time");" onfocusout="setRemainTime("'+row_cnt+'")">';
         html += '</td>';
 
         html += '<td style="border:1px solid black;width: 200px;">';
@@ -347,7 +347,7 @@
                         html += '</td>';
 
                         html += '<td style="border:1px solid black;width: 200px;">';
-                        html += '<input type="text" class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" placeholder="Projected Time");" value="'+projected_time+'">';
+                        html += '<input type="text" class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" placeholder="Projected Time");" value="'+projected_time+'" onfocusout="setRemainTime("'+row_cnt+'")">';
                         html += '</td>';
 
                         html += '<td style="border:1px solid black;width: 200px;">';

@@ -78,7 +78,7 @@ class WorkPlanningController extends Controller
         $work_planning->loggedin_time = $loggedin_time;
         $work_planning->loggedout_time = $loggedout_time;
         $work_planning->work_planning_time = date('H:i:s');
-        $work_planning->work_planning_status_time = NULL;
+        $work_planning->work_planning_status_time = $loggedout_time;
         $work_planning->added_date = date('Y-m-d');
         $work_planning->added_by = $user_id;
         $work_planning->save();
