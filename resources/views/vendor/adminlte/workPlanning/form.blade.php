@@ -66,14 +66,14 @@
                     <div class="col-xs-4 col-sm-4 col-md-4">
                         <div class="form-group">
                             <strong>Status Time : </strong>
-                            {!! Form::text('work_planning_status_time',$loggedout_time, array('id' => 'work_planning_status_time','class' => 'form-control','tabindex' => '5','readonly' => 'true')) !!}
+                            {!! Form::text('work_planning_status_time',$work_planning_status_time, array('id' => 'work_planning_status_time','class' => 'form-control','tabindex' => '5','readonly' => 'true')) !!}
                         </div>
                     </div>
 
                     <div class="col-xs-4 col-sm-4 col-md-4">
                         <div class="form-group">
                             <strong>Remaining Time : </strong>
-                            {!! Form::text('remaining_time',null, array('id' => 'remaining_time','class' => 'form-control','tabindex' => '6','readonly' => 'true')) !!}
+                            {!! Form::text('remaining_time',$remaining_time, array('id' => 'remaining_time','class' => 'form-control','tabindex' => '6','readonly' => 'true')) !!}
                         </div>
                     </div>
                 </div>
@@ -113,7 +113,7 @@
                                     </td>
 
                                     <td style="border:1px solid black;">
-                                        {!! Form::text('actual_time[]',null, array('placeholder' => 'Actual Time','id' => 'actual_time_'.$i,'class' => 'form-control','tabindex' => $tabindex++)) !!}
+                                        {!! Form::text('actual_time[]',null, array('placeholder' => 'Actual Time','id' => 'actual_time_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'readonly' => 'true')) !!}
                                     </td>
 
                                     <td style="border:1px solid black;">
@@ -151,7 +151,7 @@
             
             <div style="margin-left:500px;">
                 <button type="button" disabled="true" class="btn btn-primary" id="remove_row" onclick="RemoveRow();">Remove</button>
-                <button type="button" class="btn btn-primary" onclick="AddRow();">Add</button>
+                <button type="button" class="btn btn-primary" onclick="AddRow();" id="add_row">Add</button>
             </div><br/>
         </div>
     </div>
@@ -184,7 +184,7 @@
         for(j = 1; j <= 5; j++) {
 
             $("#projected_time_"+j).datetimepicker({
-                format: 'H:mm'
+                format: 'H:mm',
             });
 
             $("#actual_time_"+j).datetimepicker({
@@ -221,6 +221,10 @@
             var hours = Math.floor(res / 3600) % 24;
             var minutes = Math.floor(res / 60) % 60;
 
+            if(hours == 0) {
+                hours = '00';
+            }
+
             if(minutes == 0) {
                 var remain_time = hours + ":" + minutes + "0";
             }
@@ -249,6 +253,10 @@
 
             var minutes = Math.floor(res / 60) % 60;
 
+            if(hours == 0) {
+                hours = '00';
+            }
+
             if(minutes == 0) {
                 var remain_time = hours + ":" + minutes + "0";
             }
@@ -258,11 +266,27 @@
 
             $("#remaining_time").val(remain_time);
         }
+
+        var get_remain_time = $("#remaining_time").val();
+
+        if(get_remain_time == '00:00') {
+
+            document.getElementById('remaining_time').style.backgroundColor = '#B0E0E6';
+
+            document.getElementById("add_row").disabled = true;
+        }
+        else {
+
+            document.getElementById('remaining_time').style.backgroundColor = 'white';
+
+            document.getElementById("add_row").disabled = false;
+        }
     }
 
     function AddRow() {   
 
         var row_cnt = $("#row_cnt").val();
+        var action = {!! json_encode($action) !!};
 
         var html = '';
 
@@ -273,12 +297,21 @@
         html += '</td>';
 
         html += '<td style="border:1px solid black;width: 200px;">';
-        html += '<input type="text" class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" placeholder="Projected Time");" onfocusout="setRemainTime("'+row_cnt+'")">';
+        html += '<input type="text" class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" placeholder="Projected Time");" onfocusout="setRemainTime('+row_cnt+')">';
         html += '</td>';
 
-        html += '<td style="border:1px solid black;width: 200px;">';
-        html += '<input type="text" class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" placeholder="Actual Time");">';
-        html += '</td>';
+        if(action == "add") {
+
+            html += '<td style="border:1px solid black;width: 200px;">';
+            html += '<input type="text" class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" placeholder="Actual Time");" readonly=true>';
+            html += '</td>';
+        }
+        else {
+
+            html += '<td style="border:1px solid black;width: 200px;">';
+            html += '<input type="text" class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" placeholder="Actual Time");">';
+            html += '</td>';
+        }
 
         html += '<td style="border:1px solid black;width: 377px;">';
         html += '<textarea name="remarks[]" placeholder="Remarks" id="remarks_'+row_cnt+'" class="form-control" rows="3"></textarea>';
@@ -347,7 +380,7 @@
                         html += '</td>';
 
                         html += '<td style="border:1px solid black;width: 200px;">';
-                        html += '<input type="text" class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" placeholder="Projected Time");" value="'+projected_time+'" onfocusout="setRemainTime("'+row_cnt+'")">';
+                        html += '<input type="text" class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" placeholder="Projected Time");" value="'+projected_time+'" onfocusout="setRemainTime('+row_cnt+')">';
                         html += '</td>';
 
                         html += '<td style="border:1px solid black;width: 200px;">';
@@ -372,6 +405,17 @@
                         $("#row_cnt").val(row_cnt_new);
                     }
                 }
+
+                var get_remain_time = $("#remaining_time").val();
+
+        if(get_remain_time == '00:00') {
+
+            document.getElementById('remaining_time').style.backgroundColor = '#B0E0E6';
+        }
+        else {
+
+            document.getElementById('remaining_time').style.backgroundColor = 'white';
+        }
             }
         });
     }

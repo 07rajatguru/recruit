@@ -30,6 +30,8 @@ use App\TicketsDiscussion;
 use App\TicketsDiscussionDoc;
 use App\TicketDiscussionPost;
 use App\TicketsDiscussionPostDoc;
+use App\WorkPlanning;
+use App\WorkPlanningList;
 
 class EveryMinute extends Command
 {
@@ -1857,6 +1859,60 @@ class EveryMinute extends Command
 
                     \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
                 }
+            }
+
+            else if ($value['module'] == 'Work Planning') {
+
+                $to_array = explode(",",$input['to']);
+                $input['to_array'] = $to_array;
+              
+                $input['module_id'] = $value['module_id'];
+
+                $user_details = User::getAllDetailsByUserID($value['sender_name']);
+                $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
+
+                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
+                $input['from_address'] = trim($user_email_details->email);
+
+                $user_info = User::getProfileInfo($value['sender_name']);
+                $input['signature'] = $user_info['signature'];
+
+                if(strpos($input['from_address'], '@gmail.com') !== false) {
+
+                    config([
+
+                        'mail.driver' => trim('mail'),
+                        'mail.host' => trim('smtp.gmail.com'),
+                        'mail.port' => trim('587'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('tls'),
+                    ]);
+                }
+                else {
+
+                    config([
+                        'mail.driver' => trim('smtp'),
+                        'mail.host' => trim('smtp.zoho.com'),
+                        'mail.port' => trim('465'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('ssl'),
+                    ]);
+                }
+
+                $today_date = date('d/m/Y');;
+                $work_planning_list = WorkPlanningList::getWorkPlanningList($value['module_id']);
+
+                $input['today_date'] = $today_date;
+                $input['work_planning_list'] = $work_planning_list;
+
+                \Mail::send('adminlte::emails.workplanningmail', $input, function ($message) use($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
         }
     }
