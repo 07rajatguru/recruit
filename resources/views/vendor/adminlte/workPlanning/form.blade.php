@@ -109,11 +109,11 @@
                                     </td>
 
                                     <td style="border:1px solid black;">
-                                        {!! Form::text('projected_time[]',null, array('placeholder' => 'Projected Time','id' => 'projected_time_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'onfocusout'=>'setRemainTime('.$i.')')) !!}
+                                        {!! Form::select('projected_time[]',$time_array,$selected_projected_time, array('id' => 'projected_time_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'onfocusout'=>'setRemainTime('.$i.')')) !!}
                                     </td>
 
                                     <td style="border:1px solid black;">
-                                        {!! Form::text('actual_time[]',null, array('placeholder' => 'Actual Time','id' => 'actual_time_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'readonly' => 'true')) !!}
+                                        {!! Form::select('actual_time[]',$time_array,$selected_actual_time, array('placeholder' => 'Actual Time','id' => 'actual_time_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'disabled' => 'true')) !!}
                                     </td>
 
                                     <td style="border:1px solid black;">
@@ -183,13 +183,7 @@
 
         for(j = 1; j <= 5; j++) {
 
-            $("#projected_time_"+j).datetimepicker({
-                format: 'H:mm',
-            });
-
-            $("#actual_time_"+j).datetimepicker({
-                format: 'H:mm'
-            }); 
+            $("#projected_time_"+j).select2({width:"130px"});
         }
 
         // automaticaly open the select2 when it gets focus
@@ -197,8 +191,8 @@
             jQuery(this).siblings('select').select2('open');
         });
 
-        var action = {!! json_encode($action) !!};
         var work_planning_id = $("#work_planning_id").val();
+        var action = $("#action").val();
 
         if(action == "edit") {
             loadDetails(work_planning_id);
@@ -272,13 +266,11 @@
         if(get_remain_time == '00:00') {
 
             document.getElementById('remaining_time').style.backgroundColor = '#B0E0E6';
-
             document.getElementById("add_row").disabled = true;
         }
         else {
 
             document.getElementById('remaining_time').style.backgroundColor = 'white';
-
             document.getElementById("add_row").disabled = false;
         }
     }
@@ -287,45 +279,45 @@
 
         var row_cnt = $("#row_cnt").val();
         var action = {!! json_encode($action) !!};
+        var time_array_1 = <?php echo json_encode($time_array); ?>;
 
         var html = '';
 
-        html += '<td style="border:1px solid black;text-align: center;width: 60px;">'+row_cnt+'</td>';
+        html += '<td style="border:1px solid black;text-align: center;">'+row_cnt+'</td>';
 
-        html += '<td style="border:1px solid black;width: 381px;">';
+        html += '<td style="border:1px solid black;">';
         html += '<textarea name="description[]" placeholder="Description" id="description_'+row_cnt+'" class="form-control" rows="3"></textarea>';
         html += '</td>';
 
-        html += '<td style="border:1px solid black;width: 200px;">';
-        html += '<input type="text" class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" placeholder="Projected Time");" onfocusout="setRemainTime('+row_cnt+')">';
+        html += '<td style="border:1px solid black;">';
+        html += '<select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onfocusout="setRemainTime('+row_cnt+')"></select>';
         html += '</td>';
 
         if(action == "add") {
 
-            html += '<td style="border:1px solid black;width: 200px;">';
-            html += '<input type="text" class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" placeholder="Actual Time");" readonly=true>';
+            html += '<td style="border:1px solid black;">';
+            html += '<select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" readonly=true></select>';
             html += '</td>';
         }
         else {
 
-            html += '<td style="border:1px solid black;width: 200px;">';
-            html += '<input type="text" class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" placeholder="Actual Time");">';
+            html += '<td style="border:1px solid black;">';
+            html += '<select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'"></select>';
             html += '</td>';
         }
 
-        html += '<td style="border:1px solid black;width: 377px;">';
+        html += '<td style="border:1px solid black;">';
         html += '<textarea name="remarks[]" placeholder="Remarks" id="remarks_'+row_cnt+'" class="form-control" rows="3"></textarea>';
         html += '</td>';
 
         $(".row_"+row_cnt).append(html);
 
-        $("#projected_time_"+row_cnt).datetimepicker({
-            format: 'H:mm'
+        $.each(time_array_1, function(key, value) {
+            $('<option value="'+key+'">'+value+'</option>').appendTo($("#projected_time_"+row_cnt));
         });
+    
 
-        $("#actual_time_"+row_cnt).datetimepicker({
-            format: 'H:mm'
-        }); 
+        $("#projected_time_"+row_cnt).select2({width:"130px"});
 
         var row_cnt_new = parseInt(row_cnt)+1;
         $("#row_cnt").val(row_cnt_new);

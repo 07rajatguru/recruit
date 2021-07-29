@@ -26,6 +26,7 @@
             <h2>{{ $work_planning['added_date'] }}</h2>
         </div>
         <div class="pull-right">
+            <a class="btn btn-primary" href="{{ route('workplanning.edit',$work_planning['id']) }}">Edit</a>
             <a class="btn btn-primary" href="{{ route('workplanning.index') }}">Back</a>
         </div>
     </div>
@@ -70,10 +71,10 @@
                     <table class="table table-bordered">
                     <thead>
                         <tr>
-                            <th width="5%" style="border:1px solid black;">Sr No.</th>
+                            <th width="5%" style="border:1px solid black;text-align: center;">Sr No.</th>
                             <th width="35%" style="border:1px solid black;">Description</th>
-                            <th width="10%" style="border:1px solid black;">Projected Time</th>
-                            <th width="10%" style="border:1px solid black;">Actual Time </th>
+                            <th width="10%" style="border:1px solid black;text-align: center;">Projected Time</th>
+                            <th width="10%" style="border:1px solid black;text-align: center;">Actual Time</th>
                             <th style="border:1px solid black;">Remarks</th>
                         </tr>
                     </thead>
@@ -83,8 +84,40 @@
                             <tr>
                                 <td style="border:1px solid black;text-align: center;">{{ $i++ }}</td>
                                 <td style="border:1px solid black;">{{ $value['description'] }}</td>
-                                <td style="border:1px solid black;text-align: center;">{{ $value['projected_time'] }}</td>
-                                <td style="border:1px solid black;text-align: center;">{{ $value['actual_time'] }}</td>
+                                <?php
+
+                                    $projected_time = array();
+                                    $actual_time = array();
+
+                                    if(isset($value['projected_time']) && $value['projected_time'] != '') {
+                                        $projected_time = explode(':', $value['projected_time']);
+                                    }
+
+                                    if(isset($value['actual_time']) && $value['actual_time'] != '') {
+                                        $actual_time = explode(':', $value['actual_time']);
+                                    }
+                                ?>
+
+                                @if(isset($projected_time)  && sizeof($projected_time) > 0)
+                                    @if($projected_time[0] == 0)
+                                        <td style="border:1px solid black;text-align: center;">{{ $projected_time[1] }} Min.</td>
+                                    @else
+                                        <td style="border:1px solid black;text-align: center;">{{ $value['projected_time'] }} Hours</td>
+                                    @endif
+                                @else
+                                    <td style="border:1px solid black;text-align: center;">{{ $value['projected_time'] }}</td>
+                                @endif
+
+                                @if(isset($actual_time) && sizeof($actual_time) > 0)
+                                    @if($actual_time[0] == 0)
+                                        <td style="border:1px solid black;text-align: center;">{{ $actual_time[1] }} Min.</td>
+                                    @else
+                                        <td style="border:1px solid black;text-align: center;">{{ $value['actual_time'] }} Hours</td>
+                                    @endif
+                                @else
+                                    <td style="border:1px solid black;text-align: center;">{{ $value['actual_time'] }}</td>
+                                @endif
+
                                 <td style="border:1px solid black;">{{ $value['remarks'] }}</td>
                             </tr>
                         @endforeach

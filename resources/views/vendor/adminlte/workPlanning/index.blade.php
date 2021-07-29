@@ -35,11 +35,13 @@
         <tr>
 	       <th width="5%">No</th>
            <th width="8%">Action</th>
+           <th>Date</th>
            <th>Username</th>
            <th>Work Location</th>
-           <th>Date</th>
            <th>Logged-in Time</th>
 	       <th>Logged-out Time</th>
+           <th>Work Planning Time</th>
+           <th>Status Time</th>
 	    </tr>
     </thead>
     <tbody>
@@ -53,11 +55,13 @@
                     @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'workplanning','display_name'=>'Work Planning'])
                 </td>
 
+                <td>{{ $value['added_date'] }}</td>
                 <td>{{ $value['added_by'] }}</td>
                 <td>{{ $value['work_type'] }}</td>
-                <td>{{ $value['added_date'] }}</td>
                 <td>{{ $value['loggedin_time'] }}</td>
                 <td>{{ $value['loggedout_time'] }}</td>
+                <td>{{ $value['work_planning_time'] }}</td>
+                <td>{{ $value['work_planning_status_time'] }}</td>
             </tr>
         @endforeach
     </tbody>
@@ -71,7 +75,7 @@
             var table = jQuery('#work_planning_table').DataTable({
                 responsive: true,
                 stateSave : true,
-                "order" : [4,'desc'],
+                "order" : [2,'desc'],
                 "columnDefs": [ {orderable: false, targets: [1]} ]
             });
 
