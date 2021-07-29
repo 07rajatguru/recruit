@@ -782,7 +782,7 @@ class LeadController extends Controller
         $management = getenv('MANAGEMENT');
         $type_array = array($recruitment,$hr_advisory,$management);
 
-        $users_array = User::getAllUsers($type_array,'Yes');
+        $users_array = User::getAllUsers(NULL,'Yes');
         $users = array();
         
         if(isset($users_array) && sizeof($users_array) > 0) {
