@@ -1120,6 +1120,7 @@ class JobOpenController extends Controller
         $country = $input['country'];
         $job_show = 0;
         $users = $input['user_ids'];
+
         $desired_candidate = $input['desired_candidate'];
         $qualifications = $input['qualifications'];
 
@@ -1390,20 +1391,17 @@ class JobOpenController extends Controller
 
                 foreach ($users as $key => $value) {
 
-                    if($user_id != $value) {
+                    $module_id = $job_id;
+                    $module = 'Job Openings';
+                    $message = $user_name . " added new job";
+                    $link = route('jobopen.show',$job_id);
+                    $user_arr = trim($value);
 
-                        $module_id = $job_id;
-                        $module = 'Job Openings';
-                        $message = $user_name . " added new job";
-                        $link = route('jobopen.show',$job_id);
-                        $user_arr = trim($value);
+                    event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
-                        event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+                    $email = User::getUserEmailById($value);
 
-                        $email = User::getUserEmailById($value);
-
-                        $user_emails[] = $email;
-                    }
+                    $user_emails[] = $email;
                 }
 
                 // Email Notification : data store in datebase
