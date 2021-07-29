@@ -70,11 +70,12 @@ class ClientBasicinfo extends Ardent
 
                 $query = $query->where(function($query) use ($search) {
 
-                    $query = $query->where('users.name','like',"%$search%");
+                    $query = $query->where('users.name','=',"$search");
+                    $query = $query->orwhere('users.first_name','=',"$search");
                     $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
-                    $query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
+                    //$query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
 
                     if ($search == 'Active' || $search == 'active') {
                         $search = 1;
@@ -134,11 +135,12 @@ class ClientBasicinfo extends Ardent
 
                 $query = $query->where(function($query) use ($search) {
 
-                    $query = $query->where('users.name','like',"%$search%");
+                    $query = $query->where('users.name','=',"$search");
+                    $query = $query->orwhere('users.first_name','=',"$search");
                     $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
-                    $query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
+                    //$query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
 
                     if ($search == 'Active' || $search == 'active') {
                         $search = 1;
@@ -335,11 +337,12 @@ class ClientBasicinfo extends Ardent
 
             $query = $query->where(function($query) use ($search) {
 
-                $query = $query->where('users.name','like',"%$search%");
+                $query = $query->where('users.name','=',"$search");
+                $query = $query->orwhere('users.first_name','=',"$search");
                 $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                 $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                 $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
-                $query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
+                //$query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
 
                 if ($search == 'Active' || $search == 'active') {
                     $search = 1;
@@ -762,11 +765,12 @@ class ClientBasicinfo extends Ardent
 
                 $query = $query->where(function($query) use ($search) {
 
-                    $query = $query->where('users.name','like',"%$search%");
+                    $query = $query->where('users.name','=',"$search");
+                    $query = $query->orwhere('users.first_name','=',"$search");
                     $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
-                    $query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
+                    //$query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
                     
@@ -824,11 +828,12 @@ class ClientBasicinfo extends Ardent
 
                 $query = $query->where(function($query) use ($search) {
 
-                    $query = $query->where('users.name','like',"%$search%");
+                    $query = $query->where('users.name','=',"$search");
+                    $query = $query->orwhere('users.first_name','=',"$search");
                     $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
-                    $query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
+                    //$query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
 
@@ -994,11 +999,12 @@ class ClientBasicinfo extends Ardent
 
                 $query = $query->where(function($query) use ($search) {
 
-                    $query = $query->where('users.name','like',"%$search%");
+                    $query = $query->where('users.name','=',"$search");
+                    $query = $query->orwhere('users.first_name','=',"$search");
                     $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
-                    $query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
+                    //$query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
                     
@@ -1057,11 +1063,12 @@ class ClientBasicinfo extends Ardent
 
                 $query = $query->where(function($query) use ($search) {
 
-                    $query = $query->where('users.name','like',"%$search%");
+                    $query = $query->where('users.name','=',"$search");
+                    $query = $query->orwhere('users.first_name','=',"$search");
                     $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
-                    $query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
+                    //$query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
 
@@ -1412,11 +1419,12 @@ class ClientBasicinfo extends Ardent
 
             $query = $query->where(function($query) use ($search) {
 
-                $query = $query->where('users.name','like',"%$search%");
+                $query = $query->where('users.name','=',"$search");
+                $query = $query->orwhere('users.first_name','=',"$search");
                 $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                 $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                 $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
-                $query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
+                //$query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
 
                 if ($search == 'Active' || $search == 'active') {
                     $search = 1;
@@ -1490,11 +1498,12 @@ class ClientBasicinfo extends Ardent
 
                 $query = $query->where(function($query) use ($search) {
 
-                    $query = $query->where('users.name','like',"%$search%");
+                    $query = $query->where('users.name','=',"$search");
+                    $query = $query->orwhere('users.first_name','=',"$search");
                     $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
-                    $query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
+                    //$query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
 
                     if ($search == 'Active' || $search == 'active') {
                         $search = 1;
@@ -1537,11 +1546,12 @@ class ClientBasicinfo extends Ardent
 
                 $query = $query->where(function($query) use ($search) {
 
-                    $query = $query->where('users.name','like',"%$search%");
+                    $query = $query->where('users.name','=',"$search");
+                    $query = $query->orwhere('users.first_name','=',"$search");
                     $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
-                    $query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
+                    //$query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
 
                     if ($search == 'Active' || $search == 'active') {
                         $search = 1;
