@@ -288,7 +288,7 @@
             var cmno = $("#cmno").val();
             var job_title = $("#job_title").val();
 
-            if(cname == '' & cemail == '' && cmno == '' && job_title == '') {
+            if(cname == '' && cemail == '' && cmno == '' && job_title == '') {
 
                 alert("Please enter field value.");
                 return false;
