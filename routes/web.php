@@ -966,6 +966,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-client|display-account-manager-wise-client']
     ]);
 
+    Route::post('client-search', [
+        'as' => 'client.mastersearch',
+        'uses' => 'ClientController@masterSearch',
+        'middleware' => ['permission:display-client|display-account-manager-wise-client']
+    ]);
+
     Route::get('client-list/Forbid',[
         'as' => 'clients.forbid',
         'uses' => 'ClientController@getForbidClient',

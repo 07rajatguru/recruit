@@ -34,15 +34,17 @@ class ClientController extends Controller
     public function index(Request $request) {
 
         $user =  \Auth::user();
+        $user_id =  \Auth::user()->id;
+
         $all_perm = $user->can('display-client');
         $userwise_perm = $user->can('display-account-manager-wise-client');
 
         if($all_perm) {
-            $client_array = ClientBasicinfo::getAllClients(1,$user->id);
+            $client_array = ClientBasicinfo::getAllClients(1,$user_id);
             $count = sizeof($client_array);
         }
         else if($userwise_perm) {
-            $client_array = ClientBasicinfo::getAllClients(0,$user->id);
+            $client_array = ClientBasicinfo::getAllClients(0,$user_id);
             $count = sizeof($client_array);
         }
 
@@ -85,11 +87,6 @@ class ClientController extends Controller
             }
         }
 
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $management = getenv('MANAGEMENT');
-        $type_array = array($recruitment,$hr_advisory,$management);
-
         $users_array = User::getAllUsers(NULL,'Yes');
         $all_account_manager = array();
         
@@ -115,21 +112,20 @@ class ClientController extends Controller
         $email_template_names = EmailTemplate::getAllEmailTemplateNames();
 
         // Get clients for popup of add information
-        $client_name_string = ClientBasicinfo::getBefore7daysClientDetails($user->id);
+        $client_name_string = ClientBasicinfo::getBefore7daysClientDetails($user_id);
 
         // For not display superadmin popup
-
-        $user_id =  \Auth::user()->id;
-
         $superadmin = getenv('SUPERADMINUSERID');
         $manager = getenv('MANAGERUSERID');
 
         // Get Client Status
-
         $status = ClientBasicinfo::getAllStatus();
         $status_id = 1;
 
-        return view('adminlte::client.index',compact('count','active','passive','para_cat','mode_cat','std_cat','leaders','forbid','left','all_account_manager','email_template_names','client_name_string','user_id','superadmin','manager','status','status_id'));
+        // Get Master Search Field List
+        $field_list = ClientBasicinfo::getFieldsList();
+
+        return view('adminlte::client.index',compact('count','active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','all_account_manager','email_template_names','client_name_string','user_id','superadmin','manager','status','status_id','field_list'));
     }
 
     public static function getOrderColumnName($order) {
@@ -174,6 +170,13 @@ class ClientController extends Controller
         $order = $_GET['order'][0]['column'];
         $type = $_GET['order'][0]['dir'];
 
+        $client_owner = $_GET['client_owner'];
+        $client_company = $_GET['client_company'];
+        $client_contact_point = $_GET['client_contact_point'];
+        $client_cat = $_GET['client_cat'];
+        $client_status = $_GET['client_status'];
+        $client_city = $_GET['client_city'];
+        
         $user =  \Auth::user();
         $all_perm = $user->can('display-client');
         $userwise_perm = $user->can('display-account-manager-wise-client');
@@ -184,14 +187,15 @@ class ClientController extends Controller
         if($all_perm) {
 
             $order_column_name = self::getOrderColumnName($order);
-            $client_res = ClientBasicinfo::getAllClients(1,$user->id,$limit,$offset,$search,$order_column_name,$type);
-            $count = ClientBasicinfo::getAllClientsCount(1,$user->id,$search);
+            $client_res = ClientBasicinfo::getAllClients(1,$user->id,$limit,$offset,$search,$order_column_name,$type,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+            
+            $count = ClientBasicinfo::getAllClientsCount(1,$user->id,$search,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
         }
         else if($userwise_perm) {
 
             $order_column_name = self::getOrderColumnName($order);
-            $client_res = ClientBasicinfo::getAllClients(0,$user->id,$limit,$offset,$search,$order_column_name,$type);
-            $count = ClientBasicinfo::getAllClientsCount(0,$user->id,$search);
+            $client_res = ClientBasicinfo::getAllClients(0,$user->id,$limit,$offset,$search,$order_column_name,$type,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+            $count = ClientBasicinfo::getAllClientsCount(0,$user->id,$search,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
         }
         
         $recruitment = getenv('RECRUITMENT');
@@ -307,11 +311,52 @@ class ClientController extends Controller
             $i++;
         }
 
+        $active = 0;
+        $passive = 0;
+        $leaders = 0;
+        $left = 0;
+        $para_cat = 0;
+        $mode_cat = 0;
+        $std_cat = 0;
+
+        foreach($client_res as $client) {
+
+            if($client['status'] == 'Active') {
+                $active++;
+            }
+            else if ($client['status'] == 'Passive') {
+                $passive++;
+            }
+            else if($client['status'] == 'Leaders') {
+                $leaders++;
+            }
+            else if($client['status'] == 'Left') {
+                $left++;
+            }
+
+            if($client['category'] == 'Paramount') {
+                $para_cat++;
+            }
+            else if($client['category'] == 'Moderate') {
+                $mode_cat++;
+            }
+            else if($client['category'] == 'Standard') {
+                $std_cat++;
+            }
+        }
+
         $json_data = array(
             'draw' => intval($draw),
             'recordsTotal' => intval($count),
             'recordsFiltered' => intval($count),
-            "data" => $clients
+            "data" => $clients,
+            "active_count" => $active,
+            "passive_count" => $passive,
+            "leaders_count" => $leaders,
+            "left_count" => $left,
+            "paramount_count" => $para_cat,
+            "moderate_count" => $mode_cat,
+            "standard_count" => $std_cat
         );
 
         echo json_encode($json_data);exit;
@@ -2872,5 +2917,102 @@ class ClientController extends Controller
         else {
             return redirect()->route('client.index')->with('success', 'Status Changed Successfully.');
         }
+    }
+
+    public function masterSearch() {
+
+        $user =  \Auth::user();
+        $user_id =  $user->id;
+
+        $all_perm = $user->can('display-client');
+        $userwise_perm = $user->can('display-account-manager-wise-client');
+
+        if($all_perm) {
+            $client_array = ClientBasicinfo::getAllClients(1,$user_id,0,0,0,0,'','','','','','','');
+            $count = sizeof($client_array);
+        }
+        else if($userwise_perm) {
+            $client_array = ClientBasicinfo::getAllClients(0,$user_id,0,0,0,0,'','','','','','','');
+            $count = sizeof($client_array);
+        }
+
+        $i = 0;
+        $active = 0;
+        $passive = 0;
+        $leaders = 0;
+        $forbid = 0;
+        $left = 0;
+        $para_cat = 0;
+        $mode_cat = 0;
+        $std_cat = 0;
+
+        foreach($client_array as $client) {
+
+            if($client['status'] == 'Active') {
+                $active++;
+            }
+            else if ($client['status'] == 'Passive') {
+                $passive++;
+            }
+            else if($client['status'] == 'Leaders') {
+                $leaders++;
+            }
+            else if($client['status'] == 'Forbid') {
+                $forbid++;
+            }
+            else if($client['status'] == 'Left') {
+                $left++;
+            }
+
+            if($client['category'] == 'Paramount') {
+                $para_cat++;
+            }
+            else if($client['category'] == 'Moderate') {
+                $mode_cat++;
+            }
+            else if($client['category'] == 'Standard') {
+                $std_cat++;
+            }
+        }
+
+        $users_array = User::getAllUsers(NULL,'Yes');
+        $all_account_manager = array();
+        
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $all_account_manager[$k1] = $v1;
+                    }
+                }
+                else {
+                    $all_account_manager[$k1] = $v1;
+                }    
+            }
+        }
+
+        $all_account_manager[0] = 'Yet to Assign';
+
+        $email_template_names = EmailTemplate::getAllEmailTemplateNames();
+
+        // Get clients for popup of add information
+        $client_name_string = ClientBasicinfo::getBefore7daysClientDetails($user_id);
+
+        // For not display superadmin popup
+        $superadmin = getenv('SUPERADMINUSERID');
+        $manager = getenv('MANAGERUSERID');
+
+        // Get Client Status
+        $status = ClientBasicinfo::getAllStatus();
+        $status_id = 1;
+
+        // Get Master Search Field List
+        $field_list = ClientBasicinfo::getFieldsList();
+
+        return view('adminlte::client.index',compact('count','active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','all_account_manager','email_template_names','client_name_string','user_id','superadmin','manager','status','status_id','field_list'));
     }
 }

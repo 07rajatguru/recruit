@@ -31,12 +31,14 @@
 
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#searchmodal" onclick="client_emails_notification()" title="Send Mail">Send Mail</button>
 
-                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#secondlineammodal" onclick="second_line_client_am()" title="Change 2nd Line AM">Change 2nd Line AM</button>
+                    <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#secondlineammodal" onclick="second_line_client_am()" title="Change 2nd Line AM">Change 2nd Line AM</button>
                 @endpermission
+
+                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mastersearchmodal" onclick="" title="Master Search">Master Search</button>
             </div>
             
             <div class="pull-left">
-                <h2>Clients List ({{ $count or 0 }})</h2>
+                <h2>Clients List <span id="count">({{ $count or 0 }})</span></h2>
             </div>
         </div>
     </div>
@@ -44,20 +46,19 @@
     <div class="row">
         <div class="col-md-12">
             <div class="col-md-2" style="width: 12%;">
-                <a href="{{ route('client.list','Active') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#5cb85c;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Active Clients">Active({{ $active }})</div></a>
+                <a href="{{ route('client.list','Active') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#5cb85c;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Active Clients">Active <span id="active_count">({{ $active }})</span></div></a>
             </div>
 
             <div class="col-md-2" style="width: 12%;">
-                <a href="{{ route('client.list','Passive') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#d9534f;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Passive Clients">Passive({{ $passive }}) </div></a>
+                <a href="{{ route('client.list','Passive') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#d9534f;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Passive Clients">Passive <span id="passive_count">({{ $passive }})</span></div></a>
             </div>
 
             <div class="col-md-2" style="width: 12%;">
-                <a href="{{ route('client.list','Leaders') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#337ab7;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Leaders Clients">Leaders({{ $leaders }})</div></a>
+                <a href="{{ route('client.list','Leaders') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#337ab7;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Leaders Clients">Leaders <span id="leaders_count">({{ $leaders }})</span></div></a>
             </div>
 
             <div class="col-md-2" style="width: 12%;">
-                <a href="{{ route('client.list','Left') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#5bc0de;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Left Clients">Left({{ $left }}) </div>
-                </a>
+                <a href="{{ route('client.list','Left') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#5bc0de;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Left Clients">Left <span id="left_count">({{ $left }})</span></div></a>
             </div>
         </div>
     </div><br/>
@@ -66,19 +67,19 @@
         <div class="col-md-12">
             @permission(('display-paramount-client-list'))
                 <div class="col-md-2 col-sm-4">
-                    <a href="{{ route('client.list','Paramount') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#E9967A;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Paramount Clients">Paramount ({{ $para_cat }})</div></a>
+                    <a href="{{ route('client.list','Paramount') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#E9967A;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Paramount Clients">Paramount <span id="paramount_count">({{ $para_cat }})</span></div></a>
                 </div>
             @endpermission
 
             @permission(('display-moderate-client-list'))
                 <div class="col-md-2 col-sm-4">
-                    <a href="{{ route('client.list','Moderate') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#D3D3D3;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Moderate Clients">Moderate ({{ $mode_cat }})</div></a>
+                    <a href="{{ route('client.list','Moderate') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#D3D3D3;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Moderate Clients">Moderate <span id="moderate_count">({{ $mode_cat }})</span></div></a>
                 </div>
             @endpermission
 
             @permission(('display-standard-client-list'))
                 <div class="col-md-2 col-sm-4">
-                    <a href="{{ route('client.list','Standard') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00CED1;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Standard Clients">Standard ({{ $std_cat }})</div></a>
+                    <a href="{{ route('client.list','Standard') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00CED1;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Standard Clients">Standard <span id="standard_count">({{ $std_cat }})</span></div></a>
                 </div>
             @endpermission
         </div>
@@ -316,6 +317,88 @@
         </div>
     </div>
 
+    <!-- Client Master Search Modal Popup -->
+
+    <div class="modal fade mastersearchmodal" id="mastersearchmodal" aria-labelledby="mastersearchmodal" role="dialog">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Search Options</h4>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="">
+                        <div class="form-group"><br/>
+                            <strong>Select filed Which you want to search : </strong>
+                            {!! Form::select('selected_field', $field_list,null, array('id'=>'selected_field', 'class' => 'form-control','tabindex' => '1','onchange' => 'displaySelectedField()')) !!}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 client_owner_cls" style="display: none;">
+                    <div class="">
+                        <div class="form-group"><br/>
+                            <strong>Enter Client Owner : </strong>
+                            {!! Form::text('client_owner', null, array('id'=>'client_owner','placeholder' => 'Client Owner','class' => 'form-control', 'tabindex' => '1')) !!}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 client_company_cls" style="display: none;">
+                    <div class="">
+                        <div class="form-group"><br/>
+                            <strong>Enter Company Name : </strong>
+                            {!! Form::text('client_company', null, array('id'=>'client_company','placeholder' => 'Company Name','class' => 'form-control', 'tabindex' => '1')) !!}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 client_contact_point_cls" style="display: none;">
+                    <div class="">
+                        <div class="form-group"><br/>
+                            <strong>Enter Contact Point : </strong>
+                            {!! Form::text('client_contact_point', null, array('id'=>'client_contact_point','placeholder' => 'Contact Point','class' => 'form-control', 'tabindex' => '1')) !!}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 client_cat_cls" style="display: none;">
+                    <div class="">
+                        <div class="form-group"><br/>
+                            <strong>Enter Client Category : </strong>
+                            {!! Form::text('client_cat', null, array('id'=>'client_cat','placeholder' => 'Client Category','class' => 'form-control', 'tabindex' => '1')) !!}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 client_status_cls" style="display: none;">
+                    <div class="">
+                        <div class="form-group"><br/>
+                            <strong>Enter Client Status : </strong>
+                            {!! Form::text('client_status', null, array('id'=>'client_status','placeholder' => 'Client Status','class' => 'form-control', 'tabindex' => '1')) !!}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12 client_city_cls" style="display: none;">
+                    <div class="">
+                        <div class="form-group"><br/>
+                            <strong>Enter Client City : </strong>
+                            {!! Form::text('client_city', null, array('id'=>'client_city','placeholder' => 'Client City','class' => 'form-control', 'tabindex' => '1')) !!}
+                        </div>
+                    </div>
+                </div>
+         
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary" onclick="displayresults();">Search
+                    </button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div>
+
     <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
     <input type="hidden" name="superadmin" id="superadmin" value="{{ $superadmin }}">
     <input type="hidden" name="user_id" id="user_id" value="{{ $user_id }}">
@@ -330,8 +413,16 @@
         $("#account_manager_id").select2({width : '567px'});
         $("#second_line_am_id").select2({width : '567px'});
         $("#email_template_id").select2({width : '567px'});
+        $("#selected_field").select2({width : '567px'});
         
         var numCols = $('#client_table thead th').length;
+
+        var client_owner = $("#client_owner").val();
+        var client_company = $("#client_company").val();
+        var client_contact_point = $("#client_contact_point").val();
+        var client_cat = $("#client_cat").val();
+        var client_status = $("#client_status").val();
+        var client_city = $("#client_city").val();
 
         $("#client_table").DataTable({
 
@@ -342,8 +433,42 @@
             "ajax" : {
                 'url' : 'client/all',
                 'type' : 'get',
+                "data" : {
+                    "client_owner": client_owner,
+                    "client_company"  : client_company,
+                    "client_contact_point"  : client_contact_point,
+                    "client_cat"  : client_cat,
+                    "client_status"  : client_status,
+                    "client_city"  : client_city,
+                },
                 error: function() {
                 }
+            },
+            initComplete:function( settings, json) {
+
+                var count = json.recordsTotal;
+                $("#count").html("(" + count + ")");
+
+                var active_count = json.active_count;
+                $("#active_count").html("(" + active_count + ")");
+
+                var passive_count = json.passive_count;
+                $("#passive_count").html("(" + passive_count + ")");
+
+                var leaders_count = json.leaders_count;
+                $("#leaders_count").html("(" + leaders_count + ")");
+
+                var left_count = json.left_count;
+                $("#left_count").html("(" + left_count + ")");
+
+                var paramount_count = json.paramount_count;
+                $("#paramount_count").html("(" + paramount_count + ")");
+
+                var moderate_count = json.moderate_count;
+                $("#moderate_count").html("(" + moderate_count + ")");
+
+                var standard_count = json.standard_count;
+                $("#standard_count").html("(" + standard_count + ")");
             },
             responsive: true,
             "pageLength": 25,
@@ -745,6 +870,148 @@
                 }
             }
         });
+    }
+
+    function displaySelectedField() {
+
+        var selected_field = $("#selected_field").val();
+
+        if(selected_field == 'Client Owner') {
+
+            $(".client_owner_cls").show();
+            $(".client_company_cls").hide();
+            $(".client_contact_point_cls").hide();
+            $(".client_cat_cls").hide();
+            $(".client_status_cls").hide();
+            $(".client_city_cls").hide();
+
+            $("#client_owner").val("");
+            $("#client_company").val("");
+            $("#client_contact_point").val("");
+            $("#client_cat").val("");
+            $("#client_status").val("");
+            $("#client_city").val("");
+        }
+        if(selected_field == 'Company Name') {
+
+            $(".client_owner_cls").hide();
+            $(".client_company_cls").show();
+            $(".client_contact_point_cls").hide();
+            $(".client_cat_cls").hide();
+            $(".client_status_cls").hide();
+            $(".client_city_cls").hide();
+
+            $("#client_owner").val("");
+            $("#client_company").val("");
+            $("#client_contact_point").val("");
+            $("#client_cat").val("");
+            $("#client_status").val("");
+            $("#client_city").val("");
+        }
+        if(selected_field == 'Contact Point') {
+
+            $(".client_owner_cls").hide();
+            $(".client_company_cls").hide();
+            $(".client_contact_point_cls").show();
+            $(".client_cat_cls").hide();
+            $(".client_status_cls").hide();
+            $(".client_city_cls").hide();
+
+            $("#client_owner").val("");
+            $("#client_company").val("");
+            $("#client_contact_point").val("");
+            $("#client_cat").val("");
+            $("#client_status").val("");
+            $("#client_city").val("");
+        }
+        if(selected_field == 'Client Category') {
+
+            $(".client_owner_cls").hide();
+            $(".client_company_cls").hide();
+            $(".client_contact_point_cls").hide();
+            $(".client_cat_cls").show();
+            $(".client_status_cls").hide();
+            $(".client_city_cls").hide();
+
+            $("#client_owner").val("");
+            $("#client_company").val("");
+            $("#client_contact_point").val("");
+            $("#client_cat").val("");
+            $("#client_status").val("");
+            $("#client_city").val("");
+        }
+        if(selected_field == 'Client Status') {
+
+            $(".client_owner_cls").hide();
+            $(".client_company_cls").hide();
+            $(".client_contact_point_cls").hide();
+            $(".client_cat_cls").hide();
+            $(".client_status_cls").show();
+            $(".client_city_cls").hide();
+
+            $("#client_owner").val("");
+            $("#client_company").val("");
+            $("#client_contact_point").val("");
+            $("#client_cat").val("");
+            $("#client_status").val("");
+            $("#client_city").val("");
+        }
+        if(selected_field == 'Client City') {
+
+            $(".client_owner_cls").hide();
+            $(".client_company_cls").hide();
+            $(".client_contact_point_cls").hide();
+            $(".client_cat_cls").hide();
+            $(".client_status_cls").hide();
+            $(".client_city_cls").show();
+
+            $("#client_owner").val("");
+            $("#client_company").val("");
+            $("#client_contact_point").val("");
+            $("#client_cat").val("");
+            $("#client_status").val("");
+            $("#client_city").val("");
+        }
+    }
+
+    function displayresults() {
+
+        var client_owner = $("#client_owner").val();
+        var client_company = $("#client_company").val();
+        var client_contact_point = $("#client_contact_point").val();
+        var client_cat = $("#client_cat").val();
+        var client_status = $("#client_status").val();
+        var client_city = $("#client_city").val();
+
+        if(client_owner == '' && client_company == '' && client_contact_point == '' && client_cat == '' && client_status == '' && client_city == '') {
+
+            alert("Please enter field value.");
+            return false;
+        }
+        else {
+
+            $("#client_owner").val("");
+            $("#client_company").val("");
+            $("#client_contact_point").val("");
+            $("#client_cat").val("");
+            $("#client_status").val("");
+            $("#client_city").val("");
+
+            var url = '/client-search';
+
+            var form = $('<form action="' + url + '" method="post">' +
+            '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+            '<input type="text" name="client_owner" value="'+client_owner+'" />' +
+            '<input type="text" name="client_company" value="'+client_company+'" />' +
+            '<input type="text" name="client_contact_point" value="'+client_contact_point+'" />' +
+            '<input type="text" name="client_cat" value="'+client_cat+'" />' +
+            '<input type="text" name="client_status" value="'+client_status+'" />' +
+            '<input type="text" name="client_city" value="'+client_city+'" />' +
+            '</form>');
+
+            $('body').append(form);
+            form.submit();
+        }
     }
 </script>
 @endsection
