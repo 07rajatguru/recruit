@@ -50,6 +50,7 @@ class ClientBasicinfo extends Ardent
         
         $field_list[''] = 'Select Field';
         $field_list['Client Owner'] = 'Client Owner';
+        $field_list['Client 2nd Line Owner'] = 'Client 2nd Line Owner';
         $field_list['Company Name'] = 'Company Name';
         $field_list['Contact Point'] = 'Contact Point';
         $field_list['Client Category'] = 'Client Category';
@@ -59,7 +60,7 @@ class ClientBasicinfo extends Ardent
         return $field_list;
     }
 
-    public static function getAllClients($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=0,$type='asc',$client_owner='',$client_company='',$client_contact_point='',$client_cat='',$client_status='',$client_city='') {
+    public static function getAllClients($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=0,$type='asc',$client_owner='',$secondline_client_owner='',$client_company='',$client_contact_point='',$client_cat='',$client_status='',$client_city='') {
 
         $status_id = '3';
         $status_id_array = array($status_id);
@@ -191,6 +192,15 @@ class ClientBasicinfo extends Ardent
 
             $query = $query->where('users.name','like',"%$client_owner%");
             $query = $query->orwhere('users.first_name','like',"%$client_owner%");
+        }
+        else if(isset($secondline_client_owner) && $secondline_client_owner != '') {
+
+            $query = $query->leftJoin('users as u1',function($query) use ($secondline_client_owner) {
+
+                $query->on('u1.id', '=', 'client_basicinfo.second_line_am');
+                $query->where('u1.name','like',"%$secondline_client_owner%");
+                $query->orwhere('u1.first_name','like',"%$secondline_client_owner%");
+            });
         }
         else if(isset($client_company) && $client_company != '') {
 
@@ -354,7 +364,7 @@ class ClientBasicinfo extends Ardent
         return $client_array;
     }
 
-    public static function getAllClientsCount($all=0,$user_id,$search=0,$client_owner='',$client_company='',$client_contact_point='',$client_cat='',$client_status='',$client_city='') {
+    public static function getAllClientsCount($all=0,$user_id,$search=0,$client_owner='',$secondline_client_owner='',$client_company='',$client_contact_point='',$client_cat='',$client_status='',$client_city='') {
 
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
@@ -445,6 +455,15 @@ class ClientBasicinfo extends Ardent
 
             $query = $query->where('users.name','like',"%$client_owner%");
             $query = $query->orwhere('users.first_name','like',"%$client_owner%");
+        }
+        else if(isset($secondline_client_owner) && $secondline_client_owner != '') {
+
+            $query = $query->leftJoin('users as u1',function($query) use ($secondline_client_owner) {
+
+                $query->on('u1.id', '=', 'client_basicinfo.second_line_am');
+                $query->where('u1.name','like',"%$secondline_client_owner%");
+                $query->orwhere('u1.first_name','like',"%$secondline_client_owner%");
+            });
         }
         else if(isset($client_company) && $client_company != '') {
 

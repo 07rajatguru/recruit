@@ -345,6 +345,15 @@
                     </div>
                 </div>
 
+                <div class="col-xs-12 col-sm-12 col-md-12 client_secondline_owner_cls" style="display: none;">
+                    <div class="">
+                        <div class="form-group"><br/>
+                            <strong>Enter Second-line Client Owner : </strong>
+                            {!! Form::text('secondline_client_owner', null, array('id'=>'secondline_client_owner','placeholder' => 'Client Owner','class' => 'form-control', 'tabindex' => '1')) !!}
+                        </div>
+                    </div>
+                </div>
+
                 <div class="col-xs-12 col-sm-12 col-md-12 client_company_cls" style="display: none;">
                     <div class="">
                         <div class="form-group"><br/>
@@ -418,6 +427,7 @@
         var numCols = $('#client_table thead th').length;
 
         var client_owner = $("#client_owner").val();
+        var secondline_client_owner = $("#secondline_client_owner").val();
         var client_company = $("#client_company").val();
         var client_contact_point = $("#client_contact_point").val();
         var client_cat = $("#client_cat").val();
@@ -435,6 +445,7 @@
                 'type' : 'get',
                 "data" : {
                     "client_owner": client_owner,
+                    "secondline_client_owner": secondline_client_owner,
                     "client_company"  : client_company,
                     "client_contact_point"  : client_contact_point,
                     "client_cat"  : client_cat,
@@ -879,6 +890,7 @@
         if(selected_field == 'Client Owner') {
 
             $(".client_owner_cls").show();
+            $(".client_secondline_owner_cls").hide();
             $(".client_company_cls").hide();
             $(".client_contact_point_cls").hide();
             $(".client_cat_cls").hide();
@@ -886,6 +898,26 @@
             $(".client_city_cls").hide();
 
             $("#client_owner").val("");
+            $("#secondline_client_owner").val("");
+            $("#client_company").val("");
+            $("#client_contact_point").val("");
+            $("#client_cat").val("");
+            $("#client_status").val("");
+            $("#client_city").val("");
+        }
+
+        if(selected_field == 'Client 2nd Line Owner') {
+
+            $(".client_owner_cls").hide();
+            $(".client_secondline_owner_cls").show();
+            $(".client_company_cls").hide();
+            $(".client_contact_point_cls").hide();
+            $(".client_cat_cls").hide();
+            $(".client_status_cls").hide();
+            $(".client_city_cls").hide();
+
+            $("#client_owner").val("");
+            $("#secondline_client_owner").val("");
             $("#client_company").val("");
             $("#client_contact_point").val("");
             $("#client_cat").val("");
@@ -895,6 +927,7 @@
         if(selected_field == 'Company Name') {
 
             $(".client_owner_cls").hide();
+            $(".client_secondline_owner_cls").hide();
             $(".client_company_cls").show();
             $(".client_contact_point_cls").hide();
             $(".client_cat_cls").hide();
@@ -902,6 +935,7 @@
             $(".client_city_cls").hide();
 
             $("#client_owner").val("");
+            $("#secondline_client_owner").val("");
             $("#client_company").val("");
             $("#client_contact_point").val("");
             $("#client_cat").val("");
@@ -911,6 +945,7 @@
         if(selected_field == 'Contact Point') {
 
             $(".client_owner_cls").hide();
+            $(".client_secondline_owner_cls").hide();
             $(".client_company_cls").hide();
             $(".client_contact_point_cls").show();
             $(".client_cat_cls").hide();
@@ -918,6 +953,7 @@
             $(".client_city_cls").hide();
 
             $("#client_owner").val("");
+            $("#secondline_client_owner").val("");
             $("#client_company").val("");
             $("#client_contact_point").val("");
             $("#client_cat").val("");
@@ -927,6 +963,7 @@
         if(selected_field == 'Client Category') {
 
             $(".client_owner_cls").hide();
+            $(".client_secondline_owner_cls").hide();
             $(".client_company_cls").hide();
             $(".client_contact_point_cls").hide();
             $(".client_cat_cls").show();
@@ -934,6 +971,7 @@
             $(".client_city_cls").hide();
 
             $("#client_owner").val("");
+            $("#secondline_client_owner").val("");
             $("#client_company").val("");
             $("#client_contact_point").val("");
             $("#client_cat").val("");
@@ -943,6 +981,7 @@
         if(selected_field == 'Client Status') {
 
             $(".client_owner_cls").hide();
+            $(".client_secondline_owner_cls").hide();
             $(".client_company_cls").hide();
             $(".client_contact_point_cls").hide();
             $(".client_cat_cls").hide();
@@ -950,6 +989,7 @@
             $(".client_city_cls").hide();
 
             $("#client_owner").val("");
+            $("#secondline_client_owner").val("");
             $("#client_company").val("");
             $("#client_contact_point").val("");
             $("#client_cat").val("");
@@ -959,6 +999,7 @@
         if(selected_field == 'Client City') {
 
             $(".client_owner_cls").hide();
+            $(".client_secondline_owner_cls").hide();
             $(".client_company_cls").hide();
             $(".client_contact_point_cls").hide();
             $(".client_cat_cls").hide();
@@ -966,6 +1007,7 @@
             $(".client_city_cls").show();
 
             $("#client_owner").val("");
+            $("#secondline_client_owner").val("");
             $("#client_company").val("");
             $("#client_contact_point").val("");
             $("#client_cat").val("");
@@ -977,13 +1019,14 @@
     function displayresults() {
 
         var client_owner = $("#client_owner").val();
+        var secondline_client_owner = $("#secondline_client_owner").val();
         var client_company = $("#client_company").val();
         var client_contact_point = $("#client_contact_point").val();
         var client_cat = $("#client_cat").val();
         var client_status = $("#client_status").val();
         var client_city = $("#client_city").val();
 
-        if(client_owner == '' && client_company == '' && client_contact_point == '' && client_cat == '' && client_status == '' && client_city == '') {
+        if(client_owner == '' && secondline_client_owner == '' && client_company == '' && client_contact_point == '' && client_cat == '' && client_status == '' && client_city == '') {
 
             alert("Please enter field value.");
             return false;
@@ -991,6 +1034,7 @@
         else {
 
             $("#client_owner").val("");
+            $("#secondline_client_owner").val("");
             $("#client_company").val("");
             $("#client_contact_point").val("");
             $("#client_cat").val("");
@@ -1002,6 +1046,7 @@
             var form = $('<form action="' + url + '" method="post">' +
             '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
             '<input type="text" name="client_owner" value="'+client_owner+'" />' +
+            '<input type="text" name="secondline_client_owner" value="'+secondline_client_owner+'" />' +
             '<input type="text" name="client_company" value="'+client_company+'" />' +
             '<input type="text" name="client_contact_point" value="'+client_contact_point+'" />' +
             '<input type="text" name="client_cat" value="'+client_cat+'" />' +
