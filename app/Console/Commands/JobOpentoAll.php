@@ -51,6 +51,7 @@ class JobOpentoAll extends Command
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $management = getenv('MANAGEMENT');
+
         $type_array = array($recruitment,$hr_advisory,$management);
 
         $job_data = JobOpen::getJobforOpentoAll();
@@ -99,15 +100,37 @@ class JobOpentoAll extends Command
                             $user_emails = array();
                             JobVisibleUsers::where('job_id',$job_id)->delete();
 
+                            $strategyuserid = getenv('STRATEGYUSERID');
+                            $shatakshi_user_id = getenv('SHATAKSHIUSERID');
+
                             foreach ($users as $key1=>$value1) {
 
-                                $job_visible_users = new JobVisibleUsers();
-                                $job_visible_users->job_id = $value['id'];
-                                $job_visible_users->user_id = $key1;
-                                $job_visible_users->save();
+                                if($value['hiring_manager_id'] == $strategyuserid) {
+
+                                    $job_visible_users = new JobVisibleUsers();
+                                    $job_visible_users->job_id = $value['id'];
+                                    $job_visible_users->user_id = $key1;
+                                    $job_visible_users->save();
                                 
-                                $email = User::getUserEmailById($key1);
-                                $user_emails[] = $email;
+                                    $email = User::getUserEmailById($key1);
+                                    $user_emails[] = $email;
+                                }
+                                else {
+
+                                    if($key1 == $shatakshi_user_id) {
+
+                                    }
+                                    else {
+
+                                        $job_visible_users = new JobVisibleUsers();
+                                        $job_visible_users->job_id = $value['id'];
+                                        $job_visible_users->user_id = $key1;
+                                        $job_visible_users->save();
+                                    
+                                        $email = User::getUserEmailById($key1);
+                                        $user_emails[] = $email;
+                                    }
+                                }
                             }
                             
                             $superadminsecondemail = User::getUserEmailById($superadminuserid);
