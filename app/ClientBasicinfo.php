@@ -206,27 +206,27 @@ class ClientBasicinfo extends Ardent
         }
         else if(isset($client_status) && $client_status != '') {
 
-            if ($client_status == 'Active' || $client_status == 'active') {
+            if($client_status == 'Active' || $client_status == 'active') {
 
                 $client_status = 1;
                 $query = $query->where('client_basicinfo.status','=',"$client_status");
             }
-            if ($client_status == 'Passive' || $client_status == 'passive') {
+            else if($client_status == 'Passive' || $client_status == 'passive') {
 
                 $client_status = 0;
                 $query = $query->where('client_basicinfo.status','=',"$client_status");
             }
-            if ($client_status == 'Leaders' || $client_status == 'leaders') {
+            else if($client_status == 'Leaders' || $client_status == 'leaders') {
 
                 $client_status = 2;
                 $query = $query->where('client_basicinfo.status','=',"$client_status");
             }
-            if ($client_status == 'Left' || $client_status == 'left') {
+            else if($client_status == 'Left' || $client_status == 'left') {
 
                 $client_status = 4;
                 $query = $query->where('client_basicinfo.status','=',"$client_status");
             }
-            if ($client_status == 'Forbid' || $client_status == 'forbid') {
+            else if($client_status == 'Forbid' || $client_status == 'forbid') {
 
                 $client_status = 3;
                 $query = $query->where('client_basicinfo.status','=',"$client_status");
@@ -236,10 +236,6 @@ class ClientBasicinfo extends Ardent
 
             $query = $query->where('client_address.billing_city','like',"%$client_city%");
         }
-
-        //$query = $query->toSql();
-
-        //print_r($query);exit;
 
         // Not display Forbid clients
         $query = $query->whereNotIn('client_basicinfo.status',$status_id_array);
@@ -464,27 +460,27 @@ class ClientBasicinfo extends Ardent
         }
         else if(isset($client_status) && $client_status != '') {
 
-            if ($client_status == 'Active' || $client_status == 'active') {
+            if($client_status == 'Active' || $client_status == 'active') {
 
                 $client_status = 1;
                 $query = $query->where('client_basicinfo.status','=',"$client_status");
             }
-            if ($client_status == 'Passive' || $client_status == 'passive') {
+            else if($client_status == 'Passive' || $client_status == 'passive') {
 
                 $client_status = 0;
                 $query = $query->where('client_basicinfo.status','=',"$client_status");
             }
-            if ($client_status == 'Leaders' || $client_status == 'leaders') {
+            else if($client_status == 'Leaders' || $client_status == 'leaders') {
 
                 $client_status = 2;
                 $query = $query->where('client_basicinfo.status','=',"$client_status");
             }
-            if ($client_status == 'Left' || $client_status == 'left') {
+            else if($client_status == 'Left' || $client_status == 'left') {
 
                 $client_status = 4;
                 $query = $query->where('client_basicinfo.status','=',"$client_status");
             }
-            if ($client_status == 'Forbid' || $client_status == 'forbid') {
+            else if($client_status == 'Forbid' || $client_status == 'forbid') {
 
                 $client_status = 3;
                 $query = $query->where('client_basicinfo.status','=',"$client_status");
