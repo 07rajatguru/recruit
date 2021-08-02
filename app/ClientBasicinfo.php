@@ -67,7 +67,7 @@ class ClientBasicinfo extends Ardent
 
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
-        $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
+        $query = $query->leftjoin('users','users.id','=', 'client_basicinfo.account_manager_id');
         
         if ($all == 1) {
 
@@ -201,7 +201,8 @@ class ClientBasicinfo extends Ardent
                 $query->where('u1.name','like',"%$secondline_client_owner%");
                 $query->orwhere('u1.first_name','like',"%$secondline_client_owner%");
             });
-        }
+        }      
+
         else if(isset($client_company) && $client_company != '') {
 
             $query = $query->where('client_basicinfo.name','like',"%$client_company%");

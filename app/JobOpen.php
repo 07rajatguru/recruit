@@ -979,7 +979,6 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where('job_visible_users.user_id','=',$user_id);
         }
         
-        $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
         $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
         $job_open_query = $job_open_query->groupBy('job_openings.id');
 
@@ -1057,6 +1056,9 @@ class JobOpen extends Model
         if (isset($client_heirarchy) && $client_heirarchy > 0) {
             $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
         }
+
+        $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
+
         $job_response = $job_open_query->get();
 
         $jobs_list = array();
@@ -1365,7 +1367,6 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where('user_id','=',$user_id);
         }
 
-        $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
         $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
         $job_open_query = $job_open_query->groupBy('job_openings.id');
 
@@ -1425,6 +1426,9 @@ class JobOpen extends Model
         if (isset($client_heirarchy) && $client_heirarchy > 0) {
             $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
         }
+
+        $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
+        
         $job_response = $job_open_query->get();
 
         return sizeof($job_response);

@@ -163,23 +163,27 @@
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="priority_1" href="" title="Urgent Positions" style="text-decoration: none;color: black;"><div class="priority_1" style="width:max-content;height:40px;background-color:#FF0000;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_1 }}</div></a>
+                    <a id="priority_1" href="" title="Urgent Positions" style="text-decoration: none;color: black;"><div class="priority_1" style="width:max-content;height:40px;background-color:#FF0000;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"><span id="priority_1_count">{{ $priority_1 }}</span></div>
+                    </a>
                 </div>
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="priority_8" href="" title="Identified candidates" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px" class="priority_8">{{ $priority_8 }}</div></a>
+                    <a id="priority_8" href="" title="Identified candidates" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px" class="priority_8"><span id="priority_8_count">{{ $priority_8 }}</span></div>
+                    </a>
                 </div>
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="priority_2" href="" title="New Positions" style="text-decoration: none;color: black;"><div class="priority_2" style="width:max-content;height:40px;background-color:#00B0F0;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_2 }}</div></a>
+                    <a id="priority_2" href="" title="New Positions" style="text-decoration: none;color: black;"><div class="priority_2" style="width:max-content;height:40px;background-color:#00B0F0;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"><span id="priority_2_count">{{ $priority_2 }}</span></div>
+                    </a>
                 </div>
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="priority_3" href="" title="Constant Deliveries needed" style="text-decoration: none;color: black;"><div class="priority_3" style="width:max-content;height:40px;background-color:#FABF8F;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_3 }}
+                    <a id="priority_3" href="" title="Constant Deliveries needed" style="text-decoration: none;color: black;"><div class="priority_3" style="width:max-content;height:40px;background-color:#FABF8F;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"><span id="priority_3_count">{{ $priority_3 }}</span></div></a>
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                    <a id="priority_5" href="" title="Revived Positions" style="text-decoration: none;color: black;"><div class="priority_5" style="width:max-content;height:40px;background-color:yellow;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"><span id="priority_5_count">{{ $priority_5 }}</span></div>
+                    </a>
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                    <a id="priority_7" href="" title="No Deliveries Needed" style="text-decoration: none;color: black;"><div class="priority_7" style="width:max-content;height:40px;background-color:#808080;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"><span id="priority_7_count">{{ $priority_7 }}</span>
                     </div></a>
-                </div>
-                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="priority_5" href="" title="Revived Positions" style="text-decoration: none;color: black;"><div class="priority_5" style="width:max-content;height:40px;background-color:yellow;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_5 }}</div></a>
-                </div>
-                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="priority_7" href="" title="No Deliveries Needed" style="text-decoration: none;color: black;"><div class="priority_7" style="width:max-content;height:40px;background-color:#808080;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_7 }}</div></a>
                 </div>
 
                 {{-- Changes from 28-05-2021 Salary Wise Listing --}}
@@ -195,23 +199,20 @@
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
                 
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="under_ten_lacs" href="" title="Under 10 Lacs" style="text-decoration: none;color: black;"><div class="under_ten_lacs" style="width:max-content;height:40px;background-color:#FFCC00;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"><10L ({{ $under_ten_lacs }})</div>
-                    </a>
+                    <a id="under_ten_lacs" href="" title="Under 10 Lacs" style="text-decoration: none;color: black;"><div class="under_ten_lacs" style="width:max-content;height:40px;background-color:#FFCC00;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"><10L <span id="under_ten_lacs_count">({{ $under_ten_lacs }})</span></div></a>
                 </div>
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="between_ten_to_twenty_lacs" href="" title="Between 10-20 Lacs" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#e87992;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px" class="between_ten_to_twenty_lacs"> 10-20L ({{ $between_ten_to_twenty_lacs }})</div>
-                    </a>
+                    <a id="between_ten_to_twenty_lacs" href="" title="Between 10-20 Lacs" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#e87992;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px" class="between_ten_to_twenty_lacs"> 10-20L <span id="between_ten_to_twenty_lacs_count">({{ $between_ten_to_twenty_lacs }})</span></div></a>
                 </div>
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="above_twenty_lacs" href="" title="Above 20 Lacs" style="text-decoration: none;color: black;"><div class="above_twenty_lacs" style="width:max-content;height:40px;background-color:#f17a40;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"> >20L ({{ $above_twenty_lacs }})</div>
-                    </a>
+                    <a id="above_twenty_lacs" href="" title="Above 20 Lacs" style="text-decoration: none;color: black;"><div class="above_twenty_lacs" style="width:max-content;height:40px;background-color:#f17a40;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"> >20L <span id="above_twenty_lacs_count">({{ $above_twenty_lacs }})</span></div></a>
                 </div>
             </div>
         </div><br/>
     @endpermission
     
     <div class = "table-responsive">
-        <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="jo_table">
+        <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="job_table">
             <thead>
                 <tr>
                     <th>No</th>
@@ -307,7 +308,7 @@
             $("#client_heirarchy").select2({width:"565px"});
             var year = $("#year").val();
 
-            $("#jo_table").dataTable({
+            $("#job_table").dataTable({
 
                 'bProcessing' : true,
                 'serverSide' : true,
@@ -342,6 +343,28 @@
                     var job_salary = json.job_salary;
 
                     $("#count").html("(" + count + ")");
+
+                    var priority_1_count = json.priority['priority_1'];
+                    var priority_8_count = json.priority['priority_8'];
+                    var priority_2_count = json.priority['priority_2'];
+                    var priority_3_count = json.priority['priority_3'];
+                    var priority_5_count = json.priority['priority_5'];
+                    var priority_7_count = json.priority['priority_7'];
+
+                    $("#priority_1_count").html(priority_1_count);
+                    $("#priority_8_count").html(priority_8_count);
+                    $("#priority_2_count").html(priority_2_count);
+                    $("#priority_3_count").html(priority_3_count);
+                    $("#priority_5_count").html(priority_5_count);
+                    $("#priority_7_count").html(priority_7_count);
+
+                    var under_ten_lacs_count = json.priority['under_ten_lacs'];
+                    var between_ten_to_twenty_lacs_count = json.priority['between_ten_to_twenty_lacs'];
+                    var above_twenty_lacs_count = json.priority['above_twenty_lacs'];
+
+                    $("#under_ten_lacs_count").html("(" + under_ten_lacs_count + ")");
+                    $("#between_ten_to_twenty_lacs_count").html("(" + between_ten_to_twenty_lacs_count + ")");
+                    $("#above_twenty_lacs_count").html("(" + above_twenty_lacs_count + ")");
 
                     /*$("#priority_0").attr("href", '/jobs/priority/'+job_priority[0]+'/'+year);
                     $("#priority_1").attr("href", '/jobs/priority/'+job_priority[1]+'/'+year);
@@ -444,12 +467,12 @@
 
         /*function select_data(){
 
-            $("#jo_table").dataTable().fnDestroy();
+            $("#job_table").dataTable().fnDestroy();
 
             var year = $("#year").val();
             var client_heirarchy = $("#client_heirarchy").val();
 
-            $("#jo_table").dataTable({
+            $("#job_table").dataTable({
                 'bProcessing' : true,
                 'serverSide' : true,
                 "order" : [11,'desc'],
@@ -615,12 +638,12 @@
 
         function getJobsByPosition() {
 
-            var client_heirarchy=$("#client_heirarchy").val();
+            var client_heirarchy = $("#client_heirarchy").val();
             //var year = $("#year").val();
             
             var url = '/jobs';
-            if(client_heirarchy>=0)
-            {
+            if(client_heirarchy>=0) {
+
                 /*var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
                 '<input type="text" name="client_heirarchy" value="'+client_heirarchy+'" />' +
