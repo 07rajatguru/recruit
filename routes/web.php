@@ -990,6 +990,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-client|display-account-manager-wise-client']
     ]);
 
+    Route::post('client-list/{source}/search', [
+        'as' => 'clientsource.mastersearch',
+        'uses' => 'ClientController@masterSearchByType',
+        'middleware' => ['permission:display-client|display-account-manager-wise-client']
+    ]);
+
     Route::get('client/allbytype', [
         'as' => 'client.allbytype',
         'uses' => 'ClientController@getAllClientsDetailsByType',

@@ -450,7 +450,10 @@ class ClientController extends Controller
         $status = ClientBasicinfo::getAllStatus();
         $status_id = 1;
 
-        return view('adminlte::client.clienttypeindex',compact('active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','source','count','email_template_names','all_account_manager','status','status_id'));
+        // Get Master Search Field List
+        $field_list = ClientBasicinfo::getFieldsList();
+
+        return view('adminlte::client.clienttypeindex',compact('active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','source','count','email_template_names','all_account_manager','status','status_id','field_list'));
     }
 
     public function getAllClientsDetailsByType() {
@@ -462,6 +465,13 @@ class ClientController extends Controller
         $order = $_GET['order'][0]['column'];
         $type = $_GET['order'][0]['dir'];
         $source = $_GET['source'];
+
+        $client_owner = $_GET['client_owner'];
+        $client_company = $_GET['client_company'];
+        $client_contact_point = $_GET['client_contact_point'];
+        $client_cat = $_GET['client_cat'];
+        $client_status = $_GET['client_status'];
+        $client_city = $_GET['client_city'];
 
         $user =  \Auth::user();
         $all_perm = $user->can('display-client');
@@ -481,14 +491,14 @@ class ClientController extends Controller
             if($all_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,1,'');
-                $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,1,'');
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,1,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+                $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,1,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
             }
             else if($userwise_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,1,'');
-                $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,1,'');
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,1,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+                $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,1,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
             }
         }
 
@@ -498,13 +508,13 @@ class ClientController extends Controller
             if($all_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,0,'');
-                $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,0,'');
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,0,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+                $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,0,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
             }
             else if($userwise_perm) {
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,0,'');
-                $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,0,'');
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,0,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+                $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,0,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
             }
         }
 
@@ -514,14 +524,14 @@ class ClientController extends Controller
             if($all_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,2,'');
-                $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,2,'');
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,2,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+                $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,2,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
             }
             else if($userwise_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,2,'');
-                $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,2,'');
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,2,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+                $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,2,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
             }
         }
 
@@ -531,14 +541,14 @@ class ClientController extends Controller
             if($all_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,4,'');
-                $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,4,'');
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,4,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+                $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,4,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
             }
             else if($userwise_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,4,'');
-                $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,4,'');
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,4,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+                $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,4,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
             }
         }
 
@@ -548,14 +558,14 @@ class ClientController extends Controller
             if($all_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,3,'');
-                $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,3,'');
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,3,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+                $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,3,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
             }
             else if($userwise_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,3,'');
-                $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,3,'');
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,3,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+                $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,3,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
             }
         }
 
@@ -565,14 +575,14 @@ class ClientController extends Controller
             if($all_perm && $para_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,NULL,$source);
-                $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,NULL,$source);
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,NULL,$source,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+                $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,NULL,$source,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
             }
             else if($userwise_perm && $para_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,NULL,$source);
-                $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,NULL,$source);
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,NULL,$source,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+                $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,NULL,$source,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
             }
         }
 
@@ -582,14 +592,14 @@ class ClientController extends Controller
             if($all_perm && $mode_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,NULL,$source);
-                $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,NULL,$source);
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,NULL,$source,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+                $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,NULL,$source,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
             }
             else if($userwise_perm && $mode_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,NULL,$source);
-                $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,NULL,$source);
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,NULL,$source,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+                $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,NULL,$source,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
             }
         }
 
@@ -599,14 +609,14 @@ class ClientController extends Controller
             if($all_perm && $stan_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,NULL,$source);
-                $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,NULL,$source);
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,NULL,$source,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+                $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,NULL,$source,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
             }
             else if($userwise_perm && $stan_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,NULL,$source);
-                $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,NULL,$source);
+                $client_res = ClientBasicinfo::getClientsByType(0,$user->id,$limit,$offset,$search,$order_column_name,$type,NULL,$source,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+                $count = ClientBasicinfo::getClientsByTypeCount(0,$user->id,$search,NULL,$source,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
             }
         }
 
@@ -734,11 +744,53 @@ class ClientController extends Controller
             $i++;
         }
 
+        $active = 0;
+        $passive = 0;
+        $leaders = 0;
+        $left = 0;
+        $para_cat = 0;
+        $mode_cat = 0;
+        $std_cat = 0;
+
+        foreach($client_res as $client) {
+
+            if($client['status'] == 'Active') {
+                $active++;
+            }
+            else if ($client['status'] == 'Passive') {
+                $passive++;
+            }
+            else if($client['status'] == 'Leaders') {
+                $leaders++;
+            }
+            else if($client['status'] == 'Left') {
+                $left++;
+            }
+
+            if($client['category'] == 'Paramount') {
+                $para_cat++;
+            }
+            else if($client['category'] == 'Moderate') {
+                $mode_cat++;
+            }
+            else if($client['category'] == 'Standard') {
+                $std_cat++;
+            }
+        }
+
+
         $json_data = array(
             'draw' => intval($draw),
             'recordsTotal' => intval($count),
             'recordsFiltered' => intval($count),
-            "data" => $clients
+            "data" => $clients,
+            "active_count" => $active,
+            "passive_count" => $passive,
+            "leaders_count" => $leaders,
+            "left_count" => $left,
+            "paramount_count" => $para_cat,
+            "moderate_count" => $mode_cat,
+            "standard_count" => $std_cat
         );
         echo json_encode($json_data);exit;
     }
@@ -3014,5 +3066,99 @@ class ClientController extends Controller
         $field_list = ClientBasicinfo::getFieldsList();
 
         return view('adminlte::client.searchindex',compact('count','active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','all_account_manager','email_template_names','client_name_string','user_id','superadmin','manager','status','status_id','field_list'));
+    }
+
+    public function masterSearchByType($source) {
+
+        $user =  \Auth::user();
+        $all_perm = $user->can('display-client');
+        $userwise_perm = $user->can('display-account-manager-wise-client');
+
+        if($all_perm) {
+            $clients = ClientBasicinfo::getAllClients(1,$user->id,0,0,0,0,'','','','','','','');
+            $count = '0';
+        }
+        else if($userwise_perm) {
+            $clients = ClientBasicinfo::getAllClients(0,$user->id,0,0,0,0,'','','','','','','');
+            $count = '0';
+        }
+
+        $i = 0;
+        $active = 0;
+        $passive = 0;
+        $leaders = 0;
+        $forbid = 0;
+        $left = 0;
+        $para_cat = 0;
+        $mode_cat = 0;
+        $std_cat = 0;
+
+        foreach($clients as $client) {
+
+            if($client['status'] == 'Active' ) {
+                $active++;
+            }
+            else if ($client['status'] == 'Passive') {
+                $passive++;
+            }
+            else if($client['status'] == 'Leaders' ) {
+                $leaders++;
+            }
+            else if($client['status'] == 'Forbid' ) {
+                $forbid++;
+            }
+            else if($client['status'] == 'Left' ) {
+                $left++;
+            }
+
+            if($client['category'] == 'Paramount') {
+                $para_cat++;
+            }
+            else if($client['category'] == 'Moderate') {
+                $mode_cat++;
+            }
+            else if($client['category'] == 'Standard') {
+                $std_cat++;
+            }
+        }
+
+        $email_template_names = EmailTemplate::getAllEmailTemplateNames();
+
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $management = getenv('MANAGEMENT');
+        $type_array = array($recruitment,$hr_advisory,$management);
+
+        $users_array = User::getAllUsers(NULL,'Yes');
+        $all_account_manager = array();
+
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $all_account_manager[$k1] = $v1;
+                    }
+                }
+                else {
+                    $all_account_manager[$k1] = $v1;
+                }    
+            }
+        }
+
+        $all_account_manager[0] = 'Yet to Assign';
+
+        // Get Client Status
+
+        $status = ClientBasicinfo::getAllStatus();
+        $status_id = 1;
+
+        // Get Master Search Field List
+        $field_list = ClientBasicinfo::getFieldsList();
+
+        return view('adminlte::client.searchclienttypeindex',compact('active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','source','count','email_template_names','all_account_manager','status','status_id','field_list'));
     }
 }

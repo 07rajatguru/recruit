@@ -63,8 +63,8 @@ class ClientBasicinfo extends Ardent
 
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
-        $query = $query->leftjoin('users as u1','u1.id','=', 'client_basicinfo.account_manager_id');
-        $query = $query->leftjoin('users as u2','u2.id','=', 'client_basicinfo.second_line_am');
+        $query = $query->leftjoin('users','users.id','=', 'client_basicinfo.account_manager_id');
+        $query = $query->leftjoin('users as u1','u1.id','=', 'client_basicinfo.second_line_am');
         
         if ($all == 1) {
 
@@ -74,14 +74,14 @@ class ClientBasicinfo extends Ardent
                 $join->where('client_doc.category','=','Client Contract');
             });
 
-            $query = $query->select('client_basicinfo.*', 'u1.name as am_name','u1.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city');
+            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city');
 
             if (isset($search) && $search != '') {
 
                 $query = $query->where(function($query) use ($search) {
 
-                    $query = $query->where('u1.name','=',"$search");
-                    $query = $query->orwhere('u1.first_name','=',"$search");
+                    $query = $query->where('users.name','=',"$search");
+                    $query = $query->orwhere('users.first_name','=',"$search");
                     $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
@@ -120,7 +120,7 @@ class ClientBasicinfo extends Ardent
 
         else if ($all == 0) {
 
-            $query = $query->select('client_basicinfo.*', 'u1.name as am_name','u1.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
+            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
 
             /*$manager_user_id = env('MANAGERUSERID');
             $marketing_intern_user_id = env('MARKETINGINTERNUSERID');
@@ -145,8 +145,8 @@ class ClientBasicinfo extends Ardent
 
                 $query = $query->where(function($query) use ($search) {
 
-                    $query = $query->where('u1.name','=',"$search");
-                    $query = $query->orwhere('u1.first_name','=',"$search");
+                    $query = $query->where('users.name','=',"$search");
+                    $query = $query->orwhere('users.first_name','=',"$search");
                     $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                     $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
@@ -187,10 +187,13 @@ class ClientBasicinfo extends Ardent
         // Master Search Condidtions
         if(isset($client_owner) && $client_owner != '') {
 
-            $query = $query->where('u1.name','like',"%$client_owner%");
-            $query = $query->orwhere('u1.first_name','like',"%$client_owner%");
-            $query = $query->orwhere('u2.name','like',"%$client_owner%");
-            $query = $query->orwhere('u2.first_name','like',"%$client_owner%");
+            $query = $query->where(function($query) use ($client_owner) {
+
+                $query = $query->where('users.name','like',"%$client_owner%");
+                $query = $query->orwhere('users.first_name','like',"%$client_owner%");
+                $query = $query->orwhere('u1.name','like',"%$client_owner%");
+                $query = $query->orwhere('u1.first_name','like',"%$client_owner%");
+            });
         }
         else if(isset($client_company) && $client_company != '') {
 
@@ -360,8 +363,8 @@ class ClientBasicinfo extends Ardent
 
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
-        $query = $query->leftjoin('users as u1','u1.id','=', 'client_basicinfo.account_manager_id');
-        $query = $query->leftjoin('users as u2','u2.id','=', 'client_basicinfo.second_line_am');
+        $query = $query->leftjoin('users','users.id','=', 'client_basicinfo.account_manager_id');
+        $query = $query->leftjoin('users as u1','u1.id','=', 'client_basicinfo.second_line_am');
 
         if ($all == 1) {
 
@@ -371,11 +374,11 @@ class ClientBasicinfo extends Ardent
                 $join->where('client_doc.category','=','Client Contract');
             });
 
-            $query = $query->select('client_basicinfo.*', 'u1.name as am_name','u1.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city');
+            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city');
         }
         else if ($all == 0) {
 
-            $query = $query->select('client_basicinfo.*', 'u1.name as am_name','u1.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
+            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
 
             /*$manager_user_id = env('MANAGERUSERID');
             $marketing_intern_user_id = env('MARKETINGINTERNUSERID');
@@ -401,8 +404,8 @@ class ClientBasicinfo extends Ardent
 
             $query = $query->where(function($query) use ($search) {
 
-                $query = $query->where('u1.name','=',"$search");
-                $query = $query->orwhere('u1.first_name','=',"$search");
+                $query = $query->where('users.name','=',"$search");
+                $query = $query->orwhere('users.first_name','=',"$search");
                 $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                 $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                 $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
@@ -446,10 +449,13 @@ class ClientBasicinfo extends Ardent
         // Master Search Condidtions
         if(isset($client_owner) && $client_owner != '') {
 
-            $query = $query->where('u1.name','like',"%$client_owner%");
-            $query = $query->orwhere('u1.first_name','like',"%$client_owner%");
-            $query = $query->orwhere('u2.name','like',"%$client_owner%");
-            $query = $query->orwhere('u2.first_name','like',"%$client_owner%");
+            $query = $query->where(function($query) use ($client_owner) {
+
+                $query = $query->where('users.name','like',"%$client_owner%");
+                $query = $query->orwhere('users.first_name','like',"%$client_owner%");
+                $query = $query->orwhere('u1.name','like',"%$client_owner%");
+                $query = $query->orwhere('u1.first_name','like',"%$client_owner%");
+            });
         }
         else if(isset($client_company) && $client_company != '') {
 
@@ -869,11 +875,12 @@ class ClientBasicinfo extends Ardent
         return $status;
     }
 
-    public static function getClientsByType($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=0,$type='asc',$status,$category=NULL) {
+    public static function getClientsByType($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=0,$type='asc',$status,$category=NULL,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city) {
 
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
+        $query = $query->leftjoin('users as u1','u1.id','=', 'client_basicinfo.second_line_am');
 
         if ($all == 1) {
 
@@ -881,6 +888,7 @@ class ClientBasicinfo extends Ardent
                 $join->on('client_doc.client_id', '=', 'client_basicinfo.id');
                 $join->where('client_doc.category','=','Client Contract');
             });
+
             $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city');
 
             if (isset($search) && $search != '') {
@@ -965,6 +973,62 @@ class ClientBasicinfo extends Ardent
                     }
                 });
             }
+        }
+
+        // Master Search Condidtions
+        if(isset($client_owner) && $client_owner != '') {
+
+            $query = $query->where(function($query) use ($client_owner) {
+
+                $query = $query->where('users.name','like',"%$client_owner%");
+                $query = $query->orwhere('users.first_name','like',"%$client_owner%");
+                $query = $query->orwhere('u1.name','like',"%$client_owner%");
+                $query = $query->orwhere('u1.first_name','like',"%$client_owner%");
+            });
+        }
+        else if(isset($client_company) && $client_company != '') {
+
+            $query = $query->where('client_basicinfo.name','like',"%$client_company%");
+        }
+        else if(isset($client_contact_point) && $client_contact_point != '') {
+
+            $query = $query->where('client_basicinfo.coordinator_name','like',"%$client_contact_point%");
+        }
+        else if(isset($client_cat) && $client_cat != '') {
+
+            $query = $query->where('client_basicinfo.category','like',"%$client_cat%");
+        }
+        else if(isset($client_status) && $client_status != '') {
+
+            if($client_status == 'Active' || $client_status == 'active') {
+
+                $client_status = 1;
+                $query = $query->where('client_basicinfo.status','=',"$client_status");
+            }
+            else if($client_status == 'Passive' || $client_status == 'passive') {
+
+                $client_status = 0;
+                $query = $query->where('client_basicinfo.status','=',"$client_status");
+            }
+            else if($client_status == 'Leaders' || $client_status == 'leaders') {
+
+                $client_status = 2;
+                $query = $query->where('client_basicinfo.status','=',"$client_status");
+            }
+            else if($client_status == 'Left' || $client_status == 'left') {
+
+                $client_status = 4;
+                $query = $query->where('client_basicinfo.status','=',"$client_status");
+            }
+            else if($client_status == 'Forbid' || $client_status == 'forbid') {
+
+                $client_status = 3;
+                $query = $query->where('client_basicinfo.status','=',"$client_status");
+            }
+        }
+        else if(isset($client_city) && $client_city != '') {
+
+            $query = $query->where('client_address.billing_city','like',"%$client_city%");
         }
 
         if (isset($status) && $status >= 0) {
@@ -1102,11 +1166,12 @@ class ClientBasicinfo extends Ardent
         return $client_array;
     }
 
-    public static function getClientsByTypeCount($all=0,$user_id,$search=0,$status,$category=NULL) {
+    public static function getClientsByTypeCount($all=0,$user_id,$search=0,$status,$category=NULL,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city) {
 
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
+        $query = $query->leftjoin('users as u1','u1.id','=', 'client_basicinfo.second_line_am');
 
         if ($all == 1) {
 
@@ -1201,6 +1266,63 @@ class ClientBasicinfo extends Ardent
                 });
             }
         }
+
+        // Master Search Condidtions
+        if(isset($client_owner) && $client_owner != '') {
+
+            $query = $query->where(function($query) use ($client_owner) {
+
+                $query = $query->where('users.name','like',"%$client_owner%");
+                $query = $query->orwhere('users.first_name','like',"%$client_owner%");
+                $query = $query->orwhere('u1.name','like',"%$client_owner%");
+                $query = $query->orwhere('u1.first_name','like',"%$client_owner%");
+            });
+        }
+        else if(isset($client_company) && $client_company != '') {
+
+            $query = $query->where('client_basicinfo.name','like',"%$client_company%");
+        }
+        else if(isset($client_contact_point) && $client_contact_point != '') {
+
+            $query = $query->where('client_basicinfo.coordinator_name','like',"%$client_contact_point%");
+        }
+        else if(isset($client_cat) && $client_cat != '') {
+
+            $query = $query->where('client_basicinfo.category','like',"%$client_cat%");
+        }
+        else if(isset($client_status) && $client_status != '') {
+
+            if($client_status == 'Active' || $client_status == 'active') {
+
+                $client_status = 1;
+                $query = $query->where('client_basicinfo.status','=',"$client_status");
+            }
+            else if($client_status == 'Passive' || $client_status == 'passive') {
+
+                $client_status = 0;
+                $query = $query->where('client_basicinfo.status','=',"$client_status");
+            }
+            else if($client_status == 'Leaders' || $client_status == 'leaders') {
+
+                $client_status = 2;
+                $query = $query->where('client_basicinfo.status','=',"$client_status");
+            }
+            else if($client_status == 'Left' || $client_status == 'left') {
+
+                $client_status = 4;
+                $query = $query->where('client_basicinfo.status','=',"$client_status");
+            }
+            else if($client_status == 'Forbid' || $client_status == 'forbid') {
+
+                $client_status = 3;
+                $query = $query->where('client_basicinfo.status','=',"$client_status");
+            }
+        }
+        else if(isset($client_city) && $client_city != '') {
+
+            $query = $query->where('client_address.billing_city','like',"%$client_city%");
+        }
+
         if (isset($status) && $status >= 0) {
             $query = $query->where('client_basicinfo.status',$status);
         }

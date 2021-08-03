@@ -67,19 +67,19 @@
         <div class="col-md-12">
             @permission(('display-paramount-client-list'))
                 <div class="col-md-2 col-sm-4">
-                    <a id="paramount" href="{{ route('client.list','Paramount') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#E9967A;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Paramount Clients">Paramount <span id="paramount_count">({{ $para_cat }})</span></div></a>
+                    <a href="{{ route('client.list','Paramount') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#E9967A;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Paramount Clients">Paramount <span id="paramount_count">({{ $para_cat }})</span></div></a>
                 </div>
             @endpermission
 
             @permission(('display-moderate-client-list'))
                 <div class="col-md-2 col-sm-4">
-                    <a id="moderate" href="{{ route('client.list','Moderate') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#D3D3D3;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Moderate Clients">Moderate <span id="moderate_count">({{ $mode_cat }})</span></div></a>
+                    <a href="{{ route('client.list','Moderate') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#D3D3D3;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Moderate Clients">Moderate <span id="moderate_count">({{ $mode_cat }})</span></div></a>
                 </div>
             @endpermission
 
             @permission(('display-standard-client-list'))
                 <div class="col-md-2 col-sm-4">
-                    <a id="standard" href="{{ route('client.list','Standard') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00CED1;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Standard Clients">Standard <span id="standard_count">({{ $std_cat }})</span></div></a>
+                    <a href="{{ route('client.list','Standard') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00CED1;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Standard Clients">Standard <span id="standard_count">({{ $std_cat }})</span></div></a>
                 </div>
             @endpermission
         </div>
