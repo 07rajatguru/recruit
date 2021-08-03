@@ -61,6 +61,13 @@
             var source = $("#source").val();
             var numCols = $('#clienttype_table thead th').length;
 
+            var client_owner = '';
+            var client_company = '';
+            var client_contact_point = '';
+            var client_cat = '';
+            var client_status = '';
+            var client_city = '';
+
             $("#clienttype_table").dataTable({
                 
                 'bProcessing' : true,
@@ -69,7 +76,15 @@
                 "columnDefs": [ {orderable: false, targets: [1]}],
                 "ajax" : {
                     'url' : '/client/allbytype',
-                    data : {"source" : source},
+                    "data" : {
+                        "source" : source,
+                        "client_owner": client_owner,
+                        "client_company"  : client_company,
+                        "client_contact_point"  : client_contact_point,
+                        "client_cat"  : client_cat,
+                        "client_status"  : client_status,
+                        "client_city"  : client_city,
+                    },
                     'type' : 'get',
                     error: function() {
                     }
