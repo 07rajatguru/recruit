@@ -40,11 +40,11 @@ class ClientController extends Controller
         $userwise_perm = $user->can('display-account-manager-wise-client');
 
         if($all_perm) {
-            $client_array = ClientBasicinfo::getAllClients(1,$user_id);
+            $client_array = ClientBasicinfo::getAllClients(1,$user_id,0,0,0,0,'','','','','','','');
             $count = sizeof($client_array);
         }
         else if($userwise_perm) {
-            $client_array = ClientBasicinfo::getAllClients(0,$user_id);
+            $client_array = ClientBasicinfo::getAllClients(0,$user_id,0,0,0,0,'','','','','','','');
             $count = sizeof($client_array);
         }
 
@@ -369,11 +369,11 @@ class ClientController extends Controller
         $userwise_perm = $user->can('display-account-manager-wise-client');
 
         if($all_perm) {
-            $clients = ClientBasicinfo::getAllClients(1,$user->id);
+            $clients = ClientBasicinfo::getAllClients(1,$user->id,0,0,0,0,'','','','','','','');
             $count = '0';
         }
         else if($userwise_perm) {
-            $clients = ClientBasicinfo::getAllClients(0,$user->id);
+            $clients = ClientBasicinfo::getAllClients(0,$user->id,0,0,0,0,'','','','','','','');
             $count = '0';
         }
 
@@ -3013,6 +3013,6 @@ class ClientController extends Controller
         // Get Master Search Field List
         $field_list = ClientBasicinfo::getFieldsList();
 
-        return view('adminlte::client.index',compact('count','active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','all_account_manager','email_template_names','client_name_string','user_id','superadmin','manager','status','status_id','field_list'));
+        return view('adminlte::client.searchindex',compact('count','active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','all_account_manager','email_template_names','client_name_string','user_id','superadmin','manager','status','status_id','field_list'));
     }
 }
