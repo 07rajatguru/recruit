@@ -1663,6 +1663,33 @@ class EveryMinute extends Command
                 // Get users for popup of add information
                 $candidate_job_details = CandidateBasicInfo::getCandidateJobDetailsById($candidate_id,$job_id);
 
+                $user_email_details = UsersEmailPwd::getUserEmailDetails($candidate_job_details['owner_id']);
+
+                $input['from_address'] = trim($user_email_details->email);
+
+                if(strpos($input['from_address'], '@gmail.com') !== false) {
+
+                    config([
+
+                        'mail.driver' => trim('mail'),
+                        'mail.host' => trim('smtp.gmail.com'),
+                        'mail.port' => trim('587'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('tls'),
+                    ]);
+                }
+                else {
+
+                    config([
+                        'mail.driver' => trim('smtp'),
+                        'mail.host' => trim('smtp.zoho.com'),
+                        'mail.port' => trim('465'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('ssl'),
+                    ]);
+                }
                 if(isset($candidate_job_details) && $candidate_job_details != '') {
 
                     // Get candidate owner signature
