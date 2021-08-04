@@ -311,52 +311,11 @@ class ClientController extends Controller
             $i++;
         }
 
-        $active = 0;
-        $passive = 0;
-        $leaders = 0;
-        $left = 0;
-        $para_cat = 0;
-        $mode_cat = 0;
-        $std_cat = 0;
-
-        foreach($client_res as $client) {
-
-            if($client['status'] == 'Active') {
-                $active++;
-            }
-            else if ($client['status'] == 'Passive') {
-                $passive++;
-            }
-            else if($client['status'] == 'Leaders') {
-                $leaders++;
-            }
-            else if($client['status'] == 'Left') {
-                $left++;
-            }
-
-            if($client['category'] == 'Paramount') {
-                $para_cat++;
-            }
-            else if($client['category'] == 'Moderate') {
-                $mode_cat++;
-            }
-            else if($client['category'] == 'Standard') {
-                $std_cat++;
-            }
-        }
-
         $json_data = array(
             'draw' => intval($draw),
             'recordsTotal' => intval($count),
             'recordsFiltered' => intval($count),
-            "data" => $clients,
-            "active_count" => $active,
-            "passive_count" => $passive,
-            "leaders_count" => $leaders,
-            "left_count" => $left,
-            "paramount_count" => $para_cat,
-            "moderate_count" => $mode_cat,
-            "standard_count" => $std_cat
+            "data" => $clients
         );
 
         echo json_encode($json_data);exit;
@@ -778,7 +737,6 @@ class ClientController extends Controller
             }
         }
 
-
         $json_data = array(
             'draw' => intval($draw),
             'recordsTotal' => intval($count),
@@ -792,6 +750,7 @@ class ClientController extends Controller
             "moderate_count" => $mode_cat,
             "standard_count" => $std_cat
         );
+
         echo json_encode($json_data);exit;
     }
 
@@ -3066,6 +3025,207 @@ class ClientController extends Controller
         $field_list = ClientBasicinfo::getFieldsList();
 
         return view('adminlte::client.searchindex',compact('count','active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','all_account_manager','email_template_names','client_name_string','user_id','superadmin','manager','status','status_id','field_list'));
+    }
+
+    public function getAllClientsDetailsBySearch() {
+
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $client_owner = $_GET['client_owner'];
+        $client_company = $_GET['client_company'];
+        $client_contact_point = $_GET['client_contact_point'];
+        $client_cat = $_GET['client_cat'];
+        $client_status = $_GET['client_status'];
+        $client_city = $_GET['client_city'];
+        
+        $user =  \Auth::user();
+        $all_perm = $user->can('display-client');
+        $userwise_perm = $user->can('display-account-manager-wise-client');
+        $edit_perm = $user->can('client-edit');
+        $delete_perm = $user->can('client-delete');
+        $category_perm = $user->can('display-client-category-in-client-list');
+
+        if($all_perm) {
+
+            $order_column_name = self::getOrderColumnName($order);
+            $client_res = ClientBasicinfo::getAllClients(1,$user->id,$limit,$offset,$search,$order_column_name,$type,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+            
+            $count = ClientBasicinfo::getAllClientsCount(1,$user->id,$search,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+        }
+        else if($userwise_perm) {
+
+            $order_column_name = self::getOrderColumnName($order);
+            $client_res = ClientBasicinfo::getAllClients(0,$user->id,$limit,$offset,$search,$order_column_name,$type,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+            $count = ClientBasicinfo::getAllClientsCount(0,$user->id,$search,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+        }
+        
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $management = getenv('MANAGEMENT');
+        $type_array = array($recruitment,$hr_advisory,$management);
+
+        $users_array = User::getAllUsers(NULL,'Yes');
+        $account_manager = array();
+
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $account_manager[$k1] = $v1;
+                    }
+                }
+                else {
+                    $account_manager[$k1] = $v1;
+                }    
+            }
+        }
+
+        $account_manager[0] = 'Yet to Assign';
+
+        $clients = array();
+        $i = 0;$j = 0;
+
+        foreach ($client_res as $key => $value) {
+
+            $action = '';
+            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
+        
+            if($edit_perm) {
+
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
+            }
+            if($delete_perm) {
+
+                $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'client','display_name'=>'Client']);
+                $delete = $delete_view->render();
+                $action .= $delete;
+
+                if(isset($value['url']) && $value['url'] != '') {
+                    $action .= '<a target="_blank" href="'.$value['url'].'"><i  class="fa fa-fw fa-download"></i></a>';
+                }
+            }
+            if($all_perm) {
+
+                $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager, 'source' => '']);
+                $account = $account_manager_view->render();
+                $action .= $account;
+            }
+
+            if($userwise_perm) {
+
+                $secondline_account_manager_view = \View::make('adminlte::partials.secondline_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager, 'source' => '']);
+                $secondline_account = $secondline_account_manager_view->render();
+                $action .= $secondline_account;
+
+            }
+            if($all_perm || $value['client_owner']) {
+
+                $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
+
+                $days_array = ClientTimeline::getTimelineDetailsByClientId($value['id']);
+
+                $timeline_view = \View::make('adminlte::partials.client_timeline_view', ['data' => $value,'days_array' => $days_array]);
+                $timeline = $timeline_view->render();
+                $action .= $timeline;
+            }
+
+            $checkbox = '<input type=checkbox name=client value='.$value['id'].' class=others_client id='.$value['id'].'/>';
+            $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
+            $contact_point = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['hr_name'].'</a>';
+            $latest_remarks = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['latest_remarks'].'</a>';
+
+            if($value['status'] == 'Active')
+                $client_status = '<span class="label label-sm label-success">'.$value['status'].'</span></td>';
+            else if($value['status'] == 'Passive')
+                $client_status = '<span class="label label-sm label-danger">'.$value['status'].'</span></td>';
+            else if($value['status'] == 'Leaders')
+                $client_status = '<span class="label label-sm label-primary">'.$value['status'].'</span></td>';
+            else if($value['status'] == 'Forbid')
+                $client_status = '<span class="label label-sm label-default">'.$value['status'].'</span>';
+            else if($value['status'] == 'Left')
+                $client_status = '<span class="label label-sm label-info">'.$value['status'].'</span>';
+
+            $client_category = $value['category'];
+
+            if(isset($value['second_line_am_name']) && $value['second_line_am_name'] != '') {
+
+                $am_name = $value['am_name']." | ".$value['second_line_am_name'];
+            }
+            else {
+                $am_name = $value['am_name'];
+            }
+
+            if($category_perm) {
+
+                $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$value['second_line_am']);
+            }
+            else {
+
+                $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$value['second_line_am']);
+            }
+
+            $clients[$i] = $data;
+            $i++;
+        }
+
+        $active = 0;
+        $passive = 0;
+        $leaders = 0;
+        $left = 0;
+        $para_cat = 0;
+        $mode_cat = 0;
+        $std_cat = 0;
+
+        foreach($client_res as $client) {
+
+            if($client['status'] == 'Active') {
+                $active++;
+            }
+            else if ($client['status'] == 'Passive') {
+                $passive++;
+            }
+            else if($client['status'] == 'Leaders') {
+                $leaders++;
+            }
+            else if($client['status'] == 'Left') {
+                $left++;
+            }
+
+            if($client['category'] == 'Paramount') {
+                $para_cat++;
+            }
+            else if($client['category'] == 'Moderate') {
+                $mode_cat++;
+            }
+            else if($client['category'] == 'Standard') {
+                $std_cat++;
+            }
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $clients,
+            "active_count" => $active,
+            "passive_count" => $passive,
+            "leaders_count" => $leaders,
+            "left_count" => $left,
+            "paramount_count" => $para_cat,
+            "moderate_count" => $mode_cat,
+            "standard_count" => $std_cat
+        );
+
+        echo json_encode($json_data);exit;
     }
 
     public function masterSearchByType($source) {

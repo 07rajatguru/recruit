@@ -984,6 +984,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-client|display-account-manager-wise-client']
     ]);
 
+    Route::get('client-search/all', [
+        'as' => 'clientsearch.all',
+        'uses' => 'ClientController@getAllClientsDetailsBySearch',
+        'middleware' => ['permission:display-client|display-account-manager-wise-client']
+    ]);
+
     Route::get('client-list/{source}', [
         'as' => 'client.list',
         'uses' => 'ClientController@getAllClientsBySource',

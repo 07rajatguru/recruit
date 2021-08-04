@@ -447,29 +447,7 @@
             initComplete:function( settings, json) {
 
                 var count = json.recordsTotal;
-                $("#count").html("(" + count + ")");
-
-                var active_count = json.active_count;
-                $("#active_count").html("(" + active_count + ")");
-
-                var passive_count = json.passive_count;
-                $("#passive_count").html("(" + passive_count + ")");
-
-                var leaders_count = json.leaders_count;
-                $("#leaders_count").html("(" + leaders_count + ")");
-
-                var left_count = json.left_count;
-                $("#left_count").html("(" + left_count + ")");
-
-                var paramount_count = json.paramount_count;
-                $("#paramount_count").html("(" + paramount_count + ")");
-
-                var moderate_count = json.moderate_count;
-                $("#moderate_count").html("(" + moderate_count + ")");
-
-                var standard_count = json.standard_count;
-                $("#standard_count").html("(" + standard_count + ")");
-                
+                $("#count").html("(" + count + ")");        
             },
             responsive: true,
             "pageLength": 25,

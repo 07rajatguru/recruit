@@ -431,7 +431,7 @@
             "order" : [0,'desc'],
             "columnDefs": [ {orderable: false, targets: [1]},{orderable: false, targets: [2]} ],
             "ajax" : {
-                'url' : 'client/all',
+                'url' : 'client-search/all',
                 'type' : 'get',
                 "data" : {
                     "client_owner": client_owner,
