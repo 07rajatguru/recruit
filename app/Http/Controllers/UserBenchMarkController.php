@@ -23,7 +23,8 @@ class UserBenchMarkController extends Controller
     	$action = 'add';
 
     	$recruitment = getenv('RECRUITMENT');
-        $type_array = array($recruitment);
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
         $all_users = User::getAllUsers($type_array);
 
     	$select_user_id = '';
@@ -62,7 +63,8 @@ class UserBenchMarkController extends Controller
     	$action = 'edit';
 
         $recruitment = getenv('RECRUITMENT');
-        $type_array = array($recruitment);
+        $hr_advisory = getenv('HRADVISORY');
+        $type_array = array($recruitment,$hr_advisory);
         $all_users = User::getAllUsers($type_array);
 
     	$select_user_id = $user_bench_mark->user_id;

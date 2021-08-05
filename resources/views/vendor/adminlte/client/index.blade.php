@@ -330,7 +330,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="">
                         <div class="form-group"><br/>
-                            <strong>Select filed Which you want to search : </strong>
+                            <strong>Select Field which you want to search : </strong>
                             {!! Form::select('selected_field', $field_list,null, array('id'=>'selected_field', 'class' => 'form-control','tabindex' => '1','onchange' => 'displaySelectedField()')) !!}
                         </div>
                     </div>
