@@ -365,8 +365,8 @@ class CandidateController extends Controller
     public function candidatejoinBySelectedMonth($month,$year) {
 
         $user =  \Auth::user();
-        
-        $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,1,$month,$year,$department_id);
+
+        $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,1,$month,$year,0);
         $count = sizeof($response);
         
         return view('adminlte::candidate.candidatejoin', array('candidates' => $response,'count' => $count));
