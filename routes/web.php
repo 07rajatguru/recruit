@@ -181,7 +181,8 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::any('/dashboard/monthwise',[
         'as' => 'dashboard.monthwise',
-        'uses' => 'HomeController@dashboardMonthwise'
+        'uses' => 'HomeController@dashboardMonthwise',
+        'middleware' => ['permission:display-month-wise-dashboard']
     ]);
 
     // Recruitment Dashboard
@@ -1026,6 +1027,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-client|display-account-manager-wise-client']
     ]);
 
+    Route::get('monthwiseclient/{month}/{year}', [
+        'as' => 'monthwise.client',
+        'uses' => 'ClientController@getClientsBySelectedMonth',
+        'middleware' => ['permission:display-client|display-account-manager-wise-client']
+    ]);
+
     Route::post('client/create', [
         'as' => 'client.store',
         'uses' => 'ClientController@store',
@@ -1223,6 +1230,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('candidatejoin/{month}/{year}/{department_id}', [
         'as' => 'candidatejoin.index',
         'uses' => 'CandidateController@candidatejoin',
+        'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
+    ]);
+
+    Route::get('candidatejoin/{month}/{year}', [
+        'as' => 'candidatejoin.indexmonthwise',
+        'uses' => 'CandidateController@candidatejoinBySelectedMonth',
         'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
     ]);
 
@@ -1590,10 +1603,20 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@associatedCVS',
     ]);
 
+    Route::get('associatedcvs/{month}/{year}', [
+        'as' => 'job.associatedcvs',
+        'uses' => 'JobOpenController@associatedCVSBySelectedMonth',
+    ]);
+
     // Get list of Shortlisted cvs
     Route::get('shortlistedcvs/{month}/{year}/{department_id}', [
         'as' => 'jobopen.shortlistedcvs',
         'uses' => 'JobOpenController@shortlistedCVS',
+    ]);
+
+    Route::get('shortlistedcvs/{month}/{year}', [
+        'as' => 'job.shortlistedcvs',
+        'uses' => 'JobOpenController@shortlistedCVSBySelectedMonth',
     ]);
 
     // Associated candidate mail route
@@ -1679,6 +1702,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('attendedinterview/{month}/{year}/{department_id}',[
         'as' => 'interview.attendedinterview',
         'uses' => 'InterviewController@attendedinterview',
+        'middleware' => ['permission:display-interviews|display-interviews-by-loggedin-user']
+    ]);
+
+    Route::get('attendedinterview/{month}/{year}',[
+        'as' => 'interview.attendedmonthwise',
+        'uses' => 'InterviewController@attendedinterviewBySelectedMonth',
         'middleware' => ['permission:display-interviews|display-interviews-by-loggedin-user']
     ]);
 

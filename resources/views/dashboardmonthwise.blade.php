@@ -14,12 +14,6 @@
         <div class="pull-left">
             <h2>Dashboard Monthwise Data</h2>
         </div>
-
-       <!--  <div class="pull-right">
-            @include('adminlte::partials.login', ['name' => 'dashboard'])
-            @include('adminlte::partials.logout', ['name' => 'dashboard'])
-        </div>
- -->
     </div>
 </div>
 @stop

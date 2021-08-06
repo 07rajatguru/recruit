@@ -2271,6 +2271,16 @@ class ClientController extends Controller
         return view('adminlte::client.monthwiseclient', array('clients' => $response,'count' => $count));
     }
 
+    public function getClientsBySelectedMonth($month,$year) {
+
+        $user =  \Auth::user();
+
+        $response = ClientBasicinfo::getMonthWiseClientByUserId($user->id,1,$month,$year,0);
+        $count = sizeof($response);
+
+        return view('adminlte::client.monthwiseclient', array('clients' => $response,'count' => $count));
+    }
+
     public function getAccountManager(Request $request) {
 
         $account_manager = $request->get('account_manager');

@@ -362,6 +362,16 @@ class CandidateController extends Controller
         return view('adminlte::candidate.candidatejoin', array('candidates' => $response,'count' => $count));
     }
 
+    public function candidatejoinBySelectedMonth($month,$year) {
+
+        $user =  \Auth::user();
+        
+        $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,1,$month,$year,$department_id);
+        $count = sizeof($response);
+        
+        return view('adminlte::candidate.candidatejoin', array('candidates' => $response,'count' => $count));
+    }
+
     public function create() {
 
         $candidateSex = CandidateBasicInfo::getTypeArray();

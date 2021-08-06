@@ -489,6 +489,17 @@ class InterviewController extends Controller
         return view('adminlte::interview.attendedinterview',compact('count','attended_interview','source'));
     }
 
+    public function attendedinterviewBySelectedMonth($month,$year) {
+
+        $user = \Auth::user();
+
+        $attended_interview = Interview::getAttendedInterviews(1,$user->id,$month,$year,0);
+        $count = sizeof($attended_interview);
+        $source = 'ai';
+
+        return view('adminlte::interview.attendedinterview',compact('count','attended_interview','source'));
+    }
+
     public function create() {
 
         $user = \Auth::user();

@@ -4016,6 +4016,18 @@ class JobOpenController extends Controller
         return view ('adminlte::jobopen.associatedcvs',compact('response','count','short_month_name','year'));
     }
 
+    public function associatedCVSBySelectedMonth($month,$year) {
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        $response = JobAssociateCandidates::getAssociatedCvsByUseridMonthWise(0,$month,$year,0);
+        $count = sizeof($response);
+
+        $short_month_name = date("M", mktime(0, 0, 0, $month, 10)); 
+        return view ('adminlte::jobopen.associatedcvs',compact('response','count','short_month_name','year'));
+    }
+
     public function checkJobId() {
 
         if (isset($_POST['job_ids']) && $_POST['job_ids'] != '') {
@@ -4243,6 +4255,19 @@ class JobOpenController extends Controller
             $response = JobAssociateCandidates::getShortlistedCvsByUseridMonthWise(0,$month,$year,$department_id);
         }
 
+        $count = sizeof($response);
+
+        $short_month_name = date("M", mktime(0, 0, 0, $month, 10));
+        
+        return view ('adminlte::jobopen.shortlistedcvs',compact('response','count','short_month_name','year'));
+    }
+
+    public function shortlistedCVSBySelectedMonth($month,$year) {
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        $response = JobAssociateCandidates::getShortlistedCvsByUseridMonthWise(0,$month,$year,0);
         $count = sizeof($response);
 
         $short_month_name = date("M", mktime(0, 0, 0, $month, 10));
