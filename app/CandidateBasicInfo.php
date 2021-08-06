@@ -4,6 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Date;
+use App\JobOpenDoc;
 
 class CandidateBasicInfo extends Model
 {
@@ -479,6 +480,27 @@ class CandidateBasicInfo extends Model
 
         // job Details
         $job_details = JobOpen::getJobById($job_id);
+        $attachments = JobOpenDoc::getJobDocByJobId($job_id,'Job Description');
+
+        $file_path_array = array();
+        $j=0;
+
+        if (isset($attachments) && $attachments != '') {
+
+            foreach ($attachments as $key => $value) {
+
+                if (isset($value) && $value != '') {
+
+                    $file_path = public_path() . "/" . $value['file'];
+                }
+                else {
+                    $file_path = '';
+                }
+                
+                $file_path_array[$j] = $file_path;
+                $j++;
+            }
+        }
 
         $input['city'] = $job_details['city'];
         $input['company_name'] = $job_details['company_name'];
@@ -488,11 +510,25 @@ class CandidateBasicInfo extends Model
         $input['job_designation'] = $job_details['new_posting_title'];
         $input['job_location'] = $job_details['job_location'];
         $input['job_description'] = $job_details['job_description'];
+
+        if (isset($file_path_array) && sizeof($file_path_array) > 0) {
+            $input['file_path'] = $file_path_array;
+        }
      
         \Mail::send('adminlte::emails.candidateassociatemail', $input, function ($message) use($input) {
 
             $message->from($input['from_address'], $input['from_name']);
             $message->to($input['to'])->subject('Vacancy Details - '.$input['company_name'].' - '. $input['city']);
+
+            if (isset($input['file_path']) && sizeof($input['file_path']) > 0) {
+
+                foreach ($input['file_path'] as $k1 => $v1) {
+
+                    if(isset($v1) && $v1 != '') {
+                        $message->attach($v1);
+                    }
+                }
+            }
         });
     }
 
