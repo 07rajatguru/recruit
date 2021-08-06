@@ -210,6 +210,18 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
     ]);
 
+    Route::get('/monthwise-jobs',[
+        'as' => 'monthwise.jobs',
+        'uses' => 'JobOpenController@monthwiseJobs',
+        'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
+    ]);
+
+    Route::get('monthwise-jobs/all', [
+        'as' => 'monthwise.all',
+        'uses' => 'JobOpenController@getAllMonthwiseJobs',
+        'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
+    ]);
+
     // HR Advisory Dashboard
     
     Route::any('/hr-advisory-dashboard', array (

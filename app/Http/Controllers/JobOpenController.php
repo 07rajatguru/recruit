@@ -5193,4 +5193,61 @@ class JobOpenController extends Controller
 
         return view('adminlte::jobopen.searchindex', $viewVariable);
     }
+
+    public function monthwiseJobs() {
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        $count = JobOpen::getAllJobsCountByDepartment(1,$user_id,'',0);
+
+        return view('adminlte::jobopen.monthwise-jobs', compact('count'));
+    }
+
+    public function getAllMonthwiseJobs() {
+
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $draw = $_GET['draw'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $order_column_name = self::getJobOrderColumnNameByDepartment($order);
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+            
+        $job_response = JobOpen::getAllJobsByDepartment(1,$user_id,$limit,$offset,$search,$order_column_name,$type,0);
+        $count = JobOpen::getAllJobsCountByDepartment(1,$user_id,$search,0);
+
+        $jobs = array();
+        $i = 0;$j = 0;
+
+        foreach ($job_response as $key => $value) {
+
+            $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
+
+            $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'</a>';
+
+            $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['posting_title'].'</a>';
+
+            $qual = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['qual'].'</a>';
+
+            $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+            
+            $data = array(++$j,$managed_by,$company_name,$posting_title,$associated_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['updated_date'],$value['no_of_positions'],$qual,$value['coordinator_name'],$value['desired_candidate'],$value['priority']);
+            $jobs[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $jobs,
+        );
+
+        echo json_encode($json_data);exit;
+    }
 }
