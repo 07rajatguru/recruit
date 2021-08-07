@@ -471,8 +471,8 @@
                 $(".added_date_cls").hide();
                 $(".no_of_positions_cls").hide();
 
-                $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
+                $("#client_heirarchy").val('');
+                $("#client_heirarchy")[0].selectedIndex = '';
                 $("#mb_name").val("");
                 $("#company_name").val("");
                 $("#posting_title").val("");
@@ -495,8 +495,8 @@
                 $(".added_date_cls").hide();
                 $(".no_of_positions_cls").hide();
 
-                $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
+                $("#client_heirarchy").val('');
+                $("#client_heirarchy")[0].selectedIndex = '';
                 $("#mb_name").val("");
                 $("#company_name").val("");
                 $("#posting_title").val("");
@@ -519,8 +519,8 @@
                 $(".added_date_cls").hide();
                 $(".no_of_positions_cls").hide();
 
-                $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
+                $("#client_heirarchy").val('');
+                $("#client_heirarchy")[0].selectedIndex = '';
                 $("#mb_name").val("");
                 $("#company_name").val("");
                 $("#posting_title").val("");
@@ -543,8 +543,8 @@
                 $(".added_date_cls").hide();
                 $(".no_of_positions_cls").hide();
 
-                $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
+                $("#client_heirarchy").val('');
+                $("#client_heirarchy")[0].selectedIndex = '';
                 $("#mb_name").val("");
                 $("#company_name").val("");
                 $("#posting_title").val("");
@@ -567,8 +567,8 @@
                 $(".added_date_cls").hide();
                 $(".no_of_positions_cls").hide();
 
-                $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
+                $("#client_heirarchy").val('');
+                $("#client_heirarchy")[0].selectedIndex = '';
                 $("#mb_name").val("");
                 $("#company_name").val("");
                 $("#posting_title").val("");
@@ -591,8 +591,8 @@
                 $(".added_date_cls").hide();
                 $(".no_of_positions_cls").hide();
 
-                $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
+                $("#client_heirarchy").val('');
+                $("#client_heirarchy")[0].selectedIndex = '';
                 $("#mb_name").val("");
                 $("#company_name").val("");
                 $("#posting_title").val("");
@@ -615,8 +615,8 @@
                 $(".added_date_cls").hide();
                 $(".no_of_positions_cls").hide();
 
-                $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
+                $("#client_heirarchy").val('');
+                $("#client_heirarchy")[0].selectedIndex = '';
                 $("#mb_name").val("");
                 $("#company_name").val("");
                 $("#posting_title").val("");
@@ -639,8 +639,8 @@
                 $(".added_date_cls").show();
                 $(".no_of_positions_cls").hide();
 
-                $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
+                $("#client_heirarchy").val('');
+                $("#client_heirarchy")[0].selectedIndex = '';
                 $("#mb_name").val("");
                 $("#company_name").val("");
                 $("#posting_title").val("");
@@ -663,8 +663,8 @@
                 $(".added_date_cls").hide();
                 $(".no_of_positions_cls").show();
                 
-                $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
+                $("#client_heirarchy").val('');
+                $("#client_heirarchy")[0].selectedIndex = '';
                 $("#mb_name").val("");
                 $("#company_name").val("");
                 $("#posting_title").val("");
@@ -695,8 +695,8 @@
             }
             else {
 
-                $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
+                $("#client_heirarchy").val('');
+                $("#client_heirarchy")[0].selectedIndex = '';
                 $("#mb_name").val("");
                 $("#company_name").val("");
                 $("#posting_title").val("");

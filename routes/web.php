@@ -1569,6 +1569,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-closed-jobs|display-closed-jobs-by-loggedin-user']
     ]);
 
+    Route::post('job/close-search', [
+        'as' => 'closedjob.mastersearch',
+        'uses' => 'JobOpenController@masterSearchOfClosedJobs',
+        'middleware' => ['permission:display-closed-jobs|display-closed-jobs-by-loggedin-user']
+    ]);
+
     Route::get('job/applicant', [
         'as' => 'jobopen.applicant',
         'uses' => 'JobOpenController@applicant',

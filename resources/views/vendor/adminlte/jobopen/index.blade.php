@@ -240,7 +240,6 @@
         </table>
     </div>
 
-
     <!-- Client Master Search Modal Popup -->
 
     <div class="modal fade mastersearchmodal" id="mastersearchmodal" aria-labelledby="mastersearchmodal" role="dialog">
@@ -535,12 +534,6 @@
                     $("#allcb").prop('checked', false);
                 }
             });
-
-            $("#btnmodelreset").bind("click", function () {
-                $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
-                getJobsByPosition();
-            });
         });
 
         /*function select_data(){
@@ -754,8 +747,8 @@
                 $(".added_date_cls").hide();
                 $(".no_of_positions_cls").hide();
 
-                $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
+                $("#client_heirarchy").val('');
+                $("#client_heirarchy")[0].selectedIndex = '';
                 $("#mb_name").val("");
                 $("#company_name").val("");
                 $("#posting_title").val("");
@@ -778,8 +771,8 @@
                 $(".added_date_cls").hide();
                 $(".no_of_positions_cls").hide();
 
-                $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
+                $("#client_heirarchy").val('');
+                $("#client_heirarchy")[0].selectedIndex = '';
                 $("#mb_name").val("");
                 $("#company_name").val("");
                 $("#posting_title").val("");
@@ -803,7 +796,7 @@
                 $(".no_of_positions_cls").hide();
 
                 $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
+                $("#client_heirarchy")[0].selectedIndex = '';
                 $("#mb_name").val("");
                 $("#company_name").val("");
                 $("#posting_title").val("");
@@ -826,8 +819,8 @@
                 $(".added_date_cls").hide();
                 $(".no_of_positions_cls").hide();
 
-                $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
+                $("#client_heirarchy").val('');
+                $("#client_heirarchy")[0].selectedIndex = '';
                 $("#mb_name").val("");
                 $("#company_name").val("");
                 $("#posting_title").val("");
@@ -850,8 +843,8 @@
                 $(".added_date_cls").hide();
                 $(".no_of_positions_cls").hide();
 
-                $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
+                $("#client_heirarchy").val('');
+                $("#client_heirarchy")[0].selectedIndex = '';
                 $("#mb_name").val("");
                 $("#company_name").val("");
                 $("#posting_title").val("");
@@ -874,8 +867,8 @@
                 $(".added_date_cls").hide();
                 $(".no_of_positions_cls").hide();
 
-                $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
+                $("#client_heirarchy").val('');
+                $("#client_heirarchy")[0].selectedIndex = '';
                 $("#mb_name").val("");
                 $("#company_name").val("");
                 $("#posting_title").val("");
@@ -898,8 +891,8 @@
                 $(".added_date_cls").hide();
                 $(".no_of_positions_cls").hide();
 
-                $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
+                $("#client_heirarchy").val('');
+                $("#client_heirarchy")[0].selectedIndex = '';
                 $("#mb_name").val("");
                 $("#company_name").val("");
                 $("#posting_title").val("");
@@ -922,8 +915,8 @@
                 $(".added_date_cls").show();
                 $(".no_of_positions_cls").hide();
 
-                $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
+                $("#client_heirarchy").val('');
+                $("#client_heirarchy")[0].selectedIndex = '';
                 $("#mb_name").val("");
                 $("#company_name").val("");
                 $("#posting_title").val("");
@@ -946,8 +939,8 @@
                 $(".added_date_cls").hide();
                 $(".no_of_positions_cls").show();
                 
-                $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
+                $("#client_heirarchy").val('');
+                $("#client_heirarchy")[0].selectedIndex = '';
                 $("#mb_name").val("");
                 $("#company_name").val("");
                 $("#posting_title").val("");
@@ -971,6 +964,8 @@
             var added_date = $("#added_date").val();
             var no_of_positions = $("#no_of_positions").val();
 
+            console.log(client_heirarchy);
+
             if(client_heirarchy == '' && mb_name == '' && company_name == '' && posting_title == '' && location == '' && min_ctc == '' && max_ctc == '' && added_date == '' && no_of_positions == '') {
 
                 alert("Please enter field value.");
@@ -978,8 +973,8 @@
             }
             else {
 
-                $("#client_heirarchy").val('0');
-                $("#client_heirarchy")[0].selectedIndex = 0;
+                $("#client_heirarchy").val('');
+                $("#client_heirarchy")[0].selectedIndex = '';
                 $("#mb_name").val("");
                 $("#company_name").val("");
                 $("#posting_title").val("");

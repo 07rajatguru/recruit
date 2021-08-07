@@ -302,7 +302,7 @@ class JobOpen extends Model
         return $jobs_list;
     }
 
-    public static function getClosedJobs($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc',$current_year=NULL,$next_year=NULL) {
+    public static function getClosedJobs($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc',$current_year=NULL,$next_year=NULL,$client_heirarchy=0,$mb_name='',$company_name='',$posting_title='',$location='',$min_ctc='',$max_ctc='',$added_date='',$no_of_positions='') {
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -411,6 +411,78 @@ class JobOpen extends Model
                 }
             });
         }
+
+        // Master Search Condidtions
+        if(isset($mb_name) && $mb_name != '') {
+
+            $job_close_query = $job_close_query->where('users.name','like',"%$mb_name%");
+        }
+        else if(isset($company_name) && $company_name != '') {
+
+            $job_close_query = $job_close_query->where('client_basicinfo.name','like',"%$company_name%");
+        }
+        else if(isset($posting_title) && $posting_title != '') {
+
+            $job_close_query = $job_close_query->where('job_openings.posting_title','like',"%$posting_title%");
+        }
+        else if(isset($location) && $location != '') {
+
+            if($location == 'Remote') {
+
+                $job_close_query = $job_close_query->where('job_openings.remote_working','=',"1");
+            }
+            else {
+
+                $job_close_query = $job_close_query->where('job_openings.city','=',"$location");
+                $job_close_query = $job_close_query->where('job_openings.remote_working','!=',"1");
+            }
+        }
+        else if(isset($min_ctc) && $min_ctc != '') {
+
+           $job_close_query = $job_close_query->where('job_openings.lacs_from','=',$min_ctc);
+        }
+        else if(isset($max_ctc) && $max_ctc != '') {
+
+            $job_close_query = $job_close_query->where('job_openings.lacs_to','=',$max_ctc);
+        }
+        else if(isset($added_date) && $added_date != '') {
+
+            $search_date = false;
+            $array_of_date = explode("-",$added_date);
+
+            if(isset($array_of_date) && sizeof($array_of_date)>0) {
+
+                $stamp = strtotime($added_date);
+                if (is_numeric($stamp)){
+
+                    $month = date( 'm', $stamp );
+                    $day   = date( 'd', $stamp );
+                    $year  = date( 'Y', $stamp );
+
+                    if(checkdate($month, $day, $year)) {
+                        $search_date = true;
+                    }
+                }
+            }
+
+            if($search_date) {
+
+                $dateClass = new Date();
+                $search_string = $dateClass->changeDMYtoYMD($added_date);
+                $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                $job_close_query = $job_close_query->orwhere('job_openings.created_at','>=',"$from_date");
+                $job_close_query = $job_close_query->Where('job_openings.created_at','<=',"$to_date");
+            }
+        }
+        else if(isset($no_of_positions) && $no_of_positions != '') {
+
+            $job_close_query = $job_close_query->where('job_openings.no_of_positions','=',$no_of_positions);
+        }
+        else if (isset($client_heirarchy) && $client_heirarchy > 0) {
+            $job_close_query = $job_close_query->where('job_openings.level_id','=',$client_heirarchy);
+        }
+        
         $job_response = $job_close_query->get();
 
         $jobs_list = array();
@@ -535,7 +607,7 @@ class JobOpen extends Model
         return $jobs_list;   
     }
 
-    public static function getClosedJobsByClient($client_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc',$current_year=NULL,$next_year=NULL) {
+    public static function getClosedJobsByClient($client_id,$limit=0,$offset=0,$search=0,$order=NULL,$type='desc',$current_year=NULL,$next_year=NULL,$client_heirarchy=0,$mb_name='',$company_name='',$posting_title='',$location='',$min_ctc='',$max_ctc='',$added_date='',$no_of_positions='') {
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -593,6 +665,77 @@ class JobOpen extends Model
                     $job_close_query = $job_close_query->orwhere('job_openings.remote_working','=',"1");
                 }
             });
+        }
+
+        // Master Search Condidtions
+        if(isset($mb_name) && $mb_name != '') {
+
+            $job_close_query = $job_close_query->where('users.name','like',"%$mb_name%");
+        }
+        else if(isset($company_name) && $company_name != '') {
+
+            $job_close_query = $job_close_query->where('client_basicinfo.name','like',"%$company_name%");
+        }
+        else if(isset($posting_title) && $posting_title != '') {
+
+            $job_close_query = $job_close_query->where('job_openings.posting_title','like',"%$posting_title%");
+        }
+        else if(isset($location) && $location != '') {
+
+            if($location == 'Remote') {
+
+                $job_close_query = $job_close_query->where('job_openings.remote_working','=',"1");
+            }
+            else {
+
+                $job_close_query = $job_close_query->where('job_openings.city','=',"$location");
+                $job_close_query = $job_close_query->where('job_openings.remote_working','!=',"1");
+            }
+        }
+        else if(isset($min_ctc) && $min_ctc != '') {
+
+           $job_close_query = $job_close_query->where('job_openings.lacs_from','=',$min_ctc);
+        }
+        else if(isset($max_ctc) && $max_ctc != '') {
+
+            $job_close_query = $job_close_query->where('job_openings.lacs_to','=',$max_ctc);
+        }
+        else if(isset($added_date) && $added_date != '') {
+
+            $search_date = false;
+            $array_of_date = explode("-",$added_date);
+
+            if(isset($array_of_date) && sizeof($array_of_date)>0) {
+
+                $stamp = strtotime($added_date);
+                if (is_numeric($stamp)){
+
+                    $month = date( 'm', $stamp );
+                    $day   = date( 'd', $stamp );
+                    $year  = date( 'Y', $stamp );
+
+                    if(checkdate($month, $day, $year)) {
+                        $search_date = true;
+                    }
+                }
+            }
+
+            if($search_date) {
+
+                $dateClass = new Date();
+                $search_string = $dateClass->changeDMYtoYMD($added_date);
+                $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                $job_close_query = $job_close_query->orwhere('job_openings.created_at','>=',"$from_date");
+                $job_close_query = $job_close_query->Where('job_openings.created_at','<=',"$to_date");
+            }
+        }
+        else if(isset($no_of_positions) && $no_of_positions != '') {
+
+            $job_close_query = $job_close_query->where('job_openings.no_of_positions','=',$no_of_positions);
+        }
+        else if (isset($client_heirarchy) && $client_heirarchy > 0) {
+            $job_close_query = $job_close_query->where('job_openings.level_id','=',$client_heirarchy);
         }
 
         // Get data by financial year
@@ -712,7 +855,7 @@ class JobOpen extends Model
         return $jobs_list;   
     }
 
-    public static function getAllClosedJobsCount($all=0,$user_id,$search,$current_year,$next_year) {
+    public static function getAllClosedJobsCount($all=0,$user_id,$search,$current_year,$next_year,$client_heirarchy=0,$mb_name='',$company_name='',$posting_title='',$location='',$min_ctc='',$max_ctc='',$added_date='',$no_of_positions='') {
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -756,6 +899,78 @@ class JobOpen extends Model
                 }
             });
         }
+
+        // Master Search Condidtions
+        if(isset($mb_name) && $mb_name != '') {
+
+            $job_open_query = $job_open_query->where('users.name','like',"%$mb_name%");
+        }
+        else if(isset($company_name) && $company_name != '') {
+
+            $job_open_query = $job_open_query->where('client_basicinfo.name','like',"%$company_name%");
+        }
+        else if(isset($posting_title) && $posting_title != '') {
+
+            $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$posting_title%");
+        }
+        else if(isset($location) && $location != '') {
+
+            if($location == 'Remote') {
+
+                $job_open_query = $job_open_query->where('job_openings.remote_working','=',"1");
+            }
+            else {
+
+                $job_open_query = $job_open_query->where('job_openings.city','=',"$location");
+                $job_open_query = $job_open_query->where('job_openings.remote_working','!=',"1");
+            }
+        }
+        else if(isset($min_ctc) && $min_ctc != '') {
+
+           $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
+        }
+        else if(isset($max_ctc) && $max_ctc != '') {
+
+            $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
+        }
+        else if(isset($added_date) && $added_date != '') {
+
+            $search_date = false;
+            $array_of_date = explode("-",$added_date);
+
+            if(isset($array_of_date) && sizeof($array_of_date)>0) {
+
+                $stamp = strtotime($added_date);
+                if (is_numeric($stamp)){
+
+                    $month = date( 'm', $stamp );
+                    $day   = date( 'd', $stamp );
+                    $year  = date( 'Y', $stamp );
+
+                    if(checkdate($month, $day, $year)) {
+                        $search_date = true;
+                    }
+                }
+            }
+
+            if($search_date) {
+
+                $dateClass = new Date();
+                $search_string = $dateClass->changeDMYtoYMD($added_date);
+                $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                $job_open_query = $job_open_query->orwhere('job_openings.created_at','>=',"$from_date");
+                $job_open_query = $job_open_query->Where('job_openings.created_at','<=',"$to_date");
+            }
+        }
+        else if(isset($no_of_positions) && $no_of_positions != '') {
+
+            $job_open_query = $job_open_query->where('job_openings.no_of_positions','=',$no_of_positions);
+        }
+        else if (isset($client_heirarchy) && $client_heirarchy > 0) {
+            $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
+        }
+
         // Get data by financial year
         $job_open_query = $job_open_query->where('job_openings.created_at','>=',$current_year);
         $job_open_query = $job_open_query->where('job_openings.created_at','<=',$next_year);
@@ -997,8 +1212,6 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where('job_visible_users.user_id','=',$user_id);
         }
 
-        $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
-
         // Master Search Condidtions
         if(isset($mb_name) && $mb_name != '') {
 
@@ -1015,22 +1228,21 @@ class JobOpen extends Model
         else if(isset($location) && $location != '') {
 
             if($location == 'Remote') {
-
-                $job_open_query = $job_open_query->where('job_openings.remote_working','=',1);
+                $job_open_query = $job_open_query->where('job_openings.remote_working','=',"1");
             }
             else {
 
-                $job_open_query = $job_open_query->where('job_openings.remote_working','!=',1);
-                $job_open_query = $job_open_query->where('job_openings.city','like',"%$location%");
+                $job_open_query = $job_open_query->where('job_openings.city','=',"$location");
+                $job_open_query = $job_open_query->where('job_openings.remote_working','!=',"1");
             }
         }
         else if(isset($min_ctc) && $min_ctc != '') {
 
-           $job_open_query = $job_open_query->where('job_openings.lacs_from','like',"%$min_ctc%");
+           $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
         }
         else if(isset($max_ctc) && $max_ctc != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.lacs_to','like',"%$max_ctc%");
+            $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
         }
         else if(isset($added_date) && $added_date != '') {
 
@@ -1064,13 +1276,14 @@ class JobOpen extends Model
         }
         else if(isset($no_of_positions) && $no_of_positions != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.no_of_positions','like',"%$no_of_positions%");
+            $job_open_query = $job_open_query->where('job_openings.no_of_positions','=',$no_of_positions);
         }
         else if (isset($client_heirarchy) && $client_heirarchy > 0) {
             $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
         }
 
         $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
+        $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
         $job_open_query = $job_open_query->groupBy('job_openings.id');
 
         if (isset($order) && $order != '') {
@@ -1285,6 +1498,7 @@ class JobOpen extends Model
         $job_open_query = $job_open_query->leftJoin('industry','industry.id','=','job_openings.industry_id');
         $job_open_query = $job_open_query->whereNotIn('priority',$job_status);
 
+        
         // Master Search Condidtions
         if(isset($mb_name) && $mb_name != '') {
 
@@ -1302,21 +1516,21 @@ class JobOpen extends Model
 
             if($location == 'Remote') {
 
-                $job_open_query = $job_open_query->where('job_openings.remote_working','=',1);
+                $job_open_query = $job_open_query->where('job_openings.remote_working','=',"1");
             }
             else {
 
-                $job_open_query = $job_open_query->where('job_openings.remote_working','!=',1);
-                $job_open_query = $job_open_query->where('job_openings.city','like',"%$location%");
+                $job_open_query = $job_open_query->where('job_openings.city','=',"$location");
+                $job_open_query = $job_open_query->where('job_openings.remote_working','!=',"1");
             }
         }
         else if(isset($min_ctc) && $min_ctc != '') {
 
-           $job_open_query = $job_open_query->where('job_openings.lacs_from','like',"%$min_ctc%");
+           $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
         }
         else if(isset($max_ctc) && $max_ctc != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.lacs_to','like',"%$max_ctc%");
+            $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
         }
         else if(isset($added_date) && $added_date != '') {
 
@@ -1350,9 +1564,9 @@ class JobOpen extends Model
         }
         else if(isset($no_of_positions) && $no_of_positions != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.no_of_positions','like',"%$no_of_positions%");
+            $job_open_query = $job_open_query->where('job_openings.no_of_positions','=',$no_of_positions);
         }
-        else if(isset($client_heirarchy) && $client_heirarchy > 0) {
+        else if (isset($client_heirarchy) && $client_heirarchy > 0) {
             $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
         }
 
@@ -1537,21 +1751,21 @@ class JobOpen extends Model
 
             if($location == 'Remote') {
 
-                $job_open_query = $job_open_query->where('job_openings.remote_working','=',1);
+                $job_open_query = $job_open_query->where('job_openings.remote_working','=',"1");
             }
             else {
 
-                $job_open_query = $job_open_query->where('job_openings.remote_working','!=',1);
-                $job_open_query = $job_open_query->where('job_openings.city','like',"%$location%");
+                $job_open_query = $job_open_query->where('job_openings.city','=',"$location");
+                $job_open_query = $job_open_query->where('job_openings.remote_working','!=',"1");
             }
         }
         else if(isset($min_ctc) && $min_ctc != '') {
 
-           $job_open_query = $job_open_query->where('job_openings.lacs_from','like',"%$min_ctc%");
+           $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
         }
         else if(isset($max_ctc) && $max_ctc != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.lacs_to','like',"%$max_ctc%");
+            $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
         }
         else if(isset($added_date) && $added_date != '') {
 
@@ -1585,9 +1799,9 @@ class JobOpen extends Model
         }
         else if(isset($no_of_positions) && $no_of_positions != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.no_of_positions','like',"%$no_of_positions%");
+            $job_open_query = $job_open_query->where('job_openings.no_of_positions','=',$no_of_positions);
         }
-        else if(isset($client_heirarchy) && $client_heirarchy > 0) {
+        else if (isset($client_heirarchy) && $client_heirarchy > 0) {
             $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
         }
 
@@ -1986,21 +2200,21 @@ class JobOpen extends Model
 
             if($location == 'Remote') {
 
-                $job_open_query = $job_open_query->where('job_openings.remote_working','=',1);
+                $job_open_query = $job_open_query->where('job_openings.remote_working','=',"1");
             }
             else {
 
-                $job_open_query = $job_open_query->where('job_openings.remote_working','!=',1);
-                $job_open_query = $job_open_query->where('job_openings.city','like',"%$location%");
+                $job_open_query = $job_open_query->where('job_openings.city','=',"$location");
+                $job_open_query = $job_open_query->where('job_openings.remote_working','!=',"1");
             }
         }
         else if(isset($min_ctc) && $min_ctc != '') {
 
-           $job_open_query = $job_open_query->where('job_openings.lacs_from','like',"%$min_ctc%");
+           $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
         }
         else if(isset($max_ctc) && $max_ctc != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.lacs_to','like',"%$max_ctc%");
+            $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
         }
         else if(isset($added_date) && $added_date != '') {
 
@@ -2034,9 +2248,9 @@ class JobOpen extends Model
         }
         else if(isset($no_of_positions) && $no_of_positions != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.no_of_positions','like',"%$no_of_positions%");
+            $job_open_query = $job_open_query->where('job_openings.no_of_positions','=',$no_of_positions);
         }
-        else if(isset($client_heirarchy) && $client_heirarchy > 0) {
+        else if (isset($client_heirarchy) && $client_heirarchy > 0) {
             $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
         }
         
@@ -2253,21 +2467,21 @@ class JobOpen extends Model
 
             if($location == 'Remote') {
 
-                $job_open_query = $job_open_query->where('job_openings.remote_working','=',1);
+                $job_open_query = $job_open_query->where('job_openings.remote_working','=',"1");
             }
             else {
 
-                $job_open_query = $job_open_query->where('job_openings.remote_working','!=',1);
-                $job_open_query = $job_open_query->where('job_openings.city','like',"%$location%");
+                $job_open_query = $job_open_query->where('job_openings.city','=',"$location");
+                $job_open_query = $job_open_query->where('job_openings.remote_working','!=',"1");
             }
         }
         else if(isset($min_ctc) && $min_ctc != '') {
 
-           $job_open_query = $job_open_query->where('job_openings.lacs_from','like',"%$min_ctc%");
+           $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
         }
         else if(isset($max_ctc) && $max_ctc != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.lacs_to','like',"%$max_ctc%");
+            $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
         }
         else if(isset($added_date) && $added_date != '') {
 
@@ -2301,9 +2515,9 @@ class JobOpen extends Model
         }
         else if(isset($no_of_positions) && $no_of_positions != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.no_of_positions','like',"%$no_of_positions%");
+            $job_open_query = $job_open_query->where('job_openings.no_of_positions','=',$no_of_positions);
         }
-        else if(isset($client_heirarchy) && $client_heirarchy > 0) {
+        else if (isset($client_heirarchy) && $client_heirarchy > 0) {
             $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
         }
 
@@ -2564,21 +2778,21 @@ class JobOpen extends Model
 
             if($location == 'Remote') {
 
-                $job_open_query = $job_open_query->where('job_openings.remote_working','=',1);
+                $job_open_query = $job_open_query->where('job_openings.remote_working','=',"1");
             }
             else {
 
-                $job_open_query = $job_open_query->where('job_openings.remote_working','!=',1);
-                $job_open_query = $job_open_query->where('job_openings.city','like',"%$location%");
+                $job_open_query = $job_open_query->where('job_openings.city','=',"$location");
+                $job_open_query = $job_open_query->where('job_openings.remote_working','!=',"1");
             }
         }
         else if(isset($min_ctc) && $min_ctc != '') {
 
-           $job_open_query = $job_open_query->where('job_openings.lacs_from','like',"%$min_ctc%");
+           $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
         }
         else if(isset($max_ctc) && $max_ctc != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.lacs_to','like',"%$max_ctc%");
+            $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
         }
         else if(isset($added_date) && $added_date != '') {
 
@@ -2612,9 +2826,9 @@ class JobOpen extends Model
         }
         else if(isset($no_of_positions) && $no_of_positions != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.no_of_positions','like',"%$no_of_positions%");
+            $job_open_query = $job_open_query->where('job_openings.no_of_positions','=',$no_of_positions);
         }
-        else if(isset($client_heirarchy) && $client_heirarchy > 0) {
+        else if (isset($client_heirarchy) && $client_heirarchy > 0) {
             $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
         }
 
@@ -2788,6 +3002,7 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
             $job_open_query = $job_open_query->where('adler_career_checkbox','=',1);
         }
+
         // Master Search Condidtions
         if(isset($mb_name) && $mb_name != '') {
 
@@ -2805,21 +3020,21 @@ class JobOpen extends Model
 
             if($location == 'Remote') {
 
-                $job_open_query = $job_open_query->where('job_openings.remote_working','=',1);
+                $job_open_query = $job_open_query->where('job_openings.remote_working','=',"1");
             }
             else {
 
-                $job_open_query = $job_open_query->where('job_openings.remote_working','!=',1);
-                $job_open_query = $job_open_query->where('job_openings.city','like',"%$location%");
+                $job_open_query = $job_open_query->where('job_openings.city','=',"$location");
+                $job_open_query = $job_open_query->where('job_openings.remote_working','!=',"1");
             }
         }
         else if(isset($min_ctc) && $min_ctc != '') {
 
-           $job_open_query = $job_open_query->where('job_openings.lacs_from','like',"%$min_ctc%");
+           $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
         }
         else if(isset($max_ctc) && $max_ctc != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.lacs_to','like',"%$max_ctc%");
+            $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
         }
         else if(isset($added_date) && $added_date != '') {
 
@@ -2852,10 +3067,10 @@ class JobOpen extends Model
             }
         }
         else if(isset($no_of_positions) && $no_of_positions != '') {
-
-            $job_open_query = $job_open_query->where('job_openings.no_of_positions','like',"%$no_of_positions%");
+            
+            $job_open_query = $job_open_query->where('job_openings.no_of_positions','=',$no_of_positions);
         }
-        else if(isset($client_heirarchy) && $client_heirarchy > 0) {
+        else if (isset($client_heirarchy) && $client_heirarchy > 0) {
             $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
         }
 
