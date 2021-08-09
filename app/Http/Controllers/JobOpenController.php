@@ -320,6 +320,32 @@ class JobOpenController extends Controller
 
         // Get Fields List
         $field_list = JobOpen::getJobsFieldsList();
+
+        // Get Managed By Person List
+
+        // Get HR Role ID
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
+
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $operations = getenv('OPERATIONS');
+        $management = getenv('MANAGEMENT');
+
+        if($hr_role_id == $get_role_id) {
+
+            $type_array = array($management,$recruitment,$hr_advisory,$operations);
+        }
+        else {
+
+            $type_array = array($management,$recruitment,$hr_advisory);
+        }
+
+        $users = array();
+        $users[0] = 'Select';
+        $users = User::getAllUsers($type_array,'Yes');
         
         $viewVariable = array();
         $viewVariable['job_priority'] = JobOpen::getJobPriorities();
@@ -342,7 +368,8 @@ class JobOpenController extends Controller
         $viewVariable['above_twenty_lacs'] = $above_twenty_lacs;
 
         $viewVariable['field_list'] = $field_list;
-
+        $viewVariable['users'] = $users;
+        
         return view('adminlte::jobopen.index', $viewVariable);
     }
 
@@ -904,6 +931,7 @@ class JobOpenController extends Controller
         $priority['under_ten_lacs'] = $under_ten_lacs;
         $priority['between_ten_to_twenty_lacs'] = $between_ten_to_twenty_lacs;
         $priority['above_twenty_lacs'] = $above_twenty_lacs;
+
 
         $json_data = array(
             'draw' => intval($draw),
@@ -3652,6 +3680,28 @@ class JobOpenController extends Controller
         // Get Fields List
         $field_list = JobOpen::getJobsFieldsList();
 
+        // Get HR Role ID
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
+
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $operations = getenv('OPERATIONS');
+        $management = getenv('MANAGEMENT');
+
+        if($hr_role_id == $get_role_id) {
+
+            $type_array = array($management,$recruitment,$hr_advisory,$operations);
+        }
+        else {
+
+            $type_array = array($management,$recruitment,$hr_advisory);
+        }
+
+        $users = User::getAllUsers($type_array,'Yes');
+
         // Get All Client Heirarchy
         $client_hierarchy_name = JobOpen::getAllHierarchyName();
 
@@ -3663,6 +3713,7 @@ class JobOpenController extends Controller
         $viewVariable['isClient'] = $isClient;
         $viewVariable['field_list'] = $field_list;
         $viewVariable['client_hierarchy_name'] = $client_hierarchy_name;
+        $viewVariable['users'] = $users;
 
          // For salary wise count
 
@@ -5193,6 +5244,28 @@ class JobOpenController extends Controller
 
         // Get Fields List
         $field_list = JobOpen::getJobsFieldsList();
+
+        // Get HR Role ID
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
+
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $operations = getenv('OPERATIONS');
+        $management = getenv('MANAGEMENT');
+
+        if($hr_role_id == $get_role_id) {
+
+            $type_array = array($management,$recruitment,$hr_advisory,$operations);
+        }
+        else {
+
+            $type_array = array($management,$recruitment,$hr_advisory);
+        }
+
+        $users = User::getAllUsers($type_array,'Yes');
         
         $viewVariable = array();
         $viewVariable['job_priority'] = JobOpen::getJobPriorities();
@@ -5215,6 +5288,7 @@ class JobOpenController extends Controller
         $viewVariable['above_twenty_lacs'] = $above_twenty_lacs;
 
         $viewVariable['field_list'] = $field_list;
+        $viewVariable['users'] = $users;
 
         return view('adminlte::jobopen.searchindex', $viewVariable);
     }
@@ -5347,6 +5421,29 @@ class JobOpenController extends Controller
         // Get Fields List
         $field_list = JobOpen::getJobsFieldsList();
 
+        // Get HR Role ID
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
+
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $operations = getenv('OPERATIONS');
+        $management = getenv('MANAGEMENT');
+
+        if($hr_role_id == $get_role_id) {
+
+            $type_array = array($management,$recruitment,$hr_advisory,$operations);
+        }
+        else {
+
+            $type_array = array($management,$recruitment,$hr_advisory);
+        }
+
+        $users = User::getAllUsers($type_array,'Yes');
+        $users[0] = 'Select';
+
         // Get All Client Heirarchy
         $client_hierarchy_name = JobOpen::getAllHierarchyName();
 
@@ -5356,8 +5453,9 @@ class JobOpenController extends Controller
         $viewVariable['year_array'] = $year_array;
         $viewVariable['year'] = $year;
         $viewVariable['isClient'] = $isClient;
-        $viewVariable['field_list'] = $field_list;
         $viewVariable['client_hierarchy_name'] = $client_hierarchy_name;
+        $viewVariable['field_list'] = $field_list;
+        $viewVariable['users'] = $users;
 
          // For salary wise count
 

@@ -150,8 +150,8 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 mb_name_cls" style="display: none;">
                     <div class="">
                         <div class="form-group"><br/>
-                            <strong>Enter MB Name : </strong>
-                            {!! Form::text('mb_name', null, array('id'=>'mb_name','placeholder' => 'MB Name','class' => 'form-control', 'tabindex' => '1')) !!}
+                            <strong>Managed By : </strong> <br><br>
+                            {!! Form::select('mb_name', $users,null, array('id'=>'mb_name','class' => 'form-control','tabindex' => '1')) !!}
                         </div>
                     </div>
                 </div>
@@ -222,6 +222,7 @@
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" onclick="displayresults();">Search
                     </button>
+                    <a href="/jobs" class="btn btn-primary">Reset</a>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
@@ -266,6 +267,12 @@
             $("#priority").select2({width:"565px"});
             $("#selected_field").select2({width : '567px'});
             $("#client_heirarchy").select2({width:"565px"});
+            $("#mb_name").select2({width:"565px"});
+
+            $("#added_date").datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+            });
 
             var year = $("#year").val();
             var client_heirarchy = $("#client_heirarchy").val();
@@ -483,7 +490,7 @@
                 $("#no_of_positions").val("");
             }
 
-            if(selected_field == 'MB') {
+            if(selected_field == 'Managed By') {
 
                 $(".job_position_cls").hide();
                 $(".mb_name_cls").show();

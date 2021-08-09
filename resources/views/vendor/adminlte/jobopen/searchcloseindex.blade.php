@@ -8,8 +8,14 @@
 
 @section('content')
 
-    @if ($message = Session::get('success'))
+    @if($message = Session::get('success'))
         <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
+
+    @if($message = Session::get('error'))
+        <div class="alert alert-error">
             <p>{{ $message }}</p>
         </div>
     @endif
@@ -61,13 +67,13 @@
         <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12">
                  <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="on_hold_href" href="" title="On Hold" style="text-decoration: none;color: black;"><div  id="on_hold" style="width:max-content;height:40px;background-color:#B1A0C7;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $close_priority['priority_4'] }}</div></a>
+                    <a id="priority_4" title="On Hold" style="text-decoration: none;color: black;cursor: pointer;"><div style="width:max-content;height:40px;background-color:#B1A0C7;padding:9px 25px;font-weight: 600;border-radius: 22px;"><span id="priority_4_count">{{ $close_priority['priority_4'] }}</span></div></a>
                 </div>
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="closed_us_href" href="" title="Closed By Us" style="text-decoration: none;color: black;"><div id="closed_us" style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $close_priority['priority_9'] }}</div></a>
+                    <a id="priority_9" title="Closed By Us" style="text-decoration: none;color: black;cursor: pointer;"><div style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;"><span id="priority_9_count">{{ $close_priority['priority_9'] }}</span></div></a>
                 </div>
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="closed_client_href" href="" title="Closed By Client" style="text-decoration: none;color: black;"><div id="closed_client" style="width:max-content;height:40px;background-color:#FFFFFF;padding:9px 25px;font-weight: 600;border-radius: 22px;">{{ $close_priority['priority_10'] }}</div></a>
+                    <a id="priority_10" ititle="Closed By Client" style="text-decoration: none;color: black;cursor: pointer;"><div style="width:max-content;height:40px;background-color:#FFFFFF;padding:9px 25px;font-weight: 600;border-radius: 22px;"><span id="priority_10_count">{{ $close_priority['priority_10'] }}</span></div></a>
                 </div>
 
                 {{-- Changes from 28-05-2021 Salary Wise Listing --}}
@@ -93,22 +99,13 @@
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
 
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="under_ten_lacs_href" href="" title="Under 10 Lacs" style="text-decoration: none;color: black;">
-                        <div style="width:max-content;height:40px;background-color:#FFCC00;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"><10L (<span id="under_ten_lacs">{{ $under_ten_lacs }}</span>)
-                        </div>
-                    </a>
+                    <a title="Under 10 Lacs" style="text-decoration: none;color: black;cursor: pointer;"><div style="width:max-content;height:40px;background-color:#FFCC00;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"><10L (<span id="under_ten_lacs_count">{{ $under_ten_lacs }}</span>)</div></a>
                 </div>
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="between_ten_to_twenty_lacs_href" href="" title="Between 10-20 Lacs" style="text-decoration: none;color: black;">
-                        <div style="width:max-content;height:40px;background-color:#e87992;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px" >10-20L (<span id="between_ten_to_twenty_lacs">{{ $between_ten_to_twenty_lacs }}</span>)
-                        </div>
-                    </a>
+                    <a title="Between 10-20 Lacs" style="text-decoration: none;color: black;cursor: pointer;"><div style="width:max-content;height:40px;background-color:#e87992;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px" >10-20L (<span id="between_ten_to_twenty_lacs_count">{{ $between_ten_to_twenty_lacs }}</span>)</div></a>
                 </div>
                 <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="above_twenty_lacs_href" href="" title="Above 20 Lacs" style="text-decoration: none;color: black;">
-                        <div style="width:max-content;height:40px;background-color:#f17a40;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">>20L (<span id="above_twenty_lacs">{{ $above_twenty_lacs }}</span>)
-                        </div>
-                    </a>
+                    <a title="Above 20 Lacs" style="text-decoration: none;color: black;cursor: pointer;"><div style="width:max-content;height:40px;background-color:#f17a40;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">>20L (<span id="above_twenty_lacs_count">{{ $above_twenty_lacs }}</span>)</div></a>
                 </div>
             </div>
         </div><br/>
@@ -145,8 +142,8 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 mb_name_cls" style="display: none;">
                     <div class="">
                         <div class="form-group"><br/>
-                            <strong>Enter MB Name : </strong>
-                            {!! Form::text('mb_name', null, array('id'=>'mb_name','placeholder' => 'MB Name','class' => 'form-control', 'tabindex' => '1')) !!}
+                            <<strong>Managed By : </strong> <br><br>
+                            {!! Form::select('mb_name', $users,null, array('id'=>'mb_name','class' => 'form-control','tabindex' => '1')) !!}
                         </div>
                     </div>
                 </div>
@@ -217,6 +214,7 @@
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" onclick="displayresults();">Search
                     </button>
+                    <a href="/job/close" class="btn btn-primary">Reset</a>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
@@ -257,6 +255,12 @@
             $("#job_priority").select2({width:"565px"});
             $("#selected_field").select2({width : '567px'});
             $("#client_heirarchy").select2({width:"565px"});
+            $("#mb_name").select2({width:"565px"});
+
+            $("#added_date").datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+            });
 
             var year = $("#year").val();
             var client_heirarchy = $("#client_heirarchy").val();
@@ -308,40 +312,26 @@
 
                     var count = json.recordsTotal;
                     var close_priority = json.close_priority;
-                    var job_priority = json.job_priority;
-                    var job_salary = json.job_salary;
 
                     $("#count").html("(" + count + ")");
 
-                    if(typeof(close_priority['priority_4'])!="undefined") {
-                        $("#on_hold").html(close_priority['priority_4']);
-                    }
-                    if(typeof(close_priority['priority_9'])!="undefined") {
-                        $("#closed_us").html(close_priority['priority_9']);
-                    }
-                    if(typeof(close_priority['priority_10'])!="undefined") {
-                        $("#closed_client").html(close_priority['priority_10']);
-                    }
+                    var priority_4_count = json.close_priority['priority_4'];
+                    var priority_9_count = json.close_priority['priority_9'];
+                    var priority_10_count = json.close_priority['priority_10'];
 
-                    $("#on_hold_href").attr("href", '/jobs/priority/'+job_priority[4]+'/'+year);
-                    $("#closed_us_href").attr("href", '/jobs/priority/'+job_priority[9]+'/'+year);
-                    $("#closed_client_href").attr("href", '/jobs/priority/'+job_priority[10]+'/'+year);
+                    $("#priority_4_count").html(priority_4_count);
+                    $("#priority_9_count").html(priority_9_count);
+                    $("#priority_10_count").html(priority_10_count);
 
                     // For salary wise count
 
-                    if(typeof(close_priority['under_ten_lacs'])!="undefined") {
-                        $("#under_ten_lacs").html(close_priority['under_ten_lacs']);
-                    }
-                    if(typeof(close_priority['between_ten_to_twenty_lacs'])!="undefined") {
-                        $("#between_ten_to_twenty_lacs").html(close_priority['between_ten_to_twenty_lacs']);
-                    }
-                    if(typeof(close_priority['above_twenty_lacs'])!="undefined") {
-                        $("#above_twenty_lacs").html(close_priority['above_twenty_lacs']);
-                    }
+                    var under_ten_lacs_count = json.close_priority['under_ten_lacs'];
+                    var between_ten_to_twenty_lacs_count = json.close_priority['between_ten_to_twenty_lacs'];
+                    var above_twenty_lacs_count = json.close_priority['above_twenty_lacs'];
 
-                    $("#under_ten_lacs_href").attr("href", '/jobs/salary/'+job_salary[0]+'/'+year);
-                    $("#between_ten_to_twenty_lacs_href").attr("href", '/jobs/salary/'+job_salary[1]+'/'+year);
-                    $("#above_twenty_lacs_href").attr("href", '/jobs/salary/'+job_salary[2]+'/'+year);
+                    $("#under_ten_lacs_count").html(under_ten_lacs_count);
+                    $("#between_ten_to_twenty_lacs_count").html(between_ten_to_twenty_lacs_count);
+                    $("#above_twenty_lacs_count").html(above_twenty_lacs_count);
                 },
                 responsive: true,
                 "pageLength": 50,
@@ -416,40 +406,26 @@
 
                     var count = json.recordsTotal;
                     var close_priority = json.close_priority;
-                    var job_priority = json.job_priority;
-                    var job_salary = json.job_salary;
-                    
+
                     $("#count").html("(" + count + ")");
 
-                    if(typeof(close_priority['priority_4'])!="undefined") {
-                        $("#on_hold").html(close_priority['priority_4']);
-                    }
-                    if(typeof(close_priority['priority_9'])!="undefined") {
-                        $("#closed_us").html(close_priority['priority_9']);
-                    }
-                    if(typeof(close_priority['priority_10'])!="undefined") {
-                        $("#closed_client").html(close_priority['priority_10']);
-                    }
+                    var priority_4_count = json.close_priority['priority_4'];
+                    var priority_9_count = json.close_priority['priority_9'];
+                    var priority_10_count = json.close_priority['priority_10'];
 
-                    $("#on_hold_href").attr("href", '/jobs/priority/'+job_priority[4]+'/'+year);
-                    $("#closed_us_href").attr("href", '/jobs/priority/'+job_priority[9]+'/'+year);
-                    $("#closed_client_href").attr("href", '/jobs/priority/'+job_priority[10]+'/'+year);
+                    $("#priority_4_count").html(priority_4_count);
+                    $("#priority_9_count").html(priority_9_count);
+                    $("#priority_10_count").html(priority_10_count);
 
                     // For salary wise count
 
-                     if(typeof(close_priority['under_ten_lacs'])!="undefined") {
-                        $("#under_ten_lacs").html(close_priority['under_ten_lacs']);
-                    }
-                    if(typeof(close_priority['between_ten_to_twenty_lacs'])!="undefined") {
-                        $("#between_ten_to_twenty_lacs").html(close_priority['between_ten_to_twenty_lacs']);
-                    }
-                    if(typeof(close_priority['above_twenty_lacs'])!="undefined") {
-                        $("#above_twenty_lacs").html(close_priority['above_twenty_lacs']);
-                    }
+                    var under_ten_lacs_count = json.close_priority['under_ten_lacs'];
+                    var between_ten_to_twenty_lacs_count = json.close_priority['between_ten_to_twenty_lacs'];
+                    var above_twenty_lacs_count = json.close_priority['above_twenty_lacs'];
 
-                    $("#under_ten_lacs_href").attr("href", '/jobs/salary/'+job_salary[0]+'/'+year);
-                    $("#between_ten_to_twenty_lacs_href").attr("href", '/jobs/salary/'+job_salary[1]+'/'+year);
-                    $("#above_twenty_lacs_href").attr("href", '/jobs/salary/'+job_salary[2]+'/'+year);
+                    $("#under_ten_lacs_count").html(under_ten_lacs_count);
+                    $("#between_ten_to_twenty_lacs_count").html(between_ten_to_twenty_lacs_count);
+                    $("#above_twenty_lacs_count").html(above_twenty_lacs_count);
                 },
                 responsive: true,
                 "pageLength": 50,
@@ -497,7 +473,7 @@
                 $("#no_of_positions").val("");
             }
 
-            if(selected_field == 'MB') {
+            if(selected_field == 'Managed By') {
 
                 $(".job_position_cls").hide();
                 $(".mb_name_cls").show();
@@ -701,8 +677,7 @@
             var max_ctc = $("#max_ctc").val();
             var added_date = $("#added_date").val();
             var no_of_positions = $("#no_of_positions").val();
-
-            console.log(client_heirarchy);
+            var year = $("#year").val();
 
             if(client_heirarchy == '' && mb_name == '' && company_name == '' && posting_title == '' && location == '' && min_ctc == '' && max_ctc == '' && added_date == '' && no_of_positions == '') {
 
@@ -735,6 +710,7 @@
                 '<input type="text" name="max_ctc" value="'+max_ctc+'" />' +
                 '<input type="text" name="added_date" value="'+added_date+'" />' +
                 '<input type="text" name="no_of_positions" value="'+no_of_positions+'" />' +
+                '<input type="text" name="year" value="'+year+'" />' +
                 '</form>');
 
                 $('body').append(form);

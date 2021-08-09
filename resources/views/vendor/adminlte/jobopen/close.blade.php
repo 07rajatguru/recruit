@@ -8,8 +8,14 @@
 
 @section('content')
 
-    @if ($message = Session::get('success'))
+    @if($message = Session::get('success'))
         <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
+
+    @if($message = Session::get('error'))
+        <div class="alert alert-error">
             <p>{{ $message }}</p>
         </div>
     @endif
@@ -145,8 +151,8 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 mb_name_cls" style="display: none;">
                     <div class="">
                         <div class="form-group"><br/>
-                            <strong>Enter MB Name : </strong>
-                            {!! Form::text('mb_name', null, array('id'=>'mb_name','placeholder' => 'MB Name','class' => 'form-control', 'tabindex' => '1')) !!}
+                            <strong>Managed By : </strong> <br><br>
+                            {!! Form::select('mb_name', $users,null, array('id'=>'mb_name','class' => 'form-control','tabindex' => '1')) !!}
                         </div>
                     </div>
                 </div>
@@ -217,6 +223,7 @@
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" onclick="displayresults();">Search
                     </button>
+                    <a href="/job/close" class="btn btn-primary">Reset</a>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
             </div>
@@ -257,6 +264,12 @@
             $("#job_priority").select2({width:"565px"});
             $("#selected_field").select2({width : '567px'});
             $("#client_heirarchy").select2({width:"565px"});
+            $("#mb_name").select2({width:"565px"});
+
+            $("#added_date").datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+            });
 
             var year = $("#year").val();
             var client_heirarchy = $("#client_heirarchy").val();
@@ -497,7 +510,7 @@
                 $("#no_of_positions").val("");
             }
 
-            if(selected_field == 'MB') {
+            if(selected_field == 'Managed By') {
 
                 $(".job_position_cls").hide();
                 $(".mb_name_cls").show();
@@ -701,6 +714,7 @@
             var max_ctc = $("#max_ctc").val();
             var added_date = $("#added_date").val();
             var no_of_positions = $("#no_of_positions").val();
+            var year = $("#year").val();
 
             console.log(client_heirarchy);
 
@@ -735,6 +749,7 @@
                 '<input type="text" name="max_ctc" value="'+max_ctc+'" />' +
                 '<input type="text" name="added_date" value="'+added_date+'" />' +
                 '<input type="text" name="no_of_positions" value="'+no_of_positions+'" />' +
+                '<input type="text" name="year" value="'+year+'" />' +
                 '</form>');
 
                 $('body').append(form);
