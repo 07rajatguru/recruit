@@ -322,14 +322,7 @@ class JobOpenController extends Controller
         $field_list = JobOpen::getJobsFieldsList();
 
         // Get Managed By Person List
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $operations = getenv('OPERATIONS');
-        $management = getenv('MANAGEMENT');
-
-        $type_array = array($management,$recruitment,$hr_advisory,$operations);
-
-        $users_array = User::getAllUsers($type_array,'Yes');
+        $users_array = User::getAllUsers(NULL,'Yes');
         $users = array();
         
         if(isset($users_array) && sizeof($users_array) > 0) {
@@ -350,6 +343,26 @@ class JobOpenController extends Controller
                 }    
             }
         }
+
+        // Set Min CTC Array
+        $min_ctc_array = array('' => 'Min CTC');
+        $min_ctc_array['0.5'] = '0.5';
+
+        for ($min=1; $min < 30; $min++) {
+            $min_ctc_array[$min] = $min;
+        }
+
+        $min_ctc_array['30'] = '>30Lac';
+
+        // Set Max CTC Array
+        $max_ctc_array = array('' => 'Max CTC');
+        $max_ctc_array['0.5'] = '0.5';
+
+        for ($max=1; $max < 30; $max++) {
+            $max_ctc_array[$max] = $max;
+        }
+
+        $max_ctc_array['30'] = '>30Lac';
         
         $viewVariable = array();
         $viewVariable['job_priority'] = JobOpen::getJobPriorities();
@@ -373,6 +386,8 @@ class JobOpenController extends Controller
 
         $viewVariable['field_list'] = $field_list;
         $viewVariable['users'] = $users;
+        $viewVariable['min_ctc_array'] = $min_ctc_array;
+        $viewVariable['max_ctc_array'] = $max_ctc_array;
         
         return view('adminlte::jobopen.index', $viewVariable);
     }
@@ -1018,29 +1033,7 @@ class JobOpenController extends Controller
         }
 
         // For account manager
-
-        // Get HR Role id from env
-        $hr_role_id = getenv('HR');
-
-        // Get logged in user role id
-        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
-
-        if($hr_role_id == $get_role_id) {
-
-            $recruitment = getenv('RECRUITMENT');
-            $hr_advisory = getenv('HRADVISORY');
-            $operations = getenv('OPERATIONS');
-
-            $type_array = array($recruitment,$hr_advisory,$operations);
-        }
-        else {
-
-            $recruitment = getenv('RECRUITMENT');
-            $hr_advisory = getenv('HRADVISORY');
-            $type_array = array($recruitment,$hr_advisory);
-        }
-
-        $users_array = User::getAllUsers($type_array,'Yes');
+        $users_array = User::getAllUsers(NULL,'Yes');
         $users = array();
         
         if(isset($users_array) && sizeof($users_array) > 0) {
@@ -1060,6 +1053,25 @@ class JobOpenController extends Controller
             }
         }
         $users[0] = 'Yet to Assign';
+
+        // For Department wise users listing
+
+        // Get HR Role id from env
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
+
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $operations = getenv('OPERATIONS');
+
+        if($hr_role_id == $get_role_id) {
+            $type_array = array($recruitment,$hr_advisory,$operations);
+        }
+        else {
+            $type_array = array($recruitment,$hr_advisory);
+        }
 
         $users_array_new = User::getAllUsers($type_array);
         $select_all_users = array();
@@ -1738,28 +1750,7 @@ class JobOpenController extends Controller
 
         // For account manager
 
-        // Get HR Role id from env
-        $hr_role_id = getenv('HR');
-
-        // Get logged in user role id
-        $get_role_id = RoleUser::getRoleIdByUserId($loggedin_user_id);
-
-        if($hr_role_id == $get_role_id) {
-
-            $recruitment = getenv('RECRUITMENT');
-            $hr_advisory = getenv('HRADVISORY');
-            $operations = getenv('OPERATIONS');
-
-            $type_array = array($recruitment,$hr_advisory,$operations);
-        }
-        else {
-
-            $recruitment = getenv('RECRUITMENT');
-            $hr_advisory = getenv('HRADVISORY');
-            $type_array = array($recruitment,$hr_advisory);
-        }
-
-        $users_array = User::getAllUsers($type_array,'Yes');
+        $users_array = User::getAllUsers(NULL,'Yes');
         $users = array();
         
         if(isset($users_array) && sizeof($users_array) > 0) {
@@ -1779,6 +1770,25 @@ class JobOpenController extends Controller
             }
         }
         $users[0] = 'Yet to Assign';
+
+        // For Department wise users listing
+
+        // Get HR Role id from env
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($loggedin_user_id);
+
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $operations = getenv('OPERATIONS');
+
+        if($hr_role_id == $get_role_id) {
+            $type_array = array($recruitment,$hr_advisory,$operations);
+        }
+        else {
+            $type_array = array($recruitment,$hr_advisory);
+        }
 
         $users_array_new = User::getAllUsers($type_array);
         $select_all_users = array();
@@ -1963,27 +1973,7 @@ class JobOpenController extends Controller
 
         // For account manager
 
-        // Get HR Role id from env
-        $hr_role_id = getenv('HR');
-
-        // Get logged in user role id
-        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
-
-        if($hr_role_id == $get_role_id) {
-
-            $recruitment = getenv('RECRUITMENT');
-            $hr_advisory = getenv('HRADVISORY');
-            $operations = getenv('OPERATIONS');
-            $type_array = array($recruitment,$hr_advisory,$operations);
-        }
-        else {
-
-            $recruitment = getenv('RECRUITMENT');
-            $hr_advisory = getenv('HRADVISORY');
-            $type_array = array($recruitment,$hr_advisory);
-        }
-
-        $users_array = User::getAllUsers($type_array,'Yes');
+        $users_array = User::getAllUsers(NULL,'Yes');
         $users = array();
         
         if(isset($users_array) && sizeof($users_array) > 0) {
@@ -2003,6 +1993,26 @@ class JobOpenController extends Controller
             }
         }
         $users[0] = 'Yet to Assign';
+
+        // For Department wise users listing
+
+        // Get HR Role id from env
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
+
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $operations = getenv('OPERATIONS');
+
+        if($hr_role_id == $get_role_id) {
+
+            $type_array = array($recruitment,$hr_advisory,$operations);
+        }
+        else {
+            $type_array = array($recruitment,$hr_advisory);
+        }
 
         $users_array_new = User::getAllUsers($type_array);
         $select_all_users = array();
@@ -2375,27 +2385,7 @@ class JobOpenController extends Controller
 
         // For account manager
 
-        // Get HR Role id from env
-        $hr_role_id = getenv('HR');
-
-        // Get logged in user role id
-        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
-
-        if($hr_role_id == $get_role_id) {
-
-            $recruitment = getenv('RECRUITMENT');
-            $hr_advisory = getenv('HRADVISORY');
-            $operations = getenv('OPERATIONS');
-            $type_array = array($recruitment,$hr_advisory,$operations);
-        }
-        else {
-
-            $recruitment = getenv('RECRUITMENT');
-            $hr_advisory = getenv('HRADVISORY');
-            $type_array = array($recruitment,$hr_advisory);
-        }
-
-        $users_array = User::getAllUsers($type_array,'Yes');
+        $users_array = User::getAllUsers(NULL,'Yes');
         $users = array();
         
         if(isset($users_array) && sizeof($users_array) > 0) {
@@ -2415,6 +2405,25 @@ class JobOpenController extends Controller
             }
         }
         $users[0] = 'Yet to Assign';
+
+        // For Department wise users listing
+
+        // Get HR Role id from env
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
+
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $operations = getenv('OPERATIONS');
+
+        if($hr_role_id == $get_role_id) {
+            $type_array = array($recruitment,$hr_advisory,$operations);
+        }
+        else {
+            $type_array = array($recruitment,$hr_advisory);
+        }
 
         $users_array_new = User::getAllUsers($type_array);
         $select_all_users = array();
@@ -3032,19 +3041,15 @@ class JobOpenController extends Controller
         // Get logged in user role id
         $get_role_id = RoleUser::getRoleIdByUserId($user_id);
 
-        if($hr_role_id == $get_role_id) {
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $operations = getenv('OPERATIONS');
+        $management = getenv('MANAGEMENT');
 
-            $recruitment = getenv('RECRUITMENT');
-            $hr_advisory = getenv('HRADVISORY');
-            $operations = getenv('OPERATIONS');
-            $management = getenv('MANAGEMENT');
+        if($hr_role_id == $get_role_id) {
             $type_array = array($recruitment,$hr_advisory,$operations,$management);
         }
         else {
-
-            $recruitment = getenv('RECRUITMENT');
-            $hr_advisory = getenv('HRADVISORY');
-            $management = getenv('MANAGEMENT');
             $type_array = array($recruitment,$hr_advisory,$management);
         }
 
@@ -3679,20 +3684,14 @@ class JobOpenController extends Controller
         $close_priority['priority_9'] = $priority_9++;
         $close_priority['priority_10'] = $priority_10++;
 
-        $viewVariable = array();
+        // Get All Client Heirarchy
+        $client_hierarchy_name = JobOpen::getAllHierarchyName();
 
         // Get Fields List
         $field_list = JobOpen::getJobsFieldsList();
 
         // Get Managed By Person List
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $operations = getenv('OPERATIONS');
-        $management = getenv('MANAGEMENT');
-
-        $type_array = array($management,$recruitment,$hr_advisory,$operations);
-
-        $users_array = User::getAllUsers($type_array,'Yes');
+        $users_array = User::getAllUsers(NULL,'Yes');
         $users = array();
         
         if(isset($users_array) && sizeof($users_array) > 0) {
@@ -3714,9 +3713,27 @@ class JobOpenController extends Controller
             }
         }
 
-        // Get All Client Heirarchy
-        $client_hierarchy_name = JobOpen::getAllHierarchyName();
+        // Set Min CTC Array
+        $min_ctc_array = array('' => 'Min CTC');
+        $min_ctc_array['0.5'] = '0.5';
 
+        for ($min=1; $min < 30; $min++) {
+            $min_ctc_array[$min] = $min;
+        }
+
+        $min_ctc_array['30'] = '>30Lac';
+
+        // Set Max CTC Array
+        $max_ctc_array = array('' => 'Max CTC');
+        $max_ctc_array['0.5'] = '0.5';
+
+        for ($max=1; $max < 30; $max++) {
+            $max_ctc_array[$max] = $max;
+        }
+
+        $max_ctc_array['30'] = '>30Lac';
+
+        $viewVariable = array();
         $viewVariable['job_priority'] = JobOpen::getJobPriorities();
         $viewVariable['count'] = $count;
         $viewVariable['close_priority'] = $close_priority;
@@ -3724,14 +3741,16 @@ class JobOpenController extends Controller
         $viewVariable['year'] = $year;
         $viewVariable['isClient'] = $isClient;
         $viewVariable['client_hierarchy_name'] = $client_hierarchy_name;
-        $viewVariable['field_list'] = $field_list;
-        $viewVariable['users'] = $users;
 
          // For salary wise count
-
         $viewVariable['under_ten_lacs'] = $under_ten_lacs;
         $viewVariable['between_ten_to_twenty_lacs'] = $between_ten_to_twenty_lacs;
         $viewVariable['above_twenty_lacs'] = $above_twenty_lacs;
+
+        $viewVariable['field_list'] = $field_list;
+        $viewVariable['users'] = $users;
+        $viewVariable['min_ctc_array'] = $min_ctc_array;
+        $viewVariable['max_ctc_array'] = $max_ctc_array;
 
         return view('adminlte::jobopen.close',$viewVariable);   
     }
@@ -5258,14 +5277,7 @@ class JobOpenController extends Controller
         $field_list = JobOpen::getJobsFieldsList();
 
         // Get Managed By Person List
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $operations = getenv('OPERATIONS');
-        $management = getenv('MANAGEMENT');
-
-        $type_array = array($management,$recruitment,$hr_advisory,$operations);
-
-        $users_array = User::getAllUsers($type_array,'Yes');
+        $users_array = User::getAllUsers(NULL,'Yes');
         $users = array();
         
         if(isset($users_array) && sizeof($users_array) > 0) {
@@ -5286,6 +5298,26 @@ class JobOpenController extends Controller
                 }    
             }
         }
+
+        // Set Min CTC Array
+        $min_ctc_array = array('' => 'Min CTC');
+        $min_ctc_array['0.5'] = '0.5';
+
+        for ($min=1; $min < 30; $min++) {
+            $min_ctc_array[$min] = $min;
+        }
+
+        $min_ctc_array['30'] = '>30Lac';
+
+        // Set Max CTC Array
+        $max_ctc_array = array('' => 'Max CTC');
+        $max_ctc_array['0.5'] = '0.5';
+
+        for ($max=1; $max < 30; $max++) {
+            $max_ctc_array[$max] = $max;
+        }
+
+        $max_ctc_array['30'] = '>30Lac';
         
         $viewVariable = array();
         $viewVariable['job_priority'] = JobOpen::getJobPriorities();
@@ -5309,6 +5341,8 @@ class JobOpenController extends Controller
 
         $viewVariable['field_list'] = $field_list;
         $viewVariable['users'] = $users;
+        $viewVariable['min_ctc_array'] = $min_ctc_array;
+        $viewVariable['max_ctc_array'] = $max_ctc_array;
 
         return view('adminlte::jobopen.searchindex', $viewVariable);
     }
@@ -5436,20 +5470,14 @@ class JobOpenController extends Controller
         $close_priority['priority_9'] = $priority_9++;
         $close_priority['priority_10'] = $priority_10++;
 
-        $viewVariable = array();
+        // Get All Client Heirarchy
+        $client_hierarchy_name = JobOpen::getAllHierarchyName();
 
         // Get Fields List
         $field_list = JobOpen::getJobsFieldsList();
 
         // Get Managed By Person List
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $operations = getenv('OPERATIONS');
-        $management = getenv('MANAGEMENT');
-
-        $type_array = array($management,$recruitment,$hr_advisory,$operations);
-
-        $users_array = User::getAllUsers($type_array,'Yes');
+        $users_array = User::getAllUsers(NULL,'Yes');
         $users = array();
         
         if(isset($users_array) && sizeof($users_array) > 0) {
@@ -5471,9 +5499,27 @@ class JobOpenController extends Controller
             }
         }
 
-        // Get All Client Heirarchy
-        $client_hierarchy_name = JobOpen::getAllHierarchyName();
+        // Set Min CTC Array
+        $min_ctc_array = array('' => 'Min CTC');
+        $min_ctc_array['0.5'] = '0.5';
 
+        for ($min=1; $min < 30; $min++) {
+            $min_ctc_array[$min] = $min;
+        }
+
+        $min_ctc_array['30'] = '>30Lac';
+
+        // Set Max CTC Array
+        $max_ctc_array = array('' => 'Max CTC');
+        $max_ctc_array['0.5'] = '0.5';
+
+        for ($max=1; $max < 30; $max++) {
+            $max_ctc_array[$max] = $max;
+        }
+
+        $max_ctc_array['30'] = '>30Lac';
+
+        $viewVariable = array();
         $viewVariable['job_priority'] = JobOpen::getJobPriorities();
         $viewVariable['count'] = $count;
         $viewVariable['close_priority'] = $close_priority;
@@ -5481,14 +5527,17 @@ class JobOpenController extends Controller
         $viewVariable['year'] = $year;
         $viewVariable['isClient'] = $isClient;
         $viewVariable['client_hierarchy_name'] = $client_hierarchy_name;
-        $viewVariable['field_list'] = $field_list;
-        $viewVariable['users'] = $users;
 
          // For salary wise count
 
         $viewVariable['under_ten_lacs'] = $under_ten_lacs;
         $viewVariable['between_ten_to_twenty_lacs'] = $between_ten_to_twenty_lacs;
         $viewVariable['above_twenty_lacs'] = $above_twenty_lacs;
+
+        $viewVariable['field_list'] = $field_list;
+        $viewVariable['users'] = $users;
+        $viewVariable['min_ctc_array'] = $min_ctc_array;
+        $viewVariable['max_ctc_array'] = $max_ctc_array;
 
         return view('adminlte::jobopen.searchcloseindex',$viewVariable);
     }

@@ -437,14 +437,34 @@ class JobOpen extends Model
                 $job_close_query = $job_close_query->where('job_openings.remote_working','!=',"1");
             }
         }
-        else if(isset($min_ctc) && $min_ctc != '') {
+        else if (isset($min_ctc) && $min_ctc != '') {
 
-           $job_close_query = $job_close_query->where('job_openings.lacs_from','=',$min_ctc);
-        }
-        else if(isset($max_ctc) && $max_ctc != '') {
+            if($min_ctc == '30') {
 
-            $job_close_query = $job_close_query->where('job_openings.lacs_to','=',$max_ctc);
+                $job_close_query = $job_close_query->where('job_openings.lacs_from','>=',30);
+            }
+            else if($min_ctc == '0.5') {
+
+                $job_close_query = $job_close_query->where('job_openings.lacs_from','=',0);
+            }
+            else {
+                $job_close_query = $job_close_query->where('job_openings.lacs_from','=',$min_ctc);
+            }
         }
+        else if (isset($max_ctc) && $max_ctc != '') {
+
+            if($max_ctc == '30') {
+                $job_close_query = $job_close_query->where('job_openings.lacs_to','>=',30);
+            }
+            else if($max_ctc == '0.5') {
+
+                $job_close_query = $job_close_query->where('job_openings.lacs_to','=',0);
+            }
+            else {
+                $job_close_query = $job_close_query->where('job_openings.lacs_to','=',$max_ctc);
+            }
+        }
+
         else if(isset($added_date) && $added_date != '') {
 
             $f_dt = date("Y-m-d 00:00:00",strtotime($added_date));
@@ -670,13 +690,32 @@ class JobOpen extends Model
                 $job_close_query = $job_close_query->where('job_openings.remote_working','!=',"1");
             }
         }
-        else if(isset($min_ctc) && $min_ctc != '') {
+        else if (isset($min_ctc) && $min_ctc != '') {
 
-           $job_close_query = $job_close_query->where('job_openings.lacs_from','=',$min_ctc);
+            if($min_ctc == '30') {
+
+                $job_close_query = $job_close_query->where('job_openings.lacs_from','>=',30);
+            }
+            else if($min_ctc == '0.5') {
+
+                $job_close_query = $job_close_query->where('job_openings.lacs_from','=',0);
+            }
+            else {
+                $job_close_query = $job_close_query->where('job_openings.lacs_from','=',$min_ctc);
+            }
         }
-        else if(isset($max_ctc) && $max_ctc != '') {
+        else if (isset($max_ctc) && $max_ctc != '') {
 
-            $job_close_query = $job_close_query->where('job_openings.lacs_to','=',$max_ctc);
+            if($max_ctc == '30') {
+                $job_close_query = $job_close_query->where('job_openings.lacs_to','>=',30);
+            }
+            else if($max_ctc == '0.5') {
+
+                $job_close_query = $job_close_query->where('job_openings.lacs_to','=',0);
+            }
+            else {
+                $job_close_query = $job_close_query->where('job_openings.lacs_to','=',$max_ctc);
+            }
         }
         else if(isset($added_date) && $added_date != '') {
 
@@ -881,13 +920,32 @@ class JobOpen extends Model
                 $job_open_query = $job_open_query->where('job_openings.remote_working','!=',"1");
             }
         }
-        else if(isset($min_ctc) && $min_ctc != '') {
+        else if (isset($min_ctc) && $min_ctc != '') {
 
-           $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
+            if($min_ctc == '30') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','>=',30);
+            }
+            else if($min_ctc == '0.5') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','=',0);
+            }
+            else {
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
+            }
         }
-        else if(isset($max_ctc) && $max_ctc != '') {
+        else if (isset($max_ctc) && $max_ctc != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
+            if($max_ctc == '30') {
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','>=',30);
+            }
+            else if($max_ctc == '0.5') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','=',0);
+            }
+            else {
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
+            }
         }
         else if(isset($added_date) && $added_date != '') {
 
@@ -1170,13 +1228,32 @@ class JobOpen extends Model
                 $job_open_query = $job_open_query->where('job_openings.remote_working','!=',"1");
             }
         }
-        else if(isset($min_ctc) && $min_ctc != '') {
+        else if (isset($min_ctc) && $min_ctc != '') {
 
-           $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
+            if($min_ctc == '30') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','>=',30);
+            }
+            else if($min_ctc == '0.5') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','=',0);
+            }
+            else {
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
+            }
         }
-        else if(isset($max_ctc) && $max_ctc != '') {
+        else if (isset($max_ctc) && $max_ctc != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
+            if($max_ctc == '30') {
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','>=',30);
+            }
+            else if($max_ctc == '0.5') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','=',0);
+            }
+            else {
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
+            }
         }
         else if(isset($added_date) && $added_date != NULL) {
 
@@ -1436,13 +1513,32 @@ class JobOpen extends Model
                 $job_open_query = $job_open_query->where('job_openings.remote_working','!=',"1");
             }
         }
-        else if(isset($min_ctc) && $min_ctc != '') {
+        else if (isset($min_ctc) && $min_ctc != '') {
 
-           $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
+            if($min_ctc == '30') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','>=',30);
+            }
+            else if($min_ctc == '0.5') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','=',0);
+            }
+            else {
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
+            }
         }
-        else if(isset($max_ctc) && $max_ctc != '') {
+        else if (isset($max_ctc) && $max_ctc != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
+            if($max_ctc == '30') {
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','>=',30);
+            }
+            else if($max_ctc == '0.5') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','=',0);
+            }
+            else {
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
+            }
         }
         else if(isset($added_date) && $added_date != '') {
 
@@ -1649,13 +1745,32 @@ class JobOpen extends Model
                 $job_open_query = $job_open_query->where('job_openings.remote_working','!=',"1");
             }
         }
-        else if(isset($min_ctc) && $min_ctc != '') {
+        else if (isset($min_ctc) && $min_ctc != '') {
 
-           $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
+            if($min_ctc == '30') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','>=',30);
+            }
+            else if($min_ctc == '0.5') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','=',0);
+            }
+            else {
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
+            }
         }
-        else if(isset($max_ctc) && $max_ctc != '') {
+        else if (isset($max_ctc) && $max_ctc != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
+            if($max_ctc == '30') {
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','>=',30);
+            }
+            else if($max_ctc == '0.5') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','=',0);
+            }
+            else {
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
+            }
         }
         else if(isset($added_date) && $added_date != NULL) {
 
@@ -2076,13 +2191,32 @@ class JobOpen extends Model
                 $job_open_query = $job_open_query->where('job_openings.remote_working','!=',"1");
             }
         }
-        else if(isset($min_ctc) && $min_ctc != '') {
+        else if (isset($min_ctc) && $min_ctc != '') {
 
-           $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
+            if($min_ctc == '30') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','>=',30);
+            }
+            else if($min_ctc == '0.5') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','=',0);
+            }
+            else {
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
+            }
         }
-        else if(isset($max_ctc) && $max_ctc != '') {
+        else if (isset($max_ctc) && $max_ctc != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
+            if($max_ctc == '30') {
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','>=',30);
+            }
+            else if($max_ctc == '0.5') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','=',0);
+            }
+            else {
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
+            }
         }
         else if(isset($added_date) && $added_date != NULL) {
 
@@ -2321,13 +2455,32 @@ class JobOpen extends Model
                 $job_open_query = $job_open_query->where('job_openings.remote_working','!=',"1");
             }
         }
-        else if(isset($min_ctc) && $min_ctc != '') {
+        else if (isset($min_ctc) && $min_ctc != '') {
 
-           $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
+            if($min_ctc == '30') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','>=',30);
+            }
+            else if($min_ctc == '0.5') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','=',0);
+            }
+            else {
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
+            }
         }
-        else if(isset($max_ctc) && $max_ctc != '') {
+        else if (isset($max_ctc) && $max_ctc != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
+            if($max_ctc == '30') {
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','>=',30);
+            }
+            else if($max_ctc == '0.5') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','=',0);
+            }
+            else {
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
+            }
         }
         else if(isset($added_date) && $added_date != '') {
 
@@ -2610,13 +2763,32 @@ class JobOpen extends Model
                 $job_open_query = $job_open_query->where('job_openings.remote_working','!=',"1");
             }
         }
-        else if(isset($min_ctc) && $min_ctc != '') {
+        else if (isset($min_ctc) && $min_ctc != '') {
 
-           $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
+            if($min_ctc == '30') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','>=',30);
+            }
+            else if($min_ctc == '0.5') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','=',0);
+            }
+            else {
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
+            }
         }
-        else if(isset($max_ctc) && $max_ctc != '') {
+        else if (isset($max_ctc) && $max_ctc != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
+            if($max_ctc == '30') {
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','>=',30);
+            }
+            else if($max_ctc == '0.5') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','=',0);
+            }
+            else {
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
+            }
         }
         else if(isset($added_date) && $added_date != '') {
 
@@ -2830,13 +3002,32 @@ class JobOpen extends Model
                 $job_open_query = $job_open_query->where('job_openings.remote_working','!=',"1");
             }
         }
-        else if(isset($min_ctc) && $min_ctc != '') {
+        else if (isset($min_ctc) && $min_ctc != '') {
 
-           $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
+            if($min_ctc == '30') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','>=',30);
+            }
+            else if($min_ctc == '0.5') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','=',0);
+            }
+            else {
+                $job_open_query = $job_open_query->where('job_openings.lacs_from','=',$min_ctc);
+            }
         }
-        else if(isset($max_ctc) && $max_ctc != '') {
+        else if (isset($max_ctc) && $max_ctc != '') {
 
-            $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
+            if($max_ctc == '30') {
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','>=',30);
+            }
+            else if($max_ctc == '0.5') {
+
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','=',0);
+            }
+            else {
+                $job_open_query = $job_open_query->where('job_openings.lacs_to','=',$max_ctc);
+            }
         }
         else if(isset($added_date) && $added_date != '') {
 
