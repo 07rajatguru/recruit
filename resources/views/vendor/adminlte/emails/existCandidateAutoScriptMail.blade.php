@@ -9,24 +9,18 @@
 <body>
 <table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif; border-collapse: collapse; color: #444444;">
     <tr>
-        <td width="100%">
-            <table  cellpadding="0" cellspacing="0" style = "border:0; background-color: #ffffff; color:black; width:620px;">
+        <td width="600">
+            <table width="100%" cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
                 <tr style="background-color:white;">
-                    <td align="center" width="600">
-                        <div class="site-branding col-md-2 col-sm-6 col-xs-12">
+                    <td colspan="2"></td>
+                    <td align="center">
+                        <div class="site-branding col-md-2 col-sm-6 col-xs-12" >
                             <a href="http://adlertalent.com/" title="Adler Talent Solutions Pvt. Ltd." style="font-size: 22px;text-decoration:none">
-                                <img class="site-logo" src="{{$app_url}}/images/adler-logo-2.jpg" alt="Adler Talent Solutions Pvt. Ltd." style="height: 90px;width:350px;;padding-top: 16px; vertical-align: middle;">
+                                <img width="600" class="site-logo" src="{{$app_url}}/images/Adler-Header.jpg" alt="Adler Talent Solutions Pvt. Ltd." style="height: 90px;padding-top: 16px; vertical-align: middle;">
                             </a>
                         </div>
                     </td>
-                </tr>
-                <tr>
-                    <td><br/></td>
-                </tr>
-                <tr>
-                    <td align="center">
-                        <p style="display: block;border-top: solid 5.0px #c024e4!important;margin: 0.0px auto;width: 100.0%;"><br/></p>
-                    </td>
+                    <td colspan="2"></td>
                 </tr>
             </table>
         </td>
