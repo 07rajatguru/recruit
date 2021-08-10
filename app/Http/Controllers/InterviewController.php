@@ -175,17 +175,35 @@ class InterviewController extends Controller
         $i = 0;$j = 0;
         $interview_status = Interview::getEditInterviewStatus();
 
+        $today = 0;
+        $tomorrow = 0;
+        $thisweek = 0;
+        $upprev = 0;
+
         foreach ($interViews as $key => $value) {
 
             $date = date('Y-m-d', strtotime('this week'));
-            if(date("Y-m-d") == date("Y-m-d",strtotime($value['interview_date'])))
+
+            if(date("Y-m-d") == date("Y-m-d",strtotime($value['interview_date']))) {
+
                 $color = "#8FB1D5";
-            elseif(date('Y-m-d', strtotime('tomorrow')) == date("Y-m-d",strtotime($value['interview_date'])))
+                $today++;
+            }
+            elseif(date('Y-m-d', strtotime('tomorrow')) == date("Y-m-d",strtotime($value['interview_date']))) {
+
                 $color = '#feb80a';
-            elseif(date('Y-m-d', strtotime($date)) > date("Y-m-d",strtotime($value['interview_date'])) || date('Y-m-d', strtotime($date.'+6days')) < date("Y-m-d",strtotime($value['interview_date'])))
+                $tomorrow++;
+            }
+            elseif(date('Y-m-d', strtotime($date)) > date("Y-m-d",strtotime($value['interview_date'])) || date('Y-m-d', strtotime($date.'+6days')) < date("Y-m-d",strtotime($value['interview_date']))) {
+
                 $color = '#F08080';
-            else
+                $thisweek++;
+            }
+            else {
+                
                 $color = '#C4D79B';
+                $upprev++;
+            }
 
             $action = '';
 
