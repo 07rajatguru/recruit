@@ -415,7 +415,7 @@ class JobOpen extends Model
         // Master Search Condidtions
         if(isset($mb_name) && $mb_name != '') {
 
-            $job_close_query = $job_close_query->where('users.name','like',"%$mb_name%");
+            $job_close_query = $job_close_query->where('job_openings.hiring_manager_id','=',$mb_name);
         }
         else if(isset($company_name) && $company_name != '') {
 
@@ -648,7 +648,7 @@ class JobOpen extends Model
         // Master Search Condidtions
         if(isset($mb_name) && $mb_name != '') {
 
-            $job_close_query = $job_close_query->where('users.name','like',"%$mb_name%");
+            $job_close_query = $job_close_query->where('job_openings.hiring_manager_id','=',$mb_name);
         }
         else if(isset($company_name) && $company_name != '') {
 
@@ -859,7 +859,7 @@ class JobOpen extends Model
         // Master Search Condidtions
         if(isset($mb_name) && $mb_name != '') {
 
-            $job_open_query = $job_open_query->where('users.name','like',"%$mb_name%");
+            $job_open_query = $job_open_query->where('job_openings.hiring_manager_id','=',$mb_name);
         }
         else if(isset($company_name) && $company_name != '') {
 
@@ -1149,7 +1149,7 @@ class JobOpen extends Model
         // Master Search Condidtions
         if(isset($mb_name) && $mb_name != '') {
 
-            $job_open_query = $job_open_query->where('users.name','like',"%$mb_name%");
+            $job_open_query = $job_open_query->where('job_openings.hiring_manager_id','=',$mb_name);
         }
         else if(isset($company_name) && $company_name != '') {
 
@@ -1414,7 +1414,7 @@ class JobOpen extends Model
         // Master Search Condidtions
         if(isset($mb_name) && $mb_name != '') {
 
-            $job_open_query = $job_open_query->where('users.name','like',"%$mb_name%");
+            $job_open_query = $job_open_query->where('job_openings.hiring_manager_id','=',$mb_name);
         }
         else if(isset($company_name) && $company_name != '') {
 
@@ -1627,7 +1627,7 @@ class JobOpen extends Model
         // Master Search Condidtions
         if(isset($mb_name) && $mb_name != '') {
 
-            $job_open_query = $job_open_query->where('users.name','like',"%$mb_name%");
+            $job_open_query = $job_open_query->where('job_openings.hiring_manager_id','=',$mb_name);
         }
         else if(isset($company_name) && $company_name != '') {
 
@@ -2054,7 +2054,7 @@ class JobOpen extends Model
         // Master Search Condidtions
         if(isset($mb_name) && $mb_name != '') {
 
-            $job_open_query = $job_open_query->where('users.name','like',"%$mb_name%");
+            $job_open_query = $job_open_query->where('job_openings.hiring_manager_id','=',$mb_name);
         }
         else if(isset($company_name) && $company_name != '') {
 
@@ -2299,7 +2299,7 @@ class JobOpen extends Model
         // Master Search Condidtions
         if(isset($mb_name) && $mb_name != '') {
 
-            $job_open_query = $job_open_query->where('users.name','like',"%$mb_name%");
+            $job_open_query = $job_open_query->where('job_openings.hiring_manager_id','=',$mb_name);
         }
         else if(isset($company_name) && $company_name != '') {
 
@@ -2588,7 +2588,7 @@ class JobOpen extends Model
         // Master Search Condidtions
         if(isset($mb_name) && $mb_name != '') {
 
-            $job_open_query = $job_open_query->where('users.name','like',"%$mb_name%");
+            $job_open_query = $job_open_query->where('job_openings.hiring_manager_id','=',$mb_name);
         }
         else if(isset($company_name) && $company_name != '') {
 
@@ -2808,7 +2808,7 @@ class JobOpen extends Model
         // Master Search Condidtions
         if(isset($mb_name) && $mb_name != '') {
 
-            $job_open_query = $job_open_query->where('users.name','like',"%$mb_name%");
+            $job_open_query = $job_open_query->where('job_openings.hiring_manager_id','=',$mb_name);
         }
         else if(isset($company_name) && $company_name != '') {
 

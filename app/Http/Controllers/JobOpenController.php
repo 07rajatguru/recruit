@@ -322,30 +322,34 @@ class JobOpenController extends Controller
         $field_list = JobOpen::getJobsFieldsList();
 
         // Get Managed By Person List
-
-        // Get HR Role ID
-        $hr_role_id = getenv('HR');
-
-        // Get logged in user role id
-        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
-
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $operations = getenv('OPERATIONS');
         $management = getenv('MANAGEMENT');
 
-        if($hr_role_id == $get_role_id) {
+        $type_array = array($management,$recruitment,$hr_advisory,$operations);
 
-            $type_array = array($management,$recruitment,$hr_advisory,$operations);
-        }
-        else {
-
-            $type_array = array($management,$recruitment,$hr_advisory);
-        }
-
+        $users_array = User::getAllUsers($type_array,'Yes');
         $users = array();
-        $users[0] = 'Select';
-        $users = User::getAllUsers($type_array,'Yes');
+        
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            $users[''] = 'Select User';
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users[$k1] = $v1;
+                }    
+            }
+        }
         
         $viewVariable = array();
         $viewVariable['job_priority'] = JobOpen::getJobPriorities();
@@ -3680,27 +3684,35 @@ class JobOpenController extends Controller
         // Get Fields List
         $field_list = JobOpen::getJobsFieldsList();
 
-        // Get HR Role ID
-        $hr_role_id = getenv('HR');
-
-        // Get logged in user role id
-        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
-
+        // Get Managed By Person List
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $operations = getenv('OPERATIONS');
         $management = getenv('MANAGEMENT');
 
-        if($hr_role_id == $get_role_id) {
+        $type_array = array($management,$recruitment,$hr_advisory,$operations);
 
-            $type_array = array($management,$recruitment,$hr_advisory,$operations);
+        $users_array = User::getAllUsers($type_array,'Yes');
+        $users = array();
+        
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            $users[''] = 'Select User';
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users[$k1] = $v1;
+                }    
+            }
         }
-        else {
-
-            $type_array = array($management,$recruitment,$hr_advisory);
-        }
-
-        $users = User::getAllUsers($type_array,'Yes');
 
         // Get All Client Heirarchy
         $client_hierarchy_name = JobOpen::getAllHierarchyName();
@@ -3711,8 +3723,8 @@ class JobOpenController extends Controller
         $viewVariable['year_array'] = $year_array;
         $viewVariable['year'] = $year;
         $viewVariable['isClient'] = $isClient;
-        $viewVariable['field_list'] = $field_list;
         $viewVariable['client_hierarchy_name'] = $client_hierarchy_name;
+        $viewVariable['field_list'] = $field_list;
         $viewVariable['users'] = $users;
 
          // For salary wise count
@@ -5245,27 +5257,35 @@ class JobOpenController extends Controller
         // Get Fields List
         $field_list = JobOpen::getJobsFieldsList();
 
-        // Get HR Role ID
-        $hr_role_id = getenv('HR');
-
-        // Get logged in user role id
-        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
-
+        // Get Managed By Person List
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $operations = getenv('OPERATIONS');
         $management = getenv('MANAGEMENT');
 
-        if($hr_role_id == $get_role_id) {
+        $type_array = array($management,$recruitment,$hr_advisory,$operations);
 
-            $type_array = array($management,$recruitment,$hr_advisory,$operations);
+        $users_array = User::getAllUsers($type_array,'Yes');
+        $users = array();
+        
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            $users[''] = 'Select User';
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users[$k1] = $v1;
+                }    
+            }
         }
-        else {
-
-            $type_array = array($management,$recruitment,$hr_advisory);
-        }
-
-        $users = User::getAllUsers($type_array,'Yes');
         
         $viewVariable = array();
         $viewVariable['job_priority'] = JobOpen::getJobPriorities();
@@ -5421,28 +5441,35 @@ class JobOpenController extends Controller
         // Get Fields List
         $field_list = JobOpen::getJobsFieldsList();
 
-        // Get HR Role ID
-        $hr_role_id = getenv('HR');
-
-        // Get logged in user role id
-        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
-
+        // Get Managed By Person List
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $operations = getenv('OPERATIONS');
         $management = getenv('MANAGEMENT');
 
-        if($hr_role_id == $get_role_id) {
+        $type_array = array($management,$recruitment,$hr_advisory,$operations);
 
-            $type_array = array($management,$recruitment,$hr_advisory,$operations);
+        $users_array = User::getAllUsers($type_array,'Yes');
+        $users = array();
+        
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            $users[''] = 'Select User';
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users[$k1] = $v1;
+                }    
+            }
         }
-        else {
-
-            $type_array = array($management,$recruitment,$hr_advisory);
-        }
-
-        $users = User::getAllUsers($type_array,'Yes');
-        $users[0] = 'Select';
 
         // Get All Client Heirarchy
         $client_hierarchy_name = JobOpen::getAllHierarchyName();

@@ -253,7 +253,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="">
                         <div class="form-group"><br/>
-                            <strong>Select Field which you want to search : </strong>
+                            <strong>Select Field which you want to search : </strong> <br/>
                             {!! Form::select('selected_field', $field_list,null, array('id'=>'selected_field', 'class' => 'form-control','tabindex' => '1','onchange' => 'displaySelectedField()')) !!}
                         </div>
                     </div>
@@ -261,8 +261,8 @@
 
                 <div class="col-xs-12 col-sm-12 col-md-12 job_position_cls" style="display: none;">
                     <div class="">
-                        <div class="form-group"><br>
-                            <strong>Select Job Position :</strong> <br><br>
+                        <div class="form-group"><br/>
+                            <strong>Select Job Position :</strong> <br/>
                             {!! Form::select('client_heirarchy', $client_hierarchy_name,null, array('id'=>'client_heirarchy','class' => 'form-control','tabindex' => '1')) !!}
                         </div>
                     </div>
@@ -271,7 +271,7 @@
                 <div class="col-xs-12 col-sm-12 col-md-12 mb_name_cls" style="display: none;">
                     <div class="">
                         <div class="form-group"><br/>
-                            <strong>Managed By : </strong> <br><br>
+                            <strong>Managed By : </strong> <br/>
                             {!! Form::select('mb_name', $users,null, array('id'=>'mb_name','class' => 'form-control','tabindex' => '1')) !!}
                         </div>
                     </div>
@@ -756,7 +756,10 @@
 
                 $("#client_heirarchy").val('');
                 $("#client_heirarchy")[0].selectedIndex = '';
-                $("#mb_name").val("");
+
+                $("#mb_name").val('');
+                $("#mb_name")[0].selectedIndex = '';
+
                 $("#company_name").val("");
                 $("#posting_title").val("");
                 $("#location").val("");
@@ -780,7 +783,10 @@
 
                 $("#client_heirarchy").val('');
                 $("#client_heirarchy")[0].selectedIndex = '';
-                $("#mb_name").val("");
+
+                $("#mb_name").val('');
+                $("#mb_name")[0].selectedIndex = '';
+
                 $("#company_name").val("");
                 $("#posting_title").val("");
                 $("#location").val("");
@@ -804,7 +810,10 @@
 
                 $("#client_heirarchy").val('0');
                 $("#client_heirarchy")[0].selectedIndex = '';
-                $("#mb_name").val("");
+
+                $("#mb_name").val('');
+                $("#mb_name")[0].selectedIndex = '';
+
                 $("#company_name").val("");
                 $("#posting_title").val("");
                 $("#location").val("");
@@ -828,7 +837,10 @@
 
                 $("#client_heirarchy").val('');
                 $("#client_heirarchy")[0].selectedIndex = '';
-                $("#mb_name").val("");
+
+                $("#mb_name").val('');
+                $("#mb_name")[0].selectedIndex = '';
+
                 $("#company_name").val("");
                 $("#posting_title").val("");
                 $("#location").val("");
@@ -852,7 +864,10 @@
 
                 $("#client_heirarchy").val('');
                 $("#client_heirarchy")[0].selectedIndex = '';
-                $("#mb_name").val("");
+
+                $("#mb_name").val('');
+                $("#mb_name")[0].selectedIndex = '';
+
                 $("#company_name").val("");
                 $("#posting_title").val("");
                 $("#location").val("");
@@ -876,7 +891,10 @@
 
                 $("#client_heirarchy").val('');
                 $("#client_heirarchy")[0].selectedIndex = '';
-                $("#mb_name").val("");
+
+                $("#mb_name").val('');
+                $("#mb_name")[0].selectedIndex = '';
+
                 $("#company_name").val("");
                 $("#posting_title").val("");
                 $("#location").val("");
@@ -900,7 +918,10 @@
 
                 $("#client_heirarchy").val('');
                 $("#client_heirarchy")[0].selectedIndex = '';
-                $("#mb_name").val("");
+
+                $("#mb_name").val('');
+                $("#mb_name")[0].selectedIndex = '';
+
                 $("#company_name").val("");
                 $("#posting_title").val("");
                 $("#location").val("");
@@ -924,7 +945,10 @@
 
                 $("#client_heirarchy").val('');
                 $("#client_heirarchy")[0].selectedIndex = '';
-                $("#mb_name").val("");
+
+                $("#mb_name").val('');
+                $("#mb_name")[0].selectedIndex = '';
+
                 $("#company_name").val("");
                 $("#posting_title").val("");
                 $("#location").val("");
@@ -948,7 +972,10 @@
                 
                 $("#client_heirarchy").val('');
                 $("#client_heirarchy")[0].selectedIndex = '';
-                $("#mb_name").val("");
+
+                $("#mb_name").val('');
+                $("#mb_name")[0].selectedIndex = '';
+
                 $("#company_name").val("");
                 $("#posting_title").val("");
                 $("#location").val("");
@@ -982,7 +1009,10 @@
 
                 $("#client_heirarchy").val('');
                 $("#client_heirarchy")[0].selectedIndex = '';
-                $("#mb_name").val("");
+                
+                $("#mb_name").val('');
+                $("#mb_name")[0].selectedIndex = '';
+
                 $("#company_name").val("");
                 $("#posting_title").val("");
                 $("#location").val("");
