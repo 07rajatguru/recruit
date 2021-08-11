@@ -189,10 +189,8 @@ class ClientBasicinfo extends Ardent
 
             $query = $query->where(function($query) use ($client_owner) {
 
-                $query = $query->where('users.name','like',"%$client_owner%");
-                $query = $query->orwhere('users.first_name','like',"%$client_owner%");
-                $query = $query->orwhere('u1.name','like',"%$client_owner%");
-                $query = $query->orwhere('u1.first_name','like',"%$client_owner%");
+                $query = $query->where('client_basicinfo.account_manager_id','=',$client_owner);
+                $query = $query->orwhere('client_basicinfo.second_line_am','=',$client_owner);
             });
         }
         else if(isset($client_company) && $client_company != '') {
@@ -451,10 +449,8 @@ class ClientBasicinfo extends Ardent
 
             $query = $query->where(function($query) use ($client_owner) {
 
-                $query = $query->where('users.name','like',"%$client_owner%");
-                $query = $query->orwhere('users.first_name','like',"%$client_owner%");
-                $query = $query->orwhere('u1.name','like',"%$client_owner%");
-                $query = $query->orwhere('u1.first_name','like',"%$client_owner%");
+                $query = $query->where('client_basicinfo.account_manager_id','=',$client_owner);
+                $query = $query->orwhere('client_basicinfo.second_line_am','=',$client_owner);
             });
         }
         else if(isset($client_company) && $client_company != '') {
@@ -980,10 +976,8 @@ class ClientBasicinfo extends Ardent
 
             $query = $query->where(function($query) use ($client_owner) {
 
-                $query = $query->where('users.name','like',"%$client_owner%");
-                $query = $query->orwhere('users.first_name','like',"%$client_owner%");
-                $query = $query->orwhere('u1.name','like',"%$client_owner%");
-                $query = $query->orwhere('u1.first_name','like',"%$client_owner%");
+                $query = $query->where('client_basicinfo.account_manager_id','=',$client_owner);
+                $query = $query->orwhere('client_basicinfo.second_line_am','=',$client_owner);
             });
         }
         else if(isset($client_company) && $client_company != '') {
@@ -1272,10 +1266,8 @@ class ClientBasicinfo extends Ardent
 
             $query = $query->where(function($query) use ($client_owner) {
 
-                $query = $query->where('users.name','like',"%$client_owner%");
-                $query = $query->orwhere('users.first_name','like',"%$client_owner%");
-                $query = $query->orwhere('u1.name','like',"%$client_owner%");
-                $query = $query->orwhere('u1.first_name','like',"%$client_owner%");
+                $query = $query->where('client_basicinfo.account_manager_id','=',$client_owner);
+                $query = $query->orwhere('client_basicinfo.second_line_am','=',$client_owner);
             });
         }
         else if(isset($client_company) && $client_company != '') {

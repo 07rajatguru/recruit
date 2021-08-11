@@ -125,7 +125,32 @@ class ClientController extends Controller
         // Get Master Search Field List
         $field_list = ClientBasicinfo::getFieldsList();
 
-        return view('adminlte::client.index',compact('count','active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','all_account_manager','email_template_names','client_name_string','user_id','superadmin','manager','status','status_id','field_list'));
+        // Get Managed By Person List
+        $users = array();
+        
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            $users[''] = 'Select User';
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users[$k1] = $v1;
+                }    
+            }
+        }
+
+        // Get Category List
+        $category_list = ClientBasicinfo::getCategory();
+
+        return view('adminlte::client.index',compact('count','active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','all_account_manager','email_template_names','client_name_string','user_id','superadmin','manager','status','status_id','field_list','users','category_list'));
     }
 
     public static function getOrderColumnName($order) {
@@ -377,11 +402,6 @@ class ClientController extends Controller
 
         $email_template_names = EmailTemplate::getAllEmailTemplateNames();
 
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $management = getenv('MANAGEMENT');
-        $type_array = array($recruitment,$hr_advisory,$management);
-
         $users_array = User::getAllUsers(NULL,'Yes');
         $all_account_manager = array();
 
@@ -412,7 +432,32 @@ class ClientController extends Controller
         // Get Master Search Field List
         $field_list = ClientBasicinfo::getFieldsList();
 
-        return view('adminlte::client.clienttypeindex',compact('active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','source','count','email_template_names','all_account_manager','status','status_id','field_list'));
+        // Get Managed By Person List
+        $users = array();
+        
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            $users[''] = 'Select User';
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users[$k1] = $v1;
+                }    
+            }
+        }
+
+        // Get Category List
+        $category_list = ClientBasicinfo::getCategory();
+
+        return view('adminlte::client.clienttypeindex',compact('active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','source','count','email_template_names','all_account_manager','status','status_id','field_list','users','category_list'));
     }
 
     public function getAllClientsDetailsByType() {
@@ -3067,7 +3112,32 @@ class ClientController extends Controller
         // Get Master Search Field List
         $field_list = ClientBasicinfo::getFieldsList();
 
-        return view('adminlte::client.searchindex',compact('count','active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','all_account_manager','email_template_names','client_name_string','user_id','superadmin','manager','status','status_id','field_list'));
+        // Get Managed By Person List
+        $users = array();
+        
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            $users[''] = 'Select User';
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users[$k1] = $v1;
+                }    
+            }
+        }
+
+        // Get Category List
+        $category_list = ClientBasicinfo::getCategory();
+
+        return view('adminlte::client.searchindex',compact('count','active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','all_account_manager','email_template_names','client_name_string','user_id','superadmin','manager','status','status_id','field_list','users','category_list'));
     }
 
     public function getAllClientsDetailsBySearch() {
@@ -3366,6 +3436,31 @@ class ClientController extends Controller
         // Get Master Search Field List
         $field_list = ClientBasicinfo::getFieldsList();
 
-        return view('adminlte::client.searchclienttypeindex',compact('active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','source','count','email_template_names','all_account_manager','status','status_id','field_list'));
+        // Get Managed By Person List
+        $users = array();
+        
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            $users[''] = 'Select User';
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users[$k1] = $v1;
+                }    
+            }
+        }
+
+        // Get Category List
+        $category_list = ClientBasicinfo::getCategory();
+
+        return view('adminlte::client.searchclienttypeindex',compact('active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','source','count','email_template_names','all_account_manager','status','status_id','field_list','users','category_list'));
     }
 }

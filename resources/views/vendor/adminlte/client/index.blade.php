@@ -317,87 +317,7 @@
         </div>
     </div>
 
-    <!-- Client Master Search Modal Popup -->
-
-    <div class="modal fade mastersearchmodal" id="mastersearchmodal" aria-labelledby="mastersearchmodal" role="dialog">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                    <h4 class="modal-title">Search Options</h4>
-                </div>
-
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    <div class="">
-                        <div class="form-group"><br/>
-                            <strong>Select Field which you want to search : </strong>
-                            {!! Form::select('selected_field', $field_list,null, array('id'=>'selected_field', 'class' => 'form-control','tabindex' => '1','onchange' => 'displaySelectedField()')) !!}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xs-12 col-sm-12 col-md-12 client_owner_cls" style="display: none;">
-                    <div class="">
-                        <div class="form-group"><br/>
-                            <strong>Enter Client Owner : </strong>
-                            {!! Form::text('client_owner', null, array('id'=>'client_owner','placeholder' => 'Client Owner','class' => 'form-control', 'tabindex' => '1')) !!}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xs-12 col-sm-12 col-md-12 client_company_cls" style="display: none;">
-                    <div class="">
-                        <div class="form-group"><br/>
-                            <strong>Enter Company Name : </strong>
-                            {!! Form::text('client_company', null, array('id'=>'client_company','placeholder' => 'Company Name','class' => 'form-control', 'tabindex' => '1')) !!}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xs-12 col-sm-12 col-md-12 client_contact_point_cls" style="display: none;">
-                    <div class="">
-                        <div class="form-group"><br/>
-                            <strong>Enter Contact Point : </strong>
-                            {!! Form::text('client_contact_point', null, array('id'=>'client_contact_point','placeholder' => 'Contact Point','class' => 'form-control', 'tabindex' => '1')) !!}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xs-12 col-sm-12 col-md-12 client_cat_cls" style="display: none;">
-                    <div class="">
-                        <div class="form-group"><br/>
-                            <strong>Enter Client Category : </strong>
-                            {!! Form::text('client_cat', null, array('id'=>'client_cat','placeholder' => 'Client Category','class' => 'form-control', 'tabindex' => '1')) !!}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xs-12 col-sm-12 col-md-12 client_status_cls" style="display: none;">
-                    <div class="">
-                        <div class="form-group"><br/>
-                            <strong>Enter Client Status : </strong>
-                            {!! Form::text('client_status', null, array('id'=>'client_status','placeholder' => 'Client Status','class' => 'form-control', 'tabindex' => '1')) !!}
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-xs-12 col-sm-12 col-md-12 client_city_cls" style="display: none;">
-                    <div class="">
-                        <div class="form-group"><br/>
-                            <strong>Enter Client City : </strong>
-                            {!! Form::text('client_city', null, array('id'=>'client_city','placeholder' => 'Client City','class' => 'form-control', 'tabindex' => '1')) !!}
-                        </div>
-                    </div>
-                </div>
-         
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary" onclick="displayresults();">Search
-                    </button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div>
+    @include('adminlte::partials.clientmastersearchmodal', ['field_list' => $field_list,'users' => $users,'category_list' => $category_list])
 
     <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
     <input type="hidden" name="superadmin" id="superadmin" value="{{ $superadmin }}">
@@ -414,6 +334,8 @@
         $("#second_line_am_id").select2({width : '567px'});
         $("#email_template_id").select2({width : '567px'});
         $("#selected_field").select2({width : '567px'});
+        $("#client_owner").select2({width:"565px"});
+        $("#client_cat").select2({width:"565px"});
         
         var numCols = $('#client_table thead th').length;
 
@@ -864,7 +786,9 @@
             $(".client_status_cls").hide();
             $(".client_city_cls").hide();
 
-            $("#client_owner").val("");
+            $("#client_owner").val('');
+            $("#client_owner")[0].selectedIndex = '';
+
             $("#client_company").val("");
             $("#client_contact_point").val("");
             $("#client_cat").val("");
@@ -881,7 +805,9 @@
             $(".client_status_cls").hide();
             $(".client_city_cls").hide();
 
-            $("#client_owner").val("");
+            $("#client_owner").val('');
+            $("#client_owner")[0].selectedIndex = '';
+            
             $("#client_company").val("");
             $("#client_contact_point").val("");
             $("#client_cat").val("");
@@ -898,7 +824,9 @@
             $(".client_status_cls").hide();
             $(".client_city_cls").hide();
 
-            $("#client_owner").val("");
+            $("#client_owner").val('');
+            $("#client_owner")[0].selectedIndex = '';
+            
             $("#client_company").val("");
             $("#client_contact_point").val("");
             $("#client_cat").val("");
@@ -915,7 +843,9 @@
             $(".client_status_cls").hide();
             $(".client_city_cls").hide();
 
-            $("#client_owner").val("");
+            $("#client_owner").val('');
+            $("#client_owner")[0].selectedIndex = '';
+            
             $("#client_company").val("");
             $("#client_contact_point").val("");
             $("#client_cat").val("");
@@ -932,7 +862,9 @@
             $(".client_status_cls").show();
             $(".client_city_cls").hide();
 
-            $("#client_owner").val("");
+            $("#client_owner").val('');
+            $("#client_owner")[0].selectedIndex = '';
+            
             $("#client_company").val("");
             $("#client_contact_point").val("");
             $("#client_cat").val("");
@@ -949,7 +881,9 @@
             $(".client_status_cls").hide();
             $(".client_city_cls").show();
 
-            $("#client_owner").val("");
+            $("#client_owner").val('');
+            $("#client_owner")[0].selectedIndex = '';
+            
             $("#client_company").val("");
             $("#client_contact_point").val("");
             $("#client_cat").val("");
@@ -974,7 +908,9 @@
         }
         else {
 
-            $("#client_owner").val("");
+            $("#client_owner").val('');
+            $("#client_owner")[0].selectedIndex = '';
+            
             $("#client_company").val("");
             $("#client_contact_point").val("");
             $("#client_cat").val("");
