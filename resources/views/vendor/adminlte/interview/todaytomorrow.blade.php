@@ -18,11 +18,10 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="col-md-2">
-                <div style="width:100px;height:40px;background-color:#8FB1D5;padding:9px 25px;font-weight: 600;border-radius: 22px;">Today</div>
-            </div>&nbsp;
-            
+                <a href="{{ route('interview.today') }}" style="text-decoration: none;color: black;"><div style="width:115px;height:40px;background-color:#8FB1D5;padding:9px 25px;font-weight: 600;border-radius: 22px;">Today ({{ $today_count }})</div></a>
+            </div>
             <div class="col-md-2">
-                <div style="width:100px;height:40px;background-color:#feb80a;padding:9px 17px;font-weight: 600;border-radius: 22px;">Tomorrow</div>
+                <a href="{{ route('interview.tomorrow') }}" style="text-decoration: none;color: black;"><div style="width:130px;height:40px;background-color:#feb80a;padding:9px 17px;font-weight: 600;border-radius: 22px;">Tomorrow ({{ $tomorrow_count }})</div></a>
             </div>
  		</div>
     </div>

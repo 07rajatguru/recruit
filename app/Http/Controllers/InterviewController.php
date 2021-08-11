@@ -175,11 +175,6 @@ class InterviewController extends Controller
         $i = 0;$j = 0;
         $interview_status = Interview::getEditInterviewStatus();
 
-        $today = 0;
-        $tomorrow = 0;
-        $thisweek = 0;
-        $upprev = 0;
-
         foreach ($interViews as $key => $value) {
 
             $date = date('Y-m-d', strtotime('this week'));
@@ -187,22 +182,17 @@ class InterviewController extends Controller
             if(date("Y-m-d") == date("Y-m-d",strtotime($value['interview_date']))) {
 
                 $color = "#8FB1D5";
-                $today++;
             }
             elseif(date('Y-m-d', strtotime('tomorrow')) == date("Y-m-d",strtotime($value['interview_date']))) {
 
                 $color = '#feb80a';
-                $tomorrow++;
             }
             elseif(date('Y-m-d', strtotime($date)) > date("Y-m-d",strtotime($value['interview_date'])) || date('Y-m-d', strtotime($date.'+6days')) < date("Y-m-d",strtotime($value['interview_date']))) {
 
                 $color = '#F08080';
-                $thisweek++;
             }
             else {
-                
                 $color = '#C4D79B';
-                $upprev++;
             }
 
             $action = '';
@@ -412,14 +402,23 @@ class InterviewController extends Controller
         foreach ($interViews as $key => $value) {
 
             $date = date('Y-m-d', strtotime('this week'));
-            if(date("Y-m-d") == date("Y-m-d",strtotime($value['interview_date'])))
+
+            if(date("Y-m-d") == date("Y-m-d",strtotime($value['interview_date']))) {
+
                 $color = "#8FB1D5";
-            elseif(date('Y-m-d', strtotime('tomorrow')) == date("Y-m-d",strtotime($value['interview_date'])))
+            }
+            elseif(date('Y-m-d', strtotime('tomorrow')) == date("Y-m-d",strtotime($value['interview_date']))) {
+
                 $color = '#feb80a';
-            elseif(date('Y-m-d', strtotime($date)) > date("Y-m-d",strtotime($value['interview_date'])) || date('Y-m-d', strtotime($date.'+6days')) < date("Y-m-d",strtotime($value['interview_date'])))
+            }
+            elseif(date('Y-m-d', strtotime($date)) > date("Y-m-d",strtotime($value['interview_date'])) || date('Y-m-d', strtotime($date.'+6days')) < date("Y-m-d",strtotime($value['interview_date']))) {
+
                 $color = '#F08080';
-            else
+            }
+            else{
+
                 $color = '#C4D79B';
+            }
 
             $action = '';
 
@@ -475,10 +474,28 @@ class InterviewController extends Controller
             $todaytomorrow = Interview::getTodayTomorrowsInterviews(0,$user->id,$department_id);
         }
 
+        $today_count = 0;
+        $tomorrow_count = 0;
+
+        if(isset($todaytomorrow) && sizeof ($todaytomorrow) > 0) {
+
+            foreach ($todaytomorrow as $key => $value) {
+
+                if(date("Y-m-d") == date("Y-m-d",strtotime($value['interview_date']))) {
+
+                    $today_count++;
+                }
+                elseif(date('Y-m-d', strtotime('tomorrow')) == date("Y-m-d",strtotime($value['interview_date']))) {
+
+                    $tomorrow_count++;
+                }
+            }
+        }
+
         $count = sizeof($todaytomorrow);
         $source = 'tti';
 
-        return view('adminlte::interview.todaytomorrow',compact('count','todaytomorrow','source'));
+        return view('adminlte::interview.todaytomorrow',compact('count','todaytomorrow','source','today_count','tomorrow_count'));
     }
 
     public function attendedinterview($month,$year,$department_id) {
@@ -512,6 +529,7 @@ class InterviewController extends Controller
         $user = \Auth::user();
 
         $attended_interview = Interview::getAttendedInterviews(1,$user->id,$month,$year,0);
+
         $count = sizeof($attended_interview);
         $source = 'ai';
 
@@ -877,12 +895,7 @@ class InterviewController extends Controller
                 }
             }
         }
-        if ($source == 'tti') {
-            return redirect()->route('interview.todaytomorrow')->with('success','Interview Details Updated Successfully.');
-        }
-        else {
-            return redirect()->route('interview.index')->with('success','Interview Details Updated Successfully.');
-        }
+        return redirect()->route('interview.index')->with('success','Interview Details Updated Successfully.');
     }
 
     public function show($id) {
