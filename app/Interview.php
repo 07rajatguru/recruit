@@ -1364,4 +1364,42 @@ class Interview extends Model
         }
         return $interview;
     }
+
+    public static function getAttendedInterviewsByWeek($user_id=0,$from_date=NULL,$to_date=NULL) {
+
+        $query = Interview::query();
+        $query = $query->leftjoin('job_openings','job_openings.id','=','interview.posting_title');
+        $query = $query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $query = $query->leftjoin('users','users.id','=','client_basicinfo.account_manager_id');
+        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','interview.candidate_id');
+        $query = $query->leftjoin('candidate_basicinfo','candidate_basicinfo.id','=','candidate_otherinfo.candidate_id');
+        $query = $query->select(\DB::raw("COUNT(interview.candidate_id) as count"),'client_basicinfo.name as company_name','users.name as client_owner','job_openings.posting_title as posting_title','candidate_basicinfo.full_name as candidate_name');
+
+        if(isset($user_id) && $user_id > 0) {
+            $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        }
+
+        $query = $query->where('interview.interview_date','>=',$from_date);
+
+        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
+        $query = $query->where('interview.interview_date','<=',$to_date);
+        $query = $query->where('interview.status','=','Attended');
+     
+        $query = $query->groupBy(\DB::raw('Date(interview.interview_date)'));
+        $query_response = $query->get();
+       
+        $list = array();
+        $i=0;
+
+        foreach ($query_response as $key => $value) {
+
+            $list[$i]['company_name'] = $value->company_name;
+            $list[$i]['client_owner'] = $value->client_owner;
+            $list[$i]['posting_title'] = $value->posting_title;
+            $list[$i]['candidate_name'] = $value->candidate_name;
+
+            $i++;
+        }
+        return $list;
+    }
 }

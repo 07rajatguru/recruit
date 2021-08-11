@@ -600,4 +600,56 @@ class JobAssociateCandidates extends Model
         }
         return $candidate_jobs;
     }
+
+    public static function getAssociatedCandidatesByWeek($user_id=0,$from_date=NULL,$to_date=NULL) {
+        
+        $query = JobAssociateCandidates::query();
+        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_associate_candidates.candidate_id');
+        $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"));
+
+        if(isset($user_id) && $user_id > 0) {
+            $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        }
+
+        $query = $query->where('job_associate_candidates.created_at','>=',$from_date);
+
+        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
+        $query = $query->where('job_associate_candidates.created_at','<=',$to_date);
+
+        $query = $query->groupBy(\DB::raw('Date(job_associate_candidates.created_at)'));
+        $query_response = $query->get();
+
+        $cnt= 0;
+        foreach ($query_response as $key => $value) {
+            $cnt += $value->count;
+        }
+        return $cnt;  
+    }
+
+    public static function getShortlistedCandidatesByWeek($user_id=0,$from_date=NULL,$to_date=NULL) {
+
+        $query = JobAssociateCandidates::query();
+        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_associate_candidates.candidate_id');
+        $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"));
+
+        if(isset($user_id) && $user_id > 0) {
+            $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        }
+
+        $query = $query->where('job_associate_candidates.shortlisted_date','>=',$from_date);
+
+        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
+        $query = $query->where('job_associate_candidates.shortlisted_date','<=',$to_date);
+
+        $query = $query->where('job_associate_candidates.shortlisted','>=','1');
+       
+        $query = $query->groupBy(\DB::raw('Date(job_associate_candidates.shortlisted_date)'));
+        $query_response = $query->get();
+
+        $cnt= 0;
+        foreach ($query_response as $key => $value) {
+            $cnt += $value->count;
+        }
+        return $cnt;  
+    }
 }
