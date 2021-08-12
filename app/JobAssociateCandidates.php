@@ -31,6 +31,7 @@ class JobAssociateCandidates extends Model
         $query = $query->join('users', 'users.id', '=', 'candidate_otherinfo.owner_id');
         $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname', 'candidate_basicinfo.email as email', 'users.name as owner','job_associate_candidates.shortlisted','candidate_status.name as status', 'job_associate_candidates.shortlisted as shortlisted', 'candidate_basicinfo.id as cid','job_associate_candidates.created_at as job_associate_candidates_date','candidate_basicinfo.mobile as mobile','candidate_basicinfo.created_at as created_at','job_associate_candidates.selected_date as selected_date');
         $query = $query->where('job_associate_candidates.job_id','=',$job_id);
+
         $query = $query->orderBy('job_associate_candidates.shortlisted','3');
         $query = $query->orderBy('job_associate_candidates.shortlisted','2');
         $query = $query->orderBy('job_associate_candidates.shortlisted','1');
@@ -601,55 +602,83 @@ class JobAssociateCandidates extends Model
         return $candidate_jobs;
     }
 
-    public static function getAssociatedCandidatesByWeek($user_id=0,$from_date=NULL,$to_date=NULL) {
+    public static function getShortlistedCandidatesByWeek($job_id,$from_date=NULL,$to_date=NULL) {
+
+        $query = new JobAssociateCandidates();
+
+        $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','job_associate_candidates.candidate_id');
+        $query = $query->leftjoin('candidate_otherinfo', 'candidate_otherinfo.candidate_id', '=', 'candidate_basicinfo.id');
+        $query = $query->leftjoin('candidate_status','candidate_status.id', '=' , 'candidate_otherinfo.status_id');
+
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as candidate_name');
+
+        $query = $query->where('job_associate_candidates.job_id','=',$job_id);
+
+        if(isset($from_date) && $from_date != NULL) {
         
-        $query = JobAssociateCandidates::query();
-        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_associate_candidates.candidate_id');
-        $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"));
+            $query = $query->where('job_associate_candidates.shortlisted_date','>=',$from_date);
 
-        if(isset($user_id) && $user_id > 0) {
-            $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+            $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
+            $query = $query->where('job_associate_candidates.shortlisted_date','<=',$to_date);
         }
-
-        $query = $query->where('job_associate_candidates.created_at','>=',$from_date);
-
-        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
-        $query = $query->where('job_associate_candidates.created_at','<=',$to_date);
-
-        $query = $query->groupBy(\DB::raw('Date(job_associate_candidates.created_at)'));
-        $query_response = $query->get();
-
-        $cnt= 0;
-        foreach ($query_response as $key => $value) {
-            $cnt += $value->count;
-        }
-        return $cnt;  
-    }
-
-    public static function getShortlistedCandidatesByWeek($user_id=0,$from_date=NULL,$to_date=NULL) {
-
-        $query = JobAssociateCandidates::query();
-        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_associate_candidates.candidate_id');
-        $query = $query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"));
-
-        if(isset($user_id) && $user_id > 0) {
-            $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
-        }
-
-        $query = $query->where('job_associate_candidates.shortlisted_date','>=',$from_date);
-
-        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
-        $query = $query->where('job_associate_candidates.shortlisted_date','<=',$to_date);
 
         $query = $query->where('job_associate_candidates.shortlisted','>=','1');
-       
-        $query = $query->groupBy(\DB::raw('Date(job_associate_candidates.shortlisted_date)'));
-        $query_response = $query->get();
+        
+        $query = $query->orderBy('job_associate_candidates.shortlisted','3');
+        $query = $query->orderBy('job_associate_candidates.shortlisted','2');
+        $query = $query->orderBy('job_associate_candidates.shortlisted','1');
+        $query = $query->orderBy('job_associate_candidates.date','desc');
 
-        $cnt= 0;
-        foreach ($query_response as $key => $value) {
-            $cnt += $value->count;
+        $response = $query->get();
+
+        $list = array();
+        $i=0;
+
+        if(isset($response) && sizeof($response) > 0) {
+        
+            foreach ($response as $key => $value) {
+
+                $list[$i]['candidate_name'] = $value->candidate_name;
+                $i++;
+            }
         }
-        return $cnt;  
+        return $list;
+    }
+
+    public static function getAssociatedCandidatesByWeek($job_id,$from_date=NULL,$to_date=NULL) {
+
+        $query = new JobAssociateCandidates();
+        $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','job_associate_candidates.candidate_id');
+        
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as candidate_name');
+        $query = $query->where('job_associate_candidates.job_id','=',$job_id);
+
+        if(isset($from_date) && $from_date != NULL) {
+
+            $query = $query->where('job_associate_candidates.created_at','>=',$from_date);
+
+            $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
+            $query = $query->where('job_associate_candidates.created_at','<=',$to_date);
+        }
+
+        $query = $query->orderBy('job_associate_candidates.shortlisted','3');
+        $query = $query->orderBy('job_associate_candidates.shortlisted','2');
+        $query = $query->orderBy('job_associate_candidates.shortlisted','1');
+        $query = $query->orderBy('job_associate_candidates.date','desc');
+
+        $response = $query->get();
+
+        $list = array();
+        $i=0;
+
+        if(isset($response) && sizeof($response) > 0) {
+        
+            foreach ($response as $key => $value) {
+
+                $list[$i]['candidate_name'] = $value->candidate_name;
+                $i++;
+            }
+        }
+        return $list;
     }
 }

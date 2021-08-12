@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\User;
+use App\ClientBasicinfo;
+use App\JobOpen;
 use App\JobAssociateCandidates;
 use App\Interview;
 use App\Events\NotificationMail;
@@ -54,19 +56,47 @@ class ClientAutoGenerateReport extends Command
         if(isset($users) && sizeof($users) > 0) {
 
             foreach ($users as $key => $value) {
+
+                $job_ids_array = array();
+                $j = 0;
+
+                $client_res = ClientBasicinfo::getUserClientsByUserID($key);
                 
-                $interviews = Interview::getAttendedInterviewsByWeek($key,$from_date,$to_date);
+                if(isset($client_res) && sizeof($client_res) > 0) {
 
-                print_r($interviews);exit;
+                    foreach ($client_res as $client_res_key => $client_res_value) {
+                     
+                        $client_jobs = JobOpen::getAllJobsByCLient($client_res_value->id);
 
-                if(isset($module_ids_array) && sizeof($module_ids_array) > 0) {
-                        
-                    $module = "Interview Reminder";
+                        if(isset($client_jobs) && sizeof($client_jobs) > 0) {
+
+                            foreach ($client_jobs as $client_jobs_key => $client_jobs_value) {
+                             
+                                $associate_candidates = JobAssociateCandidates::getAssociatedCandidatesByWeek($client_jobs_value['id'],$from_date,$to_date);
+
+                                $shortlisted_candidates = JobAssociateCandidates::getShortlistedCandidatesByWeek($client_jobs_value['id'],$from_date,$to_date);
+
+                                $attended_interviews = Interview::getAttendedInterviewsByWeek($client_jobs_value['id'],$from_date,$to_date);
+
+                                
+                                if(isset($associate_candidates) && $associate_candidates != '') {
+
+                                    $job_ids_array[$j] = $client_jobs_value['id'];
+                                    $j++;
+                                }
+                            }
+                        }
+                    }
+                }
+
+                if(isset($job_ids_array) && sizeof($job_ids_array) > 0) {
+
+                    $module = "Client Auto Generate Report";
                     $sender_name = $key;
                     $to = User::getUserEmailById($key);
-                    $subject = "Interview Reminder";
+                    $subject = "Client Auto Generate Report";
                     $message = "";
-                    $module_id = implode(",", $module_ids_array);
+                    $module_id = implode(",", $job_ids_array);
                     $cc = "";
 
                     event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));

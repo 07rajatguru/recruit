@@ -1941,6 +1941,69 @@ class EveryMinute extends Command
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
+
+            else if ($value['module'] == "Client Auto Generate Report") {
+
+                $job_ids_array = explode(",",$value['module_id']);
+
+                if(isset($job_ids_array) && sizeof($job_ids_array) > 0) {
+
+                    $from_date = date('Y-m-d',strtotime("monday this week"));
+                    $to_date = date('Y-m-d',strtotime("$from_date +6days"));
+
+                    $j=0;
+                    $list_array = array();
+
+                    foreach ($job_ids_array as $k1 => $v1) {
+
+                        if(isset($v1) && $v1 != '') {
+
+                            $associate_candidates = JobAssociateCandidates::getAssociatedCandidatesByWeek($v1,$from_date,$to_date);
+
+                            $list_array[$j]['associate_candidates'] = $associate_candidates;
+
+                            $shortlisted_candidates = JobAssociateCandidates::getShortlistedCandidatesByWeek($v1,$from_date,$to_date);
+
+                            $list_array[$j]['shortlisted_candidates'] = $shortlisted_candidates;
+
+                            $attended_interviews = Interview::getAttendedInterviewsByWeek($v1,$from_date,$to_date);
+
+                            $list_array[$j]['attended_interviews'] = $attended_interviews;
+                            $j++;
+                        }
+                    }
+                }
+
+                if(isset($list_array) && sizeof($list_array) > 0) {
+                    
+                    $to_array = explode(",",$input['to']);
+                    $input['to_array'] = $to_array;
+
+                    $input['list_array'] = $list_array;
+                    $input['client_owner'] = User::getUserNameById($value['sender_name']);
+
+                    \Mail::send('adminlte::emails.interviewmultipleschedule', $input, function ($message) use($input) {
+
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to_array'])->subject($input['subject']);
+
+                        if (isset($input['file_path']) && sizeof($input['file_path']) > 0) {
+
+                            foreach ($input['file_path'] as $key => $value) {
+
+                                if(isset($value) && $value != '') {
+
+                                    foreach ($value as $k1 => $v1) {
+                                        $message->attach($v1);
+                                    }
+                                }
+                            }
+                        }
+                    });
+
+                    \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                }
+            }
         }
     }
 }

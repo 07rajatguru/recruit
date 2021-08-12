@@ -1926,4 +1926,18 @@ class ClientBasicinfo extends Ardent
 
         return $status_array;
     }
+
+    public static function getUserClientsByUserID($user_id) {
+
+        $client_query = ClientBasicinfo::query();
+
+        // Not Display Delete Client Status '1' Entry
+        $client_query = $client_query->where('client_basicinfo.delete_client','=','0');
+        $client_query = $client_query->where('client_basicinfo.account_manager_id','=',$user_id);
+
+        $client_query = $client_query->select('client_basicinfo.id');
+
+        $client_response = $client_query->get();
+        return $client_response;
+    }
 }
