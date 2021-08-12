@@ -317,7 +317,7 @@
         </div>
     </div>
 
-    @include('adminlte::partials.clientmastersearchmodal', ['field_list' => $field_list,'users' => $users,'category_list' => $category_list])
+    @include('adminlte::partials.clientmastersearchmodal', ['field_list' => $field_list,'users' => $users,'category_list' => $category_list,'all_status' => $all_status])
 
     <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
     <input type="hidden" name="superadmin" id="superadmin" value="{{ $superadmin }}">
@@ -336,6 +336,7 @@
         $("#selected_field").select2({width : '567px'});
         $("#client_owner").select2({width:"565px"});
         $("#client_cat").select2({width:"565px"});
+        $("#client_status").select2({width:"565px"});
         
         var numCols = $('#client_table thead th').length;
 

@@ -57,7 +57,7 @@
                     <div class="">
                         <div class="form-group"><br/>
                             <strong>Enter Client Status : </strong>
-                            {!! Form::text('client_status', null, array('id'=>'client_status','placeholder' => 'Client Status','class' => 'form-control', 'tabindex' => '1')) !!}
+                            {!! Form::select('client_status', $all_status,null, array('id'=>'client_status','class' => 'form-control','tabindex' => '1')) !!}
                         </div>
                     </div>
                 </div>

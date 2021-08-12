@@ -207,31 +207,7 @@ class ClientBasicinfo extends Ardent
         }
         else if(isset($client_status) && $client_status != '') {
 
-            if($client_status == 'Active' || $client_status == 'active') {
-
-                $client_status = 1;
-                $query = $query->where('client_basicinfo.status','=',"$client_status");
-            }
-            else if($client_status == 'Passive' || $client_status == 'passive') {
-
-                $client_status = 0;
-                $query = $query->where('client_basicinfo.status','=',"$client_status");
-            }
-            else if($client_status == 'Leaders' || $client_status == 'leaders') {
-
-                $client_status = 2;
-                $query = $query->where('client_basicinfo.status','=',"$client_status");
-            }
-            else if($client_status == 'Left' || $client_status == 'left') {
-
-                $client_status = 4;
-                $query = $query->where('client_basicinfo.status','=',"$client_status");
-            }
-            else if($client_status == 'Forbid' || $client_status == 'forbid') {
-
-                $client_status = 3;
-                $query = $query->where('client_basicinfo.status','=',"$client_status");
-            }
+            $query = $query->where('client_basicinfo.status','=',$client_status);
         }
         else if(isset($client_city) && $client_city != '') {
 
@@ -467,31 +443,7 @@ class ClientBasicinfo extends Ardent
         }
         else if(isset($client_status) && $client_status != '') {
 
-            if($client_status == 'Active' || $client_status == 'active') {
-
-                $client_status = 1;
-                $query = $query->where('client_basicinfo.status','=',"$client_status");
-            }
-            else if($client_status == 'Passive' || $client_status == 'passive') {
-
-                $client_status = 0;
-                $query = $query->where('client_basicinfo.status','=',"$client_status");
-            }
-            else if($client_status == 'Leaders' || $client_status == 'leaders') {
-
-                $client_status = 2;
-                $query = $query->where('client_basicinfo.status','=',"$client_status");
-            }
-            else if($client_status == 'Left' || $client_status == 'left') {
-
-                $client_status = 4;
-                $query = $query->where('client_basicinfo.status','=',"$client_status");
-            }
-            else if($client_status == 'Forbid' || $client_status == 'forbid') {
-
-                $client_status = 3;
-                $query = $query->where('client_basicinfo.status','=',"$client_status");
-            }
+            $query = $query->where('client_basicinfo.status','=',$client_status);
         }
         else if(isset($client_city) && $client_city != '') {
 
@@ -994,31 +946,7 @@ class ClientBasicinfo extends Ardent
         }
         else if(isset($client_status) && $client_status != '') {
 
-            if($client_status == 'Active' || $client_status == 'active') {
-
-                $client_status = 1;
-                $query = $query->where('client_basicinfo.status','=',"$client_status");
-            }
-            else if($client_status == 'Passive' || $client_status == 'passive') {
-
-                $client_status = 0;
-                $query = $query->where('client_basicinfo.status','=',"$client_status");
-            }
-            else if($client_status == 'Leaders' || $client_status == 'leaders') {
-
-                $client_status = 2;
-                $query = $query->where('client_basicinfo.status','=',"$client_status");
-            }
-            else if($client_status == 'Left' || $client_status == 'left') {
-
-                $client_status = 4;
-                $query = $query->where('client_basicinfo.status','=',"$client_status");
-            }
-            else if($client_status == 'Forbid' || $client_status == 'forbid') {
-
-                $client_status = 3;
-                $query = $query->where('client_basicinfo.status','=',"$client_status");
-            }
+            $query = $query->where('client_basicinfo.status','=',$client_status);
         }
         else if(isset($client_city) && $client_city != '') {
 
@@ -1284,31 +1212,7 @@ class ClientBasicinfo extends Ardent
         }
         else if(isset($client_status) && $client_status != '') {
 
-            if($client_status == 'Active' || $client_status == 'active') {
-
-                $client_status = 1;
-                $query = $query->where('client_basicinfo.status','=',"$client_status");
-            }
-            else if($client_status == 'Passive' || $client_status == 'passive') {
-
-                $client_status = 0;
-                $query = $query->where('client_basicinfo.status','=',"$client_status");
-            }
-            else if($client_status == 'Leaders' || $client_status == 'leaders') {
-
-                $client_status = 2;
-                $query = $query->where('client_basicinfo.status','=',"$client_status");
-            }
-            else if($client_status == 'Left' || $client_status == 'left') {
-
-                $client_status = 4;
-                $query = $query->where('client_basicinfo.status','=',"$client_status");
-            }
-            else if($client_status == 'Forbid' || $client_status == 'forbid') {
-
-                $client_status = 3;
-                $query = $query->where('client_basicinfo.status','=',"$client_status");
-            }
+            $query = $query->where('client_basicinfo.status','=',$client_status);
         }
         else if(isset($client_city) && $client_city != '') {
 
