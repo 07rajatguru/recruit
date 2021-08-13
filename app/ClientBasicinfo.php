@@ -1935,7 +1935,7 @@ class ClientBasicinfo extends Ardent
         $client_query = $client_query->where('client_basicinfo.delete_client','=','0');
         $client_query = $client_query->where('client_basicinfo.account_manager_id','=',$user_id);
 
-        $client_query = $client_query->select('client_basicinfo.id');
+        $client_query = $client_query->select('client_basicinfo.id','client_basicinfo.name');
 
         $client_response = $client_query->get();
         return $client_response;

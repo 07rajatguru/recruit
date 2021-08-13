@@ -1365,15 +1365,12 @@ class Interview extends Model
         return $interview;
     }
 
-    public static function getAttendedInterviewsByWeek($job_id=0,$from_date=NULL,$to_date=NULL) {
+    public static function getAttendedInterviewsByWeek($job_id,$from_date=NULL,$to_date=NULL) {
 
         $query = Interview::query();
-        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','interview.candidate_id');
-        $query = $query->leftjoin('candidate_basicinfo','candidate_basicinfo.id','=','candidate_otherinfo.candidate_id');
+        $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
 
-        $query = $query->select(\DB::raw("COUNT(interview.candidate_id) as count"),'candidate_basicinfo.full_name as candidate_name');
-
-        $query = $query->where('interview.posting_title','=',$job_id);
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as candidate_name');
 
         if(isset($from_date) && $from_date != NULL) {
         
@@ -1384,17 +1381,18 @@ class Interview extends Model
         }
         
         $query = $query->where('interview.status','=','Attended');
-        $query_response = $query->get();
+        $query = $query->where('interview.posting_title','=',$job_id);
+        $query = $query->orderBy('interview.interview_date','desc');
+        $response = $query->get();
        
         $list = array();
         $i=0;
 
-        if(isset($query_response) && sizeof($query_response) > 0) {
+        if(isset($response) && sizeof($response) > 0) {
 
-            foreach ($query_response as $key => $value) {
+            foreach ($response as $key => $value) {
 
                 $list[$i]['candidate_name'] = $value->candidate_name;
-
                 $i++;
             }
         }

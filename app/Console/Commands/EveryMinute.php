@@ -1942,14 +1942,15 @@ class EveryMinute extends Command
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
-            else if ($value['module'] == "Client Auto Generate Report") {
+            else if ($value['module'] == "Hiring Report") {
 
                 $job_ids_array = explode(",",$value['module_id']);
+                $owner_details = User::getAllDetailsByUserID($value['sender_name']);
+
+                $from_date = date('Y-m-d',strtotime("monday this week"));
+                $to_date = date('Y-m-d',strtotime("$from_date +6days"));
 
                 if(isset($job_ids_array) && sizeof($job_ids_array) > 0) {
-
-                    $from_date = date('Y-m-d',strtotime("monday this week"));
-                    $to_date = date('Y-m-d',strtotime("$from_date +6days"));
 
                     $j=0;
                     $list_array = array();
@@ -1969,10 +1970,15 @@ class EveryMinute extends Command
                             $attended_interviews = Interview::getAttendedInterviewsByWeek($v1,$from_date,$to_date);
 
                             $list_array[$j]['attended_interviews'] = $attended_interviews;
+
+                            $job_details = JobOpen::getJobById($v1);
+                            $list_array[$j]['posting_title'] = $job_details['posting_title'];
                             $j++;
                         }
                     }
                 }
+
+                //print_r($list_array);exit;
 
                 if(isset($list_array) && sizeof($list_array) > 0) {
                     
@@ -1980,9 +1986,10 @@ class EveryMinute extends Command
                     $input['to_array'] = $to_array;
 
                     $input['list_array'] = $list_array;
-                    $input['client_owner'] = User::getUserNameById($value['sender_name']);
+                    $input['client_owner'] = $owner_details['first_name'] . "  " . $owner_details['last_name'];
+                    $input['client_owner_short_name'] = $owner_details['name'];
 
-                    \Mail::send('adminlte::emails.interviewmultipleschedule', $input, function ($message) use($input) {
+                    \Mail::send('adminlte::emails.clientautogeneratereportemail', $input, function ($message) use($input) {
 
                         $message->from($input['from_address'], $input['from_name']);
                         $message->to($input['to_array'])->subject($input['subject']);
