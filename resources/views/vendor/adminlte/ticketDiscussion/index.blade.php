@@ -70,7 +70,7 @@
            <th>Ticket No.</th>
            <th>Module</th>
            <th>Status</th>
-	       <th>Question Type</th>
+	       <th>Query Type</th>
            <th>Added By</th>
            <th>Added Date</th>
 	    </tr>

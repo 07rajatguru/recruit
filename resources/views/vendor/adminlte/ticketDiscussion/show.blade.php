@@ -48,7 +48,7 @@
                         <td>{{ $ticket_res['status'] }}</td>
                     </tr>
                     <tr>
-                        <th>Question Type :</th>
+                        <th>Query Type :</th>
                         <td>{{ $ticket_res['question_type'] }}</td>
                     </tr>
                     <tr>

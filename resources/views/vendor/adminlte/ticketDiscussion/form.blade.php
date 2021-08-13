@@ -62,7 +62,7 @@
                         </div>
 
                         <div class="form-group {{ $errors->has('question_type') ? 'has-error' : '' }}">
-                            <strong>Select Question Type : <span class = "required_fields">*</span> </strong>
+                            <strong>Select Query Type : <span class = "required_fields">*</span> </strong>
                             {!! Form::select('question_type',$question_type,$selected_question_type,array('id'=>'question_type','class' => 'form-control','tabindex' => '3' )) !!}
                             @if ($errors->has('question_type'))
                                 <span class="help-block">
@@ -124,7 +124,7 @@
             },
             messages: {
                 "question_type": {
-                    required: "Question Type is Required Field."
+                    required: "Query Type is Required Field."
                 },
                 "description": {
                     required: "Description is Required Field."
