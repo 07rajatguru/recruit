@@ -5,11 +5,8 @@
     <title>Adler Talent Solutions Pvt. Ltd.</title>
     @yield('style')
 </head>
-
     <body style="margin: 0; padding-top: 30px; background-color: #f5f5f5;">
-
         <table align="center" width="600px" cellpadding="0" cellspacing="0" style="font-family: arial; font-size: 12px; color: #444444;">
-            
             <tr>
                 <td width="800">
                     <table border="1" cellpadding="0" cellspacing="0" style="text-align: center;"  id="userwise-monthly-report">
