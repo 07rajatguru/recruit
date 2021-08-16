@@ -167,6 +167,16 @@
                                 @endif
                             </div>
 
+                            <div class="form-group {{ $errors->has('working_hours') ? 'has-error' : '' }}">
+                                <strong>Working Hours :</strong>
+                                {!! Form::select('working_hours',$hours_array,$selected_hours, array('placeholder' => 'Select Hours','id' => 'working_hours', 'class' => 'form-control','tabindex' => '12')) !!}
+                                @if ($errors->has('working_hours'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('working_hours') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
                             <!-- <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
                                 <strong> Type : <span class = "required_fields">*</span> </strong>
                                 {!! Form::select('type', $type,null, array('class' => 'form-control','tabindex' => '12' )) !!}
@@ -257,6 +267,7 @@
             $("#roles").select2({placeholder: 'Select Role'});
             $("#reports_to").select2();
             $("#company_id").select2();
+            $("#working_hours").select2();
 
             // automaticaly open the select2 when it gets focus
             jQuery(document).on('focus', '.select2', function() {

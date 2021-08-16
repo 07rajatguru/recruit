@@ -52,6 +52,65 @@ class User extends Authenticatable
         'Passport Photo'=>'Passport Photo'
     );
 
+    public static function getHoursArray() {
+
+        $hours_array = array();
+
+        $hours_array['01:00:00'] = '1 Hours';
+        $hours_array['01:15:00'] = '1:15 Hours';
+        $hours_array['01:30:00'] = '1:30 Hours';
+        $hours_array['01:45:00'] = '1:45 Hours';
+
+        $hours_array['02:00:00'] = '2 Hours';
+        $hours_array['02:15:00'] = '2:15 Hours';
+        $hours_array['02:30:00'] = '2:30 Hours';
+        $hours_array['02:45:00'] = '2:45 Hours';
+
+        $hours_array['03:00:00'] = '3 Hours';
+        $hours_array['03:15:00'] = '3:15 Hours';
+        $hours_array['03:30:00'] = '3:30 Hours';
+        $hours_array['03:45:00'] = '3:45 Hours';
+
+        $hours_array['04:00:00'] = '4 Hours';
+        $hours_array['04:15:00'] = '4:15 Hours';
+        $hours_array['04:30:00'] = '4:30 Hours';
+        $hours_array['04:45:00'] = '4:45 Hours';
+
+        $hours_array['05:00:00'] = '5 Hours';
+        $hours_array['05:15:00'] = '5:15 Hours';
+        $hours_array['05:30:00'] = '5:30 Hours';
+        $hours_array['05:45:00'] = '5:45 Hours';
+
+        $hours_array['06:00:00'] = '6 Hours';
+        $hours_array['06:15:00'] = '6:15 Hours';
+        $hours_array['06:30:00'] = '6:30 Hours';
+        $hours_array['06:45:00'] = '6:45 Hours';
+
+        $hours_array['07:00:00'] = '7 Hours';
+        $hours_array['07:15:00'] = '7:15 Hours';
+        $hours_array['07:30:00'] = '7:30 Hours';
+        $hours_array['07:45:00'] = '7:45 Hours';
+
+        $hours_array['08:00:00'] = '8 Hours';
+        $hours_array['08:15:00'] = '8:15 Hours';
+        $hours_array['08:30:00'] = '8:30 Hours';
+        $hours_array['08:45:00'] = '8:45 Hours';
+
+        $hours_array['09:00:00'] = '9 Hours';
+        $hours_array['09:15:00'] = '9:15 Hours';
+        $hours_array['09:30:00'] = '9:30 Hours';
+        $hours_array['09:45:00'] = '9:45 Hours';
+
+        $hours_array['10:00:00'] = '10 Hours';
+        $hours_array['10:15:00'] = '10:15 Hours';
+        $hours_array['10:30:00'] = '10:30 Hours';
+        $hours_array['10:45:00'] = '10:45 Hours';
+
+        $hours_array['11:00:00'] = '11 Hours';
+
+        return $hours_array;
+    }
+
     public static function getUserArray($user_id) {
 
         $status = 'Inactive';

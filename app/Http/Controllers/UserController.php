@@ -108,7 +108,10 @@ class UserController extends Controller
 
         $departments = array_fill_keys(array(''),'Select Department')+$departments;
 
-        return view('adminlte::users.create',compact('roles','roles_id','reports_to','companies','company_id','type','floor_incharge','departments','department_id'));
+        $hours_array = User::getHoursArray();
+        $selected_hours = '';
+
+        return view('adminlte::users.create',compact('roles','roles_id','reports_to','companies','company_id','type','floor_incharge','departments','department_id','hours_array','selected_hours'));
     }
 
     /**
@@ -179,17 +182,17 @@ class UserController extends Controller
         else {
             $user->lead_report = 'No';
         }
-
         // End Report Status
 
         // Get first & last name
-
         $first_name = $request->input('first_name');
         $last_name = $request->input('last_name');
 
         // Floor incharge or not
-
         $check_floor_incharge = $request->input('check_floor_incharge');
+
+        // Working Hours
+        $working_hours = $request->input('working_hours');
 
         $user->secondary_email = $request->input('semail');
         $user->daily_report = $check_report;
@@ -202,7 +205,7 @@ class UserController extends Controller
         $user->check_floor_incharge = $check_floor_incharge;
         $user->type = $type;
         $user->hr_adv_recruitemnt = $hr_adv_recruitemnt;
-
+        $user->working_hours = $working_hours;
         $users = $user->save();
 
         $user_id = $user->id;
@@ -428,7 +431,10 @@ class UserController extends Controller
             $lead_report = '0';
         }
 
-        return view('adminlte::users.edit',compact('id','user','roles','roles_id', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge','semail','departments','department_id','hr_adv_recruitemnt','cv_report','interview_report','lead_report'));
+        $hours_array = User::getHoursArray();
+        $selected_hours = $user->working_hours;
+
+        return view('adminlte::users.edit',compact('id','user','roles','roles_id', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge','semail','departments','department_id','hr_adv_recruitemnt','cv_report','interview_report','lead_report','hours_array','selected_hours'));
     }
 
     /**
@@ -477,6 +483,7 @@ class UserController extends Controller
         $hr_adv_recruitemnt = $request->input('hr_adv_recruitemnt');
         $role = $request->input('roles');
         $reports_to = $request->input('reports_to');
+        $working_hours = $request->input('working_hours');
         
         $check_report = $request->input('daily_report');
         $cv_report = $request->input('cv_report');
@@ -484,6 +491,7 @@ class UserController extends Controller
         $lead_report = $request->input('lead_report');
         $status = $request->input('status');
         $account_manager = $request->input('account_manager');
+        
 
         // Start Report Status
 
@@ -529,6 +537,7 @@ class UserController extends Controller
         $new_value_array['hr_adv_recruitemnt'] = $hr_adv_recruitemnt;
         $new_value_array['designation'] = Role::getRoleNameById($role);
         $new_value_array['reports_to'] = User::getUserNameById($reports_to);
+        $new_value_array['working_hours'] = $working_hours;
 
         $new_value_array['check_report'] = $check_report;
         $new_value_array['cv_report'] = $set_cv_report;
@@ -553,6 +562,7 @@ class UserController extends Controller
         $old_hr_adv_recruitemnt = $user_all_info->hr_adv_recruitemnt;
         $old_role_id = $user_all_info->role_id;
         $old_reports_to = $user_all_info->reports_to;
+        $old_working_hours = $user_all_info->working_hours;
 
         $old_check_report = $user_all_info->daily_report;
         $old_cv_report = $user_all_info->cv_report;
@@ -572,6 +582,7 @@ class UserController extends Controller
         $old_value_array['hr_adv_recruitemnt'] = $old_hr_adv_recruitemnt;
         $old_value_array['designation'] = Role::getRoleNameById($old_role_id);
         $old_value_array['reports_to'] = User::getUserNameById($old_reports_to);
+        $old_value_array['old_working_hours'] = $old_working_hours;
 
         $old_value_array['check_report'] = $old_check_report;
         $old_value_array['cv_report'] = $old_cv_report;
@@ -691,6 +702,14 @@ class UserController extends Controller
         else {
             $account_manager_value = 0;
         }
+
+        if($working_hours != $old_working_hours) {
+            $working_hours_value = 1;
+        }
+        else {
+            $working_hours_value = 0;
+        }
+
         
         // Save new value
 
@@ -714,11 +733,12 @@ class UserController extends Controller
         $user->lead_report = $set_lead_report;
         $user->account_manager = $account_manager;
         $user->status = $status;
+        $user->working_hours = $working_hours;
         $user->save();
         
         // Send email notification when user information is update
 
-        if($first_name_value != 0 || $last_name_value != 0 || $name_value != 0 || $email_value != 0 || $semail_value != 0 || $company_id_value != 0 || $department_value != 0 || $hr_adv_recruitemnt_value != 0 || $role_id_value != 0 || $reports_to_value != 0 || $check_report_value != 0 || $cv_report_value != 0 || $interview_report_value != 0 || $lead_report_value != 0 || $status_value != 0 || $account_manager_value != 0) {
+        if($first_name_value != 0 || $last_name_value != 0 || $name_value != 0 || $email_value != 0 || $semail_value != 0 || $company_id_value != 0 || $department_value != 0 || $hr_adv_recruitemnt_value != 0 || $role_id_value != 0 || $reports_to_value != 0 || $check_report_value != 0 || $cv_report_value != 0 || $interview_report_value != 0 || $lead_report_value != 0 || $status_value != 0 || $account_manager_value != 0 || $working_hours_value != 0) {
 
             $logged_in_user_id = \Auth::user()->id;
             $logged_in_user_name = \Auth::user()->name;
@@ -756,13 +776,13 @@ class UserController extends Controller
             $input['new_value_array'] = $new_value_array;
             $input['old_value_array'] = $old_value_array;
 
-            /*\Mail::send('adminlte::emails.userupdatemail', $input, function ($message) use($input){
+            \Mail::send('adminlte::emails.userupdatemail', $input, function ($message) use($input){
                     
                 $message->from($input['from_address'], $input['from_name']);
                 $message->to($input['to'])->cc($input['cc'])->subject($input['subject']);
             });
 
-            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));*/
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         } 
 
         if (isset($status) && $status == 'Active') {
@@ -898,7 +918,9 @@ class UserController extends Controller
                 $user['name'] = $user_info->first_name . " " . $user_info->last_name;
                 $user['email'] = $user_info->email;
                 $user['semail'] = $user_info->secondary_email;
+                $user['department_name'] = $user_info->department_name;
                 $user['designation'] = $user_info->designation;
+                $user['working_hours'] = $user_info->working_hours;
 
                 // User Otherinfo
                 $user['personal_email'] = $user_info->personal_email;

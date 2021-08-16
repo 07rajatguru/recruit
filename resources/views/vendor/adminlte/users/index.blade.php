@@ -53,6 +53,7 @@
                 <th>Email</th>
                 <th>Department</th>
                 <th>Role</th>
+                <th>Working Hours</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -96,6 +97,8 @@
                             @endforeach
                         @endif
                     </td>
+
+                    <td>{{ $user->working_hours }}</td>
                     <td>{{ $user->status }}</td>
                 </tr>
             @endforeach

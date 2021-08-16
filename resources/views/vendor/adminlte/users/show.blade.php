@@ -22,23 +22,28 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="form-group">
-                <strong>Name:</strong>
+                <strong>Name :</strong>
                 {{ $user->name }}
             </div>
         
             <div class="form-group">
-                <strong>Email:</strong>
+                <strong>Email :</strong>
                 {{ $user->email }}
             </div>
         
             <div class="form-group">
-                <strong>Department:</strong>
+                <strong>Department :</strong>
                 {{ $user->department }}
             </div>
 
             <div class="form-group">
-                <strong>Role:</strong>
+                <strong>Role :</strong>
                 <label class="label label-success">{{ $user->display_name }}</label>
+            </div>
+
+            <div class="form-group">
+                <strong>Working Hours :</strong>
+                {{ $user->working_hours }}
             </div>
         </div>
     </div>

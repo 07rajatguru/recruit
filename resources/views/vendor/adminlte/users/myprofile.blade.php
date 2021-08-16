@@ -44,8 +44,16 @@
                         <br/>
                         <table class="table table-bordered">
                             <tr>
+                                <th>Department</th>
+                                <td>{{ $user['department_name'] }}</td>
+                            </tr>
+                            <tr>
                                 <th>Designation</th>
                                 <td>{{ $user['designation'] }}</td>
+                            </tr>
+                            <tr>
+                                <th><strong>Working Hours</strong></th>
+                                <td>{{ $user['working_hours'] }}</td>
                             </tr>
                             <tr>
                                 <th>Official Email</th>

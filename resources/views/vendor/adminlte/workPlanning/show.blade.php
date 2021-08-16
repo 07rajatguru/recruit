@@ -72,10 +72,10 @@
                     <thead>
                         <tr>
                             <th width="5%" style="border:1px solid black;text-align: center;">Sr No.</th>
-                            <th width="35%" style="border:1px solid black;">Description</th>
+                            <th width="35%" style="border:1px solid black;">Task</th>
                             <th width="10%" style="border:1px solid black;text-align: center;">Projected Time</th>
                             <th width="10%" style="border:1px solid black;text-align: center;">Actual Time</th>
-                            <th style="border:1px solid black;">Remarks</th>
+                            <th style="border:1px solid black;">Description</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -102,7 +102,7 @@
                                     @if($projected_time[0] == 0)
                                         <td style="border:1px solid black;text-align: center;">{{ $projected_time[1] }} Min.</td>
                                     @else
-                                        <td style="border:1px solid black;text-align: center;">{{ $value['projected_time'] }} Hours</td>
+                                        <td style="border:1px solid black;text-align: center;">{{ $projected_time[0] }} Hours</td>
                                     @endif
                                 @else
                                     <td style="border:1px solid black;text-align: center;">{{ $value['projected_time'] }}</td>
@@ -112,13 +112,13 @@
                                     @if($actual_time[0] == 0)
                                         <td style="border:1px solid black;text-align: center;">{{ $actual_time[1] }} Min.</td>
                                     @else
-                                        <td style="border:1px solid black;text-align: center;">{{ $value['actual_time'] }} Hours</td>
+                                        <td style="border:1px solid black;text-align: center;">{{ $actual_time[0] }} Hours</td>
                                     @endif
                                 @else
                                     <td style="border:1px solid black;text-align: center;">{{ $value['actual_time'] }}</td>
                                 @endif
 
-                                <td style="border:1px solid black;">{{ $value['remarks'] }}</td>
+                                <td style="border:1px solid black;">{!! $value['remarks'] !!}</td>
                             </tr>
                         @endforeach
                     </tbody>

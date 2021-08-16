@@ -70,7 +70,9 @@ class WorkPlanningController extends Controller
 
         $work_planning_time = '';
         $work_planning_status_time = '';
-        $remaining_time = '08:00';
+
+        $user_details = User::getAllDetailsByUserID($user_id);
+        $remaining_time = $user_details->working_hours;
 
         return view('adminlte::workPlanning.create',compact('action','work_type','selected_work_type','time_array','selected_projected_time','selected_actual_time','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','remaining_time'));
     }
@@ -78,16 +80,17 @@ class WorkPlanningController extends Controller
     public function store(Request $request) {
 
         $user_id = \Auth::user()->id;
+        $date = date('Y-m-d');
+
+        $get_time = UsersLog::getUserLogInTime($user_id,$date);
 
         $work_type = $request->input('work_type');
-        $loggedin_time = $request->input('loggedin_time');
-        $loggedout_time = $request->input('loggedout_time');
         $remaining_time = $request->input('remaining_time');
 
         $work_planning = new WorkPlanning();
         $work_planning->work_type = $work_type;
-        $work_planning->loggedin_time = date("g:i", strtotime($loggedin_time));
-        $work_planning->loggedout_time = date("g:i", strtotime($loggedout_time));
+        $work_planning->loggedin_time = $get_time['login'];
+        $work_planning->loggedout_time = $get_time['logout'];
         $work_planning->work_planning_time = date('H:i:s');
         $work_planning->work_planning_status_time = date('H:i:s');
         $work_planning->remaining_time = $remaining_time;
@@ -104,9 +107,6 @@ class WorkPlanningController extends Controller
         $projected_time = array();
         $projected_time = Input::get('projected_time');
 
-        $actual_time = array();
-        $actual_time = Input::get('actual_time');
-
         $remarks = array();
         $remarks = Input::get('remarks');
 
@@ -118,7 +118,6 @@ class WorkPlanningController extends Controller
                 $work_planning_list->work_planning_id = $work_planning_id;
                 $work_planning_list->description = $description[$j];
                 $work_planning_list->projected_time = $projected_time[$j];
-                $work_planning_list->actual_time = $actual_time[$j];
                 $work_planning_list->remarks = $remarks[$j];
                 $work_planning_list->added_by = $user_id;
                 $work_planning_list->save();
@@ -180,6 +179,8 @@ class WorkPlanningController extends Controller
         $work_type = WorkPlanning::getWorkType();
         $selected_work_type = $work_planning_res->work_type;
 
+        $time_array = WorkPlanning::getTimeArray();
+
         $user_id = \Auth::user()->id;
         $date = date('Y-m-d');
 
@@ -225,23 +226,23 @@ class WorkPlanningController extends Controller
 
         $remaining_time = '00:00';
 
-        return view('adminlte::workPlanning.create',compact('id','action','work_planning_res','work_type','selected_work_type','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','remaining_time'));
+        return view('adminlte::workPlanning.create',compact('id','action','work_planning_res','work_type','selected_work_type','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','remaining_time','time_array'));
     }
 
     public function update(Request $request,$id) {
 
         $user_id = \Auth::user()->id;
+        $date = date('Y-m-d');
+
+        $get_time = UsersLog::getUserLogInTime($user_id,$date);
 
         $work_type = $request->input('work_type');
-        $loggedin_time = $request->input('loggedin_time');
-        $loggedout_time = $request->input('loggedout_time');
         $remaining_time = $request->input('remaining_time');
 
         $work_planning = WorkPlanning::find($id);
         $work_planning->work_type = $work_type;
-        $work_planning->loggedin_time = date("g:i", strtotime($loggedin_time));
-        $work_planning->loggedout_time = date("g:i", strtotime($loggedout_time));
-        $work_planning->work_planning_status_time = date('H:i:s');
+        $work_planning->loggedin_time = $get_time['login'];
+        $work_planning->loggedout_time = $get_time['logout'];
         $work_planning->remaining_time = $remaining_time;
         $work_planning->updated_at = time();
         $work_planning->save();
