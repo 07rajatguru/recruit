@@ -73,8 +73,9 @@ class WorkPlanningController extends Controller
 
         $user_details = User::getAllDetailsByUserID($user_id);
         $remaining_time = $user_details->working_hours;
+        $user_total_hours = $user_details->working_hours;
 
-        return view('adminlte::workPlanning.create',compact('action','work_type','selected_work_type','time_array','selected_projected_time','selected_actual_time','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','remaining_time'));
+        return view('adminlte::workPlanning.create',compact('action','work_type','selected_work_type','time_array','selected_projected_time','selected_actual_time','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','remaining_time','user_total_hours'));
     }
 
     public function store(Request $request) {
@@ -224,9 +225,12 @@ class WorkPlanningController extends Controller
         $work_planning_status_time = $dt_status->format('H:i:s');
         $work_planning_status_time = date("g:i A", strtotime($work_planning_status_time));
 
-        $remaining_time = '00:00';
+        $user_details = User::getAllDetailsByUserID($user_id);
+        $user_total_hours = $user_details->working_hours;
 
-        return view('adminlte::workPlanning.create',compact('id','action','work_planning_res','work_type','selected_work_type','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','remaining_time','time_array'));
+        $remaining_time = $work_planning_res->remaining_time;
+
+        return view('adminlte::workPlanning.create',compact('id','action','work_planning_res','time_array','work_type','selected_work_type','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','remaining_time','user_total_hours'));
     }
 
     public function update(Request $request,$id) {

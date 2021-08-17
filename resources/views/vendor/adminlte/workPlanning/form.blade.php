@@ -161,6 +161,7 @@
     </div>
 
     <input type="hidden" id="action" name="action" value="{{ $action }}">
+    <input type="hidden" id="user_total_hours" name="user_total_hours" value="{{ $user_total_hours }}">
 
     @if( $action == 'add')
         <input type="hidden" id="row_cnt" name="row_cnt" value="6">
@@ -211,10 +212,13 @@
                 var get_time = $("#projected_time_"+value).val();
                 get_time = get_time + ":00";
 
-                var new_date = "Aug 1, 2021 " + get_time;
-                var date1 = new Date(new_date);
+                var new_date_1 = "Aug 1, 2021 " + get_time;
+                var date1 = new Date(new_date_1);
 
-                var date2 = new Date( "Aug 1, 2021 08:00:00");
+                var user_total_hours = $("#user_total_hours").val();
+
+                var new_date_2 = "Aug 1, 2021 " + user_total_hours;
+                var date2 = new Date(new_date_2);
 
                 var res = Math.abs(date2 - date1) / 1000;
                 var hours = Math.floor(res / 3600) % 24;
@@ -225,10 +229,10 @@
                 }
 
                 if(minutes == 0) {
-                    var remain_time = hours + ":" + minutes + "0";
+                    var remain_time = hours + ":" + minutes + "0:00";
                 }
                 else {
-                    var remain_time = hours + ":" + minutes;
+                    var remain_time = hours + ":" + minutes + ":00";
                 }
 
                 $("#remaining_time").val(remain_time);
@@ -255,10 +259,10 @@
                 }
 
                 if(minutes == 0) {
-                    var remain_time = hours + ":" + minutes + "0";
+                    var remain_time = hours + ":" + minutes + "0:00";
                 }
                 else {
-                    var remain_time = hours + ":" + minutes;
+                    var remain_time = hours + ":" + minutes + ":00";
                 }
 
                 $("#remaining_time").val(remain_time);
@@ -268,15 +272,82 @@
         if(action == "edit") {
 
             var row_cnt = $("#row_cnt").val();
+            var projected_time_array = [];
 
-            for(j = 1; j <= 5; j++) {
+            for(j = 1; j < row_cnt; j++) {
                 
+                var projected_time = $("#projected_time_"+j).val();
+                projected_time_array.push(projected_time);
             }
+
+            var hour=0;
+            var minute=0;
+            var second=0;
+            
+            for (var i = 0; i < projected_time_array.length; i++) {
+                
+                var splitTime = projected_time_array[i].split(':');
+
+                if(hour == 0) {
+                    hour = parseInt(splitTime[0]);
+                }
+                else {
+                    hour = hour + parseInt(splitTime[0]);
+                }
+
+                if(minute == 0) {
+                    minute = parseInt(splitTime[1]);
+                }
+                else {
+                    minute = minute + parseInt(splitTime[1]);
+                }
+
+                hh = hour + minute/60;
+                mm = minute%60;
+
+                if(second == 0) {
+                    second = parseInt(splitTime[2]);
+                }
+                else {
+                    second = second + parseInt(splitTime[2]);
+                }
+
+                mm = mm + second/60;
+                ss = second%60;
+            }
+
+            var final_working_hours = hh + mm + ss;
+
+            alert(final_working_hours);
+
+            var new_date_1 = "Aug 1, 2021 " + final_working_hours;
+            var date1 = new Date(new_date_1);
+
+            var user_total_hours = $("#user_total_hours").val();
+            var new_date_2 = "Aug 1, 2021 " + user_total_hours;
+            var date2 = new Date(new_date_2);
+
+            var res = Math.abs(date2 - date1) / 1000;
+            var hours = Math.floor(res / 3600) % 24;
+            var minutes = Math.floor(res / 60) % 60;
+
+            if(hours == 0) {
+                hours = '00';
+            }
+
+            if(minutes == 0) {
+                var remain_time = hours + ":" + minutes + "0:00";
+            }
+            else {
+                var remain_time = hours + ":" + minutes + "00:00";
+            }
+
+            $("#remaining_time").val(remain_time);
         }
 
         var get_remain_time = $("#remaining_time").val();
 
-        if(get_remain_time == '00:00') {
+        if(get_remain_time == '00:00:00') {
 
             document.getElementById('remaining_time').style.backgroundColor = '#B0E0E6';
             document.getElementById("add_row").disabled = true;
@@ -444,7 +515,7 @@
 
                 var get_remain_time = $("#remaining_time").val();
 
-                if(get_remain_time == '00:00') {
+                if(get_remain_time == '00:00:00') {
 
                     document.getElementById('remaining_time').style.backgroundColor = '#B0E0E6';
                     document.getElementById("add_row").disabled = true;
