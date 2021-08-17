@@ -4159,6 +4159,8 @@ class JobOpenController extends Controller
 
     public function MultipleJobPriority() {
 
+        $job_page = $_POST['job_page'];
+
         $job_ids = $_POST['job_ids'];
         $priority = $_POST['priority'];
         $updated_at = date('Y-m-d H:i:s');
@@ -4167,9 +4169,18 @@ class JobOpenController extends Controller
 
         foreach ($job_ids_array as $key => $value) {
 
-            DB::statement("UPDATE job_openings SET priority = '$priority', updated_at='$updated_at' where id=$value");
+            DB::statement("UPDATE job_openings SET priority = '$priority', updated_at='$updated_at' where id = $value");
         }
-        return redirect()->route('jobopen.index')->with('success', 'Job Priority Updated Successfully.');
+
+        if ($job_page == 'Search Job') {
+            return redirect()->route('job.mastersearch')->with('success', 'Job Priority Updated Successfully.');
+        }
+        else if ($job_page == 'Job Open') {
+            return redirect()->route('jobopen.index')->with('success', 'Job Priority Updated Successfully.');
+        }
+        else if($job_page == 'Applicant Job') {
+            return redirect()->route('jobopen.applicant')->with('success', 'Job Priority Updated Successfully.');
+        }
     }
 
     // For check wherther associated candidate selected for mail or not

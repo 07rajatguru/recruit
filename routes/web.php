@@ -1348,7 +1348,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
     ]);
     
-    Route::post('job-search', [
+    Route::any('job-search', [
         'as' => 'job.mastersearch',
         'uses' => 'JobOpenController@masterSearch',
         'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
