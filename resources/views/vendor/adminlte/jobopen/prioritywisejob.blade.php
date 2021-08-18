@@ -179,6 +179,7 @@
                 </div>
 
                 <input type="hidden" name="job_ids" id="job_ids" value="">
+                <input type="hidden" name="job_page" id="job_page" value="Job Open">
 
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" id="submit">Submit</button>

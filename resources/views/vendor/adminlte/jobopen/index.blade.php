@@ -271,6 +271,7 @@
     </div><!-- /.modal -->
 
     <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="selected_value" id="selected_value" value="">
 @stop
 
 @section('customscripts')
@@ -302,6 +303,8 @@
             var max_ctc = $("#max_ctc").val();
             var added_date = $("#added_date").val();
             var no_of_positions = $("#no_of_positions").val();
+
+            var selected_value = $("#selected_value").val();
 
             $("#job_table").dataTable({
 
@@ -336,6 +339,7 @@
                         max_ctc:max_ctc,
                         added_date:added_date,
                         no_of_positions:no_of_positions,
+                        selected_value:selected_value,
                     },
                     'type' : 'get',
                     error: function() {

@@ -150,6 +150,7 @@
     </div><!-- /.modal -->
 
     <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="selected_value" id="selected_value">
 @stop
 
 @section('customscripts')
@@ -181,6 +182,8 @@
             var max_ctc = $("#max_ctc").val();
             var added_date = $("#added_date").val();
             var no_of_positions = $("#no_of_positions").val();
+
+            var selected_value = $("#selected_value").val();
 
             $("#job_table").dataTable({
 
@@ -215,6 +218,7 @@
                         max_ctc:max_ctc,
                         added_date:added_date,
                         no_of_positions:no_of_positions,
+                        selected_value:selected_value,
                     },
                     'type' : 'get',
                     error: function() {
@@ -226,6 +230,9 @@
                     var count = json.recordsTotal;
                     var job_priority = json.job_priority;
                     var job_salary = json.job_salary;
+                    var selected_value = json.selected_value;
+
+                    $("#selected_value").val(selected_value);
 
                     $("#count").html("(" + count + ")");
 

@@ -739,6 +739,43 @@ class JobOpenController extends Controller
         $max_ctc = $_GET['max_ctc'];
         $added_date = $_GET['added_date'];
         $no_of_positions = $_GET['no_of_positions'];
+        $selected_value = $_GET['selected_value'];
+
+        //echo $selected_value;exit;
+
+        session_start();
+
+        if(isset($client_heirarchy) && $client_heirarchy != '') {
+            $_SESSION['session_value'] = $client_heirarchy;
+        }
+        else if(isset($mb_name) && $mb_name != '') {
+            $_SESSION['session_value'] = $mb_name;
+        }
+        else if(isset($company_name) && $company_name != '') {
+            $_SESSION['session_value'] = $company_name;
+        }
+        else if(isset($posting_title) && $posting_title != '') {
+            $_SESSION['session_value'] = $posting_title;
+        }
+        else if(isset($location) && $location != '') {
+            $_SESSION['session_value'] = $location;
+        }
+        else if(isset($min_ctc) && $min_ctc != '') {
+            $_SESSION['session_value'] = $min_ctc;
+        }
+        else if(isset($max_ctc) && $max_ctc != '') {
+            $_SESSION['session_value'] = $max_ctc;
+        }
+        else if(isset($added_date) && $added_date != '') {
+            $_SESSION['session_value'] = $added_date;
+        }
+        else if(isset($no_of_positions) && $no_of_positions != '') {
+            $_SESSION['session_value'] = $no_of_positions;
+        }
+        else {
+            $_SESSION['session_value'] = '';
+        }
+        
 
         if (isset($_GET['year']) && $_GET['year'] != '') {
 
@@ -951,6 +988,14 @@ class JobOpenController extends Controller
         $priority['between_ten_to_twenty_lacs'] = $between_ten_to_twenty_lacs;
         $priority['above_twenty_lacs'] = $above_twenty_lacs;
 
+        if(isset($_SESSION['session_value']) && $_SESSION['session_value'] != '') {
+            
+            $selected_value = $_SESSION['session_value'];
+        }
+        else {
+
+            $selected_value = '';
+        }
 
         $json_data = array(
             'draw' => intval($draw),
@@ -961,6 +1006,7 @@ class JobOpenController extends Controller
             "job_priority" => $job_priority,
             "job_salary" => $job_salary,
             //'year' => $year,
+            "selected_value" => $selected_value,
         );
 
         echo json_encode($json_data);exit;
@@ -3545,17 +3591,27 @@ class JobOpenController extends Controller
                 return redirect()->route('jobopen.applicant')
                 ->with('success', 'Job Priority Updated Successfully.')->with('selected_year',$year);
             }
+            else if($display_name == 'Search Job') {
+                return redirect()->route('job.mastersearch')
+                ->with('success', 'Job Priority Updated Successfully.')->with('selected_year',$year);
+            }
         }
         else {
 
             if ($display_name == 'Job Close') {
-                return redirect()->route('jobopen.close')->with('success', 'Job Priority Updated Successfully.');
+                return redirect()->route('jobopen.close')
+                ->with('success', 'Job Priority Updated Successfully.');
             }
             else if ($display_name == 'Job Open') {
-                return redirect()->route('jobopen.index')->with('success', 'Job Priority Updated Successfully.');
+                return redirect()->route('jobopen.index')
+                ->with('success', 'Job Priority Updated Successfully.');
             }
             else if($display_name == 'Applicant Job') {
                 return redirect()->route('jobopen.applicant')
+                ->with('success', 'Job Priority Updated Successfully.');
+            }
+            else if($display_name == 'Search Job') {
+                return redirect()->route('job.mastersearch')
                 ->with('success', 'Job Priority Updated Successfully.');
             }
         }
@@ -4175,11 +4231,14 @@ class JobOpenController extends Controller
         if ($job_page == 'Search Job') {
             return redirect()->route('job.mastersearch')->with('success', 'Job Priority Updated Successfully.');
         }
-        else if ($job_page == 'Job Open') {
+        else if($job_page == 'Job Open') {
             return redirect()->route('jobopen.index')->with('success', 'Job Priority Updated Successfully.');
         }
         else if($job_page == 'Applicant Job') {
             return redirect()->route('jobopen.applicant')->with('success', 'Job Priority Updated Successfully.');
+        }
+        else if($job_page == 'Job Close') {
+            return redirect()->route('jobopen.close')->with('success', 'Job Priority Updated Successfully.');
         }
     }
 
