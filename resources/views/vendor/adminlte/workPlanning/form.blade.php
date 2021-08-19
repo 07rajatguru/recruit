@@ -280,45 +280,9 @@
                 projected_time_array.push(projected_time);
             }
 
-            var hour=0;
-            var minute=0;
-            var second=0;
-            
-            for (var i = 0; i < projected_time_array.length; i++) {
-                
-                var splitTime = projected_time_array[i].split(':');
+            const sum = projected_time_array.reduce((acc, time) => acc.add(moment.duration(time)), moment.duration());
 
-                if(hour == 0) {
-                    hour = parseInt(splitTime[0]);
-                }
-                else {
-                    hour = hour + parseInt(splitTime[0]);
-                }
-
-                if(minute == 0) {
-                    minute = parseInt(splitTime[1]);
-                }
-                else {
-                    minute = minute + parseInt(splitTime[1]);
-                }
-
-                hh = hour + minute/60;
-                mm = minute%60;
-
-                if(second == 0) {
-                    second = parseInt(splitTime[2]);
-                }
-                else {
-                    second = second + parseInt(splitTime[2]);
-                }
-
-                mm = mm + second/60;
-                ss = second%60;
-            }
-
-            var final_working_hours = hh + mm + ss;
-
-            alert(final_working_hours);
+            var final_working_hours = [Math.floor(sum.asHours()), sum.minutes(), sum.seconds()].join(':');
 
             var new_date_1 = "Aug 1, 2021 " + final_working_hours;
             var date1 = new Date(new_date_1);
@@ -336,10 +300,10 @@
             }
 
             if(minutes == 0) {
-                var remain_time = hours + ":" + minutes + "0:00";
+                var remain_time = hours + ":" + "00:00";
             }
             else {
-                var remain_time = hours + ":" + minutes + "00:00";
+                var remain_time = hours + ":" + minutes + ":00";
             }
 
             $("#remaining_time").val(remain_time);
