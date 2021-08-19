@@ -23,6 +23,7 @@ class UsersLog extends Model
         $query = UsersLog::query();
         $query = $query->join('users','users.id','=','users_log.user_id');
         $query = $query->join('role_user','role_user.user_id','=','users.id');
+        
         if($month!=0 && $year!=0){
             $query = $query->where(\DB::raw('MONTH(date)'),'=', $month);
             $query = $query->where(\DB::raw('year(date)'),'=', $year);
@@ -194,5 +195,42 @@ class UsersLog extends Model
         }
 
         return $user_attendance;
+    }
+
+    public static function getUsersAttendanceNew($user_id=0,$month,$year) {
+
+        $superadmin_role_id =  getenv('SUPERADMIN');
+        $client_role_id =  getenv('CLIENT');
+        $it_role_id =  getenv('IT');
+        $superadmin = array($superadmin_role_id,$client_role_id,$it_role_id);
+        
+        $status = 'Inactive';
+        $status_array = array($status);
+
+        $query = UsersLog::query();
+        $query = $query->join('users','users.id','=','users_log.user_id');
+        $query = $query->leftjoin('users_otherinfo','users_otherinfo.user_id','=','users.id');
+        $query = $query->join('role_user','role_user.user_id','=','users.id');
+        
+        if($month!=0 && $year!=0){
+            $query = $query->where(\DB::raw('MONTH(date)'),'=', $month);
+            $query = $query->where(\DB::raw('year(date)'),'=', $year);
+        }
+
+        if($user_id>0){
+            $query = $query->where('users.id','=',$user_id);
+        }
+        else{
+            $query = $query->whereNotIn('role_id',$superadmin);
+        }
+
+        $query = $query->groupBy('users_log.date','users.id','users.name');
+        $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','role_user.role_id' ,'date',\DB::raw('min(time) as login'),\DB::raw('max(time) as logout'),'users_otherinfo.date_of_joining as joining_date');
+        $query = $query->whereNotIn('status',$status_array);
+
+
+        $response = $query->get();
+//print_r($response);exit;
+        return $response;
     }
 }

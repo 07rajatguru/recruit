@@ -388,6 +388,51 @@ class User extends Authenticatable
         return $list;
     }
 
+    public static function getOtherUsersNew($user_id=0) {
+
+        $superadmin_role_id =  getenv('SUPERADMIN');
+        $client_role_id =  getenv('CLIENT');
+        $it_role_id =  getenv('IT');
+        $superadmin = array($superadmin_role_id,$client_role_id,$it_role_id);
+
+        $status = 'Inactive';
+        $status_array = array($status);
+        
+        $query = User::query();
+        $query = $query->join('role_user','role_user.user_id','=','users.id');
+        $query = $query->leftjoin('users_otherinfo','users_otherinfo.user_id','=','users.id');
+        $query = $query->select('users.*','role_user.role_id as role_id','users_otherinfo.date_of_joining as joining_date');
+        $query = $query->whereNotIn('status',$status_array);
+        $query = $query->whereNotIn('role_id',$superadmin);
+
+        if($user_id>0) {
+            $query = $query->where('id','=',$user_id);
+        }
+
+        $user_response = $query->get();
+
+        $list = array();
+        if(sizeof($user_response)>0) {
+
+            foreach ($user_response as $key => $value) {
+
+                if(isset($value->joining_date) && $value->joining_date != NULL && $value->joining_date != '') {
+
+                    $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
+                    $full_name = $value->first_name."-".$value->last_name.",".$joining_date;
+                }
+                else {
+
+                    $joining_date = '';
+                    $full_name = $value->first_name."-".$value->last_name.",00";
+                }
+                
+                $list[$full_name]= "";
+            }
+        }
+        return $list;
+    }
+
     public static function getUserNameById($user_id) {
 
         $user_name = '';

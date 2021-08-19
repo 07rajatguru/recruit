@@ -13,6 +13,7 @@ class UserRemarks extends Model
     	$query = UserRemarks::query();
         $query = $query->join('users','users.id','=','user_remarks.user_id');
     	$query = $query->select('user_remarks.*','users.name as user_name','users.first_name as first_name','users.last_name as last_name');
+
     	if (isset($user_id) && $user_id > 0) {
     		$query = $query->where('user_remarks.user_id',$user_id);
     	}
@@ -20,8 +21,11 @@ class UserRemarks extends Model
 
         $remarks = array();
         $i=0;
+
         if(isset($res) && sizeof($res)>0) {
+
             foreach ($res as $key => $value) {
+                
                 $remarks[$i]['id'] = $value->id;
                 $remarks[$i]['user_id'] = $value->user_id;
                 $remarks[$i]['user_name'] = $value->user_name;
@@ -33,5 +37,50 @@ class UserRemarks extends Model
             }
         }
     	return $remarks;
+    }
+
+    public static function getUserRemarksByUseridNew($user_id = 0) {
+
+        $query = UserRemarks::query();
+        $query = $query->join('users','users.id','=','user_remarks.user_id');
+        $query = $query->leftjoin('users_otherinfo','users_otherinfo.user_id','=','users.id');
+        $query = $query->select('user_remarks.*','users.name as user_name','users.first_name as first_name','users.last_name as last_name','users_otherinfo.date_of_joining as joining_date');
+
+        if (isset($user_id) && $user_id > 0) {
+            $query = $query->where('user_remarks.user_id',$user_id);
+        }
+        $res = $query->get();
+
+        $remarks = array();
+        $i=0;
+
+        if(isset($res) && sizeof($res)>0) {
+
+            foreach ($res as $key => $value) {
+                
+                $remarks[$i]['id'] = $value->id;
+                $remarks[$i]['user_id'] = $value->user_id;
+                $remarks[$i]['user_name'] = $value->user_name;
+
+                if(isset($value->joining_date) && $value->joining_date != NULL && $value->joining_date != '') {
+
+                    $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
+                    $full_name = $value->first_name."-".$value->last_name.",".$joining_date;
+                    $remarks[$i]['full_name'] = $full_name;
+                }
+                else {
+
+                    $full_name = $value->first_name."-".$value->last_name.",00";
+                    $remarks[$i]['full_name'] = $full_name;
+                }
+
+                //$remarks[$i]['full_name'] = $value->first_name."-".$value->last_name;
+                $remarks[$i]['remark_date'] = $value->date;
+                $remarks[$i]['converted_date'] = date("j",strtotime($value->date));
+                $remarks[$i]['remarks'] = $value->remarks;
+                $i++;
+            }
+        }
+        return $remarks;
     }
 }

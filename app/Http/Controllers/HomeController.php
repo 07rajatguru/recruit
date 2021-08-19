@@ -709,6 +709,9 @@ class HomeController extends Controller
         if($name == 'HomeAttendance') {
             return redirect('/home');
         }
+        if($name == 'User-Attendance') {
+            return redirect('/user-attendance');
+        }
     }
 
     public function export() {
@@ -1241,5 +1244,155 @@ class HomeController extends Controller
             $job_opened = array();
         }
         return json_encode($job_opened);
+    }
+
+    public function allUsersAttendance() {
+
+        $user = \Auth::user();
+        $user_id = \Auth::user()->id;
+        $display_attendance = $user->can('display-attendance-of-all-users-in-admin-panel');
+        $display_attendance_by_user = $user->can('display-attendance-by-loggedin-user-in-admin-panel');
+
+        if($display_attendance) {
+            $users = User::getOtherUsersNew();
+        }
+        else if($display_attendance_by_user) {
+            $users = User::getOtherUsersNew($user_id);
+        }
+
+        if(isset($_POST['month']) && $_POST['month']!=''){
+            $month = $_POST['month'];
+        }
+        else{
+            $month = date("n");
+        }
+
+        if(isset($_POST['year']) && $_POST['year']!=''){
+            $year = $_POST['year'];
+        }
+        else{
+            $year = date("Y");
+        }
+
+        $month_array =array();
+        for ($m=1; $m<=12; $m++) {
+            $month_array[$m] = date('M', mktime(0,0,0,$m));
+        }
+
+        $starting_year = '2016';
+        $ending_year = date('Y',strtotime('+2 year'));
+        $year_array = array();
+        for ($y=$starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
+        }
+
+        $list = array();
+        for($d=1; $d<=31; $d++) {
+
+            $time = mktime(12, 0, 0, $month, $d, $year);
+            foreach ($users as $key => $value) {
+              
+                if (date('n', $time) == $month)
+                    $list[$key][date('j', $time)]['attendance']='';
+                
+                $list[$key][date('j', $time)]['remarks']='';
+            }
+        }
+
+        if($display_attendance) {
+            $response = UsersLog::getUsersAttendanceNew(0,$month,$year);
+            $user_remark = UserRemarks::getUserRemarksByUseridNew(0);
+        }
+        else if($display_attendance_by_user) {
+            $response = UsersLog::getUsersAttendanceNew($user_id,$month,$year);
+            $user_remark = UserRemarks::getUserRemarksByUseridNew($user_id);
+        }
+
+        $date = new Date();
+        if(sizeof($response)>0) {
+            foreach ($response as $key => $value) {
+
+                if(isset($value->joining_date) && $value->joining_date != NULL && $value->joining_date != '') {
+
+                    $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
+                    $combine_name = $value->first_name."-".$value->last_name.",".$joining_date;
+                }
+                else {
+
+                    $combine_name = $value->first_name."-".$value->last_name.",00";
+                }
+
+                $list[$combine_name][date("j",strtotime($value->date))]['attendance'] = 'P';
+
+                if (isset($user_remark) && sizeof($user_remark)>0) {
+                    foreach ($user_remark as $k => $v) {
+
+                        $split_month = date('n',strtotime($v['remark_date']));
+                        $split_year = date('Y',strtotime($v['remark_date']));
+
+                        if (($v['full_name'] == $combine_name) && ($v['remark_date'] == $value->date) && ($month == $split_month) && ($year == $split_year)) {
+                            $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
+                        }
+                        else{
+
+                            if (($v['full_name'] == $combine_name) && ($month == $split_month) && ($year == $split_year)) {
+                                $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else{
+
+            if (isset($user_remark) && sizeof($user_remark)>0) {
+                foreach ($user_remark as $k => $v) {
+                    $split_month = date('n',strtotime($v['remark_date']));
+                    $split_year = date('Y',strtotime($v['remark_date']));
+                    if (($month == $split_month) && ($year == $split_year)) {
+                        $list[$v['full_name']][$v['converted_date']]['remarks'] = $v['remarks'];
+                    }
+                }
+            }
+        }
+
+        // New List1
+        $list1 = array();
+        for($d1=1; $d1<=31; $d1++)
+        {
+            $time1=mktime(12, 0, 0, $month, $d1, $year);
+            foreach ($users as $key => $value)
+            {
+                if (date('n', $time1)==$month)
+                    $list1[$key][date('j S', $time1)]='';
+            }
+        }
+
+        if(sizeof($list)>0) {
+            foreach ($list as $key => $value) {
+                if(sizeof($value)>0) {
+                    $i=0;
+                    foreach ($value as $key1 => $value1) {
+                        if (isset($user_remark) && sizeof($user_remark)>0) {
+                            foreach ($user_remark as $u_k1 => $u_v1) {
+
+                                $split_month = date('n',strtotime($u_v1['remark_date']));
+                                $split_year = date('Y',strtotime($u_v1['remark_date']));
+
+                                if (($u_v1['full_name'] == $key) && ($u_v1['converted_date'] == $key1) && ($month == $split_month) && ($year == $split_year)) {
+                                    
+                                    $list1[$u_v1['full_name']][$u_v1['converted_date']][$u_v1['remark_date']][$i] = $u_v1['remarks'];
+                                }
+                                $i++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $users_name = User::getAllUsersForRemarks();
+
+        return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name'));
     }
 }

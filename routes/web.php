@@ -272,8 +272,13 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::post('home/export',[
         'as'=>'home.export',
-        'uses'=>'HomeController@export']);
+        'uses'=>'HomeController@export'
+    ]);
 
+    Route::any('/user-attendance', array (
+        'middleware' => ['permission:display-attendance-of-all-users-in-admin-panel|display-attendance-by-loggedin-user-in-admin-panel'],
+        'uses' => 'HomeController@allUsersAttendance'
+    ));
 
     // test mail route
     Route::get('/testmail',[
