@@ -739,9 +739,6 @@ class JobOpenController extends Controller
         $max_ctc = $_GET['max_ctc'];
         $added_date = $_GET['added_date'];
         $no_of_positions = $_GET['no_of_positions'];
-        $selected_value = $_GET['selected_value'];
-
-        //echo $selected_value;exit;
 
         session_start();
 
@@ -772,10 +769,6 @@ class JobOpenController extends Controller
         else if(isset($no_of_positions) && $no_of_positions != '') {
             $_SESSION['session_value'] = $no_of_positions;
         }
-        else {
-            $_SESSION['session_value'] = '';
-        }
-        
 
         if (isset($_GET['year']) && $_GET['year'] != '') {
 
@@ -988,15 +981,6 @@ class JobOpenController extends Controller
         $priority['between_ten_to_twenty_lacs'] = $between_ten_to_twenty_lacs;
         $priority['above_twenty_lacs'] = $above_twenty_lacs;
 
-        if(isset($_SESSION['session_value']) && $_SESSION['session_value'] != '') {
-            
-            $selected_value = $_SESSION['session_value'];
-        }
-        else {
-
-            $selected_value = '';
-        }
-
         $json_data = array(
             'draw' => intval($draw),
             'recordsTotal' => intval($count),
@@ -1006,7 +990,6 @@ class JobOpenController extends Controller
             "job_priority" => $job_priority,
             "job_salary" => $job_salary,
             //'year' => $year,
-            "selected_value" => $selected_value,
         );
 
         echo json_encode($json_data);exit;
