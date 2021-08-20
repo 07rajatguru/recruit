@@ -47,27 +47,28 @@
                                 $month_display = date('F', mktime(0, 0, 0, $month, 10));
                             ?>
                             <tr>
-                                <td style="border: 1px solid black;"colspan="35"><center><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></center></td>
+                                <th style="border: 1px solid black;text-align: center;"colspan="35">Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</th>
                             </tr>
                             <tr>
-                                <td style="border: 1px solid black;" rowspan="2"><br/><br/><b>Sr. No.</b>
-                                <td style="border: 1px solid black;background-color:#d6e3bc"><b>ADLER EMPLOYEES</b></td>
-                                <td colspan="32" style="border: 1px solid black;"><center><b>DATE</b></center></td>
+                                <th style="border: 1px solid black;text-align: center;" rowspan="2"><br/><br/>Sr. No.</th>
+                                <th style="border: 1px solid black;background-color:#d6e3bc;">ADLER EMPLOYEES</th>
+                                <th colspan="32" style="border: 1px solid black;text-align: center;">DATE</th>
                             </tr>
-                            <td style="border: 1px solid black;background-color:#d6e3bc"><b>NAME OF PERSON</b>
+                            <th style="border: 1px solid black;background-color:#d6e3bc">NAME OF PERSON
                                 @if(isset($list) && sizeof($list)>0)
-                                    <th style="border: 1px solid black;">Date of Joining<br/>(DD/MM/YYYY)</th>
+                                    <th style="border: 1px solid black;">Date of Joining</th>
                                     @foreach($list as $key => $value)
                                         @foreach($value as $key1=>$value1)
                                             <?php
                                                 $con_dt = date("j", mktime(0, 0, 0, 0, $key1, 0));
                                             ?>
-                                            <th style="border: 1px solid black;">{{ $con_dt }}</th>
+                                            <th style="border: 1px solid black;">{{ $con_dt }}
+                                            </th>
                                         @endforeach
                                         @break
                                     @endforeach
                                 @endif
-                            </td>
+                            </th>
                         <?php $i=1; ?>
 
                         @foreach($list as $key=>$value)
@@ -78,35 +79,53 @@
                                 $new_user_name = str_replace("-"," ", $user_name);
                                 $joining_date = $values_array[1];
                             ?>
-                            <td style="border: 1px solid black;"><center>{{ $i }}</center></td>
-                            <td style="color: black; border: 1px solid black;">{{ $new_user_name }}
+                            <td style="border: 1px solid black;;text-align: center;">{{ $i }}
                             </td>
+                            <td style="color: black; border: 1px solid black;;text-align: center;">{{ $new_user_name }}</td>
 
                             @if($joining_date == '00')
                                 <td style="color: black; border: 1px solid black;"></td>
                             @else
-                                <td style="color: black; border: 1px solid black;">{{ $joining_date }}</td>
+                                <td style="color: black; border: 1px solid black;"><center>{{ $joining_date }}</center></td>
                             @endif
                             
                             @foreach($value as $key1=>$value1)
                                 @if(isset($value1['remarks']) && $value1['remarks'] != '')
                                     <?php 
+                                        if(in_array($key1, $sundays)) {
 
-                                        if($value1['attendance'] == 'P') 
+                                            $attendance = 'H';
+                                        }
+                                        else if($value1['attendance'] == 'P') {
                                             $attendance = 'P';
-                                        else
+                                        }
+                                        else {
                                             $attendance = 'A';
+                                        }
                                     ?>
-                                    <td style="border: 1px solid black;background-color:#B0E0E6;cursor: pointer;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
+
+                                    @if($attendance == 'H')
+                                        <td style="border: 1px solid black;background-color:#ffc000;cursor: pointer;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
+                                    @else
+                                        <td style="border: 1px solid black;background-color:#B0E0E6;cursor: pointer;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
+                                    @endif
                                 @else
-                                    <?php 
-                                        if($value1['attendance'] == 'P') 
+                                    <?php
+                                        if(in_array($key1, $sundays)) {
+
+                                            $attendance = 'H';
+                                        }
+                                        else if($value1['attendance'] == 'P') {
                                             $attendance = 'P';
-                                        else
+                                        }
+                                        else {
                                             $attendance = 'A';
+                                        }
                                     ?>
 
-                                    @if($attendance == 'P')
+                                    @if($attendance == 'H')
+                                        <td style="border: 1px solid black;background-color:#ffc000;">{{ $attendance }}</td>
+                                    @elseif($attendance == 'P')
                                         <td style="border: 1px solid black;background-color:#d8d8d8;">{{ $attendance }}</td>
                                     @else
                                         <td style="border: 1px solid black;background-color:#ff0000;">{{ $attendance }}</td>

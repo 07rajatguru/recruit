@@ -1274,6 +1274,16 @@ class HomeController extends Controller
             $year = date("Y");
         }
 
+        $date = "$year-$month-01";
+        $first_day = date('N',strtotime($date));
+        $first_day = 7 - $first_day + 1;
+        $last_day =  date('t',strtotime($date));
+        $sundays = array();
+
+        for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+            $sundays[] = $i;
+        }
+
         $month_array =array();
         for ($m=1; $m<=12; $m++) {
             $month_array[$m] = date('M', mktime(0,0,0,$m));
@@ -1393,6 +1403,6 @@ class HomeController extends Controller
 
         $users_name = User::getAllUsersForRemarks();
 
-        return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name'));
+        return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name','sundays'));
     }
 }
