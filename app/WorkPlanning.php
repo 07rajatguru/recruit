@@ -81,7 +81,7 @@ class WorkPlanning extends Model
         return $work_type;
     }
 
-    public static function getWorkPlanningDetails($all,$user_id) {
+    public static function getWorkPlanningDetails($all,$user_id,$month,$year) {
 
         $query = WorkPlanning::query();
         $query = $query->leftjoin('users','users.id','=','work_planning.added_by');
@@ -89,6 +89,11 @@ class WorkPlanning extends Model
 
         if($all == 0) {
             $query = $query->where('work_planning.added_by','=',$user_id);
+        }
+
+        if ($month != '' && $year != '') {
+            $query = $query->where(\DB::raw('month(work_planning.added_date)'),'=',$month);
+            $query = $query->where(\DB::raw('year(work_planning.added_date)'),'=',$year);
         }
 
         $query = $query->select('work_planning.*','users.first_name as fnm','users.last_name as lnm');

@@ -83,7 +83,7 @@
                         @foreach($work_planning_list as $key=>$value)
                             <tr>
                                 <td style="border:1px solid black;text-align: center;">{{ $i++ }}</td>
-                                <td style="border:1px solid black;">{{ $value['description'] }}</td>
+                                <td style="border:1px solid black;">{!! $value['description'] !!}</td>
                                 <?php
 
                                     $projected_time = array();
@@ -102,7 +102,7 @@
                                     @if($projected_time[0] == 0)
                                         <td style="border:1px solid black;text-align: center;">{{ $projected_time[1] }} Min.</td>
                                     @else
-                                        <td style="border:1px solid black;text-align: center;">{{ $projected_time[0] }} Hours</td>
+                                        <td style="border:1px solid black;text-align: center;">{{ $projected_time[0] }}:{{ $projected_time[1] }} Hours</td>
                                     @endif
                                 @else
                                     <td style="border:1px solid black;text-align: center;">{{ $value['projected_time'] }}</td>
@@ -112,7 +112,7 @@
                                     @if($actual_time[0] == 0)
                                         <td style="border:1px solid black;text-align: center;">{{ $actual_time[1] }} Min.</td>
                                     @else
-                                        <td style="border:1px solid black;text-align: center;">{{ $actual_time[0] }} Hours</td>
+                                        <td style="border:1px solid black;text-align: center;">{{ $actual_time[0] }}:{{ $actual_time[1] }} Hours</td>
                                     @endif
                                 @else
                                     <td style="border:1px solid black;text-align: center;">{{ $value['actual_time'] }}</td>

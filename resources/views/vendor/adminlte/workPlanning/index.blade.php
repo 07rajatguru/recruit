@@ -30,6 +30,26 @@
     </div>
 @endif
 
+<div class="col-xs-12 col-sm-12 col-md-12">
+    <div class="box-body col-xs-4 col-sm-4 col-md-4">
+        <div class="form-group">
+            {{Form::select('month',$month_array, $month, array('id'=>'month','class'=>'form-control'))}}
+        </div>
+    </div>
+
+    <div class="box-body col-xs-4 col-sm-4 col-md-4">
+        <div class="form-group">
+            {{Form::select('year',$year_array, $year, array('id'=>'year','class'=>'form-control'))}}
+        </div>
+    </div>
+
+    <div class="box-body col-xs-4 col-sm-4 col-md-4">
+        <div class="form-group">
+            {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
+        </div>
+    </div>
+</div>
+
 <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="work_planning_table">
     <thead>
         <tr>
@@ -53,6 +73,7 @@
                     <a class="fa fa-circle" href="{{ route('workplanning.show',$value['id']) }}" title="Show"></a>
                     <a class="fa fa-edit" href="{{ route('workplanning.edit',$value['id']) }}" title="Edit"></a>
                     @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'workplanning','display_name'=>'Work Planning'])
+                    @include('adminlte::partials.sendWorkPlanningReport', ['data' => $value, 'name' => 'workplanning'])
                 </td>
 
                 <td>{{ $value['added_date'] }}</td>
@@ -85,5 +106,23 @@
                 new jQuery.fn.dataTable.FixedHeader( table );
             }
         });
+
+        function select_data() {
+
+            var app_url = "{!! env('APP_URL'); !!}";
+            var month = $("#month").val();
+            var year = $("#year").val();
+
+            var url = app_url+'/work-planning';
+
+            var form = $('<form action="' + url + '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="hidden" name="month" value="'+month+'" />' +
+                '<input type="hidden" name="year" value="'+year+'" />' +
+                '</form>');
+
+            $('body').append(form);
+            form.submit();
+        }
     </script>
 @endsection

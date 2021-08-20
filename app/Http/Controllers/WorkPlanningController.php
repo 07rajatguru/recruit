@@ -18,18 +18,47 @@ class WorkPlanningController extends Controller
         $all_perm = $user->can('display-work-planning');
         $userwise_perm = $user->can('display-user-wise-work-planning');
 
+        // Get Selected Month
+        $month_array = array();
+        for ($i = 1; $i <= 12 ; $i++) {
+            $month_array[$i] = date('M',mktime(0,0,0,$i));
+        }
+
+        // Get Selected Year
+        $starting_year = '2021';
+        $ending_year = date('Y',strtotime('+2 year'));
+
+        $year_array = array();
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
+        }
+
+        if (isset($_POST['month']) && $_POST['month'] != 0) {
+            $month = $_POST['month'];
+        }
+        else {
+            $month = date('m');
+        }
+
+        if (isset($_POST['year']) && $_POST['year'] != 0) {
+            $year = $_POST['year'];
+        }
+        else {
+            $year = date('Y');
+        }
+
         if($all_perm) {
 
-            $work_planning_res = WorkPlanning::getWorkPlanningDetails(1,$user->id);
+            $work_planning_res = WorkPlanning::getWorkPlanningDetails(1,$user->id,$month,$year);
         }
         else if($userwise_perm) {
 
-            $work_planning_res = WorkPlanning::getWorkPlanningDetails(0,$user->id);
+            $work_planning_res = WorkPlanning::getWorkPlanningDetails(0,$user->id,$month,$year);
         }
 
         $count = sizeof($work_planning_res);
 
-        return view('adminlte::workPlanning.index',compact('work_planning_res','count'));
+        return view('adminlte::workPlanning.index',compact('work_planning_res','count','month_array','month','year_array','year'));
     }
 
     public function create() {

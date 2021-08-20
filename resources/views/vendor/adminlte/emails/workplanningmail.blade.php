@@ -22,7 +22,7 @@
                             <td align="center"><b>Task / Positions</b></td>
                             <td align="center"><b>Projected Time</b></td>
                             <td align="center"><b>Actual Time</b></td>
-                            <td align="center"><b>Remarks</b></td>
+                            <td align="center"><b>Description</b></td>
                         </tr>
 
                         <?php $i=0; ?>
@@ -35,11 +35,44 @@
                                     <td></td>
                                 @endif
 
-                                <td align="center">{{ ++$i }}</td>                                
-                                <td align="left">{{ $value['description']}}</td>
-                                <td align="center">{{ $value['projected_time']}}</td>
-                                <td align="center">{{ $value['actual_time']}}</td>
-                                <td align="left">{{ $value['remarks']}}</td>
+                                <td align="center">{{ ++$i }}</td>              
+                                <td align="left">{!! $value['description'] !!}</td>
+
+                                <?php
+
+                                    $projected_time = array();
+                                    $actual_time = array();
+
+                                    if(isset($value['projected_time']) && $value['projected_time'] != '') {
+                                        $projected_time = explode(':', $value['projected_time']);
+                                    }
+
+                                    if(isset($value['actual_time']) && $value['actual_time'] != '') {
+                                        $actual_time = explode(':', $value['actual_time']);
+                                    }
+                                ?>
+
+                                @if(isset($projected_time)  && sizeof($projected_time) > 0)
+                                    @if($projected_time[0] == 0)
+                                        <td align="center">{{ $projected_time[1] }} Min.</td>
+                                    @else
+                                        <td align="center">{{ $projected_time[0] }}:{{ $projected_time[1] }} Hours</td>
+                                    @endif
+                                @else
+                                    <td align="center">{{ $value['projected_time'] }}</td>
+                                @endif
+
+                                @if(isset($actual_time) && sizeof($actual_time) > 0)
+                                    @if($actual_time[0] == 0)
+                                        <td align="center">{{ $actual_time[1] }} Min.</td>
+                                    @else
+                                        <td align="center">{{ $actual_time[0] }}:{{ $actual_time[1] }} Hours</td>
+                                    @endif
+                                @else
+                                    <td align="center">{{ $value['actual_time'] }}</td>
+                                @endif
+
+                                <td align="left">{!! $value['remarks'] !!}</td>
                             </tr>
                         @endforeach
                     </table>
