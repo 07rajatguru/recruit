@@ -388,6 +388,52 @@ class JobOpenController extends Controller
         $viewVariable['users'] = $users;
         $viewVariable['min_ctc_array'] = $min_ctc_array;
         $viewVariable['max_ctc_array'] = $max_ctc_array;
+
+        session_start();
+
+        if(isset($_SESSION['client_heirarchy_session_value']) && $_SESSION['client_heirarchy_session_value'] != '') {
+
+            unset($_SESSION['client_heirarchy_session_value']);
+        }
+
+        if(isset($_SESSION['mb_name_session_value']) && $_SESSION['mb_name_session_value'] != '') {
+
+            unset($_SESSION['mb_name_session_value']);
+        }
+
+        if(isset($_SESSION['company_name_session_value']) && $_SESSION['company_name_session_value'] != '') {
+
+            unset($_SESSION['company_name_session_value']);
+        }
+
+        if(isset($_SESSION['posting_title_session_value']) && $_SESSION['posting_title_session_value'] != '') {
+
+            unset($_SESSION['posting_title_session_value']);
+        }
+
+        if(isset($_SESSION['location_session_value']) && $_SESSION['location_session_value'] != '') {
+            unset($_SESSION['location_session_value']);
+        }
+
+        if(isset($_SESSION['min_ctc_session_value']) && $_SESSION['min_ctc_session_value'] != '') {
+
+            unset($_SESSION['min_ctc_session_value']);
+        }
+
+        if(isset($_SESSION['max_ctc_session_value']) && $_SESSION['max_ctc_session_value'] != '') {
+
+            unset($_SESSION['max_ctc_session_value']);
+        }
+
+        if(isset($_SESSION['added_date_session_value']) && $_SESSION['added_date_session_value'] != '') {
+
+            unset($_SESSION['added_date_session_value']);
+        }
+
+        if(isset($_SESSION['no_of_positions_session_value']) && $_SESSION['no_of_positions_session_value'] != '') {
+
+            unset($_SESSION['no_of_positions_session_value']);
+        }
         
         return view('adminlte::jobopen.index', $viewVariable);
     }
@@ -743,32 +789,189 @@ class JobOpenController extends Controller
         session_start();
 
         if(isset($client_heirarchy) && $client_heirarchy != '') {
-            $_SESSION['session_value'] = $client_heirarchy;
+
+            $_SESSION['client_heirarchy_session_value'] = $client_heirarchy;
+
+            unset($_SESSION['mb_name_session_value']);
+            unset($_SESSION['company_name_session_value']);
+            unset($_SESSION['posting_title_session_value']);
+            unset($_SESSION['location_session_value']);
+            unset($_SESSION['min_ctc_session_value']);
+            unset($_SESSION['max_ctc_session_value']);
+            unset($_SESSION['added_date_session_value']);
+            unset($_SESSION['no_of_positions_session_value']);
         }
         else if(isset($mb_name) && $mb_name != '') {
-            $_SESSION['session_value'] = $mb_name;
+
+            $_SESSION['mb_name_session_value'] = $mb_name;
+
+            unset($_SESSION['client_heirarchy_session_value']);
+            unset($_SESSION['company_name_session_value']);
+            unset($_SESSION['posting_title_session_value']);
+            unset($_SESSION['location_session_value']);
+            unset($_SESSION['min_ctc_session_value']);
+            unset($_SESSION['max_ctc_session_value']);
+            unset($_SESSION['added_date_session_value']);
+            unset($_SESSION['no_of_positions_session_value']);
         }
         else if(isset($company_name) && $company_name != '') {
-            $_SESSION['session_value'] = $company_name;
+
+            $_SESSION['company_name_session_value'] = $company_name;
+
+            unset($_SESSION['client_heirarchy_session_value']);
+            unset($_SESSION['mb_name_session_value']);
+            unset($_SESSION['posting_title_session_value']);
+            unset($_SESSION['location_session_value']);
+            unset($_SESSION['min_ctc_session_value']);
+            unset($_SESSION['max_ctc_session_value']);
+            unset($_SESSION['added_date_session_value']);
+            unset($_SESSION['no_of_positions_session_value']);
         }
         else if(isset($posting_title) && $posting_title != '') {
-            $_SESSION['session_value'] = $posting_title;
+
+            $_SESSION['posting_title_session_value'] = $posting_title;
+
+            unset($_SESSION['client_heirarchy_session_value']);
+            unset($_SESSION['mb_name_session_value']);
+            unset($_SESSION['company_name_session_value']);
+            unset($_SESSION['location_session_value']);
+            unset($_SESSION['min_ctc_session_value']);
+            unset($_SESSION['max_ctc_session_value']);
+            unset($_SESSION['added_date_session_value']);
+            unset($_SESSION['no_of_positions_session_value']);
         }
         else if(isset($location) && $location != '') {
-            $_SESSION['session_value'] = $location;
+
+            $_SESSION['location_session_value'] = $location;
+
+            unset($_SESSION['client_heirarchy_session_value']);
+            unset($_SESSION['mb_name_session_value']);
+            unset($_SESSION['company_name_session_value']);
+            unset($_SESSION['posting_title_session_value']);
+            unset($_SESSION['min_ctc_session_value']);
+            unset($_SESSION['max_ctc_session_value']);
+            unset($_SESSION['added_date_session_value']);
+            unset($_SESSION['no_of_positions_session_value']);
         }
         else if(isset($min_ctc) && $min_ctc != '') {
-            $_SESSION['session_value'] = $min_ctc;
+
+            $_SESSION['min_ctc_session_value'] = $min_ctc;
+
+            unset($_SESSION['client_heirarchy_session_value']);
+            unset($_SESSION['mb_name_session_value']);
+            unset($_SESSION['company_name_session_value']);
+            unset($_SESSION['posting_title_session_value']);
+            unset($_SESSION['location_session_value']);
+            unset($_SESSION['max_ctc_session_value']);
+            unset($_SESSION['added_date_session_value']);
+            unset($_SESSION['no_of_positions_session_value']);
         }
         else if(isset($max_ctc) && $max_ctc != '') {
-            $_SESSION['session_value'] = $max_ctc;
+
+            $_SESSION['max_ctc_session_value'] = $max_ctc;
+
+            unset($_SESSION['client_heirarchy_session_value']);
+            unset($_SESSION['mb_name_session_value']);
+            unset($_SESSION['company_name_session_value']);
+            unset($_SESSION['posting_title_session_value']);
+            unset($_SESSION['location_session_value']);
+            unset($_SESSION['min_ctc_session_value']);
+            unset($_SESSION['added_date_session_value']);
+            unset($_SESSION['no_of_positions_session_value']);
         }
         else if(isset($added_date) && $added_date != '') {
-            $_SESSION['session_value'] = $added_date;
+
+            $_SESSION['added_date_session_value'] = $added_date;
+
+            unset($_SESSION['client_heirarchy_session_value']);
+            unset($_SESSION['mb_name_session_value']);
+            unset($_SESSION['company_name_session_value']);
+            unset($_SESSION['posting_title_session_value']);
+            unset($_SESSION['location_session_value']);
+            unset($_SESSION['min_ctc_session_value']);
+            unset($_SESSION['max_ctc_session_value']);
+            unset($_SESSION['no_of_positions_session_value']);
         }
         else if(isset($no_of_positions) && $no_of_positions != '') {
-            $_SESSION['session_value'] = $no_of_positions;
+
+            $_SESSION['no_of_positions_session_value'] = $no_of_positions;
+
+            unset($_SESSION['client_heirarchy_session_value']);
+            unset($_SESSION['mb_name_session_value']);
+            unset($_SESSION['company_name_session_value']);
+            unset($_SESSION['posting_title_session_value']);
+            unset($_SESSION['location_session_value']);
+            unset($_SESSION['min_ctc_session_value']);
+            unset($_SESSION['max_ctc_session_value']);
+            unset($_SESSION['added_date_session_value']);
         }
+
+        // Get Session value & set into variable
+
+        if(isset($_SESSION['client_heirarchy_session_value']) && $_SESSION['client_heirarchy_session_value'] != '') {
+            $client_heirarchy = $_SESSION['client_heirarchy_session_value'];
+        }
+        else {
+            $client_heirarchy = '';
+        }
+
+        if(isset($_SESSION['mb_name_session_value']) && $_SESSION['mb_name_session_value'] != '') {
+            $mb_name = $_SESSION['mb_name_session_value'];
+        }
+        else {
+            $mb_name = '';
+        }
+
+        if(isset($_SESSION['company_name_session_value']) && $_SESSION['company_name_session_value'] != '') {
+            $company_name = $_SESSION['company_name_session_value'];
+        }
+        else {
+            $company_name = '';
+        }
+
+        if(isset($_SESSION['posting_title_session_value']) && $_SESSION['posting_title_session_value'] != '') {
+            $posting_title = $_SESSION['posting_title_session_value'];
+        }
+        else {
+            $posting_title = '';
+        }
+
+        if(isset($_SESSION['location_session_value']) && $_SESSION['location_session_value'] != '') {
+            $location = $_SESSION['location_session_value'];
+        }
+        else {
+            $location = '';
+        }
+
+        if(isset($_SESSION['min_ctc_session_value']) && $_SESSION['min_ctc_session_value'] != '') {
+            $min_ctc = $_SESSION['min_ctc_session_value'];
+        }
+        else {
+            $min_ctc = '';
+        }
+
+        if(isset($_SESSION['max_ctc_session_value']) && $_SESSION['max_ctc_session_value'] != '') {
+            $max_ctc = $_SESSION['max_ctc_session_value'];
+        }
+        else {
+            $max_ctc = '';
+        }
+
+        if(isset($_SESSION['added_date_session_value']) && $_SESSION['added_date_session_value'] != '') {
+            $added_date = $_SESSION['added_date_session_value'];
+        }
+        else {
+            $added_date = '';
+        }
+
+        if(isset($_SESSION['no_of_positions_session_value']) && $_SESSION['no_of_positions_session_value'] != '') {
+            $no_of_positions = $_SESSION['no_of_positions_session_value'];
+        }
+        else {
+            $no_of_positions = '';
+        }
+
+        //echo $mb_name;exit;
 
         if (isset($_GET['year']) && $_GET['year'] != '') {
 
