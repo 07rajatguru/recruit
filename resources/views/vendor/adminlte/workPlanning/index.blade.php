@@ -71,8 +71,11 @@
                 <td>{{ ++$i }}</td>
                 <td>
                     <a class="fa fa-circle" href="{{ route('workplanning.show',$value['id']) }}" title="Show"></a>
+
                     <a class="fa fa-edit" href="{{ route('workplanning.edit',$value['id']) }}" title="Edit"></a>
+                    
                     @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'workplanning','display_name'=>'Work Planning'])
+
                     @include('adminlte::partials.sendWorkPlanningReport', ['data' => $value, 'name' => 'workplanning'])
                 </td>
 

@@ -3336,4 +3336,10 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'workplanning.getlist',
         'uses' => 'WorkPlanningController@getAddedList',
     ]);
+
+    Route::post('work-planning/sendmail',[
+        'as' => 'workplanning.sendmail',
+        'uses' => 'WorkPlanningController@sendMail',
+        'middleware' => ['permission:work-planning-add']
+    ]);
 });

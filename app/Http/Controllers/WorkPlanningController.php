@@ -206,13 +206,13 @@ class WorkPlanningController extends Controller
 
         $work_planning_res = WorkPlanning::find($id);
 
+        $user_id = $work_planning_res->added_by;
+        $date = $work_planning_res->added_date;
+
         $work_type = WorkPlanning::getWorkType();
         $selected_work_type = $work_planning_res->work_type;
 
         $time_array = WorkPlanning::getTimeArray();
-
-        $user_id = \Auth::user()->id;
-        $date = date('Y-m-d');
 
         // Get Logged in Log out Time
 
@@ -328,5 +328,49 @@ class WorkPlanningController extends Controller
         $work_planning_list = WorkPlanningList::getWorkPlanningList($work_planning_id);
 
         echo json_encode($work_planning_list);exit;
+    }
+
+    public function sendMail() {
+
+        $wp_id = $_POST['wp_id'];
+
+        // Send Email Notification
+
+        $user_id = \Auth::user()->id;
+
+        //Get Reports to Email
+        $report_res = User::getReportsToUsersEmail($user_id);
+
+        if(isset($report_res->remail) && $report_res->remail!='') {
+            $report_email = $report_res->remail;
+        }
+        else {
+            $report_email = '';
+        }
+
+        // get superadmin email id
+        $superadminuserid = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($superadminuserid);
+
+        // Get HR email id
+        $hr = getenv('HRUSERID');
+        $hremail = User::getUserEmailById($hr);
+
+        $to_users_array = array($superadminemail,$hremail,$report_email);
+
+        $module = "Work Planning";
+        $sender_name = $user_id;
+        $to = implode(",",$to_users_array);
+        $cc = '';
+
+        $date = date('d/m/Y');
+
+        $subject = "Work Planning Sheet - " . $date;
+        $message = "Work Planning Sheet - " . $date;
+        $module_id = $wp_id;
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+        return redirect()->route('workplanning.index')->with('success','Work Planning Add Successfully.');
     }
 }
