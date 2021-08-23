@@ -90,43 +90,47 @@
                             @endif
                             
                             @foreach($value as $key1=>$value1)
-                                @if(isset($value1['remarks']) && $value1['remarks'] != '')
-                                    <?php 
-                                        if(in_array($key1, $sundays)) {
+                                <?php
 
-                                            $attendance = 'H';
-                                        }
-                                        else if($value1['attendance'] == 'P') {
-                                            $attendance = 'P';
-                                        }
-                                        else {
-                                            $attendance = 'A';
-                                        }
-                                    ?>
+                                    $get_cur_dt = date('d');
+                                    $get_cur_month = date('m');
+                                    $get_cur_yr = date('Y');
+
+                                    if(in_array($key1, $sundays)) {
+
+                                        $attendance = 'H';
+                                    }
+                                    else if($value1['attendance'] == 'P') {
+
+                                        $attendance = 'P';
+                                    }
+                                    else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
+
+                                        $attendance = 'N';
+                                    }
+                                    else {
+
+                                        $attendance = 'A';
+                                    }
+                                ?>
+                                @if(isset($value1['remarks']) && $value1['remarks'] != '')
 
                                     @if($attendance == 'H')
                                         <td style="border: 1px solid black;background-color:#ffc000;cursor: pointer;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
+
+                                    @elseif($attendance == 'N')
+                                        <td style="border: 1px solid black;background-color:#B0E0E6;cursor: pointer;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}"></td>
                                     @else
                                         <td style="border: 1px solid black;background-color:#B0E0E6;cursor: pointer;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
                                     @endif
                                 @else
-                                    <?php
-                                        if(in_array($key1, $sundays)) {
-
-                                            $attendance = 'H';
-                                        }
-                                        else if($value1['attendance'] == 'P') {
-                                            $attendance = 'P';
-                                        }
-                                        else {
-                                            $attendance = 'A';
-                                        }
-                                    ?>
 
                                     @if($attendance == 'H')
                                         <td style="border: 1px solid black;background-color:#ffc000;">{{ $attendance }}</td>
                                     @elseif($attendance == 'P')
                                         <td style="border: 1px solid black;background-color:#d8d8d8;">{{ $attendance }}</td>
+                                    @elseif($attendance == 'N')
+                                        <td style="border: 1px solid black;"></td>
                                     @else
                                         <td style="border: 1px solid black;background-color:#ff0000;">{{ $attendance }}</td>
                                     @endif

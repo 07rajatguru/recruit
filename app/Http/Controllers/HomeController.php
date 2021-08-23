@@ -1274,6 +1274,8 @@ class HomeController extends Controller
             $year = date("Y");
         }
 
+        // Get All Sundays dates in current month
+        
         $date = "$year-$month-01";
         $first_day = date('N',strtotime($date));
         $first_day = 7 - $first_day + 1;
