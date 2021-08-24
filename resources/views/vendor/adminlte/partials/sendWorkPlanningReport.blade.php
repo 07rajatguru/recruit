@@ -14,6 +14,7 @@
             </div>
 
             <input type="hidden" name="wp_id" id="wp_id" value="{{ $data['id'] }}">
+            
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary">Yes</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">No</button>

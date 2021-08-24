@@ -333,10 +333,10 @@ class WorkPlanningController extends Controller
     public function sendMail() {
 
         $wp_id = $_POST['wp_id'];
+        $work_planning = WorkPlanning::getWorkPlanningDetailsById($wp_id);
+        $user_id = \Auth::user()->id;
 
         // Send Email Notification
-
-        $user_id = \Auth::user()->id;
 
         //Get Reports to Email
         $report_res = User::getReportsToUsersEmail($user_id);
@@ -363,7 +363,7 @@ class WorkPlanningController extends Controller
         $to = implode(",",$to_users_array);
         $cc = '';
 
-        $date = date('d/m/Y');
+        $date = $work_planning['added_date'];
 
         $subject = "Work Planning Sheet - " . $date;
         $message = "Work Planning Sheet - " . $date;
@@ -371,6 +371,6 @@ class WorkPlanningController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-        return redirect()->route('workplanning.index')->with('success','Work Planning Add Successfully.');
+        return redirect()->route('workplanning.index')->with('success','Email Send Successfully.');
     }
 }

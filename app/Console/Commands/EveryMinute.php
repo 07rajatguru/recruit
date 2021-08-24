@@ -1928,9 +1928,10 @@ class EveryMinute extends Command
                     ]);
                 }
 
-                $today_date = date('d/m/Y');;
+                $work_planning = WorkPlanning::getWorkPlanningDetailsById($value['module_id']);
                 $work_planning_list = WorkPlanningList::getWorkPlanningList($value['module_id']);
 
+                $today_date = $work_planning['added_date'];
                 $input['today_date'] = $today_date;
                 $input['work_planning_list'] = $work_planning_list;
 
