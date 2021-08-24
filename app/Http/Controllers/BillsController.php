@@ -2221,7 +2221,10 @@ class BillsController extends Controller
 
         // Set invoice name
         $date = date('dmY');
-        $invoice_name = $invoice_data['client_company_name'] . " - " . $invoice_data['candidate_name'] . " - " . $date;
+        $in_nm = $invoice_data['client_company_name'] . " - " . $invoice_data['candidate_name'] . " - " . $date;
+
+        // Replace / with - for save excel format
+        $invoice_name =  str_replace("/","-",$in_nm);
         
         if(isset($invoice_data['gst_no']) && $invoice_data['gst_no'] == '') {
 
