@@ -166,6 +166,11 @@ Route::get('report/weekly' ,[
     'uses' => 'ReportController@weeklyreport'
 ]);
 
+Route::get('check/sendgrid' ,[
+    'as' => 'check.sendgrid',
+    'uses' => 'ReportController@checkSendgrid'
+]);
+
 Route::group(['middleware' => ['auth']], function () {
 
     // Dashboard

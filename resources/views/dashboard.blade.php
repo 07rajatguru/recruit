@@ -26,6 +26,12 @@
     @endif
     <!-- popup -->
 
+    @if($message = Session::get('success'))
+        <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
+
     <!-- Birthday Popup -->
     @if(isset($birthday_date_string) && $birthday_date_string != '')
         <input type="hidden" name="birthday_date_string" id="birthday_date_string" value="{{ $birthday_date_string }}">

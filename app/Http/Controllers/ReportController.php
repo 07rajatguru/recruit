@@ -1762,4 +1762,19 @@ class ReportController extends Controller
         }
         return view('adminlte::reports.master-productivity-report',compact('users','bench_mark','month_array','year_array','month','year','no_of_weeks','frm_to_date_array'));
     }
+
+    public function checkSendgrid() {
+
+        $email = new \SendGrid\Mail\Mail(); 
+        $email->setFrom("trajinfofree@gmail.com", "Traj");
+        $email->setSubject("SendGrid is Fun");
+        $email->addTo("dhara@trajinfotech.com", "Dhara Khandhediya");
+        $email->addContent(
+            "text/html", "<strong>Test Email</strong>"
+        );
+        $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
+
+        $response = $sendgrid->send($email);
+        return redirect('dashboard')->with('success','Email Send Successfully.');
+    }
 }
