@@ -150,6 +150,8 @@ class WorkPlanning extends Model
             
             $i++;
         }
+
+        
         return $work_planning_res;
     }
 

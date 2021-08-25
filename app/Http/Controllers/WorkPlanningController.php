@@ -9,6 +9,7 @@ use App\WorkPlanningList;
 use App\UsersLog;
 use App\Events\NotificationMail;
 use App\User;
+use DB;
 
 class WorkPlanningController extends Controller
 {
@@ -197,7 +198,7 @@ class WorkPlanningController extends Controller
         $work_planning = WorkPlanning::getWorkPlanningDetailsById($id);
         $work_planning_list = WorkPlanningList::getWorkPlanningList($id);
         
-        return view('adminlte::workplanning.show',compact('work_planning','work_planning_list'));
+        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list'));
     }
 
     public function edit($id) {
@@ -246,7 +247,7 @@ class WorkPlanningController extends Controller
         $work_planning_time = date("g:i A", strtotime($work_planning_time));
 
         // Convert Work Planning Status Time
-        $utc_status = $work_planning_res->updated_at;
+        $utc_status = $work_planning_res->work_planning_status_time;
         $dt_status = new \DateTime($utc_status);
         $tz_status = new \DateTimeZone('Asia/Kolkata');
 
@@ -276,6 +277,7 @@ class WorkPlanningController extends Controller
         $work_planning->work_type = $work_type;
         $work_planning->loggedin_time = $get_time['login'];
         $work_planning->loggedout_time = $get_time['logout'];
+        $work_planning->work_planning_status_time = date('H:i:s');
         $work_planning->remaining_time = $remaining_time;
         $work_planning->updated_at = time();
         $work_planning->save();
@@ -333,8 +335,12 @@ class WorkPlanningController extends Controller
     public function sendMail() {
 
         $wp_id = $_POST['wp_id'];
-        $work_planning = WorkPlanning::getWorkPlanningDetailsById($wp_id);
+        $work_planning_status_time = date('H:i:s');
         $user_id = \Auth::user()->id;
+
+        $work_planning = WorkPlanning::getWorkPlanningDetailsById($wp_id);
+
+        \DB::statement("UPDATE work_planning SET work_planning_status_time = '$work_planning_status_time' where id = $wp_id");
 
         // Send Email Notification
 
@@ -363,7 +369,7 @@ class WorkPlanningController extends Controller
         $to = implode(",",$to_users_array);
         $cc = '';
 
-        $date = $work_planning['added_date'];
+        $date = date('d/m/Y',strtotime($work_planning['added_date']));
 
         $subject = "Work Planning Sheet - " . $date;
         $message = "Work Planning Sheet - " . $date;
