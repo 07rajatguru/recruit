@@ -687,7 +687,7 @@ class ClientBasicinfo extends Ardent
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->where('job_openings.id','=',$job_id);
-        $query = $query->select('client_basicinfo.id as client_id','client_basicinfo.name as cname','client_basicinfo.coordinator_name','client_basicinfo.mail','client_basicinfo.mobile','client_basicinfo.account_manager_id as account_manager','client_basicinfo.percentage_charged_below','client_basicinfo.percentage_charged_above','job_openings.posting_title', 'job_openings.city','job_openings.level_id','client_basicinfo.second_line_am','client_address.billing_street2 as area','client_address.billing_city as billing_city','client_address.billing_code as billing_code','job_openings.remote_working as remote_working');
+        $query = $query->select('client_basicinfo.id as client_id','client_basicinfo.name as cname','client_basicinfo.coordinator_prefix','client_basicinfo.coordinator_name','client_basicinfo.mail','client_basicinfo.mobile','client_basicinfo.account_manager_id as account_manager','client_basicinfo.percentage_charged_below','client_basicinfo.percentage_charged_above','job_openings.posting_title', 'job_openings.city','job_openings.level_id','client_basicinfo.second_line_am','client_address.billing_street2 as area','client_address.billing_city as billing_city','client_address.billing_code as billing_code','job_openings.remote_working as remote_working');
         $response = $query->first();
 
         $client = array();
@@ -696,6 +696,7 @@ class ClientBasicinfo extends Ardent
 
             $client['client_id'] = $response->client_id;
             $client['cname'] = $response->cname;
+            $client['coordinator_prefix'] = $response->coordinator_prefix;
             $client['coordinator_name'] = $response->coordinator_name;
             $client['mail'] = $response->mail;
             $client['mobile'] = $response->mobile;
@@ -1935,7 +1936,7 @@ class ClientBasicinfo extends Ardent
         $client_query = $client_query->where('client_basicinfo.delete_client','=','0');
         $client_query = $client_query->where('client_basicinfo.account_manager_id','=',$user_id);
 
-        $client_query = $client_query->select('client_basicinfo.id','client_basicinfo.name');
+        $client_query = $client_query->select('client_basicinfo.id');
 
         $client_response = $client_query->get();
         return $client_response;

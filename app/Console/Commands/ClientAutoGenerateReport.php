@@ -86,7 +86,7 @@ class ClientAutoGenerateReport extends Command
                             $module = "Hiring Report";
                             $sender_name = $key;
                             $to = User::getUserEmailById($key);
-                            $subject = "Hiring Report - " . $client_res_value->name;
+                            $subject = "Hiring Report - Adler Talent Solutions";
                             $message = "";
                             $module_id = implode(",", $job_ids_array);
                             $cc = "";

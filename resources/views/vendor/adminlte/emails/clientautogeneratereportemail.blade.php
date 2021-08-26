@@ -10,9 +10,9 @@
     <table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif;" align="left">
         <tr>
             <td width="600" style="font-family:Cambria, serif;font-size: 11.0pt;">
-                <b><p style="text-align: left;">Dear {{ $client_owner }},</p></b>
+                <b><p style="text-align: left;">Dear {{ $client_name }},</p></b>
                 <i><p style="text-align: left;">Greetings from Adler Talent Solutions !</p></i>
-                <p style="text-align: left;"><u>Please find current job openings report as below for your reference:</u></p>
+                <p style="text-align: left;">Please find the hiring report below for your reference. Let me know convenient time to discuss this with you over phone.</p>
                     <table width="600" cellpadding="3" cellspacing="0" border="1" border-color="#000000">
                         <tr style="background-color: #7598d9;font-family:Cambria, serif;font-size: 11.0pt;">
                             <td align="left"><b>Sr. No.</b></td>
@@ -89,7 +89,7 @@
                                 @endif
 
                                 <td align="left">{{ ++$i }}</td>
-                                <td align="left">{{ $client_owner_short_name }}</td>
+                                <td align="left">{{ $client_owner }}</td>
                                 <td align="left">{{ $value['posting_title'] }}</td>
                                 <td align="left">{{ $ass_names_string }}</td>
                                 <td align="left">{{ $short_names_string }}</td>
@@ -98,7 +98,9 @@
                             </tr>
                         @endforeach
                     </table>
-                <p style="font-family:Cambria, serif;font-size: 11.0pt;text-align: left;">Hope this works.</p>
+                    
+                <p style="font-family:Cambria, serif;font-size: 11.0pt;text-align: left;">Also, let us know if you have any other priority roles for us to focus upon apart from above list.</p>
+                <p style="font-family:Cambria, serif;font-size: 11.0pt;text-align: left;">Awaiting your revert.</p>
                 <p style="font-family:Cambria, serif;font-size: 11.0pt;text-align: left;">Thanks.</p>
             </td>
         </tr>
