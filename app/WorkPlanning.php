@@ -210,6 +210,8 @@ class WorkPlanning extends Model
             $dt_wp_status->setTimezone($tz_wp_status);
             $work_planning_status_time = $dt_wp_status->format('g:i A');
             $work_planning_res['work_planning_status_time'] = $work_planning_status_time;
+
+            $work_planning_res['remaining_time'] = $response->remaining_time;
         }
         return $work_planning_res;
     }
