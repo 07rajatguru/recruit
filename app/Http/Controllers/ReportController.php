@@ -29,6 +29,7 @@ class ReportController extends Controller
 
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
+        $hr_user_id = getenv('HRUSERID');
         $type_array = array($recruitment,$hr_advisory);
 
         if($all_perm) {
@@ -53,6 +54,9 @@ class ReportController extends Controller
                     }    
                 }
             }
+
+            $get_hr_user_name = User::getUserNameById($hr_user_id);
+            $users[$hr_user_id] = $get_hr_user_name;
         }
         else if($userwise_perm || $teamwise_perm) {
             $users = User::getAssignedUsers($user_id);
@@ -105,6 +109,7 @@ class ReportController extends Controller
 
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
+        $hr_user_id = getenv('HRUSERID');
         $type_array = array($recruitment,$hr_advisory);
 
         if($all_perm) {
@@ -129,6 +134,9 @@ class ReportController extends Controller
                     }    
                 }
             }
+
+            $get_hr_user_name = User::getUserNameById($hr_user_id);
+            $users[$hr_user_id] = $get_hr_user_name;
         }
         else if($userwise_perm || $teamwise_perm) {
             $users = User::getAssignedUsers($user_id);
@@ -268,6 +276,7 @@ class ReportController extends Controller
 
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
+        $hr_user_id = getenv('HRUSERID');
         $type_array = array($recruitment,$hr_advisory);
 
         if($all_perm) {
@@ -292,6 +301,8 @@ class ReportController extends Controller
                     }    
                 }
             }
+            $get_hr_user_name = User::getUserNameById($hr_user_id);
+            $users[$hr_user_id] = $get_hr_user_name;
         }
         else if($userwise_perm || $teamwise_perm) {
             $users = User::getAssignedUsers($user_id);
@@ -380,6 +391,7 @@ class ReportController extends Controller
 
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
+        $hr_user_id = getenv('HRUSERID');
         $type_array = array($recruitment,$hr_advisory);
 
         if($all_perm) {
@@ -404,6 +416,8 @@ class ReportController extends Controller
                     }    
                 }
             }
+            $get_hr_user_name = User::getUserNameById($hr_user_id);
+            $users[$hr_user_id] = $get_hr_user_name;
         }
         else if($userwise_perm || $teamwise_perm) {
 
@@ -555,6 +569,7 @@ class ReportController extends Controller
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $management = getenv('MANAGEMENT');
+        $hr_user_id = getenv('HRUSERID');
         $type_array = array($recruitment,$hr_advisory,$management);
 
         // Year Data
@@ -611,6 +626,9 @@ class ReportController extends Controller
                         $users[$k1] = $v1;
                     }    
                 }
+
+                $get_hr_user_name = User::getUserNameById($hr_user_id);
+                $users[$hr_user_id] = $get_hr_user_name;
             }
 
             foreach ($users as $key => $value) {
@@ -696,6 +714,7 @@ class ReportController extends Controller
                 $recruitment = getenv('RECRUITMENT');
                 $hr_advisory = getenv('HRADVISORY');
                 $management = getenv('MANAGEMENT');
+                $hr_user_id = getenv('HRUSERID');
                 $type_array = array($recruitment,$hr_advisory,$management);
 
                 $users_array = User::getAllUsers($type_array);
@@ -716,6 +735,9 @@ class ReportController extends Controller
                             $users[$k1] = $v1;
                         }    
                     }
+
+                    $get_hr_user_name = User::getUserNameById($hr_user_id);
+                    $users[$hr_user_id] = $get_hr_user_name;
                 }
 
                 foreach ($users as $key => $value) {
@@ -1020,6 +1042,7 @@ class ReportController extends Controller
 
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
+        $hr_user_id = getenv('HRUSERID');
         $type_array = array($recruitment,$hr_advisory);
 
         if($all_perm) {
@@ -1043,6 +1066,9 @@ class ReportController extends Controller
                         $users[$k1] = $v1;
                     }    
                 }
+
+                $get_hr_user_name = User::getUserNameById($hr_user_id);
+                $users[$hr_user_id] = $get_hr_user_name;
             }
         }
         else if($userwise_perm || $teamwise_perm) {
@@ -1277,6 +1303,7 @@ class ReportController extends Controller
 
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
+        $hr_user_id = getenv('HRUSERID');
         $type_array = array($recruitment,$hr_advisory);
 
         if($all_perm) {
@@ -1300,6 +1327,9 @@ class ReportController extends Controller
                         $users[$k1] = $v1;
                     }    
                 }
+
+                $get_hr_user_name = User::getUserNameById($hr_user_id);
+                $users[$hr_user_id] = $get_hr_user_name;
             }
         }
         // Get Selected Month
