@@ -406,7 +406,7 @@ class User extends Authenticatable
         $query = $query->whereNotIn('role_id',$superadmin);
 
         if($user_id>0) {
-            $query = $query->where('id','=',$user_id);
+            $query = $query->where('users.id','=',$user_id);
         }
 
         $user_response = $query->get();

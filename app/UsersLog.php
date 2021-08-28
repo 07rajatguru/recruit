@@ -228,9 +228,7 @@ class UsersLog extends Model
         $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','role_user.role_id' ,'date',\DB::raw('min(time) as login'),\DB::raw('max(time) as logout'),'users_otherinfo.date_of_joining as joining_date');
         $query = $query->whereNotIn('status',$status_array);
 
-
         $response = $query->get();
-//print_r($response);exit;
         return $response;
     }
 }
