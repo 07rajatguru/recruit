@@ -211,6 +211,7 @@ class UsersLog extends Model
         $query = $query->join('users','users.id','=','users_log.user_id');
         $query = $query->leftjoin('users_otherinfo','users_otherinfo.user_id','=','users.id');
         $query = $query->join('role_user','role_user.user_id','=','users.id');
+        $query = $query->leftjoin('department','department.id','=','users.type');
         
         if($month!=0 && $year!=0){
             $query = $query->where(\DB::raw('MONTH(date)'),'=', $month);
@@ -225,7 +226,7 @@ class UsersLog extends Model
         }
 
         $query = $query->groupBy('users_log.date','users.id','users.name');
-        $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','role_user.role_id' ,'date',\DB::raw('min(time) as login'),\DB::raw('max(time) as logout'),'users_otherinfo.date_of_joining as joining_date');
+        $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','role_user.role_id' ,'date',\DB::raw('min(time) as login'),\DB::raw('max(time) as logout'),'users_otherinfo.date_of_joining as joining_date','department.name as department_name','users.working_hours as working_hours');
         $query = $query->whereNotIn('status',$status_array);
 
         $response = $query->get();

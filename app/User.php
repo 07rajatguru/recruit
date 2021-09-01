@@ -401,7 +401,10 @@ class User extends Authenticatable
         $query = User::query();
         $query = $query->join('role_user','role_user.user_id','=','users.id');
         $query = $query->leftjoin('users_otherinfo','users_otherinfo.user_id','=','users.id');
-        $query = $query->select('users.*','role_user.role_id as role_id','users_otherinfo.date_of_joining as joining_date');
+        $query = $query->leftjoin('department','department.id','=','users.type');
+
+        $query = $query->select('users.*','role_user.role_id as role_id','users_otherinfo.date_of_joining as joining_date','department.name as department_name');
+
         $query = $query->whereNotIn('status',$status_array);
         $query = $query->whereNotIn('role_id',$superadmin);
 
@@ -416,18 +419,10 @@ class User extends Authenticatable
 
             foreach ($user_response as $key => $value) {
 
-                if(isset($value->joining_date) && $value->joining_date != NULL && $value->joining_date != '') {
-
-                    $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
-                    $full_name = $value->first_name."-".$value->last_name.",".$joining_date;
-                }
-                else {
-
-                    $joining_date = '';
-                    $full_name = $value->first_name."-".$value->last_name.",00";
-                }
-                
-                $list[$full_name]= "";
+                $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
+                $full_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
+               
+                $list[$full_name] = "";
             }
         }
         return $list;

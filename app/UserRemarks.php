@@ -44,7 +44,9 @@ class UserRemarks extends Model
         $query = UserRemarks::query();
         $query = $query->join('users','users.id','=','user_remarks.user_id');
         $query = $query->leftjoin('users_otherinfo','users_otherinfo.user_id','=','users.id');
-        $query = $query->select('user_remarks.*','users.name as user_name','users.first_name as first_name','users.last_name as last_name','users_otherinfo.date_of_joining as joining_date');
+        $query = $query->leftjoin('department','department.id','=','users.type');
+
+        $query = $query->select('user_remarks.*','users.name as user_name','users.first_name as first_name','users.last_name as last_name','users_otherinfo.date_of_joining as joining_date','department.name as department_name','users.working_hours as working_hours');
 
         if (isset($user_id) && $user_id > 0) {
             $query = $query->where('user_remarks.user_id',$user_id);
@@ -62,17 +64,10 @@ class UserRemarks extends Model
                 $remarks[$i]['user_id'] = $value->user_id;
                 $remarks[$i]['user_name'] = $value->user_name;
 
-                if(isset($value->joining_date) && $value->joining_date != NULL && $value->joining_date != '') {
-
-                    $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
-                    $full_name = $value->first_name."-".$value->last_name.",".$joining_date;
-                    $remarks[$i]['full_name'] = $full_name;
-                }
-                else {
-
-                    $full_name = $value->first_name."-".$value->last_name.",00";
-                    $remarks[$i]['full_name'] = $full_name;
-                }
+                $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
+                $full_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
+                $remarks[$i]['full_name'] = $full_name;
+                
 
                 //$remarks[$i]['full_name'] = $value->first_name."-".$value->last_name;
                 $remarks[$i]['remark_date'] = $value->date;

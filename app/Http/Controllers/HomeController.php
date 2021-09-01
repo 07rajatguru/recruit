@@ -1321,18 +1321,12 @@ class HomeController extends Controller
         }
 
         $date = new Date();
-        if(sizeof($response)>0) {
+        if(sizeof($response) > 0) {
+
             foreach ($response as $key => $value) {
 
-                if(isset($value->joining_date) && $value->joining_date != NULL && $value->joining_date != '') {
-
-                    $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
-                    $combine_name = $value->first_name."-".$value->last_name.",".$joining_date;
-                }
-                else {
-
-                    $combine_name = $value->first_name."-".$value->last_name.",00";
-                }
+                $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
+                $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
 
                 $list[$combine_name][date("j",strtotime($value->date))]['attendance'] = 'P';
 
@@ -1355,10 +1349,12 @@ class HomeController extends Controller
                 }
             }
         }
-        else{
+        else {
 
             if (isset($user_remark) && sizeof($user_remark)>0) {
+
                 foreach ($user_remark as $k => $v) {
+
                     $split_month = date('n',strtotime($v['remark_date']));
                     $split_year = date('Y',strtotime($v['remark_date']));
                     if (($month == $split_month) && ($year == $split_year)) {
@@ -1370,21 +1366,25 @@ class HomeController extends Controller
 
         // New List1
         $list1 = array();
-        for($d1=1; $d1<=31; $d1++)
-        {
+        for($d1=1; $d1<=31; $d1++) {
+
             $time1=mktime(12, 0, 0, $month, $d1, $year);
-            foreach ($users as $key => $value)
-            {
+            foreach ($users as $key => $value) {
+
                 if (date('n', $time1)==$month)
                     $list1[$key][date('j S', $time1)]='';
             }
         }
 
         if(sizeof($list)>0) {
+
             foreach ($list as $key => $value) {
+
                 if(sizeof($value)>0) {
+
                     $i=0;
                     foreach ($value as $key1 => $value1) {
+
                         if (isset($user_remark) && sizeof($user_remark)>0) {
                             foreach ($user_remark as $u_k1 => $u_v1) {
 
