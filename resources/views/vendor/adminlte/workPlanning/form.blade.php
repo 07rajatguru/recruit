@@ -73,7 +73,7 @@
                     <div class="col-xs-4 col-sm-4 col-md-4">
                         <div class="form-group">
                             <strong>Remaining Hours : </strong>
-                            {!! Form::text('remaining_time',$remaining_time, array('id' => 'remaining_time','class' => 'form-control','tabindex' => '6','readonly' => 'true')) !!}
+                            {!! Form::text('remaining_time',$remaining_time, array('id' => 'remaining_time','class' => 'form-control','tabindex' => '6','readonly' => 'true','style' => 'color:red;')) !!}
                         </div>
                     </div>
                 </div>
@@ -314,6 +314,7 @@
         if(get_remain_time == '00:00:00') {
 
             document.getElementById('remaining_time').style.backgroundColor = '#B0E0E6';
+            document.getElementById('remaining_time').style.color = 'Black';
             document.getElementById("add_row").disabled = true;
         }
         else {
@@ -482,6 +483,7 @@
                 if(get_remain_time == '00:00:00') {
 
                     document.getElementById('remaining_time').style.backgroundColor = '#B0E0E6';
+                    document.getElementById('remaining_time').style.color = 'Black';
                     document.getElementById("add_row").disabled = true;
                 }
                 else {
