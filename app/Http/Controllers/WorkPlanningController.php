@@ -113,12 +113,56 @@ class WorkPlanningController extends Controller
         $user_id = \Auth::user()->id;
         $date = date('Y-m-d');
 
+        // Get Total Projected Time
+        $projected_time = Input::get('projected_time');
+        $sum = strtotime('00:00:00');
+        $totaltime = 0;
+
+        foreach($projected_time as $value) {
+      
+            $timeinsec = strtotime($value) - $sum;
+            $totaltime = $totaltime + $timeinsec;
+        }
+
+        $h = intval($totaltime / 3600);
+        $totaltime = $totaltime - ($h * 3600);
+        $m = intval($totaltime / 60);
+        $s = $totaltime - ($m * 60);
+
+        $total_projected_time = "$h:$m:$s";
+
+        // Get User Loggedin Time
         $get_time = UsersLog::getUserLogInTime($user_id,$date);
 
         $work_type = $request->input('work_type');
         $remaining_time = $request->input('remaining_time');
 
+        // Get Current Time
+        $current_time = date('h:i:s', time());
+        $checkTime = strtotime($current_time);
+
+        // Get Login Time
+        $loginTime = strtotime($get_time['login']);
+
+        // Get Difference between login time & report submit time
+        $diff = $checkTime - $loginTime;
+        $time_diff = date("H:i", $diff);
+
+        if($time_diff > '01:00') {
+            $attendance = 'A';
+        }
+        else if($total_projected_time == '4:30:0') {
+            $attendance = 'H';
+        }
+        else if($total_projected_time < '8:00:0') {
+            $attendance = 'H';
+        }
+        else {
+            $attendance = 'F';
+        }
+
         $work_planning = new WorkPlanning();
+        $work_planning->attendance = $attendance;
         $work_planning->work_type = $work_type;
         $work_planning->loggedin_time = $get_time['login'];
         $work_planning->loggedout_time = $get_time['logout'];
@@ -268,12 +312,41 @@ class WorkPlanningController extends Controller
         $user_id = \Auth::user()->id;
         $date = date('Y-m-d');
 
+        // Get Total Projected Time
+        $projected_time = Input::get('projected_time');
+        $sum = strtotime('00:00:00');
+        $totaltime = 0;
+
+        foreach($projected_time as $value) {
+      
+            $timeinsec = strtotime($value) - $sum;
+            $totaltime = $totaltime + $timeinsec;
+        }
+
+        $h = intval($totaltime / 3600);
+        $totaltime = $totaltime - ($h * 3600);
+        $m = intval($totaltime / 60);
+        $s = $totaltime - ($m * 60);
+
+        $total_projected_time = "$h:$m:$s";
+
+        if($total_projected_time == '4:30:0') {
+            $attendance = 'H';
+        }
+        else if($total_projected_time < '8:00:0') {
+            $attendance = 'H';
+        }
+        else {
+            $attendance = 'F';
+        }
+
         $get_time = UsersLog::getUserLogInTime($user_id,$date);
 
         $work_type = $request->input('work_type');
         $remaining_time = $request->input('remaining_time');
 
         $work_planning = WorkPlanning::find($id);
+        $work_planning->attendance = $attendance;
         $work_planning->work_type = $work_type;
         $work_planning->loggedin_time = $get_time['login'];
         $work_planning->loggedout_time = $get_time['logout'];
@@ -306,7 +379,15 @@ class WorkPlanningController extends Controller
                 $work_planning_list->work_planning_id = $id;
                 $work_planning_list->description = $description[$j];
                 $work_planning_list->projected_time = $projected_time[$j];
-                $work_planning_list->actual_time = $actual_time[$j];
+
+                if(isset($actual_time[$j]) && $actual_time[$j] != '') {
+                    $work_planning_list->actual_time = $actual_time[$j];
+                }
+                else {
+
+                    $work_planning_list->actual_time = '';
+                }
+
                 $work_planning_list->remarks = $remarks[$j];
                 $work_planning_list->added_by = $user_id;
                 $work_planning_list->save();
@@ -340,19 +421,7 @@ class WorkPlanningController extends Controller
 
         $work_planning = WorkPlanning::getWorkPlanningDetailsById($wp_id);
 
-        $user_remaining_time = $work_planning['remaining_time'];
-
-        if($user_remaining_time == '00:00:00') {
-            $attendance = 'F';
-        }
-        else if($user_remaining_time == '01:00:00') {
-            $attendance = 'F';
-        }
-        else {
-            $attendance = 'H';
-        }
-
-        \DB::statement("UPDATE work_planning SET work_planning_status_time = '$work_planning_status_time',attendance = '$attendance' where id = $wp_id");
+        \DB::statement("UPDATE work_planning SET work_planning_status_time = '$work_planning_status_time' where id = $wp_id");
 
         // Send Email Notification
 
