@@ -113,6 +113,14 @@ class WorkPlanningController extends Controller
         $user_id = \Auth::user()->id;
         $date = date('Y-m-d');
 
+        // Get user working hours
+        $user_details = User::getAllDetailsByUserID($user_id);
+        $user_working_hours = strtotime($user_details->working_hours);
+        $two_hour = strtotime('02:00:00');
+
+        $early_late_in = $user_working_hours - $two_hour;
+        $early_late_in_time_diff = date("H:i", $early_late_in);
+
         // Get Total Projected Time
         $projected_time = Input::get('projected_time');
         $sum = strtotime('00:00:00');
@@ -152,10 +160,13 @@ class WorkPlanningController extends Controller
             $attendance = 'A';
         }
         else if($total_projected_time == '4:30:0') {
-            $attendance = 'H';
+            $attendance = 'HD';
         }
-        else if($total_projected_time < '8:00:0') {
-            $attendance = 'H';
+        else if($total_projected_time == $early_late_in_time_diff) {
+            $attendance = 'F';
+        }
+        else if($total_projected_time < $user_details->working_hours) {
+            $attendance = 'HD';
         }
         else {
             $attendance = 'F';
@@ -312,6 +323,17 @@ class WorkPlanningController extends Controller
         $user_id = \Auth::user()->id;
         $date = date('Y-m-d');
 
+        // Get Work Planning Details
+        $work_planning_details = WorkPlanning::getWorkPlanningDetailsById($id);
+
+        // Get Loggedin user details
+        $user_details = User::getAllDetailsByUserID($user_id);
+        $user_working_hours = strtotime($user_details->working_hours);
+        $two_hour = strtotime('02:00:00');
+
+        $early_late_in = $user_working_hours - $two_hour;
+        $early_late_in_time_diff = date("H:i", $early_late_in);
+
         // Get Total Projected Time
         $projected_time = Input::get('projected_time');
         $sum = strtotime('00:00:00');
@@ -330,14 +352,24 @@ class WorkPlanningController extends Controller
 
         $total_projected_time = "$h:$m:$s";
 
-        if($total_projected_time == '4:30:0') {
-            $attendance = 'H';
-        }
-        else if($total_projected_time < '8:00:0') {
-            $attendance = 'H';
+        if($work_planning_details['attendance'] == 'A') {
+
+            $attendance = 'A';
         }
         else {
-            $attendance = 'F';
+
+            if($total_projected_time == '4:30:0') {
+                $attendance = 'HD';
+            }
+            else if($total_projected_time == $early_late_in_time_diff) {
+                $attendance = 'F';
+            }
+            else if($total_projected_time < $user_details->working_hours) {
+                $attendance = 'HD';
+            }
+            else {
+                $attendance = 'F';
+            }
         }
 
         $get_time = UsersLog::getUserLogInTime($user_id,$date);

@@ -17,6 +17,7 @@ use DB;
 use Calendar;
 use App\UserRemarks;
 use App\UserBenchMark;
+use App\WorkPlanning;
 
 class HomeController extends Controller
 {
@@ -1274,8 +1275,7 @@ class HomeController extends Controller
             $year = date("Y");
         }
 
-        // Get All Sundays dates in current month
-        
+        // Get All Sundays dates in selected month
         $date = "$year-$month-01";
         $first_day = date('N',strtotime($date));
         $first_day = 7 - $first_day + 1;
@@ -1312,11 +1312,11 @@ class HomeController extends Controller
         }
 
         if($display_attendance) {
-            $response = UsersLog::getUsersAttendanceNew(0,$month,$year);
+            $response = WorkPlanning::getUsersAttendanceByWorkPlanning(0,$month,$year);
             $user_remark = UserRemarks::getUserRemarksByUseridNew(0);
         }
         else if($display_attendance_by_user) {
-            $response = UsersLog::getUsersAttendanceNew($user_id,$month,$year);
+            $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year);
             $user_remark = UserRemarks::getUserRemarksByUseridNew($user_id);
         }
 
@@ -1328,7 +1328,7 @@ class HomeController extends Controller
                 $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
                 $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
 
-                $list[$combine_name][date("j",strtotime($value->date))]['attendance'] = 'P';
+                $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
 
                 if (isset($user_remark) && sizeof($user_remark)>0) {
                     foreach ($user_remark as $k => $v) {
@@ -1336,7 +1336,7 @@ class HomeController extends Controller
                         $split_month = date('n',strtotime($v['remark_date']));
                         $split_year = date('Y',strtotime($v['remark_date']));
 
-                        if (($v['full_name'] == $combine_name) && ($v['remark_date'] == $value->date) && ($month == $split_month) && ($year == $split_year)) {
+                        if (($v['full_name'] == $combine_name) && ($v['remark_date'] == $value->added_date) && ($month == $split_month) && ($year == $split_year)) {
                             $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
                         }
                         else{
@@ -1368,11 +1368,12 @@ class HomeController extends Controller
         $list1 = array();
         for($d1=1; $d1<=31; $d1++) {
 
-            $time1=mktime(12, 0, 0, $month, $d1, $year);
+            $time1 = mktime(12, 0, 0, $month, $d1, $year);
             foreach ($users as $key => $value) {
 
-                if (date('n', $time1)==$month)
+                if (date('n', $time1) == $month) {
                     $list1[$key][date('j S', $time1)]='';
+                }
             }
         }
 

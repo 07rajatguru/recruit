@@ -90,7 +90,12 @@
                                     {{ $i }}</td>
                                     <td style="color: black; border: 1px solid black;;text-align: center;">{{ $new_user_name }}</td>
                                     <td style="color: black; border: 1px solid black;"><center>{{ $department }}</center></td>
-                                    <td style="color: black; border: 1px solid black;"><center>{{ $working_hours[0] }} Hours</center></td>
+
+                                    @if($working_hours[0] != '')
+                                        <td style="color: black; border: 1px solid black;"><center>{{ $working_hours[0] }} Hours</center></td>
+                                    @else
+                                        <td style="color: black; border: 1px solid black;"></td>
+                                    @endif
 
                                     @if(strpos($joining_date,'1970') !== false)
                                         <td style="color: black; border: 1px solid black;"></td>
@@ -109,14 +114,11 @@
                                             if(in_array($key1, $sundays)) {
                                                 $attendance = 'H';
                                             }
-                                            else if($value1['attendance'] == 'P') {
-                                                $attendance = 'P';
-                                            }
                                             else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
                                                 $attendance = 'N';
                                             }
                                             else {
-                                                $attendance = 'A';
+                                                $attendance = $value1['attendance'];
                                             }
                                         ?>
                                         @if(isset($value1['remarks']) && $value1['remarks'] != '')
@@ -133,12 +135,16 @@
 
                                             @if($attendance == 'H')
                                                 <td style="border: 1px solid black;background-color:#ffc000;">{{ $attendance }}</td>
-                                            @elseif($attendance == 'P')
-                                                <td style="border: 1px solid black;background-color:#d8d8d8;">{{ $attendance }}</td>
+                                            @elseif($attendance == 'F')
+                                                <td style="border: 1px solid black;background-color:#d8d8d8;">P</td>
                                             @elseif($attendance == 'N')
                                                 <td style="border: 1px solid black;"></td>
-                                            @else
+                                            @elseif($attendance == 'A')
                                                 <td style="border: 1px solid black;background-color:#ff0000;">{{ $attendance }}</td>
+                                            @elseif($attendance == 'HD')
+                                                <td style="border: 1px solid black;background-color:#d99594;">{{ $attendance }}</td>
+                                            @else
+                                                <td style="border: 1px solid black;background-color:#ff0000;">A</td>
                                             @endif
                                         @endif
                                     @endforeach
