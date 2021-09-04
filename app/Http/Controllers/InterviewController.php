@@ -95,13 +95,13 @@ class InterviewController extends Controller
                 $order_column_name = "interview.interview_date";
             }
             else if ($order == 7) {
-                $order_column_name = "interview.location";
+                $order_column_name = "users.name";
             }
             else if ($order == 8) {
                 $order_column_name = "interview.status";
             }
             else if ($order == 9) {
-                $order_column_name = "users.name";
+                $order_column_name = "interview.location";
             }
         }
         return $order_column_name;
@@ -221,7 +221,7 @@ class InterviewController extends Controller
                 $action .= $delete;
             }
 
-            $data = array(++$j,$checkbox,$action,$posting_title,$value['candidate_fname'],$value['contact'],$date,$location,$value['status'],$value['candidate_owner'],$color);
+            $data = array(++$j,$checkbox,$action,$posting_title,$value['candidate_fname'],$value['contact'],$date,$value['candidate_owner'],$value['status'],$location,$color);
             $interview[$i] = $data;
             $i++;
         }
@@ -445,7 +445,7 @@ class InterviewController extends Controller
                 $action .= $delete;
             }
 
-            $data = array(++$j,$checkbox,$action,$posting_title,$value['candidate_fname'],$value['contact'],$date,$location,$value['status'],$value['candidate_owner'],$color);
+            $data = array(++$j,$checkbox,$action,$posting_title,$value['candidate_fname'],$value['contact'],$date,$value['candidate_owner'],$value['status'],$location,$color);
             $interview[$i] = $data;
             $i++;
         }

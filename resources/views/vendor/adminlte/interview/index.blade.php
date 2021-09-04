@@ -83,46 +83,15 @@
                 <th>Candidate</th>
                 <th>Candidate <br/>Contact No.</th>
                 <th>Interview Date</th>
-                <th>Interview Venue</th>
-                <th>Status</th>
                 <th>Candidate Owner</th>
+                <th>Status</th>
+                <th>Interview Venue</th>
             </tr>
         </thead>
         <?php $i=0; ?>
 
-        {{--<tbody>
-        @foreach ($interViews as $interView)
-        
-        $date = date('Y-m-d', strtotime('this week'));
-            if(date("Y-m-d") == date("Y-m-d",strtotime($interView['interview_date'])))
-                $color = "#8FB1D5";
-            elseif(date('Y-m-d', strtotime('tomorrow')) == date("Y-m-d",strtotime($interView['interview_date'])))
-                $color = '#feb80a';
-            elseif(date('Y-m-d', strtotime($date)) > date("Y-m-d",strtotime($interView['interview_date'])) || date('Y-m-d', strtotime($date.'+6days')) < date("Y-m-d",strtotime($interView['interview_date'])))
-                $color = '';
-            else
-                $color = '#C4D79B';
-        
-            <tr>
-                <td>{{ ++$i }}</td>
-                <td>{{ Form::checkbox('interview_ids',$interView['id'],null,array('class'=>'interview_ids' ,'id'=>$interView['id'] )) }}</td>
-                {{--<td style="background-color: {{ $color }}">{{ $interView['interview_name'] or '' }}</td>
-                <td style="white-space: pre-wrap; word-wrap: break-word;background-color: {{ $color }};">{{ $interView['client_name'] }} - {{ $interView['posting_title'] }} , {{$interView['city']}}</td>
-                <td>{{ $interView['candidate_fname'] }}</td>
-                <td>{{ $interView['contact'] }}</td>
-                <td>{{ $interView['client_name'] or ''}}</td>
-                <td data-th="Lastrun" data-order="{{$interView['interview_date_ts']}}">{{ date('d-m-Y h:i A',strtotime($interView['interview_date'])) }}</td>
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $interView['location'] or ''}}</td>
-                <td>{{ $interView['status'] or '' }}</td>
-                <td>{{ $interView['candidate_owner'] }}</td>
-                <td>
-                    <a title="Show"  class="fa fa-circle" href="{{ route('interview.show',$interView['id']) }}"></a>
-                    <a title="Edit" class="fa fa-edit" href="{{ route('interview.edit',array($interView['id'],'index')) }}"></a>
-                    @include('adminlte::partials.deleteInterview', ['data' => $interView, 'name' => 'interview','display_name'=>'Interview'])
-                </td>
-            </tr>
-        @endforeach
-        </tbody>--}}
+        <tbody>
+        </tbody>
     </table>
 
     <div id="modal-mail" class="modal text-left fade interview-mail" style="display: none;">

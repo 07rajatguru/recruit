@@ -69,9 +69,9 @@
                 <th>Candidate</th>
                 <th>Candidate <br/>Contact No.</th>
                 <th>Interview Date</th>
-                <th>Interview Venue</th>
-                <th>Status</th>
                 <th>Candidate Owner</th>
+                <th>Status</th>
+                <th>Interview Venue</th>
             </tr>
         </thead>
         <tbody></tbody>
