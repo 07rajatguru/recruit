@@ -45,6 +45,7 @@ class ClientAutoGenerateReport extends Command
     {
         $from_date = date('Y-m-d',strtotime("monday this week"));
         $to_date = date('Y-m-d',strtotime("$from_date +6days"));
+        $today_date = date('d-m-Y');
 
         $users = User::getAllUsers(NULL,'Yes');
 
@@ -83,10 +84,12 @@ class ClientAutoGenerateReport extends Command
 
                         if(isset($job_ids_array) && sizeof($job_ids_array) > 0) {
 
+                            $company_name = $client_res_value->name;
+
                             $module = "Hiring Report";
                             $sender_name = $key;
                             $to = User::getUserEmailById($key);
-                            $subject = "Hiring Report - Adler Talent Solutions";
+                            $subject = "Adler : Hiring Report_".$today_date." | ".$company_name;
                             $message = "";
                             $module_id = implode(",", $job_ids_array);
                             $cc = "";

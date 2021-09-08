@@ -5,7 +5,7 @@ php artisan key:generate
 php artisan config:clear
 php artisan migrate
 php artisan db::seed
-login with admin@tanitech.in/admin123
+login with admin@trajinfotech.com/admin123
 
 
 Add manual login/logout time : /users/attendance

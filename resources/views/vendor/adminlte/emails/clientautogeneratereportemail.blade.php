@@ -7,39 +7,47 @@
     </head>
 
 <body style="margin: 0; padding-top: 30px;">
-    <table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif;" align="left">
+    <table border="0" cellpadding="0" cellspacing="0" style="font-family:Helvetica,Arial,sans-serif;" align="left">
         <tr>
-            <td width="600" style="font-family:Cambria, serif;font-size: 11.0pt;">
+            <td style="font-family:Cambria, serif;font-size: 11.0pt;">
                 <b><p style="text-align: left;">Dear {{ $client_name }},</p></b>
                 <i><p style="text-align: left;">Greetings from Adler Talent Solutions !</p></i>
                 <p style="text-align: left;">Please find the hiring report below for your reference. Let me know convenient time to discuss this with you over phone.</p>
-                    <table width="600" cellpadding="3" cellspacing="0" border="1" border-color="#000000">
+                    <table cellpadding="3" cellspacing="0" border="1" border-color="#000000">
                         <tr style="background-color: #7598d9;font-family:Cambria, serif;font-size: 11.0pt;">
-                            <td align="left"><b>Sr. No.</b></td>
-                            <td align="left"><b>Client Owner</b></td>
-                            <td align="left"><b>Position Name</b></td>
-                            <td align="left"><b>Candidates Associated</b></td>
-                            <td align="left"><b>Shortlisted Names</b></td>
-                            <td align="left"><b>Interview Attended Names</b></td>
-                            <td align="left"><b>Remarks</b></td>
+                            <td align="center" width="5%"><b>Sr. No.</b></td>
+                            <!-- <td align="center"><b>Client Owner</b></td> -->
+                            <td align="center" width="15%"><b>Position Name</b></td>
+                            <td align="center" width="14%"><b>CVs Shared</b></td>
+                            <td align="center" width="15%"><b>Shortlisted Names</b></td>
+                            <td align="center" width="15%"><b>Interview Attended Names</b></td>
+                            <td align="center" width="18%"><b>Adler's Remarks</b></td>
+                            <td align="center" width="18%"><b>Client's Remarks</b></td>
                         </tr>
 
                         <?php $i=0; ?>
                         @foreach($list_array as $key => $value)
                             <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
                                 
-                                @if(isset($value['associate_candidates']) && sizeof($value['associate_candidates']) > 0)
+                                @if(isset($value['associate_candidates']) && sizeof($value['associate_candidates']) >= 5)
+                                    <?php 
+                                        $ass_names_string = sizeof($value['associate_candidates']);
+                                    ?>
+                                @elseif(isset($value['associate_candidates']) && sizeof($value['associate_candidates']) > 0)
                                     <?php
                                         $ass_names_string = '';
+                                        $ass_incr = 1;
                                     ?>
                                     @foreach($value['associate_candidates'] as $k1 => $v1)
                                         <?php 
                                             if($ass_names_string == '') {
-                                                $ass_names_string = $v1['candidate_name'];
+                                                $ass_names_string = $ass_incr . " . " . $v1['candidate_name'] . " " . "<br/>";
                                             }
                                             else {
-                                                $ass_names_string .= " , " . $v1['candidate_name'];
+                                                $ass_names_string .= $ass_incr . " . " . $v1['candidate_name'] . " " . "<br/>";
                                             }
+
+                                            $ass_incr++;
                                         ?>
                                     @endforeach
                                 @else
@@ -48,18 +56,25 @@
                                     ?>
                                 @endif
 
-                                @if(isset($value['shortlisted_candidates']) && sizeof($value['shortlisted_candidates']) > 0)
+                                @if(isset($value['shortlisted_candidates']) && sizeof($value['shortlisted_candidates']) >= 5)
+                                    <?php 
+                                        $short_names_string = sizeof($value['shortlisted_candidates']);
+                                    ?>
+                                @elseif(isset($value['shortlisted_candidates']) && sizeof($value['shortlisted_candidates']) > 0)
                                     <?php
                                         $short_names_string = '';
+                                        $short_incr = 1;
                                     ?>
                                     @foreach($value['shortlisted_candidates'] as $k2 => $v2)
                                         <?php 
                                             if($short_names_string == '') {
-                                                $short_names_string = $v2['candidate_name'];
+                                                $short_names_string = $short_incr . " . " . $v2['candidate_name'] . " " . "<br/>";
                                             }
                                             else {
-                                                $short_names_string .= " , " . $v2['candidate_name'];
+                                                $short_names_string .= $short_incr . " . " . $v2['candidate_name'] . " " . "<br/>";
                                             }
+
+                                            $short_incr++;
                                         ?>
                                     @endforeach
                                 @else
@@ -71,15 +86,18 @@
                                 @if(isset($value['attended_interviews']) && sizeof($value['attended_interviews']) > 0)
                                     <?php
                                         $attend_names_string = '';
+                                        $attend_incr = 1;
                                     ?>
                                     @foreach($value['attended_interviews'] as $k3 => $v3)
                                         <?php 
                                             if($attend_names_string == '') {
-                                                $attend_names_string = $v3['candidate_name'];
+                                                $attend_names_string = $attend_incr . " . " . $v3['candidate_name'] . " " . "<br/>";
                                             }
                                             else {
-                                                $attend_names_string .= " , " . $v3['candidate_name'];
+                                                $attend_names_string .= $attend_incr . " . " . $v3['candidate_name'] . " " . "<br/>";
                                             }
+
+                                            $attend_incr++;
                                         ?>
                                     @endforeach
                                 @else
@@ -88,13 +106,14 @@
                                     ?>
                                 @endif
 
-                                <td align="left">{{ ++$i }}</td>
-                                <td align="left">{{ $client_owner }}</td>
-                                <td align="left">{{ $value['posting_title'] }}</td>
-                                <td align="left">{{ $ass_names_string }}</td>
-                                <td align="left">{{ $short_names_string }}</td>
-                                <td align="left">{{ $attend_names_string }}</td>
-                                <td align="left"></td>
+                                <td align="center">{{ ++$i }}</td>
+                                <!-- <td align="center">{{ $client_owner }}</td> -->
+                                <td align="center">{{ $value['posting_title'] }}</td>
+                                <td align="center">{!! $ass_names_string !!}</td>
+                                <td align="center">{!! $short_names_string !!}</td>
+                                <td align="center">{!! $attend_names_string !!}</td>
+                                <td align="center"></td>
+                                <td align="center"></td>
                             </tr>
                         @endforeach
                     </table>
