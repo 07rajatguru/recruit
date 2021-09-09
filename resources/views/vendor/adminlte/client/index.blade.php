@@ -337,6 +337,16 @@
         $("#client_owner").select2({width:"565px"});
         $("#client_cat").select2({width:"565px"});
         $("#client_status").select2({width:"565px"});
+
+        $("#from_date").datepicker({
+            format: "dd-mm-yyyy",
+            autoclose: true,
+        });
+
+        $("#to_date").datepicker({
+            format: "dd-mm-yyyy",
+            autoclose: true,
+        });
         
         var numCols = $('#client_table thead th').length;
 
@@ -928,6 +938,35 @@
             '<input type="text" name="client_cat" value="'+client_cat+'" />' +
             '<input type="text" name="client_status" value="'+client_status+'" />' +
             '<input type="text" name="client_city" value="'+client_city+'" />' +
+            '</form>');
+
+            $('body').append(form);
+            form.submit();
+        }
+    }
+
+    function generateHiringReport(client_id) {
+
+        var from_date = $("#from_date_"+client_id).val();
+        var to_date = $("#to_date_"+client_id).val();
+        
+        if(from_date == '' || to_date == '') {
+
+            alert("Please enter date.");
+            return false;
+        }
+        else {
+
+            $("#from_date").val("");
+            $("#to_date").val("");
+
+            var url = '/send-hiring-report';
+
+            var form = $('<form action="' + url + '" method="post">' +
+            '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+            '<input type="text" name="from_date" value="'+from_date+'" />' +
+            '<input type="text" name="to_date" value="'+to_date+'" />' +
+            '<input type="text" name="client_id" value="'+client_id+'" />' +
             '</form>');
 
             $('body').append(form);

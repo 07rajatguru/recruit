@@ -1149,6 +1149,12 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'ClientController@getSecondlineAccountManager',
     ]);
 
+    Route::post('send-hiring-report', [
+        'as' => 'client.hiringreport',
+        'uses' => 'ClientController@sendHiringReport',
+        'middleware' => ['permission:display-client|display-account-manager-wise-client']
+    ]);
+
     // Candidate
     Route::get('candidate', [
         'as' => 'candidate.index',

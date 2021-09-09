@@ -28,6 +28,8 @@ use App\ClientTimeline;
 use App\Notifications;
 use Illuminate\Validation\Rule;
 use Validator;
+use App\JobAssociateCandidates;
+use App\Interview;
 
 class ClientController extends Controller
 {
@@ -296,6 +298,10 @@ class ClientController extends Controller
             if($all_perm || $value['client_owner']) {
 
                 $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
+
+                $hiring_report = \View::make('adminlte::partials.client_hiring_report', ['data' => $value]);
+                $report = $hiring_report->render();
+                $action .= $report;
 
                 $days_array = ClientTimeline::getTimelineDetailsByClientId($value['id']);
 
@@ -3491,5 +3497,62 @@ class ClientController extends Controller
         $all_status[4] = 'Left';
 
         return view('adminlte::client.searchclienttypeindex',compact('active','passive','leaders','forbid','left','para_cat','mode_cat','std_cat','source','count','email_template_names','all_account_manager','status','status_id','field_list','users','category_list','all_status'));
+    }
+
+    public function sendHiringReport() {
+
+        $from_date = $_POST['from_date'];
+        $to_date = $_POST['to_date'];
+        $client_id = $_POST['client_id'];
+
+        $user =  \Auth::user();
+        $user_id = $user->id;
+        $today_date = date('d-m-Y');
+        $client_res = ClientBasicinfo::getClientDetailsById($client_id);
+
+        $client_jobs = JobOpen::getAllJobsByCLient($client_id);
+
+        if(isset($client_jobs) && sizeof($client_jobs) > 0) {
+
+            $job_ids_array = array();
+            $j = 0;
+
+            foreach ($client_jobs as $client_jobs_key => $client_jobs_value) {
+
+                $associate_candidates = JobAssociateCandidates::getAssociatedCandidatesByWeek($client_jobs_value['id'],$from_date,$to_date);
+
+                $shortlisted_candidates = JobAssociateCandidates::getShortlistedCandidatesByWeek($client_jobs_value['id'],$from_date,$to_date);
+
+                $attended_interviews = Interview::getAttendedInterviewsByWeek($client_jobs_value['id'],$from_date,$to_date);
+
+                if((isset($associate_candidates) && sizeof($associate_candidates) > 0) || (isset($shortlisted_candidates) && sizeof($shortlisted_candidates) > 0) || (isset($attended_interviews) && sizeof($attended_interviews) > 0)) {
+
+                    $job_ids_array[$j] = $client_jobs_value['id'];
+                    $j++;
+                }
+            }
+        }
+
+        if(isset($job_ids_array) && sizeof($job_ids_array) > 0) {
+
+            $company_name = $client_res['name'];
+
+            $module = "Hiring Report";
+            $sender_name = $user_id;
+            $to = User::getUserEmailById($user_id);
+            $subject = "Adler : Hiring Report_".$today_date." | ".$company_name;
+            $message = "";
+            $module_id = implode(",", $job_ids_array);
+            $cc = "";
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+            return redirect()->route('client.index')->with('success','Hiring Report Send Successfully.');
+        }
+
+        else {
+
+            return redirect()->route('client.index')->with('error','There is no active positions of client.');
+        }
     }
 }
