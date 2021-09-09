@@ -80,7 +80,8 @@ class DailyReport extends Command
 
                         $cc_array = array();
                         $cc_array[] = $report_email;
-                        $cc_array[] = 'rajlalwani@adlertalent.com';
+                        //$cc_array[] = 'rajlalwani@adlertalent.com';
+                        $cc_array[] = 'info@adlertalent.com';
 
                         $user_name = User::getUserNameById($key);
 

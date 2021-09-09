@@ -1174,7 +1174,8 @@ class LeadController extends Controller
             $sender_name = $user_id;
             $to = $client_email;
             $subject = $email_subject; 
-            $cc = 'rajlalwani@adlertalent.com';
+            //$cc = 'rajlalwani@adlertalent.com';
+            $cc = 'info@adlertalent.com';
             $module_id = $value;
             $new_email_body = "<tr><td style='padding:8px;'>$email_body</td></tr>";
             

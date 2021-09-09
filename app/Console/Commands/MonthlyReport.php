@@ -53,7 +53,8 @@ class MonthlyReport extends Command
             $subject = 'Monthly Activity Report - ' . $user_name . ' - ' . date("F",strtotime("last month"))." ".date("Y");
             $message = "";
             $to = $v1;
-            $cc = 'rajlalwani@adlertalent.com';
+            //$cc = 'rajlalwani@adlertalent.com';
+            $cc = 'info@adlertalent.com';
 
             $module_id = 0;
             $sender_name = $k1;

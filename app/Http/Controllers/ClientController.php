@@ -2035,7 +2035,8 @@ class ClientController extends Controller
             $sender_name = $user_id;
             $to = $client_email;
             $subject = $email_subject; 
-            $cc = 'rajlalwani@adlertalent.com';
+            //$cc = 'rajlalwani@adlertalent.com';
+            $cc = 'info@adlertalent.com';
             $module_id = $value;
 
             if(strpos($email_body, '{Clientname}') !== false) {
