@@ -190,7 +190,6 @@ return [
         MaddHatter\LaravelFullcalendar\ServiceProvider::class,
 
         BrianFaust\Commentable\CommentableServiceProvider::class,
-        Unisharp\Ckeditor\ServiceProvider::class,
     ],
 
     /*

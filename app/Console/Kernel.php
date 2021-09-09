@@ -36,6 +36,18 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\CandidateAutoScript',
         'App\Console\Commands\ExistCandidateAutoScript',
         'App\Console\Commands\GenerateEmployeeID',
+        'App\Console\Commands\ProductivityReport',
+        'App\Console\Commands\AddUsersEmailPassword',
+        'App\Console\Commands\InterviewPriorEmail',
+        'App\Console\Commands\InterviewOneHourPriorEmail',
+        'App\Console\Commands\AfterIntrviewReminder',
+        'App\Console\Commands\OpenJobOfCheckbox',
+        'App\Console\Commands\AddClientHeirarchyWisePositionInJobs',
+        'App\Console\Commands\ApplicantCandidatesReport',
+        'App\Console\Commands\AddUserOtherInfomations',
+        'App\Console\Commands\SalaryReminder',
+        'App\Console\Commands\NewCandidateEmail',
+        'App\Console\Commands\ClientAutoGenerateReport',
     ];
 
     /**

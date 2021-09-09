@@ -20,7 +20,8 @@
         "mjaschen/collmex": "^0.12.0",
         "faustbrian/laravel-commentable": "^3.0",
         "barryvdh/laravel-dompdf" : "^0.8.0",
-        "dompdf/dompdf" : "0.8.0 as 0.6.2"
+        "dompdf/dompdf" : "0.8.0 as 0.6.2",
+        "sendgrid/sendgrid": "~7"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

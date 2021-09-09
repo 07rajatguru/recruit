@@ -3,8 +3,9 @@ composer install
 compose update
 php artisan key:generate
 php artisan config:clear
+php artisan cache:clear
 php artisan migrate
-php artisan db::seed
+php artisan db:seed
 login with admin@trajinfotech.com/admin123
 
 
