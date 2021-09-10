@@ -1997,19 +1997,6 @@ class EveryMinute extends Command
 
                         $message->from($input['from_address'], $input['from_name']);
                         $message->to($input['to_array'])->subject($input['subject']);
-
-                        if (isset($input['file_path']) && sizeof($input['file_path']) > 0) {
-
-                            foreach ($input['file_path'] as $key => $value) {
-
-                                if(isset($value) && $value != '') {
-
-                                    foreach ($value as $k1 => $v1) {
-                                        $message->attach($v1);
-                                    }
-                                }
-                            }
-                        }
                     });
 
                     \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");

@@ -3514,38 +3514,55 @@ class ClientController extends Controller
 
         if(isset($client_jobs) && sizeof($client_jobs) > 0) {
 
-            $job_ids_array = array();
+            $list_array = array();
             $j = 0;
 
             foreach ($client_jobs as $client_jobs_key => $client_jobs_value) {
 
                 $associate_candidates = JobAssociateCandidates::getAssociatedCandidatesByWeek($client_jobs_value['id'],$from_date,$to_date);
 
+                $list_array[$j]['associate_candidates'] = $associate_candidates;
+
                 $shortlisted_candidates = JobAssociateCandidates::getShortlistedCandidatesByWeek($client_jobs_value['id'],$from_date,$to_date);
+
+                $list_array[$j]['shortlisted_candidates'] = $shortlisted_candidates;
 
                 $attended_interviews = Interview::getAttendedInterviewsByWeek($client_jobs_value['id'],$from_date,$to_date);
 
-                if((isset($associate_candidates) && sizeof($associate_candidates) > 0) || (isset($shortlisted_candidates) && sizeof($shortlisted_candidates) > 0) || (isset($attended_interviews) && sizeof($attended_interviews) > 0)) {
+                $list_array[$j]['attended_interviews'] = $attended_interviews;
 
-                    $job_ids_array[$j] = $client_jobs_value['id'];
-                    $j++;
-                }
+                $job_details = JobOpen::getJobById($client_jobs_value['id']);
+                $list_array[$j]['posting_title'] = $job_details['posting_title'];
+
+                $j++;
             }
         }
 
-        if(isset($job_ids_array) && sizeof($job_ids_array) > 0) {
+        if(isset($list_array) && sizeof($list_array) > 0) {
 
+            $input = array();
+
+            $from_name = getenv('FROM_NAME');
+            $from_address = getenv('FROM_ADDRESS');
+
+            $client_name = $client_res['coordinator_name'];
             $company_name = $client_res['name'];
 
-            $module = "Hiring Report";
-            $sender_name = $user_id;
             $to = User::getUserEmailById($user_id);
             $subject = "Adler : Hiring Report_".$today_date." | ".$company_name;
-            $message = "";
-            $module_id = implode(",", $job_ids_array);
-            $cc = "";
+                    
+            $input['from_name'] = $from_name;
+            $input['from_address'] = $from_address;
+            $input['to'] = $to;
+            $input['subject'] = $subject;
+            $input['list_array'] = $list_array;
+            $input['client_name'] = $client_name;
 
-            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+            \Mail::send('adminlte::emails.clientautogeneratereportemail', $input, function ($message) use($input) {
+
+                $message->from($input['from_address'], $input['from_name']);
+                $message->to($input['to'])->subject($input['subject']);
+            });
 
             return redirect()->route('client.index')->with('success','Hiring Report Send Successfully.');
         }

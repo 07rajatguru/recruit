@@ -107,7 +107,7 @@
                                 @endif
 
                                 <td align="center">{{ ++$i }}</td>
-                                <!-- <td align="center">{{ $client_owner }}</td> -->
+                                {{-- <td align="center">{{ $client_owner }}</td> --}}
                                 <td align="center">{{ $value['posting_title'] }}</td>
                                 <td align="center">{!! $ass_names_string !!}</td>
                                 <td align="center">{!! $short_names_string !!}</td>
