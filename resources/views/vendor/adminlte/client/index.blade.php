@@ -337,16 +337,6 @@
         $("#client_owner").select2({width:"565px"});
         $("#client_cat").select2({width:"565px"});
         $("#client_status").select2({width:"565px"});
-
-        $("#from_date").datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true,
-        });
-
-        $("#to_date").datepicker({
-            format: "dd-mm-yyyy",
-            autoclose: true,
-        });
         
         var numCols = $('#client_table thead th').length;
 
@@ -466,6 +456,25 @@
                 jQuery("#clientModal").modal('show');
             }
         }
+
+        $("body").delegate(".from_date_class", "focusin", function () {
+
+            $(this).datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                orientation: "bottom left",
+            });
+        });
+   
+        $("body").delegate(".to_date_class", "focusin", function () {
+
+            $(this).datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+                orientation: "bottom left",
+            });
+        });
+
     });
 
     function client_emails_notification() {

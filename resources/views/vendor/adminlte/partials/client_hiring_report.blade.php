@@ -12,14 +12,14 @@
                     <strong>From Date :</strong>
                     <div class="input-group date">
                         <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-                        {!! Form::text('from_date',null, array('id'=>'from_date_'.$data['id'],'placeholder' => 'From Date','class' => 'form-control', 'tabindex' => '1')) !!}
+                        {!! Form::text('from_date',null, array('id'=>'from_date_'.$data['id'],'placeholder' => 'From Date','class' => 'form-control from_date_class', 'tabindex' => '1','autocomplete' => 'off')) !!}
                     </div>
                 </div>
                 <div class="form-group">
                     <strong>To Date :</strong>
                     <div class="input-group date">
                         <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-                        {!! Form::text('to_date',null, array('id'=>'to_date_'.$data['id'],'placeholder' => 'To Date','class' => 'form-control', 'tabindex' => '2')) !!}
+                        {!! Form::text('to_date',null, array('id'=>'to_date_'.$data['id'],'placeholder' => 'To Date','class' => 'form-control to_date_class', 'tabindex' => '2','autocomplete' => 'off')) !!}
                     </div>
                 </div>
             </div>

@@ -3501,8 +3501,8 @@ class ClientController extends Controller
 
     public function sendHiringReport() {
 
-        $from_date = $_POST['from_date'];
-        $to_date = $_POST['to_date'];
+        $from_date = date('Y-m-d',strtotime($_POST['from_date']));
+        $to_date = date('Y-m-d',strtotime($_POST['to_date']));
         $client_id = $_POST['client_id'];
 
         $user =  \Auth::user();
@@ -3552,7 +3552,7 @@ class ClientController extends Controller
 
         else {
 
-            return redirect()->route('client.index')->with('error','There is no active positions of client.');
+            return redirect()->route('client.index')->with('error','There is no active positions.');
         }
     }
 }
