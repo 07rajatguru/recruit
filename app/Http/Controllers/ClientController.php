@@ -299,7 +299,8 @@ class ClientController extends Controller
 
                 $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
 
-                $hiring_report = \View::make('adminlte::partials.client_hiring_report', ['data' => $value]);
+                // Client Hiring Report
+                $hiring_report = \View::make('adminlte::partials.client_hiring_report', ['data' => $value,'page' => 'Main','source' => '']);
                 $report = $hiring_report->render();
                 $action .= $report;
 
@@ -745,6 +746,16 @@ class ClientController extends Controller
 
                 $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
 
+                if($source == 'Forbid') {
+                }
+                else {
+
+                    // Client Hiring Report
+                    $hiring_report = \View::make('adminlte::partials.client_hiring_report', ['data' => $value,'page' => 'Type','source' => $source]);
+                    $report = $hiring_report->render();
+                    $action .= $report;
+                }
+                
                 $days_array = ClientTimeline::getTimelineDetailsByClientId($value['id']);
 
                 $timeline_view = \View::make('adminlte::partials.client_timeline_view', ['data' => $value,'days_array' => $days_array]);
@@ -2644,6 +2655,11 @@ class ClientController extends Controller
 
                 $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
 
+                // Client Hiring Report
+                $hiring_report = \View::make('adminlte::partials.client_hiring_report', ['data' => $value,'page' => 'AM','source' => '']);
+                $report = $hiring_report->render();
+                $action .= $report;
+
                 $days_array = ClientTimeline::getTimelineDetailsByClientId($value['id']);
 
                 $timeline_view = \View::make('adminlte::partials.client_timeline_view', ['data' => $value,'days_array' => $days_array]);
@@ -3520,7 +3536,9 @@ class ClientController extends Controller
         }
 
         $client_id = $_POST['client_id'];
-        
+        $page_nm = $_POST['page_nm'];
+        $source = $_POST['source'];
+
         $user =  \Auth::user();
         $user_id = $user->id;
         $today_date = date('d-m-Y');
@@ -3580,12 +3598,35 @@ class ClientController extends Controller
                 $message->to($input['to'])->subject($input['subject']);
             });
 
-            return redirect()->route('client.index')->with('success','Hiring Report Send Successfully.');
+
+            if($page_nm == 'AM') {
+
+                return redirect()->route('clientlist.amwise')->with('success','Hiring Report Send Successfully.');
+            }
+            else if($page_nm == 'Type') {
+
+                return redirect('/client-list/'.$source)->with('success', 'Hiring Report Send Successfully.');
+            }
+            else {
+
+                return redirect()->route('client.index')->with('success','Hiring Report Send Successfully.');
+            }
         }
 
         else {
 
-            return redirect()->route('client.index')->with('error','There is no active positions.');
+            if($page_nm == 'AM') {
+
+                return redirect()->route('clientlist.amwise')->with('error','There is no active positions.');
+            }
+            else if($page_nm == 'Type') {
+
+                return redirect('/client-list/'.$source)->with('error', 'There is no active positions.');
+            }
+            else {
+                
+                return redirect()->route('client.index')->with('error','There is no active positions.');
+            }
         }
     }
 }

@@ -415,6 +415,24 @@
                     $("#allcb").prop('checked', false);
                 }
             });
+
+            $("body").delegate(".from_date_class", "focusin", function () {
+
+                $(this).datepicker({
+                    format: "dd-mm-yyyy",
+                    autoclose: true,
+                    orientation: "bottom left",
+                });
+            });
+       
+            $("body").delegate(".to_date_class", "focusin", function () {
+
+                $(this).datepicker({
+                    format: "dd-mm-yyyy",
+                    autoclose: true,
+                    orientation: "bottom left",
+                });
+            });
         });
 
         function client_emails_notification() {
@@ -888,6 +906,61 @@
             '<input type="text" name="client_cat" value="'+client_cat+'" />' +
             '<input type="text" name="client_status" value="'+client_status+'" />' +
             '<input type="text" name="client_city" value="'+client_city+'" />' +
+            '</form>');
+
+            $('body').append(form);
+            form.submit();
+        }
+    }
+
+    function generateLastestHiringReport(client_id) {
+
+        var from_date = '';
+        var to_date = '';
+        var page_nm = $("#page_nm").val();
+        var source = $("#source").val();
+
+        var url = '/send-hiring-report';
+
+        var form = $('<form action="' + url + '" method="post">' +
+        '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+        '<input type="text" name="from_date" value="'+from_date+'" />' +
+        '<input type="text" name="to_date" value="'+to_date+'" />' +
+        '<input type="text" name="client_id" value="'+client_id+'" />' +
+        '<input type="text" name="page_nm" value="'+page_nm+'" />' +
+        '<input type="text" name="source" value="'+source+'" />' +
+        '</form>');
+
+        $('body').append(form);
+        form.submit();
+    }
+
+    function generateHiringReport(client_id) {
+
+        var from_date = $("#from_date_"+client_id).val();
+        var to_date = $("#to_date_"+client_id).val();
+        var page_nm = $("#page_nm").val();
+        var source = $("#source").val();
+        
+        if(from_date == '' || to_date == '') {
+
+            alert("Please enter date.");
+            return false;
+        }
+        else {
+
+            $("#from_date").val("");
+            $("#to_date").val("");
+
+            var url = '/send-hiring-report';
+
+            var form = $('<form action="' + url + '" method="post">' +
+            '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+            '<input type="text" name="from_date" value="'+from_date+'" />' +
+            '<input type="text" name="to_date" value="'+to_date+'" />' +
+            '<input type="text" name="client_id" value="'+client_id+'" />' +
+            '<input type="text" name="page_nm" value="'+page_nm+'" />' +
+            '<input type="text" name="source" value="'+source+'" />' +
             '</form>');
 
             $('body').append(form);

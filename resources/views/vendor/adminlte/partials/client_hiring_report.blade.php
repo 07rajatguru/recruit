@@ -13,7 +13,7 @@
                         <strong>From Date : <span class = "required_fields">*</span></strong>
                         <div class="input-group date">
                             <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-                            {!! Form::text('from_date',null, array('id'=>'from_date_'.$data['id'],'placeholder' => 'From Date','class' => 'form-control from_date_class', 'tabindex' => '1','autocomplete' => 'off')) !!}
+                            {!! Form::text('from_date',null, array('id'=>'from_date_'.$data['id'],'placeholder' => 'From Date','class' => 'form-control from_date_class', 'tabindex' => '1','autocomplete' => 'off','style' => 'width:225px;')) !!}
                         </div>
                     </div>
                 </div>
@@ -21,10 +21,13 @@
                     <strong>To Date : <span class = "required_fields">*</span></strong>
                     <div class="input-group date">
                         <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-                        {!! Form::text('to_date',null, array('id'=>'to_date_'.$data['id'],'placeholder' => 'To Date','class' => 'form-control to_date_class', 'tabindex' => '2','autocomplete' => 'off')) !!}
+                        {!! Form::text('to_date',null, array('id'=>'to_date_'.$data['id'],'placeholder' => 'To Date','class' => 'form-control to_date_class', 'tabindex' => '2','autocomplete' => 'off','style' => 'width:225px;')) !!}
                     </div>
                 </div>
             </div>
+
+            <input type="hidden" name="page_nm" id="page_nm" value="{{ $page }}">
+            <input type="hidden" name="source" id="source" value="{{ $source }}">
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" onclick="generateLastestHiringReport({{ $data['id'] }})">Generate Last 15 Days Hiring Report</button>
