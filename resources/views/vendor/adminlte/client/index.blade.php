@@ -954,6 +954,24 @@
         }
     }
 
+    function generateLastestHiringReport(client_id) {
+
+        var from_date = '';
+        var to_date = '';
+        
+        var url = '/send-hiring-report';
+
+        var form = $('<form action="' + url + '" method="post">' +
+        '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+        '<input type="text" name="from_date" value="'+from_date+'" />' +
+        '<input type="text" name="to_date" value="'+to_date+'" />' +
+        '<input type="text" name="client_id" value="'+client_id+'" />' +
+        '</form>');
+
+        $('body').append(form);
+        form.submit();
+    }
+
     function generateHiringReport(client_id) {
 
         var from_date = $("#from_date_"+client_id).val();

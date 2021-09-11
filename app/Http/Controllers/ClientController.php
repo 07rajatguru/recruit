@@ -3501,10 +3501,26 @@ class ClientController extends Controller
 
     public function sendHiringReport() {
 
-        $from_date = date('Y-m-d',strtotime($_POST['from_date']));
-        $to_date = date('Y-m-d',strtotime($_POST['to_date']));
-        $client_id = $_POST['client_id'];
+        if(isset($_POST['to_date']) && $_POST['to_date'] != '') {
 
+            $to_date = date('Y-m-d',strtotime($_POST['to_date']));
+        }
+        else {
+            
+            $to_date = date('Y-m-d');
+        }
+
+        if(isset($_POST['from_date']) && $_POST['from_date'] != '') {
+
+            $from_date = date('Y-m-d',strtotime($_POST['from_date']));
+        }
+        else {
+
+            $from_date = date('Y-m-d',strtotime("$to_date -15days"));
+        }
+
+        $client_id = $_POST['client_id'];
+        
         $user =  \Auth::user();
         $user_id = $user->id;
         $today_date = date('d-m-Y');
