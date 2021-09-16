@@ -3601,15 +3601,15 @@ class ClientController extends Controller
 
             if($page_nm == 'AM') {
 
-                return redirect()->route('clientlist.amwise')->with('success','Hiring Report Send Successfully.');
+                return redirect()->route('clientlist.amwise')->with('success','Hiring Report Sent Successfully.');
             }
             else if($page_nm == 'Type') {
 
-                return redirect('/client-list/'.$source)->with('success', 'Hiring Report Send Successfully.');
+                return redirect('/client-list/'.$source)->with('success', 'Hiring Report Sent Successfully.');
             }
             else {
 
-                return redirect()->route('client.index')->with('success','Hiring Report Send Successfully.');
+                return redirect()->route('client.index')->with('success','Hiring Report Sent Successfully.');
             }
         }
 
