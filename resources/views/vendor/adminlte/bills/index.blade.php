@@ -26,19 +26,19 @@
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12">
               <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                  <a href="" title="Joining Confirmation Sent" style="text-decoration: none;color: black;"><div class="priority_1" style="width:max-content;height:40px;background-color:#00B0F0;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"><b><span id="jc_sent">({{ $jc_sent }})</span></b></div></a>
+                  <a title="Joining Confirmation Sent" style="text-decoration: none;color: black;"><div class="priority_1" style="width:max-content;height:40px;background-color:#00B0F0;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px;cursor: pointer;"><b><span id="jc_sent">({{ $jc_sent }})</span></b></div></a>
               </div>
               <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="" title="Got Confirmation" style="text-decoration: none;color: black;">
-                  <div class="priority_1" style="width:max-content;height:40px;background-color:#FFA500;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"><b><span id="got_con">({{ $got_con }})</span></b></div></a>
+                <a title="Got Confirmation" style="text-decoration: none;color: black;">
+                  <div class="priority_1" style="width:max-content;height:40px;background-color:#FFA500;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px;cursor: pointer;"><b><span id="got_con">({{ $got_con }})</span></b></div></a>
               </div>
               <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="" title="Invoice Generated" style="text-decoration: none;color: black;">
-                  <div class="priority_1" style="width:max-content;height:40px;background-color:#FFC0CB;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"><b><span id="invoice_gen">({{ $invoice_gen }})</span></b></div></a>
+                <a title="Invoice Generated" style="text-decoration: none;color: black;">
+                  <div class="priority_1" style="width:max-content;height:40px;background-color:#FFC0CB;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px;cursor: pointer;"><b><span id="invoice_gen">({{ $invoice_gen }})</span></b></div></a>
               </div>
               <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                <a href="" title="Payment Received" style="text-decoration: none;color: black;">
-                  <div class="priority_1" style="width:max-content;height:40px;background-color:#32CD32;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"><b><span id="pymnt_rcv">({{ $pymnt_rcv }})</span></b></div></a>
+                <a title="Payment Received" style="text-decoration: none;color: black;">
+                  <div class="priority_1" style="width:max-content;height:40px;background-color:#32CD32;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px;cursor: pointer;"><b><span id="pymnt_rcv">({{ $pymnt_rcv }})</span></b></div></a>
               </div>
             </div>
           </div><br/>
