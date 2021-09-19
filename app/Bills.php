@@ -731,7 +731,7 @@ class Bills extends Model
             $billsdetails['candidate_name'] = $bills->candidate_name;
             $billsdetails['candidate_contact_number'] = $bills->number;
             $billsdetails['designation_offered'] = $bills->offered;
-            $billsdetails['date_of_joining'] = $bills->date;
+            $billsdetails['date_of_joining'] = date('d-m-Y',strtotime($bills->date));
             $billsdetails['job_location'] = $bills->location;
 
             $salary = str_replace(",", "", $bills->salary);
