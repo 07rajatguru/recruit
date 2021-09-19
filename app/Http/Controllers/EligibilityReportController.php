@@ -344,7 +344,15 @@ class EligibilityReportController extends Controller
             $user_data = UserOthersInfo::getUserOtherInfo($key);
             $user_salary = $user_data['fixed_salary'];
 
-            $target = $user_salary * 3.5;
+            if(isset($user_salary) && $user_salary > 0) {
+
+                $target = $user_salary * 3.5;
+            }
+            else {
+
+                $target = 0;
+            }
+            
             $achieved = 0;
 
             $month_name = date('M',mktime(0, 0, 0, $month, 1));
@@ -395,6 +403,8 @@ class EligibilityReportController extends Controller
                 $eligible->save();
             }
         }
-        return redirect('/eligibility-report');
+        
+        //return redirect('/eligibility-report');
+        return redirect()->route('report.eligibilityreportindex')->with('success','Report Added Successfully.');
     }
 }

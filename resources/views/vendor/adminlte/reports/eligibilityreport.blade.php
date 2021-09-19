@@ -19,6 +19,18 @@
             </div>--}}
         </div>
     </div>
+
+    @if($message = Session::get('success'))
+        <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
+
+    @if($message = Session::get('error'))
+        <div class="alert alert-error">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="box-body col-xs-3 col-sm-3 col-md-3">
             <div class="form-group">
