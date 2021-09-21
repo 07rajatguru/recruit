@@ -541,11 +541,11 @@ return [
                     'url'  => 'vendors',
                     'icon' => 'circle-o',
                 ],
-                /*[
+                [
                     'text' => 'Expense',
                     'url'  => 'expense',
                     'icon' => 'circle-o',
-                ],*/
+                ],
                 [
                     'text' => 'Holiday',
                     'url'  => 'holidays',
@@ -556,11 +556,11 @@ return [
                     'url'  => 'module',
                     'icon' => 'circle-o',
                 ],
-                [
+/*                [
                     'text' => 'Module Visibility',
                     'url'  => 'modulevisible',
                     'icon' => 'circle-o',
-                ],
+                ],*/
                 [
                     'text' => 'Client Hierarchy',
                     'url'  => 'client-hierarchy',

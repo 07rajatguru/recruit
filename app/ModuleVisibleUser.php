@@ -1,5 +1,7 @@
 <?php
 
+/* This is not in use*/
+
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;

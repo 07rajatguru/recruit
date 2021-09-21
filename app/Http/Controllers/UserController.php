@@ -256,8 +256,8 @@ class UserController extends Controller
             }
         }
 
-        // Add new user module visibility by it's role id
-        if (isset($role_id) && $role_id > 0) {
+        // Add new user module visibility by it's role id not require now because module visibility is not in use
+        /*if (isset($role_id) && $role_id > 0) {
 
             $other_user_id = RoleUser::getUserIdByRoleId($role_id);
 
@@ -290,7 +290,7 @@ class UserController extends Controller
                     }
                 }
             }
-        }
+        }*/
 
         // Add entry in email password table for send lead & client bulk email functionality
 
@@ -298,6 +298,12 @@ class UserController extends Controller
         $users_email_pwd->user_id = $user_id;
         $users_email_pwd->email = $request->input('email');
         $users_email_pwd->save();
+
+        // Add entry in user otherinfo table
+ 
+        $users_otherinfo = new UserOthersInfo();
+        $users_otherinfo->user_id = $user_id;
+        $users_otherinfo->save();
 
         // Send email notification when new user is add
 
@@ -842,12 +848,9 @@ class UserController extends Controller
             rmdir($path1);
 
             $user_doc = UsersDoc::where('user_id','=',$id)->delete();
-            $user_other_info = UserOthersInfo::where('user_id','=',$id)->delete();
-        }
-        else {
-            $user_other_info = UserOthersInfo::where('user_id','=',$id)->delete();
         }
 
+        UserOthersInfo::where('user_id','=',$id)->delete();
         ProcessVisibleUser::where('user_id',$id)->delete();
         TrainingVisibleUser::where('user_id',$id)->delete();
         UsersFamily::where('user_id',$id)->delete();
@@ -1228,8 +1231,8 @@ class UserController extends Controller
             $users_otherinfo_update = new UserOthersInfo();
             $users_otherinfo_update->user_id = $user_id;
 
-            if($superadmin_role_id == $role_id){
-
+            if($superadmin_role_id == $role_id) {
+ 
             }
             else {
                 // Generate Emp ID
