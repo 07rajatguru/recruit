@@ -27,10 +27,63 @@
             </div>
 
             <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('jobopen.create') }}"> Create Job Openings</a>
+                <a class="btn btn-success" href="{{ route('jobopen.create') }}">Create Job Openings</a>
             </div>
         </div>
     </div>
+
+    @permission(('display-job-priority-count-in-listing'))
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                    <a title="Urgent Positions" style="text-decoration: none;color: black;cursor: pointer;"><div style="width:max-content;height:40px;background-color:#FF0000;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_1 }}</div>
+                    </a>
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                    <a title="Identified candidates" style="text-decoration: none;color: black;cursor: pointer;"><div style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_8 }}</div>
+                    </a>
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                    <a title="New Positions" style="text-decoration: none;color: black;cursor: pointer;"><div style="width:max-content;height:40px;background-color:#00B0F0;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_2 }}</div>
+                    </a>
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                    <a title="Constant Deliveries needed" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#FABF8F;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_3 }}</div>
+                    </a>
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                    <a title="Revived Positions" style="text-decoration: none;color: black;cursor: pointer;"><div style="width:max-content;height:40px;background-color:yellow;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_5 }}</div>
+                    </a>
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                    <a title="No Deliveries Needed" style="text-decoration: none;color: black;cursor: pointer;"><div style="width:max-content;height:40px;background-color:#808080;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_7 }}</div>
+                    </a>
+                </div>
+
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
+
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
+                
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                    <a title="Under 10 Lacs" style="text-decoration: none;color: black;cursor: pointer;"><div style="width:max-content;height:40px;background-color:#FFCC00;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"><10L ({{ $under_ten_lacs }})</div>
+                    </a>
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                    <a title="Between 10-20 Lacs" style="text-decoration: none;color: black;cursor: pointer;"><div style="width:max-content;height:40px;background-color:#e87992;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">10-20L ({{ $between_ten_to_twenty_lacs }})</div></a>
+                </div>
+                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                    <a title="Above 20 Lacs" style="text-decoration: none;color: black;cursor: pointer;"><div style="width:max-content;height:40px;background-color:#f17a40;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"> >20L ({{ $above_twenty_lacs }})</div>
+                    </a>
+                </div>
+            </div>
+        </div><br/>
+    @endpermission
 
     <div class = "table-responsive">
         <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="job_table">
@@ -66,7 +119,7 @@
 
                 'bProcessing' : true,
                 'serverSide' : true,
-                "order" : [9,'desc'],
+                "order" : [8,'desc'],
                 "columnDefs": [ 
 
                     { "width": "10px", "targets": 0},
