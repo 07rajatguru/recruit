@@ -230,7 +230,13 @@ class WorkPlanningController extends Controller
         $hr = getenv('HRUSERID');
         $hremail = User::getUserEmailById($hr);
 
-        $to_users_array = array($report_email,$superadminemail,$hremail);
+        if($report_email == '') {
+
+            $to_users_array = array($superadminemail,$hremail);
+        }
+        else {
+            $to_users_array = array($report_email,$superadminemail,$hremail);
+        }
 
         $module = "Work Planning";
         $sender_name = $user_id;

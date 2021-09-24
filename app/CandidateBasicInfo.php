@@ -661,7 +661,7 @@ class CandidateBasicInfo extends Model
         $query = $query->leftjoin('eduction_qualification','eduction_qualification.id','=','candidate_otherinfo.educational_qualification_id');
         $query = $query->leftjoin('education_specialization','education_specialization.id','=','candidate_otherinfo.specialization');
 
-        $query = $query->select('candidate_basicinfo.*','candidate_otherinfo.current_employer as current_employer','candidate_otherinfo.current_job_title as current_job_title','candidate_otherinfo.skill as key_skills','candidate_otherinfo.specialization as specialization','candidate_otherinfo.experience_years as experience_years','candidate_otherinfo.experience_months as experience_months','candidate_otherinfo.current_salary as current_salary','candidate_otherinfo.expected_salary as expected_salary','candidate_otherinfo.skype_id as skype_id','candidate_uploaded_resume.id as file_id','candidate_uploaded_resume.file_name as resume_name','candidate_uploaded_resume.file as resume_path','candidate_uploaded_resume.size as resume_size','candidate_uploaded_resume.file_type as resume_file_type','users.name as owner_name','candidate_otherinfo.owner_id as candidate_owner_id','candidate_otherinfo.functional_roles_id as functional_roles_id','candidate_otherinfo.educational_qualification_id as educational_qualification_id','functional_roles.name as functional_roles_name','eduction_qualification.name as eduction_qualification_value','education_specialization.id as education_specialization_id','education_specialization.name as education_specialization','users.email as owner_email');
+        $query = $query->select('candidate_basicinfo.*','candidate_otherinfo.current_employer as current_employer','candidate_otherinfo.current_job_title as current_job_title','candidate_otherinfo.skill as key_skills','candidate_otherinfo.specialization as specialization','candidate_otherinfo.experience_years as experience_years','candidate_otherinfo.experience_months as experience_months','candidate_otherinfo.current_salary as current_salary','candidate_otherinfo.expected_salary as expected_salary','candidate_otherinfo.skype_id as skype_id','candidate_uploaded_resume.id as file_id','candidate_uploaded_resume.file_name as resume_name','candidate_uploaded_resume.file as resume_path','candidate_uploaded_resume.size as resume_size','candidate_uploaded_resume.file_type as resume_file_type','users.name as owner_name','candidate_otherinfo.owner_id as candidate_owner_id','candidate_otherinfo.functional_roles_id as functional_roles_id','candidate_otherinfo.educational_qualification_id as educational_qualification_id','functional_roles.name as functional_roles_name','eduction_qualification.name as eduction_qualification_value','education_specialization.id as education_specialization_id','education_specialization.name as education_specialization','users.email as owner_email','users.first_name as owner_first_name','users.last_name as owner_last_name');
 
         $query = $query->where('candidate_basicinfo.id','=',$candidate_id);
         $response = $query->first();
@@ -711,6 +711,9 @@ class CandidateBasicInfo extends Model
         $candidate['resume_path'] = "../../".$response->resume_path;
         $candidate['resume_size'] = $utils->formatSizeUnits($response->resume_size);
         $candidate['resume_file_type'] = $response->resume_file_type;
+
+        $candidate['owner_first_name'] = $response->owner_first_name;
+        $candidate['owner_last_name'] = $response->owner_last_name;
         
         return $candidate;
     }
@@ -755,7 +758,7 @@ class CandidateBasicInfo extends Model
         $query = $query->leftjoin('job_associate_candidates','job_associate_candidates.candidate_id','=','candidate_basicinfo.id');
         $query = $query->leftjoin('job_openings','job_openings.id','=','job_associate_candidates.job_id');
         $query = $query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $query = $query->select('candidate_basicinfo.*','job_openings.posting_title as posting_title','client_basicinfo.name as company_name','users.email as owner_email','users.name as owner_name','users.id as owner_id');
+        $query = $query->select('candidate_basicinfo.*','job_openings.posting_title as posting_title','client_basicinfo.name as company_name','users.email as owner_email','users.name as owner_name','users.id as owner_id','users.first_name as owner_first_name','users.last_name as owner_last_name');
 
         $query = $query->where('job_associate_candidates.candidate_id','=',$candidate_id);
         $query = $query->where('job_associate_candidates.job_id','=',$job_id);
@@ -773,6 +776,9 @@ class CandidateBasicInfo extends Model
 
         $candidate['posting_title'] = $response->posting_title;
         $candidate['company_name'] = $response->company_name;
+
+        $candidate['owner_first_name'] = $response->owner_first_name;
+        $candidate['owner_last_name'] = $response->owner_last_name;
 
         return $candidate;
     }

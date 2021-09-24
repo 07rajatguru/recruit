@@ -572,7 +572,7 @@ class EveryMinute extends Command
 
                 $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
 
-                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
+                /*$user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
 
                 $input['from_address'] = trim($user_email_details->email);
 
@@ -597,11 +597,11 @@ class EveryMinute extends Command
                         'mail.password' => trim($user_email_details->password),
                         'mail.encryption' => trim('ssl'),
                     ]);
-                }
+                }*/
 
                 \Mail::send('adminlte::emails.clientbulkmail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to_array'])->cc($input['cc_array'])->bcc($input['owner_email'])->subject($input['subject']);
+                    $message->to($input['to_array'])->cc($input['cc_array'])->bcc($input['owner_email'])->replyTo($input['owner_email'], $input['from_name'])->subject($input['subject']);
                 });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
@@ -1090,12 +1090,14 @@ class EveryMinute extends Command
                 $input['candidate_name'] = $candidate_details['full_name'];
                 $input['owner_email'] = $candidate_details['owner_email'];
 
+                $input['from_name'] = $candidate_details['owner_first_name'] . " " . $candidate_details['owner_last_name'];
+
                 if($input['owner_email'] == 'careers@adlertalent.com') {
 
                     \Mail::send('adminlte::emails.candidateAutoScriptMail', $input, function ($message) use($input) {
 
                         $message->from($input['from_address'], $input['from_name']);
-                        $message->to($input['to'])->subject($input['subject']);
+                        $message->to($input['to'])->replyTo($input['owner_email'], $input['from_name'])->subject($input['subject']);
                     });
                 }
                 else {
@@ -1103,7 +1105,7 @@ class EveryMinute extends Command
                     \Mail::send('adminlte::emails.candidateAutoScriptMail', $input, function ($message) use($input) {
 
                         $message->from($input['from_address'], $input['from_name']);
-                        $message->to($input['to'])->bcc($input['owner_email'])->subject($input['subject']);
+                        $message->to($input['to'])->bcc($input['owner_email'])->replyTo($input['owner_email'], $input['from_name'])->subject($input['subject']);
                     });
                 }
 
@@ -1179,11 +1181,13 @@ class EveryMinute extends Command
                 $input['module_id'] = $value['module_id'];
                 $input['bulk_message'] = $value['message'];
 
+                $input['from_email'] = User::getUserEmailById($value['sender_name']);
+
                 $user_details = User::getAllDetailsByUserID($value['sender_name']);
 
                 $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
 
-                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
+                /*$user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
 
                 $input['from_address'] = trim($user_email_details->email);
 
@@ -1209,11 +1213,11 @@ class EveryMinute extends Command
                         'mail.password' => trim($user_email_details->password),
                         'mail.encryption' => trim('ssl'),
                     ]);
-                }
+                }*/
 
                 \Mail::send('adminlte::emails.clientbulkmail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
+                    $message->to($input['to_array'])->cc($input['cc_array'])->bcc($input['from_email'])->replyTo($input['from_email'], $input['from_name'])->subject($input['subject']);
                 });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
@@ -1611,13 +1615,15 @@ class EveryMinute extends Command
                 $input['module_id'] = $value['module_id'];
                 $input['bulk_message'] = $value['message'];
 
+                $input['from_email'] = User::getUserEmailById($value['sender_name']);
+
                 $user_details = User::getAllDetailsByUserID($value['sender_name']);
 
                 $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
 
                 $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
 
-                $input['from_address'] = trim($user_email_details->email);
+                /*$input['from_address'] = trim($user_email_details->email);
 
                 if(strpos($input['from_address'], '@gmail.com') !== false) {
 
@@ -1641,11 +1647,12 @@ class EveryMinute extends Command
                         'mail.password' => trim($user_email_details->password),
                         'mail.encryption' => trim('ssl'),
                     ]);
-                }
+                }*/
 
                 \Mail::send('adminlte::emails.clientbulkmail', $input, function ($message) use($input) {
+
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
+                    $message->to($input['to_array'])->cc($input['cc_array'])->bcc($input['from_email'])->replyTo($input['from_email'], $input['from_name'])->subject($input['subject']);
                 });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
@@ -1663,7 +1670,7 @@ class EveryMinute extends Command
                 // Get users for popup of add information
                 $candidate_job_details = CandidateBasicInfo::getCandidateJobDetailsById($candidate_id,$job_id);
 
-                $user_email_details = UsersEmailPwd::getUserEmailDetails($candidate_job_details['owner_id']);
+                /*$user_email_details = UsersEmailPwd::getUserEmailDetails($candidate_job_details['owner_id']);
 
                 $input['from_address'] = trim($user_email_details->email);
 
@@ -1689,13 +1696,16 @@ class EveryMinute extends Command
                         'mail.password' => trim($user_email_details->password),
                         'mail.encryption' => trim('ssl'),
                     ]);
-                }
+                }*/
+
                 if(isset($candidate_job_details) && $candidate_job_details != '') {
 
                     // Get candidate owner signature
                     $owner_id = $candidate_job_details['owner_id'];
                     $owner_info = User::getProfileInfo($owner_id);
                     $input['owner_signature'] = $owner_info['signature'];
+
+                    $input['from_name'] = $candidate_job_details['owner_first_name'] . " " . $candidate_job_details['owner_last_name'];
                     
                     $input['candidate_job_details'] = $candidate_job_details;
                     $input['to_array'] = $to_array;
@@ -1705,7 +1715,7 @@ class EveryMinute extends Command
                      \Mail::send('adminlte::emails.candidateinformationform', $input, function ($message) use($input) {
                     
                         $message->from($input['from_address'], $input['from_name']);
-                        $message->to($input['to_array'])->bcc($input['bcc_email'])->subject($input['subject']);
+                        $message->to($input['to_array'])->bcc($input['bcc_email'])->replyTo($input['bcc_email'], $input['from_name'])->subject($input['subject']);
 
                         if (isset($input['attachment']) && $input['attachment'] != '') {
                             $message->attach($input['attachment']);
@@ -1898,11 +1908,11 @@ class EveryMinute extends Command
                 $user_details = User::getAllDetailsByUserID($value['sender_name']);
                 $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
 
-                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
-                $input['from_address'] = trim($user_email_details->email);
-
                 $user_info = User::getProfileInfo($value['sender_name']);
                 $input['signature'] = $user_info['signature'];
+
+                /*$user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
+                $input['from_address'] = trim($user_email_details->email);
 
                 if(strpos($input['from_address'], '@gmail.com') !== false) {
 
@@ -1926,7 +1936,7 @@ class EveryMinute extends Command
                         'mail.password' => trim($user_email_details->password),
                         'mail.encryption' => trim('ssl'),
                     ]);
-                }
+                }*/
 
                 $work_planning = WorkPlanning::getWorkPlanningDetailsById($value['module_id']);
                 $work_planning_list = WorkPlanningList::getWorkPlanningList($value['module_id']);
