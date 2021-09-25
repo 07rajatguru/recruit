@@ -81,7 +81,7 @@ class WorkPlanning extends Model
         return $work_type;
     }
 
-    public static function getWorkPlanningDetails($all,$user_id,$month,$year) {
+    public static function getWorkPlanningDetails($all,$user_id,$month,$year,$status='') {
 
         $query = WorkPlanning::query();
         $query = $query->leftjoin('users','users.id','=','work_planning.added_by');
@@ -94,6 +94,10 @@ class WorkPlanning extends Model
         if ($month != '' && $year != '') {
             $query = $query->where(\DB::raw('month(work_planning.added_date)'),'=',$month);
             $query = $query->where(\DB::raw('year(work_planning.added_date)'),'=',$year);
+        }
+
+        if(isset($status) && $status != '') {
+            $query = $query->where('work_planning.status','=',$status);
         }
 
         $query = $query->select('work_planning.*','users.first_name as fnm','users.last_name as lnm');
@@ -147,6 +151,7 @@ class WorkPlanning extends Model
             $dt_wp_status->setTimezone($tz_wp_status);
             $work_planning_status_time = $dt_wp_status->format('g:i A');
             $work_planning_res[$i]['work_planning_status_time'] = $work_planning_status_time;
+            $work_planning_res[$i]['status'] = $value->status;
             
             $i++;
         }
@@ -213,6 +218,7 @@ class WorkPlanning extends Model
 
             $work_planning_res['remaining_time'] = $response->remaining_time;
             $work_planning_res['attendance'] = $response->attendance;
+            $work_planning_res['status'] = $response->status;
         }
         return $work_planning_res;
     }

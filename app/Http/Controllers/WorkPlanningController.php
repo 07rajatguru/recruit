@@ -50,16 +50,112 @@ class WorkPlanningController extends Controller
 
         if($all_perm) {
 
-            $work_planning_res = WorkPlanning::getWorkPlanningDetails(1,$user->id,$month,$year);
+            $work_planning_res = WorkPlanning::getWorkPlanningDetails(1,$user->id,$month,$year,'');
         }
         else if($userwise_perm) {
 
-            $work_planning_res = WorkPlanning::getWorkPlanningDetails(0,$user->id,$month,$year);
+            $work_planning_res = WorkPlanning::getWorkPlanningDetails(0,$user->id,$month,$year,'');
+        }
+
+        $pending = 0;
+        $approved = 0;
+        $not_approved = 0;
+
+        foreach($work_planning_res as $work_planning) {
+
+            if($work_planning['status'] == '0') {
+                $pending++;
+            }
+            else if ($work_planning['status'] == '1') {
+                $approved++;
+            }
+            else if($work_planning['status'] == '2') {
+                $not_approved++;
+            }
         }
 
         $count = sizeof($work_planning_res);
 
-        return view('adminlte::workPlanning.index',compact('work_planning_res','count','month_array','month','year_array','year'));
+        return view('adminlte::workPlanning.index',compact('work_planning_res','count','month_array','month','year_array','year','pending','approved','not_approved'));
+    }
+
+    public function getAllDetailsByStatus($status) {
+        
+        $user =  \Auth::user();
+        $all_perm = $user->can('display-work-planning');
+        $userwise_perm = $user->can('display-user-wise-work-planning');
+
+        // Get Selected Month
+        $month_array = array();
+        for ($i = 1; $i <= 12 ; $i++) {
+            $month_array[$i] = date('M',mktime(0,0,0,$i));
+        }
+
+        // Get Selected Year
+        $starting_year = '2021';
+        $ending_year = date('Y',strtotime('+2 year'));
+
+        $year_array = array();
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
+        }
+
+        if (isset($_POST['month']) && $_POST['month'] != 0) {
+            $month = $_POST['month'];
+        }
+        else {
+            $month = date('m');
+        }
+
+        if (isset($_POST['year']) && $_POST['year'] != 0) {
+            $year = $_POST['year'];
+        }
+        else {
+            $year = date('Y');
+        }
+
+        if($status == 'pending') {
+            $status = '0';
+        }
+        else if($status == 'approved') {
+            $status = '1';
+        }
+        else if($status == 'not-approved') {
+            $status = '2';
+        }
+ 
+        if($all_perm) {
+
+            $work_planning_all = WorkPlanning::getWorkPlanningDetails(1,$user->id,$month,$year,'');
+
+            $work_planning_res = WorkPlanning::getWorkPlanningDetails(1,$user->id,$month,$year,$status);
+        }
+        else if($userwise_perm) {
+
+            $work_planning_all = WorkPlanning::getWorkPlanningDetails(0,$user->id,$month,$year,'');
+            $work_planning_res = WorkPlanning::getWorkPlanningDetails(0,$user->id,$month,$year,$status);
+        }
+
+        $pending = 0;
+        $approved = 0;
+        $not_approved = 0;
+
+        foreach($work_planning_all as $work_planning) {
+
+            if($work_planning['status'] == '0') {
+                $pending++;
+            }
+            else if ($work_planning['status'] == '1') {
+                $approved++;
+            }
+            else if($work_planning['status'] == '2') {
+                $not_approved++;
+            }
+        }
+
+        $count = sizeof($work_planning_res);
+
+        return view('adminlte::workPlanning.statusindex',compact('work_planning_res','count','month_array','month','year_array','year','pending','approved','not_approved','status'));
     }
 
     public function create() {
@@ -173,6 +269,7 @@ class WorkPlanningController extends Controller
         }
 
         $work_planning = new WorkPlanning();
+        $work_planning->status = '0';
         $work_planning->attendance = $attendance;
         $work_planning->work_type = $work_type;
         $work_planning->loggedin_time = $get_time['login'];

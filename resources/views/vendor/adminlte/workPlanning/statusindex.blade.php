@@ -115,7 +115,9 @@
         @endforeach
     </tbody>
 </table>
-@stop
+
+<input type="hidden" name="status" id="status" value="{{ $status }}">
+@stop 
 
 @section('customscripts')
     <script type="text/javascript">
@@ -140,13 +142,25 @@
             var app_url = "{!! env('APP_URL'); !!}";
             var month = $("#month").val();
             var year = $("#year").val();
+            var status = $("#status").val();
 
-            var url = app_url+'/work-planning';
+            if(status == '0') {
+                status = 'pending';
+            }
+            else if(status == '1') {
+                status = 'approved';
+            }
+            else if(status == '2') {
+                status = 'not-approved';
+            }
+
+            var url = app_url+'/work-planning/'+status;
 
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
                 '<input type="hidden" name="month" value="'+month+'" />' +
                 '<input type="hidden" name="year" value="'+year+'" />' +
+                '<input type="hidden" name="status" value="'+status+'" />' +
                 '</form>');
 
             $('body').append(form);
