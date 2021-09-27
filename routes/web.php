@@ -3307,12 +3307,6 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-work-planning|display-user-wise-work-planning|work-planning-add|work-planning-edit|work-planning-delete']
     ]);
 
-    Route::any('work-planning/{status}', [
-        'as' => 'workplanning.status',
-        'uses' => 'WorkPlanningController@getAllDetailsByStatus',
-        'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
-    ]);
-
     Route::get('work-planning/add',[
         'as' => 'workplanning.create',
         'uses' => 'WorkPlanningController@create',
@@ -3325,10 +3319,21 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:work-planning-add']
     ]);
 
+    Route::any('work-planning/{status}', [
+        'as' => 'workplanning.status',
+        'uses' => 'WorkPlanningController@getAllDetailsByStatus',
+        'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
+    ]);
+
     Route::get('work-planning/{id}/show', [
         'as' => 'workplanning.show',
         'uses' => 'WorkPlanningController@show',
         'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
+    ]);
+
+    Route::post('work-planning/{id}/show',[
+        'as' => 'workplanning.replysend',
+        'uses' => 'WorkPlanningController@replySend'
     ]);
 
     Route::get('work-planning/edit/{id}',[

@@ -1907,6 +1907,7 @@ class EveryMinute extends Command
 
                 $user_details = User::getAllDetailsByUserID($value['sender_name']);
                 $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
+                $input['owner_email'] = $user_details->email;
 
                 $user_info = User::getProfileInfo($value['sender_name']);
                 $input['signature'] = $user_info['signature'];
@@ -1947,7 +1948,7 @@ class EveryMinute extends Command
 
                 \Mail::send('adminlte::emails.workplanningmail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to_array'])->subject($input['subject']);
+                    $message->to($input['to_array'])->bcc($input['owner_email'])->subject($input['subject']);
                 });
 
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");

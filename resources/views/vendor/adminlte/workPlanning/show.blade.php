@@ -27,8 +27,10 @@
         </div>
         <div class="pull-right">
             @if($work_planning['status'] == 0)
-                <button type="submit" class="btn btn-primary" onclick="permission('Approved')">Approved</button>
-                <button type="submit" class="btn btn-primary" onclick="permission('Unapproved')">Unapproved</button>
+                @if($loggedin_user_id == $reports_to_id)
+                    <button type="submit" class="btn btn-primary" onclick="permission('Approved')">Approved</button>
+                    <button type="submit" class="btn btn-primary" onclick="permission('Rejected')">Rejected</button>
+                @endif
             @endif
             <a class="btn btn-primary" href="{{ route('workplanning.edit',$work_planning['id']) }}">Edit</a>
             <a class="btn btn-primary" href="{{ route('workplanning.index') }}">Back</a>
@@ -132,6 +134,9 @@
         </div>
     </div>
 @endif
+
+<input type="hidden" name="wp_id" id="wp_id" value="{{ $id }}">
+
 @endsection
 
 @section('customscripts')
@@ -139,26 +144,28 @@
 
     function permission(check) {
         
-        var leave_id = $("#leave_id").val();
+        var wp_id = $("#wp_id").val();
         var app_url = "{!! env('APP_URL') !!}";
         var token = $("input[name=_token]").val();
-        var msg = $("#msg").val();
-        var user_name = $("#user_name").val();
-        var loggedin_user_id = $("#loggedin_user_id").val();
-        var user_id = $("#user_id").val();
-        var subject = $("#subject").val();
-        var approved_by = $("#approved_by").val();
-        //alert(loggedin_user_id);
 
         $.ajax({
             type: 'POST',
-            url:app_url+'/leave/reply/'+leave_id,
-            data: {leave_id: leave_id, 'check':check, '_token':token, msg:msg, user_name:user_name, loggedin_user_id:loggedin_user_id,user_id:user_id,subject:subject,approved_by:approved_by},
+            url:app_url+'/work-planning/'+wp_id+'/show',
+            data: {wp_id: wp_id, 'check':check, '_token':token},
             dataType:'json',
-            success: function(data){
+
+            success: function(data) {
+
                 if (data == 'success') { 
-                    window.location.reload();
-                    alert('Reply Send Successfully.');
+
+                    window.location.href = app_url+'/work-planning';
+
+                    if(check == 'Approved') {
+                        alert("Report Approved Successfully.");
+                    }
+                    if(check == 'Rejected') {
+                        alert("Report Rejected.");
+                    }
                 }
             }
         });

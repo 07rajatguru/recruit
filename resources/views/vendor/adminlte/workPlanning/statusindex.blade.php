@@ -61,7 +61,7 @@
         </div>
 
         <div class="col-md-2" style="width: 15%;">
-            <a href="{{ route('workplanning.status','not-approved') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Not Approved">Not Approved ({{ $not_approved }})</div></a>
+            <a href="{{ route('workplanning.status','rejected') }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Rejected">Rejected ({{ $rejected }})</div></a>
         </div>
     </div>
 </div><br/>
@@ -151,7 +151,7 @@
                 status = 'approved';
             }
             else if(status == '2') {
-                status = 'not-approved';
+                status = 'rejected';
             }
 
             var url = app_url+'/work-planning/'+status;

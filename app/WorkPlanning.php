@@ -219,6 +219,7 @@ class WorkPlanning extends Model
             $work_planning_res['remaining_time'] = $response->remaining_time;
             $work_planning_res['attendance'] = $response->attendance;
             $work_planning_res['status'] = $response->status;
+            $work_planning_res['added_by_id'] = $response->added_by;
         }
         return $work_planning_res;
     }

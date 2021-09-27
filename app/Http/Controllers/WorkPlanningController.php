@@ -59,7 +59,7 @@ class WorkPlanningController extends Controller
 
         $pending = 0;
         $approved = 0;
-        $not_approved = 0;
+        $rejected = 0;
 
         foreach($work_planning_res as $work_planning) {
 
@@ -70,13 +70,13 @@ class WorkPlanningController extends Controller
                 $approved++;
             }
             else if($work_planning['status'] == '2') {
-                $not_approved++;
+                $rejected++;
             }
         }
 
         $count = sizeof($work_planning_res);
 
-        return view('adminlte::workPlanning.index',compact('work_planning_res','count','month_array','month','year_array','year','pending','approved','not_approved'));
+        return view('adminlte::workPlanning.index',compact('work_planning_res','count','month_array','month','year_array','year','pending','approved','rejected'));
     }
 
     public function getAllDetailsByStatus($status) {
@@ -120,7 +120,7 @@ class WorkPlanningController extends Controller
         else if($status == 'approved') {
             $status = '1';
         }
-        else if($status == 'not-approved') {
+        else if($status == 'rejected') {
             $status = '2';
         }
  
@@ -138,7 +138,7 @@ class WorkPlanningController extends Controller
 
         $pending = 0;
         $approved = 0;
-        $not_approved = 0;
+        $rejected = 0;
 
         foreach($work_planning_all as $work_planning) {
 
@@ -149,13 +149,13 @@ class WorkPlanningController extends Controller
                 $approved++;
             }
             else if($work_planning['status'] == '2') {
-                $not_approved++;
+                $rejected++;
             }
         }
 
         $count = sizeof($work_planning_res);
 
-        return view('adminlte::workPlanning.statusindex',compact('work_planning_res','count','month_array','month','year_array','year','pending','approved','not_approved','status'));
+        return view('adminlte::workPlanning.statusindex',compact('work_planning_res','count','month_array','month','year_array','year','pending','approved','rejected','status'));
     }
 
     public function create() {
@@ -212,9 +212,9 @@ class WorkPlanningController extends Controller
         // Get user working hours
         $user_details = User::getAllDetailsByUserID($user_id);
         $user_working_hours = strtotime($user_details->working_hours);
-        $two_hour = strtotime('02:00:00');
+        $one_hour = strtotime('01:00:00');
 
-        $early_late_in = $user_working_hours - $two_hour;
+        $early_late_in = $user_working_hours - $one_hour;
         $early_late_in_time_diff = date("H:i", $early_late_in);
 
         // Get Total Projected Time
@@ -353,10 +353,14 @@ class WorkPlanningController extends Controller
 
     public function show($id) {
 
+        $loggedin_user_id = \Auth::user()->id;
+
         $work_planning = WorkPlanning::getWorkPlanningDetailsById($id);
         $work_planning_list = WorkPlanningList::getWorkPlanningList($id);
+
+        $reports_to_id = User::getReportsToById($work_planning['added_by_id']);
         
-        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list'));
+        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','id','loggedin_user_id','reports_to_id'));
     }
 
     public function edit($id) {
@@ -432,9 +436,9 @@ class WorkPlanningController extends Controller
         // Get Loggedin user details
         $user_details = User::getAllDetailsByUserID($user_id);
         $user_working_hours = strtotime($user_details->working_hours);
-        $two_hour = strtotime('02:00:00');
+        $one_hour = strtotime('01:00:00');
 
-        $early_late_in = $user_working_hours - $two_hour;
+        $early_late_in = $user_working_hours - $one_hour;
         $early_late_in_time_diff = date("H:i", $early_late_in);
 
         // Get Total Projected Time
@@ -594,5 +598,24 @@ class WorkPlanningController extends Controller
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
         return redirect()->route('workplanning.index')->with('success','Email Send Successfully.');
+    }
+
+    public function replySend(){
+
+        $wp_id = $_POST['wp_id'];
+        $reply = $_POST['check'];
+
+        if ($reply == 'Approved') {
+
+            \DB::statement("UPDATE work_planning SET status = '1' WHERE id = $wp_id");
+        }
+        elseif ($reply == 'Rejected') {
+
+            \DB::statement("UPDATE work_planning SET status = '2' WHERE id = $wp_id");
+        }
+
+        $data = 'success';
+
+        return json_encode($data);
     }
 }
