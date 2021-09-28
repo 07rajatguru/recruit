@@ -61,24 +61,38 @@
                                 </tr>
 
                                 <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>Working Hours</b></td>
+                                    <td align="left">{{ $users_details['working_hours'] }}</td>
+                                </tr>
+
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>Half Day Working Hours</b></td>
+                                    <td align="left">
+                                    {{ $users_details['half_day_working_hours'] }}</td>
+                                </tr>
+
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
                                     <td align="left"><b>Generate Report</b></td>
                                     <td align="left">{{ $users_details['daily_report'] }}</td>
                                 </tr>
 
-                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
-                                    <td align="left"><b>CVs Associated</b></td>
-                                    <td align="left">{{ $users_details['cv_report'] }}</td>
-                                </tr>
+                                @if(isset($users_details['daily_report']) && $users_details['daily_report'] == 'Yes')
 
-                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
-                                    <td align="left"><b>Interviews Scheduled</b></td>
-                                    <td align="left">{{ $users_details['interview_report'] }}</td>
-                                </tr>
+                                    <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                        <td align="left"><b>CVs Associated</b></td>
+                                        <td align="left">{{ $users_details['cv_report'] }}</td>
+                                    </tr>
 
-                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
-                                    <td align="left"><b>Leads Added</b></td>
-                                    <td align="left">{{ $users_details['lead_report'] }}</td>
-                                </tr>
+                                    <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                        <td align="left"><b>Interviews Scheduled</b></td>
+                                        <td align="left">{{ $users_details['interview_report'] }}</td>
+                                    </tr>
+
+                                    <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                        <td align="left"><b>Leads Added</b></td>
+                                        <td align="left">{{ $users_details['lead_report'] }}</td>
+                                    </tr>
+                                @endif
 
                                 <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
                                     <td align="left"><b>Status</b></td>
@@ -87,7 +101,8 @@
 
                                 <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
                                     <td align="left"><b>Account Manager</b></td>
-                                    <td align="left">{{ $users_details['account_manager'] }}</td>
+                                    <td align="left">{{ $users_details['account_manager'] }}
+                                    </td>
                                 </tr>
                             </table>
                         </td>

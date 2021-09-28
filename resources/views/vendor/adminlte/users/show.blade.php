@@ -45,6 +45,11 @@
                 <strong>Working Hours :</strong>
                 {{ $user->working_hours }}
             </div>
+
+            <div class="form-group">
+                <strong>Half Day Working Hours :</strong>
+                {{ $user->half_day_working_hours }}
+            </div>
         </div>
     </div>
 @endsection

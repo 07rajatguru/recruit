@@ -47,13 +47,14 @@
         <thead>
             <tr>
                 <th width="2%">No</th>
-                <th width="8%">Action</th>
-                <th width="5%">Job Open to all</th>
+                <th width="5%">Action</th>
+                <th width="8%">Job Open to all</th>
                 <th>Name</th>
                 <th>Email</th>
                 <th>Department</th>
                 <th>Role</th>
                 <th>Working Hours</th>
+                <th>Half Day Working Hours</th>
                 <th>Status</th>
             </tr>
         </thead>
@@ -99,6 +100,7 @@
                     </td>
 
                     <td>{{ $user->working_hours }}</td>
+                    <td>{{ $user->half_day_working_hours }}</td>
                     <td>{{ $user->status }}</td>
                 </tr>
             @endforeach

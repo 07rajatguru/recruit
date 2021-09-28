@@ -197,6 +197,8 @@ class WorkPlanningController extends Controller
         $work_planning_time = '';
         $work_planning_status_time = '';
 
+        // Get Working Hours
+
         $user_details = User::getAllDetailsByUserID($user_id);
         $remaining_time = $user_details->working_hours;
         $user_total_hours = $user_details->working_hours;
@@ -269,8 +271,8 @@ class WorkPlanningController extends Controller
         }
 
         $work_planning = new WorkPlanning();
-        $work_planning->status = '0';
         $work_planning->attendance = $attendance;
+        $work_planning->status = '0';
         $work_planning->work_type = $work_type;
         $work_planning->loggedin_time = $get_time['login'];
         $work_planning->loggedout_time = $get_time['logout'];

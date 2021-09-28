@@ -84,6 +84,22 @@
                                 </tr>
 
                                 <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>Working Hours</b></td>
+                                    <td align="left">{{ $old_value_array['working_hours'] }}
+                                    </td>
+                                    <td align="left">{{ $new_value_array['working_hours'] }}
+                                    </td>
+                                </tr>
+
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>Half Day Working Hours</b></td>
+                                    <td align="left">
+                                        {{ $old_value_array['half_day_working_hours'] }}</td>
+                                    <td align="left">
+                                        {{ $new_value_array['half_day_working_hours'] }}</td>
+                                </tr>
+
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
                                     <td align="left"><b>Generate Report</b></td>
                                     <td align="left">{{ $old_value_array['check_report'] }}</td>
                                     <td align="left">{{ $new_value_array['check_report'] }}</td>

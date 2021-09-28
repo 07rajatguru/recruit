@@ -181,10 +181,20 @@
 
                             <div class="form-group {{ $errors->has('working_hours') ? 'has-error' : '' }}">
                                 <strong>Working Hours :</strong>
-                                {!! Form::select('working_hours',$hours_array,$selected_hours, array('placeholder' => 'Select Hours','id' => 'working_hours', 'class' => 'form-control','tabindex' => '12')) !!}
+                                {!! Form::select('working_hours',$hours_array,$selected_working_hours, array('placeholder' => 'Select Hours','id' => 'working_hours', 'class' => 'form-control','tabindex' => '12')) !!}
                                 @if ($errors->has('working_hours'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('working_hours') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('half_day_working_hours') ? 'has-error' : '' }}">
+                                <strong>Half Day Working Hours :</strong>
+                                {!! Form::select('half_day_working_hours',$hours_array,$selected_half_day_working_hours, array('placeholder' => 'Select Hours','id' => 'half_day_working_hours', 'class' => 'form-control','tabindex' => '13')) !!}
+                                @if ($errors->has('half_day_working_hours'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('half_day_working_hours') }}</strong>
                                     </span>
                                 @endif
                             </div>
@@ -273,6 +283,7 @@
             $("#reports_to").select2();
             $("#company_id").select2();
             $("#working_hours").select2();
+            $("#half_day_working_hours").select2();
 
             // automaticaly open the select2 when it gets focus
             jQuery(document).on('focus', '.select2', function() {

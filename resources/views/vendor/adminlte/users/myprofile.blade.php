@@ -56,6 +56,10 @@
                                 <td>{{ $user['working_hours'] }}</td>
                             </tr>
                             <tr>
+                                <th><strong>Half Day Working Hours</strong></th>
+                                <td>{{ $user['half_day_working_hours'] }}</td>
+                            </tr>
+                            <tr>
                                 <th>Official Email</th>
                                 <td>{{ $user['email'] }}</td>
                             </tr>

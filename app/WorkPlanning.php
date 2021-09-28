@@ -151,6 +151,8 @@ class WorkPlanning extends Model
             $dt_wp_status->setTimezone($tz_wp_status);
             $work_planning_status_time = $dt_wp_status->format('g:i A');
             $work_planning_res[$i]['work_planning_status_time'] = $work_planning_status_time;
+            
+            // For Pending/Approved/Rejected
             $work_planning_res[$i]['status'] = $value->status;
             
             $i++;
