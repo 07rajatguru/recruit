@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\CandidateBasicInfo;
+use App\Events\NotificationMail;
 
 class ExistCandidateAutoScript extends Command
 {
@@ -38,9 +39,7 @@ class ExistCandidateAutoScript extends Command
      */
     public function handle()
     {
-        $candidate_res = CandidateBasicInfo::getCandidateDetails(1,0);
-
-        //print_r($candidate_res);exit;
+        /*$candidate_res = CandidateBasicInfo::getCandidateDetails(1,0);
 
         $from_name = getenv('FROM_NAME');
         $from_address = getenv('FROM_ADDRESS');
@@ -81,6 +80,27 @@ class ExistCandidateAutoScript extends Command
 
                     echo $candidate_id . " - 0". "\n";
                 }
+            }
+        }*/
+
+        $candidate_details = CandidateBasicInfo::getAllCandidates(NULL,NULL);
+
+        print_r($candidate_details);exit;
+
+        if(isset($candidate_details) && sizeof($candidate_details) > 0) {
+
+            foreach ($candidate_details as $key => $value) {
+
+                $module = "Exist Candidate AutoScript Mail";
+                $sender_name = $value['owner_id'];
+                $to = $value['email'];
+                $subject = 'Thanks for your application - Adler Talent Solution';
+                $message = "<tr><td>" . $value['owner'] . " send email to exist Candidate </td></tr>";
+                $module_id = $value['id'];
+
+                $cc = '';
+
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
             }
         }
     }

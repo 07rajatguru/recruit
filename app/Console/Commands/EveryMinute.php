@@ -1083,8 +1083,6 @@ class EveryMinute extends Command
 
             else if ($value['module'] == 'New Candidate AutoScript Mail') {
 
-                // get todos subject and description
-
                 $candidate_details = CandidateBasicInfo::getCandidateDetailsById($module_id);
 
                 $input['candidate_name'] = $candidate_details['full_name'];
@@ -2012,6 +2010,37 @@ class EveryMinute extends Command
 
                     \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
                 }
+            }
+
+            else if ($value['module'] == 'Exist Candidate AutoScript Mail') {
+
+                $candidate_details = CandidateBasicInfo::getCandidateDetailsById($module_id);
+
+                $input['candidate_name'] = $candidate_details['full_name'];
+                $input['owner_email'] = $candidate_details['owner_email'];
+
+                $input['from_name'] = $candidate_details['owner_first_name'] . " " . $candidate_details['owner_last_name'];
+
+                if($input['owner_email'] == 'careers@adlertalent.com') {
+
+                    \Mail::send('adminlte::emails.existCandidateAutoScriptMail', $input, function ($message) use($input) {
+
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to'])->replyTo($input['owner_email'], $input['from_name'])->subject($input['subject']);
+                    });
+                }
+                else {
+
+                    \Mail::send('adminlte::emails.existCandidateAutoScriptMail', $input, function ($message) use($input) {
+
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to'])->bcc($input['owner_email'])->replyTo($input['owner_email'], $input['from_name'])->subject($input['subject']);
+                    });
+                }
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+
+                \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '1' where id = '$module_id';");
             }
         }
     }

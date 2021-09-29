@@ -54,8 +54,14 @@
 
                             <br>We would appreciate your ratings and reviews on Google based on your experience with our team of professionals which will help us improve.
 
-                            <br><br>For any concern/queries/grievances, feel free to email us on 
-                            <a href="mailto:{{ $owner_email }}">{{ $owner_email }}</a>
+                            <br><br>For any concern/queries/grievances, feel free to email us on
+
+                            @if($owner_email == 'careers@adlertalent.com')
+                                <a href="mailto:info@adlertalent.com">info@adlertalent.com</a>
+                            @else
+                                <a href="mailto:info@adlertalent.com">info@adlertalent.com</a> or
+                                <a href="mailto:{{ $owner_email }}">{{ $owner_email }}</a>
+                            @endif
                         </p>
                         <p><b>Thanks.</b></p>
                     </td>
