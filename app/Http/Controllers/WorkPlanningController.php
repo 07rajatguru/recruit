@@ -214,10 +214,7 @@ class WorkPlanningController extends Controller
         // Get user working hours
         $user_details = User::getAllDetailsByUserID($user_id);
         $user_working_hours = strtotime($user_details->working_hours);
-        $one_hour = strtotime('01:00:00');
-
-        $early_late_in = $user_working_hours - $one_hour;
-        $early_late_in_time_diff = date("H:i", $early_late_in);
+        $user_half_day_working_hours = strtotime($user_details->half_day_working_hours);
 
         // Get Total Projected Time
         $projected_time = Input::get('projected_time');
@@ -234,6 +231,7 @@ class WorkPlanningController extends Controller
         $totaltime = $totaltime - ($h * 3600);
         $m = intval($totaltime / 60);
         $s = $totaltime - ($m * 60);
+        $s = $s."0";
 
         $total_projected_time = "$h:$m:$s";
 
@@ -257,13 +255,7 @@ class WorkPlanningController extends Controller
         if($time_diff > '01:00') {
             $attendance = 'A';
         }
-        else if($total_projected_time == '4:30:0') {
-            $attendance = 'HD';
-        }
-        else if($total_projected_time == $early_late_in_time_diff) {
-            $attendance = 'F';
-        }
-        else if($total_projected_time < $user_details->working_hours) {
+        else if($total_projected_time == $user_half_day_working_hours) {
             $attendance = 'HD';
         }
         else {
@@ -438,10 +430,7 @@ class WorkPlanningController extends Controller
         // Get Loggedin user details
         $user_details = User::getAllDetailsByUserID($user_id);
         $user_working_hours = strtotime($user_details->working_hours);
-        $one_hour = strtotime('01:00:00');
-
-        $early_late_in = $user_working_hours - $one_hour;
-        $early_late_in_time_diff = date("H:i", $early_late_in);
+        $user_half_day_working_hours = strtotime($user_details->half_day_working_hours);
 
         // Get Total Projected Time
         $projected_time = Input::get('projected_time');
@@ -458,6 +447,7 @@ class WorkPlanningController extends Controller
         $totaltime = $totaltime - ($h * 3600);
         $m = intval($totaltime / 60);
         $s = $totaltime - ($m * 60);
+        $s = $s."0";
 
         $total_projected_time = "$h:$m:$s";
 
@@ -467,13 +457,7 @@ class WorkPlanningController extends Controller
         }
         else {
 
-            if($total_projected_time == '4:30:0') {
-                $attendance = 'HD';
-            }
-            else if($total_projected_time == $early_late_in_time_diff) {
-                $attendance = 'F';
-            }
-            else if($total_projected_time < $user_details->working_hours) {
+            if($total_projected_time == $user_half_day_working_hours) {
                 $attendance = 'HD';
             }
             else {

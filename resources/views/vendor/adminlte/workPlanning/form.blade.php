@@ -295,8 +295,8 @@
 
             if(time_start > time_end) {
 
-                alert("Your Working Hours are : " + user_total_hours);
-                return false;
+                alert("Your Total Working Hours are : " + user_total_hours);
+                $("#remaining_time").val('00:00:00');
             }
         }
 
@@ -338,6 +338,24 @@
             }
 
             $("#remaining_time").val(remain_time);
+
+            // For calculate total & actual working hours
+
+            var user_total_hours = $("#user_total_hours").val();
+
+            var time_start = new Date();
+            var time_end = new Date();
+            var value_start = final_working_hours.split(':');
+            var value_end = user_total_hours.split(':');
+
+            time_start.setHours(value_start[0], value_start[1], value_start[2], 0)
+            time_end.setHours(value_end[0], value_end[1], value_end[2], 0)
+
+            if(time_start > time_end) {
+
+                alert("Your Total Working Hours are : " + user_total_hours);
+                $("#remaining_time").val('00:00:00');
+            }
         }
 
         var get_remain_time = $("#remaining_time").val();
