@@ -721,7 +721,9 @@ class CandidateBasicInfo extends Model
     public static function getCandidateDetails($limit=0,$offset=0) {
 
         $query = CandidateBasicInfo::query();
-        $query = $query->select('candidate_basicinfo.*');
+        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
+        $query = $query->leftjoin('users','users.id','=','candidate_otherinfo.owner_id');
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as full_name','candidate_basicinfo.email as email','users.name as owner','users.id as owner_id','candidate_basicinfo.created_at as created_at');
 
         if (isset($limit) && $limit > 0) {
             $query = $query->limit($limit);
@@ -735,18 +737,21 @@ class CandidateBasicInfo extends Model
         
         $res = $query->get();
 
-        $candidate = array();
+        $candidate_array = array();
         $i = 0;
 
         foreach ($res as $key => $value) {
 
-            $candidate[$i]['id'] = $value->id;
-            $candidate[$i]['full_name'] = $value->full_name;
-            $candidate[$i]['email'] = $value->email;
+            $candidate_array[$i]['id'] = $value->id;
+            $candidate_array[$i]['full_name'] = $value->full_name;
+            $candidate_array[$i]['owner_id'] = $value->owner_id;
+            $candidate_array[$i]['owner'] = $value->owner;
+            $candidate_array[$i]['email'] = $value->email;
+            $candidate_array[$i]['created_at'] = date('d-m-Y',strtotime($value->created_at));
             
             $i++;
         }
-        return $candidate;
+        return $candidate_array;
     }
 
     public static function getCandidateJobDetailsById($candidate_id,$job_id) {

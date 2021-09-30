@@ -83,7 +83,7 @@ class ExistCandidateAutoScript extends Command
             }
         }*/
 
-        $candidate_details = CandidateBasicInfo::getAllCandidates(NULL,NULL);
+        $candidate_details = CandidateBasicInfo::getCandidateDetails(1,0);
 
         print_r($candidate_details);exit;
 
