@@ -2021,8 +2021,6 @@ class EveryMinute extends Command
 
                 if($input['owner_email'] == 'careers@adlertalent.com') {
 
-                    $input['owner_email'] = 'info@adlertalent.com';
-
                     \Mail::send('adminlte::emails.candidateAutoScriptMail', $input, function ($message) use($input) {
 
                         $message->from($input['from_address'], $input['from_name']);
