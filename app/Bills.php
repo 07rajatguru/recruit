@@ -1392,6 +1392,7 @@ class Bills extends Model
         $personwise_query = $personwise_query->where('bills.cancel_bill','=','0');
         $personwise_query = $personwise_query->where('bills.date_of_joining','>=',$current_year);
         $personwise_query = $personwise_query->where('bills.date_of_joining','<=',$next_year);
+        $personwise_query = $personwise_query->orderBy('bills.date_of_joining','ASC');
         $personwise_res = $personwise_query->get();
 
         $person_data = array();
