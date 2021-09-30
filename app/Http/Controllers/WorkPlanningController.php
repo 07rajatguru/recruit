@@ -352,9 +352,10 @@ class WorkPlanningController extends Controller
         $work_planning = WorkPlanning::getWorkPlanningDetailsById($id);
         $work_planning_list = WorkPlanningList::getWorkPlanningList($id);
 
-        $reports_to_id = User::getReportsToById($work_planning['added_by_id']);
+        $added_by_id = $work_planning['added_by_id'];
+        $appr_rejct_by = User::getUserNameById($work_planning['appr_rejct_by']);
         
-        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','id','loggedin_user_id','reports_to_id'));
+        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','id','loggedin_user_id','added_by_id','appr_rejct_by'));
     }
 
     public function edit($id) {
@@ -590,14 +591,15 @@ class WorkPlanningController extends Controller
 
         $wp_id = $_POST['wp_id'];
         $reply = $_POST['check'];
+        $user_id = \Auth::user()->id;
 
         if ($reply == 'Approved') {
 
-            \DB::statement("UPDATE work_planning SET status = '1' WHERE id = $wp_id");
+            \DB::statement("UPDATE work_planning SET status = '1',approved_by = $user_id WHERE id = $wp_id");
         }
         elseif ($reply == 'Rejected') {
 
-            \DB::statement("UPDATE work_planning SET status = '2' WHERE id = $wp_id");
+            \DB::statement("UPDATE work_planning SET status = '2',approved_by = $user_id WHERE id = $wp_id");
         }
 
         $data = 'success';

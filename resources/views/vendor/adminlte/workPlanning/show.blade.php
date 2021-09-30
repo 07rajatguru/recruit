@@ -23,14 +23,21 @@
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-            <h2>{{ $work_planning['added_date'] }}</h2>
+
+            @if($work_planning['status'] == 0)
+                <h4>{{ $work_planning['added_date'] }}</h4>
+            @elseif($work_planning['status'] == 1)
+                <h4>{{ $work_planning['added_date'] }} ( Approved By {{ $appr_rejct_by }} )</h4>
+            @else
+                <h4>{{ $work_planning['added_date'] }} ( Rejected By {{ $appr_rejct_by }} )</h4>
+            @endif
         </div>
         <div class="pull-right">
-            @if($work_planning['status'] == 0)
-                @if($loggedin_user_id == $reports_to_id)
-                    <button type="submit" class="btn btn-primary" onclick="permission('Approved')">Approved</button>
-                    <button type="submit" class="btn btn-primary" onclick="permission('Rejected')">Rejected</button>
-                @endif
+            @if($loggedin_user_id == $added_by_id)
+
+            @else
+                <button type="submit" class="btn btn-primary" onclick="permission('Approved')">Approved</button>
+                <button type="submit" class="btn btn-primary" onclick="permission('Rejected')">Rejected</button>
             @endif
             <a class="btn btn-primary" href="{{ route('workplanning.edit',$work_planning['id']) }}">Edit</a>
             <a class="btn btn-primary" href="{{ route('workplanning.index') }}">Back</a>
