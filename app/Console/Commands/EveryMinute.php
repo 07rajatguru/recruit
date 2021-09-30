@@ -2019,11 +2019,9 @@ class EveryMinute extends Command
                 $input['candidate_name'] = $candidate_details['full_name'];
                 $input['owner_email'] = $candidate_details['owner_email'];
 
-                $input['from_name'] = $candidate_details['owner_first_name'] . " " . $candidate_details['owner_last_name'];
-
                 if($input['owner_email'] == 'careers@adlertalent.com') {
 
-                    \Mail::send('adminlte::emails.existCandidateAutoScriptMail', $input, function ($message) use($input) {
+                    \Mail::send('adminlte::emails.candidateAutoScriptMail', $input, function ($message) use($input) {
 
                         $message->from($input['from_address'], $input['from_name']);
                         $message->to($input['to'])->replyTo($input['owner_email'], $input['from_name'])->subject($input['subject']);
@@ -2031,7 +2029,9 @@ class EveryMinute extends Command
                 }
                 else {
 
-                    \Mail::send('adminlte::emails.existCandidateAutoScriptMail', $input, function ($message) use($input) {
+                    $input['from_name'] = $candidate_details['owner_first_name'] . " " . $candidate_details['owner_last_name'];
+
+                    \Mail::send('adminlte::emails.candidateAutoScriptMail', $input, function ($message) use($input) {
 
                         $message->from($input['from_address'], $input['from_name']);
                         $message->to($input['to'])->bcc($input['owner_email'])->replyTo($input['owner_email'], $input['from_name'])->subject($input['subject']);
