@@ -10,7 +10,7 @@
 	<div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Leave Application</h2>
+                <h2>{!! $leave_details['subject'] !!}</h2>
             </div>
             <div class="pull-right">
                 <a class="btn btn-primary" href="{{ route('leave.index') }}"> Back</a>
@@ -23,12 +23,7 @@
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
             	<br/>
             	<div class="col-xs-12 col-sm-12 col-md-12">
-            		<p><b> Subject : </b> &nbsp;&nbsp;{!! $leave_details['subject'] !!}</p>
-                    <br/>
-                    <b><p style="margin-top: 0px; margin-bottom: 14px; font-family: arial;">Hello, </p></b>
-            		<p>{!! $leave_details['message'] !!}</p>
-            		<p>Thanks & Regards,</p>
-            		<p>{{ $leave_details['uname'] }}</p>
+            		<p><b> Email : </b>{!! $leave_details['message'] !!}</p>
             	</div>
             </div>
         </div>
@@ -66,19 +61,23 @@
     </div>
 @endif
 
-@if($leave_details['status'] == 0)
-    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-        <button type="submit" class="btn btn-primary" onclick="permission('Approved')">Approved</button> &nbsp;&nbsp;&nbsp;&nbsp;
-        <button type="submit" class="btn btn-primary" onclick="permission('Unapproved')">Unapproved</button>
-    </div>
-@elseif($leave_details['status'] == 1)
-    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-        <button type="button" class="btn btn-primary" disabled="disabled">Approved by {{ $leave_details['approved_by'] }}</button>
-    </div>
-@elseif($leave_details['status'] == 2)
-    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-        <button type="button" class="btn btn-primary" disabled="disabled">Unapproved by {{ $leave_details['approved_by'] }}</button>
-    </div>
+@if($loggedin_user_id == $leave_details['user_id'])
+
+@else
+    @if($leave_details['status'] == 0)
+        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+            <button type="submit" class="btn btn-primary" onclick="permission('Approved')">Approved</button> &nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="submit" class="btn btn-primary" onclick="permission('Unapproved')">Unapproved</button>
+        </div>
+    @elseif($leave_details['status'] == 1)
+        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+            <button type="button" class="btn btn-primary" disabled="disabled">Approved by {{ $leave_details['approved_by'] }}</button>
+        </div>
+    @elseif($leave_details['status'] == 2)
+        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+            <button type="button" class="btn btn-primary" disabled="disabled">Unapproved by {{ $leave_details['approved_by'] }}</button>
+        </div>
+    @endif
 @endif
 
 <input type="hidden" name="leave_id" id="leave_id" value="{{$leave_id}}">

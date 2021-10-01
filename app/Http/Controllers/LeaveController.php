@@ -13,53 +13,55 @@ use App\LeaveBalance;
 
 class LeaveController extends Controller
 {
-    // Start functions for single user apply for leave & leave data
-    public function index(){
+    public function index() {
         
         $user = \Auth::user();
         $user_id = $user->id;
+        $super_admin_userid = getenv('SUPERADMINUSERID');
 
-        // get role of logged in user
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
+        $all_perm = $user->can('display-leave');
+        $userwise_perm = $user->can('display-user-wise-leave');
 
-        $user_obj = new User();
-        $isAdmin = $user_obj::isAdmin($role_id);
-        $isSuperAdmin = $user_obj::isSuperAdmin($role_id);
-        $isAccountant = $user_obj::isAccountant($role_id);
-
-        if(!$isSuperAdmin){
-            $leave_balance = LeaveBalance::getLeaveBalanceByUserId($user_id);
-        }
-        else {
-
+        if($user_id == $super_admin_userid) {
             $leave_balance = '';
         }
+        else {
+            $leave_balance = LeaveBalance::getLeaveBalanceByUserId($user_id);
+        }
 
-        if($isSuperAdmin || $isAdmin || $isAccountant) {
+        if($all_perm) {
+
             $leave_details = UserLeave::getAllLeavedataByUserId(1,$user_id);
         }
-        else {
+        else if($userwise_perm) {
+
             $floor_reports_id = User::getAssignedUsers($user_id);
             foreach ($floor_reports_id as $key => $value) {
                 $user_ids[] = $key;
             }
-            $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids);   
+            $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids);
         }
 
-        return view('adminlte::leave.index',compact('leave_details','leave_balance','isSuperAdmin'));
+        $count = sizeof($leave_details);
+
+        return view('adminlte::leave.index',compact('leave_details','leave_balance','super_admin_userid','user_id','count'));
     }
 
-    public function userLeaveAdd()
-    {
+    public function userLeaveAdd() {
+
+        $action = 'add';
+
         $leave_type = UserLeave::getLeaveType();
         $leave_category = UserLeave::getLeaveCategory();
 
-        return view('adminlte::leave.create',compact('leave_type','leave_category'));
+        $selected_leave_type = '';
+        $selected_leave_category = '';
+        
+        return view('adminlte::leave.create',compact('action','leave_type','leave_category','selected_leave_type','selected_leave_category'));
     }
 
-    public function leaveStore(Request $request)
-    {
+    public function leaveStore(Request $request) {
+
         $user_id = \Auth::user()->id;
         $dateClass = new Date();
 
@@ -77,7 +79,7 @@ class LeaveController extends Controller
             $to_date = NULL;
         }
 
-        $message = Input::get('leave_msg');
+        $message = Input::get('message');
 
         $user_leave = new UserLeave();
         $user_leave->user_id = $user_id;
@@ -91,10 +93,15 @@ class LeaveController extends Controller
         $user_leave->save();
 
         $leave_id = $user_leave->id;
+
         $leave_doc = Input::file('doc');
+
         if (isset($leave_doc) && $leave_doc != '') {
+
         	foreach ($leave_doc as $key => $value) {
+
         		if (isset($value) && $value->isValid()) {
+
                     $file_name = $value->getClientOriginalName();
                     $file_extension = $value->getClientOriginalExtension();
                     $file_realpath = $value->getRealPath();
@@ -144,7 +151,65 @@ class LeaveController extends Controller
         return redirect()->route('leave.index')->with('success','Leave Application Send Successfully');
     }
 
-    public function leaveReply($id){
+    public function edit($id) {
+
+        $action = 'edit';
+
+        $leave_type = UserLeave::getLeaveType();
+        $leave_category = UserLeave::getLeaveCategory();
+
+        $leave = UserLeave::find($id);
+
+        $selected_leave_type = $leave->type_of_leave;
+        $selected_leave_category = $leave->category;
+
+        $dateClass = new Date();
+        $from_date = $dateClass->changeYMDtoDMY($leave->from_date);
+        $to_date = $dateClass->changeYMDtoDMY($leave->to_date);
+        
+        return view('adminlte::leave.edit',compact('action','leave_type','leave_category','leave','selected_leave_type','selected_leave_category','from_date','to_date'));
+    }
+
+    public function update(Request $request,$id) {
+
+        $dateClass = new Date();
+
+        if (Input::get('from_date') != '') {
+            $from_date = $dateClass->changeDMYtoYMD(Input::get('from_date'));
+        }
+        else {
+            $from_date = NULL;
+        }
+
+        if (Input::get('to_date') != '') {
+            $to_date = $dateClass->changeDMYtoYMD(Input::get('to_date'));
+        }
+        else {
+            $to_date = NULL;
+        }
+
+        $message = Input::get('message');
+
+        $user_leave = UserLeave::find($id);
+        $user_leave->subject = Input::get('subject');
+        $user_leave->from_date = $from_date;
+        $user_leave->to_date = $to_date;
+        $user_leave->type_of_leave = Input::get('leave_type');
+        $user_leave->category = Input::get('leave_category');
+        $user_leave->message = $message;
+        $user_leave->status = '0';
+        $user_leave->save();
+
+        return redirect()->route('leave.index')->with('success','Leave Application Updated Successfully.');
+    }
+
+    public function destroy($id) {
+
+        UserLeave::where('id',$id)->delete();
+        return redirect()->route('leave.index')->with('success','Leave Application Deleted Successfully.');
+    }
+
+    public function leaveReply($id) {
 
         $loggedin_user_id = \Auth::user()->id;
         $leave_details = UserLeave::getLeaveDetails($id);
@@ -155,7 +220,7 @@ class LeaveController extends Controller
         return view('adminlte::leave.leavereply',compact('leave_details','leave_doc','leave_id','loggedin_user_id'));
     }
 
-    public function leaveReplySend(){
+    public function leaveReplySend() {
 
         $leave_id = $_POST['leave_id'];
         $reply = $_POST['check'];

@@ -9,18 +9,19 @@ class UserLeave extends Model
     //
     public $table="user_leave";
 
-    public static function getLeaveType(){
+    public static function getLeaveType() {
 
         $type = array();
-        $type['']='Select Leave Type';
-        $type['Early/Late'] = 'Early Go/Late In';
+        $type[''] = 'Select Leave Type';
+        $type['Early Go'] = 'Early Go';
+        $type['Late In'] = 'Late In';
         $type['Half'] = 'Half Day';
         $type['Full'] = 'Full Day';
         
         return $type;
     }
 
-    public static function getLeaveCategory(){
+    public static function getLeaveCategory() {
 
         $type = array();
         $type['']='Select Leave Category';
@@ -30,7 +31,7 @@ class UserLeave extends Model
         return $type;
     }
 
-    public static function getAllLeavedataByUserId($all=0,$user_id){
+    public static function getAllLeavedataByUserId($all=0,$user_id) {
 
         $query = UserLeave::query();
         $query = $query->join('users','users.id','=','user_leave.user_id');
@@ -69,7 +70,7 @@ class UserLeave extends Model
         return $leave;
     }
 
-    public static function getLeaveDetails($leave_id){
+    public static function getLeaveDetails($leave_id) {
 
         $query = UserLeave::query();
         $query = $query->join('users as u1','u1.id','user_leave.user_id');
@@ -95,7 +96,7 @@ class UserLeave extends Model
         return $leave_data;
     }
 
-    public static function getLeaveDataByFromDate($date){
+    public static function getLeaveDataByFromDate($date) {
 
         $query = UserLeave::query();
         $query = $query->select('user_leave.*');

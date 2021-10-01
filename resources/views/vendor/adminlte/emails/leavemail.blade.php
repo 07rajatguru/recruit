@@ -15,10 +15,7 @@
                     <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 0px 50px 54px;">
                         <tr>
                             <td>
-                                <br/><b><p style="margin-top: 0px; margin-bottom: 14px; font-family: arial;">Hello, </p></b>
                                 <p>{!! $leave_message !!}</p>
-                                <p>Thanks & Regards,</p>
-                                <p>{{ $logged_in_user_nm }}</p>
                             </td>
                         </tr>
                     </table>

@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'User Leave')
+@section('title', 'Leave')
 
 @section('content_header')
     <h1></h1>
@@ -10,11 +10,13 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-right">
-                   <a class="btn btn-success" href="{{ route('leave.add') }}"> Add Leave Application</a>
+                <a class="btn btn-success" href="{{ route('leave.add') }}">Add New Leave Application</a>
             </div>
         </div>
     </div>
-    @if(!$isSuperAdmin)
+    @if($user_id == $super_admin_userid)
+
+    @else
         <div class="row">
             <div class="col-lg-12 margin-tb">
                 <div class="pull-left">
@@ -22,41 +24,43 @@
                 </div>
             </div>
         </div>
+        
         <div class="row">
-            <div class="col-lg-2 col-xs-4">
-                <div class="small-box bg-aqua">
-                    <div class="inner">
-                        <h3>{{ $leave_balance->leave_total or 0 }}</h3>
-                        <p>No. of Leave</p>
-                    </div>
+            <div class="col-md-12">
+                <div class="col-md-2 col-sm-4">
+                    <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00c0ef !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 180px;" title="Total Leave">Total Leave ({{ $leave_balance->leave_total or 0 }})</div></a>
+                </div>
+
+                <div class="col-md-2 col-sm-4">
+                    <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00a65a !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 180px;" title="Leave Taken">Leave Taken ({{ $leave_balance->leave_taken or 0 }})</div></a>
+                </div>
+
+                <div class="col-md-2 col-sm-4">
+                    <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#dd4b39 !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 180px;" title="Leave Remainings">Leave Remainings ({{ $leave_balance->leave_remaining or 0 }})</div></a>
                 </div>
             </div>
-            <div class="col-lg-2 col-xs-4">
-                <div class="small-box bg-green">
-                    <div class="inner">
-                        <h3>{{ $leave_balance->leave_taken or 0 }}</h3>
-                        <p>No. of Leave Taken</p>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-2 col-xs-4">
-                <div class="small-box bg-red">
-                    <div class="inner">
-                        <h3>{{ $leave_balance->leave_remaining or 0 }}</h3>
-                        <p>No. of Leave Remainings</p>
-                    </div>
-                </div>
-            </div>
-        </div>
+        </div><br>
     @endif
 
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Leave Applications</h2>
+                <h2>Leave Applications ({{ $count }})</h2>
             </div>
         </div>
     </div>
+
+    @if ($message = Session::get('success'))
+        <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
+
+    @if ($message = Session::get('error'))
+        <div class="alert alert-error">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
 
     <div class="table-responsive">
     	<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%"" id="leave_table">
@@ -80,6 +84,12 @@
 		    			<td>{{ ++$i }}</td>
                         <td>
                             <a class="fa fa-circle" title="Show" href="{{ route('leave.reply',$value['id']) }}"></a>
+
+                            <a class="fa fa-edit" title="edit" href="{{ route('leave.edit',$value['id']) }}"></a>
+
+                            @permission(('leave-delete'))
+                                @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'leave','display_name'=>'Leave Application'])
+                            @endpermission
                         </td>
 		    			<td>{{ $value['user_name'] }}</td>
 		    			<td>{{ $value['subject'] }}</td>

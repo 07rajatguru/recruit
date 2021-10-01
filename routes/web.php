@@ -587,26 +587,49 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/leave',[
         'as' => 'leave.index',
         'uses' => 'LeaveController@index',
+        'middleware' => ['permission:display-leave|display-user-wise-leave|leave-add|leave-edit|leave-delete']
     ]);
 
     Route::get('leave/add',[
         'as' => 'leave.add',
-        'uses' => 'LeaveController@userLeaveAdd'
+        'uses' => 'LeaveController@userLeaveAdd',
+        'middleware' => ['permission:leave-add']
     ]);
 
     Route::post('leave/add',[
         'as' => 'leave.store',
-        'uses' => 'LeaveController@leaveStore'
+        'uses' => 'LeaveController@leaveStore',
+        'middleware' => ['permission:leave-add']
+    ]);
+
+    Route::get('leave/edit/{id}',[
+        'as' => 'leave.edit',
+        'uses' => 'LeaveController@edit',
+        'middleware' => ['permission:leave-edit']
+    ]);
+
+    Route::patch('leave/edit/{id}',[
+        'as' => 'leave.update',
+        'uses' => 'LeaveController@update',
+        'middleware' => ['permission:leave-edit']
+    ]);
+
+    Route::delete('leave/{d}',[
+        'as' => 'leave.destroy',
+        'uses' => 'LeaveController@destroy',
+        'middleware' => ['permission:leave-delete']
     ]);
 
     Route::get('leave/reply/{id}',[
         'as' => 'leave.reply',
-        'uses' => 'LeaveController@leaveReply'
+        'uses' => 'LeaveController@leaveReply',
+        'middleware' => ['permission:display-leave|display-user-wise-leave']
     ]);
 
     Route::post('leave/reply/{id}',[
         'as' => 'leave.replysend',
-        'uses' => 'LeaveController@leaveReplySend'
+        'uses' => 'LeaveController@leaveReplySend',
+        'middleware' => ['permission:display-leave|display-user-wise-leave']
     ]);
 
     // All Users Leave Balance Routes
