@@ -36,8 +36,14 @@
             @if($loggedin_user_id == $added_by_id)
 
             @else
-                <button type="submit" class="btn btn-primary" onclick="permission('Approved')">Approved</button>
-                <button type="submit" class="btn btn-primary" onclick="permission('Rejected')">Rejected</button>
+
+                @if($work_planning['status'] == 0)
+                    <button type="submit" class="btn btn-primary" onclick="permission('Approved')">Approved</button>
+                    <button type="submit" class="btn btn-primary" onclick="permission('Rejected')">Rejected</button>
+                @else
+                    <button type="submit" class="btn btn-primary" onclick="permission('Approved')" disabled="disabled">Approved</button>
+                    <button type="submit" class="btn btn-primary" onclick="permission('Rejected')" disabled="disabled">Rejected</button>
+                @endif
             @endif
             <a class="btn btn-primary" href="{{ route('workplanning.edit',$work_planning['id']) }}">Edit</a>
             <a class="btn btn-primary" href="{{ route('workplanning.index') }}">Back</a>
