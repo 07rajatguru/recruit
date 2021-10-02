@@ -1375,7 +1375,12 @@ class JobOpenController extends Controller
         $selected_departments = array();
         $job_id = 0;
 
-        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','super_admin_user_id','loggedin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox','adler_job_disclosed_checkbox','remote_working','departments','selected_departments','job_id'));
+        // Get users whose report to user is logged-in user
+
+        $user_ids_list = User::getAssignedUsers($loggedin_user_id);
+        $loggedin_user_report_to = User::getReportsToById($loggedin_user_id);
+
+        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','super_admin_user_id','loggedin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox','adler_job_disclosed_checkbox','remote_working','departments','selected_departments','job_id','user_ids_list','loggedin_user_report_to'));
     }
 
     public function store(Request $request) {

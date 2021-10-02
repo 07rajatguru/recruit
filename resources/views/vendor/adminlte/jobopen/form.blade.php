@@ -590,6 +590,21 @@
 <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
 </div>
 
+@if($action == 'add')
+    <?php $u_id = ''; ?>
+    @foreach($user_ids_list as $u_k => $u_v)
+        <?php
+            $u_id = $u_id . "," . $u_k;
+        ?>
+    @endforeach
+
+    <?php
+        $u_id = $u_id . "," . $loggedin_user_report_to;
+    ?>
+
+    <input type="hidden" name="u_id" id="u_id" value="{{ $u_id }}">
+@endif
+
 {!! Form::close() !!}
 
 @section('customscripts')
@@ -868,6 +883,14 @@
 
             var action = $("#action").val();
 
+            if(action == 'add') {
+
+                var u_id = $("#u_id").val();
+                var u_id_array = u_id.split(",");
+
+                var arrayOfUIds = u_id_array.map(Number);
+            }
+
             $.ajax({
 
                 url:'/getjobusers/bydepartment',
@@ -902,9 +925,26 @@
                            
                             for (var i = 0; i < data.length; i++) {
 
-                                html += '<input type="checkbox" name="user_ids[]" value="'+data[i].id+'" class="department_class">';
-                                html += '&nbsp;&nbsp;';
-                                html += '<b><span style="font-size:15px;">'+data[i].name+'</span>&nbsp;&nbsp;</b>';
+                                if(action == 'add') {
+                                    if(arrayOfUIds.indexOf(data[i].id) !== -1) {
+
+                                        html += '<input type="checkbox" name="user_ids[]" value="'+data[i].id+'" class="department_class" checked>';
+                                        html += '&nbsp;&nbsp;';
+                                        html += '<b><span style="font-size:15px;">'+data[i].name+'</span>&nbsp;&nbsp;</b>';
+                                    }
+                                    else {
+
+                                        html += '<input type="checkbox" name="user_ids[]" value="'+data[i].id+'" class="department_class">';
+                                        html += '&nbsp;&nbsp;';
+                                        html += '<b><span style="font-size:15px;">'+data[i].name+'</span>&nbsp;&nbsp;</b>';
+                                    }
+                                }
+                                else {
+
+                                    html += '<input type="checkbox" name="user_ids[]" value="'+data[i].id+'" class="department_class">';
+                                    html += '&nbsp;&nbsp;';
+                                    html += '<b><span style="font-size:15px;">'+data[i].name+'</span>&nbsp;&nbsp;</b>';
+                                }
                             }
 
                             html += '<br/>';
