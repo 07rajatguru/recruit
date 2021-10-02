@@ -169,10 +169,14 @@ class EveryMinute extends Command
 
             else if ($value['module'] == 'Leave') {
 
-                $cc_array = array();
-                $cc_array = explode(",",$input['cc']); 
+                // Get Sender name details
 
-                $input['cc_array'] = array_unique($cc_array);
+                $user_details = User::getAllDetailsByUserID($value['sender_name']);
+                $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
+                $input['owner_email'] = $user_details->email;
+
+                $user_info = User::getProfileInfo($value['sender_name']);
+                $input['signature'] = $user_info['signature'];
 
                 $leave = UserLeave::find($module_id);
 
@@ -181,6 +185,7 @@ class EveryMinute extends Command
                 if (isset($leave_doc) && sizeof($leave_doc) > 0) {
 
                     $input['attachment'] = array();$j = 0;
+
                     foreach ($leave_doc as $key => $value) {
                         $input['attachment'][$j] = 'public/'.$value['fileName'];
                         $j++;
@@ -190,14 +195,12 @@ class EveryMinute extends Command
                 $input['leave_message'] = $leave->message;
                 $input['leave_id'] = $module_id;
 
-                $logged_in_user_id = $leave->user_id;
-
-                $input['logged_in_user_nm'] = User::getUserNameById($logged_in_user_id);
-
                 \Mail::send('adminlte::emails.leavemail', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
-                    if (isset($input['attachment']) && sizeof($input['attachment'])>0) {
+                    $message->to($input['to'])->cc($input['cc'])->bcc($input['owner_email'])->subject($input['subject']);
+
+                    if (isset($input['attachment']) && sizeof($input['attachment']) > 0) {
+                        
                         foreach ($input['attachment'] as $key => $value) {
                             $message->attach($value);
                         }
@@ -473,6 +476,17 @@ class EveryMinute extends Command
                 $cc_array = explode(",",$input['cc']); 
 
                 $input['cc_array'] = array_unique($cc_array);
+
+                // Get Sender name details
+
+                $user_details = User::getAllDetailsByUserID($value['sender_name']);
+                $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
+
+                $user_info = User::getProfileInfo($value['sender_name']);
+                $input['signature'] = $user_info['signature'];
+
+                $leave = UserLeave::find($module_id);
+                $input['leave_message'] = $leave->reply_message;
 
                 \Mail::send('adminlte::emails.leavemail', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);

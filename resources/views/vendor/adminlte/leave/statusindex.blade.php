@@ -14,33 +14,6 @@
             </div>
         </div>
     </div>
-    @if($user_id == $super_admin_userid)
-
-    @else
-        <div class="row">
-            <div class="col-lg-12 margin-tb">
-                <div class="pull-left">
-                    <h2>Leave Balance</h2>
-                </div>
-            </div>
-        </div>
-        
-        <div class="row">
-            <div class="col-md-12">
-                <div class="col-md-2 col-sm-4">
-                    <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00c0ef !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 180px;" title="Total Leave">Total Leave ({{ $leave_balance->leave_total or 0 }})</div></a>
-                </div>
-
-                <div class="col-md-2 col-sm-4">
-                    <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00a65a !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 180px;" title="Leave Taken">Leave Taken ({{ $leave_balance->leave_taken or 0 }})</div></a>
-                </div>
-
-                <div class="col-md-2 col-sm-4">
-                    <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#dd4b39 !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 180px;" title="Leave Remainings">Leave Remainings ({{ $leave_balance->leave_remaining or 0 }})</div></a>
-                </div>
-            </div>
-        </div><br>
-    @endif
 
     <div class="row">
         <div class="col-lg-12 margin-tb">

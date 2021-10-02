@@ -23,7 +23,7 @@
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
             	<br/>
             	<div class="col-xs-12 col-sm-12 col-md-12">
-            		<p><b> Email : </b>{!! $leave_details['message'] !!}</p>
+            		{!! $leave_details['message'] !!}
             	</div>
             </div>
         </div>
@@ -62,22 +62,24 @@
 @endif
 
 @if($loggedin_user_id == $leave_details['user_id'])
-
+    
 @else
     @if($leave_details['status'] == 0)
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
             <button type="submit" class="btn btn-primary" onclick="permission('Approved')">Approved</button> &nbsp;&nbsp;&nbsp;&nbsp;
             <button type="submit" class="btn btn-primary" onclick="permission('Unapproved')">Unapproved</button>
         </div>
-    @elseif($leave_details['status'] == 1)
-        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            <button type="button" class="btn btn-primary" disabled="disabled">Approved by {{ $leave_details['approved_by'] }}</button>
-        </div>
-    @elseif($leave_details['status'] == 2)
-        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            <button type="button" class="btn btn-primary" disabled="disabled">Unapproved by {{ $leave_details['approved_by'] }}</button>
-        </div>
     @endif
+@endif
+
+@if($leave_details['status'] == 1)
+    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+        <button type="button" class="btn btn-primary" disabled="disabled">Approved by {{ $leave_details['approved_by'] }}</button>
+    </div>
+@elseif($leave_details['status'] == 2)
+    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+        <button type="button" class="btn btn-primary" disabled="disabled">Unapproved by {{ $leave_details['approved_by'] }}</button>
+    </div>
 @endif
 
 <input type="hidden" name="leave_id" id="leave_id" value="{{$leave_id}}">

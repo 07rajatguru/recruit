@@ -614,10 +614,16 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:leave-edit']
     ]);
 
-    Route::delete('leave/{d}',[
+    Route::delete('leave/{id}',[
         'as' => 'leave.destroy',
         'uses' => 'LeaveController@destroy',
         'middleware' => ['permission:leave-delete']
+    ]);
+
+    Route::post('leave/sendmail',[
+        'as' => 'leave.sendmail',
+        'uses' => 'LeaveController@sendMail',
+        'middleware' => ['permission:leave-add']
     ]);
 
     Route::get('leave/reply/{id}',[
@@ -632,10 +638,17 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-leave|display-user-wise-leave']
     ]);
 
+    Route::any('leave/{status}', [
+        'as' => 'leave.status',
+        'uses' => 'LeaveController@getAllDetailsByStatus',
+        'middleware' => ['permission:display-leave|display-user-wise-leave']
+    ]);
+
     // All Users Leave Balance Routes
     Route::get('userwiseleave',[
         'as' => 'leave.userwise',
-        'uses' => 'LeaveController@userWiseLeave'
+        'uses' => 'LeaveController@userWiseLeave',
+        'middleware' => ['permission:display-leave']
     ]);
 
     Route::get('userwiseleave/create',[

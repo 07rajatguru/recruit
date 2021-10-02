@@ -31,7 +31,7 @@ class LeaveController extends Controller
 
         if($all_perm) {
 
-            $leave_details = UserLeave::getAllLeavedataByUserId(1,$user_id);
+            $leave_details = UserLeave::getAllLeavedataByUserId(1,$user_id,'');
         }
         else if($userwise_perm) {
 
@@ -39,12 +39,85 @@ class LeaveController extends Controller
             foreach ($floor_reports_id as $key => $value) {
                 $user_ids[] = $key;
             }
-            $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids);
+            $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,'');
         }
 
         $count = sizeof($leave_details);
 
-        return view('adminlte::leave.index',compact('leave_details','leave_balance','super_admin_userid','user_id','count'));
+        $pending = 0;
+        $approved = 0;
+        $not_approved = 0;
+
+        foreach($leave_details as $leave_detail) {
+
+            if($leave_detail['status'] == '0') {
+                $pending++;
+            }
+            else if ($leave_detail['status'] == '1') {
+                $approved++;
+            }
+            else if($leave_detail['status'] == '2') {
+                $not_approved++;
+            }
+        }
+
+        return view('adminlte::leave.index',compact('leave_details','leave_balance','super_admin_userid','user_id','count','pending','approved','not_approved'));
+    }
+
+    public function getAllDetailsByStatus($status) {
+        
+        $user =  \Auth::user();
+        $user_id = $user->id;
+        $all_perm = $user->can('display-leave');
+        $userwise_perm = $user->can('display-user-wise-leave');
+
+        if($status == 'pending') {
+            $status = '0';
+        }
+        else if($status == 'approved') {
+            $status = '1';
+        }
+        else if($status == 'not-approved') {
+            $status = '2';
+        }
+ 
+        if($all_perm) {
+
+            $leave_details_all = UserLeave::getAllLeavedataByUserId(1,$user_id,'');
+            $leave_details = UserLeave::getAllLeavedataByUserId(1,$user_id,$status);
+        }
+        else if($userwise_perm) {
+
+            $floor_reports_id = User::getAssignedUsers($user_id);
+
+            foreach ($floor_reports_id as $key => $value) {
+                $user_ids[] = $key;
+            }
+
+            $leave_details_all = UserLeave::getAllLeavedataByUserId(0,$user_ids,'');
+            $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$status);
+        }
+
+        $pending = 0;
+        $approved = 0;
+        $not_approved = 0;
+
+        foreach($leave_details_all as $leave_detail) {
+
+            if($leave_detail['status'] == '0') {
+                $pending++;
+            }
+            else if ($leave_detail['status'] == '1') {
+                $approved++;
+            }
+            else if($leave_detail['status'] == '2') {
+                $not_approved++;
+            }
+        }
+
+        $count = sizeof($leave_details);
+
+        return view('adminlte::leave.statusindex',compact('leave_details','count','pending','approved','not_approved'));
     }
 
     public function userLeaveAdd() {
@@ -129,25 +202,6 @@ class LeaveController extends Controller
         	}
         }
 
-        $superadmin_userid = getenv('SUPERADMINUSERID');
-        $reports_to_id = User::getReportsToById($user_id);
-
-        $superadmin_secondary_email = User::getUserEmailById($superadmin_userid);
-        $reports_to_secondary_email = User::getUserEmailById($reports_to_id);
-
-        $cc_users_array = array($superadmin_secondary_email);
-        $cc_users_array = array_filter($cc_users_array);
-
-        $module = "Leave";
-        $sender_name = $user_id;
-        $to = $reports_to_secondary_email;
-        $cc = implode(",",$cc_users_array);
-        $subject = $user_leave->subject;
-        $body_message = $user_leave->message;
-        $module_id = $user_leave->id;
-
-        event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
-
         return redirect()->route('leave.index')->with('success','Leave Application Send Successfully');
     }
 
@@ -209,6 +263,31 @@ class LeaveController extends Controller
         return redirect()->route('leave.index')->with('success','Leave Application Deleted Successfully.');
     }
 
+    public function sendMail() {
+
+        $leave_id = $_POST['leave_id'];
+        $leave_details = UserLeave::getLeaveDetails($leave_id);
+
+        $user_id = \Auth::user()->id;
+
+        $superadmin_userid = getenv('SUPERADMINUSERID');
+        $reports_to_id = User::getReportsToById($user_id);
+
+        $module = "Leave";
+        $sender_name = $user_id;
+
+        $to = User::getUserEmailById($superadmin_userid);
+        $cc = User::getUserEmailById($reports_to_id);
+
+        $subject = $leave_details['subject'];
+        $body_message = $leave_details['message'];
+        $module_id = $leave_id;
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+
+        return redirect()->route('leave.index')->with('success','Email Sent Successfully.');
+    }
+
     public function leaveReply($id) {
 
         $loggedin_user_id = \Auth::user()->id;
@@ -234,23 +313,14 @@ class LeaveController extends Controller
         $reports_to_id = User::getReportsToById($user_id);
 
         $user_email = User::getUserEmailById($user_id);
+        
+        $superadmin_email = User::getUserEmailById($superadmin_userid);
+        $reports_to_email = User::getUserEmailById($reports_to_id);
+        $cc_users_array = array($superadmin_email,$reports_to_email);
+        $cc_users_array = array_filter($cc_users_array);
 
-        if ($loggedin_user_id == $reports_to_id) {
-            $superadmin_email = User::getUserEmailById($superadmin_userid);
-
-            $cc_users_array = array($superadmin_email);
-            $cc_users_array = array_filter($cc_users_array);
-        }
-        else {
-            $reports_to_email = User::getUserEmailById($reports_to_id);
-
-            $cc_users_array = array($reports_to_email);
-            $cc_users_array = array_filter($cc_users_array);
-        }
 
         if ($reply == 'Approved') {
-
-            \DB::statement("UPDATE user_leave SET status = '1',approved_by=$loggedin_user_id where id = $leave_id");
 
             $leave_details = UserLeave::getLeaveDetails($leave_id);
             $approved_by = $leave_details['approved_by'];
@@ -268,10 +338,10 @@ class LeaveController extends Controller
             $module_id = $leave_id;
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+
+            \DB::statement("UPDATE user_leave SET status = '1',approved_by=$loggedin_user_id, reply_message = '$message' WHERE id = $leave_id");
         }
         elseif ($reply == 'Unapproved') {
-
-            \DB::statement("UPDATE user_leave SET status = '2',approved_by=$loggedin_user_id where id = $leave_id");
 
             $leave_details = UserLeave::getLeaveDetails($leave_id);
             $approved_by = $leave_details['approved_by'];
@@ -289,6 +359,8 @@ class LeaveController extends Controller
             $module_id = $leave_id;
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+
+            \DB::statement("UPDATE user_leave SET status = '2',approved_by=$loggedin_user_id, reply_message = '$message' WHERE id = $leave_id");
         }
 
         $data = 'success';

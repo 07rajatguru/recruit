@@ -6,8 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class UserLeave extends Model
 {
-    //
-    public $table="user_leave";
+    public $table = "user_leave";
 
     public static function getLeaveType() {
 
@@ -31,14 +30,20 @@ class UserLeave extends Model
         return $type;
     }
 
-    public static function getAllLeavedataByUserId($all=0,$user_id) {
+    public static function getAllLeavedataByUserId($all=0,$user_id,$status='') {
 
         $query = UserLeave::query();
         $query = $query->join('users','users.id','=','user_leave.user_id');
         $query = $query->select('user_leave.*','users.name as user_name');
+        
         if ($all == 0) {
             $query = $query->whereIn('user_leave.user_id',$user_id);
         }
+
+        if(isset($status) && $status != '') {
+            $query = $query->where('user_leave.status','=',$status);
+        }
+
         $query = $query->orderBy('user_leave.id','desc');
         $res = $query->get();
 
