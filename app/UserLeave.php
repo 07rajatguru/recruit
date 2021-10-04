@@ -30,7 +30,7 @@ class UserLeave extends Model
         return $type;
     }
 
-    public static function getAllLeavedataByUserId($all=0,$user_id,$status='') {
+    public static function getAllLeavedataByUserId($all=0,$user_id,$month,$year,$status='') {
 
         $query = UserLeave::query();
         $query = $query->join('users','users.id','=','user_leave.user_id');
@@ -42,6 +42,11 @@ class UserLeave extends Model
 
         if(isset($status) && $status != '') {
             $query = $query->where('user_leave.status','=',$status);
+        }
+
+        if ($month != '' && $year != '') {
+            $query = $query->where(\DB::raw('month(user_leave.created_at)'),'=',$month);
+            $query = $query->where(\DB::raw('year(user_leave.created_at)'),'=',$year);
         }
 
         $query = $query->orderBy('user_leave.id','desc');
@@ -96,6 +101,8 @@ class UserLeave extends Model
             $leave_data['status'] = $res->status;
             $leave_data['uname'] = $res->fname . " " . $res->lname;
             $leave_data['approved_by'] = $res->approved_by_first_name . " " . $res->approved_by_last_name;
+            $leave_data['from_date'] = $res->from_date;
+            $leave_data['to_date'] = $res->to_date;
         }
 
         return $leave_data;

@@ -43,8 +43,11 @@ class LeaveBalanceData extends Command
         $users = User::getAllUsers();
 
         foreach ($users as $key => $value) {
+
             $user_id = LeaveBalance::CheckUserID($key);
+
             if (isset($user_id) && $user_id > 0) {
+
                 $leave_data = LeaveBalance::getLeaveBalanceByUserId($key);
                 $total_leave = $leave_data['leave_total'];
                 $remaining_leave = $leave_data['leave_remaining'];
@@ -56,13 +59,17 @@ class LeaveBalanceData extends Command
                 //print_r($new_remaining);exit;
             }
             else {
+
                 $user_data = UserOthersInfo::getUserOtherInfo($key);
+
                 if (isset($user_data) && $user_data != '') {
+
                     $date_of_joining = $user_data['date_of_joining'];
                     $after_six_month = date('Y-m-d', strtotime("+6 month $date_of_joining"));
                     $current_date = date('Y-m-d');
 
                     if ($after_six_month <= $current_date) {
+
                         $date1 = date_create($current_date);
                         $date2 = date_create($after_six_month);
                         $date_diff = date_diff($date1,$date2);
@@ -73,6 +80,7 @@ class LeaveBalanceData extends Command
                         $total_month = $month_convert + $month;
                         $total_leave = 2 * $total_month;
                         //print_r($total_leave);exit;
+
                         //Add User Leave Balance data
                         $leave_balance = new LeaveBalance();
                         $leave_balance->user_id = $key;

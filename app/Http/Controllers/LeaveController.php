@@ -22,6 +22,36 @@ class LeaveController extends Controller
         $all_perm = $user->can('display-leave');
         $userwise_perm = $user->can('display-user-wise-leave');
 
+        // Get Selected Month
+        $month_array = array();
+        for ($i = 1; $i <= 12 ; $i++) {
+            $month_array[$i] = date('M',mktime(0,0,0,$i));
+        }
+
+        // Get Selected Year
+        $starting_year = '2021';
+        $ending_year = date('Y',strtotime('+2 year'));
+
+        $year_array = array();
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
+        }
+
+        if (isset($_POST['month']) && $_POST['month'] != 0) {
+            $month = $_POST['month'];
+        }
+        else {
+            $month = date('m');
+        }
+
+        if (isset($_POST['year']) && $_POST['year'] != 0) {
+            $year = $_POST['year'];
+        }
+        else {
+            $year = date('Y');
+        }
+
+        // Get userwise leave balance
         if($user_id == $super_admin_userid) {
             $leave_balance = '';
         }
@@ -31,7 +61,7 @@ class LeaveController extends Controller
 
         if($all_perm) {
 
-            $leave_details = UserLeave::getAllLeavedataByUserId(1,$user_id,'');
+            $leave_details = UserLeave::getAllLeavedataByUserId(1,$user_id,$month,$year,'');
         }
         else if($userwise_perm) {
 
@@ -39,7 +69,7 @@ class LeaveController extends Controller
             foreach ($floor_reports_id as $key => $value) {
                 $user_ids[] = $key;
             }
-            $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,'');
+            $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'');
         }
 
         $count = sizeof($leave_details);
@@ -61,16 +91,48 @@ class LeaveController extends Controller
             }
         }
 
-        return view('adminlte::leave.index',compact('leave_details','leave_balance','super_admin_userid','user_id','count','pending','approved','not_approved'));
+        return view('adminlte::leave.index',compact('leave_details','leave_balance','super_admin_userid','user_id','count','pending','approved','not_approved','month_array','month','year_array','year'));
     }
 
     public function getAllDetailsByStatus($status) {
         
         $user =  \Auth::user();
         $user_id = $user->id;
+        $super_admin_userid = getenv('SUPERADMINUSERID');
+
         $all_perm = $user->can('display-leave');
         $userwise_perm = $user->can('display-user-wise-leave');
 
+        // Get Selected Month
+        $month_array = array();
+        for ($i = 1; $i <= 12 ; $i++) {
+            $month_array[$i] = date('M',mktime(0,0,0,$i));
+        }
+
+        // Get Selected Year
+        $starting_year = '2021';
+        $ending_year = date('Y',strtotime('+2 year'));
+
+        $year_array = array();
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
+        }
+
+        if (isset($_POST['month']) && $_POST['month'] != 0) {
+            $month = $_POST['month'];
+        }
+        else {
+            $month = date('m');
+        }
+
+        if (isset($_POST['year']) && $_POST['year'] != 0) {
+            $year = $_POST['year'];
+        }
+        else {
+            $year = date('Y');
+        }
+
+        // Set Status value
         if($status == 'pending') {
             $status = '0';
         }
@@ -80,24 +142,35 @@ class LeaveController extends Controller
         else if($status == 'not-approved') {
             $status = '2';
         }
+
+        // Get userwise leave balance
+        if($user_id == $super_admin_userid) {
+            $leave_balance = '';
+        }
+        else {
+            $leave_balance = LeaveBalance::getLeaveBalanceByUserId($user_id);
+        }
  
         if($all_perm) {
 
-            $leave_details_all = UserLeave::getAllLeavedataByUserId(1,$user_id,'');
-            $leave_details = UserLeave::getAllLeavedataByUserId(1,$user_id,$status);
+            $leave_details_all = UserLeave::getAllLeavedataByUserId(1,$user_id,$month,$year,'');
+            $leave_details = UserLeave::getAllLeavedataByUserId(1,$user_id,$month,$year,$status);
         }
         else if($userwise_perm) {
 
-            $floor_reports_id = User::getAssignedUsers($user_id);
+            $reports_to_ids = User::getAssignedUsers($user_id);
 
-            foreach ($floor_reports_id as $key => $value) {
+            foreach ($reports_to_ids as $key => $value) {
                 $user_ids[] = $key;
             }
 
-            $leave_details_all = UserLeave::getAllLeavedataByUserId(0,$user_ids,'');
-            $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$status);
+            $leave_details_all = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'');
+            $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,$status);
         }
 
+        $count = sizeof($leave_details);
+
+        // Set total leave count by status
         $pending = 0;
         $approved = 0;
         $not_approved = 0;
@@ -115,9 +188,7 @@ class LeaveController extends Controller
             }
         }
 
-        $count = sizeof($leave_details);
-
-        return view('adminlte::leave.statusindex',compact('leave_details','count','pending','approved','not_approved'));
+        return view('adminlte::leave.statusindex',compact('status','leave_details','leave_balance','super_admin_userid','user_id','count','pending','approved','not_approved','month_array','month','year_array','year'));
     }
 
     public function userLeaveAdd() {
@@ -319,10 +390,17 @@ class LeaveController extends Controller
         $cc_users_array = array($superadmin_email,$reports_to_email);
         $cc_users_array = array_filter($cc_users_array);
 
+        // Get user leave details
+        $leave_details = UserLeave::getLeaveDetails($leave_id);
+
+        $from_date = strtotime($leave_details['from_date']);
+        $to_date = strtotime($leave_details['to_date']);
+
+        $diff_in_days = ($to_date - $from_date)/60/60/24;
+        $diff_in_days = $diff_in_days + 1;
 
         if ($reply == 'Approved') {
-
-            $leave_details = UserLeave::getLeaveDetails($leave_id);
+            
             $approved_by = $leave_details['approved_by'];
 
             $new_msg = "<p> Hello " . $user_name . " ,</p><p><b>Your leave has been Approved.</b></p>";
@@ -340,10 +418,21 @@ class LeaveController extends Controller
             event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
 
             \DB::statement("UPDATE user_leave SET status = '1',approved_by=$loggedin_user_id, reply_message = '$message' WHERE id = $leave_id");
+
+            // Update Leave Balance
+
+            $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
+
+            $leave_taken = $leave_balance_details['leave_taken'];
+            $leave_remaining = $leave_balance_details['leave_remaining'];
+
+            $new_leave_taken = $leave_taken + $diff_in_days;
+            $new_leave_remaining = $leave_remaining - $diff_in_days;
+
+            \DB::statement("UPDATE leave_balance SET leave_taken = '$new_leave_taken', leave_remaining = '$new_leave_remaining' where user_id = '$user_id'");
         }
         elseif ($reply == 'Unapproved') {
 
-            $leave_details = UserLeave::getLeaveDetails($leave_id);
             $approved_by = $leave_details['approved_by'];
             
             $new_msg = "<p> Hello " . $user_name . " ,</p><p><b>Your leave has been Unapproved.</b></p>";

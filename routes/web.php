@@ -584,7 +584,7 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     // User Leave Route
-    Route::get('/leave',[
+    Route::any('/leave',[
         'as' => 'leave.index',
         'uses' => 'LeaveController@index',
         'middleware' => ['permission:display-leave|display-user-wise-leave|leave-add|leave-edit|leave-delete']
