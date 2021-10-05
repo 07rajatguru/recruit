@@ -79,7 +79,7 @@ class WorkPlanningController extends Controller
         return view('adminlte::workPlanning.index',compact('work_planning_res','count','month_array','month','year_array','year','pending','approved','rejected'));
     }
 
-    public function getAllDetailsByStatus($status) {
+    public function getAllDetailsByStatus($status,$month,$year) {
         
         $user =  \Auth::user();
         $all_perm = $user->can('display-work-planning');
@@ -100,15 +100,15 @@ class WorkPlanningController extends Controller
             $year_array[$y] = $y;
         }
 
-        if (isset($_POST['month']) && $_POST['month'] != 0) {
-            $month = $_POST['month'];
+        if (isset($month) && $month != 0) {
+            $month = $month;
         }
         else {
             $month = date('m');
         }
 
-        if (isset($_POST['year']) && $_POST['year'] != 0) {
-            $year = $_POST['year'];
+        if (isset($year) && $year != 0) {
+            $year = $year;
         }
         else {
             $year = date('Y');
@@ -184,6 +184,7 @@ class WorkPlanningController extends Controller
         $dt_login->setTimezone($tz_login);
         $loggedin_time = $dt_login->format('H:i:s');
         $loggedin_time = date("g:i A", strtotime($loggedin_time));
+        $org_loggedin_time = $dt_login->format('H:i:s');
 
         // Convert Logged in time
         $utc_logout = $get_time['logout'];
@@ -203,7 +204,7 @@ class WorkPlanningController extends Controller
         $remaining_time = $user_details->working_hours;
         $user_total_hours = $user_details->working_hours;
 
-        return view('adminlte::workPlanning.create',compact('action','work_type','selected_work_type','time_array','selected_projected_time','selected_actual_time','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','remaining_time','user_total_hours'));
+        return view('adminlte::workPlanning.create',compact('action','work_type','selected_work_type','time_array','selected_projected_time','selected_actual_time','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','remaining_time','user_total_hours','org_loggedin_time'));
     }
 
     public function store(Request $request) {

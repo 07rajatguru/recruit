@@ -94,7 +94,7 @@ class LeaveController extends Controller
         return view('adminlte::leave.index',compact('leave_details','leave_balance','super_admin_userid','user_id','count','pending','approved','not_approved','month_array','month','year_array','year'));
     }
 
-    public function getAllDetailsByStatus($status) {
+    public function getAllDetailsByStatus($status,$month,$year) {
         
         $user =  \Auth::user();
         $user_id = $user->id;
@@ -118,15 +118,15 @@ class LeaveController extends Controller
             $year_array[$y] = $y;
         }
 
-        if (isset($_POST['month']) && $_POST['month'] != 0) {
-            $month = $_POST['month'];
+        if (isset($month) && $month != 0) {
+            $month = $month;
         }
         else {
             $month = date('m');
         }
 
-        if (isset($_POST['year']) && $_POST['year'] != 0) {
-            $year = $_POST['year'];
+        if (isset($year) && $year != 0) {
+            $year = $year;
         }
         else {
             $year = date('Y');

@@ -25,7 +25,7 @@
 @if($action == 'edit')
     {!! Form::model($work_planning_res,['method' => 'PATCH', 'files' => true, 'route' => ['workplanning.update', $work_planning_res['id']],'id'=>'work_planning_form', 'autocomplete' => 'off']) !!}
 @else
-    {!! Form::open(['files' => true, 'route' => 'workplanning.store','id'=>'work_planning_form', 'autocomplete' => 'off']) !!}
+    {!! Form::open(['files' => true, 'route' => 'workplanning.store','id'=>'work_planning_form', 'autocomplete' => 'off','onsubmit' => "return checkTime()"]) !!}
 @endif
 
 <div class="row">
@@ -165,12 +165,30 @@
 
     @if( $action == 'add')
         <input type="hidden" id="row_cnt" name="row_cnt" value="6">
+        <input type="hidden" id="org_loggedin_time" name="org_loggedin_time" value="{{ $org_loggedin_time }}">
     @endif
 
     @if($action == 'edit')
         <input type="hidden" value="{!! $id !!}" name="work_planning_id" id="work_planning_id">
         <input type="hidden" id="row_cnt" name="row_cnt" value="1">
     @endif
+</div>
+
+<div id="alertModal" class="modal text-left fade" data-toggle="modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Work Planning</h4>
+            </div>
+            <div class="modal-body">
+                <p>Have you Reported Work at Late?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" id="yes-btn">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 {!! Form::close() !!}
@@ -542,6 +560,25 @@
                 }
             }
         });
+    }
+
+    function checkTime () {
+
+        var time_start = new Date();
+        var current_time = time_start.getHours() + ":" + time_start.getMinutes() + ":" + time_start.getSeconds();
+        var loggedin_time = $("#org_loggedin_time").val();
+        
+        var value_start = loggedin_time.split(':');
+        var value_end = current_time.split(':');
+
+        var diff = value_end[0] - value_start[0];
+
+        if(diff > 1) {
+
+            $("#alertModal").modal();
+        }
+
+        return false;
     }
 </script>
 @endsection

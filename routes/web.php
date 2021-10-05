@@ -638,7 +638,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-leave|display-user-wise-leave']
     ]);
 
-    Route::any('leave/{status}', [
+    Route::any('leave/{status}/{month}/{year}', [
         'as' => 'leave.status',
         'uses' => 'LeaveController@getAllDetailsByStatus',
         'middleware' => ['permission:display-leave|display-user-wise-leave']
@@ -3395,7 +3395,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:work-planning-add']
     ]);
 
-    Route::any('work-planning/{status}', [
+    Route::any('work-planning/{status}/{month}/{year}', [
         'as' => 'workplanning.status',
         'uses' => 'WorkPlanningController@getAllDetailsByStatus',
         'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
