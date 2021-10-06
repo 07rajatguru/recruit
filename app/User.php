@@ -281,42 +281,6 @@ class User extends Authenticatable
         return $interviewerArray;
     }
 
-    public static function isAdmin($user_role_id) {
-
-        $admin_role_id = env('ADMIN');
-        $director_role_id = env('DIRECTOR');
-        $super_admin_role_id = env('SUPERADMIN');
-
-        if ($admin_role_id == $user_role_id) {
-            return true;
-        }
-        if($director_role_id == $user_role_id){
-            return true;
-        }
-        if($super_admin_role_id == $user_role_id){
-            return true;
-        }
-        return false;
-    }
-
-    public static function isSuperAdmin($user_role_id) {
-
-        $admin_role_id = env('SUPERADMIN');
-        if ($admin_role_id == $user_role_id) {
-            return true;
-        }
-        return false;
-    }
-
-    public static function isAccountant($user_role_id) {
-
-        $admin_role_id = env('ACCOUNTANT');
-        if ($admin_role_id == $user_role_id) {
-            return true;
-        }
-        return false;
-    }
-
     public static function isClient($user_role_id) {
 
         $admin_role_id = getenv('CLIENT');

@@ -3400,4 +3400,41 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'WorkPlanningController@getAllDetailsByStatus',
         'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
     ]);
+
+    // Rolewise Bench Mark Routes
+    Route::get('bench-mark',[
+        'as' => 'rolewisebenchmark.index',
+        'uses' => 'RolewiseUserBenchmarkController@index',
+        'middleware' => ['permission:display-user-benchmark|user-benchmark-add|user-benchmark-edit|user-benchmark-delete']
+    ]);
+
+    Route::get('bench-mark/add',[
+        'as' => 'rolewisebenchmark.create',
+        'uses' => 'RolewiseUserBenchmarkController@create',
+        'middleware' => ['permission:user-benchmark-add']
+    ]);
+
+    Route::post('bench-mark/add',[
+        'as' => 'rolewisebenchmark.store',
+        'uses' => 'RolewiseUserBenchmarkController@store',
+        'middleware' => ['permission:user-benchmark-add']
+    ]);
+
+    Route::get('bench-mark/edit/{id}',[
+        'as' => 'rolewisebenchmark.edit',
+        'uses' => 'RolewiseUserBenchmarkController@edit',
+        'middleware' => ['permission:user-benchmark-edit']
+    ]);
+
+    Route::patch('bench-mark/edit/{id}',[
+        'as' => 'rolewisebenchmark.update',
+        'uses' => 'RolewiseUserBenchmarkController@update',
+        'middleware' => ['permission:user-benchmark-edit']
+    ]);
+
+    Route::delete('bench-mark/{id}',[
+        'as' => 'rolewisebenchmark.destroy',
+        'uses' => 'RolewiseUserBenchmarkController@destroy',
+        'middleware' => ['permission:user-benchmark-delete']
+    ]);
 });
