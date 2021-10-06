@@ -314,17 +314,20 @@ class UserController extends Controller
         // Get Benchmark from rolewise table
         $role_bench_mark = RolewiseUserBenchmark::getBenchMarkByRoleID($role);
 
-        // Add entry in user benchmark table
-        $user_bench_mark = new UserBenchMark();
-        $user_bench_mark->user_id = $user_id;
-        $user_bench_mark->no_of_resumes = $role_bench_mark['no_of_resumes'];
-        $user_bench_mark->shortlist_ratio = $role_bench_mark['shortlist_ratio'];
-        $user_bench_mark->interview_ratio = $role_bench_mark['interview_ratio'];
-        $user_bench_mark->selection_ratio = $role_bench_mark['selection_ratio'];
-        $user_bench_mark->offer_acceptance_ratio = $role_bench_mark['offer_acceptance_ratio'];
-        $user_bench_mark->joining_ratio = $role_bench_mark['joining_ratio'];
-        $user_bench_mark->after_joining_success_ratio = $role_bench_mark['after_joining_success_ratio'];
-        $user_bench_mark->save();
+        if(isset($role_bench_mark) && sizeof($role_bench_mark) > 0) {
+
+            // Add entry in user benchmark table
+            $user_bench_mark = new UserBenchMark();
+            $user_bench_mark->user_id = $user_id;
+            $user_bench_mark->no_of_resumes = $role_bench_mark['no_of_resumes'];
+            $user_bench_mark->shortlist_ratio = $role_bench_mark['shortlist_ratio'];
+            $user_bench_mark->interview_ratio = $role_bench_mark['interview_ratio'];
+            $user_bench_mark->selection_ratio = $role_bench_mark['selection_ratio'];
+            $user_bench_mark->offer_acceptance_ratio = $role_bench_mark['offer_acceptance_ratio'];
+            $user_bench_mark->joining_ratio = $role_bench_mark['joining_ratio'];
+            $user_bench_mark->after_joining_success_ratio = $role_bench_mark['after_joining_success_ratio'];
+            $user_bench_mark->save();
+        }
 
         // Send email notification when new user is add
 
