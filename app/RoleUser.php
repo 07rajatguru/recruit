@@ -41,7 +41,7 @@ class RoleUser extends Model
 
         if (isset($response) && $response != '') {
 
-            $role_id = $res->role_id;
+            $role_id = $response->role_id;
         }
         return $role_id;
     }

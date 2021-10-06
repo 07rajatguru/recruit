@@ -577,6 +577,11 @@ return [
                     'icon' => 'circle-o',
                 ],
                 [
+                    'text' => 'Rolewise Bench Mark',
+                    'url'  => 'bench-mark',
+                    'icon' => 'circle-o',
+                ],
+                [
                     'text' => 'User Bench Mark',
                     'url'  => 'user-bench-mark',
                     'icon' => 'circle-o',

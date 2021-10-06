@@ -117,7 +117,7 @@ class Role extends EntrustRole
 
                 if($value->department == 3) {
 
-                    if($value->id = $hr_role_id) {
+                    if($value->id == $hr_role_id) {
 
                         $roles_array[$value->id] = $value->display_name;
                     }
