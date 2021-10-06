@@ -601,7 +601,9 @@ class User extends Authenticatable
         $superadmin = getenv('SUPERADMINUSERID');
         $allclient = getenv('ALLCLIENTVISIBLEUSERID');
         $strtegy = getenv('STRATEGYUSERID');
-        $super_array = array($superadmin,$allclient,$strtegy);
+        $jasmine = getenv('JASMINEUSERID');
+
+        $super_array = array($superadmin,$allclient,$strtegy,$jasmine);
 
         $status = 'Inactive';
         $status_array = array($status);
