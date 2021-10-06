@@ -72,6 +72,8 @@ class HomeController extends Controller
         $allclient = getenv('ALLCLIENTVISIBLEUSERID');
         $strtegy = getenv('STRATEGYUSERID');
         $superadmin = getenv('SUPERADMINUSERID');
+        $jasmine = getenv('JASMINEUSERID');
+
         $recruitment = getenv('RECRUITMENT');
 
         $userRole = $user->roles->pluck('id','id')->toArray();
@@ -118,7 +120,7 @@ class HomeController extends Controller
         }
         else {
 
-            if($user_id == $allclient || $user_id == $strtegy) {
+            if($user_id == $allclient || $user_id == $strtegy || $user_id == $jasmine) {
                 $msg = '';
             }
             else {
