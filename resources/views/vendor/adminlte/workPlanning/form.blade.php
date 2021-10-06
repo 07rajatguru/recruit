@@ -174,7 +174,10 @@
     @endif
 </div>
 
-<div id="alertModal" class="modal text-left fade" data-toggle="modal">
+{!! Form::close() !!}
+
+<!-- Modal Start -->
+<div class="modal text-left fade" id="alertModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -182,16 +185,28 @@
             </div>
             <div class="modal-body">
                 <p>Have you Reported Work at Late?</p>
+
+                <div class="detail_class" style="display:none;">
+                    <input type="radio" name="report_answer" id="report_answer" value="Half Day or Late in">&nbsp;
+                    Half Day or Late in
+                    &nbsp;&nbsp;<input type="radio" name="report_answer" id="report_answer" value="There is delay of Pending Report">&nbsp;
+                    There is delay of Pending Report
+                </div>
             </div>
-            <div class="modal-footer">
-                <button type="submit" class="btn btn-primary" id="yes-btn">Yes</button>
+            <div class="modal-footer first_footer">
+                <button type="button" class="btn btn-primary" onclick="displaybuttons();">Yes
+                </button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+            </div>
+            <div class="modal-footer second_footer" style="display:none;">
+                <button type="button" class="btn btn-primary" onclick="submitform();">Submit</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel
+                </button>
             </div>
         </div>
     </div>
 </div>
-
-{!! Form::close() !!}
+<!-- Modal End -->
 
 @section('customscripts')
 <script type="text/javascript">
@@ -562,7 +577,7 @@
         });
     }
 
-    function checkTime () {
+    function checkTime() {
 
         var time_start = new Date();
         var current_time = time_start.getHours() + ":" + time_start.getMinutes() + ":" + time_start.getSeconds();
@@ -575,10 +590,25 @@
 
         if(diff > 1) {
 
-            $("#alertModal").modal();
+            $("#alertModal").modal('show');
+            return false;
         }
+        else {
 
-        return false;
+            return true;
+        }
+    }
+
+    function displaybuttons() {
+
+        $(".detail_class").show();
+        $(".first_footer").hide();
+        $(".second_footer").show();
+    }
+
+    function submitform() {
+
+        $('#alertModal').modal('hide');
     }
 </script>
 @endsection

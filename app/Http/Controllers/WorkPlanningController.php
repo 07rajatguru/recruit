@@ -209,6 +209,18 @@ class WorkPlanningController extends Controller
 
     public function store(Request $request) {
 
+        $report_answer = Input::get('report_answer');
+
+        // If report delay
+        if(isset($report_answer) && $report_answer != '') {
+        }
+        else {
+
+            $report_answer = '';
+        }
+
+        echo $report_answer;exit;
+
         $user_id = \Auth::user()->id;
         $date = date('Y-m-d');
 
@@ -263,6 +275,7 @@ class WorkPlanningController extends Controller
             $attendance = 'F';
         }
 
+        
         $work_planning = new WorkPlanning();
         $work_planning->attendance = $attendance;
         $work_planning->status = '0';
@@ -274,6 +287,7 @@ class WorkPlanningController extends Controller
         $work_planning->remaining_time = $remaining_time;
         $work_planning->added_date = date('Y-m-d');
         $work_planning->added_by = $user_id;
+        $work_planning->report_delay = $report_answer;
         $work_planning->save();
 
         $work_planning_id = $work_planning->id;
