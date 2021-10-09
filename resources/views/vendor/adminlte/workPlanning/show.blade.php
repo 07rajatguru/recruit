@@ -45,7 +45,10 @@
                     <button type="submit" class="btn btn-primary" onclick="permission('Rejected')" disabled="disabled">Rejected</button>
                 @endif
             @endif
-            <a class="btn btn-primary" href="{{ route('workplanning.edit',$work_planning['id']) }}">Edit</a>
+
+            @if($loggedin_user_id == $added_by_id)
+                <a class="btn btn-primary" href="{{ route('workplanning.edit',$work_planning['id']) }}">Edit</a>
+            @endif
             <a class="btn btn-primary" href="{{ route('workplanning.index') }}">Back</a>
         </div>
     </div>

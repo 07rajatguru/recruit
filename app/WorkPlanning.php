@@ -81,14 +81,14 @@ class WorkPlanning extends Model
         return $work_type;
     }
 
-    public static function getWorkPlanningDetails($all,$user_id,$month,$year,$status='') {
+    public static function getWorkPlanningDetails($all,$user_ids,$month,$year,$status='') {
 
         $query = WorkPlanning::query();
         $query = $query->leftjoin('users','users.id','=','work_planning.added_by');
         $query = $query->orderBy('work_planning.id','DESC');
 
         if($all == 0) {
-            $query = $query->where('work_planning.added_by','=',$user_id);
+            $query = $query->whereIn('work_planning.added_by',$user_ids);
         }
 
         if ($month != '' && $year != '') {
@@ -109,6 +109,7 @@ class WorkPlanning extends Model
         foreach ($response as $key => $value) {
 
             $work_planning_res[$i]['id'] = $value->id;
+            $work_planning_res[$i]['added_by_id'] = $value->added_by;
             $work_planning_res[$i]['added_by'] = $value->fnm . " " . $value->lnm;
             $work_planning_res[$i]['work_type'] = $value->work_type;
             $work_planning_res[$i]['added_date'] = date('d-m-Y', strtotime("$value->added_date"));
@@ -154,11 +155,10 @@ class WorkPlanning extends Model
             
             // For Pending/Approved/Rejected
             $work_planning_res[$i]['status'] = $value->status;
+            $work_planning_res[$i]['report_delay'] = $value->report_delay;
             
             $i++;
         }
-
-        
         return $work_planning_res;
     }
 
@@ -223,6 +223,7 @@ class WorkPlanning extends Model
             $work_planning_res['status'] = $response->status;
             $work_planning_res['added_by_id'] = $response->added_by;
             $work_planning_res['appr_rejct_by'] = $response->approved_by;
+            $work_planning_res['report_delay'] = $response->report_delay;
         }
         return $work_planning_res;
     }

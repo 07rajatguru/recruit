@@ -128,7 +128,9 @@
                                 @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'leave','display_name'=>'Leave Application'])
                             @endpermission
 
-                            @include('adminlte::partials.sendLeaveEmail', ['data' => $value, 'name' => 'leave'])
+                            @if($user_id == $value['user_id'])
+                                @include('adminlte::partials.sendLeaveEmail', ['data' => $value, 'name' => 'leave'])
+                            @endif
                         </td>
                         <td>{{ $value['user_name'] }}</td>
                         <td>{{ $value['subject'] }}</td>

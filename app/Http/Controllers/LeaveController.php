@@ -61,7 +61,7 @@ class LeaveController extends Controller
 
         if($all_perm) {
 
-            $leave_details = UserLeave::getAllLeavedataByUserId(1,$user_id,$month,$year,'');
+            $leave_details = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,'');
         }
         else if($userwise_perm) {
 
@@ -153,8 +153,8 @@ class LeaveController extends Controller
  
         if($all_perm) {
 
-            $leave_details_all = UserLeave::getAllLeavedataByUserId(1,$user_id,$month,$year,'');
-            $leave_details = UserLeave::getAllLeavedataByUserId(1,$user_id,$month,$year,$status);
+            $leave_details_all = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,'');
+            $leave_details = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,$status);
         }
         else if($userwise_perm) {
 

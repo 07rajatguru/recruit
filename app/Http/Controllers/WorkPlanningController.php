@@ -16,6 +16,7 @@ class WorkPlanningController extends Controller
     public function index() {
 
         $user =  \Auth::user();
+        $user_id = $user->id;
         $all_perm = $user->can('display-work-planning');
         $userwise_perm = $user->can('display-user-wise-work-planning');
 
@@ -50,11 +51,20 @@ class WorkPlanningController extends Controller
 
         if($all_perm) {
 
-            $work_planning_res = WorkPlanning::getWorkPlanningDetails(1,$user->id,$month,$year,'');
+            $work_planning_res = WorkPlanning::getWorkPlanningDetails(1,0,$month,$year,'');
         }
         else if($userwise_perm) {
 
-            $work_planning_res = WorkPlanning::getWorkPlanningDetails(0,$user->id,$month,$year,'');
+            $users = User::getAssignedUsers($user_id);
+
+            if(isset($users) && sizeof($users) > 0) {
+
+                foreach ($users as $key => $value) {
+                    $user_ids[] = $key;
+                }
+            }
+
+            $work_planning_res = WorkPlanning::getWorkPlanningDetails(0,$user_ids,$month,$year,'');
         }
 
         $pending = 0;
@@ -76,12 +86,13 @@ class WorkPlanningController extends Controller
 
         $count = sizeof($work_planning_res);
 
-        return view('adminlte::workPlanning.index',compact('work_planning_res','count','month_array','month','year_array','year','pending','approved','rejected'));
+        return view('adminlte::workPlanning.index',compact('work_planning_res','count','month_array','month','year_array','year','pending','approved','rejected','user_id'));
     }
 
     public function getAllDetailsByStatus($status,$month,$year) {
         
         $user =  \Auth::user();
+        $user_id = $user->id;
         $all_perm = $user->can('display-work-planning');
         $userwise_perm = $user->can('display-user-wise-work-planning');
 
@@ -126,14 +137,23 @@ class WorkPlanningController extends Controller
  
         if($all_perm) {
 
-            $work_planning_all = WorkPlanning::getWorkPlanningDetails(1,$user->id,$month,$year,'');
+            $work_planning_all = WorkPlanning::getWorkPlanningDetails(1,0,$month,$year,'');
 
-            $work_planning_res = WorkPlanning::getWorkPlanningDetails(1,$user->id,$month,$year,$status);
+            $work_planning_res = WorkPlanning::getWorkPlanningDetails(1,0,$month,$year,$status);
         }
         else if($userwise_perm) {
 
-            $work_planning_all = WorkPlanning::getWorkPlanningDetails(0,$user->id,$month,$year,'');
-            $work_planning_res = WorkPlanning::getWorkPlanningDetails(0,$user->id,$month,$year,$status);
+            $users = User::getAssignedUsers($user_id);
+
+            if(isset($users) && sizeof($users) > 0) {
+
+                foreach ($users as $key => $value) {
+                    $user_ids[] = $key;
+                }
+            }
+
+            $work_planning_all = WorkPlanning::getWorkPlanningDetails(0,$user_ids,$month,$year,'');
+            $work_planning_res = WorkPlanning::getWorkPlanningDetails(0,$user_ids,$month,$year,$status);
         }
 
         $pending = 0;
@@ -155,7 +175,7 @@ class WorkPlanningController extends Controller
 
         $count = sizeof($work_planning_res);
 
-        return view('adminlte::workPlanning.statusindex',compact('work_planning_res','count','month_array','month','year_array','year','pending','approved','rejected','status'));
+        return view('adminlte::workPlanning.statusindex',compact('work_planning_res','count','month_array','month','year_array','year','pending','approved','rejected','status','user_id'));
     }
 
     public function create() {
@@ -209,25 +229,12 @@ class WorkPlanningController extends Controller
 
     public function store(Request $request) {
 
-        $report_answer = Input::get('report_answer');
-
-        // If report delay
-        if(isset($report_answer) && $report_answer != '') {
-        }
-        else {
-
-            $report_answer = '';
-        }
-
-        echo $report_answer;exit;
-
         $user_id = \Auth::user()->id;
         $date = date('Y-m-d');
 
         // Get user working hours
         $user_details = User::getAllDetailsByUserID($user_id);
-        $user_working_hours = strtotime($user_details->working_hours);
-        $user_half_day_working_hours = strtotime($user_details->half_day_working_hours);
+        $user_half_day_working_hours = $user_details->half_day_working_hours;
 
         // Get Total Projected Time
         $projected_time = Input::get('projected_time');
@@ -241,6 +248,14 @@ class WorkPlanningController extends Controller
         }
 
         $h = intval($totaltime / 3600);
+
+        if(strlen($h) == 1) {
+            $h = "0".$h;
+        }
+        else {
+            $h = $h;
+        }
+
         $totaltime = $totaltime - ($h * 3600);
         $m = intval($totaltime / 60);
         $s = $totaltime - ($m * 60);
@@ -265,17 +280,25 @@ class WorkPlanningController extends Controller
         $diff = $checkTime - $loginTime;
         $time_diff = date("H:i", $diff);
 
-        if($time_diff > '01:00') {
-            $attendance = 'A';
-        }
-        else if($total_projected_time == $user_half_day_working_hours) {
+        if($total_projected_time == $user_half_day_working_hours) {
             $attendance = 'HD';
+        }
+        else if($time_diff > '01:00') {
+            $attendance = 'A';
         }
         else {
             $attendance = 'F';
         }
 
-        
+        $report_answer = Input::get('report_answer');
+
+        // If report delay
+        if(isset($report_answer) && $report_answer != '') {
+        }
+        else {
+            $report_answer = '';
+        }
+
         $work_planning = new WorkPlanning();
         $work_planning->attendance = $attendance;
         $work_planning->status = '0';
@@ -460,6 +483,14 @@ class WorkPlanningController extends Controller
         }
 
         $h = intval($totaltime / 3600);
+
+        if(strlen($h) == 1) {
+            $h = "0".$h;
+        }
+        else {
+            $h = $h;
+        }
+
         $totaltime = $totaltime - ($h * 3600);
         $m = intval($totaltime / 60);
         $s = $totaltime - ($m * 60);
@@ -473,11 +504,14 @@ class WorkPlanningController extends Controller
         }
         else {
 
-            if($total_projected_time == $user_half_day_working_hours) {
+            if($total_projected_time == $user_working_hours) {
+                $attendance = 'F';
+            }
+            else if($total_projected_time == $user_half_day_working_hours) {
                 $attendance = 'HD';
             }
             else {
-                $attendance = 'F';
+                $attendance = 'HD';
             }
         }
 

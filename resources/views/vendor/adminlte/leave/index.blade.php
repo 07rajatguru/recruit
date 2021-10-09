@@ -122,13 +122,17 @@
                         <td>
                             <a class="fa fa-circle" title="Show" href="{{ route('leave.reply',$value['id']) }}"></a>
 
-                            <a class="fa fa-edit" title="edit" href="{{ route('leave.edit',$value['id']) }}"></a>
+                            @if($user_id == $value['user_id'])
+                                <a class="fa fa-edit" title="edit" href="{{ route('leave.edit',$value['id']) }}"></a>
+                            @endif
 
                             @permission(('leave-delete'))
                                 @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'leave','display_name'=>'Leave Application'])
                             @endpermission
 
-                            @include('adminlte::partials.sendLeaveEmail', ['data' => $value, 'name' => 'leave'])
+                            @if($user_id == $value['user_id'])
+                                @include('adminlte::partials.sendLeaveEmail', ['data' => $value, 'name' => 'leave'])
+                            @endif
                         </td>
 		    			<td>{{ $value['user_name'] }}</td>
 		    			<td>{{ $value['subject'] }}</td>

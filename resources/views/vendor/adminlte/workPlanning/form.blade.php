@@ -25,7 +25,7 @@
 @if($action == 'edit')
     {!! Form::model($work_planning_res,['method' => 'PATCH', 'files' => true, 'route' => ['workplanning.update', $work_planning_res['id']],'id'=>'work_planning_form', 'autocomplete' => 'off']) !!}
 @else
-    {!! Form::open(['files' => true, 'route' => 'workplanning.store','id'=>'work_planning_form', 'autocomplete' => 'off','onsubmit' => "return checkTime()"]) !!}
+    {!! Form::open(['files' => true, 'route' => 'workplanning.store','id'=>'work_planning_form', 'autocomplete' => 'off']) !!}
 @endif
 
 <div class="row">
@@ -174,8 +174,6 @@
     @endif
 </div>
 
-{!! Form::close() !!}
-
 <!-- Modal Start -->
 <div class="modal text-left fade" id="alertModal">
     <div class="modal-dialog">
@@ -187,10 +185,10 @@
                 <p>Have you Reported Work at Late?</p>
 
                 <div class="detail_class" style="display:none;">
-                    <input type="radio" name="report_answer" id="report_answer" value="Half Day or Late in">&nbsp;
-                    Half Day or Late in
-                    &nbsp;&nbsp;<input type="radio" name="report_answer" id="report_answer" value="There is delay of Pending Report">&nbsp;
-                    There is delay of Pending Report
+                    {!! Form::radio('report_answer','Half Day or Late in') !!}
+                    {!! Form::label('Half Day or Late in') !!} &nbsp;&nbsp;
+                    {!! Form::radio('report_answer','There is delay of Pending Report') !!}
+                    {!! Form::label('There is delay of Pending Report') !!}
                 </div>
             </div>
             <div class="modal-footer first_footer">
@@ -199,7 +197,8 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
             </div>
             <div class="modal-footer second_footer" style="display:none;">
-                <button type="button" class="btn btn-primary" onclick="submitform();">Submit</button>
+                <button type="button" class="btn btn-primary" onclick="submitform();">Submit
+                </button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel
                 </button>
             </div>
@@ -207,6 +206,8 @@
     </div>
 </div>
 <!-- Modal End -->
+
+{!! Form::close() !!}
 
 @section('customscripts')
 <script type="text/javascript">
@@ -231,6 +232,10 @@
 
         if(action == "edit") {
             loadDetails(work_planning_id);
+        }
+
+        if(action == 'add') {
+            checkTime();
         }
     });
 
@@ -593,10 +598,8 @@
             $("#alertModal").modal('show');
             return false;
         }
-        else {
-
-            return true;
-        }
+        
+        return true;
     }
 
     function displaybuttons() {
