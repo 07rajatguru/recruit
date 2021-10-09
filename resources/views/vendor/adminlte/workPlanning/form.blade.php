@@ -593,7 +593,7 @@
 
         var diff = value_end[0] - value_start[0];
 
-        if(diff > 1) {
+        if(diff >= 1) {
 
             $("#alertModal").modal('show');
             return false;
