@@ -12,7 +12,7 @@
             <table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif; border-collapse: collapse; color: #444444;">
                 <tr>
                     <td width="600">
-                        <table width="100%" cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
+                        <table cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
                             <tr style="background-color:white;">
                                 <td colspan="2"></td>
                                 <td align="center">
@@ -29,7 +29,7 @@
                 </tr>
                 <tr>
                     <td width="600">
-                        <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff;padding: 15px 15px;">
+                        <table cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff;padding: 15px 15px;">
                             <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
                                 <td style="font-family:Cambria, serif;font-size: 11.0pt;">
                                    <p>{!! $leave_message !!}</p>
@@ -40,9 +40,9 @@
                 </tr>
                 <tr>
                     <td>
-                        <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 0px 50px 54px;">
+                        <table cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 0px 50px 54px;">
                             <tr>
-                                <td align="center" style="padding: 0px;">
+                                <td style="padding: 0px;">
                                     <a style="border: black; background-color: skyblue;color: white;padding: 10px 20px 10px 20px; border-radius: 50px;font-size: 15px;width: 59%;text-decoration: none;" class="btn btn-primary" formtarget="_blank" href="{{getenv('APP_URL').'/leave/reply/'.$leave_id}}">Reply</a>
                                 </td>
                             </tr>
@@ -51,7 +51,7 @@
                 </tr>
                 <tr>
                     <td width="600">
-                        <table width="100%" cellpadding="0" cellspacing="0" style="border:0;">
+                        <table cellpadding="0" cellspacing="0" style="border:0;">
                             <tr><td style="padding: 20px;">{!! $signature !!}</td></tr>
                         </table>
                     </td>
@@ -61,7 +61,7 @@
             <table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif; border-collapse: collapse; color: #444444;">
                 <tr>
                     <td width="600">
-                        <table width="100%" cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
+                        <table cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
                             <tr style="background-color:white;">
                                 <td colspan="2"></td>
                                 <td align="center">
@@ -78,7 +78,7 @@
                 </tr>
                 <tr>
                     <td width="600">
-                        <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff;padding: 15px 15px;">
+                        <table cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff;padding: 15px 15px;">
                             <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
                                 <td style="font-family:Cambria, serif;font-size: 11.0pt;">
                                     <p>{!! $leave_message !!}</p>
@@ -89,7 +89,7 @@
                 </tr>
                 <tr>
                     <td width="600">
-                        <table width="100%" cellpadding="0" cellspacing="0" style="border:0;">
+                        <table lpadding="0" cellspacing="0" style="border:0;">
                             <tr><td style="padding: 20px;">{!! $signature !!}</td></tr>
                         </table>
                     </td>
