@@ -682,7 +682,7 @@ class WorkPlanningController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-        return redirect()->route('workplanning.index')->with('success','Email Send Successfully.');
+        return redirect()->route('workplanning.index')->with('success','Email Sent Successfully.');
     }
 
     public function replySend(){
