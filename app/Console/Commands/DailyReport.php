@@ -75,11 +75,21 @@ class DailyReport extends Command
                             $report_email = '';
                         }
 
+                        $recruitment = getenv('RECRUITMENT');
+                        $department_id = $report_res->type;
+
                         $to_array = array();
                         $to_array[] = $value;
 
                         $cc_array = array();
                         $cc_array[] = $report_email;
+
+                        if($recruitment == $department_id) {
+
+                            $manager_user_id = getenv('MANAGERUSERID');
+                            $manager_email = User::getUserEmailById($manager_user_id);
+                            $cc_array[] = $manager_email;
+                        }
                         //$cc_array[] = 'rajlalwani@adlertalent.com';
                         $cc_array[] = 'info@adlertalent.com';
 

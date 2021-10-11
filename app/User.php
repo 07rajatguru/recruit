@@ -470,7 +470,7 @@ class User extends Authenticatable
     public static function getReportsToUsersEmail($key) {
 
         $user_query = User::query();
-        $user_query = $user_query->select('users.id','u1.email as remail','u1.secondary_email as rsemail');
+        $user_query = $user_query->select('users.id','u1.email as remail','u1.secondary_email as rsemail','users.type');
         $user_query = $user_query->join('users as u1','u1.id','=','users.reports_to');
         $user_query = $user_query->where('users.id',$key);
         $user = $user_query->first();

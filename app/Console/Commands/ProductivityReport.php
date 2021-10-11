@@ -69,7 +69,11 @@ class ProductivityReport extends Command
                     $to_array[] = $value;
 
                     $cc_array = array();
+                    $manager_user_id = getenv('MANAGERUSERID');
+                    $manager_email = User::getUserEmailById($manager_user_id);
+
                     $cc_array[] = $report_email;
+                    $cc_array[] = $manager_email;
                     //$cc_array[] = 'rajlalwani@adlertalent.com';
                     $cc_array[] = 'info@adlertalent.com';
                     $cc_array[] = 'hr@adlertalent.com';
