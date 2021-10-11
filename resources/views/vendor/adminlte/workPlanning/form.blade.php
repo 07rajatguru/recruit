@@ -185,8 +185,10 @@
                 <p>Have you Reported Work at Late?</p>
 
                 <div class="detail_class" style="display:none;">
-                    {!! Form::radio('report_answer','Half Day or Late in') !!}
-                    {!! Form::label('Half Day or Late in') !!} &nbsp;&nbsp;
+                    {!! Form::radio('report_answer','Late in / Early Go') !!}
+                    {!! Form::label('Late in / Early Go') !!} &nbsp;&nbsp;
+                    {!! Form::radio('report_answer','Half Day') !!}
+                    {!! Form::label('Half Day') !!} &nbsp;&nbsp;
                     {!! Form::radio('report_answer','There is delay of Pending Report') !!}
                     {!! Form::label('There is delay of Pending Report') !!}
                 </div>

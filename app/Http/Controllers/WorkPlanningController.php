@@ -247,6 +247,7 @@ class WorkPlanningController extends Controller
             $totaltime = $totaltime + $timeinsec;
         }
 
+        // Set Hours
         $h = intval($totaltime / 3600);
 
         if(strlen($h) == 1) {
@@ -255,12 +256,29 @@ class WorkPlanningController extends Controller
         else {
             $h = $h;
         }
-
         $totaltime = $totaltime - ($h * 3600);
-        $m = intval($totaltime / 60);
-        $s = $totaltime - ($m * 60);
-        $s = $s."0";
 
+        // Set Minutes
+        $m = intval($totaltime / 60);
+
+        if(strlen($m) == 1) {
+            $m = "0".$m;
+        }
+        else {
+            $m = $m;
+        }
+
+        // Set Seconds
+        $s = $totaltime - ($m * 60);
+
+        if(strlen($s) == 1) {
+            $s = "0".$s;
+        }
+        else {
+            $s = $s;
+        }
+
+        // Set Total Projected Time
         $total_projected_time = "$h:$m:$s";
 
         // Get User Loggedin Time
@@ -294,6 +312,19 @@ class WorkPlanningController extends Controller
 
         // If report delay
         if(isset($report_answer) && $report_answer != '') {
+
+            if($report_answer == 'Late in / Early Go') {
+
+                $attendance = 'F';
+            }
+            if($report_answer == 'Half Day') {
+
+                $attendance = 'HD';
+            }
+            if($report_answer == 'There is delay of Pending Report') {
+
+                $attendance = 'F';
+            }
         }
         else {
             $report_answer = '';
@@ -468,8 +499,8 @@ class WorkPlanningController extends Controller
 
         // Get Loggedin user details
         $user_details = User::getAllDetailsByUserID($user_id);
-        $user_working_hours = strtotime($user_details->working_hours);
-        $user_half_day_working_hours = strtotime($user_details->half_day_working_hours);
+        $user_working_hours = $user_details->working_hours;
+        $user_half_day_working_hours = $user_details->half_day_working_hours;
 
         // Get Total Projected Time
         $projected_time = Input::get('projected_time');
@@ -482,6 +513,7 @@ class WorkPlanningController extends Controller
             $totaltime = $totaltime + $timeinsec;
         }
 
+        // Set Hours
         $h = intval($totaltime / 3600);
 
         if(strlen($h) == 1) {
@@ -490,12 +522,29 @@ class WorkPlanningController extends Controller
         else {
             $h = $h;
         }
-
         $totaltime = $totaltime - ($h * 3600);
-        $m = intval($totaltime / 60);
-        $s = $totaltime - ($m * 60);
-        $s = $s."0";
 
+        // Set Minutes
+        $m = intval($totaltime / 60);
+
+        if(strlen($m) == 1) {
+            $m = "0".$m;
+        }
+        else {
+            $m = $m;
+        }
+
+        // Set Seconds
+        $s = $totaltime - ($m * 60);
+
+        if(strlen($s) == 1) {
+            $s = "0".$s;
+        }
+        else {
+            $s = $s;
+        }
+
+        // Set Total Projected Time
         $total_projected_time = "$h:$m:$s";
 
         if($work_planning_details['attendance'] == 'A') {
@@ -511,7 +560,7 @@ class WorkPlanningController extends Controller
                 $attendance = 'HD';
             }
             else {
-                $attendance = 'HD';
+                $attendance = 'F';
             }
         }
 
