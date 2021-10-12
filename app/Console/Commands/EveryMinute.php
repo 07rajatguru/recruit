@@ -488,7 +488,7 @@ class EveryMinute extends Command
                 $leave = UserLeave::find($module_id);
                 $input['leave_message'] = $leave->reply_message;
 
-                \Mail::send('adminlte::emails.leavemail', $input, function ($message) use ($input) {
+                \Mail::send('adminlte::emails.leavereply', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
                 });

@@ -273,7 +273,7 @@ class LeaveController extends Controller
         	}
         }
 
-        return redirect()->route('leave.index')->with('success','Leave Application Send Successfully');
+        return redirect()->route('leave.index')->with('success','Leave Application Added Successfully');
     }
 
     public function edit($id) {
@@ -403,8 +403,8 @@ class LeaveController extends Controller
             
             $approved_by = $leave_details['approved_by'];
 
-            $new_msg = "<p> Hello " . $user_name . " ,</p><p><b>Your leave has been Approved.</b></p>";
-            $message = "<tr><td><p>" . $new_msg . "</p><p>Thanks & Regards,</p><p>" . 
+            $new_msg = "<p><b>Hello " . $user_name . " ,</b></p><p><b>Your leave has been Approved.</b></p>";
+            $message = "<tr><td><p>" . $new_msg . "</p><p>Thanks.</p><p>" . 
             $approved_by . "</p></td></tr>";
 
             $module = "Leave Reply";
@@ -434,9 +434,9 @@ class LeaveController extends Controller
         elseif ($reply == 'Unapproved') {
 
             $approved_by = $leave_details['approved_by'];
-            
-            $new_msg = "<p> Hello " . $user_name . " ,</p><p><b>Your leave has been Unapproved.</b></p>";
-            $message = "<tr><td><p>" . $new_msg . "</p><p>Thanks & Regards,</p><p>" . 
+       
+            $new_msg = "<p><b>Hello " . $user_name . " ,</b></p><p><b>Your leave has been Unapproved.</b></p>";
+            $message = "<tr><td><p>" . $new_msg . "</p><p>Thanks.</p><p>" . 
             $approved_by . "</p></td></tr>";
 
             $module = "Leave Reply";
