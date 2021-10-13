@@ -1661,6 +1661,145 @@ class Bills extends Model
 
             $cnt += $value->count;
         }
-        return $cnt;  
+        return $cnt;
+    }
+
+    public static function getMonthwiseReportData($user_id=NULL,$current_year,$next_year) {
+        
+        $personwise_query = Bills::query();
+        $personwise_query = $personwise_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
+        $personwise_query = $personwise_query->join('job_openings','job_openings.id','=','bills.job_id');
+        $personwise_query = $personwise_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $personwise_query = $personwise_query->select('bills.*','candidate_basicinfo.full_name as candidate_name','client_basicinfo.coordinator_prefix as coordinator_prefix');
+
+        if ($user_id != NULL) {
+            $personwise_query = $personwise_query->join('bills_efforts','bills_efforts.bill_id','=','bills.id');
+            $personwise_query = $personwise_query->join('users','users.id','=','bills_efforts.employee_name');
+            $personwise_query = $personwise_query->where('users.type','=','1');
+            $personwise_query = $personwise_query->groupBy('candidate_basicinfo.id');
+        }
+
+        $personwise_query = $personwise_query->where('bills.status','=','1');
+        $personwise_query = $personwise_query->where('bills.cancel_bill','=','0');
+        $personwise_query = $personwise_query->where('bills.date_of_joining','>=',$current_year);
+        $personwise_query = $personwise_query->where('bills.date_of_joining','<=',$next_year);
+        $personwise_query = $personwise_query->orderBy('bills.date_of_joining','ASC');
+        $personwise_res = $personwise_query->get();
+
+        $person_data = array();
+        $j = 0;
+
+        if (isset($personwise_res) && sizeof($personwise_res)>0) {
+
+            $total_salary_offered = 0;
+            $total_billing = 0;
+            $total_monthwise_billing = 0;
+            $total_monthwise_gst = 0;
+            $total_monthwise_invoice_raised = 0;
+            $total_monthwise_payment = 0;
+
+            foreach ($personwise_res as $key => $value) {
+
+                //$salary = $value->fixed_salary;
+                $salary = str_replace(",", "", $value->fixed_salary);
+                $salary = (int)$salary;
+
+                $pc = $value->percentage_charged;
+                $pc = (float)$pc;
+
+                $fees = round(($salary * $pc)/100);
+                $gst = round(($fees * 18)/100);
+                $billing_amount = round($fees + $gst);
+                $payment = round((($fees * 90)/100)+ (($fees * 18)/100));
+
+                $person_data[$j]['candidate_name'] = $value->candidate_name;
+                $person_data[$j]['company_name'] = $value->company_name;
+                $person_data[$j]['position'] = $value->designation_offered;
+                $person_data[$j]['salary_offered'] = Utils::IND_money_format(round($salary));
+                $person_data[$j]['billing'] = Utils::IND_money_format(round($fees));
+                $person_data[$j]['joining_date'] = date('d-m-Y', strtotime($value->date_of_joining));
+
+                // get employee efforts
+                $efforts = Bills::getEmployeeEffortsNameById($value->id);
+                $efforts_str = '';
+                $person_billing = 0;
+                foreach ($efforts as $k=>$v){
+                    if($efforts_str==''){
+                        $efforts_str = $k .'('.(int)$v . '%)';
+                    }
+                    else{
+                        $efforts_str .= ', '. $k .'('.(int)$v . '%)';
+                    }
+                    // Person wise billing amount
+                    $user_name = User::getUserNameById($user_id);
+
+                    if ($user_name == $k) {
+                        $efforts_person = $v;
+                        $person_billing = ($fees * $efforts_person) / 100;
+                    }
+                }
+                if (isset($person_billing) && $person_billing != '') {
+                    $person_data[$j]['person_billing'] = Utils::IND_money_format(round($person_billing));
+
+                    // Set for Eligibility Report
+                    $person_data[$j]['person_billing_new'] = round($person_billing);
+                }
+                else {
+                    $person_data[$j]['person_billing'] = 0;
+
+                    // Set for Eligibility Report
+                    $person_data[$j]['person_billing_new'] = 0;
+                }
+
+                $person_data[$j]['efforts'] = $efforts_str;
+                $person_data[$j]['client_name'] = $value->coordinator_prefix. " " .$value->client_name;
+                $person_data[$j]['location'] = $value->job_location;
+                $person_data[$j]['gst'] = Utils::IND_money_format(round($gst));
+                $person_data[$j]['invoice_raised'] = Utils::IND_money_format(round($billing_amount));
+                $person_data[$j]['payment'] = Utils::IND_money_format(round($payment));
+
+                $total_salary_offered = $total_salary_offered + $salary;
+                $total_billing = $total_billing + $person_billing;
+
+                $person_data[$j]['total_salary_offered'] = Utils::IND_money_format(round($total_salary_offered));
+                $person_data[$j]['total_billing'] = Utils::IND_money_format(round($total_billing));
+
+                // Specially for Montwise Report
+
+                // 1. For Billing
+                $billing = str_replace(",", "", $person_data[$j]['billing']);
+                $billing = (int)$billing;
+
+                $total_monthwise_billing = $total_monthwise_billing + $billing;
+                $person_data[$j]['total_monthwise_billing'] = Utils::IND_money_format(round($total_monthwise_billing));
+
+                // 2. For GST
+
+                $gst = str_replace(",", "", $person_data[$j]['gst']);
+                $gst = (int)$gst;
+
+                $total_monthwise_gst = $total_monthwise_gst + $gst;
+                $person_data[$j]['total_monthwise_gst'] = Utils::IND_money_format(round($total_monthwise_gst));
+
+                // 3. For Invoice Raised
+
+                $invoice_raised = str_replace(",", "", $person_data[$j]['invoice_raised']);
+                $invoice_raised = (int)$invoice_raised;
+
+                $total_monthwise_invoice_raised = $total_monthwise_invoice_raised + $invoice_raised;
+                $person_data[$j]['total_monthwise_invoice_raised'] = Utils::IND_money_format(round($total_monthwise_invoice_raised));
+
+                // 4. For Payment
+
+                $payment = str_replace(",", "", $person_data[$j]['payment']);
+                $payment = (int)$payment;
+
+                $total_monthwise_payment = $total_monthwise_payment + $payment;
+                $person_data[$j]['total_monthwise_payment'] = Utils::IND_money_format(round($total_monthwise_payment));
+
+                $j++;
+            }
+        }
+        return $person_data;
     }
 }

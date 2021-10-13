@@ -566,12 +566,6 @@ class ReportController extends Controller
         $all_perm = $user->can('display-person-wise-report-of-all-users');
         $teamwise_perm = $user->can('display-person-wise-report-of-loggedin-user-team');
 
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $management = getenv('MANAGEMENT');
-        $hr_user_id = getenv('HRUSERID');
-        $type_array = array($recruitment,$hr_advisory,$management);
-
         // Year Data
         $starting_year = '2017';
         $ending_year = date('Y',strtotime('+1 year'));
@@ -606,7 +600,24 @@ class ReportController extends Controller
         $current_year = date('Y-m-d',strtotime("first day of $current"));
         $next_year = date('Y-m-d',strtotime("last day of $next"));
 
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $management = getenv('MANAGEMENT');
+        $hr_user_id = getenv('HRUSERID');
+
         if ($all_perm) {
+
+            // Set all recruitment reports for Manager Role
+            $manager_user_id = getenv('MANAGERUSERID');
+
+            if($user_id == $manager_user_id) {
+
+                $type_array = array($recruitment);
+            }
+            else {
+               
+                $type_array = array($recruitment,$hr_advisory,$management);
+            }
 
             $users_array = User::getAllUsers($type_array);
             $users = array();
@@ -627,8 +638,14 @@ class ReportController extends Controller
                     }    
                 }
 
-                $get_hr_user_name = User::getUserNameById($hr_user_id);
-                $users[$hr_user_id] = $get_hr_user_name;
+                if($user_id == $manager_user_id) {
+
+                }
+                else {
+
+                    $get_hr_user_name = User::getUserNameById($hr_user_id);
+                    $users[$hr_user_id] = $get_hr_user_name;
+                }
             }
 
             foreach ($users as $key => $value) {
@@ -711,11 +728,28 @@ class ReportController extends Controller
                 $current_year = date('Y-m-d',strtotime("first day of $current"));
                 $next_year = date('Y-m-d',strtotime("last day of $next"));
 
+                // get logged in user
+                $user =  \Auth::user();
+                $user_id = \Auth::user()->id;
+                $all_perm = $user->can('display-person-wise-report-of-all-users');
+                $teamwise_perm = $user->can('display-person-wise-report-of-loggedin-user-team');
+
                 $recruitment = getenv('RECRUITMENT');
                 $hr_advisory = getenv('HRADVISORY');
                 $management = getenv('MANAGEMENT');
                 $hr_user_id = getenv('HRUSERID');
-                $type_array = array($recruitment,$hr_advisory,$management);
+
+                // Set all recruitment reports for Manager Role
+                $manager_user_id = getenv('MANAGERUSERID');
+
+                if($user_id == $manager_user_id) {
+                    
+                    $type_array = array($recruitment);
+                }
+                else {
+
+                    $type_array = array($recruitment,$hr_advisory,$management);
+                }
 
                 $users_array = User::getAllUsers($type_array);
                 $users = array();
@@ -736,8 +770,13 @@ class ReportController extends Controller
                         }    
                     }
 
-                    $get_hr_user_name = User::getUserNameById($hr_user_id);
-                    $users[$hr_user_id] = $get_hr_user_name;
+                    if($user_id == $manager_user_id) {
+                    
+                    }
+                    else {
+                        $get_hr_user_name = User::getUserNameById($hr_user_id);
+                        $users[$hr_user_id] = $get_hr_user_name;
+                    }
                 }
 
                 foreach ($users as $key => $value) {
@@ -834,11 +873,21 @@ class ReportController extends Controller
                 }
             }
 
+            // Set all recruitment reports for Manager Role
+            $manager_user_id = getenv('MANAGERUSERID');
+
             foreach ($month as $key => $value) {
+
                 $month_start = date('Y-m-d',strtotime("first day of $key"));
                 $month_last = date('Y-m-d',strtotime("last day of $key"));
 
-                $monthwise_data[$value] = Bills::getPersonwiseReportData(NULL,$month_start,$month_last);
+                if($user_id == $manager_user_id) {
+
+                    $monthwise_data[$value] = Bills::getMonthwiseReportData($user_id,$month_start,$month_last);
+                }
+                else {
+                    $monthwise_data[$value] = Bills::getMonthwiseReportData(NULL,$month_start,$month_last);
+                }
             }
             return view('adminlte::reports.monthwise-report',compact('year_array','year','monthwise_data'));
         }
@@ -904,11 +953,25 @@ class ReportController extends Controller
                     }
                 }
 
+                // Set all recruitment reports for Manager Role
+                $manager_user_id = getenv('MANAGERUSERID');
+
+                // get logged in user
+                $user =  \Auth::user();
+                $user_id = \Auth::user()->id;
+        
                 foreach ($month as $key => $value) {
+
                     $month_start = date('Y-m-d',strtotime("first day of $key"));
                     $month_last = date('Y-m-d',strtotime("last day of $key"));
 
-                    $monthwise_data[$value] = Bills::getPersonwiseReportData(NULL,$month_start,$month_last);
+                    if($user_id == $manager_user_id) {
+
+                        $monthwise_data[$value] = Bills::getMonthwiseReportData($user_id,$month_start,$month_last);
+                    }
+                    else {
+                        $monthwise_data[$value] = Bills::getMonthwiseReportData(NULL,$month_start,$month_last);
+                    }
                 }
                     
                 $sheet->loadview('adminlte::reports.monthwise-reportexport')->with('monthwise_data',$monthwise_data);
@@ -1043,9 +1106,20 @@ class ReportController extends Controller
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $hr_user_id = getenv('HRUSERID');
-        $type_array = array($recruitment,$hr_advisory);
 
         if($all_perm) {
+
+            // Set all recruitment reports for Manager Role
+            $manager_user_id = getenv('MANAGERUSERID');
+
+            if($user_id == $manager_user_id) {
+
+                $type_array = array($recruitment);
+            }
+            else {
+
+                $type_array = array($recruitment,$hr_advisory);
+            }
 
             $users_array = User::getAllUsersExpectSuperAdmin($type_array);
 
@@ -1067,8 +1141,14 @@ class ReportController extends Controller
                     }    
                 }
 
-                $get_hr_user_name = User::getUserNameById($hr_user_id);
-                $users[$hr_user_id] = $get_hr_user_name;
+                if($user_id == $manager_user_id) {
+
+                }
+                else {
+
+                    $get_hr_user_name = User::getUserNameById($hr_user_id);
+                    $users[$hr_user_id] = $get_hr_user_name;
+                }
             }
         }
         else if($userwise_perm || $teamwise_perm) {
@@ -1297,6 +1377,7 @@ class ReportController extends Controller
 
         // get logged in user
         $user =  \Auth::user();
+        $user_id = $user->id;
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
         $all_perm = $user->can('display-productivity-report-of-all-users');
@@ -1304,9 +1385,20 @@ class ReportController extends Controller
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $hr_user_id = getenv('HRUSERID');
-        $type_array = array($recruitment,$hr_advisory);
 
         if($all_perm) {
+
+            // Set all recruitment reports for Manager Role
+            $manager_user_id = getenv('MANAGERUSERID');
+
+            if($user_id == $manager_user_id) {
+
+                $type_array = array($recruitment);
+            }
+            else {
+
+                $type_array = array($recruitment,$hr_advisory);
+            }
 
             $users_array = User::getAllUsersExpectSuperAdmin($type_array);
 
@@ -1328,8 +1420,13 @@ class ReportController extends Controller
                     }    
                 }
 
-                $get_hr_user_name = User::getUserNameById($hr_user_id);
-                $users[$hr_user_id] = $get_hr_user_name;
+                if($user_id == $manager_user_id) {
+
+                }
+                else {
+                    $get_hr_user_name = User::getUserNameById($hr_user_id);
+                    $users[$hr_user_id] = $get_hr_user_name;
+                }
             }
         }
         // Get Selected Month
