@@ -223,8 +223,9 @@ class WorkPlanningController extends Controller
         $user_details = User::getAllDetailsByUserID($user_id);
         $remaining_time = $user_details->working_hours;
         $user_total_hours = $user_details->working_hours;
+        $user_half_day_hours = $user_details->half_day_working_hours;
 
-        return view('adminlte::workPlanning.create',compact('action','work_type','selected_work_type','time_array','selected_projected_time','selected_actual_time','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','remaining_time','user_total_hours','org_loggedin_time'));
+        return view('adminlte::workPlanning.create',compact('action','work_type','selected_work_type','time_array','selected_projected_time','selected_actual_time','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','remaining_time','user_total_hours','user_half_day_hours','org_loggedin_time'));
     }
 
     public function store(Request $request) {

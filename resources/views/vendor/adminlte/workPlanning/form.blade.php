@@ -10,7 +10,7 @@
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-            @if( $action == 'edit')
+            @if($action == 'edit')
                 <h2>Edit Work Planning Sheet</h2>
             @else
                 <h2>Add Work Planning</h2>
@@ -25,7 +25,7 @@
 @if($action == 'edit')
     {!! Form::model($work_planning_res,['method' => 'PATCH', 'files' => true, 'route' => ['workplanning.update', $work_planning_res['id']],'id'=>'work_planning_form', 'autocomplete' => 'off']) !!}
 @else
-    {!! Form::open(['files' => true, 'route' => 'workplanning.store','id'=>'work_planning_form', 'autocomplete' => 'off']) !!}
+    {!! Form::open(['files' => true, 'route' => 'workplanning.store','id'=>'work_planning_form', 'autocomplete' => 'off','onsubmit' => "return hoursValidation()"]) !!}
 @endif
 
 <div class="row">
@@ -109,7 +109,7 @@
                                     </td>
 
                                     <td style="border:1px solid black;">
-                                        {!! Form::select('projected_time[]',$time_array,$selected_projected_time, array('placeholder' => 'Select Time','id' => 'projected_time_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'onchange'=>'setRemainTime('.$i.')')) !!}
+                                        {!! Form::select('projected_time[]',$time_array,$selected_projected_time, array('id' => 'projected_time_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'onchange'=>'setRemainTime('.$i.')')) !!}
                                     </td>
 
                                     <td style="border:1px solid black;">
@@ -162,6 +162,7 @@
 
     <input type="hidden" id="action" name="action" value="{{ $action }}">
     <input type="hidden" id="user_total_hours" name="user_total_hours" value="{{ $user_total_hours }}">
+    <input type="hidden" id="user_half_day_hours" name="user_half_day_hours" value="{{ $user_half_day_hours }}">
 
     @if( $action == 'add')
         <input type="hidden" id="row_cnt" name="row_cnt" value="6">
@@ -243,6 +244,38 @@
 
     function setRemainTime(value) {
 
+        // For calculate total & actual working hours
+
+        var row_cnt = $("#row_cnt").val();
+        var projected_time_array = [];
+
+        for(j = 1; j < row_cnt; j++) {
+                
+            var projected_time = $("#projected_time_"+j).val();
+            projected_time_array.push(projected_time);
+        }
+
+        const sum = projected_time_array.reduce((acc, time) => acc.add(moment.duration(time)), moment.duration());
+
+        var final_working_hours = [Math.floor(sum.asHours()), sum.minutes(), sum.seconds()].join(':');
+
+        var user_total_hours = $("#user_total_hours").val();
+
+        var time_start = new Date();
+        var time_end = new Date();
+        var value_start = final_working_hours.split(':');
+        var value_end = user_total_hours.split(':');
+
+        time_start.setHours(value_start[0], value_start[1], value_start[2], 0)
+        time_end.setHours(value_end[0], value_end[1], value_end[2], 0)
+
+        if(time_start > time_end) {
+
+            alert("Your Total Working Hours are : " + user_total_hours);
+            $('#projected_time_'+value).val('0').change();
+        }
+
+        // Set remain time difference
         var action = $("#action").val();
 
         if(action == "add") {
@@ -306,37 +339,6 @@
                 }
 
                 $("#remaining_time").val(remain_time);
-            }
-
-            // For calculate total & actual working hours
-
-            var row_cnt = $("#row_cnt").val();
-            var projected_time_array = [];
-
-            for(j = 1; j < row_cnt; j++) {
-                
-                var projected_time = $("#projected_time_"+j).val();
-                projected_time_array.push(projected_time);
-            }
-
-            const sum = projected_time_array.reduce((acc, time) => acc.add(moment.duration(time)), moment.duration());
-
-            var final_working_hours = [Math.floor(sum.asHours()), sum.minutes(), sum.seconds()].join(':');
-
-            var user_total_hours = $("#user_total_hours").val();
-
-            var time_start = new Date();
-            var time_end = new Date();
-            var value_start = final_working_hours.split(':');
-            var value_end = user_total_hours.split(':');
-
-            time_start.setHours(value_start[0], value_start[1], value_start[2], 0)
-            time_end.setHours(value_end[0], value_end[1], value_end[2], 0)
-
-            if(time_start > time_end) {
-
-                alert("Your Total Working Hours are : " + user_total_hours);
-                $("#remaining_time").val('00:00:00');
             }
         }
 
@@ -595,7 +597,7 @@
 
         var diff = value_end[0] - value_start[0];
 
-        if(diff >= 1) {
+        if(diff > 1) {
 
             $("#alertModal").modal('show');
             return false;
@@ -614,6 +616,76 @@
     function submitform() {
 
         $('#alertModal').modal('hide');
+    }
+
+    function hoursValidation() {
+
+        var user_total_hours = $("#user_total_hours").val();
+        var user_half_day_hours = $("#user_half_day_hours").val();
+
+        // For calculate total & actual working hours
+
+        var row_cnt = $("#row_cnt").val();
+        var projected_time_array = [];
+
+        for(j = 1; j < row_cnt; j++) {
+                
+            var projected_time = $("#projected_time_"+j).val();
+            projected_time_array.push(projected_time);
+        }
+
+        const sum = projected_time_array.reduce((acc, time) => acc.add(moment.duration(time)), moment.duration());
+
+        var final_working_hours = [Math.floor(sum.asHours()), sum.minutes(), sum.seconds()].join(':');
+
+        var total_time = final_working_hours.split(':');
+
+        // Set Hours
+        if(total_time[0] == '0') {
+
+            var hours = '00';
+        }
+        else {
+
+            if(total_time[0] > 10) {
+                var hours = total_time[0];
+            }
+            else {
+                var hours = "0"+total_time[0];
+            }
+        }
+
+        // Set Minutes
+        if(total_time[1] == '0') {
+
+            var minutes = '00';
+        }
+        else {
+
+            var minutes = total_time[1];
+        }
+
+        // Set Seconds
+        if(total_time[2] == '0') {
+
+            var seconds = '00';
+        }
+        else {
+
+            var seconds = total_time[2];
+        }
+
+        var final_added_time = hours+":"+minutes+":"+seconds;
+
+        if(user_total_hours == final_added_time) {
+        }
+        else if(user_half_day_hours == final_added_time) {
+        }
+        else {
+
+            alert("Your Total Working Hours are : " + user_total_hours);
+            return false;
+        }
     }
 </script>
 @endsection
