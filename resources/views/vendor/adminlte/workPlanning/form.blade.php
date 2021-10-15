@@ -1,4 +1,4 @@
-@section('customs_css')
+f@section('customs_css')
 <style>
     .error
     {
@@ -90,10 +90,11 @@
                         <thead>
                             <tr style="border:1px solid black;">
                                <th width="5%" style="border:1px solid black;">Sr No.</th>
-                               <th style="border:1px solid black;">Task</th>
-                               <th style="border:1px solid black;">Projected Time</th>
-                               <th style="border:1px solid black;">Actual Time </th>
-                               <th width="45%" style="border:1px solid black;">Description</th>
+                               <th width="20%" style="border:1px solid black;">Task</th>
+                               <th width="10%" style="border:1px solid black;">Projected Time / <br/>Actual Time</th>
+                               <!-- <th style="border:1px solid black;">Actual Time </th> -->
+                               <th width="30%" style="border:1px solid black;">Remarks</th>
+                               <th width="30%" style="border:1px solid black;">Reporting Manager / HR Remarks</th>
                             </tr>
                         </thead>
 
@@ -105,19 +106,25 @@
                                     </td>
 
                                     <td style="border:1px solid black;">
-                                        {!!Form::textarea('description[]',null, array('placeholder' => 'Task','id' => 'description_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'rows' => 9)) !!}
+                                        {!!Form::textarea('task[]',null, array('placeholder' => 'Task','id' => 'task_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'rows' => 3)) !!}
                                     </td>
 
                                     <td style="border:1px solid black;">
-                                        {!! Form::select('projected_time[]',$time_array,$selected_projected_time, array('id' => 'projected_time_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'onchange'=>'setRemainTime('.$i.')')) !!}
-                                    </td>
+                                        {!! Form::select('projected_time[]',$time_array,$selected_projected_time, array('id' => 'projected_time_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'onchange'=>'setRemainTime('.$i.')')) !!} <br/><br/>
 
-                                    <td style="border:1px solid black;">
                                         {!! Form::select('actual_time[]',$time_array,$selected_actual_time, array('placeholder' => 'Select Time','id' => 'actual_time_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'disabled' => 'true','style' => 'width:130px;')) !!}
                                     </td>
 
+                                    <!-- <td style="border:1px solid black;">
+                                        
+                                    </td> -->
+
                                     <td style="border:1px solid black;">
-                                        {!!Form::textarea('remarks[]',null, array('placeholder' =>'Description','id' => 'remarks_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'rows' => 5)) !!}
+                                        {!!Form::textarea('remarks[]',null, array('placeholder' =>'Remarks','id' => 'remarks_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'rows' => 5)) !!}
+                                    </td>
+
+                                    <td style="border:1px solid black;">
+                                        {!!Form::textarea('rm_hr_remarks[]',null, array('placeholder' =>'RM / HR Remarks','id' => 'rm_hr_remarks_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'rows' => 5)) !!}
                                     </td>
                                 </tr>
                             @endfor
@@ -135,7 +142,7 @@
                                <th style="border:1px solid black;">Task</th>
                                <th style="border:1px solid black;">Projected Time</th>
                                <th style="border:1px solid black;">Actual Time </th>
-                               <th width="45%" style="border:1px solid black;">Description</th>
+                               <th width="45%" style="border:1px solid black;">Remarks</th>
                             </tr>
                         </thead>
 
@@ -163,6 +170,7 @@
     <input type="hidden" id="action" name="action" value="{{ $action }}">
     <input type="hidden" id="user_total_hours" name="user_total_hours" value="{{ $user_total_hours }}">
     <input type="hidden" id="user_half_day_hours" name="user_half_day_hours" value="{{ $user_half_day_hours }}">
+    <input type="hidden" id="early_late_in_time" name="early_late_in_time" value="{{ $early_late_in_time }}">
 
     @if( $action == 'add')
         <input type="hidden" id="row_cnt" name="row_cnt" value="6">
@@ -223,6 +231,7 @@
 
             $("#projected_time_"+j).select2({width:"130px"});
             $("#remarks_"+j).wysihtml5();
+            $("#rm_hr_remarks_"+j).wysihtml5();
         }
 
         // automaticaly open the select2 when it gets focus
@@ -415,7 +424,7 @@
         }
     }
 
-    function AddRow() {   
+    function AddRow() {
 
         var row_cnt = $("#row_cnt").val();
         var action = {!! json_encode($action) !!};
@@ -426,28 +435,28 @@
         html += '<td style="border:1px solid black;text-align: center;">'+row_cnt+'</td>';
 
         html += '<td style="border:1px solid black;">';
-        html += '<textarea name="description[]" placeholder="Task" id="description_'+row_cnt+'" class="form-control" rows="9"></textarea>';
+        html += '<textarea name="task[]" placeholder="Task" id="task_'+row_cnt+'" class="form-control" rows="3"></textarea>';
         html += '</td>';
 
         html += '<td style="border:1px solid black;">';
-        html += '<select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setRemainTime('+row_cnt+')"><option value="" disabled selected>Select Time</option></select>';
-        html += '</td>';
+        html += '<select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setRemainTime('+row_cnt+')"><option value="" disabled selected>Select Time</option></select> <br/><br/>';
+        //html += '</td>';
 
         if(action == "add") {
 
-            html += '<td style="border:1px solid black;">';
+            //html += '<td style="border:1px solid black;">';
             html += '<select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" readonly=true><option value="" disabled selected>Select Time</option></select>';
             html += '</td>';
         }
         else {
 
-            html += '<td style="border:1px solid black;">';
+            //html += '<td style="border:1px solid black;">';
             html += '<select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'"><option value="" disabled selected>Select Time</option></select>';
             html += '</td>';
         }
 
         html += '<td style="border:1px solid black;">';
-        html += '<textarea name="remarks[]" placeholder="Description" id="remarks_'+row_cnt+'" class="form-control" rows="5"></textarea>';
+        html += '<textarea name="remarks[]" placeholder="Remarks" id="remarks_'+row_cnt+'" class="form-control" rows="5"></textarea>';
         html += '</td>';
 
         $(".row_"+row_cnt).append(html);
@@ -461,6 +470,7 @@
         $("#remarks_"+row_cnt).wysihtml5();
 
         if(action == "add") {
+
             document.getElementById("actual_time_"+row_cnt).disabled = true;
         }
         else {
@@ -504,7 +514,7 @@
                     for(j = 0;j < data.length;j++) {
 
                         var work_planning_list_id = data[j].work_planning_list_id;
-                        var description = data[j].description;
+                        var task = data[j].task;
                         var projected_time = data[j].projected_time;
                         var actual_time = data[j].actual_time;
                         var remarks = data[j].remarks;
@@ -518,7 +528,7 @@
                         html += '<td style="border:1px solid black;text-align: center;">'+row_cnt+'</td>';
 
                         html += '<td style="border:1px solid black;">';
-                        html += '<textarea name="description[]" placeholder="Task" id="description_'+row_cnt+'" class="form-control" rows="9" style="width:292px;">'+description+'</textarea>';
+                        html += '<textarea name="task[]" placeholder="Task" id="task_'+row_cnt+'" class="form-control" rows="4" style="width:292px;">'+task+'</textarea>';
                         html += '</td>';
 
                         html += '<td style="border:1px solid black;">';
@@ -530,7 +540,7 @@
                         html += '</td>';
 
                         html += '<td style="border:1px solid black;">';
-                        html += '<textarea name="remarks[]" placeholder="Description" id="remarks_'+row_cnt+'" class="form-control" rows="5">'+remarks+'</textarea>';
+                        html += '<textarea name="remarks[]" placeholder="Remarks" id="remarks_'+row_cnt+'" class="form-control" rows="5">'+remarks+'</textarea>';
                         html += '</td>';
 
                         $(".row_"+row_cnt).append(html);
@@ -620,10 +630,7 @@
 
     function hoursValidation() {
 
-        var user_total_hours = $("#user_total_hours").val();
-        var user_half_day_hours = $("#user_half_day_hours").val();
-
-        // For calculate total & actual working hours
+        // For calculate actual working hours added by user
 
         var row_cnt = $("#row_cnt").val();
         var projected_time_array = [];
@@ -642,7 +649,6 @@
 
         // Set Hours
         if(total_time[0] == '0') {
-
             var hours = '00';
         }
         else {
@@ -657,33 +663,31 @@
 
         // Set Minutes
         if(total_time[1] == '0') {
-
             var minutes = '00';
         }
         else {
-
             var minutes = total_time[1];
         }
 
         // Set Seconds
         if(total_time[2] == '0') {
-
             var seconds = '00';
         }
         else {
-
             var seconds = total_time[2];
         }
 
         var final_added_time = hours+":"+minutes+":"+seconds;
 
-        if(user_total_hours == final_added_time) {
-        }
-        else if(user_half_day_hours == final_added_time) {
+        var user_total_hours = $("#user_total_hours").val();
+        var user_half_day_hours = $("#user_half_day_hours").val();
+        var early_late_in_time = $("#early_late_in_time").val();
+
+        if(user_total_hours == final_added_time || user_half_day_hours == final_added_time || early_late_in_time == final_added_time) {
         }
         else {
 
-            alert("Your Total Working Hours are : " + user_total_hours);
+            alert("Please Add Proper Report.");
             return false;
         }
     }

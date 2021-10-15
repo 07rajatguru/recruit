@@ -22,10 +22,11 @@ class WorkPlanningList extends Model
 
             $work_planning_list[$i]['work_planning_list_id'] = $v->id;
             $work_planning_list[$i]['work_planning_id'] = $v->work_planning_id;
-            $work_planning_list[$i]['description'] = $v->description;
+            $work_planning_list[$i]['task'] = $v->task;
             $work_planning_list[$i]['projected_time'] = $v->projected_time;
             $work_planning_list[$i]['actual_time'] = $v->actual_time;
             $work_planning_list[$i]['remarks'] = $v->remarks;
+            $work_planning_list[$i]['rm_hr_remarks'] = $v->rm_hr_remarks;
 
             $i++;
         }

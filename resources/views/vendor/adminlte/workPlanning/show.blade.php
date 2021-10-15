@@ -97,7 +97,7 @@
                             <th width="35%" style="border:1px solid black;">Task</th>
                             <th width="10%" style="border:1px solid black;text-align: center;">Projected Time</th>
                             <th width="10%" style="border:1px solid black;text-align: center;">Actual Time</th>
-                            <th style="border:1px solid black;">Description</th>
+                            <th style="border:1px solid black;">Remarks</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -105,7 +105,7 @@
                         @foreach($work_planning_list as $key=>$value)
                             <tr>
                                 <td style="border:1px solid black;text-align: center;">{{ $i++ }}</td>
-                                <td style="border:1px solid black;">{!! $value['description'] !!}</td>
+                                <td style="border:1px solid black;">{!! $value['task'] !!}</td>
                                 <?php
 
                                     $projected_time = array();

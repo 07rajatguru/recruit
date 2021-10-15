@@ -225,7 +225,15 @@ class WorkPlanningController extends Controller
         $user_total_hours = $user_details->working_hours;
         $user_half_day_hours = $user_details->half_day_working_hours;
 
-        return view('adminlte::workPlanning.create',compact('action','work_type','selected_work_type','time_array','selected_projected_time','selected_actual_time','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','remaining_time','user_total_hours','user_half_day_hours','org_loggedin_time'));
+        // Set Early go / Late in hours
+
+        $user_working_hours = strtotime($user_details->working_hours);
+        $one_hour = strtotime('01:00:00');
+
+        $early_late_in = $user_working_hours - $one_hour;
+        $early_late_in_time = date("H:i:s", $early_late_in);
+
+        return view('adminlte::workPlanning.create',compact('action','work_type','selected_work_type','time_array','selected_projected_time','selected_actual_time','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','remaining_time','user_total_hours','user_half_day_hours','org_loggedin_time','early_late_in_time'));
     }
 
     public function store(Request $request) {
@@ -348,8 +356,8 @@ class WorkPlanningController extends Controller
         $work_planning_id = $work_planning->id;
 
         // Add Listing Rows
-        $description = array();
-        $description = Input::get('description');
+        $task = array();
+        $task = Input::get('task');
 
         $projected_time = array();
         $projected_time = Input::get('projected_time');
@@ -357,13 +365,13 @@ class WorkPlanningController extends Controller
         $remarks = array();
         $remarks = Input::get('remarks');
 
-        for($j = 0; $j < count($description); $j++) {
+        for($j = 0; $j < count($task); $j++) {
 
-            if($description[$j]!='') {
+            if($task[$j]!='') {
 
                 $work_planning_list = new WorkPlanningList();
                 $work_planning_list->work_planning_id = $work_planning_id;
-                $work_planning_list->description = $description[$j];
+                $work_planning_list->task = $task[$j];
                 $work_planning_list->projected_time = $projected_time[$j];
                 $work_planning_list->remarks = $remarks[$j];
                 $work_planning_list->added_by = $user_id;
@@ -584,8 +592,8 @@ class WorkPlanningController extends Controller
         WorkPlanningList::where('work_planning_id','=',$id)->delete();
 
         // Add Listing Rows
-        $description = array();
-        $description = Input::get('description');
+        $task = array();
+        $task = Input::get('task');
 
         $projected_time = array();
         $projected_time = Input::get('projected_time');
@@ -596,13 +604,13 @@ class WorkPlanningController extends Controller
         $remarks = array();
         $remarks = Input::get('remarks');
 
-        for($j = 0; $j < count($description); $j++) {
+        for($j = 0; $j < count($task); $j++) {
 
-            if($description[$j]!='') {
+            if($task[$j]!='') {
 
                 $work_planning_list = new WorkPlanningList();
                 $work_planning_list->work_planning_id = $id;
-                $work_planning_list->description = $description[$j];
+                $work_planning_list->task = $task[$j];
                 $work_planning_list->projected_time = $projected_time[$j];
 
                 if(isset($actual_time[$j]) && $actual_time[$j] != '') {
