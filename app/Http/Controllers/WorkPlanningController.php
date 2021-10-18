@@ -317,26 +317,29 @@ class WorkPlanningController extends Controller
             $attendance = 'F';
         }
 
-        $report_answer = Input::get('report_answer');
+        $report_delay = Input::get('report_delay');
 
         // If report delay
-        if(isset($report_answer) && $report_answer != '') {
+        if(isset($report_delay) && $report_delay != '') {
 
-            if($report_answer == 'Late in / Early Go') {
-
-                $attendance = 'F';
-            }
-            if($report_answer == 'Half Day') {
-
+            if($report_delay == 'Half Day') {
                 $attendance = 'HD';
             }
-            if($report_answer == 'There is delay of Pending Report') {
-
+            else {
                 $attendance = 'F';
             }
         }
         else {
-            $report_answer = '';
+            $report_delay = '';
+        }
+
+        $report_delay_conent = Input::get('report_delay_conent');
+
+        // If report delay
+        if(isset($report_delay_conent) && $report_delay_conent != '') {
+        }
+        else {
+            $report_delay_conent = '';
         }
 
         $work_planning = new WorkPlanning();
@@ -350,7 +353,8 @@ class WorkPlanningController extends Controller
         $work_planning->remaining_time = $remaining_time;
         $work_planning->added_date = date('Y-m-d');
         $work_planning->added_by = $user_id;
-        $work_planning->report_delay = $report_answer;
+        $work_planning->report_delay = $report_delay;
+        $work_planning->report_delay_conent = $report_delay_conent;
         $work_planning->save();
 
         $work_planning_id = $work_planning->id;
@@ -365,6 +369,9 @@ class WorkPlanningController extends Controller
         $remarks = array();
         $remarks = Input::get('remarks');
 
+        $rm_hr_remarks = array();
+        $rm_hr_remarks = Input::get('rm_hr_remarks');
+
         for($j = 0; $j < count($task); $j++) {
 
             if($task[$j]!='') {
@@ -374,6 +381,7 @@ class WorkPlanningController extends Controller
                 $work_planning_list->task = $task[$j];
                 $work_planning_list->projected_time = $projected_time[$j];
                 $work_planning_list->remarks = $remarks[$j];
+                $work_planning_list->rm_hr_remarks = $rm_hr_remarks[$j];
                 $work_planning_list->added_by = $user_id;
                 $work_planning_list->save();
             }
@@ -490,12 +498,21 @@ class WorkPlanningController extends Controller
         $work_planning_status_time = $dt_status->format('H:i:s');
         $work_planning_status_time = date("g:i A", strtotime($work_planning_status_time));
 
-        $user_details = User::getAllDetailsByUserID($user_id);
-        $user_total_hours = $user_details->working_hours;
-
         $remaining_time = $work_planning_res->remaining_time;
 
-        return view('adminlte::workPlanning.create',compact('id','action','work_planning_res','time_array','work_type','selected_work_type','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','remaining_time','user_total_hours'));
+        $user_details = User::getAllDetailsByUserID($user_id);
+        $user_total_hours = $user_details->working_hours;
+        $user_half_day_hours = $user_details->half_day_working_hours;
+
+        // Set Early go / Late in hours
+
+        $user_working_hours = strtotime($user_details->working_hours);
+        $one_hour = strtotime('01:00:00');
+
+        $early_late_in = $user_working_hours - $one_hour;
+        $early_late_in_time = date("H:i:s", $early_late_in);
+
+        return view('adminlte::workPlanning.create',compact('id','action','work_planning_res','time_array','work_type','selected_work_type','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','remaining_time','user_total_hours','user_half_day_hours','early_late_in_time'));
     }
 
     public function update(Request $request,$id) {
@@ -604,6 +621,9 @@ class WorkPlanningController extends Controller
         $remarks = array();
         $remarks = Input::get('remarks');
 
+        $rm_hr_remarks = array();
+        $rm_hr_remarks = Input::get('rm_hr_remarks');
+
         for($j = 0; $j < count($task); $j++) {
 
             if($task[$j]!='') {
@@ -622,6 +642,7 @@ class WorkPlanningController extends Controller
                 }
 
                 $work_planning_list->remarks = $remarks[$j];
+                $work_planning_list->rm_hr_remarks = $rm_hr_remarks[$j];
                 $work_planning_list->added_by = $user_id;
                 $work_planning_list->save();
             }

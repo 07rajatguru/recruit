@@ -1,8 +1,11 @@
-f@section('customs_css')
+@section('customs_css')
 <style>
     .error
     {
         color:#f56954 !important;
+    }
+    tbody > tr > td:first-child {
+      text-align: center;
     }
 </style>
 @endsection
@@ -128,9 +131,6 @@ f@section('customs_css')
                                     </td>
                                 </tr>
                             @endfor
-                            @for($j=6; $j<=20; $j++)
-                                <tr class="row_{{ $j }}" style="border:1px solid black;"></tr>
-                            @endfor
                         </tbody>
                     </table>
                 @endif
@@ -139,19 +139,13 @@ f@section('customs_css')
                         <thead>
                             <tr style="border:1px solid black;">
                                <th width="5%" style="border:1px solid black;">Sr No.</th>
-                               <th style="border:1px solid black;">Task</th>
-                               <th style="border:1px solid black;">Projected Time</th>
-                               <th style="border:1px solid black;">Actual Time </th>
-                               <th width="45%" style="border:1px solid black;">Remarks</th>
+                               <th width="20%" style="border:1px solid black;">Task</th>
+                               <th width="10%" style="border:1px solid black;">Projected Time / <br/>Actual Time</th>
+                               <th width="30%" style="border:1px solid black;">Remarks</th>
+                               <th width="30%" style="border:1px solid black;">Reporting Manager / HR Remarks</th>
                             </tr>
                         </thead>
-
-                        <tbody>    
-                            @for($i=1; $i<=20; $i++)
-                                <tr class="row_{{ $i }}" style="border:1px solid black;" style="display:none;">
-                                </tr>
-                            @endfor
-                        </tbody>
+                        <tbody></tbody>
                     </table>
                 @endif
             </div>
@@ -194,12 +188,22 @@ f@section('customs_css')
                 <p>Have you Reported Work at Late?</p>
 
                 <div class="detail_class" style="display:none;">
-                    {!! Form::radio('report_answer','Late in / Early Go') !!}
-                    {!! Form::label('Late in / Early Go') !!} &nbsp;&nbsp;
-                    {!! Form::radio('report_answer','Half Day') !!}
-                    {!! Form::label('Half Day') !!} &nbsp;&nbsp;
-                    {!! Form::radio('report_answer','There is delay of Pending Report') !!}
-                    {!! Form::label('There is delay of Pending Report') !!}
+                    {!! Form::radio('report_delay','Late in / Early Go',false,['id' => 'report_delay','onchange' => 'displayTextArea("Late in / Early Go")']) !!}
+                    {!! Form::label('Late in / Early Go') !!} &nbsp;
+
+                    {!! Form::radio('report_delay','Half Day',false,['id' => 'report_delay','onchange' => 'displayTextArea("Half Day")']) !!}
+                    {!! Form::label('Half Day') !!} &nbsp;
+
+                    {!! Form::radio('report_delay','There is delay of Pending Report',false,['id' => 'report_delay','onchange' => 'displayTextArea("There is delay of Pending Report")']) !!}
+                    {!! Form::label('There is delay of Pending Report') !!}&nbsp;
+
+                    {!! Form::radio('report_delay','Others',false,['id' => 'report_delay','onchange' => 'displayTextArea("Others")']) !!}
+                    {!! Form::label('Others') !!}
+
+                    <div class="form-group report_delay_conent_cls" style="display:none;">
+                        <br/><strong>&nbsp;Add Description :</strong>
+                        {!! Form::textarea('report_delay_conent', null, array('id' => 'report_delay_conent','placeholder' => 'Add Text','class' => 'form-control','rows' => '5')) !!}
+                    </div>
                 </div>
             </div>
             <div class="modal-footer first_footer">
@@ -208,7 +212,7 @@ f@section('customs_css')
                 <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
             </div>
             <div class="modal-footer second_footer" style="display:none;">
-                <button type="button" class="btn btn-primary" onclick="submitform();">Submit
+                <button type="button" class="btn btn-primary" onclick="submitform();">OK
                 </button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel
                 </button>
@@ -227,27 +231,28 @@ f@section('customs_css')
 
         $("#work_type").select2();
 
-        for(j = 1; j <= 5; j++) {
+        var action = $("#action").val();
 
-            $("#projected_time_"+j).select2({width:"130px"});
-            $("#remarks_"+j).wysihtml5();
-            $("#rm_hr_remarks_"+j).wysihtml5();
+        if(action == 'add') {
+
+            for(j = 1; j <= 5; j++) {
+
+                $("#projected_time_"+j).select2({width:"130px"});
+                $("#remarks_"+j).wysihtml5();
+                $("#rm_hr_remarks_"+j).wysihtml5();
+                $("#rm_hr_remarks_"+j).val('Hii');
+            }
+
+            checkTime();
+            jQuery(document).on('focus', '.select2', function() {
+                jQuery(this).siblings('select').select2('open');
+            });
         }
 
-        // automaticaly open the select2 when it gets focus
-        jQuery(document).on('focus', '.select2', function() {
-            jQuery(this).siblings('select').select2('open');
-        });
-
         var work_planning_id = $("#work_planning_id").val();
-        var action = $("#action").val();
 
         if(action == "edit") {
             loadDetails(work_planning_id);
-        }
-
-        if(action == 'add') {
-            checkTime();
         }
     });
 
@@ -289,7 +294,7 @@ f@section('customs_css')
 
         if(action == "add") {
 
-            if(value == 1) {
+            /*if(value == 1) {
 
                 var get_time = $("#projected_time_"+value).val();
                 get_time = get_time + ":00";
@@ -348,7 +353,44 @@ f@section('customs_css')
                 }
 
                 $("#remaining_time").val(remain_time);
+            }*/
+
+            var row_cnt = $("#row_cnt").val();
+            var projected_time_array = [];
+
+            for(j = 1; j < row_cnt; j++) {
+                
+                var projected_time = $("#projected_time_"+j).val();
+                projected_time_array.push(projected_time);
             }
+
+            const sum = projected_time_array.reduce((acc, time) => acc.add(moment.duration(time)), moment.duration());
+
+            var final_working_hours = [Math.floor(sum.asHours()), sum.minutes(), sum.seconds()].join(':');
+
+            var new_date_1 = "Aug 1, 2021 " + final_working_hours;
+            var date1 = new Date(new_date_1);
+
+            var user_total_hours = $("#user_total_hours").val();
+            var new_date_2 = "Aug 1, 2021 " + user_total_hours;
+            var date2 = new Date(new_date_2);
+
+            var res = Math.abs(date2 - date1) / 1000;
+            var hours = Math.floor(res / 3600) % 24;
+            var minutes = Math.floor(res / 60) % 60;
+
+            if(hours == 0) {
+                hours = '00';
+            }
+
+            if(minutes == 0) {
+                var remain_time = hours + ":" + "00:00";
+            }
+            else {
+                var remain_time = hours + ":" + minutes + ":00";
+            }
+
+            $("#remaining_time").val(remain_time);
         }
 
         if(action == "edit") {
@@ -420,6 +462,7 @@ f@section('customs_css')
         else {
 
             document.getElementById('remaining_time').style.backgroundColor = 'white';
+            document.getElementById('remaining_time').style.color = 'Red';
             document.getElementById("add_row").disabled = false;
         }
     }
@@ -430,36 +473,38 @@ f@section('customs_css')
         var action = {!! json_encode($action) !!};
         var time_array_1 = <?php echo json_encode($time_array); ?>;
 
-        var html = '';
+        var table = document.getElementById("work_planning_table");
+        var row = table.insertRow(-1);
+        row.className = 'row_'+row_cnt+'';
+        row.style.border = '1px solid black';
 
-        html += '<td style="border:1px solid black;text-align: center;">'+row_cnt+'</td>';
+        var cell1 = row.insertCell(0);
+        cell1.style.border = '1px solid black';
+        cell1.innerHTML = row_cnt;
 
-        html += '<td style="border:1px solid black;">';
-        html += '<textarea name="task[]" placeholder="Task" id="task_'+row_cnt+'" class="form-control" rows="3"></textarea>';
-        html += '</td>';
+        var cell2 = row.insertCell(1);
+        cell2.style.border = '1px solid black';
+        cell2.innerHTML = '<td style="border:1px solid black;"><textarea name="task[]" placeholder="Task" id="task_'+row_cnt+'" class="form-control" rows="3"></textarea></td>';
 
-        html += '<td style="border:1px solid black;">';
-        html += '<select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setRemainTime('+row_cnt+')"><option value="" disabled selected>Select Time</option></select> <br/><br/>';
-        //html += '</td>';
+        var cell3 = row.insertCell(2);
+        cell3.style.border = '1px solid black';
 
         if(action == "add") {
 
-            //html += '<td style="border:1px solid black;">';
-            html += '<select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" readonly=true><option value="" disabled selected>Select Time</option></select>';
-            html += '</td>';
+            cell3.innerHTML =  '<td style="border:1px solid black;"><select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setRemainTime('+row_cnt+')"><option value="" disabled selected>Select Time</option></select> <br/><br/><select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" readonly=true><option value="" disabled selected>Select Time</option></select></td>';
         }
         else {
 
-            //html += '<td style="border:1px solid black;">';
-            html += '<select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'"><option value="" disabled selected>Select Time</option></select>';
-            html += '</td>';
+            cell3.innerHTML = '<td style="border:1px solid black;"><select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setRemainTime('+row_cnt+')"><option value="" disabled selected>Select Time</option></select> <br/><br/><select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'"><option value="" disabled selected>Select Time</option></select></td>';
         }
 
-        html += '<td style="border:1px solid black;">';
-        html += '<textarea name="remarks[]" placeholder="Remarks" id="remarks_'+row_cnt+'" class="form-control" rows="5"></textarea>';
-        html += '</td>';
+        var cell4 = row.insertCell(3);
+        cell4.style.border = '1px solid black';
+        cell4.innerHTML = '<td style="border:1px solid black;"><textarea name="remarks[]" placeholder="Remarks" id="remarks_'+row_cnt+'" class="form-control" rows="5"></textarea></td>';
 
-        $(".row_"+row_cnt).append(html);
+        var cell5 = row.insertCell(4);
+        cell5.style.border = '1px solid black';
+        cell5.innerHTML = '<td style="border:1px solid black;"><textarea name="rm_hr_remarks[]" placeholder="RM / HR Remarks" id="rm_hr_remarks_'+row_cnt+'" class="form-control" rows="5"></textarea></td>';
 
         $.each(time_array_1, function(key, value) {
             $('<option value="'+key+'">'+value+'</option>').appendTo($("#projected_time_"+row_cnt));
@@ -468,6 +513,7 @@ f@section('customs_css')
     
         $("#projected_time_"+row_cnt).select2();
         $("#remarks_"+row_cnt).wysihtml5();
+        $("#rm_hr_remarks_"+row_cnt).wysihtml5();
 
         if(action == "add") {
 
@@ -496,6 +542,54 @@ f@section('customs_css')
         var row_cnt_new = parseInt(row_cnt)-1;
         $(".row_" + row_cnt_new).remove();
         $("#row_cnt").val(row_cnt_new);
+
+        var projected_time_array = [];
+
+        for(j = 1; j < row_cnt_new; j++) {
+                
+            var projected_time = $("#projected_time_"+j).val();
+            projected_time_array.push(projected_time);
+        }
+
+        const sum = projected_time_array.reduce((acc, time) => acc.add(moment.duration(time)), moment.duration());
+
+        var final_working_hours = [Math.floor(sum.asHours()), sum.minutes(), sum.seconds()].join(':');
+        var new_date_1 = "Aug 1, 2021 " + final_working_hours;
+        var date1 = new Date(new_date_1);
+
+        var user_total_hours = $("#user_total_hours").val();
+        var new_date_2 = "Aug 1, 2021 " + user_total_hours;
+        var date2 = new Date(new_date_2);
+
+        var res = Math.abs(date2 - date1) / 1000;
+        var hours = Math.floor(res / 3600) % 24;
+        var minutes = Math.floor(res / 60) % 60;
+
+        if(hours == 0) {
+            hours = '00';
+        }
+
+        if(minutes == 0) {
+            var remain_time = hours + ":" + "00:00";
+        }
+        else {
+            var remain_time = hours + ":" + minutes + ":00";
+        }
+
+        $("#remaining_time").val(remain_time);
+
+        if(remain_time == '00:00:00') {
+
+            document.getElementById('remaining_time').style.backgroundColor = '#B0E0E6';
+            document.getElementById('remaining_time').style.color = 'Black';
+            document.getElementById("add_row").disabled = true;
+        }
+        else {
+
+            document.getElementById('remaining_time').style.backgroundColor = 'white';
+            document.getElementById('remaining_time').style.color = 'Red';
+            document.getElementById("add_row").disabled = false;
+        }
     }
 
     function loadDetails(work_planning_id) {
@@ -518,32 +612,35 @@ f@section('customs_css')
                         var projected_time = data[j].projected_time;
                         var actual_time = data[j].actual_time;
                         var remarks = data[j].remarks;
+                        var rm_hr_remarks = data[j].rm_hr_remarks;
 
                         var time_array_1 = <?php echo json_encode($time_array); ?>;
-
                         var row_cnt = $("#row_cnt").val();
 
-                        var html = '';
+                        var table = document.getElementById("work_planning_table");
+                        var row = table.insertRow(-1);
+                        row.className = 'row_'+row_cnt+'';
+                        row.style.border = '1px solid black';
 
-                        html += '<td style="border:1px solid black;text-align: center;">'+row_cnt+'</td>';
+                        var cell1 = row.insertCell(0);
+                        cell1.style.border = '1px solid black';
+                        cell1.innerHTML = row_cnt;
 
-                        html += '<td style="border:1px solid black;">';
-                        html += '<textarea name="task[]" placeholder="Task" id="task_'+row_cnt+'" class="form-control" rows="4" style="width:292px;">'+task+'</textarea>';
-                        html += '</td>';
+                        var cell2 = row.insertCell(1);
+                        cell2.style.border = '1px solid black';
+                        cell2.innerHTML = '<td style="border:1px solid black;"><textarea name="task[]" placeholder="Task" id="task_'+row_cnt+'" class="form-control" rows="3">'+task+'</textarea></td>';
 
-                        html += '<td style="border:1px solid black;">';
-                        html += '<select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setRemainTime('+row_cnt+')"><option value="" disabled selected>Select Time</option></select>';
-                        html += '</td>';
+                        var cell3 = row.insertCell(2);
+                        cell3.style.border = '1px solid black';
+                        cell3.innerHTML = '<td style="border:1px solid black;"><select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setRemainTime('+row_cnt+')"><option value="" disabled selected>Select Time</option></select> <br/><br/><select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'"><option value="" disabled selected>Select Time</option> </select></td>';
 
-                        html += '<td style="border:1px solid black;">';
-                        html += '<select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'"><option value="" disabled selected>Select Time</option></select>';
-                        html += '</td>';
+                        var cell4 = row.insertCell(3);
+                        cell4.style.border = '1px solid black';
+                        cell4.innerHTML = '<td style="border:1px solid black;"><textarea name="remarks[]" placeholder="Remarks" id="remarks_'+row_cnt+'" class="form-control" rows="5">'+remarks+'</textarea></td>';
 
-                        html += '<td style="border:1px solid black;">';
-                        html += '<textarea name="remarks[]" placeholder="Remarks" id="remarks_'+row_cnt+'" class="form-control" rows="5">'+remarks+'</textarea>';
-                        html += '</td>';
-
-                        $(".row_"+row_cnt).append(html);
+                        var cell5 = row.insertCell(4);
+                        cell5.style.border = '1px solid black';
+                        cell5.innerHTML = '<td style="border:1px solid black;"><textarea name="rm_hr_remarks[]" placeholder="RM / HR Remarks" id="rm_hr_remarks_'+row_cnt+'" class="form-control" rows="5">'+rm_hr_remarks+'</textarea></td>';
 
                         $.each(time_array_1, function(key1, value1) {
 
@@ -573,6 +670,7 @@ f@section('customs_css')
                         $("#actual_time_"+row_cnt).select2({width:"130px"});
 
                         $("#remarks_"+row_cnt).wysihtml5();
+                        $("#rm_hr_remarks_"+row_cnt).wysihtml5();
 
                         var row_cnt_new = parseInt(row_cnt)+1;
                         $("#row_cnt").val(row_cnt_new);
@@ -590,6 +688,7 @@ f@section('customs_css')
                 else {
 
                     document.getElementById('remaining_time').style.backgroundColor = 'white';
+                    document.getElementById('remaining_time').style.color = 'Red';
                     document.getElementById("add_row").disabled = false;
                 }
             }
@@ -607,7 +706,7 @@ f@section('customs_css')
 
         var diff = value_end[0] - value_start[0];
 
-        if(diff > 1) {
+        if(diff >= 1) {
 
             $("#alertModal").modal('show');
             return false;
@@ -621,6 +720,17 @@ f@section('customs_css')
         $(".detail_class").show();
         $(".first_footer").hide();
         $(".second_footer").show();
+    }
+
+    function displayTextArea(value) {
+
+        if(value == 'Others') {
+
+            $(".report_delay_conent_cls").show();
+        }
+        else {
+            $(".report_delay_conent_cls").hide();
+        }
     }
 
     function submitform() {

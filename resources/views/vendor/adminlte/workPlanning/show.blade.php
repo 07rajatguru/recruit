@@ -98,6 +98,8 @@
                             <th width="10%" style="border:1px solid black;text-align: center;">Projected Time</th>
                             <th width="10%" style="border:1px solid black;text-align: center;">Actual Time</th>
                             <th style="border:1px solid black;">Remarks</th>
+                            <th style="border:1px solid black;">Reporting Manager / HR Remarks
+                            </th>
                         </tr>
                     </thead>
                     <tbody>
@@ -141,6 +143,8 @@
                                 @endif
 
                                 <td style="border:1px solid black;">{!! $value['remarks'] !!}</td>
+
+                                <td style="border:1px solid black;">{!! $value['rm_hr_remarks'] !!}</td>
                             </tr>
                         @endforeach
                     </tbody>
