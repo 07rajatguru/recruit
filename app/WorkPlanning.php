@@ -158,6 +158,7 @@ class WorkPlanning extends Model
             // For Pending/Approved/Rejected
             $work_planning_res[$i]['status'] = $value->status;
             $work_planning_res[$i]['report_delay'] = $value->report_delay;
+            $work_planning_res[$i]['report_delay_content'] = $value->report_delay_content;
             
             $i++;
         }
@@ -226,6 +227,7 @@ class WorkPlanning extends Model
             $work_planning_res['added_by_id'] = $response->added_by;
             $work_planning_res['appr_rejct_by'] = $response->approved_by;
             $work_planning_res['report_delay'] = $response->report_delay;
+            $work_planning_res['report_delay_content'] = $response->report_delay_content;
         }
         return $work_planning_res;
     }

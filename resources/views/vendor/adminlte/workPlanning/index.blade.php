@@ -88,9 +88,7 @@
                 <td>
                     <a class="fa fa-circle" href="{{ route('workplanning.show',$value['id']) }}" title="Show"></a>
 
-                    @if($user_id == $value['added_by_id'])
-                        <a class="fa fa-edit" href="{{ route('workplanning.edit',$value['id']) }}" title="Edit"></a>
-                    @endif
+                    <a class="fa fa-edit" href="{{ route('workplanning.edit',$value['id']) }}" title="Edit"></a>
                     
                     @permission(('work-planning-delete'))
                         @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'workplanning','display_name'=>'Work Planning'])

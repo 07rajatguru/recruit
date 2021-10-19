@@ -168,7 +168,7 @@
 
     @if( $action == 'add')
         <input type="hidden" id="row_cnt" name="row_cnt" value="6">
-        <input type="hidden" id="org_loggedin_time" name="org_loggedin_time" value="{{ $org_loggedin_time }}">
+        <input type="hidden" id="plus_one_hour_time" name="plus_one_hour_time" value="{{ $plus_one_hour_time }}">
     @endif
 
     @if($action == 'edit')
@@ -202,7 +202,7 @@
 
                     <div class="form-group report_delay_conent_cls" style="display:none;">
                         <br/><strong>&nbsp;Add Description :</strong>
-                        {!! Form::textarea('report_delay_conent', null, array('id' => 'report_delay_conent','placeholder' => 'Add Text','class' => 'form-control','rows' => '5')) !!}
+                        {!! Form::textarea('report_delay_content', null, array('id' => 'report_delay_content','placeholder' => 'Add Text','class' => 'form-control','rows' => '5')) !!}
                     </div>
                 </div>
             </div>
@@ -240,7 +240,7 @@
                 $("#projected_time_"+j).select2({width:"130px"});
                 $("#remarks_"+j).wysihtml5();
                 $("#rm_hr_remarks_"+j).wysihtml5();
-                $("#rm_hr_remarks_"+j).val('Hii');
+                //$("#rm_hr_remarks_"+j).val('Hii');
             }
 
             checkTime();
@@ -697,16 +697,21 @@
 
     function checkTime() {
 
-        var time_start = new Date();
-        var current_time = time_start.getHours() + ":" + time_start.getMinutes() + ":" + time_start.getSeconds();
-        var loggedin_time = $("#org_loggedin_time").val();
-        
-        var value_start = loggedin_time.split(':');
-        var value_end = current_time.split(':');
+        var time1 = $("#plus_one_hour_time").val();       
+        var value1 = time1.split(':');
 
-        var diff = value_end[0] - value_start[0];
+        var time2 = new Date();
+        var current_time = time2.getHours() + ":" + time2.getMinutes() + ":" + time2.getSeconds();
+        var value2 = current_time.split(':');
 
-        if(diff >= 1) {
+        var d1 = new Date(parseInt("2001",10),(parseInt("01",10))-1,parseInt("01",10),parseInt(value1[0],10),parseInt(value1[1],10),parseInt(value1[2],10));
+
+        var d2 = new Date(parseInt("2001",10),(parseInt("01",10))-1,parseInt("01",10),parseInt(value2[0],10),parseInt(value2[1],10),parseInt(value2[2],10));
+
+        var dd1 = d1.valueOf();
+        var dd2 = d2.valueOf();
+
+        if(dd2 > dd1) {
 
             $("#alertModal").modal('show');
             return false;

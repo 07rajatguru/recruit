@@ -12,11 +12,20 @@
             <td width="800" style="font-family:Cambria, serif;font-size: 11.0pt;">
                 <b><p style="text-align: left;">Dear Sir,</p></b>
                 <i><p style="text-align: left;">Greetings !</p></i>
+
+                @if(isset($report_delay) && $report_delay != '')
+                    <p style="text-align: left;">
+                        @if(isset($report_delay_content) && $report_delay_content != '')
+                            <b>Reason for Delay Report</b> : {{ $report_delay_content }}
+                        @else
+                            <b>Reason for Delay Report</b> : {{ $report_delay }}
+                        @endif  
+                    </p>
+                @endif
+
                 <p style="text-align: left;">
                     <u>Please find my Work Planning Sheet for the day :</u>
                 </p>
-
-
                     
                 <table width="800" cellpadding="3" cellspacing="0" border="1" border-color="#000000">
                     <tr style="background-color: #ffff00;font-family:Cambria, serif;font-size: 11.0pt;">

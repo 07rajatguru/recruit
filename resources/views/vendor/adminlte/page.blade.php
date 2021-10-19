@@ -39,33 +39,40 @@
                         <!-- /.navbar-collapse -->
                     @else
                         <!-- Logo -->
-                            <a href="{{ url(config('adminlte.dashboard_url', 'home')) }}" class="logo">
-                                <!-- mini logo for sidebar mini 50x50 pixels -->
-                                <span class="logo-mini">{!! config('adminlte.logo_mini', '<b>A</b>LT') !!}</span>
-                                <!-- logo for regular state and mobile devices -->
-                                <span class="logo-lg">{!! config('adminlte.logo', '<b>Admin</b>LTE') !!}</span>
+                        <a href="{{ url(config('adminlte.dashboard_url', 'home')) }}" class="logo">
+                            <!-- mini logo for sidebar mini 50x50 pixels -->
+                            <span class="logo-mini">{!! config('adminlte.logo_mini', '<b>A</b>LT') !!}</span>
+                            <!-- logo for regular state and mobile devices -->
+                            <span class="logo-lg">{!! config('adminlte.logo', '<b>Admin</b>LTE') !!}</span>
+                        </a>
+
+                        <!-- Header Navbar -->
+                        <nav class="navbar navbar-static-top" role="navigation">
+                            <!-- Sidebar toggle button-->
+                            <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+                                <span class="sr-only">{{ trans('adminlte::adminlte.toggle_navigation') }}</span>
                             </a>
 
-                            <!-- Header Navbar -->
-                            <nav class="navbar navbar-static-top" role="navigation">
-                                <!-- Sidebar toggle button-->
-                                <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
-                                    <span class="sr-only">{{ trans('adminlte::adminlte.toggle_navigation') }}</span>
-                                </a>
-                            @endif
-                            <!-- Navbar Right Menu -->
-                            <?php Use App\User;
-                                $user = \Auth::user();
-                                $user_id = $user->id;
-                                $userRole = $user->roles->pluck('id','id')->toArray();
-                                $role_id = key($userRole);
-                                $user_obj = new User();
-                                $isClient = $user_obj::isClient($role_id);
-                            ?>
+                            <a href="/ticket-discussion/create">
+                                <span style="color:white;margin-left: 10px;">Product Query ?</span>
+                            </a>
+                    @endif
+                    
+                    <!-- Navbar Right Menu -->
+                    <?php Use App\User;
+                        $user = \Auth::user();
+                        $user_id = $user->id;
+                        $userRole = $user->roles->pluck('id','id')->toArray();
+                        $role_id = key($userRole);
+                        $user_obj = new User();
+                        $isClient = $user_obj::isClient($role_id);
+                    ?>
                                 <div class="navbar-custom-menu">
-
                                     <ul class="nav navbar-nav">
                                         @if(!$isClient)
+                                        <li>
+                                            <a href="{{getenv('APP_URL').'/work-planning/add'}}">Add Work Planning</a>
+                                        </li>
                                         <li class="dropdown messages-menu">
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                                 <i class="fa fa-plus"></i>

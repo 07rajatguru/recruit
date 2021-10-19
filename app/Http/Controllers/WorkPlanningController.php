@@ -226,14 +226,17 @@ class WorkPlanningController extends Controller
         $user_half_day_hours = $user_details->half_day_working_hours;
 
         // Set Early go / Late in hours
-
         $user_working_hours = strtotime($user_details->working_hours);
         $one_hour = strtotime('01:00:00');
 
         $early_late_in = $user_working_hours - $one_hour;
         $early_late_in_time = date("H:i:s", $early_late_in);
 
-        return view('adminlte::workPlanning.create',compact('action','work_type','selected_work_type','time_array','selected_projected_time','selected_actual_time','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','remaining_time','user_total_hours','user_half_day_hours','org_loggedin_time','early_late_in_time'));
+        // Add one hour plus time into loggedin time
+        $timestamp = strtotime($org_loggedin_time) + $one_hour;
+        $plus_one_hour_time = date('H:i:s', $timestamp);
+
+        return view('adminlte::workPlanning.create',compact('action','work_type','selected_work_type','time_array','selected_projected_time','selected_actual_time','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','remaining_time','user_total_hours','user_half_day_hours','early_late_in_time','plus_one_hour_time'));
     }
 
     public function store(Request $request) {
@@ -333,13 +336,13 @@ class WorkPlanningController extends Controller
             $report_delay = '';
         }
 
-        $report_delay_conent = Input::get('report_delay_conent');
+        $report_delay_content = Input::get('report_delay_content');
 
         // If report delay
-        if(isset($report_delay_conent) && $report_delay_conent != '') {
+        if(isset($report_delay_content) && $report_delay_content != '') {
         }
         else {
-            $report_delay_conent = '';
+            $report_delay_content = '';
         }
 
         $work_planning = new WorkPlanning();
@@ -354,7 +357,7 @@ class WorkPlanningController extends Controller
         $work_planning->added_date = date('Y-m-d');
         $work_planning->added_by = $user_id;
         $work_planning->report_delay = $report_delay;
-        $work_planning->report_delay_conent = $report_delay_conent;
+        $work_planning->report_delay_content = $report_delay_content;
         $work_planning->save();
 
         $work_planning_id = $work_planning->id;
@@ -645,6 +648,57 @@ class WorkPlanningController extends Controller
                 $work_planning_list->rm_hr_remarks = $rm_hr_remarks[$j];
                 $work_planning_list->added_by = $user_id;
                 $work_planning_list->save();
+            }
+        }
+
+        if(isset($rm_hr_remarks) && sizeof($rm_hr_remarks) > 0) {
+
+            foreach ($rm_hr_remarks as $key => $value) {
+                
+                if($value != '') {
+
+                    // Send Email Notification
+
+                    //Get Reports to Email
+                    $report_res = User::getReportsToUsersEmail($user_id);
+
+                    if(isset($report_res->remail) && $report_res->remail!='') {
+                        $report_email = $report_res->remail;
+                    }
+                    else {
+                        $report_email = '';
+                    }
+
+                    // get superadmin email id
+                    $superadminuserid = getenv('SUPERADMINUSERID');
+                    $superadminemail = User::getUserEmailById($superadminuserid);
+
+                    // Get HR email id
+                    $hr = getenv('HRUSERID');
+                    $hremail = User::getUserEmailById($hr);
+
+                    $to_users_array = array($superadminemail,$hremail,$report_email);
+
+                    $added_by = $work_planning->added_by;
+                    $module = "Work Planning Remarks";
+                    $sender_name = $user_id;
+                    $to = User::getUserEmailById($added_by);
+                    $cc = implode(",",$to_users_array);
+
+                    $date = date('d/m/Y',strtotime($work_planning['added_date']));
+
+                    $subject = "Work Planning Remarks Added - " . $date;
+                    $message = "Work Planning Remarks Added - " . $date;
+                    $module_id = $id;
+
+                    event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+                    return redirect()->route('workplanning.index')->with('success','Work Planning Updated Successfully.');
+                }
+                else {
+
+                    return redirect()->route('workplanning.index')->with('success','Work Planning Updated Successfully.');
+                }
             }
         }
 
