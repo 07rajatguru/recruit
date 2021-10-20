@@ -3395,6 +3395,17 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:work-planning-add']
     ]);
 
+    Route::post('work-planning/addremarks',[
+        'as' => 'workplanning.addremarks',
+        'uses' => 'WorkPlanningController@addRemarks',
+        'middleware' => ['permission:work-planning-add']
+    ]);
+
+    Route::get('work-planning/getDetailsById',[
+        'as' => 'workplanning.getDetailsById',
+        'uses' => 'WorkPlanningController@getWorkPlanningTaskById'
+    ]);
+
     Route::any('work-planning/{status}/{month}/{year}', [
         'as' => 'workplanning.status',
         'uses' => 'WorkPlanningController@getAllDetailsByStatus',

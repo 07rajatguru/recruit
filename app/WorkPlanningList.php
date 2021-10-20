@@ -32,4 +32,26 @@ class WorkPlanningList extends Model
         }
         return $work_planning_list;
     }
+
+    public static function getTaskById($task_id) {
+
+        $query = WorkPlanningList::query();
+        $query = $query->where('work_planning_list.id',$task_id);
+        $query = $query->select('work_planning_list.*');
+        $response = $query->first();
+
+        $work_planning_task = array();
+        
+        if(isset($response) && $response != '') {
+
+            $work_planning_task['work_planning_id'] = $response->work_planning_id;
+            $work_planning_task['task'] = $response->task;
+            $work_planning_task['projected_time'] = $response->projected_time;
+            $work_planning_task['actual_time'] = $response->actual_time;
+            $work_planning_task['remarks'] = strip_tags($response->remarks);
+            $work_planning_task['rm_hr_remarks'] = strip_tags($response->rm_hr_remarks);
+        }
+
+        return $work_planning_task;
+    }
 }

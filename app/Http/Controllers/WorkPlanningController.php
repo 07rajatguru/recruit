@@ -86,7 +86,9 @@ class WorkPlanningController extends Controller
 
         $count = sizeof($work_planning_res);
 
-        return view('adminlte::workPlanning.index',compact('work_planning_res','count','month_array','month','year_array','year','pending','approved','rejected','user_id'));
+        $superadmin_user_id = getenv('SUPERADMINUSERID');
+
+        return view('adminlte::workPlanning.index',compact('work_planning_res','count','month_array','month','year_array','year','pending','approved','rejected','user_id','superadmin_user_id'));
     }
 
     public function getAllDetailsByStatus($status,$month,$year) {
@@ -372,9 +374,6 @@ class WorkPlanningController extends Controller
         $remarks = array();
         $remarks = Input::get('remarks');
 
-        $rm_hr_remarks = array();
-        $rm_hr_remarks = Input::get('rm_hr_remarks');
-
         for($j = 0; $j < count($task); $j++) {
 
             if($task[$j]!='') {
@@ -384,7 +383,6 @@ class WorkPlanningController extends Controller
                 $work_planning_list->task = $task[$j];
                 $work_planning_list->projected_time = $projected_time[$j];
                 $work_planning_list->remarks = $remarks[$j];
-                $work_planning_list->rm_hr_remarks = $rm_hr_remarks[$j];
                 $work_planning_list->added_by = $user_id;
                 $work_planning_list->save();
             }
@@ -624,9 +622,6 @@ class WorkPlanningController extends Controller
         $remarks = array();
         $remarks = Input::get('remarks');
 
-        $rm_hr_remarks = array();
-        $rm_hr_remarks = Input::get('rm_hr_remarks');
-
         for($j = 0; $j < count($task); $j++) {
 
             if($task[$j]!='') {
@@ -645,60 +640,8 @@ class WorkPlanningController extends Controller
                 }
 
                 $work_planning_list->remarks = $remarks[$j];
-                $work_planning_list->rm_hr_remarks = $rm_hr_remarks[$j];
                 $work_planning_list->added_by = $user_id;
                 $work_planning_list->save();
-            }
-        }
-
-        if(isset($rm_hr_remarks) && sizeof($rm_hr_remarks) > 0) {
-
-            foreach ($rm_hr_remarks as $key => $value) {
-                
-                if($value != '') {
-
-                    // Send Email Notification
-
-                    //Get Reports to Email
-                    $report_res = User::getReportsToUsersEmail($user_id);
-
-                    if(isset($report_res->remail) && $report_res->remail!='') {
-                        $report_email = $report_res->remail;
-                    }
-                    else {
-                        $report_email = '';
-                    }
-
-                    // get superadmin email id
-                    $superadminuserid = getenv('SUPERADMINUSERID');
-                    $superadminemail = User::getUserEmailById($superadminuserid);
-
-                    // Get HR email id
-                    $hr = getenv('HRUSERID');
-                    $hremail = User::getUserEmailById($hr);
-
-                    $to_users_array = array($superadminemail,$hremail,$report_email);
-
-                    $added_by = $work_planning->added_by;
-                    $module = "Work Planning Remarks";
-                    $sender_name = $user_id;
-                    $to = User::getUserEmailById($added_by);
-                    $cc = implode(",",$to_users_array);
-
-                    $date = date('d/m/Y',strtotime($work_planning['added_date']));
-
-                    $subject = "Work Planning Remarks Added - " . $date;
-                    $message = "Work Planning Remarks Added - " . $date;
-                    $module_id = $id;
-
-                    event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
-
-                    return redirect()->route('workplanning.index')->with('success','Work Planning Updated Successfully.');
-                }
-                else {
-
-                    return redirect()->route('workplanning.index')->with('success','Work Planning Updated Successfully.');
-                }
             }
         }
 
@@ -769,7 +712,7 @@ class WorkPlanningController extends Controller
         return redirect()->route('workplanning.index')->with('success','Email Sent Successfully.');
     }
 
-    public function replySend(){
+    public function replySend() {
 
         $wp_id = $_POST['wp_id'];
         $reply = $_POST['check'];
@@ -787,5 +730,67 @@ class WorkPlanningController extends Controller
         $data = 'success';
 
         return json_encode($data);
+    }
+
+    public function getWorkPlanningTaskById() {
+        
+        $task_id = $_GET['task_id'];
+
+        if($task_id > 0) {
+            $task_details = WorkPlanningList::getTaskById($task_id);
+        }
+        else {
+            $task_details = array();
+        }
+
+        return json_encode($task_details);exit;
+    }
+
+    public function addRemarks() {
+
+        $wp_id = $_POST['wp_id'];
+        $work_planning_status_time = date('H:i:s');
+        $user_id = \Auth::user()->id;
+
+        $work_planning = WorkPlanning::getWorkPlanningDetailsById($wp_id);
+
+        \DB::statement("UPDATE work_planning SET work_planning_status_time = '$work_planning_status_time' where id = $wp_id");
+
+        // Send Email Notification
+
+        //Get Reports to Email
+        $report_res = User::getReportsToUsersEmail($user_id);
+
+        if(isset($report_res->remail) && $report_res->remail!='') {
+            $report_email = $report_res->remail;
+        }
+        else {
+            $report_email = '';
+        }
+
+        // get superadmin email id
+        $superadminuserid = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($superadminuserid);
+
+        // Get HR email id
+        $hr = getenv('HRUSERID');
+        $hremail = User::getUserEmailById($hr);
+
+        $to_users_array = array($superadminemail,$hremail,$report_email);
+
+        $module = "Work Planning";
+        $sender_name = $user_id;
+        $to = implode(",",$to_users_array);
+        $cc = '';
+
+        $date = date('d/m/Y',strtotime($work_planning['added_date']));
+
+        $subject = "Work Planning Sheet - " . $date;
+        $message = "Work Planning Sheet - " . $date;
+        $module_id = $wp_id;
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+        return redirect()->route('workplanning.index')->with('success','Email Sent Successfully.');
     }
 }

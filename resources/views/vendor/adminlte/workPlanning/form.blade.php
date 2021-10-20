@@ -127,7 +127,7 @@
                                     </td>
 
                                     <td style="border:1px solid black;">
-                                        {!!Form::textarea('rm_hr_remarks[]',null, array('placeholder' =>'RM / HR Remarks','id' => 'rm_hr_remarks_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'rows' => 5)) !!}
+                                        {!!Form::textarea('rm_hr_remarks[]',null, array('placeholder' =>'RM / HR Remarks','id' => 'rm_hr_remarks_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'rows' => 5,'disabled' => true)) !!}
                                     </td>
                                 </tr>
                             @endfor
@@ -239,8 +239,6 @@
 
                 $("#projected_time_"+j).select2({width:"130px"});
                 $("#remarks_"+j).wysihtml5();
-                $("#rm_hr_remarks_"+j).wysihtml5();
-                //$("#rm_hr_remarks_"+j).val('Hii');
             }
 
             checkTime();
@@ -504,7 +502,7 @@
 
         var cell5 = row.insertCell(4);
         cell5.style.border = '1px solid black';
-        cell5.innerHTML = '<td style="border:1px solid black;"><textarea name="rm_hr_remarks[]" placeholder="RM / HR Remarks" id="rm_hr_remarks_'+row_cnt+'" class="form-control" rows="5"></textarea></td>';
+        cell5.innerHTML = '<td style="border:1px solid black;"><textarea name="rm_hr_remarks[]" placeholder="RM / HR Remarks" id="rm_hr_remarks_'+row_cnt+'" class="form-control" rows="5" disabled></textarea></td>';
 
         $.each(time_array_1, function(key, value) {
             $('<option value="'+key+'">'+value+'</option>').appendTo($("#projected_time_"+row_cnt));
@@ -513,7 +511,6 @@
     
         $("#projected_time_"+row_cnt).select2();
         $("#remarks_"+row_cnt).wysihtml5();
-        $("#rm_hr_remarks_"+row_cnt).wysihtml5();
 
         if(action == "add") {
 
@@ -638,9 +635,14 @@
                         cell4.style.border = '1px solid black';
                         cell4.innerHTML = '<td style="border:1px solid black;"><textarea name="remarks[]" placeholder="Remarks" id="remarks_'+row_cnt+'" class="form-control" rows="5">'+remarks+'</textarea></td>';
 
+                        if(rm_hr_remarks == null) {
+
+                            rm_hr_remarks = '';
+                        }
+
                         var cell5 = row.insertCell(4);
                         cell5.style.border = '1px solid black';
-                        cell5.innerHTML = '<td style="border:1px solid black;"><textarea name="rm_hr_remarks[]" placeholder="RM / HR Remarks" id="rm_hr_remarks_'+row_cnt+'" class="form-control" rows="5">'+rm_hr_remarks+'</textarea></td>';
+                        cell5.innerHTML = '<td style="border:1px solid black;"><textarea name="rm_hr_remarks[]" placeholder="RM / HR Remarks" id="rm_hr_remarks_'+row_cnt+'" class="form-control" rows="5" disabled>'+rm_hr_remarks+'</textarea></td>';
 
                         $.each(time_array_1, function(key1, value1) {
 
@@ -670,10 +672,13 @@
                         $("#actual_time_"+row_cnt).select2({width:"130px"});
 
                         $("#remarks_"+row_cnt).wysihtml5();
-                        $("#rm_hr_remarks_"+row_cnt).wysihtml5();
 
                         var row_cnt_new = parseInt(row_cnt)+1;
                         $("#row_cnt").val(row_cnt_new);
+
+                        if(row_cnt_new < 5) {
+                            document.getElementById("remove_row").disabled = true;
+                        }
                     }
                 }
 

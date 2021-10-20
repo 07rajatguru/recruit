@@ -88,7 +88,9 @@
                 <td>
                     <a class="fa fa-circle" href="{{ route('workplanning.show',$value['id']) }}" title="Show"></a>
 
-                    <a class="fa fa-edit" href="{{ route('workplanning.edit',$value['id']) }}" title="Edit"></a>
+                    @if($user_id == $value['added_by_id'] || $user_id == $superadmin_user_id)
+                        <a class="fa fa-edit" href="{{ route('workplanning.edit',$value['id']) }}" title="Edit"></a>
+                    @endif
                     
                     @permission(('work-planning-delete'))
                         @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'workplanning','display_name'=>'Work Planning'])
@@ -96,6 +98,10 @@
 
                     @if($user_id == $value['added_by_id'])
                         @include('adminlte::partials.sendWorkPlanningReport', ['data' => $value, 'name' => 'workplanning'])
+                    @endif
+
+                    @if($user_id == $superadmin_user_id)
+                        @include('adminlte::partials.addWorkPlanningRemarks', ['data' => $value, 'name' => 'workplanning'])
                     @endif
                 </td>
 
@@ -122,6 +128,9 @@
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function() {
+
+            $(".task").select2();
+            $(".rm_hr_remarks").wysihtml5();
 
             var table = jQuery('#work_planning_table').DataTable({
                 responsive: true,
@@ -153,6 +162,39 @@
 
             $('body').append(form);
             form.submit();
+        }
+
+        function setData(wp_id) {
+
+            var token = $('input[name="csrf_token"]').val();
+            var app_url = "{!! env('APP_URL'); !!}";
+            var task_id = $("#task_id_"+wp_id).val();
+            
+            $.ajax({
+
+                type : 'GET',
+                url : app_url+'/work-planning/getDetailsById',
+                data : {task_id : task_id, '_token':token},
+                dataType : 'json',
+
+                success: function(data) {
+
+                    if(task_id == '') {
+
+                        $("#projected_time_"+wp_id).val("");
+                        $("#actual_time_"+wp_id).val("");
+                        $("#remarks_"+wp_id).val("");
+                        $("#rm_hr_remarks_"+wp_id).val("");
+                    }
+                    else {
+
+                        $("#projected_time_"+wp_id).val(data.projected_time);
+                        $("#actual_time_"+wp_id).val(data.actual_time);
+                        $("#remarks_"+wp_id).val(data.remarks);
+                        $("#rm_hr_remarks_"+wp_id).val(data.rm_hr_remarks);
+                    }
+                }
+            });
         }
     </script>
 @endsection

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\WorkPlanningList;
 
 class WorkPlanning extends Model
 {
@@ -157,8 +158,13 @@ class WorkPlanning extends Model
             
             // For Pending/Approved/Rejected
             $work_planning_res[$i]['status'] = $value->status;
+
+            // For Delay Report
             $work_planning_res[$i]['report_delay'] = $value->report_delay;
             $work_planning_res[$i]['report_delay_content'] = $value->report_delay_content;
+
+            // Get All Task List
+            $work_planning_res[$i]['task_list'] = WorkPlanningList::getWorkPlanningList($value->id);
             
             $i++;
         }
