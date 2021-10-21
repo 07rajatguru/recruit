@@ -610,10 +610,10 @@
                         $("#client_contact_number").val(mobile);
                         $("#designation_offered").val(designation);
                         $("#job_location").val(location);
-                        $("#address_of_communication").val(address);
 
                         if(action == 'add') {
                             $("#percentage_charged").val(percentage_charged);
+                            $("#address_of_communication").val(address);
                         }
                         else {
                         }
