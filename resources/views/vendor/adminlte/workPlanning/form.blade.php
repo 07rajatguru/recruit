@@ -185,7 +185,7 @@
                 <h4 class="modal-title">Work Planning</h4>
             </div>
             <div class="modal-body">
-                <p>Have you Reported Work at Late?</p>
+                <p>Have you Reported Late to Work?</p>
 
                 <div class="detail_class" style="display:none;">
                     {!! Form::radio('report_delay','Late in / Early Go',false,['id' => 'report_delay','onchange' => 'displayTextArea("Late in / Early Go")']) !!}
@@ -194,8 +194,8 @@
                     {!! Form::radio('report_delay','Half Day',false,['id' => 'report_delay','onchange' => 'displayTextArea("Half Day")']) !!}
                     {!! Form::label('Half Day') !!} &nbsp;
 
-                    {!! Form::radio('report_delay','There is delay of Pending Report',false,['id' => 'report_delay','onchange' => 'displayTextArea("There is delay of Pending Report")']) !!}
-                    {!! Form::label('There is delay of Pending Report') !!}&nbsp;
+                    {!! Form::radio('report_delay','There is delay of Sending Report',false,['id' => 'report_delay','onchange' => 'displayTextArea("There is delay of Sending Report")']) !!}
+                    {!! Form::label('There is delay of Sending Report') !!}&nbsp;
 
                     {!! Form::radio('report_delay','Others',false,['id' => 'report_delay','onchange' => 'displayTextArea("Others")']) !!}
                     {!! Form::label('Others') !!}
