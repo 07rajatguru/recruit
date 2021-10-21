@@ -1964,6 +1964,8 @@ class EveryMinute extends Command
                 
                 $input['work_planning_list'] = $work_planning_list;
 
+                $input['module'] = $value['module'];
+
                 \Mail::send('adminlte::emails.workplanningmail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to_array'])->bcc($input['owner_email'])->subject($input['subject']);
@@ -1974,7 +1976,7 @@ class EveryMinute extends Command
 
             else if ($value['module'] == 'Work Planning Remarks') {
 
-                $cc_array = explode(",",$input['to']);
+                $cc_array = explode(",",$input['cc']);
                 $input['cc_array'] = $cc_array;
               
                 $input['module_id'] = $value['module_id'];
@@ -1987,11 +1989,20 @@ class EveryMinute extends Command
                 $input['signature'] = $user_info['signature'];
 
                 $work_planning = WorkPlanning::getWorkPlanningDetailsById($value['module_id']);
+
                 $today_date = $work_planning['added_date'];
+                $report_delay = $work_planning['report_delay'];
+                $report_delay_content = $work_planning['report_delay_content'];
+
                 $input['today_date'] = $today_date;
-                
+                $input['report_delay'] = $report_delay;
+                $input['report_delay_content'] = $report_delay_content;
+
+                // Get Task List
                 $work_planning_list = WorkPlanningList::getWorkPlanningList($value['module_id']);
                 $input['work_planning_list'] = $work_planning_list;
+
+                $input['module'] = $value['module'];
 
                 \Mail::send('adminlte::emails.workplanningmail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);

@@ -50,6 +50,7 @@ class WorkPlanningList extends Model
             $work_planning_task['actual_time'] = $response->actual_time;
             $work_planning_task['remarks'] = strip_tags($response->remarks);
             $work_planning_task['rm_hr_remarks'] = strip_tags($response->rm_hr_remarks);
+            $work_planning_task['added_by'] = $response->added_by;
         }
 
         return $work_planning_task;

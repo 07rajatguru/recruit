@@ -100,7 +100,7 @@
                         @include('adminlte::partials.sendWorkPlanningReport', ['data' => $value, 'name' => 'workplanning'])
                     @endif
 
-                    @if($user_id == $superadmin_user_id)
+                    @if($user_id != $value['added_by_id'])
                         @include('adminlte::partials.addWorkPlanningRemarks', ['data' => $value, 'name' => 'workplanning'])
                     @endif
                 </td>

@@ -749,48 +749,52 @@ class WorkPlanningController extends Controller
     public function addRemarks() {
 
         $wp_id = $_POST['wp_id'];
-        $work_planning_status_time = date('H:i:s');
-        $user_id = \Auth::user()->id;
+        $task_id = $_POST['task_id'];
+        $rm_hr_remarks = $_POST['rm_hr_remarks'];
 
-        $work_planning = WorkPlanning::getWorkPlanningDetailsById($wp_id);
+        \DB::statement("UPDATE work_planning_list SET `rm_hr_remarks` = '$rm_hr_remarks' WHERE `id` = '$task_id'");
 
-        \DB::statement("UPDATE work_planning SET work_planning_status_time = '$work_planning_status_time' where id = $wp_id");
 
         // Send Email Notification
 
+        // Get Work Planning Details
+        $work_planning = WorkPlanning::getWorkPlanningDetailsById($wp_id);
+
+        $user_id = \Auth::user()->id;
+
         //Get Reports to Email
-        $report_res = User::getReportsToUsersEmail($user_id);
+        $report_res = User::getReportsToUsersEmail($work_planning['added_by_id']);
 
         if(isset($report_res->remail) && $report_res->remail!='') {
-            $report_email = $report_res->remail;
+            $reports_to_email = $report_res->remail;
         }
         else {
-            $report_email = '';
+            $reports_to_email = '';
         }
 
         // get superadmin email id
-        $superadminuserid = getenv('SUPERADMINUSERID');
-        $superadminemail = User::getUserEmailById($superadminuserid);
+        $superadmin = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($superadmin);
 
         // Get HR email id
         $hr = getenv('HRUSERID');
         $hremail = User::getUserEmailById($hr);
 
-        $to_users_array = array($superadminemail,$hremail,$report_email);
+        $cc_users_array = array($superadminemail,$hremail,$reports_to_email);
 
-        $module = "Work Planning";
+        $module = "Work Planning Remarks";
         $sender_name = $user_id;
-        $to = implode(",",$to_users_array);
-        $cc = '';
+        $to = User::getUserEmailById($work_planning['added_by_id']);
+        $cc = implode(",",$cc_users_array);
 
         $date = date('d/m/Y',strtotime($work_planning['added_date']));
 
-        $subject = "Work Planning Sheet - " . $date;
-        $message = "Work Planning Sheet - " . $date;
+        $subject = "Work Planning Remarks Added - " . $date;
+        $message = "Work Planning Remarks Added - " . $date;
         $module_id = $wp_id;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-        return redirect()->route('workplanning.index')->with('success','Email Sent Successfully.');
+        return redirect()->route('workplanning.index')->with('success','Remarks Added Successfully.');
     }
 }
