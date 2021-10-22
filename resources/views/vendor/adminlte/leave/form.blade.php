@@ -169,7 +169,7 @@
 
             leave_cat = $("#leave_category").val();
 
-            if (leave_cat == 'Medical') {
+            if (leave_cat == 'Seek') {
                 $(".document").show();
             }
             else {

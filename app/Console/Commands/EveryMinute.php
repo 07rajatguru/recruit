@@ -170,7 +170,6 @@ class EveryMinute extends Command
             else if ($value['module'] == 'Leave') {
 
                 // Get Sender name details
-
                 $user_details = User::getAllDetailsByUserID($value['sender_name']);
                 $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
                 $input['owner_email'] = $user_details->email;

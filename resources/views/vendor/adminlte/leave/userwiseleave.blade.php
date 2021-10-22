@@ -31,9 +31,12 @@
 	    			<th>No</th>
                     <th>Action</th>
                     <th>User Name</th>
-                    <th>Total Leave</th>
-                    <th>Taken Leave</th>
-                    <th>Remaining Leave</th>
+                    <th>Total Paid Leave</th>
+                    <th>Taken Paid Leave</th>
+                    <th>Remaining Paid Leave</th>
+                    <th>Total Seek Leave</th>
+                    <th>Taken Seek Leave</th>
+                    <th>Remaining Seek Leave</th>
 	    		</tr>
     		</thead>
     		<?php $i=0; ?>
@@ -49,6 +52,9 @@
 		    			<td>{{ $value['leave_total'] }}</td>
 		    			<td>{{ $value['leave_taken'] }}</td>
 		    			<td>{{ $value['leave_remaining'] }}</td>
+                        <td>{{ $value['seek_leave_total'] }}</td>
+                        <td>{{ $value['seek_leave_taken'] }}</td>
+                        <td>{{ $value['seek_leave_remaining'] }}</td>
 		    		</tr>
     			@endforeach
     		</tbody>		

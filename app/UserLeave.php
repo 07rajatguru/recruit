@@ -23,9 +23,9 @@ class UserLeave extends Model
     public static function getLeaveCategory() {
 
         $type = array();
-        $type['']='Select Leave Category';
-        $type['Casual'] = 'Casual Leave';
-        $type['Medical'] = 'Medical Leave';
+        $type[''] = 'Select Leave Category';
+        $type['Paid'] = 'Paid Leave';
+        $type['Seek'] = 'Seek Leave';
 
         return $type;
     }
@@ -103,6 +103,7 @@ class UserLeave extends Model
             $leave_data['approved_by'] = $res->approved_by_first_name . " " . $res->approved_by_last_name;
             $leave_data['from_date'] = $res->from_date;
             $leave_data['to_date'] = $res->to_date;
+            $leave_data['type_of_leave'] = $res->type_of_leave;
         }
 
         return $leave_data;

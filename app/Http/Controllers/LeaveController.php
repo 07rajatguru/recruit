@@ -419,17 +419,80 @@ class LeaveController extends Controller
 
             \DB::statement("UPDATE user_leave SET status = '1',approved_by=$loggedin_user_id, reply_message = '$message' WHERE id = $leave_id");
 
-            // Update Leave Balance
+            // Get Leave Type
+            $type_of_leave = $leave_details->type_of_leave;
+            $leave_category = $leave_details->category;
 
-            $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
+            if($leave_category == 'Paid') {
 
-            $leave_taken = $leave_balance_details['leave_taken'];
-            $leave_remaining = $leave_balance_details['leave_remaining'];
+                if($type_of_leave == 'Full') {
 
-            $new_leave_taken = $leave_taken + $diff_in_days;
-            $new_leave_remaining = $leave_remaining - $diff_in_days;
+                    // Update Leave Balance
+                    $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
 
-            \DB::statement("UPDATE leave_balance SET leave_taken = '$new_leave_taken', leave_remaining = '$new_leave_remaining' where user_id = '$user_id'");
+                    $leave_taken = $leave_balance_details['leave_taken'];
+                    $leave_remaining = $leave_balance_details['leave_remaining'];
+
+                    $new_leave_taken = $leave_taken + $diff_in_days;
+                    $new_leave_remaining = $leave_remaining - $diff_in_days;
+
+                    \DB::statement("UPDATE leave_balance SET leave_taken = '$new_leave_taken', leave_remaining = '$new_leave_remaining' where user_id = '$user_id'");
+                }
+                else if($type_of_leave == 'Half') {
+
+                    // Update Leave Balance
+                    $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
+
+                    $leave_taken = $leave_balance_details['leave_taken'];
+                    $leave_remaining = $leave_balance_details['leave_remaining'];
+
+                    $new_leave_taken = $leave_taken + $diff_in_days;
+                    $new_leave_remaining = $leave_remaining - $diff_in_days;
+
+                    \DB::statement("UPDATE leave_balance SET leave_taken = '$new_leave_taken', leave_remaining = '$new_leave_remaining' where user_id = '$user_id'");
+                }
+                else {
+
+
+                }
+            }
+            else if($leave_category == 'Seek') {
+                
+                if($type_of_leave == 'Full') {
+
+                    // Update Leave Balance
+                    $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
+
+                    $seek_leave_taken = $leave_balance_details['seek_leave_taken'];
+                    $seek_leave_remaining = $leave_balance_details['seek_leave_remaining'];
+
+                    $new_leave_taken = $seek_leave_taken + $diff_in_days;
+                    $new_leave_remaining = $seek_leave_remaining - $diff_in_days;
+
+                    \DB::statement("UPDATE leave_balance SET seek_leave_taken = '$new_leave_taken', seek_leave_remaining = '$new_leave_remaining' where user_id = '$user_id'");
+                }
+                else if($type_of_leave == 'Half') {
+
+                    // Update Leave Balance
+                    $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
+
+                    $leave_taken = $leave_balance_details['leave_taken'];
+                    $leave_remaining = $leave_balance_details['leave_remaining'];
+
+                    $new_leave_taken = $leave_taken + $diff_in_days;
+                    $new_leave_remaining = $leave_remaining - $diff_in_days;
+
+                    \DB::statement("UPDATE leave_balance SET leave_taken = '$new_leave_taken', leave_remaining = '$new_leave_remaining' where user_id = '$user_id'");
+                }
+                else {
+
+
+                }
+            }
+            else {
+
+
+            }
         }
         elseif ($reply == 'Unapproved') {
 
@@ -477,15 +540,23 @@ class LeaveController extends Controller
     public function userWiseLeaveStore(Request $request) {
 
         $user_id = $request->get('user_id');
+
         $leave_total = $request->get('leave_total');
         $leave_taken = $request->get('leave_taken');
         $leave_remaining = $request->get('leave_remaining');
+
+        $seek_leave_total = $request->get('seek_leave_total');
+        $seek_leave_taken = $request->get('seek_leave_taken');
+        $seek_leave_remaining = $request->get('seek_leave_remaining');
 
         $leave_balance = new LeaveBalance();
         $leave_balance->user_id = $user_id;
         $leave_balance->leave_total = $leave_total;
         $leave_balance->leave_taken = $leave_taken;
         $leave_balance->leave_remaining = $leave_remaining;
+        $leave_balance->seek_leave_total = $seek_leave_total;
+        $leave_balance->seek_leave_taken = $seek_leave_taken;
+        $leave_balance->seek_leave_remaining = $seek_leave_remaining;
         $leave_balance->save();
 
         return redirect()->route('leave.userwise')->with('success','User Leave Balance Added Successfully');
@@ -504,15 +575,23 @@ class LeaveController extends Controller
     public function userWiseLeaveUpdate(Request $request,$id) {
 
         $user_id = $request->get('user_id');
+
         $leave_total = $request->get('leave_total');
         $leave_taken = $request->get('leave_taken');
         $leave_remaining = $request->get('leave_remaining');
+
+        $seek_leave_total = $request->get('seek_leave_total');
+        $seek_leave_taken = $request->get('seek_leave_taken');
+        $seek_leave_remaining = $request->get('seek_leave_remaining');
 
         $leave_balance = LeaveBalance::find($id);
         $leave_balance->user_id = $user_id;
         $leave_balance->leave_total = $leave_total;
         $leave_balance->leave_taken = $leave_taken;
         $leave_balance->leave_remaining = $leave_remaining;
+        $leave_balance->seek_leave_total = $seek_leave_total;
+        $leave_balance->seek_leave_taken = $seek_leave_taken;
+        $leave_balance->seek_leave_remaining = $seek_leave_remaining;
         $leave_balance->save();
 
         return redirect()->route('leave.userwise')->with('success','User Leave Balance Updated Successfully');
