@@ -104,6 +104,7 @@ class UserLeave extends Model
             $leave_data['from_date'] = $res->from_date;
             $leave_data['to_date'] = $res->to_date;
             $leave_data['type_of_leave'] = $res->type_of_leave;
+            $leave_data['days'] = $res->days;
         }
 
         return $leave_data;

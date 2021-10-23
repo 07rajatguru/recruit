@@ -200,8 +200,10 @@ class LeaveController extends Controller
 
         $selected_leave_type = '';
         $selected_leave_category = '';
+
+        $loggedin_user_id = \Auth::user()->id;
         
-        return view('adminlte::leave.create',compact('action','leave_type','leave_category','selected_leave_type','selected_leave_category'));
+        return view('adminlte::leave.create',compact('action','leave_type','leave_category','selected_leave_type','selected_leave_category','loggedin_user_id'));
     }
 
     public function leaveStore(Request $request) {
@@ -223,17 +225,43 @@ class LeaveController extends Controller
             $to_date = NULL;
         }
 
+        // Calculate Leave Days
+
+        $from_date_1 = strtotime($from_date);
+        $to_date_1 = strtotime($to_date);
+
+        $diff_in_days = ($to_date_1 - $from_date_1)/60/60/24;
+        $diff_in_days = $diff_in_days + 1;
+
+        $subject = Input::get('subject');
+        $leave_type = Input::get('leave_type');
+        $leave_category = Input::get('leave_category');
         $message = Input::get('message');
 
         $user_leave = new UserLeave();
         $user_leave->user_id = $user_id;
-        $user_leave->subject = Input::get('subject');
+        $user_leave->subject = $subject;
         $user_leave->from_date = $from_date;
         $user_leave->to_date = $to_date;
-        $user_leave->type_of_leave = Input::get('leave_type');
-        $user_leave->category = Input::get('leave_category');
+        $user_leave->type_of_leave = $leave_type;
+        $user_leave->category = $leave_category;
         $user_leave->message = $message;
         $user_leave->status = '0';
+
+        if($leave_type == 'Early Go' || $leave_type == 'Late In') {
+
+            $user_leave->days = 0.00;
+        }
+        else if($leave_type == 'Full') {
+
+            $user_leave->days = $diff_in_days;
+        }
+        else if($leave_type == 'Half') {
+
+            $user_leave->days = $diff_in_days/2;
+        }
+
+        // Save Details
         $user_leave->save();
 
         $leave_id = $user_leave->id;
@@ -313,16 +341,42 @@ class LeaveController extends Controller
             $to_date = NULL;
         }
 
+         // Calculate Leave Days
+
+        $from_date_1 = strtotime($from_date);
+        $to_date_1 = strtotime($to_date);
+
+        $diff_in_days = ($to_date_1 - $from_date_1)/60/60/24;
+        $diff_in_days = $diff_in_days + 1;
+
+        $subject = Input::get('subject');
+        $leave_type = Input::get('leave_type');
+        $leave_category = Input::get('leave_category');
         $message = Input::get('message');
 
         $user_leave = UserLeave::find($id);
-        $user_leave->subject = Input::get('subject');
+        $user_leave->subject = $subject;
         $user_leave->from_date = $from_date;
         $user_leave->to_date = $to_date;
-        $user_leave->type_of_leave = Input::get('leave_type');
-        $user_leave->category = Input::get('leave_category');
+        $user_leave->type_of_leave = $leave_type;
+        $user_leave->category = $leave_category;
         $user_leave->message = $message;
         $user_leave->status = '0';
+
+        if($leave_type == 'Early Go' || $leave_type == 'Late In') {
+
+            $user_leave->days = 0.00;
+        }
+        else if($leave_type == 'Full') {
+
+            $user_leave->days = $diff_in_days;
+        }
+        else if($leave_type == 'Half') {
+
+            $user_leave->days = $diff_in_days/2;
+        }
+
+        // Save Details
         $user_leave->save();
 
         return redirect()->route('leave.index')->with('success','Leave Application Updated Successfully.');
@@ -393,11 +447,13 @@ class LeaveController extends Controller
         // Get user leave details
         $leave_details = UserLeave::getLeaveDetails($leave_id);
 
-        $from_date = strtotime($leave_details['from_date']);
+        /*$from_date = strtotime($leave_details['from_date']);
         $to_date = strtotime($leave_details['to_date']);
 
         $diff_in_days = ($to_date - $from_date)/60/60/24;
-        $diff_in_days = $diff_in_days + 1;
+        $diff_in_days = $diff_in_days + 1;*/
+
+        $days = $leave_details['days'];
 
         if ($reply == 'Approved') {
             
@@ -420,77 +476,36 @@ class LeaveController extends Controller
             \DB::statement("UPDATE user_leave SET status = '1',approved_by=$loggedin_user_id, reply_message = '$message' WHERE id = $leave_id");
 
             // Get Leave Type
-            $type_of_leave = $leave_details->type_of_leave;
-            $leave_category = $leave_details->category;
+            $type_of_leave = $leave_details['type_of_leave'];
+            $leave_category = $leave_details['category'];
 
             if($leave_category == 'Paid') {
 
-                if($type_of_leave == 'Full') {
+                // Update Leave Balance
+                $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
 
-                    // Update Leave Balance
-                    $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
+                $leave_taken = $leave_balance_details['leave_taken'];
+                $leave_remaining = $leave_balance_details['leave_remaining'];
 
-                    $leave_taken = $leave_balance_details['leave_taken'];
-                    $leave_remaining = $leave_balance_details['leave_remaining'];
+                $new_leave_taken = $leave_taken + $days;
+                $new_leave_remaining = $leave_remaining - $days;
 
-                    $new_leave_taken = $leave_taken + $diff_in_days;
-                    $new_leave_remaining = $leave_remaining - $diff_in_days;
-
-                    \DB::statement("UPDATE leave_balance SET leave_taken = '$new_leave_taken', leave_remaining = '$new_leave_remaining' where user_id = '$user_id'");
-                }
-                else if($type_of_leave == 'Half') {
-
-                    // Update Leave Balance
-                    $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
-
-                    $leave_taken = $leave_balance_details['leave_taken'];
-                    $leave_remaining = $leave_balance_details['leave_remaining'];
-
-                    $new_leave_taken = $leave_taken + $diff_in_days;
-                    $new_leave_remaining = $leave_remaining - $diff_in_days;
-
-                    \DB::statement("UPDATE leave_balance SET leave_taken = '$new_leave_taken', leave_remaining = '$new_leave_remaining' where user_id = '$user_id'");
-                }
-                else {
-
-
-                }
+                \DB::statement("UPDATE leave_balance SET leave_taken = '$new_leave_taken', leave_remaining = '$new_leave_remaining' where user_id = '$user_id'");
             }
             else if($leave_category == 'Seek') {
-                
-                if($type_of_leave == 'Full') {
 
-                    // Update Leave Balance
-                    $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
+                // Update Leave Balance
+                $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
 
-                    $seek_leave_taken = $leave_balance_details['seek_leave_taken'];
-                    $seek_leave_remaining = $leave_balance_details['seek_leave_remaining'];
+                $seek_leave_taken = $leave_balance_details['seek_leave_taken'];
+                $seek_leave_remaining = $leave_balance_details['seek_leave_remaining'];
 
-                    $new_leave_taken = $seek_leave_taken + $diff_in_days;
-                    $new_leave_remaining = $seek_leave_remaining - $diff_in_days;
+                $new_leave_taken = $seek_leave_taken + $days;
+                $new_leave_remaining = $seek_leave_remaining - $days;
 
-                    \DB::statement("UPDATE leave_balance SET seek_leave_taken = '$new_leave_taken', seek_leave_remaining = '$new_leave_remaining' where user_id = '$user_id'");
-                }
-                else if($type_of_leave == 'Half') {
-
-                    // Update Leave Balance
-                    $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
-
-                    $leave_taken = $leave_balance_details['leave_taken'];
-                    $leave_remaining = $leave_balance_details['leave_remaining'];
-
-                    $new_leave_taken = $leave_taken + $diff_in_days;
-                    $new_leave_remaining = $leave_remaining - $diff_in_days;
-
-                    \DB::statement("UPDATE leave_balance SET leave_taken = '$new_leave_taken', leave_remaining = '$new_leave_remaining' where user_id = '$user_id'");
-                }
-                else {
-
-
-                }
+                \DB::statement("UPDATE leave_balance SET seek_leave_taken = '$new_leave_taken', seek_leave_remaining = '$new_leave_remaining' where user_id = '$user_id'");
             }
             else {
-
 
             }
         }
@@ -602,5 +617,12 @@ class LeaveController extends Controller
         $user_leave_delete = LeaveBalance::where('id',$id)->delete();
 
         return redirect()->route('leave.userwise')->with('success','User Leave Balance Deleted Successfully');
+    }
+
+    public function getTotalLeaves() {
+        
+        $loggedin_user_id = $_GET['loggedin_user_id'];
+
+        echo $loggedin_user_id;exit;
     }
 }

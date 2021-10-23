@@ -95,15 +95,15 @@
         </div>
 
         <div class="col-xs-2 col-sm-2 col-md-2">
-            <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00c0ef !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Total Seek Leave">Total SL ({{ $leave_balance->leave_total or 0 }})</div></a>
+            <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00c0ef !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Total Seek Leave">Total SL ({{ $leave_balance->seek_leave_total or 0 }})</div></a>
         </div>
 
         <div class="col-xs-2 col-sm-2 col-md-2">
-            <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00a65a !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Taken Seek Leave">Taken SL ({{ $leave_balance->leave_taken or 0 }})</div></a>
+            <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00a65a !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Taken Seek Leave">Taken SL ({{ $leave_balance->seek_leave_taken or 0 }})</div></a>
         </div>
 
         <div class="col-xs-2 col-sm-2 col-md-2">
-            <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#dd4b39 !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Remaining Seek Leave">Remaining SL ({{ $leave_balance->leave_remaining or 0 }})</div></a>
+            <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#dd4b39 !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Remaining Seek Leave">Remaining SL ({{ $leave_balance->seek_leave_remaining or 0 }})</div></a>
         </div>
     </div><br/>
 

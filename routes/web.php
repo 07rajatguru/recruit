@@ -644,6 +644,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-leave|display-user-wise-leave']
     ]);
 
+    Route::get('leave/count',[
+        'as' => 'leave.count',
+        'uses' => 'LeaveController@getTotalLeaves',
+        'middleware' => ['permission:display-leave|display-user-wise-leave']
+    ]);
+
     // All Users Leave Balance Routes
     Route::get('userwiseleave',[
         'as' => 'leave.userwise',

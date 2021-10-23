@@ -200,7 +200,7 @@
         	var leave_total = $("#leave_total").val();
         	var leave_taken = $("#leave_taken").val();
 
-        	var remaining_leave = parseInt(leave_total) - parseInt(leave_taken);
+        	var remaining_leave = leave_total - leave_taken;
 
         	if (remaining_leave > 0 || remaining_leave < 0) {
         		$("#leave_remaining").val(remaining_leave);
@@ -218,7 +218,7 @@
         	var seek_leave_total = $("#seek_leave_total").val();
         	var seek_leave_taken = $("#seek_leave_taken").val();
 
-        	var remaining_leave = parseInt(seek_leave_total) - parseInt(seek_leave_taken);
+        	var remaining_leave = seek_leave_total - seek_leave_taken;
 
         	if (remaining_leave > 0 || remaining_leave < 0) {
         		$("#seek_leave_remaining").val(remaining_leave);

@@ -22,9 +22,9 @@
 </div>
 
 @if( $action == 'edit')
-    {!! Form::model($leave, ['method' => 'PATCH','route' => ['leave.update', $leave->id], 'id' => 'leave_form']) !!}
+    {!! Form::model($leave, ['method' => 'PATCH','route' => ['leave.update', $leave->id], 'id' => 'leave_form','onsubmit' => "return leaveValidation()"]) !!}
 @else
-    {!! Form::open(array('route' => 'leave.store','method'=>'POST', 'id' => 'leave_form')) !!}
+    {!! Form::open(array('route' => 'leave.store','method'=>'POST', 'id' => 'leave_form','onsubmit' => "return leaveValidation()")) !!}
 @endif
 
 <div class="row">
@@ -115,6 +115,8 @@
             {!! Form::submit(isset($leave) ? 'Update' : 'Submit', ['class' => 'btn btn-primary']) !!}
         </div>
     </div>
+
+    <input type="hidden" name="loggedin_user_id" id="loggedin_user_id" value="{{ $loggedin_user_id }}">
 </div>
 
 @section('customscripts')
@@ -175,6 +177,31 @@
             else {
                 $(".document").hide();
             }
+        }
+
+        function leaveValidation() {
+
+            // For calculate leaves added by user
+
+            var loggedin_user_id = $("#loggedin_user_id").val();
+            var app_url = "{!! env('APP_URL') !!}";
+            var token = $("input[name=_token]").val();
+
+            $.ajax({
+
+                type: 'GET',
+                url:app_url+'/leave/count',
+                data: {'_token':token, loggedin_user_id:loggedin_user_id},
+                dataType:'json',
+                success: function(data) {
+
+                    if (data == 'success') { 
+                        
+                        alert('Reply Send Successfully.');
+                        return false;
+                    }
+                }
+            });
         }
 
     </script>
