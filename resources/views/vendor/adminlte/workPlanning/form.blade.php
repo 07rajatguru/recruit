@@ -672,7 +672,8 @@
                         $("#actual_time_"+row_cnt).select2({width:"130px"});
 
                         $("#remarks_"+row_cnt).wysihtml5();
-
+                        $("#rm_hr_remarks_"+row_cnt).wysihtml5();
+                        
                         var row_cnt_new = parseInt(row_cnt)+1;
                         $("#row_cnt").val(row_cnt_new);
 
