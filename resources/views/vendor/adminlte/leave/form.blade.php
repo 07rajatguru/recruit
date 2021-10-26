@@ -186,22 +186,30 @@
             var loggedin_user_id = $("#loggedin_user_id").val();
             var app_url = "{!! env('APP_URL') !!}";
             var token = $("input[name=_token]").val();
+            var leave_type = $("#leave_type").val();
 
-            $.ajax({
+            if(leave_type == 'Early Go' || leave_type == 'Late In') {
 
-                type: 'GET',
-                url:app_url+'/leave/count',
-                data: {'_token':token, loggedin_user_id:loggedin_user_id},
-                dataType:'json',
-                success: function(data) {
+                $.ajax({
 
-                    if (data == 'success') { 
-                        
-                        alert('Reply Send Successfully.');
-                        return false;
+                    type: 'GET',
+                    url:app_url+'/leave/count',
+                    data: {'_token':token, loggedin_user_id:loggedin_user_id},
+                    dataType:'json',
+                    success: function(data) {
+
+                        if (data >= '3') { 
+                            
+                            alert('You Already Take 3 Early Go / Late In in this month.');
+                            return false;
+                        }
                     }
-                }
-            });
+                });
+            }
+            else {
+
+                return true;
+            }
         }
 
     </script>

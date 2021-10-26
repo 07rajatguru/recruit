@@ -133,4 +133,25 @@ class UserLeave extends Model
 
         return $leave_by_date;
     }
+
+    public static function getLeaveDetailsByUserID($loggedin_user_id) {
+
+        $month = date('m');
+        $year = date('Y');
+        $type_array = array('Early Go','Late In');
+
+        $query = UserLeave::query();
+        $query = $query->join('users','users.id','user_leave.user_id');
+        $query = $query->select('user_leave.*','users.first_name as fname','users.last_name as lname');
+        $query = $query->where('user_leave.user_id',$loggedin_user_id);
+        $query = $query->whereIn('user_leave.type_of_leave',$type_array);
+        $query = $query->where(\DB::raw('month(user_leave.created_at)'),'=',$month);
+        $query = $query->where(\DB::raw('year(user_leave.created_at)'),'=',$year);
+
+        $response = $query->get();
+
+        $leave_count = $response->count();
+
+        return $leave_count;
+    }
 }

@@ -447,11 +447,12 @@ class LeaveController extends Controller
         // Get user leave details
         $leave_details = UserLeave::getLeaveDetails($leave_id);
 
-        /*$from_date = strtotime($leave_details['from_date']);
-        $to_date = strtotime($leave_details['to_date']);
+        // Get for sandwhich leave
+        $from_date = strtotime($leave_details['from_date']);
+        $from_day = date('l', strtotime($from_date));
 
-        $diff_in_days = ($to_date - $from_date)/60/60/24;
-        $diff_in_days = $diff_in_days + 1;*/
+        $to_date = strtotime($leave_details['to_date']);
+        $to_day = date('l', strtotime($to_date));
 
         $days = $leave_details['days'];
 
@@ -487,8 +488,16 @@ class LeaveController extends Controller
                 $leave_taken = $leave_balance_details['leave_taken'];
                 $leave_remaining = $leave_balance_details['leave_remaining'];
 
-                $new_leave_taken = $leave_taken + $days;
-                $new_leave_remaining = $leave_remaining - $days;
+                if($from_day == 'Saturday' && $to_day == 'Monday') {
+
+                    $new_leave_taken = $leave_taken + $days + 1;
+                    $new_leave_remaining = $leave_remaining - $days - 1;
+                }
+                else {
+
+                    $new_leave_taken = $leave_taken + $days;
+                    $new_leave_remaining = $leave_remaining - $days;
+                }
 
                 \DB::statement("UPDATE leave_balance SET leave_taken = '$new_leave_taken', leave_remaining = '$new_leave_remaining' where user_id = '$user_id'");
             }
@@ -500,8 +509,16 @@ class LeaveController extends Controller
                 $seek_leave_taken = $leave_balance_details['seek_leave_taken'];
                 $seek_leave_remaining = $leave_balance_details['seek_leave_remaining'];
 
-                $new_leave_taken = $seek_leave_taken + $days;
-                $new_leave_remaining = $seek_leave_remaining - $days;
+                if($from_day == 'Saturday' && $to_day == 'Monday') {
+
+                    $new_leave_taken = $seek_leave_taken + $days + 1;
+                    $new_leave_remaining = $seek_leave_remaining - $days - 1;
+                }
+                else {
+
+                    $new_leave_taken = $seek_leave_taken + $days;
+                    $new_leave_remaining = $seek_leave_remaining - $days;
+                }
 
                 \DB::statement("UPDATE leave_balance SET seek_leave_taken = '$new_leave_taken', seek_leave_remaining = '$new_leave_remaining' where user_id = '$user_id'");
             }
@@ -623,6 +640,8 @@ class LeaveController extends Controller
         
         $loggedin_user_id = $_GET['loggedin_user_id'];
 
-        echo $loggedin_user_id;exit;
+        $get_leaves = UserLeave::getLeaveDetailsByUserID($loggedin_user_id);
+
+        return json_encode($get_leaves);
     }
 }
