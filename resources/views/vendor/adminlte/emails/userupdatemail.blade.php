@@ -58,9 +58,9 @@
 
                                     @if($old_value_array['department_name'] == 'HR Advisory')
                                         @if($old_value_array['hr_adv_recruitemnt'] == 'Yes')
-                                            <td align="left">{{ $old_value_array['designation'] }} - With Recruitemnt</td>
+                                            <td align="left">{{ $old_value_array['designation'] }} - With Recruitment</td>
                                         @else
-                                            <td align="left">{{ $old_value_array['designation'] }} - Without Recruitemnt</td>
+                                            <td align="left">{{ $old_value_array['designation'] }} - Without Recruitment</td>
                                         @endif
                                     @else
                                         <td align="left">{{ $old_value_array['designation'] }}</td>
@@ -68,9 +68,9 @@
 
                                     @if($new_value_array['department_name'] == 'HR Advisory')
                                         @if($new_value_array['hr_adv_recruitemnt'] == 'Yes')
-                                            <td align="left">{{ $new_value_array['designation'] }} - With Recruitemnt</td>
+                                            <td align="left">{{ $new_value_array['designation'] }} - With Recruitment</td>
                                         @else
-                                            <td align="left">{{ $new_value_array['designation'] }} - Without Recruitemnt</td>
+                                            <td align="left">{{ $new_value_array['designation'] }} - Without Recruitment</td>
                                         @endif
                                     @else
                                         <td align="left">{{ $new_value_array['designation'] }}</td>
