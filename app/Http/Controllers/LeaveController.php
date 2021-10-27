@@ -319,8 +319,10 @@ class LeaveController extends Controller
         $dateClass = new Date();
         $from_date = $dateClass->changeYMDtoDMY($leave->from_date);
         $to_date = $dateClass->changeYMDtoDMY($leave->to_date);
+
+        $loggedin_user_id = \Auth::user()->id;
         
-        return view('adminlte::leave.edit',compact('action','leave_type','leave_category','leave','selected_leave_type','selected_leave_category','from_date','to_date'));
+        return view('adminlte::leave.edit',compact('action','leave_type','leave_category','leave','selected_leave_type','selected_leave_category','from_date','to_date','loggedin_user_id'));
     }
 
     public function update(Request $request,$id) {
@@ -480,7 +482,7 @@ class LeaveController extends Controller
             $type_of_leave = $leave_details['type_of_leave'];
             $leave_category = $leave_details['category'];
 
-            if($leave_category == 'Paid') {
+            if($leave_category == 'Paid Leave') {
 
                 // Update Leave Balance
                 $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
@@ -501,7 +503,7 @@ class LeaveController extends Controller
 
                 \DB::statement("UPDATE leave_balance SET leave_taken = '$new_leave_taken', leave_remaining = '$new_leave_remaining' where user_id = '$user_id'");
             }
-            else if($leave_category == 'Seek') {
+            else if($leave_category == 'Seek Leave') {
 
                 // Update Leave Balance
                 $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
@@ -526,11 +528,11 @@ class LeaveController extends Controller
 
             }
         }
-        elseif ($reply == 'Unapproved') {
+        elseif ($reply == 'Notapproved') {
 
             $approved_by = $leave_details['approved_by'];
        
-            $new_msg = "<p><b>Hello " . $user_name . " ,</b></p><p><b>Your leave has been Unapproved.</b></p>";
+            $new_msg = "<p><b>Hello " . $user_name . " ,</b></p><p><b>Your leave has been Not Approved.</b></p>";
             $message = "<tr><td><p>" . $new_msg . "</p><p>Thanks.</p><p>" . 
             $approved_by . "</p></td></tr>";
 

@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Leave Reply')
+@section('title', 'Leave')
 
 @section('content_header')
     <h1></h1>
@@ -13,7 +13,7 @@
                 <h2>{!! $leave_details['subject'] !!}</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('leave.index') }}"> Back</a>
+                <a class="btn btn-primary" href="{{ route('leave.index') }}">Back</a>
             </div>
         </div>
     </div>
@@ -23,7 +23,37 @@
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
             	<br/>
             	<div class="col-xs-12 col-sm-12 col-md-12">
-            		{!! $leave_details['message'] !!}
+            		<table class="table table-bordered">
+                        <tr>
+                            <th>User Name</th>
+                            <td>{{ $leave_details['uname'] }}</td>
+                            <th>From Date</th>
+                            <td>{{ $leave_details['from_date'] }}</td>
+                            <th>To Date</th>
+                            <td>{{ $leave_details['to_date'] }}</td>
+                        </tr>
+
+                        <tr>
+                            <th>Leave Type</th>
+                            <td>{{ $leave_details['type_of_leave'] }}</td>
+                            <th>Leave Category</th>
+                            <td>{{ $leave_details['category'] }}</td>
+                            <th>Status</th>
+
+                            @if($leave_details['status'] == 0)
+                                <td style="background-color:#8FB1D5;">Pending</td>
+                            @elseif($leave_details['status'] == 1)
+                                <td style="background-color:#32CD32;">Approved</td>
+                            @elseif($leave_details['status'] == 2)
+                                <td style="background-color:#F08080;">Not Approved</td>
+                            @endif
+                        </tr>
+                        
+                        <tr>
+                            <th>Leave Message</th>
+                            <td colspan="6">{!! $leave_details['message'] !!}</td>
+                        </tr>
+                    </table>
             	</div>
             </div>
         </div>
@@ -67,7 +97,7 @@
     @if($leave_details['status'] == 0)
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
             <button type="submit" class="btn btn-primary" onclick="permission('Approved')">Approved</button> &nbsp;&nbsp;&nbsp;&nbsp;
-            <button type="submit" class="btn btn-primary" onclick="permission('Unapproved')">Unapproved</button>
+            <button type="submit" class="btn btn-primary" onclick="permission('Notapproved')">Not approved</button>
         </div>
     @endif
 @endif
@@ -78,7 +108,7 @@
     </div>
 @elseif($leave_details['status'] == 2)
     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-        <button type="button" class="btn btn-primary" disabled="disabled">Unapproved by {{ $leave_details['approved_by'] }}</button>
+        <button type="button" class="btn btn-primary" disabled="disabled">Not Approved by {{ $leave_details['approved_by'] }}</button>
     </div>
 @endif
 

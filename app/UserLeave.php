@@ -14,8 +14,8 @@ class UserLeave extends Model
         $type[''] = 'Select Leave Type';
         $type['Early Go'] = 'Early Go';
         $type['Late In'] = 'Late In';
-        $type['Half'] = 'Half Day';
-        $type['Full'] = 'Full Day';
+        $type['Half Day'] = 'Half Day';
+        $type['Full Day'] = 'Full Day';
         
         return $type;
     }
@@ -24,8 +24,8 @@ class UserLeave extends Model
 
         $type = array();
         $type[''] = 'Select Leave Category';
-        $type['Paid'] = 'Paid Leave';
-        $type['Seek'] = 'Seek Leave';
+        $type['Paid Leave'] = 'Paid Leave';
+        $type['Seek Leave'] = 'Seek Leave';
 
         return $type;
     }
@@ -145,8 +145,8 @@ class UserLeave extends Model
         $query = $query->select('user_leave.*','users.first_name as fname','users.last_name as lname');
         $query = $query->where('user_leave.user_id',$loggedin_user_id);
         $query = $query->whereIn('user_leave.type_of_leave',$type_array);
-        $query = $query->where(\DB::raw('month(user_leave.created_at)'),'=',$month);
-        $query = $query->where(\DB::raw('year(user_leave.created_at)'),'=',$year);
+        $query = $query->where(\DB::raw('month(user_leave.from_date)'),'=',$month);
+        $query = $query->where(\DB::raw('year(user_leave.from_date)'),'=',$year);
 
         $response = $query->get();
 
