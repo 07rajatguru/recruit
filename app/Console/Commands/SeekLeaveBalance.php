@@ -21,7 +21,7 @@ class SeekLeaveBalance extends Command
      *
      * @var string
      */
-    protected $description = 'Command for Set Seek Leave Balance set to Zero in every year.';
+    protected $description = 'Command for Set Seek Leave Balance to Zero in every year.';
 
     /**
      * Create a new command instance.
@@ -48,7 +48,7 @@ class SeekLeaveBalance extends Command
 
             if (isset($leave_data) && $leave_data != '') {
 
-                \DB::statement("UPDATE `leave_balance` SET `seek_leave_total` = 6.00, `seek_leave_taken` = 0.00, `seek_leave_remaining` = 6.00 WHERE `user_id` = '$key'");
+                \DB::statement("UPDATE `leave_balance` SET `seek_leave_total` = 0.5, `seek_leave_taken` = 0.00, `seek_leave_remaining` = 0.5 WHERE `user_id` = '$key'");
             }
         }
     }

@@ -66,9 +66,6 @@
                                 <div class="navbar-custom-menu">
                                     <ul class="nav navbar-nav">
                                         @if(!$isClient)
-                                        <li>
-                                            <a href="{{getenv('APP_URL').'/work-planning/add'}}">Add Work Planning</a>
-                                        </li>
                                         <li class="dropdown messages-menu">
                                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
                                                 <i class="fa fa-plus"></i>
@@ -79,11 +76,11 @@
                                                     <!-- inner menu: contains the actual data -->
                                                     <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 200px;">
                                                         <ul class="menu" style=" width: 100%; height;150px">
-                                                            <!-- <li>
+                                                            <li>
                                                                 <a href="{{getenv('APP_URL').'/work-planning/add'}}">
                                                                     Add Work Planning
                                                                 </a>
-                                                            </li> -->
+                                                            </li>
                                                             <li>
                                                                 <a href="{{getenv('APP_URL').'/ticket-discussion/create'}}">
                                                                     Add Ticket

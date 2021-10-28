@@ -10,6 +10,7 @@ use App\Events\NotificationMail;
 use App\Date;
 use App\LeaveDoc;
 use App\LeaveBalance;
+use Illuminate\Support\Facades\File;
 
 class LeaveController extends Controller
 {
@@ -252,11 +253,11 @@ class LeaveController extends Controller
 
             $user_leave->days = 0.00;
         }
-        else if($leave_type == 'Full') {
+        else if($leave_type == 'Full Day') {
 
             $user_leave->days = $diff_in_days;
         }
-        else if($leave_type == 'Half') {
+        else if($leave_type == 'Half Day') {
 
             $user_leave->days = $diff_in_days/2;
         }
@@ -266,17 +267,15 @@ class LeaveController extends Controller
 
         $leave_id = $user_leave->id;
 
-        $leave_doc = Input::file('doc');
+        $leave_doc = Input::file('leave_doc');
 
         if (isset($leave_doc) && $leave_doc != '') {
 
         	foreach ($leave_doc as $key => $value) {
 
-        		if (isset($value) && $value->isValid()) {
+        		if (isset($value) && $value != '') {
 
                     $file_name = $value->getClientOriginalName();
-                    $file_extension = $value->getClientOriginalExtension();
-                    $file_realpath = $value->getRealPath();
                     $file_size = $value->getSize();
 
                     $dir = 'uploads/leave/' . $user_id . '/';
@@ -369,11 +368,11 @@ class LeaveController extends Controller
 
             $user_leave->days = 0.00;
         }
-        else if($leave_type == 'Full') {
+        else if($leave_type == 'Full Day') {
 
             $user_leave->days = $diff_in_days;
         }
-        else if($leave_type == 'Half') {
+        else if($leave_type == 'Half Day') {
 
             $user_leave->days = $diff_in_days/2;
         }
@@ -522,7 +521,7 @@ class LeaveController extends Controller
                     $new_leave_remaining = $seek_leave_remaining - $days;
                 }
 
-                \DB::statement("UPDATE leave_balance SET seek_leave_taken = '$new_leave_taken', seek_leave_remaining = '$new_leave_remaining' where user_id = '$user_id'");
+                \DB::statement("UPDATE `leave_balance` SET `seek_leave_taken` = '$new_leave_taken', `seek_leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
             }
             else {
 

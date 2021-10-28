@@ -22,9 +22,9 @@
 </div>
 
 @if( $action == 'edit')
-    {!! Form::model($leave, ['method' => 'PATCH','route' => ['leave.update', $leave->id], 'id' => 'leave_form', 'autocomplete' => 'off','onsubmit' => "return leaveValidation()"]) !!}
+    {!! Form::model($leave, ['method' => 'PATCH','files' => true,'route' => ['leave.update', $leave->id], 'id' => 'leave_form', 'autocomplete' => 'off','onsubmit' => "return leaveValidation()"]) !!}
 @else
-    {!! Form::open(array('route' => 'leave.store','method'=>'POST', 'id' => 'leave_form', 'autocomplete' => 'off','onsubmit' => "return leaveValidation()")) !!}
+    {!! Form::open(array('route' => 'leave.store','method'=>'POST','files' => true, 'id' => 'leave_form', 'autocomplete' => 'off','onsubmit' => "return leaveValidation()")) !!}
 @endif
 
 <div class="row">
@@ -96,14 +96,9 @@
                         {!! Form::select('leave_category', $leave_category,$selected_leave_category, array('id' => 'leave_category', 'class' => 'form-control','tabindex' => '5', 'onchange' => 'category();' )) !!}
                     </div>
 
-                    <div class="form-group document {{ $errors->has('doc') ? 'has-error' : '' }}" style="display: none;">
-                        <strong>Attachment: <span class = "required_fields">*</span> </strong>
-                        <input type="file" name="doc[]" multiple class="form-control" />
-                        @if ($errors->has('doc'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('doc') }}</strong>
-                            </span>
-                        @endif
+                    <div class="form-group document" style="display: none;">
+                        <strong>Attachment: <span class = "required_fields">*</span></strong>
+                        <input type="file" name="leave_doc[]"  id="leave_doc" class="form-control" multiple>
                     </div>
                 </div>
             </div>
@@ -146,7 +141,7 @@
                     "leave_type": {
                         required: true
                     },
-                    "doc[]": {
+                    "leave_doc[]": {
                         required: true
                     }
                 },
@@ -160,7 +155,7 @@
                     "leave_type": {
                         required: "Leave type is required field."
                     },
-                    "doc[]": {
+                    "leave_doc[]": {
                         required: "Document file is required field."
                     }
                 }
@@ -171,7 +166,7 @@
 
             leave_cat = $("#leave_category").val();
 
-            if (leave_cat == 'Seek') {
+            if (leave_cat == 'Seek Leave') {
                 $(".document").show();
             }
             else {
@@ -220,10 +215,14 @@
                     });
                 }
                 else {
-
                     return true;
                 }
             }
+            else {
+                return true;
+            }
+
+            return false;
         }
 
     </script>

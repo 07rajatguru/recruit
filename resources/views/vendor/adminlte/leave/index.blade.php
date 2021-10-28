@@ -80,89 +80,88 @@
         </div>
     </div>
 
-    @if($user_id == $super_admin_userid)
-    @else
+    @if(isset($leave_balance) && $leave_balance != '')
         <div class="row">
-            <div class="col-xs-2 col-sm-2 col-md-2">
+            <div class="box-body col-xs-2 col-sm-2 col-md-2">
                 <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00c0ef !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Total Paid Leave">Total PL ({{ $leave_balance->leave_total or 0 }})</div></a>
             </div>
 
-            <div class="col-xs-2 col-sm-2 col-md-2">
+            <div class="box-body col-xs-2 col-sm-2 col-md-2">
                 <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00a65a !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Taken Paid Leave">Taken PL ({{ $leave_balance->leave_taken or 0 }})</div></a>
             </div>
 
-            <div class="col-xs-2 col-sm-2 col-md-2">
+            <div class="box-body col-xs-2 col-sm-2 col-md-2">
                 <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#dd4b39 !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Remaining Paid Leave">Remaining PL ({{ $leave_balance->leave_remaining or 0 }})</div></a>
             </div>
 
-            <div class="col-xs-2 col-sm-2 col-md-2">
+            <div class="box-body col-xs-2 col-sm-2 col-md-2">
                 <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00c0ef !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Total Seek Leave">Total SL ({{ $leave_balance->seek_leave_total or 0 }})</div></a>
             </div>
 
-            <div class="col-xs-2 col-sm-2 col-md-2">
+            <div class="box-body col-xs-2 col-sm-2 col-md-2">
                 <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00a65a !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Taken Seek Leave">Taken SL ({{ $leave_balance->seek_leave_taken or 0 }})</div></a>
             </div>
 
-            <div class="col-xs-2 col-sm-2 col-md-2">
+            <div class="box-body col-xs-2 col-sm-2 col-md-2">
                 <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#dd4b39 !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Remaining Seek Leave">Remaining SL ({{ $leave_balance->seek_leave_remaining or 0 }})</div></a>
             </div>
         </div>
     @endif
 
-    <div class="table-responsive">
-    	<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="leave_table">
-    		<thead>
-    			<tr>
-	    			<th>No</th>
-                    <th width="40px">Action</th>
-                    <th>User Name</th>
-                    <th>Sujbect</th>
-                    <th>From date</th>
-                    <th>To Date</th>
-                    <th>Leave Type</th>
-                    <th>Leave Category</th>
-                    <th>Status</th>
-	    		</tr>
-    		</thead>
-    		<?php $i=0; ?>
-    		<tbody>
-    			@foreach($leave_details as $key => $value)
-	    			<tr>
-		    			<td>{{ ++$i }}</td>
-                        <td>
-                            <a class="fa fa-circle" title="Show" href="{{ route('leave.reply',$value['id']) }}"></a>
+    <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="leave_table">
+    	<thead>
+    		<tr>
+	    		<th>No</th>
+                <th width="40px">Action</th>
+                <th>User Name</th>
+                <th>Sujbect</th>
+                <th>From date</th>
+                <th>To Date</th>
+                <th>Leave Type</th>
+                <th>Leave Category</th>
+                <th>Status</th>
+	    	</tr>
+    	</thead>
+    	
+        <?php $i=0; ?>
+    	<tbody>
+    		@foreach($leave_details as $key => $value)
+	    		<tr>
+		    		<td>{{ ++$i }}</td>
+                    <td>
+                        <a class="fa fa-circle" title="Show" href="{{ route('leave.reply',$value['id']) }}"></a>
 
-                            @if($user_id == $value['user_id'])
-                                <a class="fa fa-edit" title="edit" href="{{ route('leave.edit',$value['id']) }}"></a>
-                            @endif
+                        @if($user_id == $value['user_id'])
+                            <a class="fa fa-edit" title="edit" href="{{ route('leave.edit',$value['id']) }}"></a>
+                        @endif
 
-                            @permission(('leave-delete'))
-                                @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'leave','display_name'=>'Leave Application'])
-                            @endpermission
+                        @permission(('leave-delete'))
+                            @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'leave','display_name'=>'Leave Application'])
+                        @endpermission
 
-                            @if($user_id == $value['user_id'])
-                                @include('adminlte::partials.sendLeaveEmail', ['data' => $value, 'name' => 'leave'])
-                            @endif
-                        </td>
-		    			<td>{{ $value['user_name'] }}</td>
-		    			<td>{{ $value['subject'] }}</td>
-		    			<td>{{ $value['from_date'] }}</td>
-		    			<td>{{ $value['to_date'] }}</td>
-		    			<td>{{ $value['leave_type'] }}</td>
-		    			<td>{{ $value['leave_category'] }}</td>
+                        @if($user_id == $value['user_id'])
+                            @include('adminlte::partials.sendLeaveEmail', ['data' => $value, 'name' => 'leave'])
+                        @endif
+                    </td>
 
-		    			@if($value['status'] == 0)
-		    				<td style="background-color:#8FB1D5;">Pending</td>
-		    			@elseif($value['status'] == 1)
-		    				<td style="background-color:#32CD32;">Approved</td>
-		    			@elseif($value['status'] == 2)
-		    				<td style="background-color:#F08080;">Not Approved</td>
-		    			@endif
-		    		</tr>
-    			@endforeach
-    		</tbody>		
-    	</table>
-    </div>
+		    		<td>{{ $value['user_name'] }}</td>
+		    		<td>{{ $value['subject'] }}</td>
+		    		<td>{{ $value['from_date'] }}</td>
+		    		<td>{{ $value['to_date'] }}</td>
+		    		<td>{{ $value['leave_type'] }}</td>
+		    		<td>{{ $value['leave_category'] }}</td>
+
+		    		@if($value['status'] == 0)
+		    			<td style="background-color:#8FB1D5;">Pending</td>
+		    		@elseif($value['status'] == 1)
+		    			<td style="background-color:#32CD32;">Approved</td>
+		    		@elseif($value['status'] == 2)
+		    			<td style="background-color:#F08080;">Not Approved</td>
+		    		@endif
+		    	</tr>
+    		@endforeach
+    	</tbody>		
+    </table>
 @stop
 
 @section('customscripts')

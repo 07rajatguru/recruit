@@ -13,24 +13,22 @@ class Holidays extends Model
         'title' => 'required',
         'type' => 'required',
         'from_date' => 'required',
-        'to_date' => 'required',
     );
 
     public function messages()
     {
         return [
-            'title.required' => 'Title is required field',
-            'type.required' => 'Type is required field',
-            'from_date.required' => 'From date is required field',
-            'to_date.required' => 'To date is required field',
+            'title.required' => 'Title is Required Field',
+            'type.required' => 'Type is Required Field',
+            'from_date.required' => 'From date is Required Field',
         ];
     }
 
     public static function getHolidaysType(){
 
     	$type = array('' => 'Select Type');
-    	$type['Fixed'] = 'Fixed Leave';
-    	$type['Optional'] = 'Optional Leave';
+    	$type['Fixed Leave'] = 'Fixed Leave';
+    	$type['Optional Leave'] = 'Optional Leave';
 
     	return $type;
     }
@@ -49,7 +47,14 @@ class Holidays extends Model
             $holidays[$i]['title'] = $value->title;
             $holidays[$i]['type'] = $value->type;
             $holidays[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date));
-            $holidays[$i]['to_date'] = date('d-m-Y',strtotime($value->to_date));
+
+            if($value->to_date == '') {
+                $holidays[$i]['to_date'] = '';
+            }
+            else {
+               $holidays[$i]['to_date'] = date('d-m-Y',strtotime($value->to_date)); 
+            }
+            
             $holidays[$i]['remarks'] = $value->remarks;
 
             $name = Holidays::getUsersByHolidayId($value->id);

@@ -15,7 +15,7 @@
             @endif
         </div>
         <div class="pull-right">
-            <a class="btn btn-primary" href="{{url()->previous()}}"> Back</a>
+            <a class="btn btn-primary" href="{{ route('holidays.index') }}"> Back</a>
         </div>
     </div>
 </div>
@@ -37,7 +37,7 @@
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                         <div class="">
                             <div class="form-group {{ $errors->has('title') ? 'has-error' : '' }}">
-                                <strong>Title: <span class = "required_fields">*</span> </strong>
+                                <strong>Title : <span class = "required_fields">*</span> </strong>
                                 {!! Form::text('title',null, array('id'=>'title','class' => 'form-control','tabindex' => '1' )) !!}
                                 @if ($errors->has('title'))
                                     <span class="help-block">
@@ -49,7 +49,7 @@
 
                         <div class="">
                             <div class="form-group {{ $errors->has('from_date') ? 'has-error' : '' }}">
-                                <strong>From Date: <span class = "required_fields">*</span> </strong>
+                                <strong>From Date : <span class = "required_fields">*</span> </strong>
                                 {!! Form::text('from_date',isset($from_date) ? $from_date : null, array('id'=>'from_date','class' => 'form-control','tabindex' => '3' )) !!}
                                 @if ($errors->has('from_date'))
                                     <span class="help-block">
@@ -61,7 +61,7 @@
 
                         <div class="">
                             <div class="form-group {{ $errors->has('remarks') ? 'has-error' : '' }}">
-                                <strong>Remarks: </strong>
+                                <strong>Remarks : </strong>
                                 {!! Form::textarea('remarks',null, array('id'=>'remarks','class' => 'form-control','tabindex' => '5', 'rows' => '5' )) !!}
                                 @if ($errors->has('remarks'))
                                     <span class="help-block">
@@ -75,7 +75,8 @@
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                         <div class="">
                             <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
-                                <strong>Type: <span class = "required_fields">*</span> </strong>
+                                <strong>Select Leave Type : <span class = "required_fields">*
+                                </span> </strong>
                                 {!! Form::select('type',$type,$type_id, array('id'=>'type','class' => 'form-control','tabindex' => '2' )) !!}
                                 @if ($errors->has('type'))
                                     <span class="help-block">
@@ -87,7 +88,7 @@
 
                         <div class="">
                             <div class="form-group {{ $errors->has('to_date') ? 'has-error' : '' }}">
-                                <strong>To Date: <span class = "required_fields">*</span> </strong>
+                                <strong>To Date: </strong>
                                 {!! Form::text('to_date',isset($to_date) ? $to_date : null, array('id'=>'to_date','class' => 'form-control','tabindex' => '4' )) !!}
                                 @if ($errors->has('to_date'))
                                     <span class="help-block">
@@ -101,18 +102,17 @@
                     <div class="box-body col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group {{ $errors->has('user_ids') ? 'has-error' : '' }}">
                             <strong>Select Users: <span class = "required_fields">*</span></strong><br/>&nbsp;&nbsp;
-                            <input type="checkbox" id="departments_all" /><strong>Select All</strong><br/>
+                            <input type="checkbox" id="departments_all" checked=""/><strong>Select All</strong><br/>
 
                             @foreach($departments as $k=>$v)&nbsp;&nbsp; 
-                                {!! Form::checkbox('department_ids[]', $k,in_array($k,$selected_departments), array('id'=>'department_ids','class' => 'department_ids','onclick' => 'displayUsers("'.$k.'")')) !!}
+                                {!! Form::checkbox('department_ids[]', $k,in_array($k,$selected_departments), array('id'=>'department_ids','checked','class' => 'department_ids','onclick' => 'displayUsers("'.$k.'")')) !!}
                                 {!! Form::label ($v) !!}
                             @endforeach <br/><br/>
 
                             <?php  $id = ''; ?>
 
                             @foreach($departments as $k=>$v)
-                                <div class="div_{{ $k }}" style="margin-left: 12px;display:none;">
-                                </div>
+                                <div class="div_{{ $k }}" style="margin-left: 12px;display:none;"></div>
                                 <?php $id = $id . "," . $k; ?>
                             @endforeach
 
@@ -136,7 +136,8 @@
 
 @section('customscripts')
     <script type="text/javascript">
-        $(document).ready(function(){
+        $(document).ready(function() {
+
             $("#from_date").datetimepicker({
                 format: "DD-MM-YYYY",
             });
@@ -151,7 +152,7 @@
 
                 var isChecked = $("#departments_all").is(":checked");
                 var id_string = $("#id_string").val();
-                var id_arr = id_string.split(",");;
+                var id_arr = id_string.split(",");
 
                 if(isChecked == true) {
                     $('.department_ids').prop('checked', this.checked);
@@ -177,6 +178,18 @@
 
             var action = $("#action").val();
 
+            // Set users
+            if(action == 'add') {
+
+                var id_string = $("#id_string").val();
+                var id_arr = id_string.split(",");
+
+                for (var i = 1; i < id_arr.length; i++) {
+
+                    displayUsers(id_arr[i]);
+                }
+            }
+
             if(action == 'edit') {
 
                 loadUsers();
@@ -195,9 +208,6 @@
                     "from_date" : {
                         required: true,
                     },
-                    "to_date" : {
-                        required: true,
-                    },
                     "user_ids[]" : {
                         required: true,
                     },
@@ -207,19 +217,16 @@
                 },
                 messages: {
                     "title": {
-                        required: "Title is required field.",
+                        required: "Title is Required Field.",
                     },
                     "type" : {
-                        required: "Type is required field.",
+                        required: "Type is Required Field.",
                     },
                     "from_date" : {
-                        required: "From Date is required field.",
-                    },
-                    "to_date" : {
-                        required: "To Date is required field.",
+                        required: "From Date is Required Field.",
                     },
                     "user_ids[]" : {
-                        required: "User is required field",
+                        required: "Please Select Users.",
                     },
                     "department_ids[]": {
                         required: "Please Select Department."

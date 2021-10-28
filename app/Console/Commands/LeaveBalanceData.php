@@ -44,19 +44,23 @@ class LeaveBalanceData extends Command
 
         foreach ($users as $key => $value) {
 
-            $user_id = LeaveBalance::CheckUserID($key);
+            $leave_data = LeaveBalance::getLeaveBalanceByUserId($key);
 
-            if (isset($user_id) && $user_id > 0) {
+            if (isset($leave_data) && $leave_data != '') {
 
-                $leave_data = LeaveBalance::getLeaveBalanceByUserId($key);
                 $total_leave = $leave_data['leave_total'];
                 $remaining_leave = $leave_data['leave_remaining'];
 
-                $new_total = $total_leave + 2;
-                $new_remaining = $remaining_leave + 2;
+                $total_seek_leave = $leave_data['seek_leave_total'];
+                $remaining_seek_leave = $leave_data['seek_leave_remaining'];
 
-                \DB::statement("UPDATE `leave_balance` SET `leave_total` = '$new_total', `leave_remaining` = '$new_remaining' WHERE user_id = '$key'");
-                //print_r($new_remaining);exit;
+                $new_total_leave = $total_leave + 1.5;
+                $new_remaining_leave = $remaining_leave + 1.5;
+
+                $new_total_seek_leave = $total_seek_leave + 0.5;
+                $new_remaining_seek_leave = $remaining_seek_leave + 0.5;
+
+                \DB::statement("UPDATE `leave_balance` SET `leave_total` = '$new_total_leave', `leave_remaining` = '$new_remaining_leave',`seek_leave_total` = '$new_total_seek_leave', `seek_leave_remaining` = '$new_remaining_seek_leave' WHERE `user_id` = '$key'");
             }
             else {
 
@@ -70,23 +74,15 @@ class LeaveBalanceData extends Command
 
                     if ($after_six_month <= $current_date) {
 
-                        $date1 = date_create($current_date);
-                        $date2 = date_create($after_six_month);
-                        $date_diff = date_diff($date1,$date2);
-                        $year = $date_diff->format('%y');
-                        $month = $date_diff->format('%m');
-
-                        $month_convert = $year * 12;
-                        $total_month = $month_convert + $month;
-                        $total_leave = 2 * $total_month;
-                        //print_r($total_leave);exit;
-
                         //Add User Leave Balance data
                         $leave_balance = new LeaveBalance();
                         $leave_balance->user_id = $key;
-                        $leave_balance->leave_total = $total_leave;
+                        $leave_balance->leave_total = 1.5;
                         $leave_balance->leave_taken = 0;
-                        $leave_balance->leave_remaining = $total_leave;
+                        $leave_balance->leave_remaining = 1.5;
+                        $leave_balance->seek_leave_total = 0.5;
+                        $leave_balance->seek_leave_taken = 0;
+                        $leave_balance->seek_leave_remaining = 0.5;
                         $leave_balance->save();
                     }
                 }

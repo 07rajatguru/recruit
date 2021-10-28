@@ -59,12 +59,12 @@
         </div>
     </div>
 
-@if($leave_details['category'] == 'Medical')
+@if($leave_details['category'] == 'Seek Leave')
     <div class="row">    
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                 <div class="box-header with-border col-md-6 ">
-                    <h3 class="box-title">Attachments</h3>
+                    <h3 class="box-title">Medical Documents</h3>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <table class="table table-bordered">
@@ -77,9 +77,11 @@
                             @foreach($leave_doc as $key => $value)
                                 <tr>
                                     <td>
-                                        <a download href="{{ $value['url'] }}"><i class="fa fa-fw fa-download"></i></a>
+                                        <a download href="{{ $value['url'] }}">
+                                        <i class="fa fa-fw fa-download"></i></a>
                                     </td>
-                                    <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}</a></td>
+                                    <td><a target="_blank" href="{{ $value['url'] }}">
+                                    {{ $value['name'] }}</a></td>
                                     <td>{{ $value['size'] }}</td>
                                 </tr>
                             @endforeach
