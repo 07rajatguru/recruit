@@ -46,7 +46,13 @@ class Holidays extends Model
             $holidays[$i]['id'] = $value->id;
             $holidays[$i]['title'] = $value->title;
             $holidays[$i]['type'] = $value->type;
-            $holidays[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date));
+
+            if($value->from_date == '') {
+                $holidays[$i]['from_date'] = '';
+            }
+            else {
+               $holidays[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date)); 
+            }
 
             if($value->to_date == '') {
                 $holidays[$i]['to_date'] = '';

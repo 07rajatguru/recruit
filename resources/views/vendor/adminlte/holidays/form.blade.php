@@ -59,17 +59,12 @@
                             </div>
                         </div>
 
-                        <div class="">
-                            <div class="form-group {{ $errors->has('remarks') ? 'has-error' : '' }}">
+                        <!-- <div class="">
+                            <div class="form-group">
                                 <strong>Remarks : </strong>
                                 {!! Form::textarea('remarks',null, array('id'=>'remarks','class' => 'form-control','tabindex' => '5', 'rows' => '5' )) !!}
-                                @if ($errors->has('remarks'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('remarks') }}</strong>
-                                    </span>
-                                @endif
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">

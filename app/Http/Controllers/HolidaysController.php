@@ -62,8 +62,15 @@ class HolidaysController extends Controller
     	$users = $request->user_ids;
         $department_ids = $request->department_ids;
 
+        if($from_date == '') {
+            $from_date_save = NULL;
+        }
+        else {
+            $from_date_save = $dateClass->changeDMYHMStoYMDHMS($from_date);
+        }
+
         if($to_date == '') {
-            $to_date_save = '';
+            $to_date_save = NULL;
         }
         else {
             $to_date_save = $dateClass->changeDMYHMStoYMDHMS($to_date);
@@ -72,7 +79,7 @@ class HolidaysController extends Controller
     	$holiday = new Holidays();
     	$holiday->title = $title;
     	$holiday->type = $type;
-    	$holiday->from_date = $dateClass->changeDMYHMStoYMDHMS($from_date);
+    	$holiday->from_date = $from_date_save;
     	$holiday->to_date = $to_date_save;
     	$holiday->remarks = $remarks;
         $holiday->department_ids = implode(",", $department_ids);
@@ -148,8 +155,15 @@ class HolidaysController extends Controller
         $users = $request->user_ids;
         $department_ids = $request->department_ids;
 
+        if($from_date == '') {
+            $from_date_save = NULL;
+        }
+        else {
+            $from_date_save = $dateClass->changeDMYHMStoYMDHMS($from_date);
+        }
+
         if($to_date == '') {
-            $to_date_save = '';
+            $to_date_save = NULL;
         }
         else {
             $to_date_save = $dateClass->changeDMYHMStoYMDHMS($to_date);
@@ -158,7 +172,7 @@ class HolidaysController extends Controller
         $holiday = Holidays::find($id);
         $holiday->title = $title;
         $holiday->type = $type;
-        $holiday->from_date = $dateClass->changeDMYHMStoYMDHMS($from_date);
+        $holiday->from_date = $from_date_save;
         $holiday->to_date = $to_date_save;
         $holiday->remarks = $remarks;
         $holiday->department_ids = implode(",", $department_ids);
