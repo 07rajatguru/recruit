@@ -3349,6 +3349,24 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-work-planning|display-user-wise-work-planning|work-planning-add|work-planning-edit|work-planning-delete']
     ]);
 
+    Route::any('work-planning/{status}/{month}/{year}', [
+        'as' => 'workplanning.status',
+        'uses' => 'WorkPlanningController@getWorkPlanningDetailsByStatus',
+        'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
+    ]);
+
+    Route::any('team-work-planning',[
+        'as' => 'teamworkplanning.index',
+        'uses' => 'WorkPlanningController@teamIndex',
+        'middleware' => ['permission:display-work-planning|display-user-wise-work-planning|work-planning-add|work-planning-edit|work-planning-delete']
+    ]);
+
+    Route::any('team-work-planning/{status}/{month}/{year}', [
+        'as' => 'teamworkplanning.status',
+        'uses' => 'WorkPlanningController@getTeamWorkPlanningDetailsByStatus',
+        'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
+    ]);
+
     Route::get('work-planning/add',[
         'as' => 'workplanning.create',
         'uses' => 'WorkPlanningController@create',
@@ -3412,9 +3430,9 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'WorkPlanningController@getWorkPlanningTaskById'
     ]);
 
-    Route::any('work-planning/{status}/{month}/{year}', [
-        'as' => 'workplanning.status',
-        'uses' => 'WorkPlanningController@getAllDetailsByStatus',
+    Route::get('work-planning/{id}/{updatestatus}', [
+        'as' => 'workplanning.updatestatus',
+        'uses' => 'WorkPlanningController@updateStatus',
         'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
     ]);
 

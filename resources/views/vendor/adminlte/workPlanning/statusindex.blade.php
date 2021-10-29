@@ -50,21 +50,41 @@
     </div> 
 </div>
 
-<div class="row">
-    <div class="col-md-12">
-        <div class="col-md-2" style="width: 15%;">
-            <a href="{{ route('workplanning.status',array('pending',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#8FB1D5;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Pending">Pending ({{ $pending }})</div></a>
-        </div>
+@if(isset($page) && $page == 'Self')
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-2" style="width: 15%;">
+                <a href="{{ route('workplanning.status',array('pending',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#8FB1D5;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Pending">Pending ({{ $pending }})</div></a>
+            </div>
 
-        <div class="col-md-2" style="width: 15%;">
-            <a href="{{ route('workplanning.status',array('approved',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#32CD32;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Approved">Approved ({{ $approved }})</div></a>
-        </div>
+            <div class="col-md-2" style="width: 15%;">
+                <a href="{{ route('workplanning.status',array('approved',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#32CD32;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Approved">Approved ({{ $approved }})</div></a>
+            </div>
 
-        <div class="col-md-2" style="width: 15%;">
-            <a href="{{ route('workplanning.status',array('rejected',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Rejected">Rejected ({{ $rejected }})</div></a>
+            <div class="col-md-2" style="width: 15%;">
+                <a href="{{ route('workplanning.status',array('rejected',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Rejected">Rejected ({{ $rejected }})</div></a>
+            </div>
         </div>
-    </div>
-</div><br/>
+    </div><br/>
+@endif
+
+@if(isset($page) && $page == 'Team')
+    <div class="row">
+        <div class="col-md-12">
+            <div class="col-md-2" style="width: 15%;">
+                <a href="{{ route('teamworkplanning.status',array('pending',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#8FB1D5;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Pending">Pending ({{ $pending }})</div></a>
+            </div>
+
+            <div class="col-md-2" style="width: 15%;">
+                <a href="{{ route('teamworkplanning.status',array('approved',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#32CD32;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Approved">Approved ({{ $approved }})</div></a>
+            </div>
+
+            <div class="col-md-2" style="width: 15%;">
+                <a href="{{ route('teamworkplanning.status',array('rejected',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Rejected">Rejected ({{ $rejected }})</div></a>
+            </div>
+        </div>
+    </div><br/>
+@endif
 
 <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="work_planning_table">
     <thead>
@@ -88,7 +108,7 @@
                 <td>
                     <a class="fa fa-circle" href="{{ route('workplanning.show',$value['id']) }}" title="Show"></a>
 
-                    @if($user_id == $value['added_by_id'])
+                    @if($user_id == $value['added_by_id'] || $user_id == $superadmin_user_id)
                         <a class="fa fa-edit" href="{{ route('workplanning.edit',$value['id']) }}" title="Edit"></a>
                     @endif
                     
@@ -98,6 +118,10 @@
 
                     @if($user_id == $value['added_by_id'])
                         @include('adminlte::partials.sendWorkPlanningReport', ['data' => $value, 'name' => 'workplanning'])
+                    @endif
+
+                    @if($user_id != $value['added_by_id'])
+                        @include('adminlte::partials.addWorkPlanningRemarks', ['data' => $value, 'name' => 'workplanning','page' => $page])
                     @endif
                 </td>
 
@@ -121,11 +145,14 @@
 </table>
 
 <input type="hidden" name="status" id="status" value="{{ $status }}">
+<input type="hidden" name="page" id="page" value="{{ $page }}">
 @stop 
 
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function() {
+
+            $(".task").select2();
 
             var table = jQuery('#work_planning_table').DataTable({
                 responsive: true,
@@ -147,6 +174,7 @@
             var month = $("#month").val();
             var year = $("#year").val();
             var status = $("#status").val();
+            var page = $("#page").val();
 
             if(status == '0') {
                 status = 'pending';
@@ -158,7 +186,15 @@
                 status = 'rejected';
             }
 
-            var url = app_url+'/work-planning/'+status+'/'+month+'/'+year;
+            if(page == 'Self') {
+
+                var url = app_url+'/work-planning/'+status+'/'+month+'/'+year;
+            }
+            if(page == 'Team') {
+                
+                var url = app_url+'/team-work-planning/'+status+'/'+month+'/'+year;
+            }
+            
 
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
@@ -169,6 +205,39 @@
 
             $('body').append(form);
             form.submit();
+        }
+
+        function setData(wp_id) {
+
+            //$(".wysihtml5-toolbar").html("");
+            
+            $("#projected_time_"+wp_id).val("");
+            $("#actual_time_"+wp_id).val("");
+            $("#remarks_"+wp_id).val("");
+            $("#rm_hr_remarks_"+wp_id).val("");
+
+            var token = $('input[name="csrf_token"]').val();
+            var app_url = "{!! env('APP_URL'); !!}";
+            var task_id = $("#task_id_"+wp_id).val();
+            
+            $.ajax({
+
+                type : 'GET',
+                url : app_url+'/work-planning/getDetailsById',
+                data : {task_id : task_id, '_token':token},
+                dataType : 'json',
+
+                success: function(data) {
+
+                    $("#projected_time_"+wp_id).val(data.projected_time);
+                    $("#actual_time_"+wp_id).val(data.actual_time);
+                    $("#remarks_"+wp_id).val(data.remarks);
+                    $("#rm_hr_remarks_"+wp_id).val(data.rm_hr_remarks);
+      
+                    //$(".remarks").wysihtml5();
+                    //$(".rm_hr_remarks").wysihtml5();
+                }
+            });
         }
     </script>
 @endsection

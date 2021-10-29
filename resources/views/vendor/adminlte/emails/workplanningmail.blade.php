@@ -94,6 +94,21 @@
                 <p style="font-family:Cambria, serif;font-size: 11.0pt;text-align: left;">Thanks.</p>
             </td>
         </tr>
+        @if(isset($module) && $module == 'Work Planning')
+            <tr>
+                <td width="800">
+                    <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 0px 50px 54px;">
+                        <tr>
+                            <td align="center" style="padding: 0px;">
+                                <a style="border: black; background-color: skyblue;color: white;padding: 10px 20px 10px 20px; border-radius: 50px;font-size: 15px;width: 59%;text-decoration: none;" class="btn btn-primary" formtarget="_blank" href="{{getenv('APP_URL').'/work-planning/'.$module_id.'/approved'}}">Approved</a>
+                                <a style="border: black; background-color: skyblue;color: white;padding: 10px 20px 10px 20px; border-radius: 50px;font-size: 15px;width: 59%;text-decoration: none;" class="btn btn-primary" formtarget="_blank" href="{{getenv('APP_URL').'/work-planning/'.$module_id.'/rejected'}}">Rejected</a>
+                                <a style="border: black; background-color: skyblue;color: white;padding: 10px 20px 10px 20px; border-radius: 50px;font-size: 15px;width: 59%;text-decoration: none;" class="btn btn-primary" formtarget="_blank" href="{{getenv('APP_URL').'/work-planning/'.$module_id.'/pending'}}">Pending</a>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        @endif
         <tr>
             <td width="800">
                 <table width="100%" cellpadding="0" cellspacing="0" style="border:0;">
@@ -103,20 +118,6 @@
                 </table>
             </td>
         </tr>
-
-        @if(isset($module) && $module == 'Work Planning')
-            <tr>
-                <td width="800">
-                    <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 0px 50px 54px;">
-                        <tr>
-                            <td align="center" style="padding: 0px;">
-                                <a style="border: black; background-color: skyblue;color: white;padding: 10px 20px 10px 20px; border-radius: 50px;font-size: 15px;width: 59%;text-decoration: none;" class="btn btn-primary" formtarget="_blank" href="{{getenv('APP_URL').'/work-planning/'.$module_id.'/show'}}">Approved / Rejected</a>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        @endif
     </table>
 </body>
 </html>

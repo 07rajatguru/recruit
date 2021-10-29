@@ -35,7 +35,7 @@
 
                 <div class="form-group">
                     <strong>Remarks : </strong>
-                    {!! Form::textarea('remarks', null, array('id'=>'remarks_'.$data['id'],'placeholder' => 'Remarks','class' => 'form-control','rows' => '4','disabled')) !!}
+                    {!! Form::textarea('remarks', null, array('id'=>'remarks_'.$data['id'],'placeholder' => 'Remarks','class' => 'form-control remarks','rows' => '4','disabled')) !!}
                 </div>
 
                 <div class="form-group">
@@ -45,6 +45,7 @@
             </div>
 
             <input type="hidden" name="wp_id" id="wp_id" value="{{ $data['id'] }}">
+            <input type="hidden" name="page" id="page" value="{{ $page }}">
             
             <div class="modal-footer">
                 <button type="submit" class="btn btn-primary">Submit</button>

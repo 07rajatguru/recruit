@@ -128,146 +128,165 @@ return [
                    'url'  => 'hr-advisory-dashboard',
                    'icon' => 'list',
                ],
-             ]
+            ]
         ],
         [
-               'text'        => 'Contactsphere',
-               'icon'        => 'user-plus',
-               'submenu' => [
-                   [
-                       'text' => 'Add Contact',
-                       'url'  => 'contactsphere/add',
-                       'icon' => 'plus',
-                   ],
-                   [
-                       'text' => 'View Contacts',
-                       'url'  => 'contactsphere',
-                       'icon' => 'list',
-                   ],
-                   [
-                       'text' => 'Hold Contacts',
-                       'url'  => 'contactsphere/hold',
-                       'icon' => 'list',
-                   ],
-                   [
-                       'text' => 'Forbid Contacts',
-                       'url'  => 'contactsphere/forbid',
-                       'icon' => 'list',
-                   ]
-               ],
-           ],
+            'text'        => 'Contactsphere',
+            'icon'        => 'user-plus',
+            'submenu' => [
+                [
+                    'text' => 'Add Contact',
+                    'url'  => 'contactsphere/add',
+                    'icon' => 'plus',
+                ],
+                [
+                    'text' => 'View Contacts',
+                    'url'  => 'contactsphere',
+                    'icon' => 'list',
+                ],
+                [
+                    'text' => 'Hold Contacts',
+                    'url'  => 'contactsphere/hold',
+                    'icon' => 'list',
+                ],
+                [
+                    'text' => 'Forbid Contacts',
+                    'url'  => 'contactsphere/forbid',
+                    'icon' => 'list',
+                ]
+            ],
+        ],
         [
-               'text'        => 'Lead',
-               'icon'        => 'users',
-               'submenu' => [
-                   [
-                       'text' => 'Add Lead',
-                       'url'  => 'lead/create',
-                       'icon' => 'plus',
-                   ],
-                   [
-                       'text' => 'List Leads',
-                       'url'  => 'lead',
-                       'icon' => 'list',
-                   ],
-                   [
-                       'text' => 'Cancel Lead',
-                       'url'  => 'lead/cancel',
-                       'icon' => 'list',
-                   ]
-               ],
-           ],
-            [
-               'text'        => 'Clients',
-               'icon'        => 'users',
-               'submenu' => [
-                   [
-                       'text' => 'Add Client',
-                       'url'  => 'client/create',
-                       'icon' => 'plus',
-                   ],
-                   [
-                       'text' => 'List Clients',
-                       'url'  => 'client',
-                       'icon' => 'list',
-                   ],
-                   [
-                       'text' => '2nd Line - Clients',
-                       'url'  => 'client-list',
-                       'icon' => 'list',
-                   ],
-                   [
-                       'text' => 'Forbidden Clients',
-                       'url'  => 'client-list/Forbid',
-                       'icon' => 'list',
-                   ]/*,
-                   [
-                       'text' => 'Import Clients',
-                       'url'  => 'client/importExport',
-                       'icon' => 'list',
-                   ]*/
+            'text'        => 'Work Planning',
+            'icon'        => 'file-text',
+            'submenu' => [
+                [
+                    'text' => 'Add Work Planning',
+                    'url'  => 'work-planning/add',
+                    'icon' => 'plus',
                 ],
-            ],
-            
-            [
-                'text'        => 'Job Openings',
-                'icon'        => 'folder-open',
-                'submenu' => [
-                    [
-                        'text' => 'Create Job Openings',
-                        'url'  => 'jobs/create',
-                        'icon'  => 'plus',
-                    ],
-                    [
-                        'text' => 'List Job Openings',
-                        'url'  => 'jobs',
-                        'icon' => 'list',
-                    ],
-                    [
-                        'text' => 'List of Closed Job',
-                        'url'  => 'job/close',
-                        'icon' => 'list',
-                    ],
-                    [
-                        'text' => 'Applicant Jobs',
-                        'url'  => 'job/applicant',
-                        'icon' => 'list',
-                    ]
+                [
+                    'text' => 'View Self Work Planning',
+                    'url'  => 'work-planning',
+                    'icon' => 'list',
                 ],
+                [
+                    'text' => 'View Team’s Work Planning',
+                    'url'  => 'team-work-planning',
+                    'icon' => 'list',
+                ]
             ],
-
-            [
-                'text'        => 'Candidates',
-                'icon'        => 'user',
-                'submenu' => [
-                    [
-                        'text' => 'Add Candidate',
-                        'url'  => 'candidate/create',
-                        'icon' => 'plus',
-                    ],
-                    [
-                        'text' => 'List Candidates',
-                        'url'  => 'candidate',
-                        'icon' => 'list',
-                    ],
-                    [
-                        'text' => 'Applicant | Candidates',
-                        'url'  => 'applicant-candidate',
-                        'icon' => 'list',
-                    ],
-                    /*[
-                        'text' => 'Import Candidates',
-                        'url'  => 'candidate/importExport',
-                        'icon' => 'list',
-                    ],
-                    [
-                        'text' => 'Extract From Resume',
-                        'url'  => 'candidate/resume',
-                        'icon' => 'list',
-                    ]*/
+        ],
+        [
+            'text'        => 'Lead',
+            'icon'        => 'users',
+            'submenu' => [
+                [
+                    'text' => 'Add Lead',
+                    'url'  => 'lead/create',
+                    'icon' => 'plus',
                 ],
+                [
+                    'text' => 'List Leads',
+                    'url'  => 'lead',
+                    'icon' => 'list',
+                ],
+                [
+                    'text' => 'Cancel Lead',
+                    'url'  => 'lead/cancel',
+                    'icon' => 'list',
+                ]
             ],
-           [
+        ],
+        [
+            'text'        => 'Clients',
+            'icon'        => 'users',
+            'submenu' => [
+                [
+                    'text' => 'Add Client',
+                    'url'  => 'client/create',
+                    'icon' => 'plus',
+                ],
+                [
+                    'text' => 'List Clients',
+                    'url'  => 'client',
+                    'icon' => 'list',
+                ],
+                [
+                    'text' => '2nd Line - Clients',
+                    'url'  => 'client-list',
+                    'icon' => 'list',
+                ],
+                [
+                    'text' => 'Forbidden Clients',
+                    'url'  => 'client-list/Forbid',
+                    'icon' => 'list',
+                ]/*,
+                [
+                    'text' => 'Import Clients',
+                    'url'  => 'client/importExport',
+                    'icon' => 'list',
+                ]*/
+            ],
+        ],
+        [
+            'text'        => 'Job Openings',
+            'icon'        => 'folder-open',
+            'submenu' => [
+                [
+                    'text' => 'Create Job Openings',
+                    'url'  => 'jobs/create',
+                    'icon'  => 'plus',
+                ],
+                [
+                    'text' => 'List Job Openings',
+                    'url'  => 'jobs',
+                    'icon' => 'list',
+                ],
+                [
+                    'text' => 'List of Closed Job',
+                    'url'  => 'job/close',
+                    'icon' => 'list',
+                ],
+                [
+                    'text' => 'Applicant Jobs',
+                    'url'  => 'job/applicant',
+                    'icon' => 'list',
+                ]
+            ],
+        ],
+        [
+            'text'        => 'Candidates',
+            'icon'        => 'user',
+            'submenu' => [
+                [
+                    'text' => 'Add Candidate',
+                    'url'  => 'candidate/create',
+                    'icon' => 'plus',
+                ],
+                [
+                    'text' => 'List Candidates',
+                    'url'  => 'candidate',
+                    'icon' => 'list',
+                ],
+                [
+                    'text' => 'Applicant | Candidates',
+                    'url'  => 'applicant-candidate',
+                    'icon' => 'list',
+                ],
+                /*[
+                    'text' => 'Import Candidates',
+                    'url'  => 'candidate/importExport',
+                    'icon' => 'list',
+                ],
+                [
+                    'text' => 'Extract From Resume',
+                    'url'  => 'candidate/resume',
+                    'icon' => 'list',
+                ]*/
+            ],
+        ],
+        [
             'text'        => 'Interview',
             'icon'        => ' fa-phone-square',
             'submenu' => [
@@ -283,39 +302,38 @@ return [
                 ]
             ]
          ],
-            [
-                'text'        => 'Bills',
-                'icon'        => 'money',
-                'submenu' => [
-                    [
-                        'text' => 'Create Forecasting',
-                        'url'  => 'forecasting/create',
-                        'icon' => 'plus',
-                    ],
-                    [
-                        'text' => 'View Forecasting List',
-                        'url'  => 'forecasting',
-                        'icon' => 'list',
-                    ],
-                    [
-                        'text' => 'View Recovery List',
-                        'url'  => 'recovery',
-                        'icon' => 'list',
-                    ],
-                    [
-                        'text' => 'Cancel Forecasting',
-                        'url'  => 'forecasting/cancel',
-                        'icon' => 'list',
-                    ],
-                    [
-                        'text' => 'Cancel Recovery',
-                        'url'  => 'recovery/cancel',
-                        'icon' => 'list',
-                    ],
-
+        [
+            'text'        => 'Bills',
+            'icon'        => 'money',
+            'submenu' => [
+                [
+                    'text' => 'Create Forecasting',
+                    'url'  => 'forecasting/create',
+                    'icon' => 'plus',
+                ],
+                [
+                    'text' => 'View Forecasting List',
+                    'url'  => 'forecasting',
+                    'icon' => 'list',
+                ],
+                [
+                    'text' => 'View Recovery List',
+                    'url'  => 'recovery',
+                    'icon' => 'list',
+                ],
+                [
+                    'text' => 'Cancel Forecasting',
+                    'url'  => 'forecasting/cancel',
+                    'icon' => 'list',
+                ],
+                [
+                    'text' => 'Cancel Recovery',
+                    'url'  => 'recovery/cancel',
+                    'icon' => 'list',
                 ],
             ],
-             [
+        ],
+        [
             'text'        => "To-Dos",
             'icon'        => 'tasks',
             'submenu' => [
@@ -340,21 +358,19 @@ return [
                     'icon' => 'list',
                 ]
             ]
-         ],
-          
-            [
-                'text'        => 'Attendance',
-                'url'         => '/userattendance',
-                'icon'        => 'signal',
-                'submenu' => [
-                  [
+        ],
+        [
+            'text'        => 'Attendance',
+            'url'         => '/userattendance',
+            'icon'        => 'signal',
+            'submenu' => [
+                [
                     'text' => "Attendance",
                     'url'  => '/userattendance',
                     'icon' => 'signal',
-                  ],
                 ],
             ],
-
+        ],
         [
            'text'        => 'Report',
            'icon'        => 'file',
@@ -421,7 +437,6 @@ return [
                ],
            ],
         ],
-
         [
            'text'        => 'Training Material',
            'icon'        => 'graduation-cap',
@@ -483,25 +498,25 @@ return [
                    'text' => 'Receipt',
                    'icon' => 'circle-o',
                    'submenu' => [
-                      [
-                         'text' => 'Receipt Talent',
-                         'url'  => 'receipt/talent',
-                         'icon' => 'circle-o',
-                      ],
-                      [
-                         'text' => 'Receipt Temp',
-                         'url'  => 'receipt/temp',
-                         'icon' => 'circle-o',
-                      ],
-                      [
-                         'text' => 'Receipt Other',
-                         'url'  => 'receipt/other',
-                         'icon' => 'circle-o',
-                      ],
-                   ],
-               ],
-           ],
-       ],*/
+                        [
+                            'text' => 'Receipt Talent',
+                            'url'  => 'receipt/talent',
+                            'icon' => 'circle-o',
+                        ],
+                        [
+                            'text' => 'Receipt Temp',
+                            'url'  => 'receipt/temp',
+                            'icon' => 'circle-o',
+                        ],
+                        [
+                            'text' => 'Receipt Other',
+                            'url'  => 'receipt/other',
+                            'icon' => 'circle-o',
+                        ],
+                    ],
+                ],
+            ],
+        ],*/
         [
             'text'        => 'Admin',
             'icon'        => 'user-secret',
@@ -556,7 +571,7 @@ return [
                     'url'  => 'module',
                     'icon' => 'circle-o',
                 ],
-/*                [
+                /*[
                     'text' => 'Module Visibility',
                     'url'  => 'modulevisible',
                     'icon' => 'circle-o',
@@ -586,131 +601,13 @@ return [
                     'url'  => 'user-bench-mark',
                     'icon' => 'circle-o',
                 ],
-                    /* [
-                         'text' => 'Permissions',
-                         'url'  => 'permissions',
-                         'icon' => 'circle-o',
-                     ],*/
-                    ]
-            ],
-
-
-
-        /*[
-            'text'        => 'Candidates',
-            'icon'        => 'user',
-            'submenu' => [
-                [
-                    'text' => 'Add Candidate',
-                    'url'  => 'candidate/create',
-                    'icon' => 'plus',
-                ],
-                [
-                    'text' => 'List Candidates',
-                    'url'  => 'candidate',
-                    'icon' => 'list',
-                ],
-                [
-                    'text' => 'Extract From Resume',
-                    'url'  => 'candidate/resume',
-                    'icon' => 'list',
-                ]
-            ],
-        ],
-        [
-            'text'        => 'Clients',
-            'icon'        => 'users',
-            'submenu' => [
-                [
-                    'text' => 'Add Client',
-                    'url'  => 'client/create',
-                    'icon' => 'plus',
-                ],
-                [
-                    'text' => 'List Clients',
-                    'url'  => 'client',
-                    'icon' => 'list',
-                ],
-                [
-                    'text' => 'Import Clients',
-                    'url'  => 'client/importExport',
-                    'icon' => 'list',
-                ]
-            ],
-        ],
-        [
-            'text'        => 'Reports',
-            'icon'        => ' fa-line-chart',
-            'submenu' => [
-                [
-                    'text' => 'Daily Report',
-                    'url'  => 'dailyreport',
-                    'icon' => 'plus',
-                    ]
-                ]
-         ],
-        [
-            'text'        => 'Interview',
-            'icon'        => ' fa-phone-square',
-            'submenu' => [
-                [
-                    'text' => 'Add Interview',
-                    'url'  => 'interview/create',
-                    'icon' => 'plus',
-                ],
-                [
-                    'text' => 'List Interview',
-                    'url'  => 'interview',
-                    'icon' => 'list',
-                ]
-            ]
-         ],
-       ,
-        [
-            'text'        => 'Admin',
-            'icon'        => 'user-secret',
-            'submenu' => [
-                [
-                    'text' => 'Companies',
-                    'url'  => 'companies',
-                    'icon' => 'circle-o',
-                ],
-                [
-                    'text' => 'Users',
-                    'url'  => 'users',
-                    'icon' => 'circle-o',
-                ],
-                [
-                    'text' => 'Teams',
-                    'url'  => 'team',
-                    'icon' => 'circle-o',
-                ],
-                [
-                    'text' => 'Roles',
-                    'url'  => 'roles',
-                    'icon' => 'circle-o',
-                ],
-                [
+                /*[
                     'text' => 'Permissions',
                     'url'  => 'permissions',
                     'icon' => 'circle-o',
-                ],
-                [
-                    'text' => 'Industry',
-                    'url'  => 'industry',
-                    'icon' => 'circle-o',
-                ],
-                [
-                    'text' => 'Candidate Source',
-                    'url'  => 'candidateSource',
-                    'icon' => 'circle-o',
-                ],
-                [
-                    'text' => 'Candidate Status',
-                    'url'  => 'candidateStatus',
-                    'icon' => 'circle-o',
-                ]
-            ],*/
+                ],*/
+            ]
+        ],
     ],
 
     /*
