@@ -699,7 +699,7 @@ class WorkPlanningController extends Controller
     }
 
     public function show($id) {
-
+        
         $loggedin_user_id = \Auth::user()->id;
 
         $work_planning = WorkPlanning::getWorkPlanningDetailsById($id);
@@ -1061,7 +1061,7 @@ class WorkPlanningController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-        return redirect()->route('workplanning.index')->with('success','Remarks Added Successfully.');
+        return redirect()->route('teamworkplanning.index')->with('success','Remarks Added Successfully.');
     }
 
     public function updateStatus($id,$updatestatus) {

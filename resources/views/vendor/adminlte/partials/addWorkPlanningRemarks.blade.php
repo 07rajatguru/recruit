@@ -23,25 +23,11 @@
                     @endif
                 </div>
 
-                <div class="form-group">
-                    <strong>Projected Time : </strong>
-                    {!! Form::text('projected_time', null, array('id'=>'projected_time_'.$data['id'],'placeholder' => 'Projected Time','class' => 'form-control','disabled')) !!}
-                </div>
-
-                <div class="form-group">
-                    <strong>Actual Time : </strong>
-                    {!! Form::text('actual_time', null, array('id'=>'actual_time_'.$data['id'],'placeholder' => 'Actual Time','class' => 'form-control','disabled')) !!}
-                </div>
-
-                <div class="form-group">
-                    <strong>Remarks : </strong>
-                    {!! Form::textarea('remarks', null, array('id'=>'remarks_'.$data['id'],'placeholder' => 'Remarks','class' => 'form-control remarks','rows' => '4','disabled')) !!}
-                </div>
-
-                <div class="form-group">
-                    <strong>Reporting Manager / HR Remarks : </strong>
-                    {!! Form::textarea('rm_hr_remarks', null, array('id'=>'rm_hr_remarks_'.$data['id'],'placeholder' => 'Reporting Manager / HR Remarks','class' => 'form-control rm_hr_remarks')) !!}
-                </div>
+                @if(isset($data['task_list']) && sizeof($data['task_list']) > 0)
+                    @foreach($data['task_list'] as $key=>$value)
+                        <div class="task_list_{{ $value['work_planning_list_id'] }}" style="display:none;"></div>
+                    @endforeach
+                @endif
             </div>
 
             <input type="hidden" name="wp_id" id="wp_id" value="{{ $data['id'] }}">

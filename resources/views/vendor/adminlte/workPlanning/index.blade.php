@@ -148,9 +148,11 @@
 </table>
 
 <input type="hidden" name="page" id="page" value="{{ $page }}">
+<input type="hidden" name="old_task_id" id="old_task_id" value="">
 @stop
 
 @section('customscripts')
+    <script src="https://cdn.ckeditor.com/4.6.2/standard-all/ckeditor.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function() {
 
@@ -198,13 +200,10 @@
 
         function setData(wp_id) {
 
-            //$(".wysihtml5-toolbar").html("");
-
-            $("#projected_time_"+wp_id).val("");
-            $("#actual_time_"+wp_id).val("");
-            $("#remarks_"+wp_id).val("");
-            $("#rm_hr_remarks_"+wp_id).val("");
-
+            // Clear Previous Task Data
+            var old_task_id = $("#old_task_id").val();
+            $(".task_list_"+old_task_id).html("");
+            
             var token = $('input[name="csrf_token"]').val();
             var app_url = "{!! env('APP_URL'); !!}";
             var task_id = $("#task_id_"+wp_id).val();
@@ -218,13 +217,80 @@
 
                 success: function(data) {
 
-                    $("#projected_time_"+wp_id).val(data.projected_time);
-                    $("#actual_time_"+wp_id).val(data.actual_time);
-                    $("#remarks_"+wp_id).val(data.remarks);
-                    $("#rm_hr_remarks_"+wp_id).val(data.rm_hr_remarks);
+                    var html = '';
 
-                    //$("#remarks_"+wp_id).wysihtml5();
-                    //$("#rm_hr_remarks_"+wp_id).wysihtml5();
+                    html += '<div class="form-group"><strong>Projected Time : </strong><input type="text" name="projected_time" id="projected_time_'+task_id+'" value="'+data.projected_time+'" class="form-control" disabled></div>';
+
+                    html += '<div class="form-group"><strong>Actual Time : </strong><input type="text" name="actual_time" id="actual_time_'+task_id+'" value="'+data.actual_time+'" class="form-control" disabled></div>';
+
+                    html += '<div class="form-group"><strong>Remarks : </strong><textarea id="remarks_'+task_id+'" name="remarks" class="form-control" disabled>'+data.remarks+'</textarea></div>';
+
+                    html += '<div class="form-group"><strong>Reporting Manager / HR Remarks : </strong><textarea id="rm_hr_remarks_'+task_id+'" name="rm_hr_remarks" class="form-control">'+data.rm_hr_remarks+'</textarea></div>';
+
+                    $(".task_list_"+task_id).html("");
+                    $(".task_list_"+task_id).show();
+                    $(".task_list_"+task_id).append(html);
+
+                    setRemarksEditor(task_id);
+                    setHRRemarksEditor(task_id);
+
+                    $("#old_task_id").val(task_id);
+                }
+            });
+        }
+
+        function setRemarksEditor(task_id) {
+
+            CKEDITOR.replace('remarks_'+task_id+'', {
+
+                filebrowserUploadUrl: '{{ route('emailbody.image',['_token' => csrf_token() ]) }}',
+                customConfig: '/js/ckeditor_config.js',
+                height: '100px',
+            });
+
+            CKEDITOR.on('dialogDefinition', function( ev ) {
+
+                var dialogName = ev.data.name;  
+                var dialogDefinition = ev.data.definition;
+                             
+                switch (dialogName) { 
+
+                    case 'image': //Image Properties dialog      
+                    dialogDefinition.removeContents('Link');
+                    dialogDefinition.removeContents('advanced');
+                    break;
+
+                    case 'link': //image Properties dialog          
+                    dialogDefinition.removeContents('advanced');   
+                    break;
+                }
+            });
+        }
+
+        function setHRRemarksEditor(task_id) {
+
+            CKEDITOR.replace('rm_hr_remarks_'+task_id+'', {
+
+                filebrowserUploadUrl: '{{ route('emailbody.image',['_token' => csrf_token() ]) }}',
+                customConfig: '/js/ckeditor_config.js',
+                height: '100px',
+            });
+
+            CKEDITOR.on('dialogDefinition', function( ev ) {
+
+                var dialogName = ev.data.name;  
+                var dialogDefinition = ev.data.definition;
+                             
+                switch (dialogName) { 
+
+                    case 'image': //Image Properties dialog      
+                    dialogDefinition.removeContents('Link');
+                    dialogDefinition.removeContents('advanced');
+                    break;
+
+                    case 'link': //image Properties dialog          
+                    dialogDefinition.removeContents('advanced');   
+                    break;
                 }
             });
         }
