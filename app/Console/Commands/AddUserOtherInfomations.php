@@ -54,14 +54,19 @@ class AddUserOtherInfomations extends Command
         $to_users_array = array($superadminemail,$accountantemail,$hremail,$admin_email);
         $to_users_array = array_filter($to_users_array);
 
-        $module = "Update User Informations";
-        $sender_name = $superadmin;
-        $to = implode(",",$to_users_array);
-        $cc = '';
-        $subject = "Update User Informations";
-        $message = "Update User Informations";
-        $module_id = 0;
+        $users_array = User::getBefore7daysUsersDetails();
 
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            $module = "Update User Informations";
+            $sender_name = $superadmin;
+            $to = implode(",",$to_users_array);
+            $cc = '';
+            $subject = "Update User Informations";
+            $message = "Update User Informations";
+            $module_id = 0;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        }
     }
 }

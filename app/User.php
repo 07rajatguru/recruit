@@ -732,7 +732,7 @@ class User extends Authenticatable
 
                 $users_otherinfo = UserOthersInfo::getUserOtherInfo($value->id);
 
-                if(isset($users_otherinfo) && $users_otherinfo != '') {
+                if(isset($users_otherinfo->date_of_joining) && $users_otherinfo->date_of_joining != '') {
                 }
                 else {
 
