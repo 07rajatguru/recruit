@@ -15,8 +15,8 @@ class Holidays extends Model
         'from_date' => 'required',
     );
 
-    public function messages()
-    {
+    public function messages() {
+
         return [
             'title.required' => 'Title is Required Field',
             'type.required' => 'Type is Required Field',
@@ -24,7 +24,7 @@ class Holidays extends Model
         ];
     }
 
-    public static function getHolidaysType(){
+    public static function getHolidaysType() {
 
     	$type = array('' => 'Select Type');
     	$type['Fixed Leave'] = 'Fixed Leave';
@@ -33,7 +33,7 @@ class Holidays extends Model
     	return $type;
     }
 
-    public static function getAllholidaysList(){
+    public static function getAllholidaysList() {
 
         $query = Holidays::query();
         $query = $query->select('holidays.*');
@@ -82,7 +82,7 @@ class Holidays extends Model
     }
 
 
-    public static function getUsersByHolidayId($id){
+    public static function getUsersByHolidayId($id) {
 
         $query = Holidays::query();
         $query = $query->join('holidays_users','holidays_users.holiday_id','=','holidays.id');
@@ -101,7 +101,7 @@ class Holidays extends Model
         return $holidays_users;
     }
 
-    public static function getFixedLeaveDate(){
+    public static function getFixedLeaveDate() {
 
         $query = Holidays::query();
         $query = $query->select('from_date');
@@ -118,23 +118,26 @@ class Holidays extends Model
         return $fixed_date;
     }
 
-    public static function getUsersOptionalHolidaysDate($user_id){
+    public static function getUsersHolidays($user_id) {
 
         $query = Holidays::query();
         $query = $query->join('holidays_users','holidays_users.holiday_id','=','holidays.id');
-        $query = $query->select('from_date','to_date');
-        $query = $query->where('type','=','optional');
+        $query = $query->select('from_date');
         $query = $query->where('holidays_users.user_id',$user_id);
-        $res = $query->get();
+        $query = $query->orderBy('from_date','DESC');
+        $response = $query->get();
 
-        $users_holiday_date = array();
+        $holiday_dates = array();
         $i = 0;
-        foreach ($res as $key => $value) {
-            $users_holiday_date[$i]['from_date'] = $value->from_date;
-            $users_holiday_date[$i]['to_date'] = $value->to_date;
-            $i++;
-        }
 
-        return $users_holiday_date;
+        if(isset($response) && $response != '') {
+
+            foreach ($response as $key => $value) {
+
+                $holiday_dates[$i] = $value->from_date;
+                $i++;
+            }
+        }
+        return $holiday_dates;
     }
 }

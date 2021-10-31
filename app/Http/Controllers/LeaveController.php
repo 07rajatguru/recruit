@@ -11,6 +11,7 @@ use App\Date;
 use App\LeaveDoc;
 use App\LeaveBalance;
 use Illuminate\Support\Facades\File;
+use App\Holidays;
 
 class LeaveController extends Controller
 {
@@ -455,6 +456,45 @@ class LeaveController extends Controller
         $to_date = strtotime($leave_details['to_date']);
         $to_day = date('l', strtotime($to_date));
 
+        // Get Date Range Between two dates
+
+        $first_dt = $leave_details['from_date'];
+        $last_dt = $leave_details['to_date'];
+
+        $dates = array();
+        $current = date(strtotime("$first_dt"));
+        $last_dt = strtotime($last_dt);
+
+        while($current <= $last_dt) { 
+
+            $dates[] = date('Y-m-d', $current);
+            $current = strtotime('+1 day', $current);
+        }
+
+        // Get All Holidays Dates
+        $holidays_dates = Holidays::getUsersHolidays($user_id);
+
+        if(isset($dates) && sizeof($dates) > 0) {
+
+            $selected_holiday_dates = array();
+            $selected_other_dates = array();
+            $i=0;
+
+            foreach ($dates as $key => $value) {
+                        
+                if (in_array($value,$holidays_dates)) {
+
+                    $selected_holiday_dates[$i] = $value;
+                }
+                else {
+
+                    $selected_other_dates[$i] = $value;
+                }
+
+                $i++;
+            }
+        }
+
         $days = $leave_details['days'];
 
         if ($reply == 'Approved') {
@@ -494,6 +534,23 @@ class LeaveController extends Controller
                     $new_leave_taken = $leave_taken + $days + 1;
                     $new_leave_remaining = $leave_remaining - $days - 1;
                 }
+                else if(isset($selected_holiday_dates) && sizeof($selected_holiday_dates) > 0) {
+
+                    $total_holidays = sizeof($selected_holiday_dates);
+
+                    if($total_holidays == 1) {
+
+                        $new_leave_taken = $leave_taken + 3;
+                        $new_leave_remaining = $leave_remaining - 3;
+                    }
+                    else {
+
+                        $other_days = sizeof($selected_other_dates);
+
+                        $new_leave_taken = $leave_taken + $other_days;
+                        $new_leave_remaining = $leave_remaining - $other_days;
+                    }
+                }
                 else {
 
                     $new_leave_taken = $leave_taken + $days;
@@ -514,6 +571,23 @@ class LeaveController extends Controller
 
                     $new_leave_taken = $seek_leave_taken + $days + 1;
                     $new_leave_remaining = $seek_leave_remaining - $days - 1;
+                }
+                else if(isset($selected_holiday_dates) && sizeof($selected_holiday_dates) > 0) {
+
+                    $total_holidays = sizeof($selected_holiday_dates);
+
+                    if($total_holidays == 1) {
+
+                        $new_leave_taken = $seek_leave_taken + 3;
+                        $new_leave_remaining = $seek_leave_remaining - 3;
+                    }
+                    else {
+
+                        $other_days = sizeof($selected_other_dates);
+
+                        $new_leave_taken = $seek_leave_taken + $other_days;
+                        $new_leave_remaining = $seek_leave_remaining - $other_days;
+                    }
                 }
                 else {
 

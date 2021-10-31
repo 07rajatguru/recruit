@@ -64,10 +64,10 @@ class AddLeaveBalance extends Command
                         $leave_balance = new LeaveBalance();
                         $leave_balance->user_id = $key;
                         $leave_balance->leave_total = 1.5;
-                        $leave_balance->leave_taken = 0;
+                        $leave_balance->leave_taken = 0.0;
                         $leave_balance->leave_remaining = 1.5;
                         $leave_balance->seek_leave_total = 0.5;
-                        $leave_balance->seek_leave_taken = 0;
+                        $leave_balance->seek_leave_taken = 0.0;
                         $leave_balance->seek_leave_remaining = 0.5;
                         $leave_balance->save();
                     }
