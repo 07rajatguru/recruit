@@ -156,7 +156,9 @@
                                     </td>
                                 @else
 
-                                    <td style="border:1px solid black;">{!! $value['rm_hr_remarks'] !!}</td>
+                                    <td style="border:1px solid black;">{!! $value['rm_hr_remarks'] !!}
+                                        <button type="button" data-toggle="modal" data-target="#modal-edit-remarks-{!! $value['work_planning_list_id']!!}">Edit</button>
+                                    </td>
                                 @endif
                             </tr>
                         @endforeach
@@ -170,6 +172,35 @@
 
 <input type="hidden" name="wp_id" id="wp_id" value="{{ $id }}">
 
+@foreach($work_planning_list as $k1=>$v1)
+    <div id="modal-edit-remarks-{!! $v1['work_planning_list_id']!!}" class="modal text-left fade" style="width:100%;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                {!! Form::open(['method' => 'POST', 'route' => ["workplanning.addremarks", $v1['work_planning_list_id']]])!!}
+
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h3 class="modal-title">{{ $work_planning['added_by'] }} - {{ $work_planning['added_date'] }}</h3>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <textarea id="rm_hr_remarks_{{ $v1['work_planning_list_id'] }}" name="rm_hr_remarks" class="form-control" rows="5" placeholder = "RM / HR Remarks">{{ $v1['rm_hr_remarks'] }}</textarea>
+                    </div>
+                </div>
+
+                <input type="hidden" name="wp_id" id="wp_id" value="{{ $v1['work_planning_id'] }}">
+                <input type="hidden" name="task_id" id="task_id" value="{{ $v1['work_planning_list_id'] }}">
+                <input type="hidden" name="action" id="action" value="Edit">
+                
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+                {!! Form::close() !!}
+            </div>
+        </div>
+    </div>
+@endforeach
 @endsection
 
 @section('customscripts')

@@ -1045,6 +1045,7 @@ class WorkPlanningController extends Controller
         $wp_id = $_POST['wp_id'];
         $task_id = $_POST['task_id'];
         $rm_hr_remarks = $_POST['rm_hr_remarks'];
+        $action = $_POST['action'];
 
         \DB::statement("UPDATE `work_planning_list` SET `rm_hr_remarks` = '$rm_hr_remarks' WHERE `id` = '$task_id'");
 
@@ -1089,6 +1090,13 @@ class WorkPlanningController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-        return redirect()->route('workplanning.show',$wp_id)->with('success','Remarks Added Successfully.');
+        if(isset($action) && $action == 'Add') {
+
+            return redirect()->route('workplanning.show',$wp_id)->with('success','Remarks Added Successfully.');
+        }
+        else {
+
+            return redirect()->route('workplanning.show',$wp_id)->with('success','Remarks Update Successfully.');
+        }
     }
 }
