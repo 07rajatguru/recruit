@@ -158,18 +158,40 @@ class WorkPlanningController extends Controller
             $work_planning_res = WorkPlanning::getWorkPlanningDetails(0,$user_ids,$month,$year,'');
         }*/
 
-        // Get Loggedin user team
-        $users = User::getAssignedUsers($user_id);
+        $superadmin_user_id = getenv('SUPERADMINUSERID');
 
-        if(isset($users) && sizeof($users) > 0) {
+        if($user_id == $superadmin_user_id) {
 
-            foreach ($users as $key => $value) {
+            $users = User::getAllUsers();
 
-                if($key == $user_id) {
+            if(isset($users) && sizeof($users) > 0) {
 
+                foreach ($users as $key => $value) {
+                    
+                    if($key == $user_id) {
+
+                    }
+                    else {
+                        $user_ids[] = $key;
+                    }
                 }
-                else {
-                    $user_ids[] = $key;
+            }
+        }
+        else {
+
+            // Get Loggedin user team
+            $users = User::getAssignedUsers($user_id);
+
+            if(isset($users) && sizeof($users) > 0) {
+
+                foreach ($users as $key => $value) {
+
+                    if($key == $user_id) {
+
+                    }
+                    else {
+                        $user_ids[] = $key;
+                    }
                 }
             }
         }
@@ -182,6 +204,7 @@ class WorkPlanningController extends Controller
 
             $work_planning_res = '';
         }
+        
 
         // Set Status wise count
         $pending = 0;
