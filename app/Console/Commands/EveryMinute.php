@@ -1956,10 +1956,12 @@ class EveryMinute extends Command
                 $today_date = $work_planning['added_date'];
                 $report_delay = $work_planning['report_delay'];
                 $report_delay_content = $work_planning['report_delay_content'];
+                $link = $work_planning['link'];
 
                 $input['today_date'] = $today_date;
                 $input['report_delay'] = $report_delay;
                 $input['report_delay_content'] = $report_delay_content;
+                $input['link'] = $link;
                 
                 $input['work_planning_list'] = $work_planning_list;
 
@@ -1992,10 +1994,12 @@ class EveryMinute extends Command
                 $today_date = $work_planning['added_date'];
                 $report_delay = $work_planning['report_delay'];
                 $report_delay_content = $work_planning['report_delay_content'];
+                $link = $work_planning['link'];
 
                 $input['today_date'] = $today_date;
                 $input['report_delay'] = $report_delay;
                 $input['report_delay_content'] = $report_delay_content;
+                $input['link'] = $link;
 
                 // Get Task List
                 $work_planning_list = WorkPlanningList::getWorkPlanningList($value['module_id']);

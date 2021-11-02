@@ -38,11 +38,11 @@
             @else
 
                 @if($work_planning['status'] == 0)
-                    <button type="submit" class="btn btn-primary" onclick="permission('Approved')">Approved</button>
-                    <button type="submit" class="btn btn-primary" onclick="permission('Rejected')">Rejected</button>
+                    <button type="submit" class="btn btn-success" onclick="updateStatus('Approved')">Approved</button>
+                    <button type="submit" class="btn btn-danger" onclick="updateStatus('Rejected')">Rejected</button>
                 @else
-                    <button type="submit" class="btn btn-primary" onclick="permission('Approved')" disabled="disabled">Approved</button>
-                    <button type="submit" class="btn btn-primary" onclick="permission('Rejected')" disabled="disabled">Rejected</button>
+                    <button type="submit" class="btn btn-success" onclick="updateStatus('Approved')" disabled="disabled">Approved</button>
+                    <button type="submit" class="btn btn-danger" onclick="updateStatus('Rejected')" disabled="disabled">Rejected</button>
                 @endif
             @endif
 
@@ -78,6 +78,10 @@
                         <th>Status Time :</th>
                         <td>{{ $work_planning['work_planning_status_time'] }}</td>
                     </tr>
+                    <tr>
+                        <th>Link :</th>
+                        <td colspan="4">{{ $work_planning['link'] }}</td>
+                    </tr>
                 </table>
             </div>
         </div>
@@ -94,11 +98,11 @@
                     <thead>
                         <tr>
                             <th width="5%" style="border:1px solid black;text-align: center;">Sr No.</th>
-                            <th width="35%" style="border:1px solid black;">Task</th>
+                            <th width="25%" style="border:1px solid black;">Task</th>
                             <th width="10%" style="border:1px solid black;text-align: center;">Projected Time</th>
                             <th width="10%" style="border:1px solid black;text-align: center;">Actual Time</th>
-                            <th style="border:1px solid black;">Remarks</th>
-                            <th style="border:1px solid black;">Reporting Manager / HR Remarks
+                            <th width="25%" style="border:1px solid black;">Remarks</th>
+                            <th width="25%" style="border:1px solid black;">Reporting Manager / HR Remarks
                             </th>
                         </tr>
                     </thead>
@@ -144,7 +148,16 @@
 
                                 <td style="border:1px solid black;">{!! $value['remarks'] !!}</td>
 
-                                <td style="border:1px solid black;">{!! $value['rm_hr_remarks'] !!}</td>
+                                @if($value['rm_hr_remarks'] == '')
+                                    <td style="border:1px solid black;">
+                                        @if($loggedin_user_id != $added_by_id)
+                                            @include('adminlte::partials.addWorkPlanningRemarks', ['data' => $value, 'name' => 'workplanning','work_planning' => $work_planning])
+                                        @endif
+                                    </td>
+                                @else
+
+                                    <td style="border:1px solid black;">{!! $value['rm_hr_remarks'] !!}</td>
+                                @endif
                             </tr>
                         @endforeach
                     </tbody>
@@ -162,7 +175,7 @@
 @section('customscripts')
 <script type="text/javascript">
 
-    function permission(check) {
+    function updateStatus(check) {
         
         var wp_id = $("#wp_id").val();
         var app_url = "{!! env('APP_URL') !!}";
@@ -176,9 +189,9 @@
 
             success: function(data) {
 
-                if (data == 'success') { 
+                if (data == 'success') {
 
-                    window.location.href = app_url+'/work-planning';
+                    window.location.href = app_url+'/work-planning/'+wp_id+'/show';
 
                     if(check == 'Approved') {
                         alert("Report Approved Successfully.");

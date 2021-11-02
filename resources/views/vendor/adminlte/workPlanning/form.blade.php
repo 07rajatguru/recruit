@@ -148,6 +148,11 @@
                         <tbody></tbody>
                     </table>
                 @endif
+
+                <div class="form-group">
+                    <strong>Link : </strong>
+                    {!! Form::text('link',null, array('id' => 'link','class' => 'form-control')) !!}
+                </div>
             </div>
             
             <div style="margin-left:500px;">
@@ -238,7 +243,7 @@
             for(j = 1; j <= 5; j++) {
 
                 $("#projected_time_"+j).select2({width:"130px"});
-                $("#remarks_"+j).wysihtml5();
+                //$("#remarks_"+j).wysihtml5();
             }
 
             checkTime();
@@ -510,7 +515,7 @@
         });
     
         $("#projected_time_"+row_cnt).select2();
-        $("#remarks_"+row_cnt).wysihtml5();
+        //$("#remarks_"+row_cnt).wysihtml5();
 
         if(action == "add") {
 
@@ -671,8 +676,8 @@
                         $("#projected_time_"+row_cnt).select2({width:"130px"});
                         $("#actual_time_"+row_cnt).select2({width:"130px"});
 
-                        $("#remarks_"+row_cnt).wysihtml5();
-                        $("#rm_hr_remarks_"+row_cnt).wysihtml5();
+                        //$("#remarks_"+row_cnt).wysihtml5();
+                        //$("#rm_hr_remarks_"+row_cnt).wysihtml5();
                         
                         var row_cnt_new = parseInt(row_cnt)+1;
                         $("#row_cnt").val(row_cnt_new);

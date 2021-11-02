@@ -613,6 +613,8 @@ class WorkPlanningController extends Controller
             $report_delay_content = '';
         }
 
+        $link = Input::get('link');
+
         $work_planning = new WorkPlanning();
         $work_planning->attendance = $attendance;
         $work_planning->status = '0';
@@ -626,6 +628,7 @@ class WorkPlanningController extends Controller
         $work_planning->added_by = $user_id;
         $work_planning->report_delay = $report_delay;
         $work_planning->report_delay_content = $report_delay_content;
+        $work_planning->link = $link;
         $work_planning->save();
 
         $work_planning_id = $work_planning->id;
@@ -861,6 +864,7 @@ class WorkPlanningController extends Controller
 
         $work_type = $request->input('work_type');
         $remaining_time = $request->input('remaining_time');
+        $link = Input::get('link');
 
         $work_planning = WorkPlanning::find($id);
         $work_planning->attendance = $attendance;
@@ -869,6 +873,7 @@ class WorkPlanningController extends Controller
         $work_planning->loggedout_time = $get_time['logout'];
         $work_planning->work_planning_status_time = date('H:i:s');
         $work_planning->remaining_time = $remaining_time;
+        $work_planning->link = $link;
         $work_planning->updated_at = time();
         $work_planning->save();
 
@@ -1018,7 +1023,7 @@ class WorkPlanningController extends Controller
         $task_id = $_POST['task_id'];
         $rm_hr_remarks = $_POST['rm_hr_remarks'];
 
-        \DB::statement("UPDATE work_planning_list SET `rm_hr_remarks` = '$rm_hr_remarks' WHERE `id` = '$task_id'");
+        \DB::statement("UPDATE `work_planning_list` SET `rm_hr_remarks` = '$rm_hr_remarks' WHERE `id` = '$task_id'");
 
 
         // Send Email Notification
@@ -1061,11 +1066,6 @@ class WorkPlanningController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-        return redirect()->route('teamworkplanning.index')->with('success','Remarks Added Successfully.');
-    }
-
-    public function updateStatus($id,$updatestatus) {
-
-        echo $updatestatus;exit;
+        return redirect()->route('workplanning.show',$wp_id)->with('success','Remarks Added Successfully.');
     }
 }

@@ -3430,12 +3430,6 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'WorkPlanningController@getWorkPlanningTaskById'
     ]);
 
-    Route::get('work-planning/{id}/{updatestatus}', [
-        'as' => 'workplanning.updatestatus',
-        'uses' => 'WorkPlanningController@updateStatus',
-        'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
-    ]);
-
     // Rolewise Bench Mark Routes
     Route::get('bench-mark',[
         'as' => 'rolewisebenchmark.index',

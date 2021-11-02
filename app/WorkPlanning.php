@@ -232,6 +232,7 @@ class WorkPlanning extends Model
             $work_planning_res['appr_rejct_by'] = $response->approved_by;
             $work_planning_res['report_delay'] = $response->report_delay;
             $work_planning_res['report_delay_content'] = $response->report_delay_content;
+            $work_planning_res['link'] = $response->link;
         }
         return $work_planning_res;
     }

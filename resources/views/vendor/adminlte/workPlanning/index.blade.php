@@ -12,9 +12,11 @@
         <div class="pull-left">
             <h2>Work Planning Sheet</h2>
         </div>
-        <div class="pull-right">
-            <a class="btn btn-success" href="{{ route('workplanning.create') }}">Add Work Planning</a>
-        </div>
+        @if(isset($page) && $page == 'Self')
+            <div class="pull-right">
+                <a class="btn btn-success" href="{{ route('workplanning.create') }}">Add Work Planning</a>
+            </div>
+        @endif
     </div>
 </div>
 
@@ -110,7 +112,7 @@
                     <td>
                         <a class="fa fa-circle" href="{{ route('workplanning.show',$value['id']) }}" title="Show"></a>
 
-                        @if($user_id == $value['added_by_id'] || $user_id == $superadmin_user_id)
+                        @if($user_id == $value['added_by_id'])
                             <a class="fa fa-edit" href="{{ route('workplanning.edit',$value['id']) }}" title="Edit"></a>
                         @endif
                         
@@ -120,10 +122,6 @@
 
                         @if($user_id == $value['added_by_id'])
                             @include('adminlte::partials.sendWorkPlanningReport', ['data' => $value, 'name' => 'workplanning'])
-                        @endif
-
-                        @if($user_id != $value['added_by_id'])
-                            @include('adminlte::partials.addWorkPlanningRemarks', ['data' => $value, 'name' => 'workplanning','page' => $page])
                         @endif
                     </td>
 
@@ -148,11 +146,10 @@
 </table>
 
 <input type="hidden" name="page" id="page" value="{{ $page }}">
-<input type="hidden" name="old_task_id" id="old_task_id" value="">
+
 @stop
 
 @section('customscripts')
-    <script src="https://cdn.ckeditor.com/4.6.2/standard-all/ckeditor.js"></script>
     <script type="text/javascript">
         jQuery(document).ready(function() {
 
@@ -184,115 +181,18 @@
                 var url = app_url+'/work-planning';
             }
             if(page == 'Team') {
-                
-                var url = app_url+'/team-work-planning/';
+
+                var url = app_url+'/team-work-planning';
             }
 
             var form = $('<form action="' + url + '" method="post">' +
-                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                '<input type="hidden" name="month" value="'+month+'" />' +
-                '<input type="hidden" name="year" value="'+year+'" />' +
-                '</form>');
+            '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+            '<input type="hidden" name="month" value="'+month+'" />' +
+            '<input type="hidden" name="year" value="'+year+'" />' +
+            '</form>');
 
             $('body').append(form);
             form.submit();
-        }
-
-        function setData(wp_id) {
-
-            // Clear Previous Task Data
-            var old_task_id = $("#old_task_id").val();
-            $(".task_list_"+old_task_id).html("");
-            
-            var token = $('input[name="csrf_token"]').val();
-            var app_url = "{!! env('APP_URL'); !!}";
-            var task_id = $("#task_id_"+wp_id).val();
-            
-            $.ajax({
-
-                type : 'GET',
-                url : app_url+'/work-planning/getDetailsById',
-                data : {task_id : task_id, '_token':token},
-                dataType : 'json',
-
-                success: function(data) {
-
-                    var html = '';
-
-                    html += '<div class="form-group"><strong>Projected Time : </strong><input type="text" name="projected_time" id="projected_time_'+task_id+'" value="'+data.projected_time+'" class="form-control" disabled></div>';
-
-                    html += '<div class="form-group"><strong>Actual Time : </strong><input type="text" name="actual_time" id="actual_time_'+task_id+'" value="'+data.actual_time+'" class="form-control" disabled></div>';
-
-                    html += '<div class="form-group"><strong>Remarks : </strong><textarea id="remarks_'+task_id+'" name="remarks" class="form-control" disabled>'+data.remarks+'</textarea></div>';
-
-                    html += '<div class="form-group"><strong>Reporting Manager / HR Remarks : </strong><textarea id="rm_hr_remarks_'+task_id+'" name="rm_hr_remarks" class="form-control">'+data.rm_hr_remarks+'</textarea></div>';
-
-                    $(".task_list_"+task_id).html("");
-                    $(".task_list_"+task_id).show();
-                    $(".task_list_"+task_id).append(html);
-
-                    setRemarksEditor(task_id);
-                    setHRRemarksEditor(task_id);
-
-                    $("#old_task_id").val(task_id);
-                }
-            });
-        }
-
-        function setRemarksEditor(task_id) {
-
-            CKEDITOR.replace('remarks_'+task_id+'', {
-
-                filebrowserUploadUrl: '{{ route('emailbody.image',['_token' => csrf_token() ]) }}',
-                customConfig: '/js/ckeditor_config.js',
-                height: '100px',
-            });
-
-            CKEDITOR.on('dialogDefinition', function( ev ) {
-
-                var dialogName = ev.data.name;  
-                var dialogDefinition = ev.data.definition;
-                             
-                switch (dialogName) { 
-
-                    case 'image': //Image Properties dialog      
-                    dialogDefinition.removeContents('Link');
-                    dialogDefinition.removeContents('advanced');
-                    break;
-
-                    case 'link': //image Properties dialog          
-                    dialogDefinition.removeContents('advanced');   
-                    break;
-                }
-            });
-        }
-
-        function setHRRemarksEditor(task_id) {
-
-            CKEDITOR.replace('rm_hr_remarks_'+task_id+'', {
-
-                filebrowserUploadUrl: '{{ route('emailbody.image',['_token' => csrf_token() ]) }}',
-                customConfig: '/js/ckeditor_config.js',
-                height: '100px',
-            });
-
-            CKEDITOR.on('dialogDefinition', function( ev ) {
-
-                var dialogName = ev.data.name;  
-                var dialogDefinition = ev.data.definition;
-                             
-                switch (dialogName) { 
-
-                    case 'image': //Image Properties dialog      
-                    dialogDefinition.removeContents('Link');
-                    dialogDefinition.removeContents('advanced');
-                    break;
-
-                    case 'link': //image Properties dialog          
-                    dialogDefinition.removeContents('advanced');   
-                    break;
-                }
-            });
         }
     </script>
 @endsection

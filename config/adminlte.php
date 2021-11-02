@@ -131,6 +131,27 @@ return [
             ]
         ],
         [
+            'text'        => 'Work Planning',
+            'icon'        => 'file-text',
+            'submenu' => [
+                [
+                    'text' => 'Add Work Planning',
+                    'url'  => 'work-planning/add',
+                    'icon' => 'plus',
+                ],
+                [
+                    'text' => 'Work Planning (Self)',
+                    'url'  => 'work-planning',
+                    'icon' => 'list',
+                ],
+                [
+                    'text' => 'Work Planning (Team)',
+                    'url'  => 'team-work-planning',
+                    'icon' => 'list',
+                ]
+            ],
+        ],
+        [
             'text'        => 'Contactsphere',
             'icon'        => 'user-plus',
             'submenu' => [
@@ -152,27 +173,6 @@ return [
                 [
                     'text' => 'Forbid Contacts',
                     'url'  => 'contactsphere/forbid',
-                    'icon' => 'list',
-                ]
-            ],
-        ],
-        [
-            'text'        => 'Work Planning',
-            'icon'        => 'file-text',
-            'submenu' => [
-                [
-                    'text' => 'Add Work Planning',
-                    'url'  => 'work-planning/add',
-                    'icon' => 'plus',
-                ],
-                [
-                    'text' => 'View Self Work Planning',
-                    'url'  => 'work-planning',
-                    'icon' => 'list',
-                ],
-                [
-                    'text' => 'View Team’s Work Planning',
-                    'url'  => 'team-work-planning',
                     'icon' => 'list',
                 ]
             ],
