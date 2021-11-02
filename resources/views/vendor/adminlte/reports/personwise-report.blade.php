@@ -108,7 +108,6 @@
 			@endif
 		</table>
 	</div>
-
 @stop
 
 @section('customscripts')

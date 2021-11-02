@@ -149,16 +149,20 @@
                                 <td style="border:1px solid black;">{!! $value['remarks'] !!}</td>
 
                                 @if($value['rm_hr_remarks'] == '')
-                                    <td style="border:1px solid black;">
-                                        @if($loggedin_user_id != $added_by_id)
+                                    @if($loggedin_user_id != $added_by_id)
+                                        <td style="border:1px solid black;">
                                             @include('adminlte::partials.addWorkPlanningRemarks', ['data' => $value, 'name' => 'workplanning','work_planning' => $work_planning])
-                                        @endif
-                                    </td>
+                                        </td>
+                                    @endif
                                 @else
 
-                                    <td style="border:1px solid black;">{!! $value['rm_hr_remarks'] !!}
-                                        <button type="button" data-toggle="modal" data-target="#modal-edit-remarks-{!! $value['work_planning_list_id']!!}">Edit</button>
-                                    </td>
+                                    @if($loggedin_user_id != $added_by_id)
+                                        <td style="border:1px solid black;">{!! $value['rm_hr_remarks'] !!}
+                                            <button type="button" data-toggle="modal" data-target="#modal-edit-remarks-{!! $value['work_planning_list_id']!!}">Edit</button>
+                                        </td>
+                                    @else
+                                        <td style="border:1px solid black;">{!! $value['rm_hr_remarks'] !!}</td>
+                                    @endif
                                 @endif
                             </tr>
                         @endforeach

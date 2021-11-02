@@ -12,11 +12,9 @@
         <div class="pull-left">
             <h2>Work Planning Sheet</h2>
         </div>
-        @if(isset($page) && $page == 'Self')
-            <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('workplanning.create') }}">Add Work Planning</a>
-            </div>
-        @endif
+        <div class="pull-right">
+            <a class="btn btn-success" href="{{ route('workplanning.create') }}">Add Work Planning</a>
+        </div>
     </div>
 </div>
 
@@ -52,41 +50,24 @@
     </div> 
 </div>
 
-@if(isset($page) && $page == 'Self')
-    <div class="row">
-        <div class="col-md-12">
-            <div class="col-md-2" style="width: 15%;">
-                <a href="{{ route('workplanning.status',array('pending',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#8FB1D5;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Pending">Pending ({{ $pending }})</div></a>
-            </div>
-
-            <div class="col-md-2" style="width: 15%;">
-                <a href="{{ route('workplanning.status',array('approved',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#32CD32;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Approved">Approved ({{ $approved }})</div></a>
-            </div>
-
-            <div class="col-md-2" style="width: 15%;">
-                <a href="{{ route('workplanning.status',array('rejected',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Rejected">Rejected ({{ $rejected }})</div></a>
-            </div>
+<div class="row">
+    <div class="col-md-12">
+        <div class="col-md-2" style="width: 15%;">
+            <a href="{{ route('workplanning.status',array('pending',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#8FB1D5;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Pending">Pending ({{ $pending }})</div>
+            </a>
         </div>
-    </div><br/>
-@endif
 
-@if(isset($page) && $page == 'Team')
-    <div class="row">
-        <div class="col-md-12">
-            <div class="col-md-2" style="width: 15%;">
-                <a href="{{ route('teamworkplanning.status',array('pending',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#8FB1D5;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Pending">Pending ({{ $pending }})</div></a>
-            </div>
-
-            <div class="col-md-2" style="width: 15%;">
-                <a href="{{ route('teamworkplanning.status',array('approved',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#32CD32;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Approved">Approved ({{ $approved }})</div></a>
-            </div>
-
-            <div class="col-md-2" style="width: 15%;">
-                <a href="{{ route('teamworkplanning.status',array('rejected',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Rejected">Rejected ({{ $rejected }})</div></a>
-            </div>
+        <div class="col-md-2" style="width: 15%;">
+            <a href="{{ route('workplanning.status',array('approved',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#32CD32;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Approved">Approved ({{ $approved }})</div>
+            </a>
         </div>
-    </div><br/>
-@endif
+
+        <div class="col-md-2" style="width: 15%;">
+            <a href="{{ route('workplanning.status',array('rejected',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Rejected">Rejected ({{ $rejected }})</div>
+            </a>
+        </div>
+    </div>
+</div><br/>
 
 <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="work_planning_table">
     <thead>
@@ -146,14 +127,12 @@
 </table>
 
 <input type="hidden" name="status" id="status" value="{{ $status }}">
-<input type="hidden" name="page" id="page" value="{{ $page }}">
+
 @stop 
 
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function() {
-
-            $(".task").select2();
 
             var table = jQuery('#work_planning_table').DataTable({
                 responsive: true,
@@ -175,7 +154,6 @@
             var month = $("#month").val();
             var year = $("#year").val();
             var status = $("#status").val();
-            var page = $("#page").val();
 
             if(status == '0') {
                 status = 'pending';
@@ -187,14 +165,7 @@
                 status = 'rejected';
             }
 
-            if(page == 'Self') {
-
-                var url = app_url+'/work-planning/'+status+'/'+month+'/'+year;
-            }
-            if(page == 'Team') {
-                
-                var url = app_url+'/team-work-planning/'+status+'/'+month+'/'+year;
-            }
+            var url = app_url+'/work-planning/'+status+'/'+month+'/'+year;            
             
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +

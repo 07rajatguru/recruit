@@ -84,13 +84,13 @@ class WorkPlanning extends Model
         return $work_type;
     }
 
-    public static function getWorkPlanningDetails($user_ids,$month,$year,$status='') {
+    public static function getWorkPlanningDetails($user_id,$month,$year,$status='') {
 
         $query = WorkPlanning::query();
         $query = $query->leftjoin('users','users.id','=','work_planning.added_by');
-        $query = $query->orderBy('work_planning.id','DESC');
+        $query = $query->orderBy('work_planning.added_date','DESC');
         
-        $query = $query->whereIn('work_planning.added_by',$user_ids);
+        $query = $query->where('work_planning.added_by','=',$user_id);
         
         if ($month != '' && $year != '') {
             $query = $query->where(\DB::raw('month(work_planning.added_date)'),'=',$month);

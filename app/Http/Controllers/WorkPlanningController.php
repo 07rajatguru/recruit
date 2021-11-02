@@ -67,9 +67,7 @@ class WorkPlanningController extends Controller
             $work_planning_res = WorkPlanning::getWorkPlanningDetails(0,$user_ids,$month,$year,'');
         }*/
 
-        $user_ids[] = $user_id;
-
-        $work_planning_res = WorkPlanning::getWorkPlanningDetails($user_ids,$month,$year,'');
+        $work_planning_res = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'');
 
         $pending = 0;
         $approved = 0;
@@ -89,19 +87,13 @@ class WorkPlanningController extends Controller
                     $rejected++;
                 }
             }
-
-            $count = sizeof($work_planning_res);
         }
         else {
 
             $work_planning_res = '';
-            $count = 0;
         }
 
-        $superadmin_user_id = getenv('SUPERADMINUSERID');
-        $page = 'Self';
-
-        return view('adminlte::workPlanning.index',compact('work_planning_res','count','month_array','month','year_array','year','pending','approved','rejected','user_id','superadmin_user_id','page'));
+        return view('adminlte::workPlanning.index',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','user_id'));
     }
 
     public function teamIndex() {
@@ -158,9 +150,7 @@ class WorkPlanningController extends Controller
             $work_planning_res = WorkPlanning::getWorkPlanningDetails(0,$user_ids,$month,$year,'');
         }*/
 
-        $superadmin_user_id = getenv('SUPERADMINUSERID');
-
-        if($user_id == $superadmin_user_id) {
+        if($all_perm) {
 
             $users = User::getAllUsers();
 
@@ -172,7 +162,7 @@ class WorkPlanningController extends Controller
 
                     }
                     else {
-                        $user_ids[] = $key;
+                        $work_planning_res[$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
                     }
                 }
             }
@@ -190,21 +180,11 @@ class WorkPlanningController extends Controller
 
                     }
                     else {
-                        $user_ids[] = $key;
+                        $work_planning_res[$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
                     }
                 }
             }
         }
-
-        if(isset($user_ids) && sizeof($user_ids) > 0) {
-
-            $work_planning_res = WorkPlanning::getWorkPlanningDetails($user_ids,$month,$year,'');
-        }
-        else {
-
-            $work_planning_res = '';
-        }
-        
 
         // Set Status wise count
         $pending = 0;
@@ -215,29 +195,26 @@ class WorkPlanningController extends Controller
 
             foreach($work_planning_res as $work_planning) {
 
-                if($work_planning['status'] == '0') {
-                    $pending++;
-                }
-                else if ($work_planning['status'] == '1') {
-                    $approved++;
-                }
-                else if($work_planning['status'] == '2') {
-                    $rejected++;
+                foreach ($work_planning as $key => $value) {
+                    
+                    if($value['status'] == '0') {
+                        $pending++;
+                    }
+                    else if ($value['status'] == '1') {
+                        $approved++;
+                    }
+                    else if($value['status'] == '2') {
+                        $rejected++;
+                    }
                 }
             }
-
-            $count = sizeof($work_planning_res);
         }
         else {
 
             $work_planning_res = '';
-            $count = '';
         }
 
-        $superadmin_user_id = getenv('SUPERADMINUSERID');
-        $page = 'Team';
-
-        return view('adminlte::workPlanning.index',compact('work_planning_res','count','month_array','month','year_array','year','pending','approved','rejected','user_id','superadmin_user_id','page'));
+        return view('adminlte::workPlanning.teamIndex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','user_id'));
     }
 
     public function getWorkPlanningDetailsByStatus($status,$month,$year) {
@@ -307,8 +284,7 @@ class WorkPlanningController extends Controller
             $work_planning_res = WorkPlanning::getWorkPlanningDetails(0,$user_ids,$month,$year,$status);
         }*/
 
-        $user_ids[] = $user_id;
-        $work_planning_res = WorkPlanning::getWorkPlanningDetails($user_ids,$month,$year,$status);
+        $work_planning_res = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,$status);
 
         $pending = 0;
         $approved = 0;
@@ -328,19 +304,13 @@ class WorkPlanningController extends Controller
                     $rejected++;
                 }
             }
-
-            $count = sizeof($work_planning_res);
         }
         else {
 
             $work_planning_res = '';
-            $count = '';
         }
-        
-        $superadmin_user_id = getenv('SUPERADMINUSERID');
-        $page = 'Self';
 
-        return view('adminlte::workPlanning.statusindex',compact('work_planning_res','count','month_array','month','year_array','year','pending','approved','rejected','status','user_id','superadmin_user_id','page'));
+        return view('adminlte::workPlanning.statusindex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','status','user_id'));
     }
 
     public function getTeamWorkPlanningDetailsByStatus($status,$month,$year) {
@@ -410,28 +380,40 @@ class WorkPlanningController extends Controller
             $work_planning_res = WorkPlanning::getWorkPlanningDetails(0,$user_ids,$month,$year,$status);
         }*/
 
-        $users = User::getAssignedUsers($user_id);
+        if($all_perm) {
 
-        if(isset($users) && sizeof($users) > 0) {
+            $users = User::getAllUsers();
 
-            foreach ($users as $key => $value) {
+            if(isset($users) && sizeof($users) > 0) {
 
-                if($user_id == $key) {
+                foreach ($users as $key => $value) {
+                    
+                    if($key == $user_id) {
 
-                }
-                else {
-                    $user_ids[] = $key;
+                    }
+                    else {
+                        $work_planning_res[$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status);
+                    }
                 }
             }
         }
-
-        if(isset($user_ids) && sizeof($user_ids) > 0) {
-
-            $work_planning_res = WorkPlanning::getWorkPlanningDetails($user_ids,$month,$year,$status);
-        }
         else {
 
-            $work_planning_res = '';
+            // Get Loggedin user team
+            $users = User::getAssignedUsers($user_id);
+
+            if(isset($users) && sizeof($users) > 0) {
+
+                foreach ($users as $key => $value) {
+
+                    if($key == $user_id) {
+
+                    }
+                    else {
+                        $work_planning_res[$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status);
+                    }
+                }
+            }
         }
 
         // Set status wise count
@@ -444,29 +426,26 @@ class WorkPlanningController extends Controller
 
             foreach($work_planning_res as $work_planning) {
 
-                if($work_planning['status'] == '0') {
-                    $pending++;
-                }
-                else if ($work_planning['status'] == '1') {
-                    $approved++;
-                }
-                else if($work_planning['status'] == '2') {
-                    $rejected++;
+                foreach ($work_planning as $key => $value) {
+                    
+                    if($value['status'] == '0') {
+                        $pending++;
+                    }
+                    else if ($value['status'] == '1') {
+                        $approved++;
+                    }
+                    else if($value['status'] == '2') {
+                        $rejected++;
+                    }
                 }
             }
-
-            $count = sizeof($work_planning_res);
         }
         else {
 
             $work_planning_res = '';
-            $count = '';
         }
 
-        $superadmin_user_id = getenv('SUPERADMINUSERID');
-        $page = 'Team';
-
-        return view('adminlte::workPlanning.statusindex',compact('work_planning_res','count','month_array','month','year_array','year','pending','approved','rejected','status','user_id','superadmin_user_id','page'));
+        return view('adminlte::workPlanning.teamStatusIndex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','status','user_id'));
     }
 
     public function create() {
