@@ -1923,7 +1923,7 @@ class EveryMinute extends Command
                 $user_info = User::getProfileInfo($value['sender_name']);
                 $input['signature'] = $user_info['signature'];
 
-                /*$user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
+                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
                 $input['from_address'] = trim($user_email_details->email);
 
                 if(strpos($input['from_address'], '@gmail.com') !== false) {
@@ -1948,7 +1948,7 @@ class EveryMinute extends Command
                         'mail.password' => trim($user_email_details->password),
                         'mail.encryption' => trim('ssl'),
                     ]);
-                }*/
+                }
 
                 $work_planning = WorkPlanning::getWorkPlanningDetailsById($value['module_id']);
                 $work_planning_list = WorkPlanningList::getWorkPlanningList($value['module_id']);
@@ -1988,6 +1988,33 @@ class EveryMinute extends Command
 
                 $user_info = User::getProfileInfo($value['sender_name']);
                 $input['signature'] = $user_info['signature'];
+
+                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
+                $input['from_address'] = trim($user_email_details->email);
+
+                if(strpos($input['from_address'], '@gmail.com') !== false) {
+
+                    config([
+
+                        'mail.driver' => trim('mail'),
+                        'mail.host' => trim('smtp.gmail.com'),
+                        'mail.port' => trim('587'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('tls'),
+                    ]);
+                }
+                else {
+
+                    config([
+                        'mail.driver' => trim('smtp'),
+                        'mail.host' => trim('smtp.zoho.com'),
+                        'mail.port' => trim('465'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('ssl'),
+                    ]);
+                }
 
                 $work_planning = WorkPlanning::getWorkPlanningDetailsById($value['module_id']);
 
