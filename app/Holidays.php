@@ -37,7 +37,7 @@ class Holidays extends Model
 
         $query = Holidays::query();
         $query = $query->select('holidays.*');
-        $query = $query->orderBy('holidays.id','DESC');
+        $query = $query->orderBy('holidays.from_date','DESC');
         $res = $query->get();
 
         $holidays = array();

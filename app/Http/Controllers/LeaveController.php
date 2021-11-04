@@ -436,16 +436,6 @@ class LeaveController extends Controller
         $loggedin_user_id = $_POST['loggedin_user_id'];
         $user_id = $_POST['user_id'];
 
-        $superadmin_userid = getenv('SUPERADMINUSERID');
-        $reports_to_id = User::getReportsToById($user_id);
-
-        $user_email = User::getUserEmailById($user_id);
-        
-        $superadmin_email = User::getUserEmailById($superadmin_userid);
-        $reports_to_email = User::getUserEmailById($reports_to_id);
-        $cc_users_array = array($superadmin_email,$reports_to_email);
-        $cc_users_array = array_filter($cc_users_array);
-
         // Get user leave details
         $leave_details = UserLeave::getLeaveDetails($leave_id);
 
@@ -495,7 +485,56 @@ class LeaveController extends Controller
             }
         }
 
-        $days = $leave_details['days'];
+        if(isset($selected_holiday_dates) && sizeof($selected_holiday_dates) >= 3) {
+
+            if($leave_details['type_of_leave'] == 'Half Day') {
+
+                $leave_days = sizeof($selected_other_dates);
+
+                if(isset($selected_other_dates) && $selected_other_dates != '') {
+
+                    foreach ($selected_other_dates as $key => $value) {
+                        
+                        $other_date = strtotime($value);
+                        $other_day = date('l', strtotime($other_date));
+
+                        if($other_day == 'Sunday') {
+
+                            unset($selected_other_dates[$key]);
+                        }
+                    }
+                }
+
+                print_r($selected_other_dates);exit;
+                echo "HERE";
+
+                $leave_days = $leave_days/2;
+            }
+            else {
+
+                $leave_days = sizeof($selected_holiday_dates);
+            }
+            
+            $days = $leave_details['days'] - $leave_days;
+        }
+        else {
+
+            $days = $leave_details['days'];
+        }
+
+        echo $days;exit;
+
+        // Email Notifications
+
+        $superadmin_userid = getenv('SUPERADMINUSERID');
+        $reports_to_id = User::getReportsToById($user_id);
+
+        $user_email = User::getUserEmailById($user_id);
+        
+        $superadmin_email = User::getUserEmailById($superadmin_userid);
+        $reports_to_email = User::getUserEmailById($reports_to_id);
+        $cc_users_array = array($superadmin_email,$reports_to_email);
+        $cc_users_array = array_filter($cc_users_array);
 
         if ($reply == 'Approved') {
             
@@ -534,30 +573,13 @@ class LeaveController extends Controller
                     $new_leave_taken = $leave_taken + $days + 1;
                     $new_leave_remaining = $leave_remaining - $days - 1;
                 }
-                else if(isset($selected_holiday_dates) && sizeof($selected_holiday_dates) > 0) {
-
-                    $total_holidays = sizeof($selected_holiday_dates);
-
-                    if($total_holidays == 1) {
-
-                        $new_leave_taken = $leave_taken + 3;
-                        $new_leave_remaining = $leave_remaining - 3;
-                    }
-                    else {
-
-                        $other_days = sizeof($selected_other_dates);
-
-                        $new_leave_taken = $leave_taken + $other_days;
-                        $new_leave_remaining = $leave_remaining - $other_days;
-                    }
-                }
                 else {
 
                     $new_leave_taken = $leave_taken + $days;
                     $new_leave_remaining = $leave_remaining - $days;
                 }
 
-                \DB::statement("UPDATE leave_balance SET leave_taken = '$new_leave_taken', leave_remaining = '$new_leave_remaining' where user_id = '$user_id'");
+                \DB::statement("UPDATE `leave_balance` SET `leave_taken` = '$new_leave_taken', `leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
             }
             else if($leave_category == 'Seek Leave') {
 

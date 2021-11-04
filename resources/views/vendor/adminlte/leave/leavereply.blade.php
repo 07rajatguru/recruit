@@ -98,19 +98,19 @@
 @else
     @if($leave_details['status'] == 0)
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            <button type="submit" class="btn btn-primary" onclick="permission('Approved')">Approved</button> &nbsp;&nbsp;&nbsp;&nbsp;
-            <button type="submit" class="btn btn-primary" onclick="permission('Notapproved')">Not approved</button>
+            <button type="submit" class="btn btn-success" onclick="permission('Approved')">Approved</button> &nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="submit" class="btn btn-danger" onclick="permission('Notapproved')">Not approved</button>
         </div>
     @endif
 @endif
 
 @if($leave_details['status'] == 1)
     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-        <button type="button" class="btn btn-primary" disabled="disabled">Approved by {{ $leave_details['approved_by'] }}</button>
+        <button type="button" class="btn btn-success" disabled="disabled">Approved by {{ $leave_details['approved_by'] }}</button>
     </div>
 @elseif($leave_details['status'] == 2)
     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-        <button type="button" class="btn btn-primary" disabled="disabled">Not Approved by {{ $leave_details['approved_by'] }}</button>
+        <button type="button" class="btn btn-danger" disabled="disabled">Not Approved by {{ $leave_details['approved_by'] }}</button>
     </div>
 @endif
 

@@ -75,6 +75,7 @@
             var table = jQuery('#holidays_table').DataTable({
                 responsive: true,
                 stateSave : true,
+                "order" : [0, 'desc'],
             } );
 
             if ( ! table.data().any() ) {

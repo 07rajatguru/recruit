@@ -153,6 +153,8 @@
                                         <td style="border:1px solid black;">
                                             @include('adminlte::partials.addWorkPlanningRemarks', ['data' => $value, 'name' => 'workplanning','work_planning' => $work_planning])
                                         </td>
+                                    @else
+                                        <td style="border:1px solid black;"></td>
                                     @endif
                                 @else
 
