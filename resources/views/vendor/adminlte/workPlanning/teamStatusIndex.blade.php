@@ -87,7 +87,7 @@
                     <?php $i = 0;?>
                     <tbody>
                         <tr>
-                            <td colspan="9" style="text-align: center;background-color: #E9967A;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{$key}}</b></td>
+                            <td colspan="9" style="text-align: center;background-color: #FABF8F;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{$key}}</b></td>
                         </tr>
                     </tbody>
                         
