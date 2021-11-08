@@ -585,7 +585,7 @@ class EveryMinute extends Command
 
                 $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
 
-                /*$user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
+                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
 
                 $input['from_address'] = trim($user_email_details->email);
 
@@ -610,7 +610,7 @@ class EveryMinute extends Command
                         'mail.password' => trim($user_email_details->password),
                         'mail.encryption' => trim('ssl'),
                     ]);
-                }*/
+                }
 
                 \Mail::send('adminlte::emails.clientbulkmail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
@@ -1198,7 +1198,7 @@ class EveryMinute extends Command
 
                 $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
 
-                /*$user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
+                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
 
                 $input['from_address'] = trim($user_email_details->email);
 
@@ -1224,7 +1224,7 @@ class EveryMinute extends Command
                         'mail.password' => trim($user_email_details->password),
                         'mail.encryption' => trim('ssl'),
                     ]);
-                }*/
+                }
 
                 \Mail::send('adminlte::emails.clientbulkmail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
@@ -1634,7 +1634,7 @@ class EveryMinute extends Command
 
                 $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
 
-                /*$input['from_address'] = trim($user_email_details->email);
+                $input['from_address'] = trim($user_email_details->email);
 
                 if(strpos($input['from_address'], '@gmail.com') !== false) {
 
@@ -1658,7 +1658,7 @@ class EveryMinute extends Command
                         'mail.password' => trim($user_email_details->password),
                         'mail.encryption' => trim('ssl'),
                     ]);
-                }*/
+                }
 
                 \Mail::send('adminlte::emails.clientbulkmail', $input, function ($message) use($input) {
 
@@ -1681,7 +1681,7 @@ class EveryMinute extends Command
                 // Get users for popup of add information
                 $candidate_job_details = CandidateBasicInfo::getCandidateJobDetailsById($candidate_id,$job_id);
 
-                /*$user_email_details = UsersEmailPwd::getUserEmailDetails($candidate_job_details['owner_id']);
+                $user_email_details = UsersEmailPwd::getUserEmailDetails($candidate_job_details['owner_id']);
 
                 $input['from_address'] = trim($user_email_details->email);
 
@@ -1707,7 +1707,7 @@ class EveryMinute extends Command
                         'mail.password' => trim($user_email_details->password),
                         'mail.encryption' => trim('ssl'),
                     ]);
-                }*/
+                }
 
                 if(isset($candidate_job_details) && $candidate_job_details != '') {
 
