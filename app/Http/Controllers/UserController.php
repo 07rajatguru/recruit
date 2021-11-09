@@ -1217,7 +1217,7 @@ class UserController extends Controller
         // Update in users email password table
 
         $email = Input::get('email');
-        DB::statement("UPDATE users_email_pwd SET email = '$email' where user_id = $user_id");
+        DB::statement("UPDATE `users_email_pwd` SET `email` = '$email' where `user_id` = $user_id");
 
         // User Otherinfo
         $personal_email = Input::get('personal_email');
@@ -1359,6 +1359,7 @@ class UserController extends Controller
 
         // User Family Details Update
         for ($i=1; $i <=5 ; $i++) {
+
             $name = Input::get('name_'.$i);
             $relationship = Input::get('relationship_'.$i);
             $occupation = Input::get('occupation_'.$i);
@@ -1380,7 +1381,7 @@ class UserController extends Controller
         $user_photo_info = UsersDoc::getUserDocInfoByIDType($user_id,'Photo');
         $upload_profile_photo = $request->file('image');
 
-        if (isset($upload_profile_photo) && $upload_profile_photo->isValid()){
+        if (isset($upload_profile_photo) && $upload_profile_photo->isValid()) {
             
             $file_name = $upload_profile_photo->getClientOriginalName();
             $file_extension = $upload_profile_photo->getClientOriginalExtension();

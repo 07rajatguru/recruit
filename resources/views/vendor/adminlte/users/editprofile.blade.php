@@ -131,7 +131,6 @@
 
                     <div class="box-body col-xs-6 col-sm-6 col-md-6">
                         <div class="">
-
                             <div class="form-group" id="default_image">
                                 @if($user['type'] == "Photo")
                                     <img src= "../../{!!$user['photo']!!}" style="height: 150px;width: 150px;border-radius: 50%;" />
@@ -142,14 +141,12 @@
 
                             @if($user['edit_photo'] == '1')
                                 <div class="form-group" id="image_div">
-                                
                                     <div class="form-group file_input_redesign upload_img1">
                                         <div class="fileinput fileinput-new" data-provides="fileinput">
                                             <div style="width: 22px; height: 70px;display:none;" class="fileinput-new thumbnail" data-trigger="fileinput">
                                                 <span>Select Image</span>
                                             </div>
-                                            <div id = "upload_images_div">
-                                            </div>
+                                            <div id="upload_images_div"></div>
                                             <div>
                                                 <span class="btn btn-default btn-file">
                                                 <span class="fileinput-new">Select Profile Photo</span>
@@ -717,26 +714,26 @@
         @endforeach
     @endif
 
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <div class="box-header with-border col-md-6 ">
-                    <h3 class="box-title">Attachment Information</h3>
-                </div>
+    <div class="col-xs-12 col-sm-12 col-md-12">
+        <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+            <div class="box-header with-border col-md-6 ">
+                <h3 class="box-title">Attachment Information</h3>
+            </div>
 
-                <div class="col-xs-12 col-sm-12 col-md-12" style="border: 1px dotted black;">
-                    <h4>Educational Credentials : </h4><br/>
-                    <div class="col-xs-6 col-sm-6 col-md-6">
+            <div class="col-xs-12 col-sm-12 col-md-12" style="border: 1px dotted black;">
+                <h4>Educational Credentials : </h4><br/>
+                <div class="col-xs-6 col-sm-6 col-md-6">
                         <div class="form-group">
                             <strong>Xth (SSC) : </strong>
                             @if(isset($ssc_m['url']) && $ssc_m['url'] != '')
-                                <a target="_blank" href="../{{ $ssc_m['url'] }}">{{ $ssc_m['name'] }}
-                                </a>
+                                <a target="_blank" href="../{{ $ssc_m['url'] }}">{{ $ssc_m['name'] }}</a>
 
                                 <div class="form-group file_input_redesign">
                                     <div class="fileinput fileinput-new" data-provides="fileinput">
                                         <div>
                                             <span class="btn btn-default btn-file">
-                                                <span class="fileinput-new">Change Document</span>
+                                                <span class="fileinput-new">Change Document
+                                                </span>
                                                 <input type="file" name="ssc_marksheet" id="ssc_marksheet" tabindex="51" />
                                             </span>
                                             <div class="ssc_marksheet_div"></div>
@@ -747,7 +744,7 @@
                                 <input type="file" id="ssc_marksheet" name="ssc_marksheet" class="form-control" tabindex="51" />
                             @endif
                         </div>
-                    </div>
+                </div>
 
                     <div class="col-xs-6 col-sm-6 col-md-6">
                         <div class="form-group">
