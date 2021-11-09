@@ -227,7 +227,14 @@ class LeaveController extends Controller
             $to_date = NULL;
         }
 
-        // Calculate Leave Days
+        // Get All fields values
+
+        $subject = Input::get('subject');
+        $leave_type = Input::get('leave_type');
+        $leave_category = Input::get('leave_category');
+        $message = Input::get('message');
+
+        // Calculate Difference Between Two Dates
 
         $from_date_1 = strtotime($from_date);
         $to_date_1 = strtotime($to_date);
@@ -235,10 +242,70 @@ class LeaveController extends Controller
         $diff_in_days = ($to_date_1 - $from_date_1)/60/60/24;
         $diff_in_days = $diff_in_days + 1;
 
-        $subject = Input::get('subject');
-        $leave_type = Input::get('leave_type');
-        $leave_category = Input::get('leave_category');
-        $message = Input::get('message');
+        // Calculate Final Leave Days
+
+        $first_dt = strtotime($from_date);
+        $last_dt = strtotime($to_date);
+
+        $dates = array();
+        $current = $first_dt;
+
+        while($current <= $last_dt) { 
+
+            $dates[] = date('Y-m-d', $current);
+            $current = strtotime('+1 day', $current);
+        }
+
+        // Get All Holidays Dates
+        $holidays_dates = Holidays::getUsersHolidays($user_id);
+        
+        if(isset($dates) && sizeof($dates) > 0) {
+
+            $selected_holiday_dates = array();
+            $selected_other_dates = array();
+            $i=0;
+
+            foreach ($dates as $key => $value) {
+                        
+                if (in_array($value,$holidays_dates)) {
+
+                    $selected_holiday_dates[$i] = $value;
+                }
+                else {
+
+                    $selected_other_dates[$i] = $value;
+                }
+                $i++;
+            }
+        }
+
+        if(isset($selected_holiday_dates) && sizeof($selected_holiday_dates) >= 3) {
+
+            if($leave_type == 'Half Day') {
+
+                if(isset($selected_other_dates) && $selected_other_dates != '') {
+
+                    foreach ($selected_other_dates as $key => $value) {
+
+                        $other_day = date('l', strtotime($value));
+
+                        if($other_day == 'Sunday') {
+
+                            unset($selected_other_dates[$key]);
+                        }
+                    }
+                }
+
+                $leave_days = sizeof($selected_other_dates);
+                $days = $leave_days/2;
+            }
+            else {
+
+                $days = $diff_in_days;
+            }
+        }
+
+        echo $days;exit;
 
         $user_leave = new UserLeave();
         $user_leave->user_id = $user_id;
@@ -489,14 +556,11 @@ class LeaveController extends Controller
 
             if($leave_details['type_of_leave'] == 'Half Day') {
 
-                $leave_days = sizeof($selected_other_dates);
-
                 if(isset($selected_other_dates) && $selected_other_dates != '') {
 
                     foreach ($selected_other_dates as $key => $value) {
-                        
-                        $other_date = strtotime($value);
-                        $other_day = date('l', strtotime($other_date));
+
+                        $other_day = date('l', strtotime($value));
 
                         if($other_day == 'Sunday') {
 
@@ -505,16 +569,14 @@ class LeaveController extends Controller
                     }
                 }
 
-                print_r($selected_other_dates);exit;
-                echo "HERE";
-
+                $leave_days = sizeof($selected_other_dates);
                 $leave_days = $leave_days/2;
             }
             else {
 
                 $leave_days = sizeof($selected_holiday_dates);
             }
-            
+
             $days = $leave_details['days'] - $leave_days;
         }
         else {
