@@ -283,29 +283,26 @@ class LeaveController extends Controller
 
             if($leave_type == 'Half Day') {
 
-                if(isset($selected_other_dates) && $selected_other_dates != '') {
-
-                    foreach ($selected_other_dates as $key => $value) {
-
-                        $other_day = date('l', strtotime($value));
-
-                        if($other_day == 'Sunday') {
-
-                            unset($selected_other_dates[$key]);
-                        }
-                    }
-                }
-
                 $leave_days = sizeof($selected_other_dates);
                 $days = $leave_days/2;
             }
             else {
 
-                $days = $diff_in_days;
+                $leave_days = sizeof($selected_other_dates);
+                $days = $leave_days;
             }
         }
+        else {
 
-        echo $days;exit;
+            if($leave_type == 'Half Day') {
+
+                $days = $diff_in_days/2;
+            }
+            else {
+                $days = $diff_in_days;
+            }
+            
+        }
 
         $user_leave = new UserLeave();
         $user_leave->user_id = $user_id;
@@ -321,13 +318,9 @@ class LeaveController extends Controller
 
             $user_leave->days = 0.00;
         }
-        else if($leave_type == 'Full Day') {
+        else {
 
-            $user_leave->days = $diff_in_days;
-        }
-        else if($leave_type == 'Half Day') {
-
-            $user_leave->days = $diff_in_days/2;
+            $user_leave->days = $days;
         }
 
         // Save Details
@@ -394,6 +387,7 @@ class LeaveController extends Controller
 
     public function update(Request $request,$id) {
 
+        $user_id = \Auth::user()->id;
         $dateClass = new Date();
 
         if (Input::get('from_date') != '') {
@@ -410,7 +404,14 @@ class LeaveController extends Controller
             $to_date = NULL;
         }
 
-         // Calculate Leave Days
+        // Get All fields values
+
+        $subject = Input::get('subject');
+        $leave_type = Input::get('leave_type');
+        $leave_category = Input::get('leave_category');
+        $message = Input::get('message');
+
+        // Calculate Difference Between Two Dates
 
         $from_date_1 = strtotime($from_date);
         $to_date_1 = strtotime($to_date);
@@ -418,10 +419,67 @@ class LeaveController extends Controller
         $diff_in_days = ($to_date_1 - $from_date_1)/60/60/24;
         $diff_in_days = $diff_in_days + 1;
 
-        $subject = Input::get('subject');
-        $leave_type = Input::get('leave_type');
-        $leave_category = Input::get('leave_category');
-        $message = Input::get('message');
+        // Calculate Final Leave Days
+
+        $first_dt = strtotime($from_date);
+        $last_dt = strtotime($to_date);
+
+        $dates = array();
+        $current = $first_dt;
+
+        while($current <= $last_dt) { 
+
+            $dates[] = date('Y-m-d', $current);
+            $current = strtotime('+1 day', $current);
+        }
+
+        // Get All Holidays Dates
+        $holidays_dates = Holidays::getUsersHolidays($user_id);
+        
+        if(isset($dates) && sizeof($dates) > 0) {
+
+            $selected_holiday_dates = array();
+            $selected_other_dates = array();
+            $i=0;
+
+            foreach ($dates as $key => $value) {
+                        
+                if (in_array($value,$holidays_dates)) {
+
+                    $selected_holiday_dates[$i] = $value;
+                }
+                else {
+
+                    $selected_other_dates[$i] = $value;
+                }
+                $i++;
+            }
+        }
+
+        if(isset($selected_holiday_dates) && sizeof($selected_holiday_dates) >= 3) {
+
+            if($leave_type == 'Half Day') {
+
+                $leave_days = sizeof($selected_other_dates);
+                $days = $leave_days/2;
+            }
+            else {
+
+                $leave_days = sizeof($selected_other_dates);
+                $days = $leave_days;
+            }
+        }
+        else {
+
+            if($leave_type == 'Half Day') {
+
+                $days = $diff_in_days/2;
+            }
+            else {
+                $days = $diff_in_days;
+            }
+            
+        }
 
         $user_leave = UserLeave::find($id);
         $user_leave->subject = $subject;
@@ -436,13 +494,9 @@ class LeaveController extends Controller
 
             $user_leave->days = 0.00;
         }
-        else if($leave_type == 'Full Day') {
+        else {
 
-            $user_leave->days = $diff_in_days;
-        }
-        else if($leave_type == 'Half Day') {
-
-            $user_leave->days = $diff_in_days/2;
+            $user_leave->days = $days;
         }
 
         // Save Details
@@ -506,85 +560,8 @@ class LeaveController extends Controller
         // Get user leave details
         $leave_details = UserLeave::getLeaveDetails($leave_id);
 
-        // Get for sandwhich leave
-        $from_date = strtotime($leave_details['from_date']);
-        $from_day = date('l', strtotime($from_date));
-
-        $to_date = strtotime($leave_details['to_date']);
-        $to_day = date('l', strtotime($to_date));
-
-        // Get Date Range Between two dates
-
-        $first_dt = $leave_details['from_date'];
-        $last_dt = $leave_details['to_date'];
-
-        $dates = array();
-        $current = date(strtotime("$first_dt"));
-        $last_dt = strtotime($last_dt);
-
-        while($current <= $last_dt) { 
-
-            $dates[] = date('Y-m-d', $current);
-            $current = strtotime('+1 day', $current);
-        }
-
-        // Get All Holidays Dates
-        $holidays_dates = Holidays::getUsersHolidays($user_id);
-
-        if(isset($dates) && sizeof($dates) > 0) {
-
-            $selected_holiday_dates = array();
-            $selected_other_dates = array();
-            $i=0;
-
-            foreach ($dates as $key => $value) {
-                        
-                if (in_array($value,$holidays_dates)) {
-
-                    $selected_holiday_dates[$i] = $value;
-                }
-                else {
-
-                    $selected_other_dates[$i] = $value;
-                }
-
-                $i++;
-            }
-        }
-
-        if(isset($selected_holiday_dates) && sizeof($selected_holiday_dates) >= 3) {
-
-            if($leave_details['type_of_leave'] == 'Half Day') {
-
-                if(isset($selected_other_dates) && $selected_other_dates != '') {
-
-                    foreach ($selected_other_dates as $key => $value) {
-
-                        $other_day = date('l', strtotime($value));
-
-                        if($other_day == 'Sunday') {
-
-                            unset($selected_other_dates[$key]);
-                        }
-                    }
-                }
-
-                $leave_days = sizeof($selected_other_dates);
-                $leave_days = $leave_days/2;
-            }
-            else {
-
-                $leave_days = sizeof($selected_holiday_dates);
-            }
-
-            $days = $leave_details['days'] - $leave_days;
-        }
-        else {
-
-            $days = $leave_details['days'];
-        }
-
-        echo $days;exit;
+        // Get total days
+        $days = $leave_details['days'];
 
         // Email Notifications
 
@@ -630,16 +607,8 @@ class LeaveController extends Controller
                 $leave_taken = $leave_balance_details['leave_taken'];
                 $leave_remaining = $leave_balance_details['leave_remaining'];
 
-                if($from_day == 'Saturday' && $to_day == 'Monday') {
-
-                    $new_leave_taken = $leave_taken + $days + 1;
-                    $new_leave_remaining = $leave_remaining - $days - 1;
-                }
-                else {
-
-                    $new_leave_taken = $leave_taken + $days;
-                    $new_leave_remaining = $leave_remaining - $days;
-                }
+                $new_leave_taken = $leave_taken + $days;
+                $new_leave_remaining = $leave_remaining - $days;
 
                 \DB::statement("UPDATE `leave_balance` SET `leave_taken` = '$new_leave_taken', `leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
             }
@@ -651,33 +620,8 @@ class LeaveController extends Controller
                 $seek_leave_taken = $leave_balance_details['seek_leave_taken'];
                 $seek_leave_remaining = $leave_balance_details['seek_leave_remaining'];
 
-                if($from_day == 'Saturday' && $to_day == 'Monday') {
-
-                    $new_leave_taken = $seek_leave_taken + $days + 1;
-                    $new_leave_remaining = $seek_leave_remaining - $days - 1;
-                }
-                else if(isset($selected_holiday_dates) && sizeof($selected_holiday_dates) > 0) {
-
-                    $total_holidays = sizeof($selected_holiday_dates);
-
-                    if($total_holidays == 1) {
-
-                        $new_leave_taken = $seek_leave_taken + 3;
-                        $new_leave_remaining = $seek_leave_remaining - 3;
-                    }
-                    else {
-
-                        $other_days = sizeof($selected_other_dates);
-
-                        $new_leave_taken = $seek_leave_taken + $other_days;
-                        $new_leave_remaining = $seek_leave_remaining - $other_days;
-                    }
-                }
-                else {
-
-                    $new_leave_taken = $seek_leave_taken + $days;
-                    $new_leave_remaining = $seek_leave_remaining - $days;
-                }
+                $new_leave_taken = $seek_leave_taken + $days;
+                $new_leave_remaining = $seek_leave_remaining - $days;
 
                 \DB::statement("UPDATE `leave_balance` SET `seek_leave_taken` = '$new_leave_taken', `seek_leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
             }

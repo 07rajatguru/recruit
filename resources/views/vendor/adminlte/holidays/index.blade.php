@@ -51,7 +51,10 @@
             <tr>
                 <td>{{++$i}}</td>
                 <td>
-                    <a title="Edit" class="fa fa-edit" href="{{ route('holidays.edit',$value['id']) }}"></a>
+
+                    @permission(('holiday-edit'))
+                        <a title="Edit" class="fa fa-edit" href="{{ route('holidays.edit',$value['id']) }}"></a>
+                    @endpermission
 
                     @permission(('holiday-delete'))
                         @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'holidays','display_name'=>'Holiday'])

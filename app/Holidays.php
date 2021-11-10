@@ -124,7 +124,7 @@ class Holidays extends Model
         $query = $query->join('holidays_users','holidays_users.holiday_id','=','holidays.id');
         $query = $query->select('from_date');
         $query = $query->where('holidays_users.user_id',$user_id);
-        $query = $query->orderBy('from_date','DESC');
+        $query = $query->orderBy('from_date','ASC');
         $response = $query->get();
 
         $holiday_dates = array();
