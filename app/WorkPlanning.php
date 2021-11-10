@@ -13,7 +13,7 @@ class WorkPlanning extends Model
 
         $time_array = array();
         
-        $time_array[0] = 'Select Time';
+        $time_array['00:00:00'] = 'Select Time';
 
         $time_array['00:15:00'] = '15 Min.';
         $time_array['00:30:00'] = '30 Min.';
