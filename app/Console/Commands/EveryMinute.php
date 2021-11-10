@@ -177,6 +177,10 @@ class EveryMinute extends Command
                 $user_info = User::getProfileInfo($value['sender_name']);
                 $input['signature'] = $user_info['signature'];
 
+                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
+
+                $input['from_address'] = trim($user_email_details->email);
+
                 $leave = UserLeave::find($module_id);
 
                 $leave_doc = LeaveDoc::getLeaveDocById($module_id);
@@ -193,6 +197,29 @@ class EveryMinute extends Command
 
                 $input['leave_message'] = $leave->message;
                 $input['leave_id'] = $module_id;
+
+                if(strpos($input['from_address'], '@gmail.com') !== false) {
+
+                    config([
+                        'mail.driver' => trim('mail'),
+                        'mail.host' => trim('smtp.gmail.com'),
+                        'mail.port' => trim('587'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('tls'),
+                    ]);
+                }
+                else {
+
+                    config([
+                        'mail.driver' => trim('smtp'),
+                        'mail.host' => trim('smtp.zoho.com'),
+                        'mail.port' => trim('465'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('ssl'),
+                    ]);
+                }
 
                 \Mail::send('adminlte::emails.leavemail', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
@@ -484,8 +511,36 @@ class EveryMinute extends Command
                 $user_info = User::getProfileInfo($value['sender_name']);
                 $input['signature'] = $user_info['signature'];
 
+                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
+
+                $input['from_address'] = trim($user_email_details->email);
+
                 $leave = UserLeave::find($module_id);
                 $input['leave_message'] = $leave->reply_message;
+
+                if(strpos($input['from_address'], '@gmail.com') !== false) {
+
+                    config([
+                        'mail.driver' => trim('mail'),
+                        'mail.host' => trim('smtp.gmail.com'),
+                        'mail.port' => trim('587'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('tls'),
+                    ]);
+                }
+                else {
+
+                    config([
+                        'mail.driver' => trim('smtp'),
+                        'mail.host' => trim('smtp.zoho.com'),
+                        'mail.port' => trim('465'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('ssl'),
+                    ]);
+                }
+
 
                 \Mail::send('adminlte::emails.leavereply', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);

@@ -58,24 +58,23 @@
             </div>
         </div>
 
-        <div class="box-body col-xs-2 col-sm-2 col-md-2">
+        <div class="box-body col-xs-1 col-sm-1 col-md-1">
             <div class="form-group">
                 {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
             </div>
         </div>
-
         
-        <div class="box-body col-xs-2 col-sm-2 col-md-2">
+        <div class="box-body col-xs-2 col-sm-2 col-md-2" style="margin-top:-8px;">
             <a href="{{ route('leave.status',array('pending',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#8FB1D5;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Pending">Pending ({{ $pending }})</div>
             </a>
         </div>
 
-        <div class="box-body col-xs-2 col-sm-2 col-md-2">
+        <div class="box-body col-xs-2 col-sm-2 col-md-2" style="margin-top:-8px;">
             <a href="{{ route('leave.status',array('approved',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#32CD32;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Approved">Approved ({{ $approved }})</div>
             </a>
         </div>
 
-        <div class="box-body col-xs-2 col-sm-2 col-md-2">
+        <div class="box-body col-xs-2 col-sm-2 col-md-2" style="margin-top:-8px;">
             <a href="{{ route('leave.status',array('not-approved',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Rejected">Not Approved ({{ $not_approved }})</div></a>
         </div>
     </div>
@@ -85,23 +84,18 @@
             <div class="box-body col-xs-2 col-sm-2 col-md-2">
                 <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00c0ef !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Total Paid Leave">Total PL ({{ $leave_balance->leave_total or 0 }})</div></a>
             </div>
-
             <div class="box-body col-xs-2 col-sm-2 col-md-2">
                 <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00a65a !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Taken Paid Leave">Taken PL ({{ $leave_balance->leave_taken or 0 }})</div></a>
             </div>
-
             <div class="box-body col-xs-2 col-sm-2 col-md-2">
                 <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#dd4b39 !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Remaining Paid Leave">Remaining PL ({{ $leave_balance->leave_remaining or 0 }})</div></a>
             </div>
-
             <div class="box-body col-xs-2 col-sm-2 col-md-2">
                 <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00c0ef !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Total Seek Leave">Total SL ({{ $leave_balance->seek_leave_total or 0 }})</div></a>
             </div>
-
             <div class="box-body col-xs-2 col-sm-2 col-md-2">
                 <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00a65a !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Taken Seek Leave">Taken SL ({{ $leave_balance->seek_leave_taken or 0 }})</div></a>
             </div>
-
             <div class="box-body col-xs-2 col-sm-2 col-md-2">
                 <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#dd4b39 !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Remaining Seek Leave">Remaining SL ({{ $leave_balance->seek_leave_remaining or 0 }})</div></a>
             </div>
@@ -122,7 +116,6 @@
                 <th>Status</th>
 	    	</tr>
     	</thead>
-    	
         <?php $i=0; ?>
     	<tbody>
     		@foreach($leave_details as $key => $value)
@@ -166,14 +159,18 @@
 
 @section('customscripts')
     <script type="text/javascript">
-        jQuery(document).ready(function(){
-            var table = jQuery('#leave_table').DataTable( {
+        jQuery(document).ready(function() {
+
+            var table = jQuery('#leave_table').DataTable({
                 responsive: true,
                 "pageLength": 100,
                 stateSave: true,
                 "columnDefs": [ {orderable: false, targets: [1]} ]
             });
             new jQuery.fn.dataTable.FixedHeader( table );
+
+            $("#month").select2();
+            $("#year").select2();
         });
 
         function select_data() {

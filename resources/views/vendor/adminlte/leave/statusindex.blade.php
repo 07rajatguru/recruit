@@ -58,23 +58,23 @@
             </div>
         </div>
 
-        <div class="box-body col-xs-2 col-sm-2 col-md-2">
+        <div class="box-body col-xs-1 col-sm-1 col-md-1">
             <div class="form-group">
                 {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
             </div>
         </div>
 
-        <div class="box-body col-xs-2 col-sm-2 col-md-2">
+        <div class="box-body col-xs-2 col-sm-2 col-md-2" style="margin-top:-8px;">
             <a href="{{ route('leave.status',array('pending',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#8FB1D5;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Pending">Pending ({{ $pending }})</div>
             </a>
         </div>
 
-        <div class="box-body col-xs-2 col-sm-2 col-md-2">
+        <div class="box-body col-xs-2 col-sm-2 col-md-2" style="margin-top:-8px;">
             <a href="{{ route('leave.status',array('approved',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#32CD32;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Approved">Approved ({{ $approved }})</div>
             </a>
         </div>
 
-        <div class="box-body col-xs-2 col-sm-2 col-md-2">
+        <div class="box-body col-xs-2 col-sm-2 col-md-2" style="margin-top:-8px;">
             <a href="{{ route('leave.status',array('not-approved',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Rejected">Not Approved ({{ $not_approved }})</div></a>
         </div>
     </div>
@@ -82,15 +82,13 @@
     @if(isset($leave_balance) && $leave_balance != '')
         <div class="row">
             <div class="box-body col-xs-2 col-sm-2 col-md-2">
-                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00c0ef !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 180px;" title="Total Leave">Total Leave ({{ $leave_balance->leave_total or 0 }})</div>
-                </a>
+                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00c0ef !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Total Paid Leave">Total PL ({{ $leave_balance->leave_total or 0 }})</div></a>
             </div>
             <div class="box-body col-xs-2 col-sm-2 col-md-2">
-                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00a65a !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 180px;" title="Leave Taken">Leave Taken ({{ $leave_balance->leave_taken or 0 }})</div>
-                </a>
+                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00a65a !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Taken Paid Leave">Taken PL ({{ $leave_balance->leave_taken or 0 }})</div></a>
             </div>
             <div class="box-body col-xs-2 col-sm-2 col-md-2">
-                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#dd4b39 !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 180px;" title="Leave Remainings">Leave Remainings ({{ $leave_balance->leave_remaining or 0 }})</div></a>
+                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#dd4b39 !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Remaining Paid Leave">Remaining PL ({{ $leave_balance->leave_remaining or 0 }})</div></a>
             </div>
             <div class="box-body col-xs-2 col-sm-2 col-md-2">
                 <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00c0ef !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Total Seek Leave">Total SL ({{ $leave_balance->seek_leave_total or 0 }})</div></a>
@@ -126,7 +124,9 @@
                     <td>
                         <a class="fa fa-circle" title="Show" href="{{ route('leave.reply',$value['id']) }}"></a>
 
-                        <a class="fa fa-edit" title="edit" href="{{ route('leave.edit',$value['id']) }}"></a>
+                        @if($user_id == $value['user_id'])
+                            <a class="fa fa-edit" title="edit" href="{{ route('leave.edit',$value['id']) }}"></a>
+                        @endif
 
                         @permission(('leave-delete'))
                             @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'leave','display_name'=>'Leave Application'])
@@ -145,11 +145,11 @@
                     <td>{{ $value['leave_category'] }}</td>
 
                     @if($value['status'] == 0)
-                            <td style="background-color:#8FB1D5;">Pending</td>
+                        <td style="background-color:#8FB1D5;">Pending</td>
                     @elseif($value['status'] == 1)
-                            <td style="background-color:#32CD32;">Approved</td>
+                        <td style="background-color:#32CD32;">Approved</td>
                     @elseif($value['status'] == 2)
-                            <td style="background-color:#F08080;">Upapproved</td>
+                        <td style="background-color:#F08080;">Upapproved</td>
                     @endif
                 </tr>
             @endforeach
@@ -161,7 +161,6 @@
 
 @section('customscripts')
     <script type="text/javascript">
-        
         jQuery(document).ready(function() {
 
             var table = jQuery('#leave_table').DataTable({
@@ -172,6 +171,9 @@
                 "columnDefs": [ {orderable: false, targets: [1]} ]
             });
             new jQuery.fn.dataTable.FixedHeader( table );
+
+            $("#month").select2();
+            $("#year").select2();
         });
 
         function select_data() {
