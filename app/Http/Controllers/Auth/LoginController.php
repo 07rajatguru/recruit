@@ -165,7 +165,7 @@ class LoginController extends Controller
         $date = date('Y-m-d');
         $time = date('H:i:s');
 
-        \DB::statement("UPDATE `work_planning` SET `loggedout_time` = '$time' WHERE `added_date` = '$date'");
+        \DB::statement("UPDATE `work_planning` SET `loggedout_time` = '$time' WHERE `added_date` = '$date' AND `added_by` = '$user_id'");
 
         return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : '/');
     }

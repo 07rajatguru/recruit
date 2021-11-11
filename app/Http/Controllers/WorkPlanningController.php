@@ -730,12 +730,8 @@ class WorkPlanningController extends Controller
 
         $time_array = WorkPlanning::getTimeArray();
 
-        // Get Logged in Log out Time
-
-        $get_time = UsersLog::getUserLogInTime($user_id,$date);
-
         // Convert Logged in time
-        $utc_login = $get_time['login'];
+        $utc_login = $work_planning_res->loggedin_time;
         $dt_login = new \DateTime($utc_login);
         $tz_login = new \DateTimeZone('Asia/Kolkata');
 
@@ -744,7 +740,7 @@ class WorkPlanningController extends Controller
         $loggedin_time = date("g:i A", strtotime($loggedin_time));
 
         // Convert Logged in time
-        $utc_logout = $get_time['logout'];
+        $utc_logout = $work_planning_res->loggedout_time;
         $dt_logout = new \DateTime($utc_logout);
         $tz_logout = new \DateTimeZone('Asia/Kolkata');
 
@@ -862,8 +858,6 @@ class WorkPlanningController extends Controller
             }
         }
 
-        $get_time = UsersLog::getUserLogInTime($user_id,$date);
-
         $work_type = $request->input('work_type');
         $remaining_time = $request->input('remaining_time');
         $link = Input::get('link');
@@ -871,8 +865,6 @@ class WorkPlanningController extends Controller
         $work_planning = WorkPlanning::find($id);
         $work_planning->attendance = $attendance;
         $work_planning->work_type = $work_type;
-        $work_planning->loggedin_time = $get_time['login'];
-        $work_planning->loggedout_time = $get_time['logout'];
         $work_planning->work_planning_status_time = date('H:i:s');
         $work_planning->remaining_time = $remaining_time;
         $work_planning->link = $link;
@@ -926,7 +918,7 @@ class WorkPlanningController extends Controller
         WorkPlanningList::where('work_planning_id','=',$id)->delete();
         WorkPlanning::where('id','=',$id)->delete();
 
-        return redirect()->route('workplanning.index')->with('success','Work Planning Deleted Successfully.');
+        return redirect()->route('teamworkplanning.index')->with('success','Work Planning Deleted Successfully.');
     }
 
     public function getAddedList() {
