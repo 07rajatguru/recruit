@@ -10,7 +10,7 @@
     <table border="0" cellpadding="0" cellspacing="0" width="800" style="font-family:Helvetica,Arial,sans-serif;" align="left">
         <tr>
             <td width="800" style="font-family:Cambria, serif;font-size: 11.0pt;">
-                <b><p style="text-align: left;">Dear Sir,</p></b>
+                <b><p style="text-align: left;">Dear Sir/Madam,</p></b>
                 <i><p style="text-align: left;">Greetings !</p></i>
 
                 @if(isset($report_delay) && $report_delay != '')

@@ -80,7 +80,7 @@
                     </tr>
                     <tr>
                         <th>Link :</th>
-                        <td colspan="4">{{ $work_planning['link'] }}</td>
+                        <td colspan="4"><a href="{{ $work_planning['link'] }}" target="_blank">{{ $work_planning['link'] }}</a></td>
                     </tr>
                 </table>
             </div>

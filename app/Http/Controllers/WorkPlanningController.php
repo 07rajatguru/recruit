@@ -945,7 +945,7 @@ class WorkPlanningController extends Controller
 
         $work_planning = WorkPlanning::getWorkPlanningDetailsById($wp_id);
 
-        \DB::statement("UPDATE work_planning SET work_planning_status_time = '$work_planning_status_time' where id = $wp_id");
+        \DB::statement("UPDATE work_planning SET work_planning_status_time = '$work_planning_status_time', loggedout_time = '$work_planning_status_time' WHERE id = $wp_id");
 
         // Send Email Notification
 
