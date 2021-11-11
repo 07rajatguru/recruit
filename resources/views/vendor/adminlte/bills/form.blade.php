@@ -267,7 +267,7 @@
                                 <div class="">
                                     <div class="form-group">
                                         <strong>Employee Name : </strong>
-                                        {!! Form::select('lead_name', $users,null, array('id'=>'lead_name','class' => 'form-control', 'tabindex' => '25','placeholder' => '---None---')) !!}
+                                        {!! Form::select('lead_name', $lead_users,null, array('id'=>'lead_name','class' => 'form-control', 'tabindex' => '25','placeholder' => '---None---')) !!}
                                     </div>
                                 </div>
                             </div>
@@ -296,7 +296,7 @@
                                 <div class="">
                                     <div class="form-group">
                                         <strong>Employee Name : </strong>
-                                        {!! Form::select('lead_name', $users,$lead_name, array('id'=>'lead_name','class' => 'form-control', 'tabindex' => '25','placeholder' => '---None---')) !!}
+                                        {!! Form::select('lead_name', $lead_users,$lead_name, array('id'=>'lead_name','class' => 'form-control', 'tabindex' => '25','placeholder' => '---None---')) !!}
                                     </div>
                                 </div>
                             </div>

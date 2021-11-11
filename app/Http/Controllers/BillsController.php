@@ -983,7 +983,9 @@ class BillsController extends Controller
         $candidate_id = '';
         $candidateSource = CandidateBasicInfo::getCandidateSourceArrayByName();
 
-        return view('adminlte::bills.create', compact('action','generate_bm','jobopen','job_id','users','employee_name','employee_percentage','candidate_id','candidateSource','status','lead_name','lead_percentage'));
+        $lead_users = User::getAllUsers();
+
+        return view('adminlte::bills.create', compact('action','generate_bm','jobopen','job_id','users','employee_name','employee_percentage','candidate_id','candidateSource','status','lead_name','lead_percentage','lead_users'));
     }
 
     public function store(Request $request) {
@@ -1426,7 +1428,9 @@ class BillsController extends Controller
 
         $upload_type['Others'] = 'Others';
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id','candidateSource','billsdetails','id','status','lead_name','lead_percentage','upload_type'));
+        $lead_users = User::getAllUsers();
+
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','doj','jobopen','job_id','users','candidate_id','candidateSource','billsdetails','id','status','lead_name','lead_percentage','upload_type','lead_users'));
     }
 
     public function update(Request $request, $id) {
