@@ -160,6 +160,13 @@ class LoginController extends Controller
         //\Session::put('success','you are logout Successfully');
         \Auth::logout();
 
+        // Update in work planning table
+
+        $date = date('Y-m-d');
+        $time = date('H:i:s');
+
+        \DB::statement("UPDATE `work_planning` SET `loggedout_time` = '$time' WHERE `added_date` = '$date'");
+
         return redirect(property_exists($this, 'redirectAfterLogout') ? $this->redirectAfterLogout : '/');
     }
 }
