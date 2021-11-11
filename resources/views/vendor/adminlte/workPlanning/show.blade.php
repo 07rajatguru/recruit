@@ -107,7 +107,15 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <?php $i=1; ?>
+                        <?php 
+
+                            $i=1; 
+                            $display_total_projected_time = '';
+                            $display_total_actual_time = '';
+
+                            $p_0 = '';$p_1 = '';$p_2 = '';
+                            $a_0 = '';$a_1 = '';$a_2 = '';
+                        ?>
                         @foreach($work_planning_list as $key=>$value)
                             <tr>
                                 <td style="border:1px solid black;text-align: center;">{{ $i++ }}</td>
@@ -167,7 +175,96 @@
                                     @endif
                                 @endif
                             </tr>
+
+                            <?php
+
+                                // Set Projected Time
+                                if($p_0 == '') {
+                                    $p_0 = $projected_time[0];
+                                }
+                                else {
+                                    $p_0 = $p_0 + $projected_time[0];
+                                }
+
+                                if($p_1 == '') {
+                                    $p_1 = $projected_time[1];
+                                }
+                                else {
+                                    $p_1 = $p_1 + $projected_time[1];
+                                }
+
+                                if($p_2 == '') {
+                                    $p_2 = $projected_time[2];
+                                }
+                                else {
+                                    $p_2 = $p_2 + $projected_time[2];
+                                }
+
+                                if(strlen($p_0) == 1) {
+                                    $p_0 = '0'.$p_0;
+                                }
+
+                                if(strlen($p_1) == 1) {
+                                    $p_1 = '0'.$p_1;
+                                }
+
+                                if(strlen($p_2) == 1) {
+                                    $p_2 = '0'.$p_2;
+                                }
+
+                                $display_total_projected_time = $p_0.":".$p_1.":".$p_2;
+
+                                // Set Actual Time
+
+                                if(isset($value['actual_time']) && $value['actual_time'] != '') {
+
+                                    if($a_0 == '') {
+                                        $a_0 = $actual_time[0];
+                                    }
+                                    else {
+                                        $a_0 = $a_0 + $actual_time[0];
+                                    }
+
+                                    if($a_1 == '') {
+                                        $a_1 = $actual_time[1];
+                                    }
+                                    else {
+                                        $a_1 = $a_1 + $actual_time[1];
+                                    }
+
+                                    if($a_2 == '') {
+                                        $a_2 = $actual_time[2];
+                                    }
+                                    else {
+                                        $a_2 = $a_2 + $actual_time[2];
+                                    }
+
+                                    if(strlen($a_0) == 1) {
+                                        $a_0 = '0'.$a_0;
+                                    }
+
+                                    if(strlen($a_1) == 1) {
+                                        $a_1 = '0'.$a_1;
+                                    }
+
+                                    if(strlen($a_2) == 1) {
+                                        $a_2 = '0'.$a_2;
+                                    }
+
+
+                                    $display_total_actual_time = $a_0.":".$a_1.":".$a_2;
+                                }
+                            ?>
                         @endforeach
+                        <tr>
+                            <td style="border:1px solid black;text-align: center;"></td>
+                            <td style="border:1px solid black;text-align: center;"></td>
+                            <td align="center" width="10%" style="border:1px solid black;text-align: center;"><b>{{ $display_total_projected_time }} Hours</b></td>
+                            <td align="center" width="10%" style="border:1px solid black;text-align: center;"><b>{{ $display_total_actual_time }} Hours
+                            </b></td>
+                            <td style="border:1px solid black;text-align: center;"></td>
+                            <td style="border:1px solid black;text-align: center;"></td>
+                        </tr>
                     </tbody>
                     </table>
                 </div>
