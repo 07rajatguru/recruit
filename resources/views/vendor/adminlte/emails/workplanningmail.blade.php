@@ -132,8 +132,6 @@
                                 $p_2 = '0'.$p_2;
                             }
 
-                            $display_total_projected_time = $p_0.":".$p_1.":".$p_2;
-
                             // Set Actual Time
 
                             if(isset($value['actual_time']) && $value['actual_time'] != '') {
@@ -168,17 +166,27 @@
                                 if(strlen($a_2) == 1) {
                                     $a_2 = '0'.$a_2;
                                 }
-
-                                $display_total_actual_time = $a_0.":".$a_1.":".$a_2;
                             }
                         ?>
                     @endforeach
+
+                    <?php
+
+                        $display_total_projected_time = $p_0.":".$p_1.":".$p_2;
+                        $display_total_actual_time = $a_0.":".$a_1.":".$a_2;
+                    ?>
                     <tr>
                         <td></td>
                         <td></td>
                         <td></td>
                         <td align="center"><b>{{ $display_total_projected_time }} Hours</b></td>
-                        <td align="center"><b>{{ $display_total_actual_time }} Hours</b></td>
+
+                        @if(isset($display_total_actual_time) && $display_total_actual_time != '')
+                            <td align="center"><b>{{ $display_total_actual_time }} Hours</b>
+                            </td>
+                        @else
+                            <td align="center"></td>
+                        @endif
                         <td></td>
                         <td></td>
                     </tr>

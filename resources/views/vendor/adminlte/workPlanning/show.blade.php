@@ -203,16 +203,12 @@
                                 if(strlen($p_0) == 1) {
                                     $p_0 = '0'.$p_0;
                                 }
-
                                 if(strlen($p_1) == 1) {
                                     $p_1 = '0'.$p_1;
                                 }
-
                                 if(strlen($p_2) == 1) {
                                     $p_2 = '0'.$p_2;
                                 }
-
-                                $display_total_projected_time = $p_0.":".$p_1.":".$p_2;
 
                                 // Set Actual Time
 
@@ -242,26 +238,31 @@
                                     if(strlen($a_0) == 1) {
                                         $a_0 = '0'.$a_0;
                                     }
-
                                     if(strlen($a_1) == 1) {
                                         $a_1 = '0'.$a_1;
                                     }
-
                                     if(strlen($a_2) == 1) {
                                         $a_2 = '0'.$a_2;
                                     }
-
-
-                                    $display_total_actual_time = $a_0.":".$a_1.":".$a_2;
                                 }
                             ?>
                         @endforeach
+
+                        <?php
+
+                            $display_total_projected_time = $p_0.":".$p_1.":".$p_2;
+                            $display_total_actual_time = $a_0.":".$a_1.":".$a_2;
+                        ?>
                         <tr>
                             <td style="border:1px solid black;text-align: center;"></td>
                             <td style="border:1px solid black;text-align: center;"></td>
                             <td align="center" width="10%" style="border:1px solid black;text-align: center;"><b>{{ $display_total_projected_time }} Hours</b></td>
-                            <td align="center" width="10%" style="border:1px solid black;text-align: center;"><b>{{ $display_total_actual_time }} Hours
-                            </b></td>
+
+                            @if(isset($a_0) && $a_0 != '')
+                                <td align="center" width="10%" style="border:1px solid black;text-align: center;"><b>{{ $display_total_actual_time }} Hours</b></td>
+                            @else
+                                <td align="center" width="10%" style="border:1px solid black;text-align: center;"></td>
+                            @endif
                             <td style="border:1px solid black;text-align: center;"></td>
                             <td style="border:1px solid black;text-align: center;"></td>
                         </tr>
