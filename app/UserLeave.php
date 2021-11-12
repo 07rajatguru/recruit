@@ -112,6 +112,9 @@ class UserLeave extends Model
             $leave_data['type_of_leave'] = $res->type_of_leave;
             $leave_data['days'] = $res->days;
             $leave_data['remarks'] = $res->remarks;
+
+            $created_at = $dateClass->changeYMDtoDMY($res->created_at);
+            $leave_data['created_at'] = $created_at;
         }
 
         return $leave_data;

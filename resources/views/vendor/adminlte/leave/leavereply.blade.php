@@ -128,7 +128,7 @@
 <input type="hidden" name="subject" id="subject" value="{{ $leave_details['subject'] }}">
 <input type="hidden" name="approved_by" id="approved_by" value="{{ $leave_details['approved_by'] }}">
 
-<input type="hidden" name="from_date" id="from_date" value="{{ $leave_details['from_date'] }}">
+<input type="hidden" name="created_at" id="created_at" value="{{ $leave_details['created_at'] }}">
 
 <input type="hidden" name="check" id="check" value="">
 
@@ -176,7 +176,7 @@
         var user_id = $("#user_id").val();
         var subject = $("#subject").val();
         var approved_by = $("#approved_by").val();
-        var from_date = $("#from_date").val();
+        var created_at = $("#created_at").val();
 
         $("#check").val(check);
 
@@ -201,7 +201,7 @@
         var dd_tomorrow_1 = dd_tomorrow + 1;
         var tomorrow_1 = dd_tomorrow_1+'-'+mm+'-'+yyyy;
 
-        if(from_date == today || from_date == tomorrow || from_date == tomorrow_1) {
+        if(created_at == today || created_at == tomorrow || created_at == tomorrow_1) {
 
             $("#remarksmodal").modal('show');
         }
