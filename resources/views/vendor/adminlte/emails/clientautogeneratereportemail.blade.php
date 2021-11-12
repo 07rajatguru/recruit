@@ -29,11 +29,7 @@
                         @foreach($list_array as $key => $value)
                             <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
                                 
-                                @if(isset($value['associate_candidates']) && sizeof($value['associate_candidates']) > 5)
-                                    <?php 
-                                        $ass_names_string = sizeof($value['associate_candidates']);
-                                    ?>
-                                @elseif(isset($value['associate_candidates']) && sizeof($value['associate_candidates']) > 0)
+                                @if(isset($value['associate_candidates']) && sizeof($value['associate_candidates']) > 0)
                                     <?php
                                         $ass_names_string = '';
                                         $ass_incr = 1;
