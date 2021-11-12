@@ -129,6 +129,10 @@
 <input type="hidden" name="approved_by" id="approved_by" value="{{ $leave_details['approved_by'] }}">
 
 <input type="hidden" name="created_at" id="created_at" value="{{ $leave_details['created_at'] }}">
+<input type="hidden" name="from_date" id="from_date" value="{{ $leave_details['from_date'] }}">
+<input type="hidden" name="from_tommorrow_date_1" id="from_tommorrow_date_1" value="{{ $leave_details['from_tommorrow_date_1'] }}">
+<input type="hidden" name="from_tommorrow_date_2" id="from_tommorrow_date_2" value="{{ $leave_details['from_tommorrow_date_2'] }}">
+
 
 <input type="hidden" name="check" id="check" value="">
 
@@ -176,32 +180,15 @@
         var user_id = $("#user_id").val();
         var subject = $("#subject").val();
         var approved_by = $("#approved_by").val();
+        var from_date = $("#from_date").val();
         var created_at = $("#created_at").val();
+        var from_tommorrow_date_1 = $("#from_tommorrow_date_1").val();
+        var from_tommorrow_date_2 = $("#from_tommorrow_date_2").val();
 
         $("#check").val(check);
 
-        var today = new Date();
 
-        var dd = today.getDate();
-        var mm = today.getMonth()+1; 
-        var yyyy = today.getFullYear();
-
-        if(dd < 10) {
-            dd='0'+dd;
-        } 
-        if(mm < 10) {
-            mm='0'+mm;
-        }
-
-        today = dd+'-'+mm+'-'+yyyy;
-
-        var dd_tomorrow = dd + 1;
-        var tomorrow = dd_tomorrow+'-'+mm+'-'+yyyy;
-
-        var dd_tomorrow_1 = dd_tomorrow + 1;
-        var tomorrow_1 = dd_tomorrow_1+'-'+mm+'-'+yyyy;
-
-        if(created_at == today || created_at == tomorrow || created_at == tomorrow_1) {
+        if(from_date == created_at || from_date == from_tommorrow_date_1 || from_date == from_tommorrow_date_2) {
 
             $("#remarksmodal").modal('show');
         }
@@ -214,7 +201,7 @@
                 url:app_url+'/leave/reply/'+leave_id,
                 data: {leave_id: leave_id, 'check':check, '_token':token, msg:msg, user_name:user_name, loggedin_user_id:loggedin_user_id,user_id:user_id,subject:subject,approved_by:approved_by,'remarks':remarks},
                 dataType:'json',
-                success: function(data){
+                success: function(data) {
                     if (data == 'success') { 
                         window.location.reload();
                         alert('Reply Send Successfully.');

@@ -195,57 +195,52 @@
             const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
             var days = diffInDays + 1;
 
-            console.log(days);
-
-            if(leave_type == 'Early Go' || leave_type == 'Late In') {
-                
-                return true;
-            }
-            else if(leave_type == 'Half Day') {
+            if(leave_cat == 'Paid Leave' || leave_cat == 'Seek Leave') {
 
                 var loggedin_user_id = $("#loggedin_user_id").val();
                 var app_url = "{!! env('APP_URL') !!}";
                 var token = $("input[name=_token]").val();
-                var total_days = days/2;
 
-                $.ajax({
+                if(leave_type == 'Half Day') {
 
-                    type: 'GET',
-                    url:app_url+'/leave/balance',
-                    data: {'_token':token, loggedin_user_id:loggedin_user_id,leave_cat:leave_cat},
-                    dataType:'json',
-                    success: function(leave_count) {
+                    var total_days = days/2;
 
-                        if (leave_count < total_days) { 
-                                
-                            alert('You Not Have Enough Leave Balance.');
-                            return false;
+                    $.ajax({
+
+                        type: 'GET',
+                        url:app_url+'/leave/balance',
+                        data: {'_token':token, loggedin_user_id:loggedin_user_id,leave_cat:leave_cat},
+                        dataType:'json',
+                        success: function(leave_count) {
+
+                            if (leave_count < total_days) { 
+                                    
+                                alert('You Not Have Enough Leave Balance.');
+                                return false;
+                            }
                         }
-                    }
-                });
-            }
-            else if(leave_type == 'Full Day') {
+                    });
+                }
+                if(leave_type == 'Full Day') {
 
-                var loggedin_user_id = $("#loggedin_user_id").val();
-                var app_url = "{!! env('APP_URL') !!}";
-                var token = $("input[name=_token]").val();
-                var total_days = days;
+                    var total_days = days;
 
-                $.ajax({
+                    $.ajax({
 
-                    type: 'GET',
-                    url:app_url+'/leave/balance',
-                    data: {'_token':token, loggedin_user_id:loggedin_user_id,leave_cat:leave_cat},
-                    dataType:'json',
-                    success: function(leave_count) {
+                        type: 'GET',
+                        url:app_url+'/leave/balance',
+                        data: {'_token':token, loggedin_user_id:loggedin_user_id,leave_cat:leave_cat},
+                        dataType:'json',
+                        success: function(leave_count) {
 
-                        if (leave_count < total_days) { 
-                                
-                            alert('You Not Have Enough Leave Balance.');
-                            return false;
+                            if (leave_count < total_days) { 
+                                    
+                                alert('You Not Have Enough Leave Balance.');
+                                return false;
+                            }
                         }
-                    }
-                });
+                    });
+                }
             }
         }
 

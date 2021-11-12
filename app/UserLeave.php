@@ -106,15 +106,21 @@ class UserLeave extends Model
             $from_date = $dateClass->changeYMDtoDMY($res->from_date);
             $leave_data['from_date'] = $from_date;
 
-            $to_date = $dateClass->changeYMDtoDMY($res->from_date);
+            $to_date = $dateClass->changeYMDtoDMY($res->to_date);
             $leave_data['to_date'] = $to_date;
+
+            $created_at = $dateClass->changeYMDtoDMY($res->created_at);
+            $leave_data['created_at'] = $created_at;
+
+            $from_tommorrow_date_1 = $dateClass->changeYMDtoDMY($res->from_tommorrow_date_1);
+            $leave_data['from_tommorrow_date_1'] = $from_tommorrow_date_1;
+
+            $from_tommorrow_date_2 = $dateClass->changeYMDtoDMY($res->from_tommorrow_date_2);
+            $leave_data['from_tommorrow_date_2'] = $from_tommorrow_date_2;
 
             $leave_data['type_of_leave'] = $res->type_of_leave;
             $leave_data['days'] = $res->days;
             $leave_data['remarks'] = $res->remarks;
-
-            $created_at = $dateClass->changeYMDtoDMY($res->created_at);
-            $leave_data['created_at'] = $created_at;
         }
 
         return $leave_data;

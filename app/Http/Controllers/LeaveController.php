@@ -12,6 +12,7 @@ use App\LeaveDoc;
 use App\LeaveBalance;
 use Illuminate\Support\Facades\File;
 use App\Holidays;
+use DateTime;
 
 class LeaveController extends Controller
 {
@@ -304,6 +305,11 @@ class LeaveController extends Controller
             
         }
 
+        // Set Two Dates
+
+        $from_tommorrow_date_1 = date("Y-m-d", strtotime("$from_date +1days"));
+        $from_tommorrow_date_2 = date("Y-m-d", strtotime("$from_date +2days"));
+        
         $user_leave = new UserLeave();
         $user_leave->user_id = $user_id;
         $user_leave->subject = $subject;
@@ -313,6 +319,8 @@ class LeaveController extends Controller
         $user_leave->category = $leave_category;
         $user_leave->message = $message;
         $user_leave->status = '0';
+        $user_leave->from_tommorrow_date_1 = $from_tommorrow_date_1;
+        $user_leave->from_tommorrow_date_2 = $from_tommorrow_date_2;
 
         if($leave_type == 'Early Go' || $leave_type == 'Late In') {
 
