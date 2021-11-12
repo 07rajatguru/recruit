@@ -18,7 +18,7 @@ class LeaveBalance extends Model
     	return $res;
     }
 
-    public static function CheckUserID($user_id){
+    public static function CheckUserID($user_id) {
 
     	$query = LeaveBalance::query();
     	$query = $query->where('leave_balance.user_id',$user_id);
@@ -32,7 +32,7 @@ class LeaveBalance extends Model
     	return $user;
     }
 
-    public static function getAllUserWiseLeave(){
+    public static function getAllUserWiseLeave() {
 
         $query = LeaveBalance::query();
         $query = $query->join('users','users.id','=','leave_balance.user_id');

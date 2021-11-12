@@ -90,6 +90,7 @@ class UserLeave extends Model
         $res = $query->first();
 
         $leave_data = array();
+        $dateClass = new Date();
         
         if (isset($res) && $res != '') {
 
@@ -101,10 +102,16 @@ class UserLeave extends Model
             $leave_data['status'] = $res->status;
             $leave_data['uname'] = $res->fname . " " . $res->lname;
             $leave_data['approved_by'] = $res->approved_by_first_name . " " . $res->approved_by_last_name;
-            $leave_data['from_date'] = $res->from_date;
-            $leave_data['to_date'] = $res->to_date;
+
+            $from_date = $dateClass->changeYMDtoDMY($res->from_date);
+            $leave_data['from_date'] = $from_date;
+
+            $to_date = $dateClass->changeYMDtoDMY($res->from_date);
+            $leave_data['to_date'] = $to_date;
+
             $leave_data['type_of_leave'] = $res->type_of_leave;
             $leave_data['days'] = $res->days;
+            $leave_data['remarks'] = $res->remarks;
         }
 
         return $leave_data;
@@ -134,7 +141,7 @@ class UserLeave extends Model
         return $leave_by_date;
     }
 
-    public static function getLeaveDetailsByUserID($loggedin_user_id) {
+    public static function getLeaveCountByUserID($loggedin_user_id) {
 
         $month = date('m');
         $year = date('Y');

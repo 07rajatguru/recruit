@@ -12,9 +12,7 @@
                 <td width="600">
                     <table cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff;padding: 15px 15px;">
                         <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
-                            <td style="font-family:Cambria, serif;font-size: 11.0pt;">
-                                <p>{!! $leave_message !!}</p>
-                            </td>
+                            <td>{!! $leave_message !!}</td>
                         </tr>
                     </table>
                 </td>
@@ -22,9 +20,7 @@
             <tr>
                 <td width="600">
                     <table cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff;padding: 15px 15px;">
-                        <tr>
-                            <td>{!! $signature !!}</td>
-                        </tr>
+                        <tr><td>{!! $signature !!}</td></tr>
                     </table>
                 </td>
             </tr>

@@ -53,6 +53,11 @@
                             <th>Leave Message</th>
                             <td colspan="6">{!! $leave_details['message'] !!}</td>
                         </tr>
+
+                        <tr>
+                            <th>Remarks</th>
+                            <td colspan="6">{!! $leave_details['remarks'] !!}</td>
+                        </tr>
                     </table>
             	</div>
             </div>
@@ -98,8 +103,9 @@
 @else
     @if($leave_details['status'] == 0)
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            <button type="submit" class="btn btn-success" onclick="permission('Approved')">Approved</button> &nbsp;&nbsp;&nbsp;&nbsp;
-            <button type="submit" class="btn btn-danger" onclick="permission('Notapproved')">Not approved</button>
+            <button type="submit" class="btn btn-success" onclick="permission('Approved')" title="Approved">Approved</button> 
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="submit" class="btn btn-danger" onclick="permission('Notapproved')" title="Not Approved">Not Approved</button>
         </div>
     @endif
 @endif
@@ -114,13 +120,46 @@
     </div>
 @endif
 
-<input type="hidden" name="leave_id" id="leave_id" value="{{$leave_id}}">
-<input type="hidden" name="msg" id="msg" value="{{$leave_details['message']}}">
-<input type="hidden" name="user_name" id="user_name" value="{{$leave_details['uname']}}">
-<input type="hidden" name="loggedin_user_id" id="loggedin_user_id" value="{{$loggedin_user_id}}">
-<input type="hidden" name="user_id" id="user_id" value="{{$leave_details['user_id']}}">
-<input type="hidden" name="subject" id="subject" value="{{$leave_details['subject']}}">
-<input type="hidden" name="approved_by" id="approved_by" value="{{$leave_details['approved_by']}}">
+<input type="hidden" name="leave_id" id="leave_id" value="{{ $leave_id }}">
+<input type="hidden" name="msg" id="msg" value="{{ $leave_details['message'] }}">
+<input type="hidden" name="user_name" id="user_name" value="{{ $leave_details['uname'] }}">
+<input type="hidden" name="loggedin_user_id" id="loggedin_user_id" value="{{ $loggedin_user_id }}">
+<input type="hidden" name="user_id" id="user_id" value="{{ $leave_details['user_id'] }}">
+<input type="hidden" name="subject" id="subject" value="{{ $leave_details['subject'] }}">
+<input type="hidden" name="approved_by" id="approved_by" value="{{ $leave_details['approved_by'] }}">
+
+<input type="hidden" name="from_date" id="from_date" value="{{ $leave_details['from_date'] }}">
+
+<input type="hidden" name="check" id="check" value="">
+
+<!-- Remarsk Modal Popup -->
+
+<div id="remarksmodal" class="modal text-left fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Add Remarks</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="ac_mngr_cls">
+                    <div class="form-group">
+                        <strong>Remarks: <span class = "required_fields">*</span></strong>
+                        {!! Form::textarea('remarks', null, array('id'=>'remarks','placeholder' => 'Remarks','class' => 'form-control','rows' => '5')) !!}
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="hideModal();">Submit</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
 @stop
 
 @section('customscripts')
@@ -137,19 +176,84 @@
         var user_id = $("#user_id").val();
         var subject = $("#subject").val();
         var approved_by = $("#approved_by").val();
-        //alert(loggedin_user_id);
+        var from_date = $("#from_date").val();
+
+        $("#check").val(check);
+
+        var today = new Date();
+
+        var dd = today.getDate();
+        var mm = today.getMonth()+1; 
+        var yyyy = today.getFullYear();
+
+        if(dd < 10) {
+            dd='0'+dd;
+        } 
+        if(mm < 10) {
+            mm='0'+mm;
+        }
+
+        today = dd+'-'+mm+'-'+yyyy;
+
+        var dd_tomorrow = dd + 1;
+        var tomorrow = dd_tomorrow+'-'+mm+'-'+yyyy;
+
+        var dd_tomorrow_1 = dd_tomorrow + 1;
+        var tomorrow_1 = dd_tomorrow_1+'-'+mm+'-'+yyyy;
+
+        if(from_date == today || from_date == tomorrow || from_date == tomorrow_1) {
+
+            $("#remarksmodal").modal('show');
+        }
+        else {
+
+            var remarks = '';
+
+            $.ajax({
+                type: 'POST',
+                url:app_url+'/leave/reply/'+leave_id,
+                data: {leave_id: leave_id, 'check':check, '_token':token, msg:msg, user_name:user_name, loggedin_user_id:loggedin_user_id,user_id:user_id,subject:subject,approved_by:approved_by,'remarks':remarks},
+                dataType:'json',
+                success: function(data){
+                    if (data == 'success') { 
+                        window.location.reload();
+                        alert('Reply Send Successfully.');
+                    }
+                }
+            });
+        }
+    }
+
+    function hideModal() {
+
+        alert("Remarks Added Successfully.");
+
+        $("#remarksmodal").modal('hide');
+        
+        var app_url = "{!! env('APP_URL') !!}";
+        var leave_id = $("#leave_id").val();
+        var check = $("#check").val();
+        var token = $("input[name=_token]").val();
+        var msg = $("#msg").val();
+        var user_name = $("#user_name").val();
+        var loggedin_user_id = $("#loggedin_user_id").val();
+        var user_id = $("#user_id").val();
+        var subject = $("#subject").val();
+        var approved_by = $("#approved_by").val();
+        var remarks = $("#remarks").val();
 
         $.ajax({
-            type: 'POST',
-            url:app_url+'/leave/reply/'+leave_id,
-            data: {leave_id: leave_id, 'check':check, '_token':token, msg:msg, user_name:user_name, loggedin_user_id:loggedin_user_id,user_id:user_id,subject:subject,approved_by:approved_by},
-            dataType:'json',
-            success: function(data){
-                if (data == 'success') { 
-                    window.location.reload();
-                    alert('Reply Send Successfully.');
+
+                type: 'POST',
+                url:app_url+'/leave/reply/'+leave_id,
+                data: {leave_id: leave_id, 'check':check, '_token':token, msg:msg, user_name:user_name, loggedin_user_id:loggedin_user_id,user_id:user_id,subject:subject,approved_by:approved_by,'remarks':remarks},
+                dataType:'json',
+                success: function(data){
+                    if (data == 'success') { 
+                        window.location.reload();
+                        alert('Reply Send Successfully.');
+                    }
                 }
-            }
         });
     }
 </script>

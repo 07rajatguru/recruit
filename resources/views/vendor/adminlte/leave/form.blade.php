@@ -81,7 +81,7 @@
                     </div>
 
                     <div class="form-group to_date {{ $errors->has('to_date') ? 'has-error' : '' }}">
-                        <strong>To Date: </strong>
+                        <strong>To Date: <span class = "required_fields">*</span></strong>
                         <div class="input-group date">
                             <div class="input-group-addon">
                                 <i class="fa fa-calendar"></i>
@@ -138,6 +138,9 @@
                     "from_date": {
                         required: true
                     },
+                    "to_date": {
+                        required: true
+                    },
                     "leave_type": {
                         required: true
                     },
@@ -147,16 +150,19 @@
                 },
                 messages: {
                     "subject": {
-                        required: "Subject is required field."
+                        required: "Subject is Required Field."
                     },
                     "from_date": {
-                        required: "From date is required field."
+                        required: "From Date is Required Field."
+                    },
+                    "to_date": {
+                        required: "To Date is Required Field."
                     },
                     "leave_type": {
-                        required: "Leave type is required field."
+                        required: "Leave Type is Required Field."
                     },
                     "leave_doc[]": {
-                        required: "Document file is required field."
+                        required: "Document File is Required Field."
                     }
                 }
             });
@@ -164,13 +170,82 @@
 
         function category() {
 
-            leave_cat = $("#leave_category").val();
+            var leave_cat = $("#leave_category").val();
 
             if (leave_cat == 'Seek Leave') {
                 $(".document").show();
             }
             else {
                 $(".document").hide();
+            }
+
+             // For calculate leaves added by user
+
+            var leave_type = $("#leave_type").val();
+
+            var from_date = $("#from_date").val();
+            var temp_from_date = from_date.split('-');
+            var new_from_date = temp_from_date[2]+"-"+temp_from_date[1]+"-"+temp_from_date[0];
+
+            var to_date = $("#to_date").val();
+            var temp_to_date = to_date.split('-');
+            var new_to_date = temp_to_date[2]+"-"+temp_to_date[1]+"-"+temp_to_date[0];
+
+            const diffInMs   = new Date(new_to_date) - new Date(new_from_date);
+            const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+            var days = diffInDays + 1;
+
+            console.log(days);
+
+            if(leave_type == 'Early Go' || leave_type == 'Late In') {
+                
+                return true;
+            }
+            else if(leave_type == 'Half Day') {
+
+                var loggedin_user_id = $("#loggedin_user_id").val();
+                var app_url = "{!! env('APP_URL') !!}";
+                var token = $("input[name=_token]").val();
+                var total_days = days/2;
+
+                $.ajax({
+
+                    type: 'GET',
+                    url:app_url+'/leave/balance',
+                    data: {'_token':token, loggedin_user_id:loggedin_user_id,leave_cat:leave_cat},
+                    dataType:'json',
+                    success: function(leave_count) {
+
+                        if (leave_count < total_days) { 
+                                
+                            alert('You Not Have Enough Leave Balance.');
+                            return false;
+                        }
+                    }
+                });
+            }
+            else if(leave_type == 'Full Day') {
+
+                var loggedin_user_id = $("#loggedin_user_id").val();
+                var app_url = "{!! env('APP_URL') !!}";
+                var token = $("input[name=_token]").val();
+                var total_days = days;
+
+                $.ajax({
+
+                    type: 'GET',
+                    url:app_url+'/leave/balance',
+                    data: {'_token':token, loggedin_user_id:loggedin_user_id,leave_cat:leave_cat},
+                    dataType:'json',
+                    success: function(leave_count) {
+
+                        if (leave_count < total_days) { 
+                                
+                            alert('You Not Have Enough Leave Balance.');
+                            return false;
+                        }
+                    }
+                });
             }
         }
 
@@ -221,9 +296,7 @@
             else {
                 return true;
             }
-
             return false;
         }
-
     </script>
 @endsection

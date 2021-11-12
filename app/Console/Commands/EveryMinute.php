@@ -517,6 +517,7 @@ class EveryMinute extends Command
 
                 $leave = UserLeave::find($module_id);
                 $input['leave_message'] = $leave->reply_message;
+                $input['remarks'] = $leave->remarks;
 
                 if(strpos($input['from_address'], '@gmail.com') !== false) {
 

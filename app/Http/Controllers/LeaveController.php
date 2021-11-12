@@ -556,6 +556,12 @@ class LeaveController extends Controller
         $user_name = $_POST['user_name'];
         $loggedin_user_id = $_POST['loggedin_user_id'];
         $user_id = $_POST['user_id'];
+        $remarks = $_POST['remarks'];
+
+        if(isset($remarks) && $remarks != '') {
+
+            \DB::statement("UPDATE `user_leave` SET `remarks` = '$remarks' WHERE `id` = $leave_id");
+        }
 
         // Get user leave details
         $leave_details = UserLeave::getLeaveDetails($leave_id);
@@ -579,9 +585,7 @@ class LeaveController extends Controller
             
             $approved_by = $leave_details['approved_by'];
 
-            $new_msg = "<p><b>Hello " . $user_name . " ,</b></p><p><b>Your leave has been Approved.</b></p>";
-            $message = "<tr><td><p>" . $new_msg . "</p><p>Thanks.</p><p>" . 
-            $approved_by . "</p></td></tr>";
+            $message = "<p><b>Hello " . $user_name . " ,</b></p><p><b>Your leave has been Approved.</b></p>";
 
             $module = "Leave Reply";
             $sender_name = $loggedin_user_id;
@@ -633,9 +637,7 @@ class LeaveController extends Controller
 
             $approved_by = $leave_details['approved_by'];
        
-            $new_msg = "<p><b>Hello " . $user_name . " ,</b></p><p><b>Your leave has been Not Approved.</b></p>";
-            $message = "<tr><td><p>" . $new_msg . "</p><p>Thanks.</p><p>" . 
-            $approved_by . "</p></td></tr>";
+            $message = "<p><b>Hello " . $user_name . " ,</b></p><p><b>Your leave has been Not Approved.</b></p>";
 
             $module = "Leave Reply";
             $sender_name = $loggedin_user_id;
@@ -743,8 +745,38 @@ class LeaveController extends Controller
         
         $loggedin_user_id = $_GET['loggedin_user_id'];
 
-        $get_leaves = UserLeave::getLeaveDetailsByUserID($loggedin_user_id);
+        $get_leaves = UserLeave::getLeaveCountByUserID($loggedin_user_id);
 
         return json_encode($get_leaves);
+    }
+
+    public function getTotalLeaveBalance() {
+        
+        $loggedin_user_id = $_GET['loggedin_user_id'];
+        $leave_cat = $_GET['leave_cat'];
+
+        $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($loggedin_user_id);
+
+        if($leave_cat == 'Paid Leave') {
+
+            $leave_count = array();
+
+            if(isset($leave_balance_details) && $leave_balance_details != '') {
+
+                $leave_count = $leave_balance_details->leave_remaining;
+            }
+        }
+
+        if($leave_cat == 'Seek Leave') {
+
+            $leave_count = array();
+
+            if(isset($leave_balance_details) && $leave_balance_details != '') {
+
+                $leave_count = $leave_balance_details->seek_leave_remaining;
+            }
+        }
+
+        return json_encode($leave_count);
     }
 }
