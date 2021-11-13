@@ -75,7 +75,7 @@
         </div>
 
         <div class="box-body col-xs-2 col-sm-2 col-md-2" style="margin-top:-8px;">
-            <a href="{{ route('leave.status',array('not-approved',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Rejected">Not Approved ({{ $not_approved }})</div></a>
+            <a href="{{ route('leave.status',array('not-approved',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Not Approved">Not Approved ({{ $not_approved }})</div></a>
         </div>
     </div>
 
@@ -149,7 +149,7 @@
                     @elseif($value['status'] == 1)
                         <td style="background-color:#32CD32;">Approved</td>
                     @elseif($value['status'] == 2)
-                        <td style="background-color:#F08080;">Upapproved</td>
+                        <td style="background-color:#F08080;">Not Approved</td>
                     @endif
                 </tr>
             @endforeach
