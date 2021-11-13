@@ -307,8 +307,8 @@ class LeaveController extends Controller
 
         // Set Two Dates
 
-        $from_tommorrow_date_1 = date("Y-m-d", strtotime("$from_date +1days"));
-        $from_tommorrow_date_2 = date("Y-m-d", strtotime("$from_date +2days"));
+        $from_tommorrow_date_1 = date("Y-m-d", strtotime('tomorrow'));
+        $from_tommorrow_date_2 = date("Y-m-d", strtotime('tomorrow + 1 day'));
         
         $user_leave = new UserLeave();
         $user_leave->user_id = $user_id;
