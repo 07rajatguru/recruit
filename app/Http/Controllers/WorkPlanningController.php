@@ -710,10 +710,67 @@ class WorkPlanningController extends Controller
         $work_planning = WorkPlanning::getWorkPlanningDetailsById($id);
         $work_planning_list = WorkPlanningList::getWorkPlanningList($id);
 
+        $projected_time_array = array();
+        $actual_time_array = array();
+        $i = 0;
+
+        foreach ($work_planning_list as $k=>$v) {
+
+            if(isset($v['projected_time']) && $v['projected_time'] != '') {
+
+                $projected_time_array[$i] = $v['projected_time'];
+            }
+            
+            if(isset($v['actual_time']) && $v['actual_time'] != '') {
+                
+                $actual_time_array[$i] = $v['actual_time'];
+            }
+
+            $i++;
+        }
+
+        // Calculate Total Projected Time
+
+        if(isset($projected_time_array) && sizeof($projected_time_array) > 0) {
+
+            $time_in_secs = array_map(function ($v) { return strtotime($v) - strtotime('00:00'); }, $projected_time_array);
+            $total_time = array_sum($time_in_secs);
+            $hours = floor($total_time / 3600);
+            $minutes = floor(($total_time % 3600) / 60);
+            $seconds = $total_time % 60;
+            
+            $total_projected_time = str_pad($hours, 2, '0', STR_PAD_LEFT)
+               . ":" . str_pad($minutes, 2, '0', STR_PAD_LEFT) 
+               . ":" . str_pad($seconds, 2, '0', STR_PAD_LEFT) . "\n";
+        }
+        else {
+
+            $total_projected_time = '';
+        }
+
+        // Calculate Total Projected Time
+
+        if(isset($actual_time_array) && sizeof($actual_time_array) > 0) {
+
+            $time_in_secs_1 = array_map(function ($v_1) { return strtotime($v_1) - strtotime('00:00'); }, $actual_time_array);
+            $total_time_1 = array_sum($time_in_secs_1);
+            $hours_1 = floor($total_time_1 / 3600);
+            $minutes_1 = floor(($total_time_1 % 3600) / 60);
+            $seconds_1 = $total_time_1 % 60;
+            
+            $total_actual_time = str_pad($hours_1, 2, '0', STR_PAD_LEFT)
+               . ":" . str_pad($minutes_1, 2, '0', STR_PAD_LEFT) 
+               . ":" . str_pad($seconds_1, 2, '0', STR_PAD_LEFT) . "\n";
+        }
+        else {
+
+            $total_actual_time = '';
+        }
+
         $added_by_id = $work_planning['added_by_id'];
         $appr_rejct_by = User::getUserNameById($work_planning['appr_rejct_by']);
         
-        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','id','loggedin_user_id','added_by_id','appr_rejct_by'));
+        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','id','loggedin_user_id','added_by_id','appr_rejct_by','total_projected_time','total_actual_time'));
     }
 
     public function edit($id) {
@@ -887,14 +944,23 @@ class WorkPlanningController extends Controller
         $remarks = array();
         $remarks = Input::get('remarks');
 
-        for($j = 0; $j < count($task); $j++) {
+        $row_cnt = Input::get('row_cnt');
 
-            if($task[$j]!='') {
+        for($j = 0; $j < $row_cnt; $j++) {
+
+            if(isset($task[$j]) && $task[$j]!='') {
 
                 $work_planning_list = new WorkPlanningList();
                 $work_planning_list->work_planning_id = $id;
                 $work_planning_list->task = $task[$j];
-                $work_planning_list->projected_time = $projected_time[$j];
+
+                if(isset($projected_time[$j]) && $projected_time[$j] != '') {
+                    $work_planning_list->projected_time = $projected_time[$j];
+                }
+                else {
+
+                    $work_planning_list->projected_time = '';
+                }
 
                 if(isset($actual_time[$j]) && $actual_time[$j] != '') {
                     $work_planning_list->actual_time = $actual_time[$j];
