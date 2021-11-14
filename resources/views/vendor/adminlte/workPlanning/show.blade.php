@@ -231,6 +231,31 @@
         </div>
     </div>
 @endforeach
+
+<!-- Modal Start -->
+<div class="modal text-left fade" id="alertModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Add Reason of Rejection</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <strong>&nbsp;Please specify reason of rejection:</strong><br/><br/>
+                    {!! Form::textarea('report_delay_content', null, array('id' => 'report_delay_content','placeholder' => 'Reason of Rejection','class' => 'form-control','rows' => '5')) !!}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="submitform();">OK
+                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal End -->
 @endsection
 
 @section('customscripts')
@@ -242,27 +267,32 @@
         var app_url = "{!! env('APP_URL') !!}";
         var token = $("input[name=_token]").val();
 
-        $.ajax({
-            type: 'POST',
-            url:app_url+'/work-planning/'+wp_id+'/show',
-            data: {wp_id: wp_id, 'check':check, '_token':token},
-            dataType:'json',
+        if(check == 'Rejected') {
 
-            success: function(data) {
+            $("#alertModal").modal('show');
+            return false;
+        }
+        else {
 
-                if (data == 'success') {
+            $.ajax({
+                type: 'POST',
+                url:app_url+'/work-planning/'+wp_id+'/show',
+                data: {wp_id: wp_id, 'check':check, '_token':token},
+                dataType:'json',
 
-                    window.location.href = app_url+'/work-planning/'+wp_id+'/show';
+                success: function(data) {
 
-                    if(check == 'Approved') {
-                        alert("Report Approved Successfully.");
-                    }
-                    if(check == 'Rejected') {
-                        alert("Report Rejected.");
+                    if (data == 'success') {
+
+                        window.location.href = app_url+'/work-planning/'+wp_id+'/show';
+
+                        if(check == 'Approved') {
+                            alert("Report Approved Successfully.");
+                        }
                     }
                 }
-            }
-        });
+            });
+        }
     }
 </script>
 @endsection

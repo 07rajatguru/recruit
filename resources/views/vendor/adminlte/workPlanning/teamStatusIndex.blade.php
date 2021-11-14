@@ -91,7 +91,7 @@
                         </tr>
                     </tbody>
                         
-                    <tbody id="data_{{$j}}" style="display: none;">
+                    <tbody id="data_{{$j}}">
                         @if(isset($value) && sizeof($value) >0)
                             @foreach($value as $k => $v)
                                 <tr>

@@ -206,8 +206,8 @@
                     {!! Form::label('Others') !!}
 
                     <div class="form-group report_delay_conent_cls" style="display:none;">
-                        <br/><strong>&nbsp;Add Description :</strong>
-                        {!! Form::textarea('report_delay_content', null, array('id' => 'report_delay_content','placeholder' => 'Add Text','class' => 'form-control','rows' => '5')) !!}
+                        <br/><strong>&nbsp;If others, please specify :</strong>
+                        {!! Form::textarea('report_delay_content', null, array('id' => 'report_delay_content','placeholder' => 'Specify Reason','class' => 'form-control','rows' => '5')) !!}
                     </div>
                 </div>
             </div>
