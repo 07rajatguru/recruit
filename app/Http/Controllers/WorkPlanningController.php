@@ -717,15 +717,12 @@ class WorkPlanningController extends Controller
         foreach ($work_planning_list as $k=>$v) {
 
             if(isset($v['projected_time']) && $v['projected_time'] != '') {
-
                 $projected_time_array[$i] = $v['projected_time'];
             }
             
             if(isset($v['actual_time']) && $v['actual_time'] != '') {
-                
                 $actual_time_array[$i] = $v['actual_time'];
             }
-
             $i++;
         }
 
@@ -744,7 +741,6 @@ class WorkPlanningController extends Controller
                . ":" . str_pad($seconds, 2, '0', STR_PAD_LEFT) . "\n";
         }
         else {
-
             $total_projected_time = '';
         }
 
@@ -763,7 +759,6 @@ class WorkPlanningController extends Controller
                . ":" . str_pad($seconds_1, 2, '0', STR_PAD_LEFT) . "\n";
         }
         else {
-
             $total_actual_time = '';
         }
 

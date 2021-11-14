@@ -179,14 +179,14 @@
                                 <td align="center" width="10%" style="border:1px solid black;text-align: center;"><b>{{ $total_projected_time }} Hours
                                 </b></td>
                             @else
-                                <td align="center" width="10%" style="border:1px solid black;text-align: center;"><b></b></td>
+                                <td style="border:1px solid black;text-align: center;"></td>
                             @endif
 
                             @if(isset($total_actual_time) && $total_actual_time != '')
                                 <td align="center" width="10%" style="border:1px solid black;text-align: center;"><b>{{ $total_actual_time }} Hours
                                 </b></td>
                             @else
-                                <td align="center" width="10%" style="border:1px solid black;text-align: center;"><b></b></td>
+                                <td style="border:1px solid black;text-align: center;"></td>
                             @endif
 
                             <td style="border:1px solid black;text-align: center;"></td>
