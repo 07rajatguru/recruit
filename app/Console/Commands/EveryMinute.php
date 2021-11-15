@@ -2009,75 +2009,21 @@ class EveryMinute extends Command
                 $work_planning = WorkPlanning::getWorkPlanningDetailsById($value['module_id']);
                 $work_planning_list = WorkPlanningList::getWorkPlanningList($value['module_id']);
 
-                // Set Total Time of Projected & Actual Time
-
-                $projected_time_array = array();
-                $actual_time_array = array();
-                $i = 0;
-
-                foreach ($work_planning_list as $k=>$v) {
-
-                    if(isset($v['projected_time']) && $v['projected_time'] != '') {
-                        $projected_time_array[$i] = $v['projected_time'];
-                    }
-                    
-                    if(isset($v['actual_time']) && $v['actual_time'] != '') {
-                        $actual_time_array[$i] = $v['actual_time'];
-                    }
-                    $i++;
-                }
-
-                // Calculate Total Projected Time
-
-                if(isset($projected_time_array) && sizeof($projected_time_array) > 0) {
-
-                    $time_in_secs = array_map(function ($v) { return strtotime($v) - strtotime('00:00'); }, $projected_time_array);
-                    $total_time = array_sum($time_in_secs);
-                    $hours = floor($total_time / 3600);
-                    $minutes = floor(($total_time % 3600) / 60);
-                    $seconds = $total_time % 60;
-                    
-                    $total_projected_time = str_pad($hours, 2, '0', STR_PAD_LEFT)
-                       . ":" . str_pad($minutes, 2, '0', STR_PAD_LEFT) 
-                       . ":" . str_pad($seconds, 2, '0', STR_PAD_LEFT) . "\n";
-                }
-                else {
-                    $total_projected_time = '';
-                }
-
-                // Calculate Total Projected Time
-
-                if(isset($actual_time_array) && sizeof($actual_time_array) > 0) {
-
-                    $time_in_secs_1 = array_map(function ($v_1) { return strtotime($v_1) - strtotime('00:00'); }, $actual_time_array);
-                    $total_time_1 = array_sum($time_in_secs_1);
-                    $hours_1 = floor($total_time_1 / 3600);
-                    $minutes_1 = floor(($total_time_1 % 3600) / 60);
-                    $seconds_1 = $total_time_1 % 60;
-                    
-                    $total_actual_time = str_pad($hours_1, 2, '0', STR_PAD_LEFT)
-                       . ":" . str_pad($minutes_1, 2, '0', STR_PAD_LEFT) 
-                       . ":" . str_pad($seconds_1, 2, '0', STR_PAD_LEFT) . "\n";
-                }
-                else {
-                    $total_actual_time = '';
-                }
-
                 $today_date = $work_planning['added_date'];
                 $report_delay = $work_planning['report_delay'];
                 $report_delay_content = $work_planning['report_delay_content'];
                 $link = $work_planning['link'];
+                $total_projected_time = $work_planning['total_projected_time'];
+                $total_actual_time = $work_planning['total_actual_time'];
 
                 $input['today_date'] = $today_date;
                 $input['report_delay'] = $report_delay;
                 $input['report_delay_content'] = $report_delay_content;
                 $input['link'] = $link;
-                
-                $input['work_planning_list'] = $work_planning_list;
                 $input['total_projected_time'] = $total_projected_time;
                 $input['total_actual_time'] = $total_actual_time;
-
                 $input['module'] = $value['module'];
+                $input['work_planning_list'] = $work_planning_list;
 
                 \Mail::send('adminlte::emails.workplanningmail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
@@ -2130,21 +2076,24 @@ class EveryMinute extends Command
 
                 $work_planning = WorkPlanning::getWorkPlanningDetailsById($value['module_id']);
 
+                // Get Task List
+                $work_planning_list = WorkPlanningList::getWorkPlanningList($value['module_id']);
+
                 $today_date = $work_planning['added_date'];
                 $report_delay = $work_planning['report_delay'];
                 $report_delay_content = $work_planning['report_delay_content'];
                 $link = $work_planning['link'];
+                $total_projected_time = $work_planning['total_projected_time'];
+                $total_actual_time = $work_planning['total_actual_time'];
 
                 $input['today_date'] = $today_date;
                 $input['report_delay'] = $report_delay;
                 $input['report_delay_content'] = $report_delay_content;
                 $input['link'] = $link;
-
-                // Get Task List
-                $work_planning_list = WorkPlanningList::getWorkPlanningList($value['module_id']);
-                $input['work_planning_list'] = $work_planning_list;
-
                 $input['module'] = $value['module'];
+                $input['total_projected_time'] = $total_projected_time;
+                $input['total_actual_time'] = $total_actual_time;
+                $input['work_planning_list'] = $work_planning_list;
 
                 \Mail::send('adminlte::emails.workplanningmail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
@@ -2243,6 +2192,81 @@ class EveryMinute extends Command
                 \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
 
                 \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '1' where id = '$module_id';");
+            }
+
+            else if ($value['module'] == 'Work Planning Rejection') {
+
+                $cc_array = explode(",",$input['cc']);
+                $input['cc_array'] = $cc_array;
+              
+                $input['module_id'] = $value['module_id'];
+
+                $user_details = User::getAllDetailsByUserID($value['sender_name']);
+                $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
+                $input['owner_email'] = $user_details->email;
+
+                $user_info = User::getProfileInfo($value['sender_name']);
+                $input['signature'] = $user_info['signature'];
+
+                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
+                $input['from_address'] = trim($user_email_details->email);
+
+                if(strpos($input['from_address'], '@gmail.com') !== false) {
+
+                    config([
+
+                        'mail.driver' => trim('mail'),
+                        'mail.host' => trim('smtp.gmail.com'),
+                        'mail.port' => trim('587'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('tls'),
+                    ]);
+                }
+                else {
+
+                    config([
+                        'mail.driver' => trim('smtp'),
+                        'mail.host' => trim('smtp.zoho.com'),
+                        'mail.port' => trim('465'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('ssl'),
+                    ]);
+                }
+
+                $work_planning = WorkPlanning::getWorkPlanningDetailsById($value['module_id']);
+
+                // Get Task List
+                $work_planning_list = WorkPlanningList::getWorkPlanningList($value['module_id']);
+
+                $today_date = $work_planning['added_date'];
+                $report_delay = $work_planning['report_delay'];
+                $report_delay_content = $work_planning['report_delay_content'];
+                $link = $work_planning['link'];
+                $reject_reply = $work_planning['reject_reply'];
+                $reason_of_rejection = $work_planning['reason_of_rejection'];
+                $total_projected_time = $work_planning['total_projected_time'];
+                $total_actual_time = $work_planning['total_actual_time'];
+
+                $input['today_date'] = $today_date;
+                $input['report_delay'] = $report_delay;
+                $input['report_delay_content'] = $report_delay_content;
+                $input['link'] = $link;
+                $input['reject_reply'] = $reject_reply;
+                $input['reason_of_rejection'] = $reason_of_rejection;
+                $input['module'] = $value['module'];
+                $input['total_projected_time'] = $total_projected_time;
+                $input['total_actual_time'] = $total_actual_time;
+                $input['work_planning_list'] = $work_planning_list;
+                
+
+                \Mail::send('adminlte::emails.workplanningmail', $input, function ($message) use($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
             }
         }
     }

@@ -3436,6 +3436,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'WorkPlanningController@getWorkPlanningTaskById'
     ]);
 
+    Route::post('work-planning/rejection', [
+        'as' => 'workplanning.rejection',
+        'uses' => 'WorkPlanningController@workPlanningRejection'
+    ]);
+
     // Rolewise Bench Mark Routes
     Route::get('bench-mark',[
         'as' => 'rolewisebenchmark.index',

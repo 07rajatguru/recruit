@@ -233,6 +233,10 @@ class WorkPlanning extends Model
             $work_planning_res['report_delay'] = $response->report_delay;
             $work_planning_res['report_delay_content'] = $response->report_delay_content;
             $work_planning_res['link'] = $response->link;
+            $work_planning_res['reject_reply'] = $response->reject_reply;
+            $work_planning_res['reason_of_rejection'] = $response->reason_of_rejection;
+            $work_planning_res['total_projected_time'] = $response->total_projected_time;
+            $work_planning_res['total_actual_time'] = $response->total_actual_time;
         }
         return $work_planning_res;
     }

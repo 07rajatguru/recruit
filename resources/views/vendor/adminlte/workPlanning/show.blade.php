@@ -14,8 +14,8 @@
     </div>
 @endif
 
-@if ($message = Session::get('error'))
-    <div class="alert alert-success">
+@if($message = Session::get('error'))
+    <div class="alert alert-error">
         <p>{{ $message }}</p>
     </div>
 @endif
@@ -40,6 +40,9 @@
                 @if($work_planning['status'] == 0)
                     <button type="submit" class="btn btn-success" onclick="updateStatus('Approved')">Approved</button>
                     <button type="submit" class="btn btn-danger" onclick="updateStatus('Rejected')">Rejected</button>
+                @elseif($work_planning['status'] == 2)
+                    <button type="submit" class="btn btn-success" onclick="updateStatus('Approved')">Approved</button>
+                    <button type="submit" class="btn btn-danger" onclick="updateStatus('Rejected')" disabled="disabled">Rejected</button>
                 @else
                     <button type="submit" class="btn btn-success" onclick="updateStatus('Approved')" disabled="disabled">Approved</button>
                     <button type="submit" class="btn btn-danger" onclick="updateStatus('Rejected')" disabled="disabled">Rejected</button>
@@ -78,10 +81,20 @@
                         <th>Status Time :</th>
                         <td>{{ $work_planning['work_planning_status_time'] }}</td>
                     </tr>
-                    <tr>
-                        <th>Link :</th>
-                        <td colspan="4"><a href="{{ $work_planning['link'] }}" target="_blank">{{ $work_planning['link'] }}</a></td>
-                    </tr>
+
+                    @if(isset($work_planning['link']) && $work_planning['link'] != '')
+                        <tr>
+                            <th>Link :</th>
+                            <td colspan="4"><a href="{{ $work_planning['link'] }}" target="_blank">{{ $work_planning['link'] }}</a></td>
+                        </tr>
+                    @endif
+
+                    @if(isset($work_planning['reject_reply']) && $work_planning['reject_reply'] != '')
+                        <tr>
+                            <th>Reason of Rejection :</th>
+                            <td colspan="3">For {{ $work_planning['reject_reply'] }} - {{ $work_planning['reason_of_rejection'] }}</td>
+                        </tr>
+                    @endif
                 </table>
             </div>
         </div>
@@ -175,15 +188,15 @@
                             <td style="border:1px solid black;text-align: center;"></td>
                             <td style="border:1px solid black;text-align: center;"></td>
 
-                            @if(isset($total_projected_time) && $total_projected_time != '')
-                                <td align="center" width="10%" style="border:1px solid black;text-align: center;"><b>{{ $total_projected_time }} Hours
+                            @if(isset($work_planning['total_projected_time']) && $work_planning['total_projected_time'] != '')
+                                <td align="center" width="10%" style="border:1px solid black;text-align: center;"><b>{{ $work_planning['total_projected_time'] }} Hours
                                 </b></td>
                             @else
                                 <td style="border:1px solid black;text-align: center;"></td>
                             @endif
 
-                            @if(isset($total_actual_time) && $total_actual_time != '')
-                                <td align="center" width="10%" style="border:1px solid black;text-align: center;"><b>{{ $total_actual_time }} Hours
+                            @if(isset($work_planning['total_actual_time']) && $work_planning['total_actual_time'] != '')
+                                <td align="center" width="10%" style="border:1px solid black;text-align: center;"><b>{{ $work_planning['total_actual_time'] }} Hours
                                 </b></td>
                             @else
                                 <td style="border:1px solid black;text-align: center;"></td>
@@ -240,18 +253,30 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h4 class="modal-title">Add Reason of Rejection</h4>
             </div>
-            <div class="modal-body">
-                <div class="form-group">
-                    <strong>&nbsp;Please specify reason of rejection:</strong><br/><br/>
-                    {!! Form::textarea('report_delay_content', null, array('id' => 'report_delay_content','placeholder' => 'Reason of Rejection','class' => 'form-control','rows' => '5')) !!}
+
+            {!! Form::open(['method' => 'POST', 'route' => 'workplanning.rejection']) !!}
+                <div class="modal-body">
+                    <div class="form-group">
+
+                        {!! Form::radio('reject_reply','Half Day',false,['id' => 'reject_reply']) !!}
+                        {!! Form::label('For Half Day') !!} &nbsp;
+
+                        {!! Form::radio('reject_reply','Full Day',false,['id' => 'reject_reply']) !!}
+                        {!! Form::label('For Full Day') !!}
+
+                        <br/><br/>
+                        <strong>&nbsp;Please specify reason of rejection:</strong><br/><br/>
+                        {!! Form::textarea('reason_of_rejection', null, array('id' => 'reason_of_rejection','placeholder' => 'Reason of Rejection','class' => 'form-control','rows' => '5')) !!}
+
+                        <input type="hidden" name="wrok_planning_id" id="wrok_planning_id" value="{{ $id }}">
+                    </div>
                 </div>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="submitform();">OK
-                </button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel
-                </button>
-            </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel
+                    </button>
+                </div>
+            {!! Form::close() !!}
         </div>
     </div>
 </div>
@@ -270,7 +295,6 @@
         if(check == 'Rejected') {
 
             $("#alertModal").modal('show');
-            return false;
         }
         else {
 

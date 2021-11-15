@@ -631,6 +631,7 @@ class WorkPlanningController extends Controller
         $work_planning->report_delay = $report_delay;
         $work_planning->report_delay_content = $report_delay_content;
         $work_planning->link = $link;
+        $work_planning->total_projected_time = $total_projected_time;
         $work_planning->save();
 
         $work_planning_id = $work_planning->id;
@@ -644,6 +645,11 @@ class WorkPlanningController extends Controller
 
         $remarks = array();
         $remarks = Input::get('remarks');
+
+        // Calculate Total Hours
+        $projected_time_array = array();
+        $actual_time_array = array();
+        $i = 0;
 
         for($j = 0; $j < count($task); $j++) {
 
@@ -710,62 +716,10 @@ class WorkPlanningController extends Controller
         $work_planning = WorkPlanning::getWorkPlanningDetailsById($id);
         $work_planning_list = WorkPlanningList::getWorkPlanningList($id);
 
-        $projected_time_array = array();
-        $actual_time_array = array();
-        $i = 0;
-
-        foreach ($work_planning_list as $k=>$v) {
-
-            if(isset($v['projected_time']) && $v['projected_time'] != '') {
-                $projected_time_array[$i] = $v['projected_time'];
-            }
-            
-            if(isset($v['actual_time']) && $v['actual_time'] != '') {
-                $actual_time_array[$i] = $v['actual_time'];
-            }
-            $i++;
-        }
-
-        // Calculate Total Projected Time
-
-        if(isset($projected_time_array) && sizeof($projected_time_array) > 0) {
-
-            $time_in_secs = array_map(function ($v) { return strtotime($v) - strtotime('00:00'); }, $projected_time_array);
-            $total_time = array_sum($time_in_secs);
-            $hours = floor($total_time / 3600);
-            $minutes = floor(($total_time % 3600) / 60);
-            $seconds = $total_time % 60;
-            
-            $total_projected_time = str_pad($hours, 2, '0', STR_PAD_LEFT)
-               . ":" . str_pad($minutes, 2, '0', STR_PAD_LEFT) 
-               . ":" . str_pad($seconds, 2, '0', STR_PAD_LEFT) . "\n";
-        }
-        else {
-            $total_projected_time = '';
-        }
-
-        // Calculate Total Projected Time
-
-        if(isset($actual_time_array) && sizeof($actual_time_array) > 0) {
-
-            $time_in_secs_1 = array_map(function ($v_1) { return strtotime($v_1) - strtotime('00:00'); }, $actual_time_array);
-            $total_time_1 = array_sum($time_in_secs_1);
-            $hours_1 = floor($total_time_1 / 3600);
-            $minutes_1 = floor(($total_time_1 % 3600) / 60);
-            $seconds_1 = $total_time_1 % 60;
-            
-            $total_actual_time = str_pad($hours_1, 2, '0', STR_PAD_LEFT)
-               . ":" . str_pad($minutes_1, 2, '0', STR_PAD_LEFT) 
-               . ":" . str_pad($seconds_1, 2, '0', STR_PAD_LEFT) . "\n";
-        }
-        else {
-            $total_actual_time = '';
-        }
-
         $added_by_id = $work_planning['added_by_id'];
         $appr_rejct_by = User::getUserNameById($work_planning['appr_rejct_by']);
         
-        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','id','loggedin_user_id','added_by_id','appr_rejct_by','total_projected_time','total_actual_time'));
+        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','id','loggedin_user_id','added_by_id','appr_rejct_by'));
     }
 
     public function edit($id) {
@@ -848,7 +802,7 @@ class WorkPlanningController extends Controller
         $user_working_hours = $user_details->working_hours;
         $user_half_day_working_hours = $user_details->half_day_working_hours;
 
-        // Get Total Projected Time
+        // Calculate Total Projected Time
         $projected_time = Input::get('projected_time');
         $sum = strtotime('00:00:00');
         $totaltime = 0;
@@ -893,6 +847,56 @@ class WorkPlanningController extends Controller
         // Set Total Projected Time
         $total_projected_time = "$h:$m:$s";
 
+        // Get Total Actual Time
+        $actual_time = Input::get('actual_time');
+        $sum = strtotime('00:00:00');
+        $totalactualtime = 0;
+
+        if(isset($actual_time) && sizeof($actual_time) > 0) {
+
+            foreach($actual_time as $value) {
+          
+                $timeinsec = strtotime($value) - $sum;
+                $totalactualtime = $totalactualtime + $timeinsec;
+            }
+
+            // Set Hours
+            $h = intval($totalactualtime / 3600);
+
+            if(strlen($h) == 1) {
+                $h = "0".$h;
+            }
+            else {
+                $h = $h;
+            }
+            $totalactualtime = $totalactualtime - ($h * 3600);
+
+            // Set Minutes
+            $m = intval($totalactualtime / 60);
+
+            if(strlen($m) == 1) {
+                $m = "0".$m;
+            }
+            else {
+                $m = $m;
+            }
+
+            // Set Seconds
+            $s = $totalactualtime - ($m * 60);
+
+            if(strlen($s) == 1) {
+                $s = "0".$s;
+            }
+            else {
+                $s = $s;
+            }
+
+            $total_actual_time = "$h:$m:$s";
+        }
+        else {
+            $total_actual_time = NULL;
+        }
+
         if($work_planning_details['attendance'] == 'A') {
 
             $attendance = 'A';
@@ -920,6 +924,8 @@ class WorkPlanningController extends Controller
         $work_planning->work_planning_status_time = date('H:i:s');
         $work_planning->remaining_time = $remaining_time;
         $work_planning->link = $link;
+        $work_planning->total_projected_time = $total_projected_time;
+        $work_planning->total_actual_time = $total_actual_time;
         $work_planning->updated_at = time();
         $work_planning->save();
 
@@ -1130,5 +1136,67 @@ class WorkPlanningController extends Controller
 
             return redirect()->route('workplanning.show',$wp_id)->with('success','Remarks Update Successfully.');
         }
+    }
+
+    public function workPlanningRejection() {
+
+        $user_id = \Auth::user()->id;
+
+        $reject_reply = Input::get('reject_reply');
+        $reason_of_rejection = Input::get('reason_of_rejection');
+        $wrok_planning_id = Input::get('wrok_planning_id');
+
+        $work_planning = WorkPlanning::find($wrok_planning_id);
+        $work_planning->status = 2;
+        $work_planning->approved_by = $user_id;
+        $work_planning->reject_reply = $reject_reply;
+        $work_planning->reason_of_rejection = $reason_of_rejection;
+        $work_planning->save();
+
+        // Get Work Planning Details
+        $work_planning_details = WorkPlanning::getWorkPlanningDetailsById($wrok_planning_id);
+        
+        // Email Notifications
+
+        $superadmin = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($superadmin);
+
+        // Get HR email id
+        $hr = getenv('HRUSERID');
+        $hremail = User::getUserEmailById($hr);
+
+        //Get Reports to Email
+        $report_res = User::getReportsToUsersEmail($work_planning_details['added_by_id']);
+
+        if(isset($report_res->remail) && $report_res->remail!='') {
+            $reports_to_email = $report_res->remail;
+        }
+        else {
+            $reports_to_email = '';
+        }
+
+        if($reports_to_email == '') {
+
+            $cc_users_array = array($superadminemail,$hremail);
+        }
+        else {
+
+            $cc_users_array = array($superadminemail,$hremail,$reports_to_email);
+        }
+
+        $module = "Work Planning Rejection";
+        $sender_name = $user_id;
+        $to = User::getUserEmailById($work_planning_details['added_by_id']);
+        $cc = implode(",",$cc_users_array);
+
+        $date = date('d/m/Y',strtotime($work_planning_details['added_date']));
+
+        $subject = "Work Planning Rejected - " . $date;
+        $message = "Work Planning Rejected - " . $date;
+        $module_id = $wrok_planning_id;
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+        return redirect()->route('workplanning.show',$wrok_planning_id)->with('error','Report Rejected.');
     }
 }
