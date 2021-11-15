@@ -79,7 +79,7 @@ class LeaveController extends Controller
 
         $pending = 0;
         $approved = 0;
-        $not_approved = 0;
+        $rejected = 0;
 
         foreach($leave_details as $leave_detail) {
 
@@ -90,11 +90,11 @@ class LeaveController extends Controller
                 $approved++;
             }
             else if($leave_detail['status'] == '2') {
-                $not_approved++;
+                $rejected++;
             }
         }
 
-        return view('adminlte::leave.index',compact('leave_details','leave_balance','super_admin_userid','user_id','count','pending','approved','not_approved','month_array','month','year_array','year'));
+        return view('adminlte::leave.index',compact('leave_details','leave_balance','super_admin_userid','user_id','count','pending','approved','rejected','month_array','month','year_array','year'));
     }
 
     public function getAllDetailsByStatus($status,$month,$year) {
@@ -142,7 +142,7 @@ class LeaveController extends Controller
         else if($status == 'approved') {
             $status = '1';
         }
-        else if($status == 'not-approved') {
+        else if($status == 'rejected') {
             $status = '2';
         }
 
@@ -176,7 +176,7 @@ class LeaveController extends Controller
         // Set total leave count by status
         $pending = 0;
         $approved = 0;
-        $not_approved = 0;
+        $rejected = 0;
 
         foreach($leave_details_all as $leave_detail) {
 
@@ -187,11 +187,11 @@ class LeaveController extends Controller
                 $approved++;
             }
             else if($leave_detail['status'] == '2') {
-                $not_approved++;
+                $rejected++;
             }
         }
 
-        return view('adminlte::leave.statusindex',compact('status','leave_details','leave_balance','super_admin_userid','user_id','count','pending','approved','not_approved','month_array','month','year_array','year'));
+        return view('adminlte::leave.statusindex',compact('status','leave_details','leave_balance','super_admin_userid','user_id','count','pending','approved','rejected','month_array','month','year_array','year'));
     }
 
     public function userLeaveAdd() {
@@ -611,7 +611,7 @@ class LeaveController extends Controller
             $type_of_leave = $leave_details['type_of_leave'];
             $leave_category = $leave_details['category'];
 
-            if($leave_category == 'Paid Leave') {
+            if($leave_category == 'Privilege Leave') {
 
                 // Update Leave Balance
                 $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
@@ -624,7 +624,7 @@ class LeaveController extends Controller
 
                 \DB::statement("UPDATE `leave_balance` SET `leave_taken` = '$new_leave_taken', `leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
             }
-            else if($leave_category == 'Seek Leave') {
+            else if($leave_category == 'Sick Leave') {
 
                 // Update Leave Balance
                 $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
@@ -641,11 +641,11 @@ class LeaveController extends Controller
 
             }
         }
-        elseif ($reply == 'Notapproved') {
+        elseif ($reply == 'Rejected') {
 
             $approved_by = $leave_details['approved_by'];
        
-            $message = "<p><b>Hello " . $user_name . " ,</b></p><p><b>Your leave has been Not Approved.</b></p>";
+            $message = "<p><b>Hello " . $user_name . " ,</b></p><p><b>Your leave has been Rejected.</b></p>";
 
             $module = "Leave Reply";
             $sender_name = $loggedin_user_id;
@@ -670,9 +670,38 @@ class LeaveController extends Controller
     // Starts All User Leave Balance Module function
     public function userWiseLeave() {
 
+        // Get Selected Month
+        $month_array = array();
+        for ($i = 1; $i <= 12 ; $i++) {
+            $month_array[$i] = date('M',mktime(0,0,0,$i));
+        }
+
+        // Get Selected Year
+        $starting_year = '2021';
+        $ending_year = date('Y',strtotime('+2 year'));
+
+        $year_array = array();
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
+        }
+
+        if (isset($_POST['month']) && $_POST['month'] != 0) {
+            $month = $_POST['month'];
+        }
+        else {
+            $month = date('m');
+        }
+
+        if (isset($_POST['year']) && $_POST['year'] != 0) {
+            $year = $_POST['year'];
+        }
+        else {
+            $year = date('Y');
+        }
+
         $user_leave_data = LeaveBalance::getAllUserWiseLeave();
 
-        return view('adminlte::leave.userwiseleave',compact('user_leave_data'));
+        return view('adminlte::leave.userwiseleave',compact('user_leave_data','month_array','month','year_array','year'));
     }
 
     public function userWiseLeavaAdd() {
@@ -765,7 +794,7 @@ class LeaveController extends Controller
 
         $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($loggedin_user_id);
 
-        if($leave_cat == 'Paid Leave') {
+        if($leave_cat == 'Privilege Leave') {
 
             $leave_count = array();
 
@@ -775,7 +804,7 @@ class LeaveController extends Controller
             }
         }
 
-        if($leave_cat == 'Seek Leave') {
+        if($leave_cat == 'Sick Leave') {
 
             $leave_count = array();
 

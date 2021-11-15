@@ -24,8 +24,8 @@ class UserLeave extends Model
 
         $type = array();
         $type[''] = 'Select Leave Category';
-        $type['Paid Leave'] = 'Paid Leave';
-        $type['Seek Leave'] = 'Seek Leave';
+        $type['Privilege Leave'] = 'Privilege Leave';
+        $type['Sick Leave'] = 'Sick Leave';
 
         return $type;
     }

@@ -172,7 +172,7 @@
 
             var leave_cat = $("#leave_category").val();
 
-            if (leave_cat == 'Seek Leave') {
+            if (leave_cat == 'Sick Leave') {
                 $(".document").show();
             }
             else {
@@ -195,7 +195,7 @@
             const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
             var days = diffInDays + 1;
 
-            if(leave_cat == 'Paid Leave' || leave_cat == 'Seek Leave') {
+            if(leave_cat == 'Privilege Leave' || leave_cat == 'Sick Leave') {
 
                 var loggedin_user_id = $("#loggedin_user_id").val();
                 var app_url = "{!! env('APP_URL') !!}";

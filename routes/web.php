@@ -657,7 +657,7 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     // All Users Leave Balance Routes
-    Route::get('userwiseleave',[
+    Route::any('userwiseleave',[
         'as' => 'leave.userwise',
         'uses' => 'LeaveController@userWiseLeave',
         'middleware' => ['permission:display-leave']

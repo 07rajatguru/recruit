@@ -75,29 +75,30 @@
         </div>
 
         <div class="box-body col-xs-2 col-sm-2 col-md-2" style="margin-top:-8px;">
-            <a href="{{ route('leave.status',array('not-approved',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Rejected">Not Approved ({{ $not_approved }})</div></a>
+            <a href="{{ route('leave.status',array('rejected',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Rejected">Rejected ({{ $rejected }})</div></a>
         </div>
     </div>
 
     @if(isset($leave_balance) && $leave_balance != '')
         <div class="row">
             <div class="box-body col-xs-2 col-sm-2 col-md-2">
-                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00c0ef !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Total Paid Leave">Total PL ({{ $leave_balance->leave_total or 0 }})</div></a>
+                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00c0ef !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Total PL">Total PL ({{ $leave_balance->leave_total or 0 }})</div></a>
             </div>
             <div class="box-body col-xs-2 col-sm-2 col-md-2">
-                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00a65a !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Taken Paid Leave">Taken PL ({{ $leave_balance->leave_taken or 0 }})</div></a>
+                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00a65a !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Opted PL">Opted PL ({{ $leave_balance->leave_taken or 0 }})</div></a>
             </div>
             <div class="box-body col-xs-2 col-sm-2 col-md-2">
-                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#dd4b39 !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Remaining Paid Leave">Remaining PL ({{ $leave_balance->leave_remaining or 0 }})</div></a>
+                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#dd4b39 !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="PL Balance">PL Balance ({{ $leave_balance->leave_remaining or 0 }})
+                </div></a>
             </div>
             <div class="box-body col-xs-2 col-sm-2 col-md-2">
-                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00c0ef !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Total Seek Leave">Total SL ({{ $leave_balance->seek_leave_total or 0 }})</div></a>
+                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00c0ef !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Total SL">Total SL ({{ $leave_balance->seek_leave_total or 0 }})</div></a>
             </div>
             <div class="box-body col-xs-2 col-sm-2 col-md-2">
-                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00a65a !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Taken Seek Leave">Taken SL ({{ $leave_balance->seek_leave_taken or 0 }})</div></a>
+                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00a65a !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Opted SL">Opted SL ({{ $leave_balance->seek_leave_taken or 0 }})</div></a>
             </div>
             <div class="box-body col-xs-2 col-sm-2 col-md-2">
-                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#dd4b39 !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Remaining Seek Leave">Remaining SL ({{ $leave_balance->seek_leave_remaining or 0 }})</div></a>
+                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#dd4b39 !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="SL Balance">SL Balance ({{ $leave_balance->seek_leave_remaining or 0 }})</div></a>
             </div>
         </div>
     @endif
@@ -149,7 +150,7 @@
 		    		@elseif($value['status'] == 1)
 		    			<td style="background-color:#32CD32;">Approved</td>
 		    		@elseif($value['status'] == 2)
-		    			<td style="background-color:#F08080;">Not Approved</td>
+		    			<td style="background-color:#F08080;">Rejected</td>
 		    		@endif
 		    	</tr>
     		@endforeach

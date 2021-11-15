@@ -45,7 +45,7 @@
                             @elseif($leave_details['status'] == 1)
                                 <td style="background-color:#32CD32;">Approved</td>
                             @elseif($leave_details['status'] == 2)
-                                <td style="background-color:#F08080;">Not Approved</td>
+                                <td style="background-color:#F08080;">Rejected</td>
                             @endif
                         </tr>
                         
@@ -58,13 +58,26 @@
                             <th>Remarks</th>
                             <td colspan="6">{!! $leave_details['remarks'] !!}</td>
                         </tr>
+
+                        @if(isset($leave_details['category']) && $leave_details['category'] == 'Privilege Leave')
+                            <tr>
+                                <th>Note : </th>
+                                <td colspan="6">As per leave policy, the employee is expected to applied for Privileged leaves with 3 days prior intimation.
+                                The approver is expected to understand the reason of leave application before approving or rejecting.</td>
+                            </tr>
+                        @elseif(isset($leave_details['category']) && $leave_details['category'] == 'Sick Leave')
+                            <tr>
+                                <th>Note : </th>
+                                <td colspan="6">To avail the benefit of sick leave as per leave policy, the employee is expected to apply for it immediately after returning from the leave in case if not applied before. For more than two working days, the employee is expected to submit a medical certificate to the Reporting Manager to approve the same.</td>
+                            </tr>
+                        @endif
                     </table>
             	</div>
             </div>
         </div>
     </div>
 
-@if($leave_details['category'] == 'Seek Leave')
+@if($leave_details['category'] == 'Sick Leave')
     <div class="row">    
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
@@ -105,7 +118,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
             <button type="submit" class="btn btn-success" onclick="permission('Approved')" title="Approved">Approved</button> 
             &nbsp;&nbsp;&nbsp;&nbsp;
-            <button type="submit" class="btn btn-danger" onclick="permission('Notapproved')" title="Not Approved">Not Approved</button>
+            <button type="submit" class="btn btn-danger" onclick="permission('Rejected')" title="Rejected">Rejected</button>
         </div>
     @endif
 @endif
@@ -116,7 +129,7 @@
     </div>
 @elseif($leave_details['status'] == 2)
     <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-        <button type="button" class="btn btn-danger" disabled="disabled">Not Approved by {{ $leave_details['approved_by'] }}</button>
+        <button type="button" class="btn btn-danger" disabled="disabled">Rejected by {{ $leave_details['approved_by'] }}</button>
     </div>
 @endif
 

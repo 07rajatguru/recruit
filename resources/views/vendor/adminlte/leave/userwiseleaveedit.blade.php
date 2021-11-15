@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'User Leave Balance Edit')
+@section('title', 'User Leave Balance')
 
 @section('content_header')
     <h1></h1>
@@ -44,8 +44,8 @@
 	            	<div class="col-xs-4 col-sm-4 col-md-4">
 	            		<div class="">
 	            			<div class="form-group {{ $errors->has('leave_total') ? 'has-error' : '' }}">
-	                            <strong>Total Paid Leave : <span class = "required_fields">*</span> </strong>
-	                            {!! Form::text('leave_total',null, array('id'=>'leave_total','placeholder' => 'Total Paid Leave','class' => 'form-control','tabindex' => '2', 'onchange' => 'setPaidLeaveBalance()')) !!}
+	                            <strong>Total PL : <span class = "required_fields">*</span> </strong>
+	                            {!! Form::text('leave_total',null, array('id'=>'leave_total','placeholder' => 'Total PL','class' => 'form-control','tabindex' => '2', 'onchange' => 'setPrivilegeLeaveBalance()')) !!}
 	                            @if ($errors->has('leave_total'))
 	                                <span class="help-block">
 		                            	<strong>{{ $errors->first('leave_total') }}</strong>
@@ -58,8 +58,8 @@
 	                <div class="col-xs-4 col-sm-4 col-md-4">
 	                	<div class="">
 	            			<div class="form-group {{ $errors->has('leave_taken') ? 'has-error' : '' }}">
-	                            <strong>Taken Paid Leave : <span class = "required_fields">*</span> </strong>
-	                            {!! Form::text('leave_taken',null, array('id'=>'leave_taken','placeholder' => 'Taken Paid Leave','class' => 'form-control','tabindex' => '3', 'onchange' => 'setPaidLeaveBalance()')) !!}
+	                            <strong>Opted PL : <span class = "required_fields">*</span> </strong>
+	                            {!! Form::text('leave_taken',null, array('id'=>'leave_taken','placeholder' => 'Opted PL','class' => 'form-control','tabindex' => '3', 'onchange' => 'setPrivilegeLeaveBalance()')) !!}
 	                            @if ($errors->has('leave_taken'))
 	                                <span class="help-block">
 		                            	<strong>{{ $errors->first('leave_taken') }}</strong>
@@ -72,8 +72,8 @@
 	            	<div class="col-xs-4 col-sm-4 col-md-4">
 	            		<div class="">
 	            			<div class="form-group {{ $errors->has('leave_remaining') ? 'has-error' : '' }}">
-	                            <strong>Remaining Paid Leave : <span class = "required_fields">*</span> </strong>
-	                            {!! Form::text('leave_remaining',null, array('id'=>'leave_remaining','placeholder' => 'Remaining Paid Leave','class' => 'form-control','tabindex' => '4')) !!}
+	                            <strong>PL Balance : <span class = "required_fields">*</span> </strong>
+	                            {!! Form::text('leave_remaining',null, array('id'=>'leave_remaining','placeholder' => 'PL Balance','class' => 'form-control','tabindex' => '4')) !!}
 	                            @if ($errors->has('leave_remaining'))
 	                                <span class="help-block">
 		                            	<strong>{{ $errors->first('leave_remaining') }}</strong>
@@ -88,8 +88,8 @@
 	            	<div class="col-xs-4 col-sm-4 col-md-4">
 	            		<div class="">
 	                        <div class="form-group {{ $errors->has('seek_leave_total') ? 'has-error' : '' }}">
-	                            <strong>Total Seek Leave : <span class = "required_fields">*</span> </strong>
-	                            {!! Form::text('seek_leave_total',null, array('id'=>'seek_leave_total','placeholder' => 'Total Seek Leave','class' => 'form-control','tabindex' => '5', 'onchange' => 'setSeekLeaveBalance()')) !!}
+	                            <strong>Total SL : <span class = "required_fields">*</span> </strong>
+	                            {!! Form::text('seek_leave_total',null, array('id'=>'seek_leave_total','placeholder' => 'Total SL','class' => 'form-control','tabindex' => '5', 'onchange' => 'setSickLeaveBalance()')) !!}
 	                            @if ($errors->has('seek_leave_total'))
 	                                <span class="help-block">
 		                            	<strong>{{ $errors->first('seek_leave_total') }}
@@ -103,8 +103,8 @@
 	                <div class="col-xs-4 col-sm-4 col-md-4">
 	            		<div class="">
 	            			<div class="form-group {{ $errors->has('seek_leave_taken') ? 'has-error' : '' }}">
-	                            <strong>Taken Seek Leave : <span class = "required_fields">*</span> </strong>
-	                            {!! Form::text('seek_leave_taken',null, array('id'=>'seek_leave_taken','placeholder' => 'Taken Seek Leave','class' => 'form-control','tabindex' => '6', 'onchange' => 'setSeekLeaveBalance()')) !!}
+	                            <strong>Opted SL : <span class = "required_fields">*</span> </strong>
+	                            {!! Form::text('seek_leave_taken',null, array('id'=>'seek_leave_taken','placeholder' => 'Opted SL','class' => 'form-control','tabindex' => '6', 'onchange' => 'setSickLeaveBalance()')) !!}
 	                            @if ($errors->has('seek_leave_taken'))
 	                                <span class="help-block">
 		                            	<strong>{{ $errors->first('seek_leave_taken') }}
@@ -118,8 +118,8 @@
 	                <div class="col-xs-4 col-sm-4 col-md-4">
 	            		<div class="">
 	                        <div class="form-group {{ $errors->has('seek_leave_remaining') ? 'has-error' : '' }}">
-	                            <strong>Remaining Seek Leave : <span class = "required_fields">*</span> </strong>
-	                            {!! Form::text('seek_leave_remaining',null, array('id'=>'seek_leave_remaining','placeholder' => 'Remaining Seek Leave','class' => 'form-control','tabindex' => '7')) !!}
+	                            <strong>SL Balance : <span class = "required_fields">*</span> </strong>
+	                            {!! Form::text('seek_leave_remaining',null, array('id'=>'seek_leave_remaining','placeholder' => 'SL Balance','class' => 'form-control','tabindex' => '7')) !!}
 	                            @if ($errors->has('seek_leave_remaining'))
 	                                <span class="help-block">
 		                            	<strong>{{ $errors->first('seek_leave_remaining') }}
@@ -174,28 +174,28 @@
                         required: "User is Required field."
                     },
                     "leave_total": {
-                        required: "Total Paid Leave is Required field."
+                        required: "Total Privilege Leave is Required field."
                     },
                     "leave_taken": {
-                    	required: "Taken Paid Leave is Required field."
+                    	required: "Taken Privilege Leave is Required field."
                     },
                     "leave_remaining": {
-                    	required: "Remaining Paid Leave is Required field."
+                    	required: "Remaining Privilege Leave is Required field."
                     },
                     "seek_leave_total": {
-                        required: "Total Seek Leave is Required field."
+                        required: "Total Sick Leave is Required field."
                     },
                     "seek_leave_taken": {
-                    	required: "Taken Seek Leave is Required field."
+                    	required: "Taken Sick Leave is Required field."
                     },
                     "seek_leave_remaining": {
-                    	required: "Remaining Seek Leave is Required field."
+                    	required: "Remaining Sick Leave is Required field."
                     }
                 }
             });
         });
 
-        function setPaidLeaveBalance() {
+        function setPrivilegeLeaveBalance() {
 
         	var leave_total = $("#leave_total").val();
         	var leave_taken = $("#leave_taken").val();
@@ -213,7 +213,7 @@
         	}
         }
 
-        function setSeekLeaveBalance() {
+        function setSickLeaveBalance() {
 
         	var seek_leave_total = $("#seek_leave_total").val();
         	var seek_leave_taken = $("#seek_leave_taken").val();
