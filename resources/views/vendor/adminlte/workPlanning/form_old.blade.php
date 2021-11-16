@@ -28,7 +28,7 @@
 @if($action == 'edit')
     {!! Form::model($work_planning_res,['method' => 'PATCH', 'files' => true, 'route' => ['workplanning.update', $work_planning_res['id']],'id'=>'work_planning_form', 'autocomplete' => 'off']) !!}
 @else
-    {!! Form::open(['files' => true, 'route' => 'workplanning.store','id'=>'work_planning_form', 'autocomplete' => 'off']) !!}
+    {!! Form::open(['files' => true, 'route' => 'workplanning.store','id'=>'work_planning_form', 'autocomplete' => 'off','onsubmit' => "return hoursValidation()"]) !!}
 @endif
 
 <div class="row">
@@ -69,14 +69,14 @@
                     <div class="col-xs-4 col-sm-4 col-md-4">
                         <div class="form-group">
                             <strong>Status Time : </strong>
-                            {!! Form::text('work_planning_status_time', $work_planning_status_time, array('id' => 'work_planning_status_time','class' => 'form-control','tabindex' => '5','readonly' => 'true')) !!}
+                            {!! Form::text('work_planning_status_time',$work_planning_status_time, array('id' => 'work_planning_status_time','class' => 'form-control','tabindex' => '5','readonly' => 'true')) !!}
                         </div>
                     </div>
 
                     <div class="col-xs-4 col-sm-4 col-md-4">
                         <div class="form-group">
-                            <strong>Minimum Working Hours : </strong>
-                            {!! Form::text('remaining_time',$minimum_working_hours, array('id' => 'remaining_time','class' => 'form-control','tabindex' => '6','readonly' => 'true','style' => 'background-color:#B0E0E6;')) !!}
+                            <strong>Remaining Hours : </strong>
+                            {!! Form::text('remaining_time',$remaining_time, array('id' => 'remaining_time','class' => 'form-control','tabindex' => '6','readonly' => 'true','style' => 'color:red;')) !!}
                         </div>
                     </div>
                 </div>
@@ -105,8 +105,7 @@
                             <?php $tabindex = 6; ?>
                             @for($i=1; $i<=5; $i++)
                                 <tr class="row_{{ $i }}" style="border:1px solid black;">
-                                    <td style="border:1px solid black;text-align: center;">
-                                        {{ $i }}
+                                    <td style="border:1px solid black;text-align: center;">{{ $i }}
                                     </td>
 
                                     <td style="border:1px solid black;">
@@ -114,17 +113,21 @@
                                     </td>
 
                                     <td style="border:1px solid black;">
-                                        {!! Form::select('projected_time[]',$time_array,$selected_projected_time, array('id' => 'projected_time_'.$i, 'class' => 'form-control','tabindex' => $tabindex++)) !!} <br/><br/>
+                                        {!! Form::select('projected_time[]',$time_array,$selected_projected_time, array('id' => 'projected_time_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'onchange'=>'setRemainTime('.$i.')')) !!} <br/><br/>
 
-                                        {!! Form::select('actual_time[]',$time_array,$selected_actual_time, array('placeholder' => 'Select Time','id' => 'actual_time_'.$i,'class' => 'form-control', 'tabindex' => $tabindex++,'disabled' => 'true','style' => 'width:130px;')) !!}
+                                        {!! Form::select('actual_time[]',$time_array,$selected_actual_time, array('placeholder' => 'Select Time','id' => 'actual_time_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'disabled' => 'true','style' => 'width:130px;')) !!}
                                     </td>
+
+                                    <!-- <td style="border:1px solid black;">
+                                        
+                                    </td> -->
 
                                     <td style="border:1px solid black;">
                                         {!!Form::textarea('remarks[]',null, array('placeholder' =>'Remarks','id' => 'remarks_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'rows' => 5)) !!}
                                     </td>
 
                                     <td style="border:1px solid black;">
-                                        {!!Form::textarea('rm_hr_remarks[]',null, array('placeholder' =>'RM / HR Remarks','id' => 'rm_hr_remarks_'.$i,'class' => 'form-control', 'tabindex' => $tabindex++,'rows' => 5,'disabled' => true)) !!}
+                                        {!!Form::textarea('rm_hr_remarks[]',null, array('placeholder' =>'RM / HR Remarks','id' => 'rm_hr_remarks_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'rows' => 5,'disabled' => true)) !!}
                                     </td>
                                 </tr>
                             @endfor
@@ -164,6 +167,9 @@
     </div>
 
     <input type="hidden" id="action" name="action" value="{{ $action }}">
+    <input type="hidden" id="user_total_hours" name="user_total_hours" value="{{ $user_total_hours }}">
+    <input type="hidden" id="user_half_day_hours" name="user_half_day_hours" value="{{ $user_half_day_hours }}">
+    <input type="hidden" id="early_late_in_time" name="early_late_in_time" value="{{ $early_late_in_time }}">
 
     @if( $action == 'add')
         <input type="hidden" id="row_cnt" name="row_cnt" value="6">
@@ -235,25 +241,14 @@
         if(action == 'add') {
 
             for(j = 1; j <= 5; j++) {
+
                 $("#projected_time_"+j).select2({width:"130px"});
+                //$("#remarks_"+j).wysihtml5();
             }
 
             checkTime();
             jQuery(document).on('focus', '.select2', function() {
                 jQuery(this).siblings('select').select2('open');
-            });
-
-            $("#work_planning_form").validate({
-                rules: {
-                    "task[]": {
-                        required: true
-                    }
-                },
-                messages: {
-                    "task[]": {
-                        required: "Task is Required Field."
-                    }
-                }
             });
         }
 
@@ -263,6 +258,217 @@
             loadDetails(work_planning_id);
         }
     });
+
+    function setRemainTime(value) {
+
+        // For calculate total & actual working hours
+
+        var row_cnt = $("#row_cnt").val();
+        var projected_time_array = [];
+
+        for(j = 1; j < row_cnt; j++) {
+                
+            var projected_time = $("#projected_time_"+j).val();
+            projected_time_array.push(projected_time);
+        }
+
+        const sum = projected_time_array.reduce((acc, time) => acc.add(moment.duration(time)), moment.duration());
+
+        var final_working_hours = [Math.floor(sum.asHours()), sum.minutes(), sum.seconds()].join(':');
+
+        var user_total_hours = $("#user_total_hours").val();
+
+        var time_start = new Date();
+        var time_end = new Date();
+        var value_start = final_working_hours.split(':');
+        var value_end = user_total_hours.split(':');
+
+        time_start.setHours(value_start[0], value_start[1], value_start[2], 0)
+        time_end.setHours(value_end[0], value_end[1], value_end[2], 0)
+
+        if(time_start > time_end) {
+
+            alert("Your Total Working Hours are : " + user_total_hours);
+            $('#projected_time_'+value).val('0').change();
+        }
+
+        // Set remain time difference
+        var action = $("#action").val();
+
+        if(action == "add") {
+
+            /*if(value == 1) {
+
+                var get_time = $("#projected_time_"+value).val();
+                get_time = get_time + ":00";
+
+                var new_date_1 = "Aug 1, 2021 " + get_time;
+                var date1 = new Date(new_date_1);
+
+                var user_total_hours = $("#user_total_hours").val();
+
+                var new_date_2 = "Aug 1, 2021 " + user_total_hours;
+                var date2 = new Date(new_date_2);
+
+                var res = Math.abs(date2 - date1) / 1000;
+                var hours = Math.floor(res / 3600) % 24;
+                var minutes = Math.floor(res / 60) % 60;
+
+                if(hours == 0) {
+                    hours = '00';
+                }
+
+                if(minutes == 0) {
+                    var remain_time = hours + ":" + minutes + "0:00";
+                }
+                else {
+                    var remain_time = hours + ":" + minutes + ":00";
+                }
+
+                $("#remaining_time").val(remain_time);
+            }
+            else {
+
+                var actual_remain_time = $("#remaining_time").val();
+                actual_remain_time = actual_remain_time + ":00";
+
+                var new_date = "Aug 1, 2021 " + actual_remain_time;
+                var date1 = new Date(new_date);
+
+                var get_time = $("#projected_time_"+value).val();
+
+                var new_date_2 = "Aug 1, 2021 " + get_time;
+                var date2 = new Date(new_date_2);
+
+                var res = Math.abs(date2 - date1) / 1000;
+                var hours = Math.floor(res / 3600) % 24;
+                var minutes = Math.floor(res / 60) % 60;
+
+                if(hours == 0) {
+                    hours = '00';
+                }
+
+                if(minutes == 0) {
+                    var remain_time = hours + ":" + minutes + "0:00";
+                }
+                else {
+                    var remain_time = hours + ":" + minutes + ":00";
+                }
+
+                $("#remaining_time").val(remain_time);
+            }*/
+
+            var row_cnt = $("#row_cnt").val();
+            var projected_time_array = [];
+
+            for(j = 1; j < row_cnt; j++) {
+                
+                var projected_time = $("#projected_time_"+j).val();
+                projected_time_array.push(projected_time);
+            }
+
+            const sum = projected_time_array.reduce((acc, time) => acc.add(moment.duration(time)), moment.duration());
+
+            var final_working_hours = [Math.floor(sum.asHours()), sum.minutes(), sum.seconds()].join(':');
+
+            var new_date_1 = "Aug 1, 2021 " + final_working_hours;
+            var date1 = new Date(new_date_1);
+
+            var user_total_hours = $("#user_total_hours").val();
+            var new_date_2 = "Aug 1, 2021 " + user_total_hours;
+            var date2 = new Date(new_date_2);
+
+            var res = Math.abs(date2 - date1) / 1000;
+            var hours = Math.floor(res / 3600) % 24;
+            var minutes = Math.floor(res / 60) % 60;
+
+            if(hours == 0) {
+                hours = '00';
+            }
+
+            if(minutes == 0) {
+                var remain_time = hours + ":" + "00:00";
+            }
+            else {
+                var remain_time = hours + ":" + minutes + ":00";
+            }
+
+            $("#remaining_time").val(remain_time);
+        }
+
+        if(action == "edit") {
+
+            var row_cnt = $("#row_cnt").val();
+            var projected_time_array = [];
+
+            for(j = 1; j < row_cnt; j++) {
+                
+                var projected_time = $("#projected_time_"+j).val();
+                projected_time_array.push(projected_time);
+            }
+
+            const sum = projected_time_array.reduce((acc, time) => acc.add(moment.duration(time)), moment.duration());
+
+            var final_working_hours = [Math.floor(sum.asHours()), sum.minutes(), sum.seconds()].join(':');
+
+            var new_date_1 = "Aug 1, 2021 " + final_working_hours;
+            var date1 = new Date(new_date_1);
+
+            var user_total_hours = $("#user_total_hours").val();
+            var new_date_2 = "Aug 1, 2021 " + user_total_hours;
+            var date2 = new Date(new_date_2);
+
+            var res = Math.abs(date2 - date1) / 1000;
+            var hours = Math.floor(res / 3600) % 24;
+            var minutes = Math.floor(res / 60) % 60;
+
+            if(hours == 0) {
+                hours = '00';
+            }
+
+            if(minutes == 0) {
+                var remain_time = hours + ":" + "00:00";
+            }
+            else {
+                var remain_time = hours + ":" + minutes + ":00";
+            }
+
+            $("#remaining_time").val(remain_time);
+
+            // For calculate total & actual working hours
+
+            var user_total_hours = $("#user_total_hours").val();
+
+            var time_start = new Date();
+            var time_end = new Date();
+            var value_start = final_working_hours.split(':');
+            var value_end = user_total_hours.split(':');
+
+            time_start.setHours(value_start[0], value_start[1], value_start[2], 0)
+            time_end.setHours(value_end[0], value_end[1], value_end[2], 0)
+
+            if(time_start > time_end) {
+
+                alert("Your Total Working Hours are : " + user_total_hours);
+                $("#remaining_time").val('00:00:00');
+            }
+        }
+
+        var get_remain_time = $("#remaining_time").val();
+
+        if(get_remain_time == '00:00:00') {
+
+            document.getElementById('remaining_time').style.backgroundColor = '#B0E0E6';
+            document.getElementById('remaining_time').style.color = 'Black';
+            document.getElementById("add_row").disabled = true;
+        }
+        else {
+
+            document.getElementById('remaining_time').style.backgroundColor = 'white';
+            document.getElementById('remaining_time').style.color = 'Red';
+            document.getElementById("add_row").disabled = false;
+        }
+    }
 
     function AddRow() {
 
@@ -288,11 +494,11 @@
 
         if(action == "add") {
 
-            cell3.innerHTML =  '<td style="border:1px solid black;"><select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'"><option value="" disabled selected>Select Time</option></select> <br/><br/><select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" readonly=true><option value="" disabled selected>Select Time</option></select></td>';
+            cell3.innerHTML =  '<td style="border:1px solid black;"><select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setRemainTime('+row_cnt+')"><option value="" disabled selected>Select Time</option></select> <br/><br/><select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" readonly=true><option value="" disabled selected>Select Time</option></select></td>';
         }
         else {
 
-            cell3.innerHTML = '<td style="border:1px solid black;"><select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'"><option value="" disabled selected>Select Time</option></select> <br/><br/><select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'"><option value="" disabled selected>Select Time</option></select></td>';
+            cell3.innerHTML = '<td style="border:1px solid black;"><select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setRemainTime('+row_cnt+')"><option value="" disabled selected>Select Time</option></select> <br/><br/><select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'"><option value="" disabled selected>Select Time</option></select></td>';
         }
 
         var cell4 = row.insertCell(3);
@@ -309,6 +515,7 @@
         });
     
         $("#projected_time_"+row_cnt).select2();
+        //$("#remarks_"+row_cnt).wysihtml5();
 
         if(action == "add") {
 
@@ -337,6 +544,54 @@
         var row_cnt_new = parseInt(row_cnt)-1;
         $(".row_" + row_cnt_new).remove();
         $("#row_cnt").val(row_cnt_new);
+
+        var projected_time_array = [];
+
+        for(j = 1; j < row_cnt_new; j++) {
+                
+            var projected_time = $("#projected_time_"+j).val();
+            projected_time_array.push(projected_time);
+        }
+
+        const sum = projected_time_array.reduce((acc, time) => acc.add(moment.duration(time)), moment.duration());
+
+        var final_working_hours = [Math.floor(sum.asHours()), sum.minutes(), sum.seconds()].join(':');
+        var new_date_1 = "Aug 1, 2021 " + final_working_hours;
+        var date1 = new Date(new_date_1);
+
+        var user_total_hours = $("#user_total_hours").val();
+        var new_date_2 = "Aug 1, 2021 " + user_total_hours;
+        var date2 = new Date(new_date_2);
+
+        var res = Math.abs(date2 - date1) / 1000;
+        var hours = Math.floor(res / 3600) % 24;
+        var minutes = Math.floor(res / 60) % 60;
+
+        if(hours == 0) {
+            hours = '00';
+        }
+
+        if(minutes == 0) {
+            var remain_time = hours + ":" + "00:00";
+        }
+        else {
+            var remain_time = hours + ":" + minutes + ":00";
+        }
+
+        $("#remaining_time").val(remain_time);
+
+        if(remain_time == '00:00:00') {
+
+            document.getElementById('remaining_time').style.backgroundColor = '#B0E0E6';
+            document.getElementById('remaining_time').style.color = 'Black';
+            document.getElementById("add_row").disabled = true;
+        }
+        else {
+
+            document.getElementById('remaining_time').style.backgroundColor = 'white';
+            document.getElementById('remaining_time').style.color = 'Red';
+            document.getElementById("add_row").disabled = false;
+        }
     }
 
     function loadDetails(work_planning_id) {
@@ -379,7 +634,7 @@
 
                         var cell3 = row.insertCell(2);
                         cell3.style.border = '1px solid black';
-                        cell3.innerHTML = '<td style="border:1px solid black;"><select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'"><option value="" disabled selected>Select Time</option></select> <br/><br/><select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'"><option value="" disabled selected>Select Time</option> </select></td>';
+                        cell3.innerHTML = '<td style="border:1px solid black;"><select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setRemainTime('+row_cnt+')"><option value="" disabled selected>Select Time</option></select> <br/><br/><select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'"><option value="" disabled selected>Select Time</option> </select></td>';
 
                         var cell4 = row.insertCell(3);
                         cell4.style.border = '1px solid black';
@@ -420,6 +675,9 @@
 
                         $("#projected_time_"+row_cnt).select2({width:"130px"});
                         $("#actual_time_"+row_cnt).select2({width:"130px"});
+
+                        //$("#remarks_"+row_cnt).wysihtml5();
+                        //$("#rm_hr_remarks_"+row_cnt).wysihtml5();
                         
                         var row_cnt_new = parseInt(row_cnt)+1;
                         $("#row_cnt").val(row_cnt_new);
@@ -428,6 +686,21 @@
                             document.getElementById("remove_row").disabled = true;
                         }
                     }
+                }
+
+                var get_remain_time = $("#remaining_time").val();
+
+                if(get_remain_time == '00:00:00') {
+
+                    document.getElementById('remaining_time').style.backgroundColor = '#B0E0E6';
+                    document.getElementById('remaining_time').style.color = 'Black';
+                    document.getElementById("add_row").disabled = true;
+                }
+                else {
+
+                    document.getElementById('remaining_time').style.backgroundColor = 'white';
+                    document.getElementById('remaining_time').style.color = 'Red';
+                    document.getElementById("add_row").disabled = false;
                 }
             }
         });
@@ -479,6 +752,70 @@
     function submitform() {
 
         $('#alertModal').modal('hide');
+    }
+
+    function hoursValidation() {
+
+        // For calculate actual working hours added by user
+
+        var row_cnt = $("#row_cnt").val();
+        var projected_time_array = [];
+
+        for(j = 1; j < row_cnt; j++) {
+                
+            var projected_time = $("#projected_time_"+j).val();
+            projected_time_array.push(projected_time);
+        }
+
+        const sum = projected_time_array.reduce((acc, time) => acc.add(moment.duration(time)), moment.duration());
+
+        var final_working_hours = [Math.floor(sum.asHours()), sum.minutes(), sum.seconds()].join(':');
+
+        var total_time = final_working_hours.split(':');
+
+        // Set Hours
+        if(total_time[0] == '0') {
+            var hours = '00';
+        }
+        else {
+
+            if(total_time[0] > 10) {
+                var hours = total_time[0];
+            }
+            else {
+                var hours = "0"+total_time[0];
+            }
+        }
+
+        // Set Minutes
+        if(total_time[1] == '0') {
+            var minutes = '00';
+        }
+        else {
+            var minutes = total_time[1];
+        }
+
+        // Set Seconds
+        if(total_time[2] == '0') {
+            var seconds = '00';
+        }
+        else {
+            var seconds = total_time[2];
+        }
+
+        var final_added_time = hours+":"+minutes+":"+seconds;
+
+        var user_total_hours = $("#user_total_hours").val();
+        var user_half_day_hours = $("#user_half_day_hours").val();
+        var early_late_in_time = $("#early_late_in_time").val();
+
+        if(user_total_hours == final_added_time || user_half_day_hours == final_added_time || early_late_in_time == final_added_time) {
+        }
+        else {
+
+            alert("Please Add Proper Report.");
+            return false;
+        }
     }
 </script>
 @endsection

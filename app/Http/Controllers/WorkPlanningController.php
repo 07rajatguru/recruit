@@ -49,24 +49,6 @@ class WorkPlanningController extends Controller
             $year = date('Y');
         }
 
-        /*if($all_perm) {
-
-            $work_planning_res = WorkPlanning::getWorkPlanningDetails(1,0,$month,$year,'');
-        }
-        else if($userwise_perm) {
-
-            $users = User::getAssignedUsers($user_id);
-
-            if(isset($users) && sizeof($users) > 0) {
-
-                foreach ($users as $key => $value) {
-                    $user_ids[] = $key;
-                }
-            }
-
-            $work_planning_res = WorkPlanning::getWorkPlanningDetails(0,$user_ids,$month,$year,'');
-        }*/
-
         $work_planning_res = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'');
 
         $pending = 0;
@@ -131,24 +113,6 @@ class WorkPlanningController extends Controller
         else {
             $year = date('Y');
         }
-
-        /*if($all_perm) {
-
-            $work_planning_res = WorkPlanning::getWorkPlanningDetails(1,0,$month,$year,'');
-        }
-        else if($userwise_perm) {
-
-            $users = User::getAssignedUsers($user_id);
-
-            if(isset($users) && sizeof($users) > 0) {
-
-                foreach ($users as $key => $value) {
-                    $user_ids[] = $key;
-                }
-            }
-
-            $work_planning_res = WorkPlanning::getWorkPlanningDetails(0,$user_ids,$month,$year,'');
-        }*/
 
         if($all_perm) {
 
@@ -263,27 +227,6 @@ class WorkPlanningController extends Controller
             $status = '2';
         }
  
-        /*if($all_perm) {
-
-            $work_planning_all = WorkPlanning::getWorkPlanningDetails(1,0,$month,$year,'');
-
-            $work_planning_res = WorkPlanning::getWorkPlanningDetails(1,0,$month,$year,$status);
-        }
-        else if($userwise_perm) {
-
-            $users = User::getAssignedUsers($user_id);
-
-            if(isset($users) && sizeof($users) > 0) {
-
-                foreach ($users as $key => $value) {
-                    $user_ids[] = $key;
-                }
-            }
-
-            $work_planning_all = WorkPlanning::getWorkPlanningDetails(0,$user_ids,$month,$year,'');
-            $work_planning_res = WorkPlanning::getWorkPlanningDetails(0,$user_ids,$month,$year,$status);
-        }*/
-
         $work_planning_res = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,$status);
 
         $pending = 0;
@@ -358,27 +301,6 @@ class WorkPlanningController extends Controller
         else if($status == 'rejected') {
             $status = '2';
         }
- 
-        /*if($all_perm) {
-
-            $work_planning_all = WorkPlanning::getWorkPlanningDetails(1,0,$month,$year,'');
-
-            $work_planning_res = WorkPlanning::getWorkPlanningDetails(1,0,$month,$year,$status);
-        }
-        else if($userwise_perm) {
-
-            $users = User::getAssignedUsers($user_id);
-
-            if(isset($users) && sizeof($users) > 0) {
-
-                foreach ($users as $key => $value) {
-                    $user_ids[] = $key;
-                }
-            }
-
-            $work_planning_all = WorkPlanning::getWorkPlanningDetails(0,$user_ids,$month,$year,'');
-            $work_planning_res = WorkPlanning::getWorkPlanningDetails(0,$user_ids,$month,$year,$status);
-        }*/
 
         if($all_perm) {
 
@@ -491,32 +413,20 @@ class WorkPlanningController extends Controller
         // Get Working Hours
 
         $user_details = User::getAllDetailsByUserID($user_id);
-        $remaining_time = $user_details->working_hours;
-        $user_total_hours = $user_details->working_hours;
-        $user_half_day_hours = $user_details->half_day_working_hours;
+        $minimum_working_hours = $user_details->working_hours;
 
-        // Set Early go / Late in hours
-        $user_working_hours = strtotime($user_details->working_hours);
+        // Add one hour plus time into loggedin time for display delay report modal poopup
         $one_hour = strtotime('01:00:00');
-
-        $early_late_in = $user_working_hours - $one_hour;
-        $early_late_in_time = date("H:i:s", $early_late_in);
-
-        // Add one hour plus time into loggedin time
         $timestamp = strtotime($org_loggedin_time) + $one_hour;
         $plus_one_hour_time = date('H:i:s', $timestamp);
 
-        return view('adminlte::workPlanning.create',compact('action','work_type','selected_work_type','time_array','selected_projected_time','selected_actual_time','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','remaining_time','user_total_hours','user_half_day_hours','early_late_in_time','plus_one_hour_time'));
+        return view('adminlte::workPlanning.create',compact('action','work_type','selected_work_type','time_array','selected_projected_time','selected_actual_time','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','minimum_working_hours','plus_one_hour_time'));
     }
 
     public function store(Request $request) {
 
         $user_id = \Auth::user()->id;
         $date = date('Y-m-d');
-
-        // Get user working hours
-        $user_details = User::getAllDetailsByUserID($user_id);
-        $user_half_day_working_hours = $user_details->half_day_working_hours;
 
         // Get Total Projected Time
         $projected_time = Input::get('projected_time');
@@ -580,14 +490,27 @@ class WorkPlanningController extends Controller
         $diff = $checkTime - $loginTime;
         $time_diff = date("H:i", $diff);
 
-        if($total_projected_time == $user_half_day_working_hours) {
-            $attendance = 'HD';
-        }
-        else if($time_diff > '01:00') {
-            $attendance = 'A';
+        // Get Today Day
+
+        $day = date("l");
+
+        if($day == 'Saturday') {
+
+            if($total_projected_time < '05:00:00') {
+                $attendance = 'HD';
+            }
+            else {
+                $attendance = 'F';
+            }
         }
         else {
-            $attendance = 'F';
+
+            if($total_projected_time < '07:00:00') {
+                $attendance = 'HD';
+            }
+            else {
+                $attendance = 'F';
+            }
         }
 
         $report_delay = Input::get('report_delay');
@@ -613,6 +536,13 @@ class WorkPlanningController extends Controller
         }
         else {
             $report_delay_content = '';
+        }
+
+        if($time_diff > '01:00') {
+
+            if(isset($report_delay) && $report_delay == '') {
+                $attendance = 'A';
+            }
         }
 
         $link = Input::get('link');
@@ -658,7 +588,15 @@ class WorkPlanningController extends Controller
                 $work_planning_list = new WorkPlanningList();
                 $work_planning_list->work_planning_id = $work_planning_id;
                 $work_planning_list->task = $task[$j];
-                $work_planning_list->projected_time = $projected_time[$j];
+
+                if(isset($projected_time[$j]) && $projected_time[$j] != '') {
+                    $work_planning_list->projected_time = $projected_time[$j];
+                }
+                else {
+
+                    $work_planning_list->projected_time = '';
+                }
+
                 $work_planning_list->remarks = $remarks[$j];
                 $work_planning_list->added_by = $user_id;
                 $work_planning_list->save();
@@ -772,35 +710,15 @@ class WorkPlanningController extends Controller
         $work_planning_status_time = $dt_status->format('H:i:s');
         $work_planning_status_time = date("g:i A", strtotime($work_planning_status_time));
 
-        $remaining_time = $work_planning_res->remaining_time;
+        $minimum_working_hours = $work_planning_res->remaining_time;
 
-        $user_details = User::getAllDetailsByUserID($user_id);
-        $user_total_hours = $user_details->working_hours;
-        $user_half_day_hours = $user_details->half_day_working_hours;
-
-        // Set Early go / Late in hours
-
-        $user_working_hours = strtotime($user_details->working_hours);
-        $one_hour = strtotime('01:00:00');
-
-        $early_late_in = $user_working_hours - $one_hour;
-        $early_late_in_time = date("H:i:s", $early_late_in);
-
-        return view('adminlte::workPlanning.create',compact('id','action','work_planning_res','time_array','work_type','selected_work_type','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','remaining_time','user_total_hours','user_half_day_hours','early_late_in_time'));
+        return view('adminlte::workPlanning.edit',compact('id','action','work_planning_res','time_array','work_type','selected_work_type','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','minimum_working_hours'));
     }
 
     public function update(Request $request,$id) {
 
         $user_id = \Auth::user()->id;
         $date = date('Y-m-d');
-
-        // Get Work Planning Details
-        $work_planning_details = WorkPlanning::getWorkPlanningDetailsById($id);
-
-        // Get Loggedin user details
-        $user_details = User::getAllDetailsByUserID($user_id);
-        $user_working_hours = $user_details->working_hours;
-        $user_half_day_working_hours = $user_details->half_day_working_hours;
 
         // Calculate Total Projected Time
         $projected_time = Input::get('projected_time');
@@ -897,16 +815,21 @@ class WorkPlanningController extends Controller
             $total_actual_time = NULL;
         }
 
-        if($work_planning_details['attendance'] == 'A') {
+        // Get Today Day
+        $day = date("l");
 
-            $attendance = 'A';
+        if($day == 'Saturday') {
+
+            if($total_projected_time < '05:00:00') {
+                $attendance = 'HD';
+            }
+            else {
+                $attendance = 'F';
+            }
         }
         else {
 
-            if($total_projected_time == $user_working_hours) {
-                $attendance = 'F';
-            }
-            else if($total_projected_time == $user_half_day_working_hours) {
+            if($total_projected_time < '07:00:00') {
                 $attendance = 'HD';
             }
             else {
