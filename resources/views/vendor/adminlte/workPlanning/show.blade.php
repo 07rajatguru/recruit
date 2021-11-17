@@ -184,27 +184,29 @@
                             </tr>
                         @endforeach
 
-                        <tr>
-                            <td style="border:1px solid black;text-align: center;"></td>
-                            <td style="border:1px solid black;text-align: center;"></td>
-
-                            @if(isset($work_planning['total_projected_time']) && $work_planning['total_projected_time'] != '')
-                                <td align="center" width="10%" style="border:1px solid black;text-align: center;"><b>{{ $work_planning['total_projected_time'] }} Hours
-                                </b></td>
-                            @else
+                        @if(isset($work_planning['total_projected_time']) && $work_planning['total_projected_time'] != '')
+                            <tr>
                                 <td style="border:1px solid black;text-align: center;"></td>
-                            @endif
-
-                            @if(isset($work_planning['total_actual_time']) && $work_planning['total_actual_time'] != '')
-                                <td align="center" width="10%" style="border:1px solid black;text-align: center;"><b>{{ $work_planning['total_actual_time'] }} Hours
-                                </b></td>
-                            @else
                                 <td style="border:1px solid black;text-align: center;"></td>
-                            @endif
 
-                            <td style="border:1px solid black;text-align: center;"></td>
-                            <td style="border:1px solid black;text-align: center;"></td>
-                        </tr>
+                                @if(isset($work_planning['total_projected_time']) && $work_planning['total_projected_time'] != '')
+                                    <td align="center" width="10%" style="border:1px solid black;text-align: center;"><b>{{ $work_planning['total_projected_time'] }} Hours
+                                    </b></td>
+                                @else
+                                    <td style="border:1px solid black;text-align: center;"></td>
+                                @endif
+
+                                @if(isset($work_planning['total_actual_time']) && $work_planning['total_actual_time'] != '')
+                                    <td align="center" width="10%" style="border:1px solid black;text-align: center;"><b>{{ $work_planning['total_actual_time'] }} Hours
+                                    </b></td>
+                                @else
+                                    <td style="border:1px solid black;text-align: center;"></td>
+                                @endif
+
+                                <td style="border:1px solid black;text-align: center;"></td>
+                                <td style="border:1px solid black;text-align: center;"></td>
+                            </tr>
+                        @endif
                     </tbody>
                     </table>
                 </div>
