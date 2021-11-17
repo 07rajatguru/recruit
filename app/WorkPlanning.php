@@ -90,7 +90,9 @@ class WorkPlanning extends Model
         $query = $query->leftjoin('users','users.id','=','work_planning.added_by');
         $query = $query->orderBy('work_planning.added_date','DESC');
         
-        $query = $query->where('work_planning.added_by','=',$user_id);
+        if(isset($user_id) && $user_id != 0) {
+            $query = $query->where('work_planning.added_by','=',$user_id);
+        }
         
         if ($month != '' && $year != '') {
             $query = $query->where(\DB::raw('month(work_planning.added_date)'),'=',$month);

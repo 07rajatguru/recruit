@@ -51,6 +51,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\SeekLeaveBalance',
         'App\Console\Commands\AddLeaveBalance',
         'App\Console\Commands\SetAttendanceOfWorkPlanning',
+        'App\Console\Commands\AddTotalHoursOneTime',
     ];
 
     /**
