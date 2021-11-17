@@ -163,7 +163,15 @@ class WorkPlanning extends Model
 
             // Get All Task List
             $work_planning_res[$i]['task_list'] = WorkPlanningList::getWorkPlanningList($value->id);
+
+            // Get Actual Database Login Logout Time
+            $work_planning_res[$i]['actual_login_time'] = date("H:i:s", strtotime($loggedin_time));
+            $work_planning_res[$i]['actual_logout_time'] = date("H:i:s", strtotime($loggedout_time));
             
+            // Get Total Projected & Actual Time
+            $work_planning_res[$i]['total_projected_time'] = $value->total_projected_time;
+            $work_planning_res[$i]['total_actual_time'] = $value->total_actual_time;
+
             $i++;
         }
         return $work_planning_res;
@@ -274,5 +282,23 @@ class WorkPlanning extends Model
 
         $response = $query->get();
         return $response;
+    }
+
+    public static function getWorkPlanningsByDate($from_date,$to_date) {
+
+        $query = WorkPlanning::query();
+        $query = $query->orderBy('work_planning.added_date','DESC');
+        $query = $query->where('work_planning.evening_status','=',0);
+        
+        if(isset($from_date) && $from_date != '' && isset($to_date) && $to_date != '') {
+
+            $query = $query->where('work_planning.added_date','>=',"$from_date");
+            $query = $query->where('work_planning.added_date','<=',"$to_date");
+        }
+
+        $query = $query->select('work_planning.id');
+        $work_planning_res = $query->get();
+
+        return $work_planning_res;
     }
 }

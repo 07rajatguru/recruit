@@ -59,7 +59,7 @@
             </div>
 
             <div class="col-md-2" style="width: 15%;">
-                <a href="{{ route('teamworkplanning.status',array('rejected',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Rejected">Rejected ({{ $rejected }})</div></a>
+                <a href="{{ route('teamworkplanning.status',array('rejected',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#FF3C28;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Rejected">Rejected ({{ $rejected }})</div></a>
             </div>
         </div>
     </div><br/>
@@ -118,12 +118,24 @@
                                     @elseif($v['status'] == 1)
                                         <td style="background-color:#32CD32;">{{ $v['added_date'] }}</td>
                                     @else
-                                        <td style="background-color:#F08080;">{{ $v['added_date'] }}</td>
+                                        <td style="background-color:#FF3C28;">{{ $v['added_date'] }}</td>
                                     @endif
                          
                                     <td>{{ $v['added_by'] }}</td>
                                     <td>{{ $v['work_type'] }}</td>
-                                    <td>{{ $v['loggedin_time'] }}</td>
+
+                                    @if($v['actual_login_time'] > '10:30:00')
+                                        <td style="background-color:lightpink;">{{ $v['loggedin_time'] }}</td>
+                                    @elseif($v['total_projected_time'] >= '08:30:00')
+                                        <td style="background-color:#B0E0E6;">{{ $v['loggedin_time'] }}</td>
+                                    @elseif($v['total_projected_time'] == '07:00:00')
+                                        <td style="background-color:#fff59a;">{{ $v['loggedin_time'] }}</td>
+                                    @elseif($v['total_projected_time'] < '08:00:00')
+                                        <td style="background-color:#F08080;">{{ $v['loggedin_time'] }}</td>
+                                    @else
+                                        <td>{{ $v['loggedin_time'] }}</td>
+                                    @endif
+
                                     <td>{{ $v['loggedout_time'] }}</td>
                                     <td>{{ $v['work_planning_time'] }}</td>
                                     <td>{{ $v['work_planning_status_time'] }}</td>

@@ -562,6 +562,7 @@ class WorkPlanningController extends Controller
         $work_planning->report_delay_content = $report_delay_content;
         $work_planning->link = $link;
         $work_planning->total_projected_time = $total_projected_time;
+        $work_planning->evening_status = 0;
         $work_planning->save();
 
         $work_planning_id = $work_planning->id;
@@ -815,25 +816,36 @@ class WorkPlanningController extends Controller
             $total_actual_time = NULL;
         }
 
-        // Get Today Day
-        $day = date("l");
+        // Get Work Planning Details
 
-        if($day == 'Saturday') {
+        $work_planning = WorkPlanning::find($id);
+        $attendance = $work_planning->attendance;
 
-            if($total_projected_time < '05:00:00') {
-                $attendance = 'HD';
-            }
-            else {
-                $attendance = 'F';
-            }
+        if($attendance == 'A') {
+
         }
         else {
 
-            if($total_projected_time < '07:00:00') {
-                $attendance = 'HD';
+            // Get Today Day
+            $day = date("l");
+
+            if($day == 'Saturday') {
+
+                if($total_projected_time < '05:00:00') {
+                    $attendance = 'HD';
+                }
+                else {
+                    $attendance = 'F';
+                }
             }
             else {
-                $attendance = 'F';
+
+                if($total_projected_time < '07:00:00') {
+                    $attendance = 'HD';
+                }
+                else {
+                    $attendance = 'F';
+                }
             }
         }
 
@@ -841,7 +853,6 @@ class WorkPlanningController extends Controller
         $remaining_time = $request->input('remaining_time');
         $link = Input::get('link');
 
-        $work_planning = WorkPlanning::find($id);
         $work_planning->attendance = $attendance;
         $work_planning->work_type = $work_type;
         $work_planning->work_planning_status_time = date('H:i:s');
@@ -927,7 +938,7 @@ class WorkPlanningController extends Controller
 
         $work_planning = WorkPlanning::getWorkPlanningDetailsById($wp_id);
 
-        \DB::statement("UPDATE work_planning SET work_planning_status_time = '$work_planning_status_time', loggedout_time = '$work_planning_status_time' WHERE id = $wp_id");
+        \DB::statement("UPDATE `work_planning` SET `work_planning_status_time` = '$work_planning_status_time', `loggedout_time` = '$work_planning_status_time', `evening_status` = 1 WHERE id = $wp_id");
 
         // Send Email Notification
 
@@ -1070,10 +1081,20 @@ class WorkPlanningController extends Controller
         $wrok_planning_id = Input::get('wrok_planning_id');
 
         $work_planning = WorkPlanning::find($wrok_planning_id);
+
+        // Get Work Type for Full Day Absent if report is rejected
+        $work_type = $work_planning->work_type;
+
         $work_planning->status = 2;
         $work_planning->approved_by = $user_id;
         $work_planning->reject_reply = $reject_reply;
         $work_planning->reason_of_rejection = $reason_of_rejection;
+
+        if(isset($work_type) && $work_type == 'WFH') {
+
+            $work_planning->attendance = 'A';
+        }
+
         $work_planning->save();
 
         // Get Work Planning Details

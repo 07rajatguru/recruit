@@ -62,7 +62,7 @@
         </div>
 
         <div class="col-md-2" style="width: 15%;">
-            <a href="{{ route('workplanning.status',array('rejected',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Rejected">Rejected ({{ $rejected }})</div>
+            <a href="{{ route('workplanning.status',array('rejected',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#FF3C28;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Rejected">Rejected ({{ $rejected }})</div>
             </a>
         </div>
     </div>
@@ -110,12 +110,28 @@
                     @elseif($value['status'] == 1)
                         <td style="background-color:#32CD32;">{{ $value['added_date'] }}</td>
                     @else
-                        <td style="background-color:#F08080;">{{ $value['added_date'] }}</td>
+                        <td style="background-color:#FF3C28;">{{ $value['added_date'] }}</td>
                     @endif
      
                     <td>{{ $value['added_by'] }}</td>
                     <td>{{ $value['work_type'] }}</td>
-                    <td>{{ $value['loggedin_time'] }}</td>
+
+                    @if($value['actual_login_time'] > '10:30:00')
+                        <td style="background-color:lightpink;">{{ $value['loggedin_time'] }}
+                        </td>
+                    @elseif($value['total_projected_time'] >= '08:30:00')
+                        <td style="background-color:#B0E0E6;">{{ $value['loggedin_time'] }}
+                        </td>
+                    @elseif($value['total_projected_time'] == '07:00:00')
+                        <td style="background-color:#fff59a;">{{ $value['loggedin_time'] }}
+                        </td>
+                    @elseif($value['total_projected_time'] < '08:00:00')
+                        <td style="background-color:#F08080;">{{ $value['loggedin_time'] }}
+                        </td>
+                    @else
+                        <td>{{ $value['loggedin_time'] }}</td>
+                    @endif
+                    
                     <td>{{ $value['loggedout_time'] }}</td>
                     <td>{{ $value['work_planning_time'] }}</td>
                     <td>{{ $value['work_planning_status_time'] }}</td>

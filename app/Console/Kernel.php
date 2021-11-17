@@ -50,6 +50,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\ClientAutoGenerateReport',
         'App\Console\Commands\SeekLeaveBalance',
         'App\Console\Commands\AddLeaveBalance',
+        'App\Console\Commands\SetAttendanceOfWorkPlanning',
     ];
 
     /**
