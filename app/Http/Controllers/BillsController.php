@@ -2109,7 +2109,9 @@ class BillsController extends Controller
 
         $upload_type['Others'] = 'Others';
 
-        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status','lead_name','lead_percentage','doj','upload_type','percentage_charged'));
+        $lead_users = User::getAllUsers();
+
+        return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status','lead_name','lead_percentage','doj','upload_type','percentage_charged','lead_users'));
     }
 
     public function downloadExcel() {
