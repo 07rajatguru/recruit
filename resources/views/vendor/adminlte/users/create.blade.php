@@ -26,7 +26,7 @@
         </div>
     </div>
 
-    {!! Form::open(array('route' => 'users.store','method'=>'POST','id' => 'users_form')) !!}
+    {!! Form::open(array('route' => 'users.store','method'=>'POST','id' => 'users_form', 'autocomplete' => 'off')) !!}
 
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
@@ -187,6 +187,17 @@
                                 @endif
                             </div>
 
+                            <div class="form-group {{ $errors->has('joining_date') ? 'has-error' : '' }}">
+                                <strong>Joining Date : <span class = "required_fields">*</span>
+                                </strong>
+                                <div class="input-group date">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar"></i>
+                                    </div>
+                                    {!! Form::text('joining_date', null, array('id'=>'joining_date','placeholder' => 'Joining Date','class' => 'form-control','tabindex' => '14')) !!}
+                                </div>
+                            </div>
+
                             <!-- <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
                                 <strong> Type : <span class = "required_fields">*</span> </strong>
                                 {!! Form::select('type', $type,null, array('class' => 'form-control','tabindex' => '12' )) !!}
@@ -280,6 +291,15 @@
             $("#working_hours").select2();
             $("#half_day_working_hours").select2();
 
+            $("#joining_date").datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+            });
+
+            $('.fa-calendar').click(function() {
+                $("#joining_date").focus();
+            });
+
             // automaticaly open the select2 when it gets focus
             jQuery(document).on('focus', '.select2', function() {
                 jQuery(this).siblings('select').select2('open');
@@ -307,7 +327,10 @@
                     },
                     "roles": {
                         required: true
-                    }
+                    },
+                    "joining_date": {
+                        required: true
+                    },
                 },
                 messages: {
                     "first_name": {
@@ -330,7 +353,10 @@
                     },
                     "roles": {
                         required: "Please Select Role."
-                    }
+                    },
+                    "joining_date": {
+                        required: "Please Select Joining Date."
+                    },
                 }
             });
 

@@ -195,9 +195,12 @@ class UserController extends Controller
         $check_floor_incharge = $request->input('check_floor_incharge');
 
         // Working Hours
-
         $working_hours = $request->input('working_hours');
         $half_day_working_hours = $request->input('half_day_working_hours');
+
+        // Get Joining Date
+        $dateClass = new Date();
+        $joining_date = $request->input('joining_date');
 
         $user->secondary_email = $request->input('semail');
         $user->daily_report = $check_report;
@@ -212,6 +215,14 @@ class UserController extends Controller
         $user->hr_adv_recruitemnt = $hr_adv_recruitemnt;
         $user->working_hours = $working_hours;
         $user->half_day_working_hours = $half_day_working_hours;
+
+        if(isset($joining_date) && $joining_date != '') {
+            $user->joining_date = $dateClass->changeDMYtoYMD($joining_date);
+        }
+        else {
+            $user->joining_date = NULL;
+        }
+
         $users = $user->save();
 
         $user_id = $user->id;
@@ -523,6 +534,10 @@ class UserController extends Controller
         $lead_report = $request->input('lead_report');
         $status = $request->input('status');
         $account_manager = $request->input('account_manager');
+
+        // Get Joining Date
+        $dateClass = new Date();
+        $joining_date = $request->input('joining_date');
         
         // Start Report Status
 
@@ -570,6 +585,7 @@ class UserController extends Controller
         $new_value_array['reports_to'] = User::getUserNameById($reports_to);
         $new_value_array['working_hours'] = $working_hours;
         $new_value_array['half_day_working_hours'] = $half_day_working_hours;
+        $new_value_array['joining_date'] = $joining_date;
 
         $new_value_array['check_report'] = $check_report;
         $new_value_array['cv_report'] = $set_cv_report;
@@ -596,6 +612,7 @@ class UserController extends Controller
         $old_reports_to = $user_all_info->reports_to;
         $old_working_hours = $user_all_info->working_hours;
         $old_half_day_working_hours = $user_all_info->half_day_working_hours;
+        $old_joining_date = $user_all_info->joining_date;
 
         $old_check_report = $user_all_info->daily_report;
         $old_cv_report = $user_all_info->cv_report;
@@ -617,6 +634,7 @@ class UserController extends Controller
         $old_value_array['reports_to'] = User::getUserNameById($old_reports_to);
         $old_value_array['working_hours'] = $old_working_hours;
         $old_value_array['half_day_working_hours'] = $old_half_day_working_hours;
+        $old_value_array['joining_date'] = $old_joining_date;
 
         $old_value_array['check_report'] = $old_check_report;
         $old_value_array['cv_report'] = $old_cv_report;
@@ -750,6 +768,13 @@ class UserController extends Controller
         else {
             $half_day_working_hours_value = 0;
         }
+
+        if($joining_date != $old_joining_date) {
+            $joining_date_value = 1;
+        }
+        else {
+            $joining_date_value = 0;
+        }
         
         // Save new value
 
@@ -776,11 +801,19 @@ class UserController extends Controller
         $user->status = $status;
         $user->working_hours = $working_hours;
         $user->half_day_working_hours = $half_day_working_hours;
+
+        if(isset($joining_date) && $joining_date != '') {
+            $user->joining_date = $dateClass->changeDMYtoYMD($joining_date);
+        }
+        else {
+            $user->joining_date = NULL;
+        }
+
         $user->save();
         
         // Send email notification when user information is update
 
-        if($first_name_value != 0 || $last_name_value != 0 || $name_value != 0 || $email_value != 0 || $semail_value != 0 || $company_id_value != 0 || $department_value != 0 || $hr_adv_recruitemnt_value != 0 || $role_id_value != 0 || $reports_to_value != 0 || $check_report_value != 0 || $cv_report_value != 0 || $interview_report_value != 0 || $lead_report_value != 0 || $status_value != 0 || $account_manager_value != 0 || $working_hours_value != 0 || $half_day_working_hours_value != 0) {
+        if($first_name_value != 0 || $last_name_value != 0 || $name_value != 0 || $email_value != 0 || $semail_value != 0 || $company_id_value != 0 || $department_value != 0 || $hr_adv_recruitemnt_value != 0 || $role_id_value != 0 || $reports_to_value != 0 || $check_report_value != 0 || $cv_report_value != 0 || $interview_report_value != 0 || $lead_report_value != 0 || $status_value != 0 || $account_manager_value != 0 || $working_hours_value != 0 || $half_day_working_hours_value != 0 || $joining_date_value != 0) {
 
             $logged_in_user_id = \Auth::user()->id;
             $logged_in_user_name = \Auth::user()->name;
