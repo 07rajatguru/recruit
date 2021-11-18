@@ -2240,28 +2240,25 @@ class EveryMinute extends Command
                 // Get Task List
                 $work_planning_list = WorkPlanningList::getWorkPlanningList($value['module_id']);
 
+                $user_name = $work_planning['added_by'];
                 $today_date = $work_planning['added_date'];
-                $report_delay = $work_planning['report_delay'];
-                $report_delay_content = $work_planning['report_delay_content'];
                 $link = $work_planning['link'];
                 $reject_reply = $work_planning['reject_reply'];
                 $reason_of_rejection = $work_planning['reason_of_rejection'];
                 $total_projected_time = $work_planning['total_projected_time'];
                 $total_actual_time = $work_planning['total_actual_time'];
 
-                $input['today_date'] = $today_date;
-                $input['report_delay'] = $report_delay;
-                $input['report_delay_content'] = $report_delay_content;
+                $input['user_name'] = $user_name;
+                $input['today_date'] = date('d/m/Y',strtotime($today_date));
                 $input['link'] = $link;
                 $input['reject_reply'] = $reject_reply;
                 $input['reason_of_rejection'] = $reason_of_rejection;
-                $input['module'] = $value['module'];
                 $input['total_projected_time'] = $total_projected_time;
                 $input['total_actual_time'] = $total_actual_time;
                 $input['work_planning_list'] = $work_planning_list;
                 
 
-                \Mail::send('adminlte::emails.workplanningmail', $input, function ($message) use($input) {
+                \Mail::send('adminlte::emails.rejectionworkplanningmail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
                 });

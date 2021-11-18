@@ -1135,8 +1135,8 @@ class WorkPlanningController extends Controller
 
         $date = date('d/m/Y',strtotime($work_planning_details['added_date']));
 
-        $subject = "Work Planning Rejected - " . $date;
-        $message = "Work Planning Rejected - " . $date;
+        $subject = "Rejection: Work Planning –" . $date;
+        $message = "Rejection: Work Planning –" . $date;
         $module_id = $wrok_planning_id;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
