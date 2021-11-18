@@ -213,9 +213,19 @@
                         dataType:'json',
                         success: function(leave_count) {
 
-                            if (leave_count < total_days) { 
-                                    
-                                alert('You Not Have Enough Leave Balance.');
+                            if (leave_count < total_days) {
+
+                                var rest = total_days - leave_count;
+                                
+                                if(leave_cat == 'Privilege Leave') {
+
+                                    alert('You have only '+leave_count+' PL Balance, rest '+rest+' leaves will fall into LWP, do you still want to apply?');
+                                }
+
+                                if(leave_cat == 'Sick Leave') {
+
+                                    alert('You have only '+leave_count+' SL Balance, rest '+rest+' leaves will fall into LWP, do you still want to apply?');
+                                }
                                 return false;
                             }
                         }
@@ -233,9 +243,20 @@
                         dataType:'json',
                         success: function(leave_count) {
 
-                            if (leave_count < total_days) { 
+                            if (leave_count < total_days) {
+
+                                var rest = total_days - leave_count;
                                     
-                                alert('You Not Have Enough Leave Balance.');
+                                if(leave_cat == 'Privilege Leave') {
+
+                                    alert('You have only '+leave_count+' PL Balance, rest '+rest+' leaves will fall into LWP, do you still want to apply?');
+                                }
+
+                                if(leave_cat == 'Sick Leave') {
+
+                                    alert('You have only '+leave_count+' SL Balance, rest '+rest+' leaves will fall into LWP, do you still want to apply?');
+                                }
+
                                 return false;
                             }
                         }

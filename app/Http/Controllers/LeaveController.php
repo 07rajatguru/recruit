@@ -12,7 +12,7 @@ use App\LeaveDoc;
 use App\LeaveBalance;
 use Illuminate\Support\Facades\File;
 use App\Holidays;
-use DateTime;
+use App\MonthwiseLeaveBalance;
 
 class LeaveController extends Controller
 {
@@ -700,6 +700,8 @@ class LeaveController extends Controller
         }
 
         $user_leave_data = LeaveBalance::getAllUserWiseLeave();
+
+        $user_leave_data_1 = MonthwiseLeaveBalance::getMonthWiseLeaveBalance($month,$year);
 
         return view('adminlte::leave.userwiseleave',compact('user_leave_data','month_array','month','year_array','year'));
     }

@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use App\User;
 use App\UserOthersInfo;
 use App\LeaveBalance;
+use App\MonthwiseLeaveBalance;
 
 class AddLeaveBalance extends Command
 {
@@ -70,6 +71,19 @@ class AddLeaveBalance extends Command
                         $leave_balance->seek_leave_taken = 0.0;
                         $leave_balance->seek_leave_remaining = 0.5;
                         $leave_balance->save();
+
+                        //Add User Leave Balance data Monthwise
+                        $monthwise_leave_balance = new MonthwiseLeaveBalance();
+                        $monthwise_leave_balance->user_id = $key;
+                        $monthwise_leave_balance->pl_total = 1.5;
+                        $monthwise_leave_balance->pl_taken = 0.0;
+                        $monthwise_leave_balance->pl_remaining = 1.5;
+                        $monthwise_leave_balance->sl_total = 0.5;
+                        $monthwise_leave_balance->sl_taken = 0.0;
+                        $monthwise_leave_balance->sl_remaining = 0.5;
+                        $monthwise_leave_balance->month = date('m');
+                        $monthwise_leave_balance->year = date('Y');
+                        $monthwise_leave_balance->save();
                     }
                 }
             }
