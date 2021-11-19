@@ -1410,4 +1410,46 @@ class HomeController extends Controller
 
         return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name','sundays'));
     }
+
+    public function employeeSelfService() {
+
+        $user = \Auth::user();
+        $user_id =  $user->id;
+        $superadmin = getenv('SUPERADMINUSERID');
+
+        $recruitment = getenv('RECRUITMENT');
+
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isClient = $user_obj::isClient($role_id);
+
+        if($isClient) {
+            return redirect()->route('jobopen.index');
+        }
+
+        $display_all_count = $user->can('display-all-count');
+        $display_userwise_count = $user->can('display-userwise-count');
+
+        $date = date('Y-m-d');
+        $month = date('m');
+        $year = date('Y');
+
+        if($display_all_count) {
+           
+        }
+        else if($display_userwise_count) {
+
+        }
+
+        $viewVariable = array();
+        $viewVariable['date'] = $date;
+        $viewVariable['month'] = $month;
+        $viewVariable['year'] = $year;
+        $viewVariable['superadmin'] = $superadmin;
+        $viewVariable['user_id'] = $user_id;
+
+        return view('employee-self-service',$viewVariable);
+    }
 }

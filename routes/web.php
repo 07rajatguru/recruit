@@ -173,6 +173,12 @@ Route::get('check/sendgrid' ,[
 
 Route::group(['middleware' => ['auth']], function () {
 
+    // ESS
+
+    Route::any('/employee-self-service', array (
+        'uses' => 'HomeController@employeeSelfService'
+    ));
+
     // Dashboard
 
     Route::any('/dashboard', array (
