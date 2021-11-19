@@ -490,60 +490,73 @@ class WorkPlanningController extends Controller
         $diff = $checkTime - $loginTime;
         $time_diff = date("H:i", $diff);
 
-        // Get Today Day
+        // Set Attendance for Farhin & Manisha
 
-        $day = date("l");
+        $farhin_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+        $manisha_user_id = getenv('MANISHAUSERID');
 
-        if($day == 'Saturday') {
+        if($user_id == $farhin_user_id || $user_id == $manisha_user_id) {
 
-            if($total_projected_time < '05:00:00') {
-                $attendance = 'HD';
-            }
-            else {
-                $attendance = 'F';
-            }
+            $attendance = 'F';
         }
         else {
 
-            if($total_projected_time < '07:00:00') {
-                $attendance = 'HD';
+            // Get Today Day
+
+            $day = date("l");
+
+            if($day == 'Saturday') {
+
+                if($total_projected_time < '05:00:00') {
+                    $attendance = 'HD';
+                }
+                else {
+                    $attendance = 'F';
+                }
             }
             else {
-                $attendance = 'F';
+
+                if($total_projected_time < '07:00:00') {
+                    $attendance = 'HD';
+                }
+                else {
+                    $attendance = 'F';
+                }
             }
-        }
 
-        $report_delay = Input::get('report_delay');
+            $report_delay = Input::get('report_delay');
 
-        // If report delay
-        if(isset($report_delay) && $report_delay != '') {
+            // If report delay
+            if(isset($report_delay) && $report_delay != '') {
 
-            if($report_delay == 'Half Day') {
-                $attendance = 'HD';
+                if($report_delay == 'Half Day') {
+                    $attendance = 'HD';
+                }
+                else {
+                    $attendance = 'F';
+                }
             }
             else {
-                $attendance = 'F';
+                $report_delay = '';
+            }
+
+            $report_delay_content = Input::get('report_delay_content');
+
+            // If report delay
+            if(isset($report_delay_content) && $report_delay_content != '') {
+            }
+            else {
+                $report_delay_content = '';
+            }
+
+            if($time_diff > '01:00') {
+
+                if(isset($report_delay) && $report_delay == '') {
+                    $attendance = 'A';
+                }
             }
         }
-        else {
-            $report_delay = '';
-        }
-
-        $report_delay_content = Input::get('report_delay_content');
-
-        // If report delay
-        if(isset($report_delay_content) && $report_delay_content != '') {
-        }
-        else {
-            $report_delay_content = '';
-        }
-
-        if($time_diff > '01:00') {
-
-            if(isset($report_delay) && $report_delay == '') {
-                $attendance = 'A';
-            }
-        }
+        
 
         $link = Input::get('link');
 
@@ -816,6 +829,11 @@ class WorkPlanningController extends Controller
             $total_actual_time = NULL;
         }
 
+        // Set Attendance for Farhin & Manisha
+        
+        $farhin_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+        $manisha_user_id = getenv('MANISHAUSERID');
+
         // Get Work Planning Details
 
         $work_planning = WorkPlanning::find($id);
@@ -823,6 +841,10 @@ class WorkPlanningController extends Controller
 
         if($attendance == 'A') {
 
+        }
+        else if($user_id == $farhin_user_id || $user_id == $manisha_user_id) {
+
+            $attendance = 'F';
         }
         else {
 
