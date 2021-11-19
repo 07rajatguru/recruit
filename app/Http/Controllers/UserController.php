@@ -146,7 +146,7 @@ class UserController extends Controller
 
         $role = $request->input('roles');
         $user->attachRole($role);
-        
+
         $reports_to = $request->input('reports_to');
         $floor_incharge = $request->input('floor_incharge');
         $check_report = $request->input('daily_report');
@@ -225,7 +225,9 @@ class UserController extends Controller
 
         $users = $user->save();
 
+        // Get variables
         $user_id = $user->id;
+        $user_email = $user->email;
 
         if ($status == 'Active') {
 
@@ -340,19 +342,21 @@ class UserController extends Controller
             $user_bench_mark->save();
         }
 
-        // Send email notification when new user is add
+        // Set variables for email notifications
 
         $logged_in_user_id = \Auth::user()->id;
         $user_name = \Auth::user()->name;
-
-        $hr_userid = getenv('HRUSERID');
-        $hr_email = User::getUserEmailById($hr_userid);
 
         $admin_userid = getenv('ADMINUSERID');
         $admin_email = User::getUserEmailById($admin_userid);
 
         $super_admin_userid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($super_admin_userid);
+
+        $hr_userid = getenv('HRUSERID');
+        $hr_email = User::getUserEmailById($hr_userid);
+
+        // Send email notification when new user is add
 
         $cc_users_array = array($admin_email,$superadminemail);
 
@@ -366,6 +370,19 @@ class UserController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
+        // Send email notification to user for select optional leaves
+
+        $cc_users_array = array($admin_email,$superadminemail,$hr_email);
+
+        $module = "List of Holidays";
+        $sender_name = $logged_in_user_id;
+        $to = $user_email;
+        $subject = "List of Holidays";
+        $message = "List of Holidays";
+        $module_id = $user_id;
+        $cc = implode(",",$cc_users_array);
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         return redirect()->route('users.index')->with('success','User Added Successfully.');
     }
 
@@ -472,11 +489,13 @@ class UserController extends Controller
             $lead_report = '0';
         }
 
+        $joining_date = date('d-m-Y',strtotime($user->joining_date));
+
         $hours_array = User::getHoursArray();
         $selected_working_hours = $user->working_hours;
         $selected_half_day_working_hours = $user->half_day_working_hours;
 
-        return view('adminlte::users.edit',compact('id','user','roles','roles_id', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge','semail','departments','department_id','hr_adv_recruitemnt','cv_report','interview_report','lead_report','hours_array','selected_working_hours','selected_half_day_working_hours'));
+        return view('adminlte::users.edit',compact('id','user','roles','roles_id', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge','semail','departments','department_id','hr_adv_recruitemnt','cv_report','interview_report','lead_report','hours_array','selected_working_hours','selected_half_day_working_hours','joining_date'));
     }
 
     /**
@@ -612,7 +631,7 @@ class UserController extends Controller
         $old_reports_to = $user_all_info->reports_to;
         $old_working_hours = $user_all_info->working_hours;
         $old_half_day_working_hours = $user_all_info->half_day_working_hours;
-        $old_joining_date = $user_all_info->joining_date;
+        $old_joining_date = date('d-m-Y',strtotime($user_all_info->joining_date));
 
         $old_check_report = $user_all_info->daily_report;
         $old_cv_report = $user_all_info->cv_report;
@@ -858,7 +877,37 @@ class UserController extends Controller
             });
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
-        } 
+        }
+
+        if($joining_date != $old_joining_date) {
+
+            // Set variables for email notifications
+
+            $logged_in_user_id = \Auth::user()->id;
+
+            $admin_userid = getenv('ADMINUSERID');
+            $admin_email = User::getUserEmailById($admin_userid);
+
+            $super_admin_userid = getenv('SUPERADMINUSERID');
+            $superadminemail = User::getUserEmailById($super_admin_userid);
+
+            $hr_userid = getenv('HRUSERID');
+            $hr_email = User::getUserEmailById($hr_userid);
+
+            // Send email notification to user for select optional leaves
+
+            $cc_users_array = array($admin_email,$superadminemail,$hr_email);
+
+            $module = "List of Holidays";
+            $sender_name = $logged_in_user_id;
+            $to = $email;
+            $subject = "List of Holidays";
+            $message = "List of Holidays";
+            $module_id = $id;
+            $cc = implode(",",$cc_users_array);
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        }
 
         if (isset($status) && $status == 'Active') {
 

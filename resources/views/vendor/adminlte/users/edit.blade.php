@@ -49,8 +49,9 @@
                         <div class="">
 
                             <div class="form-group {{ $errors->has('first_name') ? 'has-error' : '' }}">
-                                <strong>First Name: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('first_name', null, array('id'=>'first_name','placeholder' => 'First Name','class' => 'form-control', 'tabindex' => '1','onfocusout' => 'getFullName();')) !!}
+                                <strong>First Name: <span class = "required_fields">*</span>
+                                </strong>
+                                {!! Form::text('first_name', null, array('id'=>'first_name','placeholder' => 'First Name','class' => 'form-control', 'tabindex' => '1','onfocusout' => 'getFullName();','onchange' => 'setJoiningDate();')) !!}
                                 @if ($errors->has('first_name'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('first_name') }}</strong>
@@ -59,8 +60,9 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('last_name') ? 'has-error' : '' }}">
-                                <strong>Last Name: <span class = "required_fields">*</span> </strong>
-                                {!! Form::text('last_name', null, array('id'=>'last_name','placeholder' => 'Last Name','class' => 'form-control', 'tabindex' => '2','onfocusout' => 'getFullName();')) !!}
+                                <strong>Last Name: <span class = "required_fields">*</span>
+                                </strong>
+                                {!! Form::text('last_name', null, array('id'=>'last_name','placeholder' => 'Last Name','class' => 'form-control', 'tabindex' => '2','onfocusout' => 'getFullName();','onchange' => 'setJoiningDate();')) !!}
                                 @if ($errors->has('last_name'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('last_name') }}</strong>
@@ -69,7 +71,8 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
-                                <strong>Full Name: <span class = "required_fields">*</span> </strong>
+                                <strong>Full Name: <span class = "required_fields">*</span>
+                                </strong>
                                 {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Full Name','class' => 'form-control', 'tabindex' => '3', 'readonly' => 'true')) !!}
                                 @if ($errors->has('name'))
                                     <span class="help-block">
@@ -79,7 +82,8 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
-                                <strong>Email: <span class = "required_fields">*</span> </strong>
+                                <strong>Email: <span class = "required_fields">*</span>
+                                </strong>
                                 {!! Form::text('email', null, array('id'=>'email','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '4')) !!}
                                 @if ($errors->has('email'))
                                     <span class="help-block">
@@ -99,7 +103,8 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('password') ? 'has-error' : '' }}">
-                                <strong>Password: <span class = "required_fields">*</span> </strong>
+                                <strong>Password: <span class = "required_fields">*</span>
+                                </strong>
                                 {!! Form::password('password', array('id'=>'password','placeholder' => 'Password','class' => 'form-control','tabindex' => '6')) !!}
                                 @if ($errors->has('password'))
                                     <span class="help-block">
@@ -119,8 +124,8 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('company_id') ? 'has-error' : '' }}">
-                                <strong>Select Company : <span class = "required_fields">*</span> 
-                                </strong>
+                                <strong>Select Company : <span class = "required_fields">*
+                                </span></strong>
                                 {!! Form::select('company_id', $companies,isset($user->compnay_id) ? $user->compnay_id : null, array('id'=>'company_id','class' => 'form-control','tabindex' => '8')) !!}
                                 @if ($errors->has('company_id'))
                                     <span class="help-block">
@@ -159,7 +164,8 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('roles') ? 'has-error' : '' }}">
-                                <strong> Role : <span class = "required_fields">*</span> </strong>
+                                <strong> Role : <span class = "required_fields">*</span>
+                                </strong>
                                 {!! Form::select('roles',$roles,$roles_id, array('id'=>'roles','class' => 'form-control', 'tabindex' => '10')) !!}
                                 @if ($errors->has('roles'))
                                     <span class="help-block">
@@ -206,7 +212,7 @@
                                     <div class="input-group-addon">
                                         <i class="fa fa-calendar"></i>
                                     </div>
-                                    {!! Form::text('joining_date', isset($user['joining_date']) ? $user['joining_date'] : null, array('id'=>'joining_date','placeholder' => 'Joining Date','class' => 'form-control','tabindex' => '14')) !!}
+                                    {!! Form::text('joining_date', isset($joining_date) ? $joining_date : null, array('id'=>'joining_date','placeholder' => 'Joining Date','class' => 'form-control','tabindex' => '14')) !!}
                                 </div>
                             </div>
 
@@ -276,6 +282,7 @@
         </div>
 
         <input type="hidden" id="user_id" name="user_id" value="{{ $id }}">
+        <input type="hidden" name="get_joining_date" id="get_joining_date" value="{{ $joining_date }}">
     </div>
 
     {!! Form::close() !!}
@@ -448,6 +455,21 @@
             }
             else {
                 $(".report_class").hide();
+            }
+        }
+
+        function setJoiningDate() {
+
+            var get_joining_date = $("#get_joining_date").val();
+            var joining_date = $("#joining_date").val();
+
+            if(joining_date == get_joining_date) {
+
+                alert("Before change user details please add Joining Date.");
+
+                $("#first_name").val('');
+                $("#last_name").val('');
+                $("#joining_date").focus();
             }
         }
     </script>
