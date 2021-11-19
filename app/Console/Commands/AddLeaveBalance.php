@@ -4,7 +4,6 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\User;
-use App\UserOthersInfo;
 use App\LeaveBalance;
 use App\MonthwiseLeaveBalance;
 
@@ -45,18 +44,18 @@ class AddLeaveBalance extends Command
 
         foreach ($users as $key => $value) {
 
-            $leave_data = LeaveBalance::getLeaveBalanceByUserId($key);
+            $leave_data = MonthwiseLeaveBalance::getMonthwiseLeaveBalanceByUserId($key);
 
             if (isset($leave_data) && $leave_data != '') {
             }
             else {
 
-                $user_data = UserOthersInfo::getUserOtherInfo($key);
+                $user_data = User::getAllDetailsByUserID($key);
 
                 if (isset($user_data) && $user_data != '') {
 
-                    $date_of_joining = $user_data['date_of_joining'];
-                    $after_six_month = date('Y-m-d', strtotime("+6 month $date_of_joining"));
+                    $joining_date = $user_data->joining_date;
+                    $after_six_month = date('Y-m-d', strtotime("+6 month $joining_date"));
                     $current_date = date('Y-m-d');
 
                     if ($after_six_month <= $current_date) {

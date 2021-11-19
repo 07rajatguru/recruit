@@ -55,8 +55,8 @@
     	<thead>
     		<tr>
 	    		<th>No</th>
-                <th>Action</th>
-                <th>User Name</th>
+                <!-- <th>Action</th> -->
+                <th width="15%">User Name</th>
                 <th>Total PL</th>
                 <th>Opted PL</th>
                 <th>PL Balance</th>
@@ -68,20 +68,20 @@
 
     	<?php $i=0; ?>
     	<tbody>
-    		@foreach($user_leave_data as $key => $value)
+    		@foreach($user_leave_data_1 as $key => $value)
 	    		<tr>
 		    		<td>{{ ++$i }}</td>
-                    <td>
+                    {{-- <td>
                         <a class="fa fa-edit" href="{{ route('leave.userwiseedit',$value['id']) }}" title="Edit"></a>
                         @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'leaveuserwise','display_name'=>'User Leave Balance'])
-                    </td>
+                    </td> --}}
 		    		<td>{{ $value['user_name'] }}</td>
-		    		<td>{{ $value['leave_total'] }}</td>
-		    		<td>{{ $value['leave_taken'] }}</td>
-		    		<td>{{ $value['leave_remaining'] }}</td>
-                    <td>{{ $value['seek_leave_total'] }}</td>
-                    <td>{{ $value['seek_leave_taken'] }}</td>
-                    <td>{{ $value['seek_leave_remaining'] }}</td>
+		    		<td>{{ $value['pl_total'] }}</td>
+		    		<td>{{ $value['pl_taken'] }}</td>
+		    		<td>{{ $value['pl_remaining'] }}</td>
+                    <td>{{ $value['sl_total'] }}</td>
+                    <td>{{ $value['sl_taken'] }}</td>
+                    <td>{{ $value['sl_remaining'] }}</td>
 		    	</tr>
     		@endforeach
     	</tbody>		

@@ -89,7 +89,7 @@ class EveryMinute extends Command
 
             $status = 2;
 
-            \DB::statement("UPDATE emails_notification SET sent_date = '$sent_date', status=$status where id = $email_notification_id");
+            \DB::statement("UPDATE `emails_notification` SET `sent_date` = '$sent_date', `status`=$status where `id` = $email_notification_id");
             $i++;
         }
 
@@ -136,7 +136,7 @@ class EveryMinute extends Command
                     $job->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
                 });  
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             } 
 
             else if ($value['module'] == 'Todos') {
@@ -164,7 +164,7 @@ class EveryMinute extends Command
                     $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
                 });              
                
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             else if ($value['module'] == 'Leave') {
@@ -233,7 +233,7 @@ class EveryMinute extends Command
                     }
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'"); 
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'"); 
             }
 
             else if ($value['module'] == 'Daily Report') {
@@ -274,7 +274,7 @@ class EveryMinute extends Command
                     $message->to($input['to_array'])->cc($input['cc_array'])->subject('Daily Activity Report - ' . $input['value'] . ' - ' . date("d-m-Y"));
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
             else if ($value['module'] == 'Weekly Report') {
 
@@ -313,7 +313,7 @@ class EveryMinute extends Command
                     $message->to($input['to_array'])->cc($input['cc_array'])->subject('Weekly Activity Report -'.$input['value']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             else if ($value['module'] == 'Lead' || $value['module'] == 'Cancel Lead') {
@@ -332,7 +332,7 @@ class EveryMinute extends Command
                     $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             else if ($value['module'] == 'Forecasting' || $value['module'] == 'Recovery') {
@@ -367,7 +367,7 @@ class EveryMinute extends Command
                     }
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             else if ($value['module'] == 'Cancel Forecasting' || $value['module'] == 'Cancel Recovery' || $value['module'] == 'Relive Forecasting' || $value['module'] == 'Relive Recovery') {
@@ -388,7 +388,7 @@ class EveryMinute extends Command
                     $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             else if ($value['module'] == 'Training Material') {
@@ -405,7 +405,7 @@ class EveryMinute extends Command
                     $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             else if ($value['module'] == 'Process Manual') {
@@ -422,7 +422,7 @@ class EveryMinute extends Command
                     $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             else if ($value['module'] == 'Client' || $value['module'] == 'Forbid Client' || $value['module'] == 'Client Account Manager' || $value['module'] == 'Client Delete') {
@@ -443,7 +443,7 @@ class EveryMinute extends Command
                     $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             else if ($value['module'] == 'List of Clients transferred') {
@@ -492,7 +492,7 @@ class EveryMinute extends Command
                     $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             // Mail for Leave reply approved/unapproved
@@ -548,7 +548,7 @@ class EveryMinute extends Command
                     $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'"); 
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'"); 
             }
 
             // Mail for Joining Confirmation of recovery
@@ -568,7 +568,7 @@ class EveryMinute extends Command
                     $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             // Mail for Invoice gererate of recovery
@@ -595,7 +595,7 @@ class EveryMinute extends Command
                     //$message->attach($input['pdf_attachment']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             // Mail for Passive Client Listing
@@ -619,7 +619,7 @@ class EveryMinute extends Command
                     $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             else if ($value['module'] == 'Client Bulk Email') {
@@ -673,7 +673,7 @@ class EveryMinute extends Command
                     $message->to($input['to_array'])->cc($input['cc_array'])->bcc($input['owner_email'])->replyTo($input['owner_email'], $input['from_name'])->subject($input['subject']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             else if ($value['module'] == 'Applicant Candidate') {
@@ -696,7 +696,7 @@ class EveryMinute extends Command
                     $message->attach($input['resume']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             // Mail for Expected Passive Client Listing in next week
@@ -720,7 +720,7 @@ class EveryMinute extends Command
                     $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             else if ($value['module'] == 'Monthly Report') {
@@ -835,7 +835,7 @@ class EveryMinute extends Command
                     $message->to($input['to_array'])->cc($input['cc_array'])->subject('Monthly Activity Report - ' . $input['value'] . ' - ' . date("F",strtotime("last month"))." ".date("Y"));
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             else if ($value['module'] == 'Productivity Report') {
@@ -1147,7 +1147,7 @@ class EveryMinute extends Command
                     $message->to($input['to_array'])->cc($input['cc_array'])->subject('Productivity Report -'.$input['user_name']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             else if ($value['module'] == 'New Candidate AutoScript Mail') {
@@ -1176,9 +1176,9 @@ class EveryMinute extends Command
                     });
                 }
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
 
-                \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '1' where id = '$module_id';");
+                \DB::statement("UPDATE `candidate_basicinfo` SET `autoscript_status` = '1' where id = '$module_id';");
             }
 
             else if ($value['module'] == 'Client 2nd Line Account Manager') {
@@ -1199,7 +1199,7 @@ class EveryMinute extends Command
                     $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             else if ($value['module'] == '2nd Line of Multiple Clients') {
@@ -1234,7 +1234,7 @@ class EveryMinute extends Command
                     $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             else if ($value['module'] == 'Lead Bulk Email') {
@@ -1287,7 +1287,7 @@ class EveryMinute extends Command
                     $message->to($input['to_array'])->cc($input['cc_array'])->bcc($input['from_email'])->replyTo($input['from_email'], $input['from_name'])->subject($input['subject']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             else if ($value['module'] == "Today's Interviews") {
@@ -1368,7 +1368,7 @@ class EveryMinute extends Command
                     }
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             else if ($value['module'] == "Yesterday's Interviews") {
@@ -1450,7 +1450,7 @@ class EveryMinute extends Command
                     }
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             else if ($value['module'] == "Interview Reminder") {
@@ -2100,7 +2100,7 @@ class EveryMinute extends Command
                     $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
             else if ($value['module'] == "Hiring Report") {
@@ -2159,7 +2159,7 @@ class EveryMinute extends Command
                         $message->to($input['to_array'])->subject($input['subject']);
                     });
 
-                    \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                    \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
                 }
             }
 
@@ -2189,9 +2189,9 @@ class EveryMinute extends Command
                     });
                 }
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
 
-                \DB::statement("UPDATE candidate_basicinfo SET autoscript_status = '1' where id = '$module_id';");
+                \DB::statement("UPDATE `candidate_basicinfo` SET `autoscript_status` = '1' where id = '$module_id';");
             }
 
             else if ($value['module'] == 'Work Planning Rejection') {
@@ -2200,40 +2200,6 @@ class EveryMinute extends Command
                 $input['cc_array'] = $cc_array;
               
                 $input['module_id'] = $value['module_id'];
-
-                $user_details = User::getAllDetailsByUserID($value['sender_name']);
-                $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
-                $input['owner_email'] = $user_details->email;
-
-                $user_info = User::getProfileInfo($value['sender_name']);
-                $input['signature'] = $user_info['signature'];
-
-                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
-                $input['from_address'] = trim($user_email_details->email);
-
-                if(strpos($input['from_address'], '@gmail.com') !== false) {
-
-                    config([
-
-                        'mail.driver' => trim('mail'),
-                        'mail.host' => trim('smtp.gmail.com'),
-                        'mail.port' => trim('587'),
-                        'mail.username' => trim($user_email_details->email),
-                        'mail.password' => trim($user_email_details->password),
-                        'mail.encryption' => trim('tls'),
-                    ]);
-                }
-                else {
-
-                    config([
-                        'mail.driver' => trim('smtp'),
-                        'mail.host' => trim('smtp.zoho.com'),
-                        'mail.port' => trim('465'),
-                        'mail.username' => trim($user_email_details->email),
-                        'mail.password' => trim($user_email_details->password),
-                        'mail.encryption' => trim('ssl'),
-                    ]);
-                }
 
                 $work_planning = WorkPlanning::getWorkPlanningDetailsById($value['module_id']);
 
@@ -2256,14 +2222,36 @@ class EveryMinute extends Command
                 $input['total_projected_time'] = $total_projected_time;
                 $input['total_actual_time'] = $total_actual_time;
                 $input['work_planning_list'] = $work_planning_list;
-                
 
                 \Mail::send('adminlte::emails.rejectionworkplanningmail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
                 });
 
-                \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+
+            else if ($value['module'] == 'List of Holidays') {
+
+                $cc_array = explode(",",$input['cc']);
+
+                // Get users for popup of add information
+                $users_details = User::getAllDetailsByUserID($value['module_id']);
+                $user_name = $users_details->first_name." ".$users_details->last_name;
+
+                if(isset($users_details) && $users_details != '') {
+
+                    $input['user_name'] = $user_name;
+                    $input['cc_array'] = $cc_array;
+
+                     \Mail::send('adminlte::emails.listofholidaysemail', $input, function ($message) use($input) {
+                    
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                    });
+
+                    \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
+                }
             }
         }
     }

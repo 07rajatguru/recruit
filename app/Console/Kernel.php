@@ -48,6 +48,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\SalaryReminder',
         'App\Console\Commands\NewCandidateEmail',
         'App\Console\Commands\ClientAutoGenerateReport',
+        'App\Console\Commands\LeaveBalanceData',
         'App\Console\Commands\SeekLeaveBalance',
         'App\Console\Commands\AddLeaveBalance',
         'App\Console\Commands\SetAttendanceOfWorkPlanning',

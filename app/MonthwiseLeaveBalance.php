@@ -10,37 +10,44 @@ class MonthwiseLeaveBalance extends Model
 
     public static function getMonthWiseLeaveBalance($month,$year) {
 
-        $month_value_array = array('1','2','3','4','5','6','7','8','9','10','11','12');
+        $query = MonthwiseLeaveBalance::query();
+        $query = $query->where('month','<=',$month);
+        $query = $query->where('year','<=',$year);
+        $query = $query->select('monthwise_leave_balance.*',\DB::raw("SUM(monthwise_leave_balance.pl_total) as pl_total"),\DB::raw("SUM(monthwise_leave_balance.pl_taken) as pl_taken"),\DB::raw("SUM(monthwise_leave_balance.pl_remaining) as pl_remaining"),\DB::raw("SUM(monthwise_leave_balance.sl_total) as sl_total"),\DB::raw("SUM(monthwise_leave_balance.sl_taken) as sl_taken"),\DB::raw("SUM(monthwise_leave_balance.sl_remaining) as sl_remaining"));
+        $query = $query->orderBy('monthwise_leave_balance.user_id','desc');
+        $query = $query->groupBy('monthwise_leave_balance.user_id');
+        $response = $query->get();
 
-        if (array_search($month,$month_value_array)) {
-            unset($month_value_array[array_search($month,$month_value_array)]);
+        $leave_balance_data = array();
+
+        if(isset($response) && sizeof($response) > 0) {
+
+            foreach ($response as $key => $value) {
+
+                $user_id = $value->user_id;
+                $user_name = User::getUserNameById($user_id);
+
+                $leave_balance_data[$user_id]['user_name'] = $user_name;
+                $leave_balance_data[$user_id]['pl_total'] = $value->pl_total;
+                $leave_balance_data[$user_id]['pl_taken'] = $value->pl_taken;
+                $leave_balance_data[$user_id]['pl_remaining'] = $value->pl_remaining;
+
+                $leave_balance_data[$user_id]['sl_total'] = $value->sl_total;
+                $leave_balance_data[$user_id]['sl_taken'] = $value->sl_taken;
+                $leave_balance_data[$user_id]['sl_remaining'] = $value->sl_remaining;
+
+            }
         }
+        return $leave_balance_data;
+    }
+
+    public static function getMonthwiseLeaveBalanceByUserId($user_id) {
 
         $query = MonthwiseLeaveBalance::query();
-        $query = $query->join('users','users.id','=','monthwise_leave_balance.user_id');
-        $query = $query->whereIn('monthwise_leave_balance.month',$month_value_array);
-        $query = $query->where('monthwise_leave_balance.year',$year);
-        $query = $query->select('monthwise_leave_balance.*','users.name as user_name');
-        $query = $query->orderBy('monthwise_leave_balance.id','desc');
-        $res = $query->get();
+        $query = $query->select('monthwise_leave_balance.*');
+        $query = $query->where('monthwise_leave_balance.user_id',$user_id);
+        $res = $query->first();
 
-        $leave_data = array();
-        $i = 0;
-
-        foreach ($res as $key => $value) {
-
-            $leave_data[$i]['id'] = $value->id;
-            $leave_data[$i]['user_name'] = $value->user_name;
-            $leave_data[$i]['pl_total'] = $value->pl_total;
-            $leave_data[$i]['pl_taken'] = $value->pl_taken;
-            $leave_data[$i]['pl_remaining'] = $value->pl_remaining;
-            $leave_data[$i]['sl_total'] = $value->sl_total;
-            $leave_data[$i]['sl_taken'] = $value->sl_taken;
-            $leave_data[$i]['sl_remaining'] = $value->sl_remaining;
-
-            $i++;
-        }
-
-        return $leave_data;
+        return $res;
     }
 }
