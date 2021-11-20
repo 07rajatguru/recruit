@@ -519,7 +519,6 @@ class UserController extends Controller
         $this->validate($request, [
             'name' => 'required',
             'email' => 'required|email',
-            'password' => 'same:confirm-password',
             'roles' => 'required',
             'type' => 'required',
         ]);
@@ -612,7 +611,13 @@ class UserController extends Controller
         $new_value_array['reports_to'] = User::getUserNameById($reports_to);
         $new_value_array['working_hours'] = $working_hours;
         $new_value_array['half_day_working_hours'] = $half_day_working_hours;
-        $new_value_array['joining_date'] = $joining_date;
+
+        if(isset($joining_date) && $joining_date != '') {
+            $new_value_array['joining_date'] = $joining_date;
+        }
+        else {
+            $new_value_array['joining_date'] = '';
+        }
 
         $new_value_array['check_report'] = $check_report;
         $new_value_array['cv_report'] = $set_cv_report;
@@ -639,7 +644,13 @@ class UserController extends Controller
         $old_reports_to = $user_all_info->reports_to;
         $old_working_hours = $user_all_info->working_hours;
         $old_half_day_working_hours = $user_all_info->half_day_working_hours;
-        $old_joining_date = date('d-m-Y',strtotime($user_all_info->joining_date));
+
+        if(isset($user_all_info->joining_date) && $user_all_info->joining_date != NULL) {
+            $old_joining_date = date('d-m-Y',strtotime($user_all_info->joining_date));
+        }
+        else {
+            $old_joining_date = '';
+        }
 
         $old_check_report = $user_all_info->daily_report;
         $old_cv_report = $user_all_info->cv_report;

@@ -100,6 +100,14 @@
                                 </tr>
 
                                 <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>Joining Date</b></td>
+                                    <td align="left">
+                                        {{ $old_value_array['joining_date'] }}</td>
+                                    <td align="left">
+                                        {{ $new_value_array['joining_date'] }}</td>
+                                </tr>
+
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
                                     <td align="left"><b>Generate Report</b></td>
                                     <td align="left">{{ $old_value_array['check_report'] }}</td>
                                     <td align="left">{{ $new_value_array['check_report'] }}</td>
