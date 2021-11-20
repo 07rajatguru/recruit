@@ -489,7 +489,15 @@ class UserController extends Controller
             $lead_report = '0';
         }
 
-        $joining_date = date('d-m-Y',strtotime($user->joining_date));
+        if(isset($user->joining_date) && $user->joining_date != NULL) {
+
+            $joining_date = date('d-m-Y',strtotime($user->joining_date));
+        }
+        else {
+
+            $joining_date = NULL;
+        }
+        
 
         $hours_array = User::getHoursArray();
         $selected_working_hours = $user->working_hours;

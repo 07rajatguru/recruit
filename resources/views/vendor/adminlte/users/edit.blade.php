@@ -467,8 +467,6 @@
 
                 alert("Before change user details please add Joining Date.");
 
-                $("#first_name").val('');
-                $("#last_name").val('');
                 $("#joining_date").focus();
             }
         }
