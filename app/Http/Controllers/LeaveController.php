@@ -13,6 +13,7 @@ use App\LeaveBalance;
 use Illuminate\Support\Facades\File;
 use App\Holidays;
 use App\MonthwiseLeaveBalance;
+use Excel;
 
 class LeaveController extends Controller
 {
@@ -819,5 +820,41 @@ class LeaveController extends Controller
         }
 
         return json_encode($leave_count);
+    }
+
+    public function exportLeaveBalance() {
+
+        $user = \Auth::user();
+        $all_perm = $user->can('display-leave');
+
+        $month = $_POST['month'];
+        $year = $_POST['year'];
+
+        if($all_perm) {
+
+            $balance_array = MonthwiseLeaveBalance::getMonthWiseLeaveBalance($month,$year);
+
+            if(isset($balance_array) && sizeof($balance_array) > 0) {
+
+                Excel::create('LeaveBalance',function($excel) use ($balance_array) {
+
+                    $excel->sheet('sheet 1',function($sheet) use ($balance_array) {
+
+                        if(isset($balance_array) && sizeof($balance_array) > 0) {
+
+                            $sheet->loadview('adminlte::leave.userwiseleave-export')->with('balance_array',$balance_array);
+                        }
+                    });
+                })->export('xls');
+            }
+            else {
+
+                return redirect()->route('leave.userwise')->with('error','No Data Found.');
+            }
+        }
+        else {
+
+            return view('errors.403');
+        }
     }
 }

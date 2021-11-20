@@ -27,6 +27,8 @@
             </div>
             <div class="pull-right">
                 <a class="btn btn-success" href="{{ route('leave.userwisecreate') }}">Add Leave Balance</a>
+
+                <a class="btn btn-primary" href="javascript:void(0);" onClick="export_data()">Download Excel</a>
             </div>
         </div>
     </div>
@@ -121,6 +123,23 @@
                 '<input type="hidden" name="month" value="'+month+'" />' +
                 '<input type="hidden" name="year" value="'+year+'" />' +
                 '</form>');
+
+            $('body').append(form);
+            form.submit();
+        }
+
+        function export_data() {
+
+            var month = $("#month").val();
+            var year = $("#year").val();
+
+            var url = '/userwiseleave/export';
+
+            var form = $('<form action="'+url+ '" method="post">' +
+            '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+            '<input type="hidden" name="month" value="'+month+'" />' +
+            '<input type="hidden" name="year" value="'+year+'" />' +
+            '</form>');
 
             $('body').append(form);
             form.submit();

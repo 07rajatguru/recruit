@@ -694,6 +694,12 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'LeaveController@userWiseLeaveDestroy'
     ]);
 
+    Route::post('userwiseleave/export',[
+        'as' => 'userwiseleave.export',
+        'uses' => 'LeaveController@exportLeaveBalance',
+        'middleware' => ['permission:display-leave']
+    ]);
+
     // Admin > Users
 
     Route::get('users', [
