@@ -169,6 +169,9 @@ class EveryMinute extends Command
 
             else if ($value['module'] == 'Leave') {
 
+                $cc_array = array();
+                $cc_array = explode(",",$input['cc']);
+
                 // Get Sender name details
                 $user_details = User::getAllDetailsByUserID($value['sender_name']);
                 $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
@@ -221,9 +224,11 @@ class EveryMinute extends Command
                     ]);
                 }
 
+                $input['cc_array'] = $cc_array;
+
                 \Mail::send('adminlte::emails.leavemail', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to'])->cc($input['cc'])->bcc($input['owner_email'])->subject($input['subject']);
+                    $message->to($input['to'])->cc($input['cc_array'])->bcc($input['owner_email'])->subject($input['subject']);
 
                     if (isset($input['attachment']) && sizeof($input['attachment']) > 0) {
                         

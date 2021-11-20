@@ -27,23 +27,13 @@
         </div>
     @endif
 
-    @if($user_id == $super_admin_userid)
-        <div class="row">
-            <div class="col-lg-12 margin-tb">
-                <div class="pull-left">
-                    <h2>Leave Applications</h2>
-                </div>
+    <div class="row">
+        <div class="col-lg-12 margin-tb">
+            <div class="pull-left">
+                <h2>Leave Applications ({{ $count }})</h2>
             </div>
         </div>
-    @else
-        <div class="row">
-            <div class="col-lg-12 margin-tb">
-                <div class="pull-left">
-                    <h2>Leave Applications ({{ $count }})</h2>
-                </div>
-            </div>
-        </div>
-    @endif
+    </div>
     <br/>
 
     <div class="row">

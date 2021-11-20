@@ -95,7 +95,7 @@ class LeaveController extends Controller
             }
         }
 
-        return view('adminlte::leave.index',compact('leave_details','leave_balance','super_admin_userid','user_id','count','pending','approved','rejected','month_array','month','year_array','year'));
+        return view('adminlte::leave.index',compact('leave_details','leave_balance','user_id','count','pending','approved','rejected','month_array','month','year_array','year'));
     }
 
     public function getAllDetailsByStatus($status,$month,$year) {
@@ -192,7 +192,7 @@ class LeaveController extends Controller
             }
         }
 
-        return view('adminlte::leave.statusindex',compact('status','leave_details','leave_balance','super_admin_userid','user_id','count','pending','approved','rejected','month_array','month','year_array','year'));
+        return view('adminlte::leave.statusindex',compact('status','leave_details','leave_balance','user_id','count','pending','approved','rejected','month_array','month','year_array','year'));
     }
 
     public function userLeaveAdd() {
@@ -527,15 +527,36 @@ class LeaveController extends Controller
 
         $user_id = \Auth::user()->id;
 
-        $superadmin_userid = getenv('SUPERADMINUSERID');
-        $reports_to_id = User::getReportsToById($user_id);
+        // get superadmin email id
+        $superadminuserid = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($superadminuserid);
+
+        //Get Reports to Email
+        $report_res = User::getReportsToUsersEmail($user_id);
+
+        if(isset($report_res->remail) && $report_res->remail!='') {
+            $report_email = $report_res->remail;
+        }
+        else {
+            $report_email = '';
+        }
+
+        // Get HR email id
+        $hr = getenv('HRUSERID');
+        $hremail = User::getUserEmailById($hr);
+
+        if($report_email == '') {
+
+            $cc_users_array = array($hremail);
+        }
+        else {
+            $cc_users_array = array($report_email,$hremail);
+        }
 
         $module = "Leave";
         $sender_name = $user_id;
-
-        $to = User::getUserEmailById($superadmin_userid);
-        $cc = User::getUserEmailById($reports_to_id);
-
+        $to = $superadminemail;
+        $cc = implode(",",$cc_users_array);
         $subject = $leave_details['subject'];
         $body_message = $leave_details['message'];
         $module_id = $leave_id;
@@ -578,17 +599,38 @@ class LeaveController extends Controller
         // Get total days
         $days = $leave_details['days'];
 
+        // Get Month & Year from date of leave
+        $month = date('m',strtotime($leave_details['days']));
+        $year = date('Y',strtotime($leave_details['days']));
+
         // Email Notifications
 
-        $superadmin_userid = getenv('SUPERADMINUSERID');
-        $reports_to_id = User::getReportsToById($user_id);
-
         $user_email = User::getUserEmailById($user_id);
-        
-        $superadmin_email = User::getUserEmailById($superadmin_userid);
-        $reports_to_email = User::getUserEmailById($reports_to_id);
-        $cc_users_array = array($superadmin_email,$reports_to_email);
-        $cc_users_array = array_filter($cc_users_array);
+    
+        $superadminuserid = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($superadminuserid);
+
+        //Get Reports to Email
+        $report_res = User::getReportsToUsersEmail($user_id);
+
+        if(isset($report_res->remail) && $report_res->remail!='') {
+            $report_email = $report_res->remail;
+        }
+        else {
+            $report_email = '';
+        }
+
+        // Get HR email id
+        $hr = getenv('HRUSERID');
+        $hremail = User::getUserEmailById($hr);
+
+        if($report_email == '') {
+
+            $cc_users_array = array($superadminemail,$hremail);
+        }
+        else {
+            $cc_users_array = array($superadminemail,$hremail,$report_email);
+        }
 
         if ($reply == 'Approved') {
             
@@ -624,6 +666,8 @@ class LeaveController extends Controller
                 $new_leave_remaining = $leave_remaining - $days;
 
                 \DB::statement("UPDATE `leave_balance` SET `leave_taken` = '$new_leave_taken', `leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
+
+                \DB::statement("UPDATE `monthwise_leave_balance` SET `pl_taken` = '$new_leave_taken', `pl_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id' AND `month` = '$month' AND `year` = '$year'");
             }
             else if($leave_category == 'Sick Leave') {
 
@@ -637,6 +681,8 @@ class LeaveController extends Controller
                 $new_leave_remaining = $seek_leave_remaining - $days;
 
                 \DB::statement("UPDATE `leave_balance` SET `seek_leave_taken` = '$new_leave_taken', `seek_leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
+
+                \DB::statement("UPDATE `monthwise_leave_balance` SET `sl_taken` = '$new_leave_taken', `sl_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id' AND `month` = '$month' AND `year` = '$year'");
             }
             else {
 
