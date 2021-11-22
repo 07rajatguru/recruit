@@ -14,6 +14,8 @@ use Illuminate\Support\Facades\File;
 use App\Holidays;
 use App\MonthwiseLeaveBalance;
 use Excel;
+use Charts;
+use DB;
 
 class LeaveController extends Controller
 {
@@ -95,7 +97,22 @@ class LeaveController extends Controller
             }
         }
 
-        return view('adminlte::leave.index',compact('leave_details','leave_balance','user_id','count','pending','approved','rejected','month_array','month','year_array','year'));
+        if(isset($leave_balance) && $leave_balance != '') {
+
+            $chart_data = Charts::create('donut', 'highcharts')
+            ->title('Leave Balance Chart')
+            ->labels(['Total PL', 'Opted PL', 'PL Balance', 'Total SL', 'Opted SL', 'SL Balance'])
+            ->values([$leave_balance->leave_total,$leave_balance->leave_taken,$leave_balance->leave_remaining,$leave_balance->seek_leave_total,$leave_balance->seek_leave_taken,$leave_balance->seek_leave_remaining])
+            ->colors(['#00c0ef','#00a65a','#dd4b39','#00c0ef','#00a65a','#dd4b39'])
+            ->dimensions(400,300)
+            ->responsive(false);
+        }
+        else {
+
+            $chart_data = '';
+        }
+
+        return view('adminlte::leave.index',compact('leave_details','leave_balance','user_id','count','pending','approved','rejected','month_array','month','year_array','year','chart_data'));
     }
 
     public function getAllDetailsByStatus($status,$month,$year) {
@@ -192,7 +209,22 @@ class LeaveController extends Controller
             }
         }
 
-        return view('adminlte::leave.statusindex',compact('status','leave_details','leave_balance','user_id','count','pending','approved','rejected','month_array','month','year_array','year'));
+        if(isset($leave_balance) && $leave_balance != '') {
+
+            $chart_data = Charts::create('donut', 'highcharts')
+            ->title('Leave Balance Chart')
+            ->labels(['Total PL', 'Opted PL', 'PL Balance', 'Total SL', 'Opted SL', 'SL Balance'])
+            ->values([$leave_balance->leave_total,$leave_balance->leave_taken,$leave_balance->leave_remaining,$leave_balance->seek_leave_total,$leave_balance->seek_leave_taken,$leave_balance->seek_leave_remaining])
+            ->colors(['#00c0ef','#00a65a','#dd4b39','#00c0ef','#00a65a','#dd4b39'])
+            ->dimensions(400,300)
+            ->responsive(false);
+        }
+        else {
+
+            $chart_data = '';
+        }
+
+        return view('adminlte::leave.statusindex',compact('status','leave_details','leave_balance','user_id','count','pending','approved','rejected','month_array','month','year_array','year','chart_data'));
     }
 
     public function userLeaveAdd() {

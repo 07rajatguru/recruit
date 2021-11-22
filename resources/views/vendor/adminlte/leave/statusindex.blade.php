@@ -9,11 +9,54 @@
 @section('content')
     <div class="row">
         <div class="col-lg-12 margin-tb">
-            <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('leave.add') }}">Add New Leave Application</a>
+            <div class="pull-left">
+                <h2>Leave Applications ({{ $count }})</h2>
+
+                <div class="col-xs-5 col-sm-5 col-md-5">
+                    <div class="form-group">
+                        {{Form::select('month',$month_array, $month, array('id'=>'month','class'=>'form-control'))}}
+                    </div>
+                </div>
+                <div class="col-xs-5 col-sm-5 col-md-5">
+                    <div class="form-group">
+                        {{Form::select('year',$year_array, $year, array('id'=>'year','class'=>'form-control'))}}
+                    </div>
+                </div>
+                <div class="col-xs-2 col-sm-2 col-md-2">
+                    <div class="form-group">
+                        {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
+                    </div>
+                </div>
+
+                <br/><br/><br/>
+
+                <div class="col-lg-4">
+                    <a href="{{ route('leave.status',array('pending',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#8FB1D5;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;width:130px;" title="Pending">Pending ({{ $pending }})</div></a>
+                </div>
+
+                <div class="col-lg-4">
+                    <a href="{{ route('leave.status',array('approved',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#32CD32;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;width:130px;" title="Approved">Approved ({{ $approved }})</div></a>
+                </div>
+
+                <div class="col-lg-4">
+                    <a href="{{ route('leave.status',array('rejected',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;width:130px;" title="Rejected">Rejected ({{ $rejected }})</div></a>
+                </div>
             </div>
+            
+            @if(isset($chart_data) && $chart_data != '')
+                <div class="pull-right">
+                    <a class="btn btn-success" href="{{ route('leave.add') }}">Add New Leave Application</a><br/><br/>
+                    {!! $chart_data->html() !!}
+                    {!! Charts::scripts() !!}
+                    {!! $chart_data->script() !!}
+                </div>
+            @else
+                <div class="pull-right">
+                    <a class="btn btn-success" href="{{ route('leave.add') }}">Add New Leave Application</a>
+                </div>
+            @endif
         </div>
-    </div>
+    </div><br/><br/>
 
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
@@ -27,75 +70,6 @@
         </div>
     @endif
 
-    <div class="row">
-        <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2>Leave Applications ({{ $count }})</h2>
-            </div>
-        </div>
-    </div>
-    <br/>
-
-    <div class="row">
-        <div class="col-xs-2 col-sm-2 col-md-2" style="margin-top:-8px;">
-            <div class="form-group">
-                {{Form::select('month',$month_array, $month, array('id'=>'month','class'=>'form-control'))}}
-            </div>
-        </div>
-        <div class="col-xs-2 col-sm-2 col-md-2" style="margin-top:-8px;">
-            <div class="form-group">
-                {{Form::select('year',$year_array, $year, array('id'=>'year','class'=>'form-control'))}}
-            </div>
-        </div>
-        <div class="col-xs-2 col-sm-2 col-md-2" style="margin-top:-8px;">
-            <div class="form-group">
-                {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
-            </div>
-        </div>
-    </div>
-
-    @if(isset($leave_balance) && $leave_balance != '')
-        <div class="row">
-            <div class="box-body col-xs-2 col-sm-2 col-md-2">
-                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00c0ef !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Total PL">Total PL ({{ $leave_balance->leave_total or 0 }})</div></a>
-            </div>
-            <div class="box-body col-xs-2 col-sm-2 col-md-2">
-                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00a65a !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Opted PL">Opted PL ({{ $leave_balance->leave_taken or 0 }})</div></a>
-            </div>
-            <div class="box-body col-xs-2 col-sm-2 col-md-2">
-                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#dd4b39 !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="PL Balance">PL Balance ({{ $leave_balance->leave_remaining or 0 }})
-                </div></a>
-            </div>
-            <div class="box-body col-xs-2 col-sm-2 col-md-2">
-                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00c0ef !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Total SL">Total SL ({{ $leave_balance->seek_leave_total or 0 }})</div>
-                </a>
-            </div>
-            <div class="box-body col-xs-2 col-sm-2 col-md-2">
-                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00a65a !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="Opted SL">Opted SL ({{ $leave_balance->seek_leave_taken or 0 }})</div></a>
-            </div>
-            <div class="box-body col-xs-2 col-sm-2 col-md-2">
-                <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#dd4b39 !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 150px;" title="SL Balance">SL Balance ({{ $leave_balance->seek_leave_remaining or 0 }})</div></a>
-            </div>
-        </div>
-    @endif
-
-    <div class="row">
-        <div class="col-xs-2 col-sm-2 col-md-2" style="margin-top:-8px;">
-            <a href="{{ route('leave.status',array('pending',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#8FB1D5;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Pending">Pending ({{ $pending }})</div>
-            </a>
-        </div>
-
-        <div class="col-xs-2 col-sm-2 col-md-2" style="margin-top:-8px;">
-            <a href="{{ route('leave.status',array('approved',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#32CD32;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Approved">Approved ({{ $approved }})</div>
-            </a>
-        </div>
-
-        <div class="col-xs-2 col-sm-2 col-md-2" style="margin-top:-8px;">
-            <a href="{{ route('leave.status',array('rejected',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Rejected">Rejected ({{ $rejected }})</div>
-            </a>
-        </div>
-    </div><br/>
-    
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="leave_table">
         <thead>
             <tr>
