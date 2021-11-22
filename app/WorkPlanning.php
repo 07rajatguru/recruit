@@ -303,4 +303,29 @@ class WorkPlanning extends Model
 
         return $work_planning_res;
     }
+
+    public static function getWorkPlanningCount($user_id,$month,$year,$status) {
+
+        $query = WorkPlanning::query();
+        $query = $query->orderBy('work_planning.added_date','DESC');
+        
+        if(isset($user_id) && $user_id != 0) {
+            $query = $query->where('work_planning.added_by','=',$user_id);
+        }
+
+        if(isset($status)) {
+            $query = $query->where('work_planning.status','=',$status);
+        }
+        
+        if ($month != '' && $year != '') {
+            $query = $query->where(\DB::raw('month(work_planning.added_date)'),'=',$month);
+            $query = $query->where(\DB::raw('year(work_planning.added_date)'),'=',$year);
+        }
+
+        $query = $query->select('work_planning.*');
+        $response = $query->get();
+        $count = $response->count();
+
+        return $count;
+    }
 }

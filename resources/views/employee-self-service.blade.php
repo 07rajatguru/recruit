@@ -24,13 +24,13 @@
         <div class="col-lg-2 col-xs-4">
             <div class="small-box bg-red">
                 <div class="inner">
-                    <h3>0</h3>
+                    <h3>{{ $work_planning_pending_count or '0' }}</h3>
                     <p>Work Planning Pending Status</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-person-add"></i>
                 </div>
-                <a href="/" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="{{ route('workplanning.status',array('pending',$month,$year)) }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 

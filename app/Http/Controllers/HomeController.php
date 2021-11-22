@@ -1443,12 +1443,15 @@ class HomeController extends Controller
 
         }
 
+        $work_planning_pending_count = WorkPlanning::getWorkPlanningCount($user_id,$month,$year,0);
+
         $viewVariable = array();
         $viewVariable['date'] = $date;
         $viewVariable['month'] = $month;
         $viewVariable['year'] = $year;
         $viewVariable['superadmin'] = $superadmin;
         $viewVariable['user_id'] = $user_id;
+        $viewVariable['work_planning_pending_count'] = $work_planning_pending_count;
 
         return view('employee-self-service',$viewVariable);
     }
