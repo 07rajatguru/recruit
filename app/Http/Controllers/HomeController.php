@@ -18,6 +18,8 @@ use Calendar;
 use App\UserRemarks;
 use App\UserBenchMark;
 use App\WorkPlanning;
+use App\UserLeave;
+use App\Holidays;
 
 class HomeController extends Controller
 {
@@ -1415,9 +1417,7 @@ class HomeController extends Controller
 
         $user = \Auth::user();
         $user_id =  $user->id;
-        $superadmin = getenv('SUPERADMINUSERID');
-
-        $recruitment = getenv('RECRUITMENT');
+        $superadmin_userid = getenv('SUPERADMINUSERID');
 
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
@@ -1429,29 +1429,74 @@ class HomeController extends Controller
             return redirect()->route('jobopen.index');
         }
 
-        $display_all_count = $user->can('display-all-count');
-        $display_userwise_count = $user->can('display-userwise-count');
-
         $date = date('Y-m-d');
         $month = date('m');
         $year = date('Y');
 
-        if($display_all_count) {
-           
+        if ($user_id == $superadmin_userid) {
+
+            // Get Pending Work Planning Count
+            $work_planning = WorkPlanning::getPendingWorkPlanningDetails(0,$month,$year,0);
+            $pending_work_planning_count = sizeof($work_planning);
+
+            // Get Applied Leave Count
+            $leave_data = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,'');
+            $leave_count = sizeof($leave_data);
+            
+            // Set present days
+            $present_days = 0;
+
+            // Get Early go late in count
+            $leave_details = UserLeave::getLateInEarlyGoByUserID(0);
+            $earlygo_latein_count = sizeof($leave_details);
+
+            // Get Optional Holidays
+            $optional_holiday_details = Holidays::getUserHolidaysByType(0,$month,$year,'Optional Leave');
+            $optional_holidays_count = sizeof($optional_holiday_details);
+
+            // Get Fixed Holidays
+            $fixed_holiday_details = Holidays::getUserHolidaysByType(0,$month,$year,'Fixed Leave');
+            $fixed_holidays_count = sizeof($fixed_holiday_details);
         }
-        else if($display_userwise_count) {
+        else {
 
+            // Get Pending Work Planning Count
+            $work_planning = WorkPlanning::getPendingWorkPlanningDetails($user_id,$month,$year,0);
+            $pending_work_planning_count = sizeof($work_planning);
+
+            // Get Applied Leave Count
+            $floor_reports_id = User::getAssignedUsers($user_id);
+            foreach ($floor_reports_id as $key => $value) {
+                $user_ids[] = $key;
+            }
+
+            $leave_data = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'');
+            $leave_count = sizeof($leave_data);
+
+            // Get Present Days Count
+            $present_days_res = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'');
+            $present_days = sizeof($present_days_res);
+
+            // Get Early go late in count
+            $leave_details = UserLeave::getLateInEarlyGoByUserID($user_id);
+            $earlygo_latein_count = sizeof($leave_details);
+
+            // Get Optional Holidays
+            $optional_holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'Optional Leave');
+            $optional_holidays_count = sizeof($optional_holiday_details);
+
+            // Get Fixed Holidays
+            $fixed_holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'Fixed Leave');
+            $fixed_holidays_count = sizeof($fixed_holiday_details);
         }
-
-        $work_planning_pending_count = WorkPlanning::getWorkPlanningCount($user_id,$month,$year,0);
-
+        
         $viewVariable = array();
-        $viewVariable['date'] = $date;
-        $viewVariable['month'] = $month;
-        $viewVariable['year'] = $year;
-        $viewVariable['superadmin'] = $superadmin;
-        $viewVariable['user_id'] = $user_id;
-        $viewVariable['work_planning_pending_count'] = $work_planning_pending_count;
+        $viewVariable['pending_work_planning_count'] = $pending_work_planning_count;
+        $viewVariable['leave_count'] = $leave_count;
+        $viewVariable['present_days'] = $present_days;
+        $viewVariable['earlygo_latein_count'] = $earlygo_latein_count;
+        $viewVariable['optional_holidays_count'] = $optional_holidays_count;
+        $viewVariable['fixed_holidays_count'] = $fixed_holidays_count;
 
         return view('employee-self-service',$viewVariable);
     }

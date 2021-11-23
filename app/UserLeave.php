@@ -150,7 +150,7 @@ class UserLeave extends Model
         return $leave_by_date;
     }
 
-    public static function getLeaveCountByUserID($loggedin_user_id) {
+    public static function getLateInEarlyGoByUserID($loggedin_user_id) {
 
         $month = date('m');
         $year = date('Y');
@@ -158,16 +158,49 @@ class UserLeave extends Model
 
         $query = UserLeave::query();
         $query = $query->join('users','users.id','user_leave.user_id');
-        $query = $query->select('user_leave.*','users.first_name as fname','users.last_name as lname');
-        $query = $query->where('user_leave.user_id',$loggedin_user_id);
+        $query = $query->select('user_leave.*','users.name as user_name');
+
+        if ($loggedin_user_id > 0) {
+            $query = $query->where('user_leave.user_id',$loggedin_user_id);
+        }
+
         $query = $query->whereIn('user_leave.type_of_leave',$type_array);
         $query = $query->where(\DB::raw('month(user_leave.from_date)'),'=',$month);
         $query = $query->where(\DB::raw('year(user_leave.from_date)'),'=',$year);
 
         $response = $query->get();
 
-        $leave_count = $response->count();
+        $leave = array();
+        $i = 0;
 
-        return $leave_count;
+        if(isset($response) && $response != '') {
+
+            foreach ($response as $key => $value) {
+
+                $leave[$i]['id'] = $value->id;
+                $leave[$i]['user_name'] = $value->user_name;
+                $leave[$i]['subject'] = $value->subject;
+
+                if (isset($value->from_date) && $value->from_date != '') {
+                    $leave[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date));
+                }
+                else {
+                    $leave[$i]['from_date'] = '';
+                }
+                if (isset($value->to_date) && $value->to_date != '') {
+                    $leave[$i]['to_date'] = date('d-m-Y',strtotime($value->to_date));
+                }
+                else {
+                    $leave[$i]['to_date'] = '';
+                }
+                
+                $leave[$i]['leave_type'] = $value->type_of_leave;
+                $leave[$i]['leave_category'] = $value->category;
+                $leave[$i]['status'] = $value->status;
+                
+                $i++;
+            }
+        }
+        return $leave;
     }
 }

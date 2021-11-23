@@ -865,9 +865,10 @@ class LeaveController extends Controller
         
         $loggedin_user_id = $_GET['loggedin_user_id'];
 
-        $get_leaves = UserLeave::getLeaveCountByUserID($loggedin_user_id);
+        $get_leaves = UserLeave::getLateInEarlyGoByUserID($loggedin_user_id);
+        $leaves_count = sizeof($get_leaves);
 
-        return json_encode($get_leaves);
+        return json_encode($leaves_count);
     }
 
     public function getTotalLeaveBalance() {
@@ -934,5 +935,52 @@ class LeaveController extends Controller
 
             return view('errors.403');
         }
+    }
+
+    public function getAppliedLeave() {
+        
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $super_admin_userid = getenv('SUPERADMINUSERID');
+       
+        $month = date('m');
+        $year = date('Y');
+
+        if($user_id == $super_admin_userid) {
+
+            $leave_details = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,'');
+        }
+        else {
+
+            $floor_reports_id = User::getAssignedUsers($user_id);
+            foreach ($floor_reports_id as $key => $value) {
+                $user_ids[] = $key;
+            }
+            $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'');
+        }
+
+        $count = sizeof($leave_details);
+
+        return view('adminlte::leave.appliedleave',compact('leave_details','user_id','count'));
+    }
+
+    public function getLateInEarlyGo() {
+        
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $super_admin_userid = getenv('SUPERADMINUSERID');
+
+        if($user_id == $super_admin_userid) {
+
+            $leave_details = UserLeave::getLateInEarlyGoByUserID(0);
+        }
+        else {
+
+            $leave_details = UserLeave::getLateInEarlyGoByUserID($user_id);
+        }
+        
+        $count = sizeof($leave_details);
+
+        return view('adminlte::leave.earlygo-latein',compact('leave_details','user_id','count'));
     }
 }

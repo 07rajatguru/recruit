@@ -179,6 +179,42 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HomeController@employeeSelfService'
     ));
 
+    Route::get('work-planning/pending', [
+        'as' => 'workplanning.pending',
+        'uses' => 'WorkPlanningController@getPendingWorkPlanning',
+        'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
+    ]);
+
+    Route::get('applied-leave', [
+        'as' => 'applied.leave',
+        'uses' => 'LeaveController@getAppliedLeave',
+        'middleware' => ['permission:display-leave|display-user-wise-leave']
+    ]);
+
+    Route::get('present-days', [
+        'as' => 'present.days',
+        'uses' => 'WorkPlanningController@getPresentDays',
+        'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
+    ]);
+
+    Route::get('early-go-late-in', [
+        'as' => 'early.late',
+        'uses' => 'LeaveController@getLateInEarlyGo',
+        'middleware' => ['permission:display-leave|display-user-wise-leave']
+    ]);
+
+    Route::get('optional-holidays', [
+        'as' => 'optional.holidays',
+        'uses' => 'HolidaysController@getOptionalHolidays',
+        'middleware' => ['permission:display-holidays']
+    ]);
+
+    Route::get('fixed-holidays', [
+        'as' => 'fixed.holidays',
+        'uses' => 'HolidaysController@getFixedHolidays',
+        'middleware' => ['permission:display-holidays']
+    ]);
+
     // Dashboard
 
     Route::any('/dashboard', array (

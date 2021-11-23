@@ -35,8 +35,8 @@ class JobCandidateJoiningdate extends Model
         $query = $query->leftjoin('bills','bills.candidate_id','=','job_candidate_joining_date.candidate_id');
         $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.email as email', 'users.name as owner','candidate_basicinfo.mobile as mobile','job_candidate_joining_date.joining_date as date','job_openings.posting_title as jobname', 'job_openings.id as jid', 'job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','job_candidate_joining_date.fixed_salary as salary','bills.id as bill_id');
 
-        $query = $query->whereRaw('MONTH(joining_date) = ?',[$month]);
-        $query = $query->whereRaw('YEAR(joining_date) = ?',[$year]);
+        $query = $query->whereRaw('MONTH(job_candidate_joining_date.joining_date) = ?',[$month]);
+        $query = $query->whereRaw('YEAR(job_candidate_joining_date.joining_date) = ?',[$year]);
 
         if($all==0) {
             $query = $query->where(function($query) use ($user_id){
