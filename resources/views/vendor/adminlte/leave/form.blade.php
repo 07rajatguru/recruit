@@ -302,10 +302,12 @@
                                 alert('You Already Take 3 Early Go / Late In in this month.');
                                 return false;
                             }
+                            else {
+
+                                return true;
+                            }
                         }
                     });
-
-                    return true;
                 }
                 else {
                     return true;
@@ -314,6 +316,8 @@
             else {
                 return true;
             }
+
+            return false;
         }
     </script>
 @endsection

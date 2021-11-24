@@ -99,7 +99,7 @@ class LeaveController extends Controller
 
         if(isset($leave_balance) && $leave_balance != '') {
 
-            $chart_data = Charts::create('donut', 'highcharts')
+            $chart_data = Charts::create('pie', 'highcharts')
             ->title('Leave Balance Chart')
             ->labels(['Total PL', 'Opted PL', 'PL Balance', 'Total SL', 'Opted SL', 'SL Balance'])
             ->values([$leave_balance->leave_total,$leave_balance->leave_taken,$leave_balance->leave_remaining,$leave_balance->seek_leave_total,$leave_balance->seek_leave_taken,$leave_balance->seek_leave_remaining])
@@ -632,8 +632,8 @@ class LeaveController extends Controller
         $days = $leave_details['days'];
 
         // Get Month & Year from date of leave
-        $month = date('m',strtotime($leave_details['days']));
-        $year = date('Y',strtotime($leave_details['days']));
+        $month = date('m',strtotime($leave_details['from_date']));
+        $year = date('Y',strtotime($leave_details['from_date']));
 
         // Email Notifications
 

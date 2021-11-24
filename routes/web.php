@@ -205,14 +205,12 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('optional-holidays', [
         'as' => 'optional.holidays',
-        'uses' => 'HolidaysController@getOptionalHolidays',
-        'middleware' => ['permission:display-holidays']
+        'uses' => 'HolidaysController@getOptionalHolidays'
     ]);
 
     Route::get('fixed-holidays', [
         'as' => 'fixed.holidays',
-        'uses' => 'HolidaysController@getFixedHolidays',
-        'middleware' => ['permission:display-holidays']
+        'uses' => 'HolidaysController@getFixedHolidays'
     ]);
 
     // Dashboard
