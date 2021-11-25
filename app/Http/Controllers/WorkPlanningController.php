@@ -425,10 +425,7 @@ class WorkPlanningController extends Controller
 
     public function store(Request $request) {
 
-        $user_id = \Auth::user()->id;
-        $date = date('Y-m-d');
-
-        // Get Total Projected Time
+        /*// Get Total Projected Time
         $projected_time = Input::get('projected_time');
         $sum = strtotime('00:00:00');
         $totaltime = 0;
@@ -472,12 +469,18 @@ class WorkPlanningController extends Controller
 
         // Set Total Projected Time
         $total_projected_time = "$h:$m:$s";
+*/
 
-        // Get User Loggedin Time
-        $get_time = UsersLog::getUserLogInTime($user_id,$date);
+        $user_id = \Auth::user()->id;
+        $date = date('Y-m-d');
 
         $work_type = $request->input('work_type');
         $remaining_time = $request->input('remaining_time');
+        $total_projected_time = $request->input('total_projected_time');
+        $link = $request->input('link');
+
+        // Get User Loggedin Time
+        $get_time = UsersLog::getUserLogInTime($user_id,$date);
 
         // Get Current Time
         $current_time = date('h:i:s', time());
@@ -556,9 +559,6 @@ class WorkPlanningController extends Controller
                 }
             }
         }
-        
-
-        $link = Input::get('link');
 
         $work_planning = new WorkPlanning();
         $work_planning->attendance = $attendance;
@@ -731,10 +731,7 @@ class WorkPlanningController extends Controller
 
     public function update(Request $request,$id) {
 
-        $user_id = \Auth::user()->id;
-        $date = date('Y-m-d');
-
-        // Calculate Total Projected Time
+        /*// Calculate Total Projected Time
         $projected_time = Input::get('projected_time');
         $sum = strtotime('00:00:00');
         $totaltime = 0;
@@ -827,15 +824,23 @@ class WorkPlanningController extends Controller
         }
         else {
             $total_actual_time = NULL;
-        }
+        }*/
+
+
+        $user_id = \Auth::user()->id;
+        $date = date('Y-m-d');
+
+        $total_projected_time = $request->input('total_projected_time');
+        $total_actual_time = $request->input('total_actual_time');
+        $work_type = $request->input('work_type');
+        $remaining_time = $request->input('remaining_time');
+        $link = Input::get('link');
 
         // Set Attendance for Farhin & Manisha
-        
         $farhin_user_id = getenv('ALLCLIENTVISIBLEUSERID');
         $manisha_user_id = getenv('MANISHAUSERID');
 
         // Get Work Planning Details
-
         $work_planning = WorkPlanning::find($id);
         $attendance = $work_planning->attendance;
 
@@ -870,10 +875,6 @@ class WorkPlanningController extends Controller
                 }
             }
         }
-
-        $work_type = $request->input('work_type');
-        $remaining_time = $request->input('remaining_time');
-        $link = Input::get('link');
 
         $work_planning->attendance = $attendance;
         $work_planning->work_type = $work_type;
