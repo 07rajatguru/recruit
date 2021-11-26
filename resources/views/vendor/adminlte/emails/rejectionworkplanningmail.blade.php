@@ -15,7 +15,7 @@
                     </b>
 
                     <p style="text-align: left;">
-                        This is to inform you that your Work Planning for {{ $today_date }} has been rejected. You are requested to respond back to your Reporting Manager justifying queries raised against each task.
+                        This is to inform you that your Work Planning for {{ $added_date }} has been rejected. You are requested to respond back to your Reporting Manager justifying queries raised against each task.
                     </p>
                                 
                     <p style="text-align: left;">

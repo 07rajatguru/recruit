@@ -658,6 +658,24 @@ class WorkPlanningController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
+        // If Report Delay send one more email notification
+
+        if(isset($report_delay) && $report_delay != '') {
+
+            $module = "Work Planning Delay";
+            $sender_name = $superadminuserid;
+            $to = User::getUserEmailById($work_planning->added_by);
+            $cc = implode(",",$to_users_array);
+
+            $date = date('d/m/Y');
+
+            $subject = "Work Planning Delay - " . $date;
+            $message = "Work Planning Delay - " . $date;
+            $module_id = $work_planning_id;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        }
+
         return redirect()->route('workplanning.index')->with('success','Work Planning Add Successfully.');
     }
 
@@ -1003,6 +1021,39 @@ class WorkPlanningController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
+        // If Status not add tomorrow before 11:00 AM then send email notifications
+
+        $today_date = date("d-m-Y");
+        $work_planning_date = $work_planning['added_date'];
+
+        if($work_planning_date != $today_date) {
+
+            $utc = date('d-m-Y H:i:s');
+            $dt = new \DateTime($utc);
+            $tz = new \DateTimeZone('Asia/Kolkata'); // or whatever zone you're after
+            $dt->setTimezone($tz);
+            $current_date_time = $dt->format('d-m-Y H:i:s');
+
+            // Get Today Eleven O'clock Time
+
+            $eleven = date('d-m-Y 11:00:00');
+
+            if($current_date_time > $eleven) {
+
+                $module = "Work Planning Status Delay";
+                $sender_name = $superadminuserid;
+                $to = User::getUserEmailById($work_planning['added_by_id']);
+                $cc = implode(",",$to_users_array);
+
+                $date = date('d/m/Y',strtotime($work_planning['added_date']));
+
+                $subject = "Delay of Work Planning Status - " . $work_planning_date;
+                $message = "Delay of Work Planning Status - " . $work_planning_date;
+                $module_id = $wp_id;
+
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+            }
+        }
         return redirect()->route('workplanning.index')->with('success','Email Sent Successfully.');
     }
 

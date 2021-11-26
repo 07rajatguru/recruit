@@ -2204,27 +2204,43 @@ class EveryMinute extends Command
 
                 $work_planning = WorkPlanning::getWorkPlanningDetailsById($value['module_id']);
 
-                // Get Task List
-                $work_planning_list = WorkPlanningList::getWorkPlanningList($value['module_id']);
-
                 $user_name = $work_planning['added_by'];
-                $today_date = $work_planning['added_date'];
-                $link = $work_planning['link'];
-                $reject_reply = $work_planning['reject_reply'];
-                $reason_of_rejection = $work_planning['reason_of_rejection'];
-                $total_projected_time = $work_planning['total_projected_time'];
-                $total_actual_time = $work_planning['total_actual_time'];
+                $added_date = $work_planning['added_date'];
 
                 $input['user_name'] = $user_name;
-                $input['today_date'] = date('d/m/Y',strtotime($today_date));
-                $input['link'] = $link;
-                $input['reject_reply'] = $reject_reply;
-                $input['reason_of_rejection'] = $reason_of_rejection;
-                $input['total_projected_time'] = $total_projected_time;
-                $input['total_actual_time'] = $total_actual_time;
-                $input['work_planning_list'] = $work_planning_list;
+                $input['added_date'] = date('d/m/Y',strtotime($added_date));
 
                 \Mail::send('adminlte::emails.rejectionworkplanningmail', $input, function ($message) use($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+
+            else if ($value['module'] == 'Work Planning Delay' || $value['module'] == 'Work Planning Status Delay') {
+
+                $cc_array = explode(",",$input['cc']);
+                $input['cc_array'] = $cc_array;
+              
+                $input['module_id'] = $value['module_id'];
+
+                $work_planning = WorkPlanning::getWorkPlanningDetailsById($value['module_id']);
+
+                $user_name = $work_planning['added_by'];
+                $added_date = $work_planning['added_date'];
+                $loggedin_time = $work_planning['loggedin_time'];
+                $loggedout_time = $work_planning['loggedout_time'];
+                $work_planning_time = $work_planning['work_planning_time'];
+
+                $input['module'] = $value['module'];
+                $input['user_name'] = $user_name;
+                $input['added_date'] = date('d/m/Y',strtotime($added_date));
+                $input['loggedin_time'] = $loggedin_time;
+                $input['loggedout_time'] = $loggedout_time;
+                $input['work_planning_time'] = $work_planning_time;
+
+                \Mail::send('adminlte::emails.workplanningdelayemail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
                 });
