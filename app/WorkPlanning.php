@@ -247,6 +247,7 @@ class WorkPlanning extends Model
             $work_planning_res['reason_of_rejection'] = $response->reason_of_rejection;
             $work_planning_res['total_projected_time'] = $response->total_projected_time;
             $work_planning_res['total_actual_time'] = $response->total_actual_time;
+            $work_planning_res['evening_status'] = $response->evening_status;
         }
         return $work_planning_res;
     }
