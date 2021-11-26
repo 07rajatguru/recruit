@@ -2085,15 +2085,11 @@ class EveryMinute extends Command
                 $work_planning_list = WorkPlanningList::getWorkPlanningList($value['module_id']);
 
                 $today_date = $work_planning['added_date'];
-                $report_delay = $work_planning['report_delay'];
-                $report_delay_content = $work_planning['report_delay_content'];
                 $link = $work_planning['link'];
                 $total_projected_time = $work_planning['total_projected_time'];
                 $total_actual_time = $work_planning['total_actual_time'];
 
                 $input['today_date'] = $today_date;
-                $input['report_delay'] = $report_delay;
-                $input['report_delay_content'] = $report_delay_content;
                 $input['link'] = $link;
                 $input['module'] = $value['module'];
                 $input['total_projected_time'] = $total_projected_time;

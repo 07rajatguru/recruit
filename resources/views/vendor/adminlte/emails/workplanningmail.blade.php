@@ -23,16 +23,6 @@
                     </p>
                 @endif
 
-                @if(isset($reject_reply) && $reject_reply != '')
-                    <p style="text-align: left;">
-                        @if(isset($reason_of_rejection) && $reason_of_rejection != '')
-                            <b>Reason of Rejection</b> : For {{ $reject_reply }} - {{ $reason_of_rejection }}
-                        @else
-                            <b>Reason of Rejection</b> : For {{ $reject_reply }}
-                        @endif  
-                    </p>
-                @endif
-
                 <p style="text-align: left;">
                     <u>Please find my Work Planning Sheet for the day :</u>
                 </p>
