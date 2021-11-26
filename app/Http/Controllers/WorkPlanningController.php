@@ -983,8 +983,13 @@ class WorkPlanningController extends Controller
         $hr = getenv('HRUSERID');
         $hremail = User::getUserEmailById($hr);
 
-        $to_users_array = array($superadminemail,$hremail,$report_email);
-
+        if($report_email == '') {
+            $to_users_array = array($superadminemail,$hremail);
+        }
+        else {
+            $to_users_array = array($report_email,$superadminemail,$hremail);
+        }
+        
         $module = "Work Planning";
         $sender_name = $user_id;
         $to = implode(",",$to_users_array);
@@ -1070,7 +1075,14 @@ class WorkPlanningController extends Controller
         $hr = getenv('HRUSERID');
         $hremail = User::getUserEmailById($hr);
 
-        $cc_users_array = array($superadminemail,$hremail,$reports_to_email);
+        if($reports_to_email == '') {
+            
+            $cc_users_array = array($superadminemail,$hremail);
+        }
+        else {
+
+            $cc_users_array = array($reports_to_email,$superadminemail,$hremail);
+        }
 
         $module = "Work Planning Remarks";
         $sender_name = $user_id;
@@ -1148,7 +1160,7 @@ class WorkPlanningController extends Controller
         }
         else {
 
-            $cc_users_array = array($superadminemail,$hremail,$reports_to_email);
+            $cc_users_array = array($reports_to_email,$superadminemail,$hremail);
         }
 
         $module = "Work Planning Rejection";
