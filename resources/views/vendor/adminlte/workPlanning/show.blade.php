@@ -1,3 +1,15 @@
+@section('customs_css')
+<style>
+    .error
+    {
+        color:#f56954 !important;
+    }
+    tbody > tr > td:first-child {
+      text-align: center;
+    }
+</style>
+@endsection
+
 @extends('adminlte::page')
 
 @section('title', 'Work Planning')
@@ -92,10 +104,27 @@
                         </tr>
                     @endif
 
-                    @if(isset($work_planning['reject_reply']) && $work_planning['reject_reply'] != '')
+                    @if(isset($work_planning['report_delay']) && $work_planning['report_delay'] != '')
+                        <tr>
+                            <th>Reason of Delay Report :</th>
+
+                            @if(isset($work_planning['report_delay_content']) && $work_planning['report_delay_content'] != '')
+                                <td colspan="3">{{ $work_planning['report_delay'] }} - {{ $work_planning['report_delay_content'] }}</td>
+                            @else
+                                <td colspan="3">{{ $work_planning['report_delay'] }}</td>
+                            @endif
+                        </tr>
+                    @endif
+
+                    @if(isset($work_planning['reason_of_rejection']) && $work_planning['reason_of_rejection'] != '')
                         <tr>
                             <th>Reason of Rejection :</th>
-                            <td colspan="3">For {{ $work_planning['reject_reply'] }} - {{ $work_planning['reason_of_rejection'] }}</td>
+
+                            @if(isset($work_planning['reject_reply']) && $work_planning['reject_reply'] != '')
+                                <td colspan="3">{{ $work_planning['reject_reply'] }} - {{ $work_planning['reason_of_rejection'] }}</td>
+                            @else
+                                <td colspan="3">{{ $work_planning['reason_of_rejection'] }}</td>
+                            @endif
                         </tr>
                     @endif
                 </table>
@@ -111,106 +140,111 @@
                 <div class="box-header col-md-6"></div>
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <table class="table table-bordered">
-                    <thead>
-                        <tr>
-                            <th width="5%" style="border:1px solid black;text-align: center;">Sr No.</th>
-                            <th width="25%" style="border:1px solid black;">Task</th>
-                            <th width="10%" style="border:1px solid black;text-align: center;">Projected Time</th>
-                            <th width="10%" style="border:1px solid black;text-align: center;">Actual Time</th>
-                            <th width="25%" style="border:1px solid black;">Remarks</th>
-                            <th width="25%" style="border:1px solid black;">Reporting Manager / HR Remarks
-                            </th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php 
-                            $i=1;
-                        ?>
-                        @foreach($work_planning_list as $key=>$value)
+                        <thead>
                             <tr>
-                                <td style="border:1px solid black;text-align: center;">{{ $i++ }}</td>
-                                <td style="border:1px solid black;">{!! $value['task'] !!}</td>
-                                <?php
+                                <th width="5%" style="border:1px solid black;text-align: center;">Sr No.</th>
+                                <th width="25%" style="border:1px solid black;">Task</th>
+                                <th width="10%" style="border:1px solid black;text-align: center;">Projected Time</th>
+                                <th width="10%" style="border:1px solid black;text-align: center;">Actual Time</th>
+                                <th width="25%" style="border:1px solid black;">Remarks</th>
+                                <th width="25%" style="border:1px solid black;">Reporting Manager / HR Remarks</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $i=1; ?>
+                            @foreach($work_planning_list as $key=>$value)
+                                <tr>
+                                    <td style="border:1px solid black;text-align: center;">{{ $i++ }}</td>
+                                    <td style="border:1px solid black;">{!! $value['task'] !!}</td>
+                                    <?php
+                                        $projected_time = array();$actual_time = array();
 
-                                    $projected_time = array();
-                                    $actual_time = array();
+                                        if(isset($value['projected_time']) && $value['projected_time'] != '') {
+                                            $projected_time = explode(':', $value['projected_time']);
+                                        }
 
-                                    if(isset($value['projected_time']) && $value['projected_time'] != '') {
-                                        $projected_time = explode(':', $value['projected_time']);
-                                    }
+                                        if(isset($value['actual_time']) && $value['actual_time'] != '') {
+                                            $actual_time = explode(':', $value['actual_time']);
+                                        }
+                                    ?>
 
-                                    if(isset($value['actual_time']) && $value['actual_time'] != '') {
-                                        $actual_time = explode(':', $value['actual_time']);
-                                    }
-                                ?>
-
-                                @if(isset($projected_time)  && sizeof($projected_time) > 0)
-                                    @if($projected_time[0] == 0)
-                                        <td style="border:1px solid black;text-align: center;">{{ $projected_time[1] }} Min.</td>
+                                    @if(isset($projected_time)  && sizeof($projected_time) > 0)
+                                        @if($projected_time[0] == 0)
+                                            <td style="border:1px solid black;text-align: center;">{{ $projected_time[1] }} Min.</td>
+                                        @else
+                                            <td style="border:1px solid black;text-align: center;">{{ $projected_time[0] }}:{{ $projected_time[1] }} Hours</td>
+                                        @endif
                                     @else
-                                        <td style="border:1px solid black;text-align: center;">{{ $projected_time[0] }}:{{ $projected_time[1] }} Hours</td>
+                                        <td style="border:1px solid black;text-align: center;">{{ $value['projected_time'] }}</td>
                                     @endif
-                                @else
-                                    <td style="border:1px solid black;text-align: center;">{{ $value['projected_time'] }}</td>
-                                @endif
 
-                                @if(isset($actual_time) && sizeof($actual_time) > 0)
-                                    @if($actual_time[0] == 0)
-                                        <td style="border:1px solid black;text-align: center;">{{ $actual_time[1] }} Min.</td>
+                                    @if(isset($actual_time) && sizeof($actual_time) > 0)
+                                        @if($actual_time[0] == 0)
+                                            <td style="border:1px solid black;text-align: center;">{{ $actual_time[1] }} Min.</td>
+                                        @else
+                                            <td style="border:1px solid black;text-align: center;">{{ $actual_time[0] }}:{{ $actual_time[1] }} Hours</td>
+                                        @endif
                                     @else
-                                        <td style="border:1px solid black;text-align: center;">{{ $actual_time[0] }}:{{ $actual_time[1] }} Hours</td>
+                                        <td style="border:1px solid black;text-align: center;">{{ $value['actual_time'] }}</td>
                                     @endif
-                                @else
-                                    <td style="border:1px solid black;text-align: center;">{{ $value['actual_time'] }}</td>
-                                @endif
 
-                                <td style="border:1px solid black;">{!! $value['remarks'] !!}</td>
+                                    <td style="border:1px solid black;">{!! $value['remarks'] !!}</td>
 
-                                @if($value['rm_hr_remarks'] == '')
-                                    @if($loggedin_user_id != $added_by_id)
-                                        <td style="border:1px solid black;">
-                                            @include('adminlte::partials.addWorkPlanningRemarks', ['data' => $value, 'name' => 'workplanning','work_planning' => $work_planning])
+                                    @if($value['rm_hr_remarks'] == '')
+
+                                        @if($loggedin_user_id != $added_by_id)
+                                            <td style="border:1px solid black;">
+                                                @include('adminlte::partials.addWorkPlanningRemarks', ['data' => $value, 'name' => 'workplanning','work_planning' => $work_planning])
+                                            </td>
+                                        @else
+                                            <td style="border:1px solid black;"></td>
+                                        @endif
+                                    @else
+
+                                        @if($loggedin_user_id != $added_by_id)
+                                            <td style="border:1px solid black;">{!! $value['rm_hr_remarks'] !!}
+                                                <button type="button" data-toggle="modal" data-target="#modal-edit-remarks-{!! $value['work_planning_list_id']!!}">Edit</button>
+                                            </td>
+                                        @else
+                                            <td style="border:1px solid black;">{!! $value['rm_hr_remarks'] !!}</td>
+                                        @endif
+                                    @endif
+                                </tr>
+                            @endforeach
+
+                            @if(isset($work_planning['total_projected_time']) && $work_planning['total_projected_time'] != '')
+                                <tr>
+                                    <td style="border:1px solid black;text-align: center;">
+                                    </td>
+                                    <td style="border:1px solid black;text-align: center;">
+                                    </td>
+
+                                    @if(isset($work_planning['total_projected_time']) && $work_planning['total_projected_time'] != '')
+                                        <td align="center" width="10%" style="border:1px solid black;text-align: center;">
+                                            <b>{{ $work_planning['total_projected_time'] }} Hours</b>
                                         </td>
                                     @else
-                                        <td style="border:1px solid black;"></td>
+                                        <td style="border:1px solid black;text-align: center;">
+                                        </td>
                                     @endif
-                                @else
 
-                                    @if($loggedin_user_id != $added_by_id)
-                                        <td style="border:1px solid black;">{!! $value['rm_hr_remarks'] !!}
-                                            <button type="button" data-toggle="modal" data-target="#modal-edit-remarks-{!! $value['work_planning_list_id']!!}">Edit</button>
+                                    @if(isset($work_planning['total_actual_time']) && $work_planning['total_actual_time'] != '')
+                                        <td align="center" width="10%" style="border:1px solid black;text-align: center;">
+                                            <b>{{ $work_planning['total_actual_time'] }} Hours
+                                            </b>
                                         </td>
                                     @else
-                                        <td style="border:1px solid black;">{!! $value['rm_hr_remarks'] !!}</td>
+                                        <td style="border:1px solid black;text-align: center;">
+                                        </td>
                                     @endif
-                                @endif
-                            </tr>
-                        @endforeach
 
-                        @if(isset($work_planning['total_projected_time']) && $work_planning['total_projected_time'] != '')
-                            <tr>
-                                <td style="border:1px solid black;text-align: center;"></td>
-                                <td style="border:1px solid black;text-align: center;"></td>
-
-                                @if(isset($work_planning['total_projected_time']) && $work_planning['total_projected_time'] != '')
-                                    <td align="center" width="10%" style="border:1px solid black;text-align: center;"><b>{{ $work_planning['total_projected_time'] }} Hours
-                                    </b></td>
-                                @else
-                                    <td style="border:1px solid black;text-align: center;"></td>
-                                @endif
-
-                                @if(isset($work_planning['total_actual_time']) && $work_planning['total_actual_time'] != '')
-                                    <td align="center" width="10%" style="border:1px solid black;text-align: center;"><b>{{ $work_planning['total_actual_time'] }} Hours
-                                    </b></td>
-                                @else
-                                    <td style="border:1px solid black;text-align: center;"></td>
-                                @endif
-
-                                <td style="border:1px solid black;text-align: center;"></td>
-                                <td style="border:1px solid black;text-align: center;"></td>
-                            </tr>
-                        @endif
-                    </tbody>
+                                    <td style="border:1px solid black;text-align: center;">
+                                    </td>
+                                    <td style="border:1px solid black;text-align: center;">
+                                    </td>
+                                </tr>
+                            @endif
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -259,7 +293,7 @@
                 <h4 class="modal-title">Add Reason of Rejection</h4>
             </div>
 
-            {!! Form::open(['method' => 'POST', 'route' => 'workplanning.rejection']) !!}
+            {!! Form::open(['method' => 'POST', 'route' => 'workplanning.rejection','id' => 'reject_form']) !!}
                 <div class="modal-body">
                     <div class="form-group">
 
@@ -270,7 +304,8 @@
                         {!! Form::label('For Full Day') !!}
 
                         <br/><br/>
-                        <strong>&nbsp;Please specify reason of rejection:</strong><br/><br/>
+                        <strong>&nbsp;Please specify reason of rejection: <span class = "required_fields">*</span></strong>
+                        <br/><br/>
                         {!! Form::textarea('reason_of_rejection', null, array('id' => 'reason_of_rejection','placeholder' => 'Reason of Rejection','class' => 'form-control','rows' => '5')) !!}
 
                         <input type="hidden" name="wrok_planning_id" id="wrok_planning_id" value="{{ $id }}">
@@ -290,6 +325,22 @@
 
 @section('customscripts')
 <script type="text/javascript">
+
+    $(document).ready(function() {
+
+        $("#reject_form").validate({
+            rules: {
+                "reason_of_rejection": {
+                    required: true
+                }
+            },
+            messages: {
+                "reason_of_rejection": {
+                    required: "Please Add Reason of Rejection."
+                }
+            }
+        });
+    });
 
     function updateStatus(check) {
         

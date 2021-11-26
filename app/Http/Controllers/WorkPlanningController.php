@@ -1014,11 +1014,11 @@ class WorkPlanningController extends Controller
 
         if ($reply == 'Approved') {
 
-            \DB::statement("UPDATE work_planning SET status = '1',approved_by = $user_id WHERE id = $wp_id");
+            \DB::statement("UPDATE `work_planning` SET `status` = '1',`approved_by` = $user_id,`attendance` = 'F' WHERE `id` = $wp_id");
         }
         elseif ($reply == 'Rejected') {
 
-            \DB::statement("UPDATE work_planning SET status = '2',approved_by = $user_id WHERE id = $wp_id");
+            \DB::statement("UPDATE `work_planning` SET `status` = '2',`approved_by` = $user_id,`attendance` = 'A' WHERE `id` = $wp_id");
         }
 
         $data = 'success';
@@ -1116,17 +1116,15 @@ class WorkPlanningController extends Controller
         $wrok_planning_id = Input::get('wrok_planning_id');
 
         $work_planning = WorkPlanning::find($wrok_planning_id);
-
-        // Get Work Type for Full Day Absent if report is rejected
-        $work_type = $work_planning->work_type;
-
         $work_planning->status = 2;
         $work_planning->approved_by = $user_id;
         $work_planning->reject_reply = $reject_reply;
         $work_planning->reason_of_rejection = $reason_of_rejection;
 
-        if(isset($work_type) && $work_type == 'WFH') {
-
+        if(isset($reject_reply) && $reject_reply == 'Half Day') {
+            $work_planning->attendance = 'HD';
+        }
+        else {
             $work_planning->attendance = 'A';
         }
 
