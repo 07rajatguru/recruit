@@ -119,13 +119,13 @@
                     @if($value['actual_login_time'] > '10:30:00')
                         <td style="background-color:lightpink;">{{ $value['loggedin_time'] }}
                         </td>
-                    @elseif($value['total_projected_time'] >= '08:30:00')
+                    @elseif($value['total_actual_time'] >= '08:30:00')
                         <td style="background-color:#B0E0E6;">{{ $value['loggedin_time'] }}
                         </td>
-                    @elseif($value['total_projected_time'] == '07:00:00')
+                    @elseif($value['total_actual_time'] == '07:00:00')
                         <td style="background-color:#fff59a;">{{ $value['loggedin_time'] }}
                         </td>
-                    @elseif($value['total_projected_time'] < '08:00:00')
+                    @elseif($value['total_actual_time'] < '08:00:00')
                         <td style="background-color:#F08080;">{{ $value['loggedin_time'] }}
                         </td>
                     @else

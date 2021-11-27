@@ -10,6 +10,7 @@ use App\UsersLog;
 use App\Events\NotificationMail;
 use App\User;
 use DB;
+use App\WorkPlanningPost;
 
 class WorkPlanningController extends Controller
 {
@@ -682,14 +683,18 @@ class WorkPlanningController extends Controller
     public function show($id) {
         
         $loggedin_user_id = \Auth::user()->id;
+        $wp_id = $id;
 
         $work_planning = WorkPlanning::getWorkPlanningDetailsById($id);
         $work_planning_list = WorkPlanningList::getWorkPlanningList($id);
 
         $added_by_id = $work_planning['added_by_id'];
         $appr_rejct_by = User::getUserNameById($work_planning['appr_rejct_by']);
+
+        $work_planning_post = WorkPlanningPost::orderBy('created_at','desc')
+        ->where('work_planning_post.wp_id','=',$wp_id)->select('work_planning_post.*')->get();
         
-        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','id','loggedin_user_id','added_by_id','appr_rejct_by'));
+        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','wp_id','loggedin_user_id','added_by_id','appr_rejct_by','work_planning_post'));
     }
 
     public function edit($id) {
@@ -899,8 +904,21 @@ class WorkPlanningController extends Controller
         $work_planning->work_planning_status_time = date('H:i:s');
         $work_planning->remaining_time = $remaining_time;
         $work_planning->link = $link;
-        $work_planning->total_projected_time = $total_projected_time;
-        $work_planning->total_actual_time = $total_actual_time;
+
+        if(isset($total_projected_time) && $total_projected_time != '') {
+            $work_planning->total_projected_time = $total_projected_time;
+        }
+        else {
+            $work_planning->total_projected_time = NULL;
+        }
+
+        if(isset($total_actual_time) && $total_actual_time != '') {
+            $work_planning->total_actual_time = $total_actual_time;
+        }
+        else {
+            $work_planning->total_actual_time = NULL;
+        }
+
         $work_planning->updated_at = time();
         $work_planning->save();
 
@@ -1274,5 +1292,52 @@ class WorkPlanningController extends Controller
         }
 
         return view('adminlte::workPlanning.presentdays',compact('work_planning_res','count'));
+    }
+
+    public function writePost(Request $request, $client_id) {
+
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $wp_id = $input['wp_id'];
+        $content = $input['content'];
+
+        if(isset($user_id) && $user_id > 0) {
+
+            $post = new WorkPlanningPost();
+            $post->content = $content;
+            $post->user_id = $user_id;
+            $post->wp_id = $wp_id;
+            $post->created_at = time();
+            $post->updated_at = time();
+            $post->save();
+        }
+
+        return redirect()->route('workplanning.show',[$wp_id])->with('success','Remarks Added Successfully.');
+    }
+
+    public function updatePost(Request $request, $wp_id,$post_id) {
+
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $wp_id = $input['wp_id'];
+
+        $response = WorkPlanningPost::updatePost($post_id,$input["content"]);
+        $returnValue["success"] = true;
+        $returnValue["message"] = "Remarks Updated";
+        $returnValue["id"] = $post_id;
+
+       return redirect()->route('workplanning.show',[$wp_id])->with('success','Remarks Updated Successfully.');
+    }
+
+    public function destroyPost($id) {
+
+        $response['returnvalue'] = 'invalid';
+        $res = WorkPlanningPost::deletePost($id);
+
+        if($res) {
+            $response['returnvalue'] = 'valid';
+        }
+
+        return json_encode($response);exit;
     }
 }

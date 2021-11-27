@@ -3487,6 +3487,25 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'WorkPlanningController@workPlanningRejection'
     ]);
 
+    // Work Planning Comment Section
+
+    Route::post('work-planning/{wp_id}/post',[
+        'as'=>'workplanning.post.write',
+        'uses'=>'WorkPlanningController@writePost'
+    ]);
+
+    Route::post('work-planning-post/update/{wp_id}/{post_id}',[
+        'as'=>'workplanning.post.update',
+        'uses'=>'WorkPlanningController@updatePost'
+    ]);
+
+    Route::post('post/delete/{id}',[
+        'as'=>'workplanning.postdestroy',
+        'uses'=>'WorkPlanningController@destroyPost'
+    ]);
+
+    // Work Planning Comment Section End
+
     // Rolewise Bench Mark Routes
     Route::get('bench-mark',[
         'as' => 'rolewisebenchmark.index',

@@ -249,10 +249,26 @@
                 </div>
             </div>
         </div>
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                <div class="box-header col-md-6">
+                    <h4>Remarks</h4>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div>
+                        @include('adminlte::workPlanning.postnew',array('wp_id' => $wp_id,'user_id'=>$loggedin_user_id))   
+                    </div>
+
+                    <div>
+                        @include('adminlte::workPlanning.postlist',array('post' => $work_planning_post))
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 @endif
 
-<input type="hidden" name="wp_id" id="wp_id" value="{{ $id }}">
+<input type="hidden" name="wp_id" id="wp_id" value="{{ $wp_id }}">
 
 @foreach($work_planning_list as $k1=>$v1)
     <div id="modal-edit-remarks-{!! $v1['work_planning_list_id']!!}" class="modal text-left fade" style="width:100%;">
@@ -308,7 +324,7 @@
                         <br/><br/>
                         {!! Form::textarea('reason_of_rejection', null, array('id' => 'reason_of_rejection','placeholder' => 'Reason of Rejection','class' => 'form-control','rows' => '5')) !!}
 
-                        <input type="hidden" name="wrok_planning_id" id="wrok_planning_id" value="{{ $id }}">
+                        <input type="hidden" name="wrok_planning_id" id="wrok_planning_id" value="{{ $wp_id }}">
                     </div>
                 </div>
                 <div class="modal-footer">
@@ -324,6 +340,8 @@
 @endsection
 
 @section('customscripts')
+<link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
+<script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script type="text/javascript">
 
     $(document).ready(function() {
@@ -370,6 +388,36 @@
                             alert("Report Approved Successfully.");
                         }
                     }
+                }
+            });
+        }
+    }
+
+    function deletePost(id) {
+
+        var msg = "Are you sure ?";
+        var confirmvalue = confirm(msg);
+        var csrf_token = $("#csrf_token").val();
+        var app_url = "{!! env('APP_URL'); !!}";
+        
+        if(confirmvalue) {
+
+            jQuery.ajax({
+
+                url:app_url+'/post/delete/'+id,
+                type:"POST",
+                dataType:'json',
+                data : {_token:csrf_token},
+
+                success: function(response) {
+
+                    if (response.returnvalue == 'valid') {
+                        alert("Remarks Deleted Succesfully.");
+                    }
+                    else {
+                        alert("Error while Deleting Remarks.");
+                    }
+                    window.location.reload();
                 }
             });
         }
