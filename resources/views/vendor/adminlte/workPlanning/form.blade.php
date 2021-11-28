@@ -116,7 +116,7 @@
                                     <td style="border:1px solid black;">
                                         {!! Form::select('projected_time[]',$time_array,$selected_projected_time, array('id' => 'projected_time_'.$i, 'class' => 'form-control','tabindex' => $tabindex++,'onchange'=>'setTotalProjectedTime()')) !!} <br/><br/>
 
-                                        {!! Form::select('actual_time[]',$time_array,$selected_actual_time, array('placeholder' => 'Select Time','id' => 'actual_time_'.$i,'class' => 'form-control', 'tabindex' => $tabindex++,'disabled' => 'true','style' => 'width:130px;','onchange'=>'setTotalActualTime()')) !!}
+                                        {!! Form::select('actual_time[]',$time_array,$selected_actual_time, array('id' => 'actual_time_'.$i,'class' => 'form-control', 'tabindex' => $tabindex++,'disabled' => 'true','style' => 'width:130px;','onchange'=>'setTotalActualTime()')) !!}
                                     </td>
 
                                     <td style="border:1px solid black;">
@@ -378,11 +378,11 @@
 
         if(action == "add") {
 
-            cell3.innerHTML =  '<td style="border:1px solid black;"><select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setTotalProjectedTime()"><option value="" disabled selected>Select Time</option></select> <br/><br/><select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" readonly=true><option value="" disabled selected>Select Time</option></select></td>';
+            cell3.innerHTML =  '<td style="border:1px solid black;"><select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setTotalProjectedTime()"></select> <br/><br/><select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" readonly=true></select></td>';
         }
         else {
 
-            cell3.innerHTML = '<td style="border:1px solid black;"><select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setTotalProjectedTime()"><option value="" disabled selected>Select Time</option></select> <br/><br/><select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" onchange="setTotalActualTime()"><option value="" disabled selected>Select Time</option></select></td>';
+            cell3.innerHTML = '<td style="border:1px solid black;"><select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setTotalProjectedTime()"></select> <br/><br/><select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" onchange="setTotalActualTime()"></select></td>';
         }
 
         var cell4 = row.insertCell(3);
@@ -472,7 +472,7 @@
 
                         var cell3 = row.insertCell(2);
                         cell3.style.border = '1px solid black';
-                        cell3.innerHTML = '<td style="border:1px solid black;"><select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setTotalProjectedTime()"><option value="" disabled selected>Select Time</option></select> <br/><br/><select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" onchange="setTotalActualTime()"><option value="" disabled selected>Select Time</option> </select></td>';
+                        cell3.innerHTML = '<td style="border:1px solid black;"><select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setTotalProjectedTime()"></select> <br/><br/><select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" onchange="setTotalActualTime()"></select></td>';
 
                         var cell4 = row.insertCell(3);
                         cell4.style.border = '1px solid black';
