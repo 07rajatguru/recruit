@@ -352,7 +352,7 @@ class WorkPlanningController extends Controller
                         if($key == $user_id) {
                         }
                         else {
-                            $work_planning_res[$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
+                            $work_planning_res[$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status);
                         }
                     }   
                 }
@@ -364,7 +364,7 @@ class WorkPlanningController extends Controller
                         if($key1 == $user_id) {
                         }
                         else {
-                            $work_planning_res[$value1] = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,'');
+                            $work_planning_res[$value1] = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,$status);
                         }
                     }
                 }
