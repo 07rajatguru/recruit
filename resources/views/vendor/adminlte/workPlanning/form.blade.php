@@ -149,7 +149,7 @@
                 <div class="col-md-12" style="margin-left:-28px;">
                     <div class="col-md-2">
                         <div class="form-group">
-                            <strong>Total Prjected Time : </strong>
+                            <strong>Total Projected Time : </strong>
                             {!! Form::text('total_projected_time',null, array('id' => 'total_projected_time','class' => 'form-control','readonly' => 'true')) !!}
                         </div>
                     </div>
