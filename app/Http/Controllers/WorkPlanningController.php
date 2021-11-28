@@ -117,17 +117,50 @@ class WorkPlanningController extends Controller
 
         if($all_perm) {
 
-            $users = User::getAllUsers();
+            $superadminuserid = getenv('SUPERADMINUSERID');
 
-            if(isset($users) && sizeof($users) > 0) {
+            if($user_id == $superadminuserid) {
 
-                foreach ($users as $key => $value) {
-                    
-                    if($key == $user_id) {
+                $team_users = User::getAssignedUsers($user_id);
+                $other_users = User::getAllUsers();
 
+                if(isset($team_users) && sizeof($team_users) > 0) {
+
+                    foreach ($team_users as $key => $value) {
+                        
+                        if($key == $user_id) {
+                        }
+                        else {
+                            $work_planning_res[$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
+                        }
+                    }   
+                }
+
+                if(isset($other_users) && sizeof($other_users) > 0) {
+
+                    foreach ($other_users as $key1 => $value1) {
+                        
+                        if($key1 == $user_id) {
+                        }
+                        else {
+                            $work_planning_res[$value1] = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,'');
+                        }
                     }
-                    else {
-                        $work_planning_res[$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
+                }
+            }
+            else {
+
+                $users = User::getAllUsers();
+
+                if(isset($users) && sizeof($users) > 0) {
+
+                    foreach ($users as $key => $value) {
+                        
+                        if($key == $user_id) {
+                        }
+                        else {
+                            $work_planning_res[$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
+                        }
                     }
                 }
             }
@@ -305,17 +338,51 @@ class WorkPlanningController extends Controller
 
         if($all_perm) {
 
-            $users = User::getAllUsers();
+            $superadminuserid = getenv('SUPERADMINUSERID');
 
-            if(isset($users) && sizeof($users) > 0) {
+            if($user_id == $superadminuserid) {
 
-                foreach ($users as $key => $value) {
-                    
-                    if($key == $user_id) {
+                $team_users = User::getAssignedUsers($user_id);
+                $other_users = User::getAllUsers();
 
+                if(isset($team_users) && sizeof($team_users) > 0) {
+
+                    foreach ($team_users as $key => $value) {
+                        
+                        if($key == $user_id) {
+                        }
+                        else {
+                            $work_planning_res[$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
+                        }
+                    }   
+                }
+
+                if(isset($other_users) && sizeof($other_users) > 0) {
+
+                    foreach ($other_users as $key1 => $value1) {
+                        
+                        if($key1 == $user_id) {
+                        }
+                        else {
+                            $work_planning_res[$value1] = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,'');
+                        }
                     }
-                    else {
-                        $work_planning_res[$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status);
+                }
+            }
+            else {
+
+                $users = User::getAllUsers();
+
+                if(isset($users) && sizeof($users) > 0) {
+
+                    foreach ($users as $key => $value) {
+                        
+                        if($key == $user_id) {
+
+                        }
+                        else {
+                            $work_planning_res[$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status);
+                        }
                     }
                 }
             }
