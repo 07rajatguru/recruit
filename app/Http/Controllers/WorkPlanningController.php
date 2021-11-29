@@ -565,6 +565,8 @@ class WorkPlanningController extends Controller
 
         $farhin_user_id = getenv('ALLCLIENTVISIBLEUSERID');
         $manisha_user_id = getenv('MANISHAUSERID');
+        $report_delay = Input::get('report_delay');
+        $report_delay_content = Input::get('report_delay_content');
 
         if($user_id == $farhin_user_id || $user_id == $manisha_user_id) {
 
@@ -594,37 +596,33 @@ class WorkPlanningController extends Controller
                     $attendance = 'F';
                 }
             }
+        }
 
-            $report_delay = Input::get('report_delay');
+        // If report delay
+        if(isset($report_delay) && $report_delay != '') {
 
-            // If report delay
-            if(isset($report_delay) && $report_delay != '') {
-
-                if($report_delay == 'Half Day') {
-                    $attendance = 'HD';
-                }
-                else {
-                    $attendance = 'F';
-                }
+            if($report_delay == 'Half Day') {
+                $attendance = 'HD';
             }
             else {
-                $report_delay = '';
+                $attendance = 'F';
             }
+        }
+        else {
+            $report_delay = '';
+        }
 
-            $report_delay_content = Input::get('report_delay_content');
+        // If report delay
+        if(isset($report_delay_content) && $report_delay_content != '') {
+        }
+        else {
+            $report_delay_content = '';
+        }
 
-            // If report delay
-            if(isset($report_delay_content) && $report_delay_content != '') {
-            }
-            else {
-                $report_delay_content = '';
-            }
+        if($time_diff > '01:00') {
 
-            if($time_diff > '01:00') {
-
-                if(isset($report_delay) && $report_delay == '') {
-                    $attendance = 'A';
-                }
+            if(isset($report_delay) && $report_delay == '') {
+                $attendance = 'A';
             }
         }
 

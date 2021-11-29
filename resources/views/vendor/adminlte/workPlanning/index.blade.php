@@ -119,6 +119,8 @@
                     @if($value['actual_login_time'] > '10:30:00')
                         <td style="background-color:lightpink;">{{ $value['loggedin_time'] }}
                         </td>
+                    @elseif($value['total_actual_time'] == '')
+                        <td>{{ $value['loggedin_time'] }}</td>
                     @elseif($value['total_actual_time'] >= '08:30:00')
                         <td style="background-color:#B0E0E6;">{{ $value['loggedin_time'] }}
                         </td>
