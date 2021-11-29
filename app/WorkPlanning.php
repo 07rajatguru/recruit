@@ -379,6 +379,10 @@ class WorkPlanning extends Model
             $work_planning_res[$i]['actual_login_time'] = date("H:i:s", strtotime($loggedin_time));
             $work_planning_res[$i]['actual_logout_time'] = date("H:i:s", strtotime($loggedout_time));
 
+            // Get Total Projected & Actual Time
+            $work_planning_res[$i]['total_projected_time'] = $value->total_projected_time;
+            $work_planning_res[$i]['total_actual_time'] = $value->total_actual_time;
+
             $i++;
         }
         return $work_planning_res;
