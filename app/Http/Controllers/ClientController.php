@@ -298,11 +298,16 @@ class ClientController extends Controller
             if($all_perm || $value['client_owner']) {
 
                 $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
+            }
+
+            if($all_perm || $value['client_owner'] || $value['second_line_client_owner']) {
 
                 // Client Hiring Report
                 $hiring_report = \View::make('adminlte::partials.client_hiring_report', ['data' => $value,'page' => 'Main','source' => '']);
                 $report = $hiring_report->render();
                 $action .= $report;
+            }
+            if($all_perm || $value['client_owner']) {
 
                 $days_array = ClientTimeline::getTimelineDetailsByClientId($value['id']);
 
@@ -745,6 +750,9 @@ class ClientController extends Controller
             if($all_perm || $value['client_owner']) {
 
                 $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
+            }
+
+            if($all_perm || $value['client_owner'] || $value['second_line_client_owner']) {
 
                 if($source == 'Forbid') {
                 }
@@ -755,6 +763,9 @@ class ClientController extends Controller
                     $report = $hiring_report->render();
                     $action .= $report;
                 }
+            }
+
+            if($all_perm || $value['client_owner']) {
                 
                 $days_array = ClientTimeline::getTimelineDetailsByClientId($value['id']);
 
@@ -2654,11 +2665,15 @@ class ClientController extends Controller
             if($all_perm || $value['client_owner']) {
 
                 $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
+            }
+            if($all_perm || $value['client_owner'] || $value['second_line_client_owner']) {
 
                 // Client Hiring Report
                 $hiring_report = \View::make('adminlte::partials.client_hiring_report', ['data' => $value,'page' => 'AM','source' => '']);
                 $report = $hiring_report->render();
                 $action .= $report;
+            }
+            if($all_perm || $value['client_owner']) {
 
                 $days_array = ClientTimeline::getTimelineDetailsByClientId($value['id']);
 

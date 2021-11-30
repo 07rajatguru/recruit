@@ -328,6 +328,14 @@ class ClientBasicinfo extends Ardent
                 $client_array[$i]['second_line_am_name'] = '';
             }
 
+            // For Secondline AM
+            if($value->second_line_am == $user_id) {
+                $client_array[$i]['second_line_client_owner'] = true;
+            }
+            else {
+                $client_array[$i]['second_line_client_owner'] = false;
+            }
+
             $i++;
         }
         return $client_array;
@@ -1081,6 +1089,14 @@ class ClientBasicinfo extends Ardent
             }
             else {
                 $client_array[$i]['second_line_am_name'] = '';
+            }
+
+            // For Secondline AM
+            if($value->second_line_am == $user_id) {
+                $client_array[$i]['second_line_client_owner'] = true;
+            }
+            else {
+                $client_array[$i]['second_line_client_owner'] = false;
             }
             
             $i++;
@@ -1836,6 +1852,14 @@ class ClientBasicinfo extends Ardent
             }
             else {
                 $client_array[$i]['second_line_am_name'] = '';
+            }
+
+            // For Secondline AM
+            if($value->second_line_am == $user_id) {
+                $client_array[$i]['second_line_client_owner'] = true;
+            }
+            else {
+                $client_array[$i]['second_line_client_owner'] = false;
             }
 
             $i++;
