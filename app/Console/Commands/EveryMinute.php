@@ -1972,8 +1972,8 @@ class EveryMinute extends Command
 
             else if ($value['module'] == 'Work Planning') {
 
-                $to_array = explode(",",$input['to']);
-                $input['to_array'] = $to_array;
+                $cc_array = explode(",",$input['cc']);
+                $input['cc_array'] = $cc_array;
               
                 $input['module_id'] = $value['module_id'];
 
@@ -2032,7 +2032,7 @@ class EveryMinute extends Command
 
                 \Mail::send('adminlte::emails.workplanningmail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to_array'])->bcc($input['owner_email'])->subject($input['subject']);
+                    $message->to($input['to'])->cc($input['cc_array'])->bcc($input['owner_email'])->subject($input['subject']);
                 });
 
                 \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");

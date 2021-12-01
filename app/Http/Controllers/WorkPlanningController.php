@@ -703,18 +703,24 @@ class WorkPlanningController extends Controller
         $hr = getenv('HRUSERID');
         $hremail = User::getUserEmailById($hr);
 
+        // Get Vibhuti gmail id
+        $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
+
         if($report_email == '') {
 
-            $to_users_array = array($superadminemail,$hremail);
+            $to_email = $superadminemail;
+            $cc_users_array = array($hremail,$vibhuti_gmail_id);
         }
         else {
-            $to_users_array = array($report_email,$superadminemail,$hremail);
+        
+            $to_email = $report_email;
+            $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
         }
 
         $module = "Work Planning";
         $sender_name = $user_id;
-        $to = implode(",",$to_users_array);
-        $cc = '';
+        $to = $to_email;
+        $cc = implode(",",$cc_users_array);
 
         $date = date('d/m/Y');
 
@@ -728,10 +734,17 @@ class WorkPlanningController extends Controller
 
         if(isset($report_delay) && $report_delay != '') {
 
+            if($report_email == '') {
+                $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
+            }
+            else {
+                $cc_users_array = array($report_email,$superadminemail,$hremail,$vibhuti_gmail_id);
+            }
+
             $module = "Work Planning Delay";
             $sender_name = $superadminuserid;
             $to = User::getUserEmailById($work_planning->added_by);
-            $cc = implode(",",$to_users_array);
+            $cc = implode(",",$cc_users_array);
 
             $date = date('d/m/Y');
 
@@ -742,7 +755,7 @@ class WorkPlanningController extends Controller
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         }
 
-        return redirect()->route('workplanning.index')->with('success','Work Planning Add Successfully.');
+        return redirect()->route('workplanning.index')->with('success','Work Planning Added Successfully.');
     }
 
     public function show($id) {
@@ -1084,17 +1097,24 @@ class WorkPlanningController extends Controller
         $hr = getenv('HRUSERID');
         $hremail = User::getUserEmailById($hr);
 
+        // Get Vibhuti gmail id
+        $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
+
         if($report_email == '') {
-            $to_users_array = array($superadminemail,$hremail);
+
+            $to_email = $superadminemail;
+            $cc_users_array = array($hremail,$vibhuti_gmail_id);
         }
         else {
-            $to_users_array = array($report_email,$superadminemail,$hremail);
+        
+            $to_email = $report_email;
+            $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
         }
         
         $module = "Work Planning";
         $sender_name = $user_id;
-        $to = implode(",",$to_users_array);
-        $cc = '';
+        $to = $to_email;
+        $cc = implode(",",$cc_users_array);
 
         $date = date('d/m/Y',strtotime($work_planning['added_date']));
 
@@ -1123,10 +1143,17 @@ class WorkPlanningController extends Controller
 
             if($current_date_time > $eleven) {
 
+                if($report_email == '') {
+                    $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
+                }
+                else {
+                    $cc_users_array = array($report_email,$superadminemail,$hremail,$vibhuti_gmail_id);
+                }
+
                 $module = "Work Planning Status Delay";
                 $sender_name = $superadminuserid;
                 $to = User::getUserEmailById($work_planning['added_by_id']);
-                $cc = implode(",",$to_users_array);
+                $cc = implode(",",$cc_users_array);
 
                 $date = date('d/m/Y',strtotime($work_planning['added_date']));
 
@@ -1209,13 +1236,14 @@ class WorkPlanningController extends Controller
         $hr = getenv('HRUSERID');
         $hremail = User::getUserEmailById($hr);
 
+        // Get Vibhuti gmail id
+        $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
+
         if($reports_to_email == '') {
-            
-            $cc_users_array = array($superadminemail,$hremail);
+            $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
         }
         else {
-
-            $cc_users_array = array($reports_to_email,$superadminemail,$hremail);
+            $cc_users_array = array($reports_to_email,$superadminemail,$hremail,$vibhuti_gmail_id);
         }
 
         $module = "Work Planning Remarks";
@@ -1237,7 +1265,7 @@ class WorkPlanningController extends Controller
         }
         else {
 
-            return redirect()->route('workplanning.show',$wp_id)->with('success','Remarks Update Successfully.');
+            return redirect()->route('workplanning.show',$wp_id)->with('success','Remarks Updated Successfully.');
         }
     }
 
@@ -1285,14 +1313,15 @@ class WorkPlanningController extends Controller
         else {
             $reports_to_email = '';
         }
+        
+        // Get Vibhuti gmail id
+        $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
 
         if($reports_to_email == '') {
-
-            $cc_users_array = array($superadminemail,$hremail);
+            $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
         }
         else {
-
-            $cc_users_array = array($reports_to_email,$superadminemail,$hremail);
+            $cc_users_array = array($reports_to_email,$superadminemail,$hremail,$vibhuti_gmail_id);
         }
 
         $module = "Work Planning Rejection";
