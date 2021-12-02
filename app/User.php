@@ -352,7 +352,7 @@ class User extends Authenticatable
         return $list;
     }
 
-    public static function getOtherUsersNew($user_id=0) {
+    public static function getOtherUsersNew($user_id=0,$type) {
 
         $superadmin_role_id =  getenv('SUPERADMIN');
         $client_role_id =  getenv('CLIENT');
@@ -370,10 +370,22 @@ class User extends Authenticatable
         $query = $query->select('users.*','role_user.role_id as role_id','users_otherinfo.date_of_joining as joining_date','department.name as department_name');
 
         $query = $query->whereNotIn('status',$status_array);
-        $query = $query->whereNotIn('role_id',$superadmin);
 
-        if($user_id>0) {
-            $query = $query->where('users.id','=',$user_id);
+        if(isset($type) && $type == 'Self') {
+
+            if($user_id > 0) {
+
+                $query = $query->where('users.id','=',$user_id);
+            }
+        }
+        else {
+
+            if($user_id > 0) {
+
+                $query = $query->where('users.reports_to','=',$user_id);
+                $query = $query->orwhere('users.id','=',$user_id);
+                $query = $query->whereNotIn('role_id',$superadmin);
+            }
         }
 
         $user_response = $query->get();
@@ -389,6 +401,7 @@ class User extends Authenticatable
                 $list[$full_name] = "";
             }
         }
+
         return $list;
     }
 

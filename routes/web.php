@@ -320,9 +320,14 @@ Route::group(['middleware' => ['auth']], function () {
         'uses'=>'HomeController@export'
     ]);
 
-    Route::any('/user-attendance', array (
+    Route::any('/self-user-attendance', array (
         'middleware' => ['permission:display-attendance-of-all-users-in-admin-panel|display-attendance-by-loggedin-user-in-admin-panel'],
-        'uses' => 'HomeController@allUsersAttendance'
+        'uses' => 'HomeController@selfAttendance'
+    ));
+
+    Route::any('/team-user-attendance', array (
+        'middleware' => ['permission:display-attendance-of-all-users-in-admin-panel|display-attendance-by-loggedin-user-in-admin-panel'],
+        'uses' => 'HomeController@teamUsersAttendance'
     ));
 
     // test mail route

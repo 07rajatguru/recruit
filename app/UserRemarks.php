@@ -39,7 +39,7 @@ class UserRemarks extends Model
     	return $remarks;
     }
 
-    public static function getUserRemarksByUseridNew($user_id = 0) {
+    public static function getUserRemarksByUserIDNew($user_id = 0) {
 
         $query = UserRemarks::query();
         $query = $query->join('users','users.id','=','user_remarks.user_id');

@@ -1251,7 +1251,165 @@ class HomeController extends Controller
         return json_encode($job_opened);
     }
 
-    public function allUsersAttendance() {
+    public function selfAttendance() {
+
+        $user = \Auth::user();
+        $user_id = \Auth::user()->id;
+        $superadmin_userid = getenv('SUPERADMINUSERID');
+
+        if(isset($_POST['month']) && $_POST['month']!=''){
+            $month = $_POST['month'];
+        }
+        else{
+            $month = date("n");
+        }
+
+        if(isset($_POST['year']) && $_POST['year']!=''){
+            $year = $_POST['year'];
+        }
+        else{
+            $year = date("Y");
+        }
+
+        // Get All Sundays dates in selected month
+        $date = "$year-$month-01";
+        $first_day = date('N',strtotime($date));
+        $first_day = 7 - $first_day + 1;
+        $last_day =  date('t',strtotime($date));
+        $sundays = array();
+
+        for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+            $sundays[] = $i;
+        }
+
+        $month_array =array();
+        for ($m=1; $m<=12; $m++) {
+            $month_array[$m] = date('M', mktime(0,0,0,$m));
+        }
+
+        $starting_year = '2016';
+        $ending_year = date('Y',strtotime('+2 year'));
+        $year_array = array();
+        for ($y=$starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
+        }
+
+        if($user_id == $superadmin_userid) {
+
+            $users = array();
+            $response = array();
+        }
+        else {
+
+            $users = User::getOtherUsersNew($user_id,'Self');
+            $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year);
+        }
+
+        $list = array();
+        for($d=1; $d<=31; $d++) {
+
+            $time = mktime(12, 0, 0, $month, $d, $year);
+            foreach ($users as $key => $value) {
+              
+                if (date('n', $time) == $month)
+                    $list[$key][date('j', $time)]['attendance']='';
+                
+                $list[$key][date('j', $time)]['remarks']='';
+            }
+        }
+
+        $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id);
+
+        $date = new Date();
+        if(sizeof($response) > 0) {
+
+            foreach ($response as $key => $value) {
+
+                $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
+                $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
+
+                $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
+
+                if (isset($user_remark) && sizeof($user_remark)>0) {
+                    foreach ($user_remark as $k => $v) {
+
+                        $split_month = date('n',strtotime($v['remark_date']));
+                        $split_year = date('Y',strtotime($v['remark_date']));
+
+                        if (($v['full_name'] == $combine_name) && ($v['remark_date'] == $value->added_date) && ($month == $split_month) && ($year == $split_year)) {
+                            $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
+                        }
+                        else{
+
+                            if (($v['full_name'] == $combine_name) && ($month == $split_month) && ($year == $split_year)) {
+                                $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        else {
+
+            if (isset($user_remark) && sizeof($user_remark)>0) {
+
+                foreach ($user_remark as $k => $v) {
+
+                    $split_month = date('n',strtotime($v['remark_date']));
+                    $split_year = date('Y',strtotime($v['remark_date']));
+                    if (($month == $split_month) && ($year == $split_year)) {
+                        $list[$v['full_name']][$v['converted_date']]['remarks'] = $v['remarks'];
+                    }
+                }
+            }
+        }
+
+        // New List1
+        $list1 = array();
+        for($d1=1; $d1<=31; $d1++) {
+
+            $time1 = mktime(12, 0, 0, $month, $d1, $year);
+            foreach ($users as $key => $value) {
+
+                if (date('n', $time1) == $month) {
+                    $list1[$key][date('j S', $time1)]='';
+                }
+            }
+        }
+
+        if(sizeof($list)>0) {
+
+            foreach ($list as $key => $value) {
+
+                if(sizeof($value)>0) {
+
+                    $i=0;
+                    foreach ($value as $key1 => $value1) {
+
+                        if (isset($user_remark) && sizeof($user_remark)>0) {
+                            foreach ($user_remark as $u_k1 => $u_v1) {
+
+                                $split_month = date('n',strtotime($u_v1['remark_date']));
+                                $split_year = date('Y',strtotime($u_v1['remark_date']));
+
+                                if (($u_v1['full_name'] == $key) && ($u_v1['converted_date'] == $key1) && ($month == $split_month) && ($year == $split_year)) {
+                                    
+                                    $list1[$u_v1['full_name']][$u_v1['converted_date']][$u_v1['remark_date']][$i] = $u_v1['remarks'];
+                                }
+                                $i++;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        $users_name = User::getAllUsersForRemarks();
+
+        return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name','sundays'));
+    }
+
+    public function teamUsersAttendance() {
 
         $user = \Auth::user();
         $user_id = \Auth::user()->id;
@@ -1259,10 +1417,10 @@ class HomeController extends Controller
         $display_attendance_by_user = $user->can('display-attendance-by-loggedin-user-in-admin-panel');
 
         if($display_attendance) {
-            $users = User::getOtherUsersNew();
+            $users = User::getOtherUsersNew($user_id,'');
         }
         else if($display_attendance_by_user) {
-            $users = User::getOtherUsersNew($user_id);
+            $users = User::getOtherUsersNew($user_id,'');
         }
 
         if(isset($_POST['month']) && $_POST['month']!=''){
@@ -1317,11 +1475,11 @@ class HomeController extends Controller
 
         if($display_attendance) {
             $response = WorkPlanning::getUsersAttendanceByWorkPlanning(0,$month,$year);
-            $user_remark = UserRemarks::getUserRemarksByUseridNew(0);
+            $user_remark = UserRemarks::getUserRemarksByUserIDNew(0);
         }
         else if($display_attendance_by_user) {
             $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year);
-            $user_remark = UserRemarks::getUserRemarksByUseridNew($user_id);
+            $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id);
         }
 
         $date = new Date();
