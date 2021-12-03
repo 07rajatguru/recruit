@@ -1,3 +1,11 @@
+@section('customs_css')
+    <style>
+        .error{
+            color:#f56954 !important;
+        }
+    </style>
+@endsection
+
 @extends('adminlte::page')
 
 @section('title', 'Interview')

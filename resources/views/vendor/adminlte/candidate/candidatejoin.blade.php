@@ -81,7 +81,8 @@
                 ],
 
                 "autoWidth": false,
-                "pageLength": 100
+                "pageLength": 100,
+                "order" : [4,'ASC'],
             });
 
             if ( ! table.data().any() ) {

@@ -137,7 +137,7 @@
 
                 'bProcessing' : true,
                 'serverSide' : true,
-                "order" : [2,'desc'],
+                "order" : [6,'desc'],
                 "columnDefs": [ {orderable: false, targets: [0]},{orderable: false, targets: [1]}],
                 "ajax" : {
                     'url' : 'bills/all',
@@ -230,7 +230,7 @@
 
                 'bProcessing' : true,
                 'serverSide' : true,
-                "order" : [2,'desc'],
+                "order" : [6,'desc'],
                 "columnDefs": [ {orderable: false, targets: [0]},{orderable: false, targets: [1]}],
                 "ajax" : {
                     'url' : '/bills/cancel/all',
@@ -375,7 +375,7 @@
 
               'bProcessing' : true,
               'serverSide' : true,
-              'order' : [2,'desc'],
+              'order' : [6,'desc'],
               "columnDefs": [ {orderable: false, targets: [0]},{orderable: false, targets: [1]}],
               "ajax" : {
                   'url' : 'bills/all',
@@ -472,7 +472,7 @@
 
                 'bProcessing' : true,
                 'serverSide' : true,
-                "order" : [2,'desc'],
+                "order" : [6,'desc'],
                 "columnDefs": [ {orderable: false, targets: [0]},{orderable: false, targets: [1]}],
                 "ajax" : {
                     'url' : '/bills/cancel/all',

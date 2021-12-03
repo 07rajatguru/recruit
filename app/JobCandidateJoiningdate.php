@@ -50,7 +50,7 @@ class JobCandidateJoiningdate extends Model
             $query = $query->where('client_basicinfo.department_id','=',$department_id);
         }
 
-        $query = $query->orderBy('job_candidate_joining_date.id','desc');
+        $query = $query->orderBy('job_candidate_joining_date.joining_date','asc');
         $query = $query->groupBy('candidate_basicinfo.id');
         $response = $query->get();
 
