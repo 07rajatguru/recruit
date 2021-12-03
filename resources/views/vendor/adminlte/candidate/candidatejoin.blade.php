@@ -82,7 +82,7 @@
 
                 "autoWidth": false,
                 "pageLength": 100,
-                "order" : [4,'ASC'],
+                "order" : [4,'asc'],
             });
 
             if ( ! table.data().any() ) {
