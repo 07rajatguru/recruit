@@ -252,14 +252,12 @@ class WorkPlanning extends Model
         return $work_planning_res;
     }
 
-    public static function getUsersAttendanceByWorkPlanning($user_id=0,$month,$year) {
+    public static function getUsersAttendanceByWorkPlanning($user_id=0,$month,$year,$type,$department_id=0) {
 
         $superadmin_role_id =  getenv('SUPERADMIN');
         $client_role_id =  getenv('CLIENT');
         $it_role_id =  getenv('IT');
         $superadmin = array($superadmin_role_id,$client_role_id,$it_role_id);
-
-        $superadmin_userid = getenv('SUPERADMINUSERID');
         
         $status = 'Inactive';
         $status_array = array($status);
@@ -275,14 +273,22 @@ class WorkPlanning extends Model
             $query = $query->where(\DB::raw('year(work_planning.added_date)'),'=', $year);
         }
 
-        $query = $query->whereNotIn('role_id',$superadmin);
-        
-        if($user_id>0) {
-            $query = $query->where('users.id','=',$user_id);
+        //$query = $query->whereNotIn('role_id',$superadmin);
+
+        if(isset($department_id) && $department_id > 0) {
+
+            $query = $query->where('users.type','=',$department_id);
         }
-        else{
-            $query = $query->where('users.reports_to','=',$superadmin_userid);
-            
+        else {
+
+            if(isset($type) && $type == 'Self') {
+                if($user_id > 0) {
+                    $query = $query->where('users.id','=',$user_id);
+                }
+            }
+            else {
+                $query = $query->where('users.reports_to','=',$user_id);
+            }
         }
 
         $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','users.working_hours as working_hours','work_planning.added_date','work_planning.attendance','users_otherinfo.date_of_joining as joining_date','department.name as department_name');

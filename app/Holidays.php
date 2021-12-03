@@ -204,4 +204,56 @@ class Holidays extends Model
         }
         return $holidays;
     }
+
+    public static function getHolidaysByType($user_id,$month,$year,$type) {
+
+        $ids_array = array($user_id);
+
+        $query = Holidays::query();
+        $query = $query->leftjoin('holidays_users','holidays_users.holiday_id','=','holidays.id');
+        $query = $query->select('holidays.*');
+
+        if(isset($user_id) && $user_id != 0) {
+            $query = $query->whereIn('holidays_users.user_id',$ids_array);
+        }
+
+        if(isset($type) && $type != '') {
+            $query = $query->where('holidays.type','=',$type);
+        }
+
+        if ($month != '' && $year != '') {
+            $query = $query->where(\DB::raw('month(holidays.from_date)'),'=',$month);
+            $query = $query->where(\DB::raw('year(holidays.from_date)'),'=',$year);
+        }
+
+        $query = $query->orderBy('from_date','ASC');
+        $query = $query->groupBy('holidays.id');
+        $response = $query->get();
+
+        $holidays = array();
+        $i = 0;
+
+        if(isset($response) && $response != '') {
+
+            foreach ($response as $key => $value) {
+
+                if($value->from_date == '') {
+                    $holidays[$i]['from_date'] = '';
+                }
+                else {
+                    $holidays[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date)); 
+                }
+
+                if($value->to_date == '') {
+                    $holidays[$i]['to_date'] = '';
+                }
+                else {
+                    $holidays[$i]['to_date'] = date('d-m-Y',strtotime($value->to_date)); 
+                }
+
+                $i++;
+            }
+        }
+        return $holidays;
+    }
 }

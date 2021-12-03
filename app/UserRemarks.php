@@ -39,7 +39,7 @@ class UserRemarks extends Model
     	return $remarks;
     }
 
-    public static function getUserRemarksByUserIDNew($user_id = 0) {
+    public static function getUserRemarksByUserIDNew($user_id = 0,$month,$year,$type,$department_id=0) {
 
         $query = UserRemarks::query();
         $query = $query->join('users','users.id','=','user_remarks.user_id');
@@ -48,9 +48,32 @@ class UserRemarks extends Model
 
         $query = $query->select('user_remarks.*','users.name as user_name','users.first_name as first_name','users.last_name as last_name','users_otherinfo.date_of_joining as joining_date','department.name as department_name','users.working_hours as working_hours');
 
-        if (isset($user_id) && $user_id > 0) {
+        /*if (isset($user_id) && $user_id > 0) {
             $query = $query->where('user_remarks.user_id',$user_id);
+        }*/
+
+        if(isset($department_id) && $department_id > 0) {
+
+            $query = $query->where('users.type','=',$department_id);
         }
+        else {
+            
+            if(isset($type) && $type == 'Self') {
+                if($user_id > 0) {
+                    $query = $query->where('users.id','=',$user_id);
+                }
+            }
+            else {
+                $query = $query->where('users.reports_to','=',$user_id);
+            }
+        }
+
+        if($month!=0 && $year!=0) {
+
+            $query = $query->where(\DB::raw('MONTH(user_remarks.date)'),'=', $month);
+            $query = $query->where(\DB::raw('year(user_remarks.date)'),'=', $year);
+        }
+
         $res = $query->get();
 
         $remarks = array();

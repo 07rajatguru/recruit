@@ -330,6 +330,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HomeController@teamUsersAttendance'
     ));
 
+    Route::any('/users-attendance/{department_id}', array (
+        'middleware' => ['permission:display-attendance-of-all-users-in-admin-panel|display-attendance-by-loggedin-user-in-admin-panel'],
+        'uses' => 'HomeController@departmentWiseUsersAttendance'
+    ));
+
     // test mail route
     Route::get('/testmail',[
         'as' => 'home.testmail',

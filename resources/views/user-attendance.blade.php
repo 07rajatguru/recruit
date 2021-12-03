@@ -101,10 +101,13 @@
                                             <td style="color: black; border: 1px solid black;background-color: #F08080;"><center>{{ $department }}</center></td>
                                         @elseif($department == 'Operations')
                                             <td style="color: black; border: 1px solid black;background-color: #fff59a;"><center>{{ $department }}</center></td>
+                                        @else
+                                            <td style="color: black; border: 1px solid black;background-color: #B1A0C7;"><center>{{ $department }}</center></td>
                                         @endif
 
                                         @if($working_hours[0] != '')
-                                            <td style="color: black; border: 1px solid black;"><center>{{ $working_hours[0] }} Hours</center></td>
+                                            <td style="color: black; border: 1px solid black;">
+                                            <center>{{ $working_hours[0] }} Hours</center></td>
                                         @else
                                             <td style="color: black; border: 1px solid black;"></td>
                                         @endif
@@ -113,7 +116,7 @@
                                             <td style="color: black; border: 1px solid black;"></td>
                                         @else
                                             <td style="color: black; border: 1px solid black;">
-                                                <center>{{ $joining_date }}</center></td>
+                                            <center>{{ $joining_date }}</center></td>
                                         @endif
                                         
                                         @foreach($value as $key1=>$value1)
@@ -123,25 +126,31 @@
                                                 $get_cur_month = date('m');
                                                 $get_cur_yr = date('Y');
 
-                                                if(in_array($key1, $sundays)) {
+                                                if(in_array($key1, $sundays) || in_array($key1, $fixed_holiday_dates) || in_array($key1, $optional_holiday_dates)) {
                                                     $attendance = 'H';
                                                 }
                                                 else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
                                                     $attendance = 'N';
                                                 }
+                                                else if(isset($value1['attendance']) && $value1['attendance'] == '') {
+                                                    $attendance = 'A';
+                                                }
                                                 else {
-                                                    $attendance = $value1['attendance'];
+
+                                                    if(isset($value1['attendance'])) {
+                                                        $attendance = $value1['attendance'];
+                                                    }
+                                                    else {
+                                                        $attendance = '';
+                                                    }
                                                 }
                                             ?>
                                             @if(isset($value1['remarks']) && $value1['remarks'] != '')
-
-                                                @if($attendance == 'H')
-                                                    <td style="border: 1px solid black;background-color:#ffc000;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
-
-                                                @elseif($attendance == 'N')
-                                                    <td style="border: 1px solid black;background-color:#B0E0E6;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}"></td>
+                                                @if($attendance == 'N')
+                                                    
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}"></td>
                                                 @else
-                                                    <td style="border: 1px solid black;background-color:#B0E0E6;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
                                                 @endif
                                             @else
 
@@ -220,6 +229,12 @@
             </div>
         @endforeach
     @endforeach
+
+    <input type="hidden" name="page" id="page" value="{{ $page }}">
+
+    @if(isset($page) && $page == 'Department')
+        <input type="hidden" name="department_id" id="department_id" value="{{ $department_id }}">
+    @endif
 @stop
 
 @section('customscripts')
@@ -249,8 +264,24 @@
 
             var month = $("#month :selected").val();
             var year = $("#year :selected").val();
+            var page = $("#page").val();
+            var department_id = $("#department_id").val();
 
-            var url = '/self-user-attendance';
+            if(department_id > 0) {
+
+                var url = '/users-attendance/'+department_id+'';
+            }
+            else {
+
+                if(page == 'Self') {
+                    
+                    var url = '/self-user-attendance';
+                }
+                if(page == 'Team') {
+
+                    var url = '/team-user-attendance';
+                }
+            }
 
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
