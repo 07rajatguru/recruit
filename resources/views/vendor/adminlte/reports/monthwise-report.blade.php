@@ -97,9 +97,9 @@
 								<td style="border: 1px solid black;">{{ ++$i }}</td>
 
 								@if(isset($v['status']) && $v['status'] == 0)
-									<td style="border: 1px solid black;background-color: #00B0F0;">{{ $v['candidate_name'] }}</td>
+									<td style="border: 1px solid black;background-color: #FABF8F;">{{ $v['candidate_name'] }}</td>
 								@else
-									<td style="border: 1px solid black;background-color: #e87992;">{{ $v['candidate_name'] }}</td>
+									<td style="border: 1px solid black;background-color: #B0E0E6;">{{ $v['candidate_name'] }}</td>
 								@endif
 
 								<td style="border: 1px solid black;">{{ $v['company_name'] }}</td>

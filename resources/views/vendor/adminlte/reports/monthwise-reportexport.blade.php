@@ -28,7 +28,13 @@
 				@foreach($value as $k => $v)
 					<tr>
 						<td style="border: 1 solid #000000;text-align: center;">{{ ++$i }}</td>
-						<td style="border: 1 solid #000000;">{{ $v['candidate_name'] }}</td>
+
+						@if(isset($v['status']) && $v['status'] == 0)
+							<td style="border: 1px solid #000000;background-color: #FABF8F;">{{ $v['candidate_name'] }}</td>
+						@else
+							<td style="border: 1px solid #000000;background-color: #B0E0E6;">{{ $v['candidate_name'] }}</td>
+						@endif
+
 						<td style="border: 1 solid #000000;">{{ $v['company_name'] }}</td>
 						<td style="border: 1 solid #000000;">{{ $v['position'] }}</td>
 						<td style="border: 1 solid #000000;">{{ $v['salary_offered'] }}</td>
