@@ -95,7 +95,13 @@
 							<tr>
 								{{--<td style="border: 1px solid black;"></td>--}}
 								<td style="border: 1px solid black;">{{ ++$i }}</td>
-								<td style="border: 1px solid black;">{{ $v['candidate_name'] }}</td>
+
+								@if(isset($v['status']) && $v['status'] == 0)
+									<td style="border: 1px solid black;background-color: #00B0F0;">{{ $v['candidate_name'] }}</td>
+								@else
+									<td style="border: 1px solid black;background-color: #e87992;">{{ $v['candidate_name'] }}</td>
+								@endif
+
 								<td style="border: 1px solid black;">{{ $v['company_name'] }}</td>
 								<td style="border: 1px solid black;">{{ $v['position'] }}</td>
 								<td style="border: 1px solid black;">{{ $v['salary_offered'] }}</td>

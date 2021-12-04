@@ -1679,7 +1679,7 @@ class Bills extends Model
             $personwise_query = $personwise_query->groupBy('candidate_basicinfo.id');
         }
 
-        $personwise_query = $personwise_query->where('bills.status','=','1');
+        //$personwise_query = $personwise_query->where('bills.status','=','1');
         $personwise_query = $personwise_query->where('bills.cancel_bill','=','0');
         $personwise_query = $personwise_query->where('bills.date_of_joining','>=',$current_year);
         $personwise_query = $personwise_query->where('bills.date_of_joining','<=',$next_year);
@@ -1796,6 +1796,8 @@ class Bills extends Model
 
                 $total_monthwise_payment = $total_monthwise_payment + $payment;
                 $person_data[$j]['total_monthwise_payment'] = Utils::IND_money_format(round($total_monthwise_payment));
+
+                $person_data[$j]['status'] = $value->status;
 
                 $j++;
             }
