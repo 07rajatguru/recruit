@@ -32,7 +32,8 @@ class HolidaysController extends Controller
         $hr_advisory = getenv('HRADVISORY');
         $operations = getenv('OPERATIONS');
         $strategy = getenv('STRATEGY_DEPT');
-        $type_array = array($recruitment,$hr_advisory,$operations,$strategy);
+        $management = getenv('MANAGEMENT');
+        $type_array = array($recruitment,$hr_advisory,$operations,$strategy,$management);
 
         $department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
 
@@ -124,7 +125,8 @@ class HolidaysController extends Controller
         $hr_advisory = getenv('HRADVISORY');
         $operations = getenv('OPERATIONS');
         $strategy = getenv('STRATEGY_DEPT');
-        $type_array = array($recruitment,$hr_advisory,$operations,$strategy);
+        $management = getenv('MANAGEMENT');
+        $type_array = array($recruitment,$hr_advisory,$operations,$strategy,$management);
 
         // Set Department
         $department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();

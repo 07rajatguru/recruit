@@ -205,9 +205,7 @@ class Holidays extends Model
         return $holidays;
     }
 
-    public static function getHolidaysByType($user_id,$month,$year,$type) {
-
-        $ids_array = array($user_id);
+    public static function getHolidaysByUserIDsArray($ids_array,$month,$year,$type) {
 
         $query = Holidays::query();
         $query = $query->leftjoin('holidays_users','holidays_users.holiday_id','=','holidays.id');
@@ -243,14 +241,6 @@ class Holidays extends Model
                 else {
                     $holidays[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date)); 
                 }
-
-                if($value->to_date == '') {
-                    $holidays[$i]['to_date'] = '';
-                }
-                else {
-                    $holidays[$i]['to_date'] = date('d-m-Y',strtotime($value->to_date)); 
-                }
-
                 $i++;
             }
         }

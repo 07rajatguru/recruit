@@ -62,7 +62,7 @@
                 </td>
                 <td>{{$value['title']}}</td>
                 <td>{{$value['type']}}</td>
-                <td>{{$value['users']}}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">{{$value['users']}}</td>
                 <td>{{$value['from_date']}}</td>
                 <td>{{$value['to_date']}}</td>
             </tr>
@@ -78,6 +78,7 @@
             var table = jQuery('#holidays_table').DataTable({
                 responsive: true,
                 stateSave : true,
+                "columnDefs": [{orderable: false, targets: [1]}],
                 "order" : [0, 'desc'],
             } );
 
