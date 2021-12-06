@@ -1492,31 +1492,7 @@ class HomeController extends Controller
 
         $page = 'Self';
 
-        // Get Current Month Fixed Holidays
-        $fixed_holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'Fixed Leave');
-        $fixed_holiday_dates = array();
-
-        if (isset($fixed_holiday_details) && sizeof($fixed_holiday_details)>0) {
-
-            foreach ($fixed_holiday_details as $fixed_holiday_key => $fixed_holiday_value) {
-                
-                $fixed_holiday_dates[] = $fixed_holiday_value['from_date'];
-            }
-        }
-
-        // Get Current Month Optional Holidays
-        $optional_holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'Optional Leave');
-        $optional_holiday_dates = array();
-
-        if (isset($optional_holiday_details) && sizeof($optional_holiday_details)>0) {
-
-            foreach ($optional_holiday_details as $optional_holiday_key => $optional_holiday_value) {
-                
-                $optional_holiday_dates[] = $optional_holiday_value['from_date'];
-            }
-        }
-
-        return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name','sundays','fixed_holiday_dates','optional_holiday_dates','page'));
+        return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name','sundays','page'));
     }
 
     public function teamUsersAttendance() {
@@ -1600,7 +1576,7 @@ class HomeController extends Controller
                         if (($v['full_name'] == $combine_name) && ($v['remark_date'] == $value->added_date) && ($month == $split_month) && ($year == $split_year)) {
                             $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
                         }
-                        else{
+                        else {
 
                             if (($v['full_name'] == $combine_name) && ($month == $split_month) && ($year == $split_year)) {
                                 $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
@@ -1669,31 +1645,7 @@ class HomeController extends Controller
 
         $page = 'Team';
 
-        // Get Current Month Fixed Holidays
-        $fixed_holiday_details = Holidays::getUserHolidaysByType(0,$month,$year,'Fixed Leave');
-        $fixed_holiday_dates = array();
-
-        if (isset($fixed_holiday_details) && sizeof($fixed_holiday_details)>0) {
-
-            foreach ($fixed_holiday_details as $fixed_holiday_key => $fixed_holiday_value) {
-                
-                $fixed_holiday_dates[] = $fixed_holiday_value['from_date'];
-            }
-        }
-
-        // Get Current Month Optional Holidays
-        $optional_holiday_details = Holidays::getUserHolidaysByType(0,$month,$year,'Optional Leave');
-        $optional_holiday_dates = array();
-
-        if (isset($optional_holiday_details) && sizeof($optional_holiday_details)>0) {
-
-            foreach ($optional_holiday_details as $optional_holiday_key => $optional_holiday_value) {
-                
-                $optional_holiday_dates[] = $optional_holiday_value['from_date'];
-            }
-        }
-
-        return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name','sundays','fixed_holiday_dates','optional_holiday_dates','page'));
+        return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name','sundays','page'));
     }
 
     public function departmentWiseUsersAttendance($department_id) {
@@ -1726,30 +1678,6 @@ class HomeController extends Controller
             $sundays[] = $i;
         }
 
-        // Get Current Month Fixed Holidays
-        $fixed_holiday_details = Holidays::getUserHolidaysByType(0,$month,$year,'Fixed Leave');
-        $fixed_holiday_dates = array();
-
-        if (isset($fixed_holiday_details) && sizeof($fixed_holiday_details)>0) {
-
-            foreach ($fixed_holiday_details as $fixed_holiday_key => $fixed_holiday_value) {
-                
-                $fixed_holiday_dates[] = $fixed_holiday_value['from_date'];
-            }
-        }
-
-        // Get Current Month Optional Holidays
-        $optional_holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'Optional Leave');
-        $optional_holiday_dates = array();
-
-        if (isset($optional_holiday_details) && sizeof($optional_holiday_details)>0) {
-
-            foreach ($optional_holiday_details as $optional_holiday_key => $optional_holiday_value) {
-                
-                $optional_holiday_dates[] = $optional_holiday_value['from_date'];
-            }
-        }
-
         $month_array =array();
         for ($m=1; $m<=12; $m++) {
             $month_array[$m] = date('M', mktime(0,0,0,$m));
@@ -1761,6 +1689,9 @@ class HomeController extends Controller
         for ($y=$starting_year; $y < $ending_year ; $y++) {
             $year_array[$y] = $y;
         }
+
+        $all_perm = $user->can('display-recruitment-dashboard');
+        $all_perm = $user->can('display-hr-advisory-dashboard');
 
         // Get Users
         $users = User::getOtherUsersNew(0,'',$department_id);
@@ -1805,7 +1736,7 @@ class HomeController extends Controller
                         if (($v['full_name'] == $combine_name) && ($v['remark_date'] == $value->added_date) && ($month == $split_month) && ($year == $split_year)) {
                             $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
                         }
-                        else{
+                        else {
 
                             if (($v['full_name'] == $combine_name) && ($month == $split_month) && ($year == $split_year)) {
                                 $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
@@ -1874,6 +1805,6 @@ class HomeController extends Controller
 
         $page = 'Department';
 
-        return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name','sundays','fixed_holiday_dates','optional_holiday_dates','page','department_id'));
+        return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name','sundays','page','department_id'));
     }
 }

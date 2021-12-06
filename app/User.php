@@ -376,6 +376,7 @@ class User extends Authenticatable
             $query = $query->where('users.type','=',$department_id);
         }
         else {
+
             if(isset($type) && $type == 'Self') {
 
                 if($user_id > 0) {
@@ -386,6 +387,10 @@ class User extends Authenticatable
 
                 if($user_id > 0) {
                     $query = $query->where('users.reports_to','=',$user_id);
+                    $query = $query->whereNotIn('role_id',$superadmin);
+                }
+                else {
+
                     $query = $query->whereNotIn('role_id',$superadmin);
                 }
             }
@@ -1145,5 +1150,22 @@ class User extends Authenticatable
             }
         }
         return $user_name_array;
+    }
+
+    public static function getUserIdByBothName($u_name_array) {
+
+        $values_array = explode("-", $u_name_array);
+
+        $user_id = 0;
+
+        $user_query = User::query();
+        $user_query = $user_query->where('first_name','=',$values_array[0]);
+        $user_query = $user_query->where('last_name','=',$values_array[1]);
+        $user_query = $user_query->first();
+
+        if(isset($user_query)) {
+            $user_id = $user_query->id;
+        }
+        return $user_id;
     }
 }

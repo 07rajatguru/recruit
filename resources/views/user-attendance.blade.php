@@ -126,7 +126,11 @@
                                                 $get_cur_month = date('m');
                                                 $get_cur_yr = date('Y');
 
-                                                if(in_array($key1, $sundays) || in_array($key1, $fixed_holiday_dates) || in_array($key1, $optional_holiday_dates)) {
+                                                $user_id = App\User::getUserIdByBothName($user_name);
+
+                                                $user_holidays = App\Holidays::getHolidaysByUserID($user_id,$month,$year);
+
+                                                if(in_array($key1, $sundays) || in_array($key1, $user_holidays)) {
                                                     $attendance = 'H';
                                                 }
                                                 else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
@@ -267,7 +271,7 @@
             var page = $("#page").val();
             var department_id = $("#department_id").val();
 
-            if(department_id > 0) {
+            if(department_id >= 0) {
 
                 var url = '/users-attendance/'+department_id+'';
             }

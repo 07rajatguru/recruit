@@ -205,18 +205,14 @@ class Holidays extends Model
         return $holidays;
     }
 
-    public static function getHolidaysByUserIDsArray($ids_array,$month,$year,$type) {
+    public static function getHolidaysByUserID($user_id,$month,$year) {
 
         $query = Holidays::query();
         $query = $query->leftjoin('holidays_users','holidays_users.holiday_id','=','holidays.id');
-        $query = $query->select('holidays.*');
+        $query = $query->select('holidays.*','holidays_users.user_id');
 
         if(isset($user_id) && $user_id != 0) {
-            $query = $query->whereIn('holidays_users.user_id',$ids_array);
-        }
-
-        if(isset($type) && $type != '') {
-            $query = $query->where('holidays.type','=',$type);
+            $query = $query->where('holidays_users.user_id','=',$user_id);
         }
 
         if ($month != '' && $year != '') {
@@ -235,12 +231,8 @@ class Holidays extends Model
 
             foreach ($response as $key => $value) {
 
-                if($value->from_date == '') {
-                    $holidays[$i]['from_date'] = '';
-                }
-                else {
-                    $holidays[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date)); 
-                }
+                $date = explode("-",$value->from_date);
+                $holidays[$i] = $date[2];
                 $i++;
             }
         }
