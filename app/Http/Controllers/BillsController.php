@@ -1465,7 +1465,7 @@ class BillsController extends Controller
 
             $current_dt = date('Y-m-d');
 
-            \DB::statement("UPDATE bills_date SET recovery_date = '$current_dt' where bills_id = $id");
+            \DB::statement("UPDATE `bills_date` SET `recovery_date` = '$current_dt' where bills_id = $id");
         }
 
         if(isset($input['percentage_charged']) && $input['percentage_charged']!='')
@@ -1661,6 +1661,7 @@ class BillsController extends Controller
         $candidatejoindate->save();
 
         if ($status == 1) {
+            
             // For Recovery mail [email_notification table entry every minute check]
             $user_email = \Auth::user()->email;
             $superadminuserid = getenv('SUPERADMINUSERID');
@@ -1687,13 +1688,64 @@ class BillsController extends Controller
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         }
+        else {
+
+            // Update value email functionality
+
+            $update_increment = $bill->update_increment;
+            if($update_increment == '') {
+                $update_increment = 1;
+            }
+            else {
+                $update_increment = $update_increment + 1;
+            }
+
+            \DB::statement("UPDATE `bills` SET `update_increment`= '$update_increment' WHERE `id` = '$id'");
+
+            // For Forecasting update mail
+            $user_email = \Auth::user()->email;
+            $superadminuserid = getenv('SUPERADMINUSERID');
+            $accountantuserid = getenv('ACCOUNTANTUSERID');
+
+            $superadminemail = User::getUserEmailById($superadminuserid);
+            $accountantemail = User::getUserEmailById($accountantuserid);
+
+            $cc_users_array = array($superadminemail,$accountantemail);
+            $cc_users_array = array_filter($cc_users_array);
+
+            $c_name = CandidateBasicInfo::getCandidateNameById($candidate_id);
+
+            $module = "Forecasting Update";
+            $sender_name = $user_id;
+            $to = $user_email;
+            $cc = implode(",",$cc_users_array);
+
+            $today_date = date("jS F");
+            $year = date('Y');
+
+            if($update_increment == 1) {
+
+                $subject = "Forecasting - " . $c_name . " | Updated on " . $today_date . "'$year";
+                $message = "Forecasting - " . $c_name . " | Updated on " . $today_date . "'$year";
+            }
+            else {
+
+                $subject = "Forecasting - " . $c_name . " | Updated-$update_increment on " . $today_date . "'$year";
+                $message = "Forecasting - " . $c_name . " | Updated-$update_increment on " . $today_date . "'$year";
+            }
+            
+            $module_id = $id;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        }
 
         if($status == 1) {
 
             return redirect()->route('bills.recovery')
             ->with('success', 'Recovery Updated Successfully.');
         }
-        else{
+        else {
+
             return redirect()->route('forecasting.index')->with('success', 'Forecasting Updated Successfully.');
         }
     }
