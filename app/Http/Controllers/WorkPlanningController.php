@@ -561,14 +561,13 @@ class WorkPlanningController extends Controller
         $diff = $checkTime - $loginTime;
         $time_diff = date("H:i", $diff);
 
-        // Set Attendance for Farhin & Manisha
-
-        $farhin_user_id = getenv('ALLCLIENTVISIBLEUSERID');
-        $manisha_user_id = getenv('MANISHAUSERID');
         $report_delay = Input::get('report_delay');
         $report_delay_content = Input::get('report_delay_content');
 
-        if($user_id == $farhin_user_id || $user_id == $manisha_user_id) {
+        // Set Attendance for Farhin
+        $farhin_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+
+        if($user_id == $farhin_user_id) {
 
             $attendance = 'F';
         }
@@ -944,9 +943,8 @@ class WorkPlanningController extends Controller
         $remaining_time = $request->input('remaining_time');
         $link = Input::get('link');
 
-        // Set Attendance for Farhin & Manisha
+        // Set Attendance for Farhin
         $farhin_user_id = getenv('ALLCLIENTVISIBLEUSERID');
-        $manisha_user_id = getenv('MANISHAUSERID');
 
         // Get Work Planning Details
         $work_planning = WorkPlanning::find($id);
@@ -955,7 +953,7 @@ class WorkPlanningController extends Controller
         if($attendance == 'A') {
 
         }
-        else if($user_id == $farhin_user_id || $user_id == $manisha_user_id) {
+        else if($user_id == $farhin_user_id) {
 
             $attendance = 'F';
         }
@@ -966,7 +964,7 @@ class WorkPlanningController extends Controller
 
             if($day == 'Saturday') {
 
-                if($total_projected_time < '05:00:00') {
+                if($total_actual_time < '05:00:00') {
                     $attendance = 'HD';
                 }
                 else {
@@ -975,7 +973,7 @@ class WorkPlanningController extends Controller
             }
             else {
 
-                if($total_projected_time < '07:00:00') {
+                if($total_actual_time < '07:00:00') {
                     $attendance = 'HD';
                 }
                 else {
