@@ -131,7 +131,7 @@ class WorkPlanningController extends Controller
                         if($key == $user_id) {
                         }
                         else {
-                            $work_planning_res[$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
+                            $work_planning_res[$key."-".$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
                         }
                     }   
                 }
@@ -143,7 +143,7 @@ class WorkPlanningController extends Controller
                         if($key1 == $user_id) {
                         }
                         else {
-                            $work_planning_res[$value1] = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,'');
+                            $work_planning_res[$key1."-".$value1] = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,'');
                         }
                     }
                 }
@@ -159,7 +159,7 @@ class WorkPlanningController extends Controller
                         if($key == $user_id) {
                         }
                         else {
-                            $work_planning_res[$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
+                            $work_planning_res[$key."-".$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
                         }
                     }
                 }
@@ -178,7 +178,7 @@ class WorkPlanningController extends Controller
 
                     }
                     else {
-                        $work_planning_res[$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
+                        $work_planning_res[$key."-".$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
                     }
                 }
             }
@@ -212,7 +212,7 @@ class WorkPlanningController extends Controller
             $work_planning_res = '';
         }
 
-        return view('adminlte::workPlanning.teamIndex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','user_id'));
+        return view('adminlte::workPlanning.teamIndex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','user_id','superadminuserid'));
     }
 
     public function getWorkPlanningDetailsByStatus($status,$month,$year) {
@@ -352,7 +352,7 @@ class WorkPlanningController extends Controller
                         if($key == $user_id) {
                         }
                         else {
-                            $work_planning_res[$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status);
+                            $work_planning_res[$key."-".$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status);
                         }
                     }   
                 }
@@ -364,7 +364,7 @@ class WorkPlanningController extends Controller
                         if($key1 == $user_id) {
                         }
                         else {
-                            $work_planning_res[$value1] = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,$status);
+                            $work_planning_res[$key1."-".$value1] = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,$status);
                         }
                     }
                 }
@@ -381,7 +381,7 @@ class WorkPlanningController extends Controller
 
                         }
                         else {
-                            $work_planning_res[$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status);
+                            $work_planning_res[$key."-".$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status);
                         }
                     }
                 }
@@ -400,7 +400,7 @@ class WorkPlanningController extends Controller
 
                     }
                     else {
-                        $work_planning_res[$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status);
+                        $work_planning_res[$key."-".$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status);
                     }
                 }
             }
@@ -435,7 +435,7 @@ class WorkPlanningController extends Controller
             $work_planning_res = '';
         }
 
-        return view('adminlte::workPlanning.teamStatusIndex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','status','user_id'));
+        return view('adminlte::workPlanning.teamStatusIndex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','status','user_id','superadminuserid'));
     }
 
     public function create() {

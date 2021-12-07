@@ -84,11 +84,23 @@
             <?php $j = 0;?>
             @if(isset($work_planning_res) && $work_planning_res != '')
                 @foreach($work_planning_res as $key => $value)
-                    <?php $i = 0;?>
+                    <?php
+                        $i = 0;
+                        $user = explode("-", $key);
+                        $report_to_id = App\User::getReportsToById($user[0]);
+                    ?>
                     <tbody>
-                        <tr>
-                            <td colspan="9" style="text-align: center;background-color: #FABF8F;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{$key}}</b></td>
-                        </tr>
+                        @if(isset($report_to_id) && $report_to_id == $superadminuserid)
+                            <tr>
+                                <td colspan="9" style="text-align: center;background-color:#C4D79B;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{ $user[1] }}</b></td>
+                            </tr>
+                        @endif
+
+                        @if(isset($report_to_id) && $report_to_id != $superadminuserid)
+                            <tr>
+                                <td colspan="9" style="text-align: center;background-color: #FABF8F;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{ $user[1] }}</b></td>
+                            </tr>
+                        @endif
                     </tbody>
                         
                     <tbody id="data_{{$j}}" style="display: none;">
