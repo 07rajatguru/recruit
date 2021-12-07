@@ -115,9 +115,9 @@ class WorkPlanningController extends Controller
             $year = date('Y');
         }
 
+        $superadminuserid = getenv('SUPERADMINUSERID');
+        
         if($all_perm) {
-
-            $superadminuserid = getenv('SUPERADMINUSERID');
 
             if($user_id == $superadminuserid) {
 
@@ -336,9 +336,9 @@ class WorkPlanningController extends Controller
             $status = '2';
         }
 
-        if($all_perm) {
+        $superadminuserid = getenv('SUPERADMINUSERID');
 
-            $superadminuserid = getenv('SUPERADMINUSERID');
+        if($all_perm) {
 
             if($user_id == $superadminuserid) {
 

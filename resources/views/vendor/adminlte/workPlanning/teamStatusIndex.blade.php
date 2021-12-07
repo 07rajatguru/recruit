@@ -90,14 +90,16 @@
                         $report_to_id = App\User::getReportsToById($user[0]);
                     ?>
                     <tbody>
-                        @if(isset($report_to_id) && $report_to_id == $superadminuserid)
+                        @if(isset($report_to_id) && $report_to_id == $superadminuserid && $user_id == $superadminuserid)
                             <tr>
                                 <td colspan="9" style="text-align: center;background-color:#C4D79B;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{ $user[1] }}</b></td>
                             </tr>
-                        @endif
-
-                        @if(isset($report_to_id) && $report_to_id != $superadminuserid)
+                        @elseif(isset($report_to_id) && $report_to_id != $superadminuserid)
                             <tr>
+                                <td colspan="9" style="text-align: center;background-color: #FABF8F;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{ $user[1] }}</b></td>
+                            </tr>
+                        @else
+                             <tr>
                                 <td colspan="9" style="text-align: center;background-color: #FABF8F;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{ $user[1] }}</b></td>
                             </tr>
                         @endif
