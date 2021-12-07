@@ -443,14 +443,14 @@ class User extends Authenticatable
 
     public static function getAssignedUsers($user_id) {
 
-        $user_query = User::query();
-
         $status = 'Inactive';
         $status_array = array($status);
 
         $client = getenv('EXTERNAL');
         $client_type = array($client);
 
+        $user_query = User::query();
+        
         $user_query = $user_query->where(function($user_query) use ($user_id) {
             $user_query = $user_query->where('reports_to',$user_id);
             $user_query = $user_query->orwhere('id',$user_id);
