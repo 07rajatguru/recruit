@@ -1660,39 +1660,93 @@ class BillsController extends Controller
         $candidatejoindate->fixed_salary = $fixed_salary;
         $candidatejoindate->save();
 
+        // Get update increment values
+        $update_increment = $bill->update_increment;
+        $recovery_update_increment = $bill->recovery_update_increment;
+
         if ($status == 1) {
             
-            // For Recovery mail [email_notification table entry every minute check]
-            $user_email = \Auth::user()->email;
-            $superadminuserid = getenv('SUPERADMINUSERID');
-            $accountantuserid = getenv('ACCOUNTANTUSERID');
-            //$operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
+             // Update value email functionality
 
-            $superadminemail = User::getUserEmailById($superadminuserid);
-            $accountantemail = User::getUserEmailById($accountantuserid);
-            //$operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
+            if($recovery_update_increment == NULL && $recovery_update_increment < 0) {
+                
+                // For Recovery mail 
+                $user_email = \Auth::user()->email;
+                $superadminuserid = getenv('SUPERADMINUSERID');
+                $accountantuserid = getenv('ACCOUNTANTUSERID');
+                //$operationsexecutiveuserid = getenv('OPERATIONSEXECUTIVEUSERID');
 
-            //$cc_users_array = array($superadminemail,$accountantemail,$operationsexecutivemail);
-            $cc_users_array = array($superadminemail,$accountantemail);
-            $cc_users_array = array_filter($cc_users_array);
+                $superadminemail = User::getUserEmailById($superadminuserid);
+                $accountantemail = User::getUserEmailById($accountantuserid);
+                //$operationsexecutivemail = User::getUserEmailById($operationsexecutiveuserid);
 
-            $c_name = CandidateBasicInfo::getCandidateNameById($candidate_id);
+                //$cc_users_array = array($superadminemail,$accountantemail,$operationsexecutivemail);
+                $cc_users_array = array($superadminemail,$accountantemail);
+                $cc_users_array = array_filter($cc_users_array);
 
-            $module = "Recovery";
-            $sender_name = $user_id;
-            $to = $user_email;
-            $cc = implode(",",$cc_users_array);
-            $subject = "Recovery - ". $c_name;
-            $message = "Recovery - ". $c_name;
-            $module_id = $id;
+                $c_name = CandidateBasicInfo::getCandidateNameById($candidate_id);
 
-            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+                $module = "Recovery";
+                $sender_name = $user_id;
+                $to = $user_email;
+                $cc = implode(",",$cc_users_array);
+                $subject = "Recovery - ". $c_name;
+                $message = "Recovery - ". $c_name;
+                $module_id = $id;
+
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+                $recovery_update_increment = 0;
+
+                \DB::statement("UPDATE `bills` SET `recovery_update_increment`= '$recovery_update_increment' WHERE `id` = '$id'");
+            }
+            else {
+
+                $recovery_update_increment = $recovery_update_increment + 1;
+
+                \DB::statement("UPDATE `bills` SET `recovery_update_increment`= '$recovery_update_increment' WHERE `id` = '$id'");
+
+                // For Recovery Update mail
+                $user_email = \Auth::user()->email;
+                $superadminuserid = getenv('SUPERADMINUSERID');
+                $accountantuserid = getenv('ACCOUNTANTUSERID');
+
+                $superadminemail = User::getUserEmailById($superadminuserid);
+                $accountantemail = User::getUserEmailById($accountantuserid);
+
+                $cc_users_array = array($superadminemail,$accountantemail);
+                $cc_users_array = array_filter($cc_users_array);
+
+                $c_name = CandidateBasicInfo::getCandidateNameById($candidate_id);
+
+                $module = "Recovery Update";
+                $sender_name = $user_id;
+                $to = $user_email;
+                $cc = implode(",",$cc_users_array);
+
+                $today_date = date("jS F");
+                $year = date('Y');
+
+                if($recovery_update_increment == 1) {
+
+                    $subject = "Recovery - " . $c_name . " | Updated on " . $today_date . "'$year";
+                    $message = "Recovery - " . $c_name . " | Updated on " . $today_date . "'$year";
+                }
+                else {
+
+                    $subject = "Recovery - " . $c_name . " | Updated-$recovery_update_increment on " . $today_date . "'$year";
+                    $message = "Recovery - " . $c_name . " | Updated-$recovery_update_increment on " . $today_date . "'$year";
+                }
+                
+                $module_id = $id;
+
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+            }
         }
         else {
 
             // Update value email functionality
 
-            $update_increment = $bill->update_increment;
             if($update_increment == '') {
                 $update_increment = 1;
             }
@@ -1702,7 +1756,7 @@ class BillsController extends Controller
 
             \DB::statement("UPDATE `bills` SET `update_increment`= '$update_increment' WHERE `id` = '$id'");
 
-            // For Forecasting update mail
+            // For Forecasting Update mail
             $user_email = \Auth::user()->email;
             $superadminuserid = getenv('SUPERADMINUSERID');
             $accountantuserid = getenv('ACCOUNTANTUSERID');

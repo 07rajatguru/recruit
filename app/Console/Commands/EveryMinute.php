@@ -340,7 +340,7 @@ class EveryMinute extends Command
                 \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
-            else if ($value['module'] == 'Forecasting' || $value['module'] == 'Recovery' || $value['module'] == 'Forecasting Update') {
+            else if ($value['module'] == 'Forecasting' || $value['module'] == 'Recovery' || $value['module'] == 'Forecasting Update' || $value['module'] == 'Recovery Update') {
                 
                 $cc_array = array();
                 $cc_array = explode(",",$input['cc']);
