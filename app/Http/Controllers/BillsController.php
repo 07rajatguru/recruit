@@ -1668,7 +1668,7 @@ class BillsController extends Controller
             
              // Update value email functionality
 
-            if($recovery_update_increment == NULL && $recovery_update_increment < 0) {
+            if($recovery_update_increment == '' && $recovery_update_increment != 0) {
                 
                 // For Recovery mail 
                 $user_email = \Auth::user()->email;
