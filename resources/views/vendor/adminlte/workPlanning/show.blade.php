@@ -51,7 +51,7 @@
                 @if($work_planning['status'] == 2)
                     <button type="submit" class="btn btn-success" onclick="updateStatus('Approved')">Approved</button>
                     <button type="submit" class="btn btn-danger" onclick="updateStatus('Rejected')" disabled="disabled">Rejected</button>
-                @elseif($added_date <= $yesterday_date && $work_planning['evening_status'] == 0 && $curr_time > '11:00:00' && $work_planning['status'] == 0)
+                @elseif($added_date <= $yesterday_date && $work_planning['evening_status'] == 0 && $work_planning['status'] == 0)
                     <button type="submit" class="btn btn-danger" onclick="updateStatus('Rejected')">Rejected</button>
                 @elseif($work_planning['evening_status'] == 1 && $work_planning['status'] == 0)
                     <button type="submit" class="btn btn-success" onclick="updateStatus('Approved')">Approved</button>

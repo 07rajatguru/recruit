@@ -775,10 +775,7 @@ class WorkPlanningController extends Controller
         // Get Yesterday Date
         $yesterday_date = date("Y-m-d", strtotime("-1 days"));
 
-        // Get Current Time
-        $curr_time = date('H:i:00', time() + 19800);
-
-        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','wp_id','loggedin_user_id','added_by_id','appr_rejct_by','work_planning_post','added_date','yesterday_date','curr_time'));
+        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','wp_id','loggedin_user_id','added_by_id','appr_rejct_by','work_planning_post','added_date','yesterday_date'));
     }
 
     public function edit($id) {
