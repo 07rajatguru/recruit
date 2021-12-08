@@ -1414,6 +1414,17 @@ class HomeController extends Controller
 
                 $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
 
+                // Get User id from both name & set holiday dates
+                $user_name = $value->first_name."-".$value->last_name;
+                $u_id = User::getUserIdByBothName($user_name);
+                $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
+
+                if (isset($user_holidays) && sizeof($user_holidays)>0) {
+                    foreach ($user_holidays as $h_k => $h_v) {
+                        $list[$combine_name][$h_v]['holiday'] = 'Y';
+                    }
+                }
+
                 if (isset($user_remark) && sizeof($user_remark)>0) {
                     foreach ($user_remark as $k => $v) {
 
@@ -1469,6 +1480,18 @@ class HomeController extends Controller
 
                     $i=0;
                     foreach ($value as $key1 => $value1) {
+
+                        $split_unm = explode(",",$key);
+
+                        // Get User id from both name & set holiday dates
+                        $u_id = User::getUserIdByBothName($split_unm[0]);
+                        $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
+
+                        if (isset($user_holidays) && sizeof($user_holidays)>0) {
+                            foreach ($user_holidays as $h_k => $h_v) {
+                                $list[$key][$h_v]['holiday'] = 'Y';
+                            }
+                        }
 
                         if (isset($user_remark) && sizeof($user_remark)>0) {
                             foreach ($user_remark as $u_k1 => $u_v1) {
@@ -1567,6 +1590,17 @@ class HomeController extends Controller
 
                 $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
 
+                // Get User id from both name & set holiday dates
+                $user_name = $value->first_name."-".$value->last_name;
+                $u_id = User::getUserIdByBothName($user_name);
+                $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
+
+                if (isset($user_holidays) && sizeof($user_holidays)>0) {
+                    foreach ($user_holidays as $h_k => $h_v) {
+                        $list[$combine_name][$h_v]['holiday'] = 'Y';
+                    }
+                }
+
                 if (isset($user_remark) && sizeof($user_remark)>0) {
                     foreach ($user_remark as $k => $v) {
 
@@ -1622,6 +1656,18 @@ class HomeController extends Controller
 
                     $i=0;
                     foreach ($value as $key1 => $value1) {
+
+                        $split_unm = explode(",",$key);
+
+                        // Get User id from both name & set holiday dates
+                        $u_id = User::getUserIdByBothName($split_unm[0]);
+                        $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
+
+                        if (isset($user_holidays) && sizeof($user_holidays)>0) {
+                            foreach ($user_holidays as $h_k => $h_v) {
+                                $list[$key][$h_v]['holiday'] = 'Y';
+                            }
+                        }
 
                         if (isset($user_remark) && sizeof($user_remark)>0) {
                             foreach ($user_remark as $u_k1 => $u_v1) {
@@ -1690,120 +1736,170 @@ class HomeController extends Controller
             $year_array[$y] = $y;
         }
 
-        $all_perm = $user->can('display-recruitment-dashboard');
-        $all_perm = $user->can('display-hr-advisory-dashboard');
+        // Check department wise permissions
 
-        // Get Users
-        $users = User::getOtherUsersNew(0,'',$department_id);
+        if($department_id == 0) {
 
-        // Get Attendance & Remarks
+            $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
+        }
+        else if($department_id == 1) {
 
-        $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,'',$department_id);
-        $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,'',$department_id);
+            $dept_perm = $user->can('display-recruitment-dashboard');
+            $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
+        }
+        else if($department_id == 2) {
 
-        //print_r($user_remark);exit;
+            $dept_perm = $user->can('display-hr-advisory-dashboard');
+            $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
+        }
+        else {
 
-        $list = array();
-        for($d=1; $d<=31; $d++) {
-
-            $time = mktime(12, 0, 0, $month, $d, $year);
-            foreach ($users as $key => $value) {
-              
-                if (date('n', $time) == $month)
-                    $list[$key][date('j', $time)]['attendance']='';
-                
-                $list[$key][date('j', $time)]['remarks']='';
-            }
+            $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
         }
 
+        if($all_perm || $dept_perm) {
 
-        $date = new Date();
-        if(sizeof($response) > 0) {
+            // Get Users
+            $users = User::getOtherUsersNew(0,'',$department_id);
 
-            foreach ($response as $key => $value) {
+            // Get Attendance & Remarks
 
-                $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
-                $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
+            $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,'',$department_id);
+            $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,'',$department_id);
 
-                $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
+            $list = array();
+            for($d=1; $d<=31; $d++) {
+
+                $time = mktime(12, 0, 0, $month, $d, $year);
+                foreach ($users as $key => $value) {
+                  
+                    if (date('n', $time) == $month)
+                        $list[$key][date('j', $time)]['attendance']='';
+                    
+                    $list[$key][date('j', $time)]['remarks']='';
+                    $list[$key][date('j', $time)]['holiday']='';
+                }
+            }
+
+            $date = new Date();
+            if(sizeof($response) > 0) {
+
+                foreach ($response as $key => $value) {
+
+                    $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
+                    $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
+
+                    $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
+
+                    // Get User id from both name & set holiday dates
+                    $user_name = $value->first_name."-".$value->last_name;
+                    $u_id = User::getUserIdByBothName($user_name);
+                    $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
+
+                    if (isset($user_holidays) && sizeof($user_holidays)>0) {
+
+                        foreach ($user_holidays as $h_k => $h_v) {
+
+                            $list[$combine_name][$h_v]['holiday'] = 'Y';
+                        }
+                    }
+
+                    if (isset($user_remark) && sizeof($user_remark)>0) {
+                        foreach ($user_remark as $k => $v) {
+
+                            $split_month = date('n',strtotime($v['remark_date']));
+                            $split_year = date('Y',strtotime($v['remark_date']));
+
+                            if (($v['full_name'] == $combine_name) && ($v['remark_date'] == $value->added_date) && ($month == $split_month) && ($year == $split_year)) {
+                                $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
+                            }
+                            else {
+
+                                if (($v['full_name'] == $combine_name) && ($month == $split_month) && ($year == $split_year)) {
+                                    $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else {
 
                 if (isset($user_remark) && sizeof($user_remark)>0) {
+
                     foreach ($user_remark as $k => $v) {
 
                         $split_month = date('n',strtotime($v['remark_date']));
                         $split_year = date('Y',strtotime($v['remark_date']));
-
-                        if (($v['full_name'] == $combine_name) && ($v['remark_date'] == $value->added_date) && ($month == $split_month) && ($year == $split_year)) {
-                            $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
+                        if (($month == $split_month) && ($year == $split_year)) {
+                            $list[$v['full_name']][$v['converted_date']]['remarks'] = $v['remarks'];
                         }
-                        else {
+                    }
+                }
+            }
 
-                            if (($v['full_name'] == $combine_name) && ($month == $split_month) && ($year == $split_year)) {
-                                $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
+            // New List1
+            $list1 = array();
+            for($d1=1; $d1<=31; $d1++) {
+
+                $time1 = mktime(12, 0, 0, $month, $d1, $year);
+                foreach ($users as $key => $value) {
+
+                    if (date('n', $time1) == $month) {
+                        $list1[$key][date('j S', $time1)]='';
+                    }
+                }
+            }
+
+            if(sizeof($list)>0) {
+
+                foreach ($list as $key => $value) {
+
+                    if(sizeof($value)>0) {
+
+                        $i=0;
+                        foreach ($value as $key1 => $value1) {
+
+                            $split_unm = explode(",",$key);
+
+                            // Get User id from both name & set holiday dates
+                            $u_id = User::getUserIdByBothName($split_unm[0]);
+                            $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
+
+                            if (isset($user_holidays) && sizeof($user_holidays)>0) {
+
+                                foreach ($user_holidays as $h_k => $h_v) {
+
+                                    $list[$key][$h_v]['holiday'] = 'Y';
+                                }
+                            }
+
+                            if (isset($user_remark) && sizeof($user_remark)>0) {
+                                foreach ($user_remark as $u_k1 => $u_v1) {
+
+                                    $split_month = date('n',strtotime($u_v1['remark_date']));
+                                    $split_year = date('Y',strtotime($u_v1['remark_date']));
+
+                                    if (($u_v1['full_name'] == $key) && ($u_v1['converted_date'] == $key1) && ($month == $split_month) && ($year == $split_year)) {
+                                        
+                                        $list1[$u_v1['full_name']][$u_v1['converted_date']][$u_v1['remark_date']][$i] = $u_v1['remarks'];
+                                    }
+                                    $i++;
+                                }
                             }
                         }
                     }
                 }
             }
+
+            $users_name = User::getAllUsersForRemarks();
+
+            $page = 'Department';
         }
         else {
 
-            if (isset($user_remark) && sizeof($user_remark)>0) {
-
-                foreach ($user_remark as $k => $v) {
-
-                    $split_month = date('n',strtotime($v['remark_date']));
-                    $split_year = date('Y',strtotime($v['remark_date']));
-                    if (($month == $split_month) && ($year == $split_year)) {
-                        $list[$v['full_name']][$v['converted_date']]['remarks'] = $v['remarks'];
-                    }
-                }
-            }
+            return view('errors.403');
         }
-
-        // New List1
-        $list1 = array();
-        for($d1=1; $d1<=31; $d1++) {
-
-            $time1 = mktime(12, 0, 0, $month, $d1, $year);
-            foreach ($users as $key => $value) {
-
-                if (date('n', $time1) == $month) {
-                    $list1[$key][date('j S', $time1)]='';
-                }
-            }
-        }
-
-        if(sizeof($list)>0) {
-
-            foreach ($list as $key => $value) {
-
-                if(sizeof($value)>0) {
-
-                    $i=0;
-                    foreach ($value as $key1 => $value1) {
-
-                        if (isset($user_remark) && sizeof($user_remark)>0) {
-                            foreach ($user_remark as $u_k1 => $u_v1) {
-
-                                $split_month = date('n',strtotime($u_v1['remark_date']));
-                                $split_year = date('Y',strtotime($u_v1['remark_date']));
-
-                                if (($u_v1['full_name'] == $key) && ($u_v1['converted_date'] == $key1) && ($month == $split_month) && ($year == $split_year)) {
-                                    
-                                    $list1[$u_v1['full_name']][$u_v1['converted_date']][$u_v1['remark_date']][$i] = $u_v1['remarks'];
-                                }
-                                $i++;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        $users_name = User::getAllUsersForRemarks();
-
-        $page = 'Department';
 
         return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name','sundays','page','department_id'));
     }

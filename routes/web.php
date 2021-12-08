@@ -321,18 +321,18 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     Route::any('/self-user-attendance', array (
+        'uses' => 'HomeController@selfAttendance',
         'middleware' => ['permission:display-attendance-of-all-users-in-admin-panel|display-attendance-by-loggedin-user-in-admin-panel'],
-        'uses' => 'HomeController@selfAttendance'
     ));
 
     Route::any('/team-user-attendance', array (
+        'uses' => 'HomeController@teamUsersAttendance',
         'middleware' => ['permission:display-attendance-of-all-users-in-admin-panel|display-attendance-by-loggedin-user-in-admin-panel'],
-        'uses' => 'HomeController@teamUsersAttendance'
     ));
 
     Route::any('/users-attendance/{department_id}', array (
-        'middleware' => ['permission:display-recruitment-dashboard|display-hr-advisory-dashboard'],
-        'uses' => 'HomeController@departmentWiseUsersAttendance'
+        'uses' => 'HomeController@departmentWiseUsersAttendance',
+        'middleware' => ['permission:display-attendance-of-all-users-in-admin-panel|display-recruitment-dashboard|display-hr-advisory-dashboard'],
     ));
 
     // test mail route

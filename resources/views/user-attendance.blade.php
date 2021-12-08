@@ -126,11 +126,15 @@
                                                 $get_cur_month = date('m');
                                                 $get_cur_yr = date('Y');
 
-                                                $user_id = App\User::getUserIdByBothName($user_name);
+                                                //$user_id = App\User::getUserIdByBothName($user_name);
 
-                                                $user_holidays = App\Holidays::getHolidaysByUserID($user_id,$month,$year);
+                                                //$user_holidays = App\Holidays::getHolidaysByUserID($user_id,$month,$year);
 
-                                                if(in_array($key1, $sundays) || in_array($key1, $user_holidays)) {
+                                                if(in_array($key1, $sundays)) {
+
+                                                    $attendance = 'H';
+                                                }
+                                                else if(isset($value1['holiday']) && $value1['holiday'] == 'Y') {
                                                     $attendance = 'H';
                                                 }
                                                 else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
