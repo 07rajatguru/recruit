@@ -352,7 +352,7 @@ class User extends Authenticatable
         return $list;
     }
 
-    public static function getOtherUsersNew($user_id=0,$type,$department_id=0) {
+    public static function getOtherUsersNew($user_id=0,$department_id='') {
 
         $superadmin_role_id =  getenv('SUPERADMIN');
         $client_role_id =  getenv('CLIENT');
@@ -364,35 +364,28 @@ class User extends Authenticatable
         
         $query = User::query();
         $query = $query->join('role_user','role_user.user_id','=','users.id');
-        $query = $query->leftjoin('users_otherinfo','users_otherinfo.user_id','=','users.id');
         $query = $query->leftjoin('department','department.id','=','users.type');
 
-        $query = $query->select('users.*','role_user.role_id as role_id','users_otherinfo.date_of_joining as joining_date','department.name as department_name');
+        $query = $query->select('users.*','role_user.role_id as role_id','department.name as department_name');
 
         $query = $query->whereNotIn('status',$status_array);
 
-        if(isset($department_id) && $department_id > 0) {
+        if(isset($department_id) && $department_id != '') {
 
-            $query = $query->where('users.type','=',$department_id);
+            if($department_id == 0) {
+
+                $query = $query->whereNotIn('role_id',$superadmin);
+            }
+            else {
+                $query = $query->where('users.type','=',$department_id);
+            }
         }
         else {
 
-            if(isset($type) && $type == 'Self') {
+            if($user_id > 0) {
 
-                if($user_id > 0) {
-                    $query = $query->where('users.id','=',$user_id);
-                }
-            }
-            else {
-
-                if($user_id > 0) {
-                    $query = $query->where('users.reports_to','=',$user_id);
-                    $query = $query->whereNotIn('role_id',$superadmin);
-                }
-                else {
-
-                    $query = $query->whereNotIn('role_id',$superadmin);
-                }
+                $query = $query->where('users.reports_to','=',$user_id);
+                $query = $query->whereNotIn('role_id',$superadmin);
             }
         }
 

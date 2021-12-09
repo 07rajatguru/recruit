@@ -689,6 +689,12 @@ class HomeController extends Controller
     public function storeUserRemarks(Request $request) {
 
         $name = $_POST['name'];
+
+        if(isset($_POST['department_id'])) {
+
+            $department_id = $_POST['department_id'];
+        }
+
         $user = \Auth::user();
         $dateClass = new Date();
 
@@ -709,13 +715,19 @@ class HomeController extends Controller
         $user_remark->save();
 
         if($name == 'UserAttendance') {
-            return redirect('/userattendance');
+            return redirect('/userattendance')->with('success', 'Remarks Added Successfully.');
         }
         if($name == 'HomeAttendance') {
-            return redirect('/home');
+            return redirect('/home')->with('success', 'Remarks Added Successfully.');
         }
-        if($name == 'User-Attendance') {
-            return redirect('/user-attendance');
+        if($name == 'Self') {
+            return redirect('/self-user-attendance')->with('success', 'Remarks Added Successfully.');
+        }
+        if($name == 'Team') {
+            return redirect('/team-user-attendance')->with('success', 'Remarks Added Successfully.');
+        }
+        if($name == 'Department') {
+            return redirect('/users-attendance/'.$department_id)->with('success', 'Remarks Added Successfully.');
         }
     }
 
@@ -1384,12 +1396,15 @@ class HomeController extends Controller
         }
 
         // Get Users
-        $users = User::getOtherUsersNew($user_id,'Self');
+        $user_details = User::getProfileInfo($user_id);
+        $joining_date = date('d/m/Y', strtotime("$user_details->joining_date"));
+        $full_name = $user_details->first_name."-".$user_details->last_name.",".$user_details->department_name.",".$user_details->working_hours.",".$joining_date;
+        $users = array($full_name => "");
 
         // Get Attendance & Remarks
-        $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,'Self');
-        $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,'Self');
-        
+        $response = WorkPlanning::getWorkPlanningByUserID($user_id,$month,$year);
+        $user_remark = UserRemarks::getUserRemarksDetailsByUserID($user_id,$month,$year);
+
         $list = array();
         for($d=1; $d<=31; $d++) {
 
@@ -1400,9 +1415,9 @@ class HomeController extends Controller
                     $list[$key][date('j', $time)]['attendance']='';
                 
                 $list[$key][date('j', $time)]['remarks']='';
+                $list[$key][date('j', $time)]['holiday']='';
             }
         }
-        
 
         $date = new Date();
         if(sizeof($response) > 0) {
@@ -1577,6 +1592,7 @@ class HomeController extends Controller
                     $list[$key][date('j', $time)]['attendance']='';
                 
                 $list[$key][date('j', $time)]['remarks']='';
+                $list[$key][date('j', $time)]['holiday']='';
             }
         }
 
@@ -1613,7 +1629,12 @@ class HomeController extends Controller
                         else {
 
                             if (($v['full_name'] == $combine_name) && ($month == $split_month) && ($year == $split_year)) {
+
                                 $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
+                            }
+                            else {
+
+                                $list[$v['full_name']][$v['converted_date']]['remarks'] = $v['remarks'];
                             }
                         }
                     }
@@ -1760,12 +1781,11 @@ class HomeController extends Controller
         if($all_perm || $dept_perm) {
 
             // Get Users
-            $users = User::getOtherUsersNew(0,'',$department_id);
-
+            $users = User::getOtherUsersNew('',$department_id);
             // Get Attendance & Remarks
 
-            $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,'',$department_id);
-            $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,'',$department_id);
+            $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,$department_id);
+            $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,$department_id);
 
             $list = array();
             for($d=1; $d<=31; $d++) {
@@ -1805,6 +1825,7 @@ class HomeController extends Controller
                     }
 
                     if (isset($user_remark) && sizeof($user_remark)>0) {
+
                         foreach ($user_remark as $k => $v) {
 
                             $split_month = date('n',strtotime($v['remark_date']));
@@ -1816,7 +1837,12 @@ class HomeController extends Controller
                             else {
 
                                 if (($v['full_name'] == $combine_name) && ($month == $split_month) && ($year == $split_year)) {
+
                                     $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
+                                }
+                                else {
+
+                                    $list[$v['full_name']][$v['converted_date']]['remarks'] = $v['remarks'];
                                 }
                             }
                         }
@@ -1837,6 +1863,8 @@ class HomeController extends Controller
                     }
                 }
             }
+
+            //print_r($list);exit;
 
             // New List1
             $list1 = array();

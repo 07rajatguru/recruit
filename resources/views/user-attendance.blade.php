@@ -30,10 +30,28 @@
             </div>
 
             <div class="col-md-1 col-sm-4">
-                @include('adminlte::partials.userRemarks', ['name' => 'User-Attendance','users' => $users_name])
+                @if(isset($page) && $page == 'Department')
+                    @include('adminlte::partials.userRemarks', ['name' => $page,'users' => $users_name,'department_id' => $department_id])
+                @else
+                    @include('adminlte::partials.userRemarks', ['name' => $page,'users' => $users_name])
+                @endif
             </div>
         </div>
+    </div><br/>
 
+    @if($message = Session::get('success'))
+        <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
+
+    @if($message = Session::get('error'))
+        <div class="alert alert-error">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
+
+    <div class="row">
         @if(isset($list) && sizeof($list)>0)
             <div class="col-sm-12" style="margin-top:2%;">
                 @section('cotable_panel_body')

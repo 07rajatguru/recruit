@@ -252,7 +252,7 @@ class WorkPlanning extends Model
         return $work_planning_res;
     }
 
-    public static function getUsersAttendanceByWorkPlanning($user_id=0,$month,$year,$type,$department_id=0) {
+    public static function getUsersAttendanceByWorkPlanning($user_id=0,$month,$year,$department_id='') {
 
         $superadmin_role_id =  getenv('SUPERADMIN');
         $client_role_id =  getenv('CLIENT');
@@ -264,7 +264,6 @@ class WorkPlanning extends Model
 
         $query = WorkPlanning::query();
         $query = $query->leftjoin('users','users.id','=','work_planning.added_by');
-        $query = $query->leftjoin('users_otherinfo','users_otherinfo.user_id','=','users.id');
         $query = $query->join('role_user','role_user.user_id','=','users.id');
         $query = $query->leftjoin('department','department.id','=','users.type');
         
@@ -273,25 +272,24 @@ class WorkPlanning extends Model
             $query = $query->where(\DB::raw('year(work_planning.added_date)'),'=', $year);
         }
 
-        //$query = $query->whereNotIn('role_id',$superadmin);
+        $query = $query->whereNotIn('role_id',$superadmin);
 
-        if(isset($department_id) && $department_id > 0) {
+        if(isset($department_id) && $department_id != '') {
 
-            $query = $query->where('users.type','=',$department_id);
+            if($department_id == 0) {
+            }
+            else {
+                $query = $query->where('users.type','=',$department_id);
+            }
         }
         else {
 
-            if(isset($type) && $type == 'Self') {
-                if($user_id > 0) {
-                    $query = $query->where('users.id','=',$user_id);
-                }
-            }
-            else {
+            if($user_id > 0) {
                 $query = $query->where('users.reports_to','=',$user_id);
             }
         }
 
-        $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','users.working_hours as working_hours','work_planning.added_date','work_planning.attendance','users_otherinfo.date_of_joining as joining_date','department.name as department_name');
+        $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','users.working_hours as working_hours','work_planning.added_date','work_planning.attendance','users.joining_date','department.name as department_name');
         $query = $query->whereNotIn('users.status',$status_array);
 
         $response = $query->get();
@@ -397,5 +395,26 @@ class WorkPlanning extends Model
             $i++;
         }
         return $work_planning_res;
+    }
+
+    public static function getWorkPlanningByUserID($user_id,$month,$year) {
+
+        $query = WorkPlanning::query();
+        $query = $query->leftjoin('users','users.id','=','work_planning.added_by');
+        $query = $query->leftjoin('users_otherinfo','users_otherinfo.user_id','=','users.id');
+        $query = $query->join('role_user','role_user.user_id','=','users.id');
+        $query = $query->leftjoin('department','department.id','=','users.type');
+
+        $query = $query->where('users.id','=',$user_id);
+        
+        if($month!=0 && $year!=0) {
+            $query = $query->where(\DB::raw('MONTH(work_planning.added_date)'),'=', $month);
+            $query = $query->where(\DB::raw('year(work_planning.added_date)'),'=', $year);
+        }
+
+        $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','users.working_hours as working_hours','work_planning.added_date','work_planning.attendance','users_otherinfo.date_of_joining as joining_date','department.name as department_name');
+
+        $response = $query->get();
+        return $response;
     }
 }
