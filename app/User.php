@@ -519,7 +519,7 @@ class User extends Authenticatable
     }
 
     // function for user remarks dropdown
-    public static function getAllUsersForRemarks() {
+    public static function getAllUsersForRemarks($user_id,$department_id) {
 
         $superadmin = getenv('SUPERADMINUSERID');
         $saloni_user_id = getenv('SALONIUSERID');
@@ -536,6 +536,19 @@ class User extends Authenticatable
         $user_query = $user_query->whereNotIn('status',$status_array);
         $user_query = $user_query->whereNotIn('id',$super_array);
         $user_query = $user_query->whereNotIn('type',$client_type);
+
+        if(isset($department_id) && $department_id > 0) {
+            $user_query = $user_query->where('users.type',$department_id);
+        }
+        else {
+
+            if($user_id>0) {
+                $user_query = $user_query->where('reports_to','=',$user_id);
+            }
+        }
+
+        
+
         $user_query = $user_query->orderBy('name');
         $users = $user_query->get();
 

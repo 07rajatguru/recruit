@@ -18,11 +18,12 @@
                     <input type="hidden" name="department_id" id="department_id" value="{{ $department_id }}">
                 @endif
 
-                @permission(('add-remarks-of-all-users-in-admin-panel'))
-                    <strong>Select User :</strong><br/>
-                    {!! Form::select('user_id', $users,null, array('id'=>'user_id','class' => 'form-control')) !!}
-                    <br/><br/>
-                @endpermission
+                @if(isset($users) && sizeof($users) > 0)
+                    @permission(('add-remarks-of-all-users-in-admin-panel'))
+                        <strong>Select User :</strong><br/>
+                        {!! Form::select('user_id', $users,null, array('id'=>'user_id','class' => 'form-control')) !!}<br/><br/>
+                    @endpermission
+                @endif
                 
                 <strong>Select Date: </strong>
                 {!! Form::text('date',null,array('id' => 'date', 'placeholder' => 'Select Date', 'class' => 'form-control'))!!}

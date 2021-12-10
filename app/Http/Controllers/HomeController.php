@@ -589,7 +589,7 @@ class HomeController extends Controller
             }
         }
 
-        $users_name = User::getAllUsersForRemarks();
+        $users_name = User::getAllUsersForRemarks(0,0);
 
         return view('home',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name'));
     }
@@ -680,7 +680,7 @@ class HomeController extends Controller
 
         $calendar = Calendar::addEvents($events);
 
-        $users_name = User::getAllUsersForRemarks();
+        $users_name = User::getAllUsersForRemarks(0,0);
         
         return view('userattendance', compact('calendar','users_name'));
     }
@@ -752,37 +752,6 @@ class HomeController extends Controller
 
                 $response = UsersLog::getUsersAttendanceList(0,$month,$year);
 
-                /*$list = array();
-                $date = new Date();
-                if(sizeof($response)>0){
-                    foreach ($response as $key => $value) {
-                        $data[] = array(
-                            $login_time = $date->converttime($value->login),
-                            $logout_time = $date->converttime($value->logout),
-                            $list[$value->name][date("j S",strtotime($value->date))]['login'] = date("h:i A",$login_time),
-                            $list[$value->name][date("j S",strtotime($value->date))]['logout'] = date("h:i A",$logout_time),
-
-                            $total = ($logout_time - $login_time) / 60,
-
-                            $list[$value->name][date("j S",strtotime($value->date))]['total'] = date('H:i', mktime(0,$total)),
-                        );
-                    }
-                }*/
-                //print_r($response);exit;
-                /*user=DB::table('users_log')->join("users","users.id","=","users_log.user_id")
-                                            ->select("users_log.*","users.name as name")
-                                            ->orderBy('users_log.id','desc')
-                                            ->get();
-                    foreach($list as $lists) {
-                     $data[] = array(
-                        $lists->id,
-                        $lists->name,
-                        $lists->login,
-                        $lists->logout,
-                        $lists->total,
-                    );
-                }*/
-
                 for($d=1; $d<=31; $d++) {
 
                     $time = mktime(12, 0, 0, $month, $d, $year);
@@ -820,288 +789,6 @@ class HomeController extends Controller
         );
         return json_encode($data);
     }
-
-/*    public function recruitmentDashboard() {
-
-        $user = \Auth::user();
-        $user_id =  $user->id;
-
-        $display_all_count = $user->can('display-all-count');
-        $display_userwise_count = $user->can('display-userwise-count');
-
-        // get assigned to todos
-        $assigned_todo_ids = ToDos::getTodoIdsByUserId($user_id);
-        $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user_id);
-
-        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids);
-        $toDos = array();
-
-        if(isset($todo_ids) && sizeof($todo_ids)>0) {
-            $toDos = ToDos::getAllTodosdash($todo_ids,7);
-        }
-
-        $month = date('m');
-        $year = date('Y');
-        $department_id = getenv('RECRUITMENT');
-
-        if($display_all_count) {
-
-            // Client Count
-            $client = DB::table('client_basicinfo')
-            ->whereRaw('MONTH(created_at) = ?',[$month])
-            ->whereRaw('YEAR(created_at) = ?',[$year])
-            ->where('delete_client','=',0)->where('department_id','=',$department_id)->count();
-
-            // Job Count
-            $job = JobOpen::getAllJobsCountByDepartment(1,$user_id,'',$department_id);
-
-            // Cvs Associated this month
-            $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year,$department_id);
-            $associate_count = $associate_monthly_response['cvs_cnt'];
-
-            // Cvs Shortlisted this month
-            $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted(0,$month,$year,$department_id);
-
-            // Interview Attended this month
-            $interview_attended_list = Interview::getAttendedInterviews(1,$user_id,$month,$year,$department_id);
-            $interview_attend = sizeof($interview_attended_list);
-
-            // Candidate Join this month
-            $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year,$department_id);
-
-            // Interview Count
-            $interviews = Interview::getDashboardInterviews(1,$user_id,$department_id);
-            $interviews_cnt = sizeof($interviews);
-        }
-        else if($display_userwise_count) {
-
-            // Client Count
-            $client = DB::table('client_basicinfo')
-            ->whereRaw('MONTH(created_at) = ?',[$month])
-            ->whereRaw('YEAR(created_at) = ?',[$year])->where('account_manager_id',$user_id)
-            ->where('delete_client','=',0)->where('department_id','=',$department_id)->count();
-
-            // Job Count
-            $job = JobOpen::getAllJobsCountByDepartment(0,$user_id,'',$department_id);
-
-            $tanisha_user_id = getenv('TANISHAUSERID');
-
-            if($user_id == $tanisha_user_id) {
-
-                // Cvs Associated this month
-                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($tanisha_user_id,$month,$year,$department_id);
-                $associate_count = $associate_monthly_response['cvs_cnt'];
-
-                // Cvs Shortlisted this month
-                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($tanisha_user_id,$month,$year,$department_id);
-
-                // Interview Attended this month
-                $interview_attended_list = Interview::getAttendedInterviews(0,$tanisha_user_id,$month,$year,$department_id);
-                $interview_attend = sizeof($interview_attended_list);
-
-                // Candidate Join this month
-                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($tanisha_user_id,0,$month,$year,$department_id);
-
-                // Interview Count
-                $interviews = Interview::getDashboardInterviews(0,$tanisha_user_id,$department_id);
-                $interviews_cnt = sizeof($interviews);
-            }
-            else {
-
-                // Cvs Associated this month
-                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year,$department_id);
-                $associate_count = $associate_monthly_response['cvs_cnt'];
-
-                // Cvs Shortlisted this month
-                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($user_id,$month,$year,$department_id);
-
-                // Interview Attended this month
-                $interview_attended_list = Interview::getAttendedInterviews(0,$user_id,$month,$year,$department_id);
-                $interview_attend = sizeof($interview_attended_list);
-
-                // Candidate Join this month
-                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,0,$month,$year,$department_id);
-
-                // Interview Count
-                $interviews = Interview::getDashboardInterviews(0,$user_id,$department_id);
-                $interviews_cnt = sizeof($interviews);
-            }
-        }
-
-        $viewVariable = array();
-        $viewVariable['toDos'] = $toDos;
-        $viewVariable['interviews'] = $interviews;
-        $viewVariable['interviewCount'] = $interviews_cnt;
-        $viewVariable['jobCount'] = $job;
-        $viewVariable['clientCount'] = $client;
-        $viewVariable['candidatejoinCount'] = $candidatecount;
-        $viewVariable['associatedCount'] = $associate_count;
-        $viewVariable['interviewAttendCount'] = $interview_attend;
-        $viewVariable['shortlisted_count'] = $shortlisted_count;
-        $viewVariable['month'] = $month;
-        $viewVariable['year'] = $year;
-        $viewVariable['department_id'] = $department_id;
-
-        return view('recruitment-dashboard',$viewVariable);
-    }
-
-    public function recruitmentOpentoAllJob() {
-
-        $user = \Auth::user();
-        $user_id = \Auth::user()->id;
-        $display_jobs = $user->can('display-jobs-open-to-all');
-
-        $department_id = getenv('RECRUITMENT');
-
-        if($display_jobs) {
-            $job_opened = JobOpen::getOpenToAllJobs(10,$user_id,$department_id);
-        }
-        else {
-            $job_opened = array();
-        }
-        return json_encode($job_opened);
-    }
-
-    public function hrAdvisoryDashboard() {
-
-        $user = \Auth::user();
-        $user_id =  $user->id;
-
-        $display_all_count = $user->can('display-all-count');
-        $display_userwise_count = $user->can('display-userwise-count');
-
-        // get assigned to todos
-        $assigned_todo_ids = ToDos::getTodoIdsByUserId($user_id);
-        $owner_todo_ids = ToDos::getAllTaskOwnertodoIds($user_id);
-
-        $todo_ids = array_merge($assigned_todo_ids,$owner_todo_ids);
-        $toDos = array();
-
-        if(isset($todo_ids) && sizeof($todo_ids)>0) {
-            $toDos = ToDos::getAllTodosdash($todo_ids,7);
-        }
-
-        $month = date('m');
-        $year = date('Y');
-        $department_id = getenv('HRADVISORY');
-
-        if($display_all_count) {
-
-            // Client Count
-            $client = DB::table('client_basicinfo')
-            ->whereRaw('MONTH(created_at) = ?',[$month])
-            ->whereRaw('YEAR(created_at) = ?',[$year])
-            ->where('delete_client','=',0)->where('department_id','=',$department_id)->count();
-
-            // Job Count
-            $job = JobOpen::getAllJobsCountByDepartment(1,$user_id,'',$department_id);
-
-            // Cvs Associated this month
-            $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate(0,$month,$year,$department_id);
-            $associate_count = $associate_monthly_response['cvs_cnt'];
-
-            // Cvs Shortlisted this month
-            $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted(0,$month,$year,$department_id);
-
-            // Interview Attended this month
-            $interview_attended_list = Interview::getAttendedInterviews(1,$user_id,$month,$year,$department_id);
-            $interview_attend = sizeof($interview_attended_list);
-
-            // Candidate Join this month
-            $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year,$department_id);
-
-            // Interview Count
-            $interviews = Interview::getDashboardInterviews(1,$user_id,$department_id);
-            $interviews_cnt = sizeof($interviews);
-        }
-        else if($display_userwise_count) {
-
-            // Client Count
-            $client = DB::table('client_basicinfo')
-            ->whereRaw('MONTH(created_at) = ?',[$month])
-            ->whereRaw('YEAR(created_at) = ?',[$year])->where('account_manager_id',$user_id)
-            ->where('delete_client','=',0)->where('department_id','=',$department_id)->count();
-
-            // Job Count
-            $job = JobOpen::getAllJobsCountByDepartment(0,$user_id,'',$department_id);
-
-            $tanisha_user_id = getenv('TANISHAUSERID');
-
-            if($user_id == $tanisha_user_id) {
-
-                // Cvs Associated this month
-                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($tanisha_user_id,$month,$year,$department_id);
-                $associate_count = $associate_monthly_response['cvs_cnt'];
-
-                // Cvs Shortlisted this month
-                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($tanisha_user_id,$month,$year,$department_id);
-
-                // Interview Attended this month
-                $interview_attended_list = Interview::getAttendedInterviews(0,$tanisha_user_id,$month,$year,$department_id);
-                $interview_attend = sizeof($interview_attended_list);
-
-                // Candidate Join this month
-                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($tanisha_user_id,0,$month,$year,$department_id);
-
-                // Interview Count
-                $interviews = Interview::getDashboardInterviews(0,$tanisha_user_id,$department_id);
-                $interviews_cnt = sizeof($interviews);
-            }
-            else {
-
-                // Cvs Associated this month
-                $associate_monthly_response = JobAssociateCandidates::getMonthlyReprtAssociate($user_id,$month,$year,$department_id);
-                $associate_count = $associate_monthly_response['cvs_cnt'];
-
-                // Cvs Shortlisted this month
-                $shortlisted_count = JobAssociateCandidates::getMonthlyReprtShortlisted($user_id,$month,$year,$department_id);
-
-                // Interview Attended this month
-                $interview_attended_list = Interview::getAttendedInterviews(0,$user_id,$month,$year,$department_id);
-                $interview_attend = sizeof($interview_attended_list);
-
-                // Candidate Join this month
-                $candidatecount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,0,$month,$year,$department_id);
-
-                // Interview Count
-                $interviews = Interview::getDashboardInterviews(0,$user_id,$department_id);
-                $interviews_cnt = sizeof($interviews);
-            }
-        }
-
-        $viewVariable = array();
-        $viewVariable['toDos'] = $toDos;
-        $viewVariable['interviews'] = $interviews;
-        $viewVariable['interviewCount'] = $interviews_cnt;
-        $viewVariable['jobCount'] = $job;
-        $viewVariable['clientCount'] = $client;
-        $viewVariable['candidatejoinCount'] = $candidatecount;
-        $viewVariable['associatedCount'] = $associate_count;
-        $viewVariable['interviewAttendCount'] = $interview_attend;
-        $viewVariable['shortlisted_count'] = $shortlisted_count;
-        $viewVariable['month'] = $month;
-        $viewVariable['year'] = $year;
-        $viewVariable['department_id'] = $department_id;
-
-        return view('hr-advisory-dashboard',$viewVariable);
-    }
-
-    public function hrAdvisoryOpentoAllJob() {
-
-        $user = \Auth::user();
-        $user_id = \Auth::user()->id;
-        $display_jobs = $user->can('display-jobs-open-to-all');
-
-        $department_id = getenv('HRADVISORY');
-
-        if($display_jobs) {
-            $job_opened = JobOpen::getOpenToAllJobs(10,$user_id,$department_id);
-        }
-        else {
-            $job_opened = array();
-        }
-        return json_encode($job_opened);
-    }*/
 
     public function recruitmentDashboard() {
 
@@ -1526,11 +1213,9 @@ class HomeController extends Controller
             }
         }
 
-        $users_name = User::getAllUsersForRemarks();
-
         $page = 'Self';
 
-        return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name','sundays','page'));
+        return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('sundays','page'));
     }
 
     public function teamUsersAttendance() {
@@ -1708,7 +1393,7 @@ class HomeController extends Controller
             }
         }
 
-        $users_name = User::getAllUsersForRemarks();
+        $users_name = User::getAllUsersForRemarks($user_id,0);
 
         $page = 'Team';
 
@@ -1782,8 +1467,8 @@ class HomeController extends Controller
 
             // Get Users
             $users = User::getOtherUsersNew('',$department_id);
-            // Get Attendance & Remarks
 
+            // Get Attendance & Remarks
             $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,$department_id);
             $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,$department_id);
 
@@ -1864,8 +1549,6 @@ class HomeController extends Controller
                 }
             }
 
-            //print_r($list);exit;
-
             // New List1
             $list1 = array();
             for($d1=1; $d1<=31; $d1++) {
@@ -1920,7 +1603,7 @@ class HomeController extends Controller
                 }
             }
 
-            $users_name = User::getAllUsersForRemarks();
+            $users_name = User::getAllUsersForRemarks(0,$department_id);
 
             $page = 'Department';
         }
@@ -1930,5 +1613,210 @@ class HomeController extends Controller
         }
 
         return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name','sundays','page','department_id'));
+    }
+
+    public function exportData() {
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
+
+        //$contacts_array = Contactsphere::getAllContacts(1,$user->id,0,0,NULL,NULL,'');
+
+        if($all_perm) {
+
+            $page = $_POST['page'];
+            $department_id = $_POST['department_id'];
+            $month = $_POST['month'];
+            $year = $_POST['year'];
+            
+            $month_name = date("F", mktime(0, 0, 0, $month, 10));
+            $sheet_name = 'Attendance-'.$month_name."-".$year;
+
+            // Get All Sundays dates in selected month
+            $date = "$year-$month-01";
+            $first_day = date('N',strtotime($date));
+            $first_day = 7 - $first_day + 1;
+            $last_day =  date('t',strtotime($date));
+            $sundays = array();
+
+            for($i = $first_day; $i <= $last_day; $i = $i+7) {
+                $sundays[] = $i;
+            }
+
+            if($page == 'Self') {
+
+                // Get Users
+                $user_details = User::getProfileInfo($user_id);
+                $joining_date = date('d/m/Y', strtotime("$user_details->joining_date"));
+                $full_name = $user_details->first_name."-".$user_details->last_name.",".$user_details->department_name.",".$user_details->working_hours.",".$joining_date;
+                $users = array($full_name => "");
+
+                // Get Attendance & Remarks
+                $response = WorkPlanning::getWorkPlanningByUserID($user_id,$month,$year);
+                $user_remark = UserRemarks::getUserRemarksDetailsByUserID($user_id,$month,$year);
+            }
+            else if($page == 'Team') {
+
+                // Get Users
+                $users = User::getOtherUsersNew($user_id,'');
+
+                // Get Attendance & Remarks
+                $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,'');
+                $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,'');
+            }
+            else {
+
+                // Get Users
+                $users = User::getOtherUsersNew('',$department_id);
+
+                // Get Attendance & Remarks
+                $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,$department_id);
+                $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,$department_id);
+            }
+
+            // Set new array from data array
+
+            $list = array();
+            for($d=1; $d<=31; $d++) {
+
+                $time = mktime(12, 0, 0, $month, $d, $year);
+                foreach ($users as $key => $value) {
+                  
+                    if (date('n', $time) == $month)
+                        $list[$key][date('j', $time)]['attendance']='';
+                    
+                    $list[$key][date('j', $time)]['remarks']='';
+                    $list[$key][date('j', $time)]['holiday']='';
+                }
+            }
+
+            $date = new Date();
+            if(sizeof($response) > 0) {
+
+                foreach ($response as $key => $value) {
+
+                    $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
+                    $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
+
+                    $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
+
+                    // Get User id from both name & set holiday dates
+                    $user_name = $value->first_name."-".$value->last_name;
+                    $u_id = User::getUserIdByBothName($user_name);
+                    $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
+
+                    if (isset($user_holidays) && sizeof($user_holidays)>0) {
+
+                        foreach ($user_holidays as $h_k => $h_v) {
+                            $list[$combine_name][$h_v]['holiday'] = 'Y';
+                        }
+                    }
+                    if (isset($user_remark) && sizeof($user_remark) > 0) {
+
+                        foreach ($user_remark as $k => $v) {
+
+                            $split_month = date('n',strtotime($v['remark_date']));
+                            $split_year = date('Y',strtotime($v['remark_date']));
+
+                            if (($v['full_name'] == $combine_name) && ($v['remark_date'] == $value->added_date) && ($month == $split_month) && ($year == $split_year)) {
+                                $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
+                            }
+                            else {
+
+                                if (($v['full_name'] == $combine_name) && ($month == $split_month) && ($year == $split_year)) {
+
+                                    $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
+                                }
+                                else {
+
+                                    $list[$v['full_name']][$v['converted_date']]['remarks'] = $v['remarks'];
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+
+                if (isset($user_remark) && sizeof($user_remark)>0) {
+
+                    foreach ($user_remark as $k => $v) {
+
+                        $split_month = date('n',strtotime($v['remark_date']));
+                        $split_year = date('Y',strtotime($v['remark_date']));
+                        if (($month == $split_month) && ($year == $split_year)) {
+                            $list[$v['full_name']][$v['converted_date']]['remarks'] = $v['remarks'];
+                        }
+                    }
+                }
+            }
+
+            // Set new List1
+            $list1 = array();
+            for($d1=1; $d1<=31; $d1++) {
+
+                $time1 = mktime(12, 0, 0, $month, $d1, $year);
+                foreach ($users as $key => $value) {
+
+                    if (date('n', $time1) == $month) {
+                        $list1[$key][date('j S', $time1)]='';
+                    }
+                }
+            }
+
+            // If list has values
+            if(sizeof($list)>0) {
+
+                foreach ($list as $key => $value) {
+
+                    if(sizeof($value)>0) {
+
+                        $i=0;
+                        foreach ($value as $key1 => $value1) {
+
+                            $split_unm = explode(",",$key);
+
+                            // Get User id from both name & set holiday dates
+                            $u_id = User::getUserIdByBothName($split_unm[0]);
+                            $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
+
+                            if (isset($user_holidays) && sizeof($user_holidays)>0) {
+
+                                foreach ($user_holidays as $h_k => $h_v) {
+                                    $list[$key][$h_v]['holiday'] = 'Y';
+                                }
+                            }
+
+                            if (isset($user_remark) && sizeof($user_remark)>0) {
+
+                                foreach ($user_remark as $u_k1 => $u_v1) {
+
+                                    $split_month = date('n',strtotime($u_v1['remark_date']));
+                                    $split_year = date('Y',strtotime($u_v1['remark_date']));
+
+                                    if (($u_v1['full_name'] == $key) && ($u_v1['converted_date'] == $key1) && ($month == $split_month) && ($year == $split_year)) {
+                                        
+                                        $list1[$u_v1['full_name']][$u_v1['converted_date']][$u_v1['remark_date']][$i] = $u_v1['remarks'];
+                                    }
+                                    $i++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            if(isset($list) && sizeof($list) > 0) {
+
+                Excel::create($sheet_name,function($excel) use ($list,$list1,$sundays,$year,$month) {
+
+                    $excel->sheet('sheet 1',function($sheet) use ($list,$list1,$sundays,$year,$month) {
+
+                        $sheet->loadView('attendance-sheet', array('list' => $list,'list1' => $list1,'sundays' => $sundays,'year' => $year,'month' => $month));
+                    });
+                })->export('xls');
+            }
+        }
     }
 }

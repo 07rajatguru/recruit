@@ -8,35 +8,43 @@
 
 @section('content')
     <div class="row">
-        <div class="filter_section">
-            <div class="month_div col-md-4 col-sm-6 col-xs-12">
-                <select class="form-control" name="month" id="month">
-                    @foreach($month_list as $key=>$value)
-                        <option value={{ $key }} @if($key==$month) selected="selected" @endif>{{ $value}}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="year_div col-md-4 col-sm-6 col-xs-12">
-                <select class="form-control" name="year" id="year">
-                    @foreach($year_list as $key=>$value)
-                        <option value={{ $key }} @if($key==$year) selected="selected" @endif>{{ $value}}</option>
-                    @endforeach
-                </select>
-            </div>
-
-            <div class="attendance_submit col-md-1 col-sm-4">
-                <input class="btn btn-success btn-block" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" style="width:100px;"/>
-            </div>
-
-            <div class="col-md-1 col-sm-4">
-                @if(isset($page) && $page == 'Department')
-                    @include('adminlte::partials.userRemarks', ['name' => $page,'users' => $users_name,'department_id' => $department_id])
-                @else
-                    @include('adminlte::partials.userRemarks', ['name' => $page,'users' => $users_name])
-                @endif
-            </div>
+        <div class="col-md-3 month_div">
+            <select class="form-control" name="month" id="month">
+                @foreach($month_list as $key=>$value)
+                    <option value={{ $key }} @if($key==$month) selected="selected" @endif>{{ $value}}</option>
+                @endforeach
+            </select>
         </div>
+
+        <div class="col-md-3 year_div">
+            <select class="form-control" name="year" id="year">
+                @foreach($year_list as $key=>$value)
+                    <option value={{ $key }} @if($key==$year) selected="selected" @endif>{{ $value}}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-1 attendance_submit">
+            <input class="btn btn-primary" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" style="width:100px;"/>
+        </div>
+
+        <div class="col-md-1">
+            @if(isset($page) && $page == 'Department')
+                @include('adminlte::partials.userRemarks', ['name' => $page,'users' => $users_name,'department_id' => $department_id])
+            @else
+                @if(isset($users_name) && sizeof($users_name) > 0)
+                    @include('adminlte::partials.userRemarks', ['name' => $page,'users' => $users_name])
+                @else
+                    @include('adminlte::partials.userRemarks', ['name' => $page])
+                @endif
+            @endif
+        </div>
+
+        @permission(('display-attendance-of-all-users-in-admin-panel'))
+            <div class="col-md-2" style="margin-left: 10px;">
+                <input class="btn bg-maroon" type="button" value="Download Excel Sheet" name ="excel" id="excel" onClick="export_data()" style="width:170px;"/>
+            </div>
+        @endpermission
     </div><br/>
 
     @if($message = Session::get('success'))
@@ -314,6 +322,27 @@
                 '<input type="text" name="month" value="'+month+'" />' +
                 '<input type="text" name="year" value="'+year+'" />' +
                 '</form>');
+
+            $('body').append(form);
+            form.submit();
+        }
+
+        function export_data() {
+
+            var month = $("#month :selected").val();
+            var year = $("#year :selected").val();
+            var page = $("#page").val();
+            var department_id = $("#department_id").val();
+
+            var url = '/attendance/export';
+
+            var form = $('<form action="' + url + '" method="post">' +
+            '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+            '<input type="text" name="month" value="'+month+'" />' +
+            '<input type="text" name="year" value="'+year+'" />' +
+            '<input type="text" name="page" value="'+page+'" />' +
+            '<input type="text" name="department_id" value="'+department_id+'" />' +
+            '</form>');
 
             $('body').append(form);
             form.submit();

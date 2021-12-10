@@ -335,6 +335,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-attendance-of-all-users-in-admin-panel|display-recruitment-dashboard|display-hr-advisory-dashboard'],
     ));
 
+    Route::post('attendance/export',[
+        'as' => 'attendance.export',
+        'uses' => 'HomeController@exportData',
+        'middleware' => ['permission:display-attendance-of-all-users-in-admin-panel']
+    ]);
+
     // test mail route
     Route::get('/testmail',[
         'as' => 'home.testmail',
