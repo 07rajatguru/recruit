@@ -1815,7 +1815,7 @@ class HomeController extends Controller
 
                         $sheet->loadView('attendance-sheet', array('list' => $list,'list1' => $list1,'sundays' => $sundays,'year' => $year,'month' => $month));
                     });
-                })->export('xls');
+                })->export('xlsx');
             }
         }
     }
