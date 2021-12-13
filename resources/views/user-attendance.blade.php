@@ -40,11 +40,13 @@
             @endif
         </div>
 
-        @permission(('display-attendance-of-all-users-in-admin-panel'))
-            <div class="col-md-2" style="margin-left: 10px;">
-                <input class="btn bg-maroon" type="button" value="Download Excel Sheet" name ="excel" id="excel" onClick="export_data()" style="width:170px;"/>
-            </div>
-        @endpermission
+        @if(isset($list) && sizeof($list)>0)
+            @permission(('display-attendance-of-all-users-in-admin-panel'))
+                <div class="col-md-2" style="margin-left: 10px;">
+                    <input class="btn bg-maroon" type="button" value="Download Excel Sheet" name ="excel" id="excel" onClick="export_data()" style="width:170px;"/>
+                </div>
+            @endpermission
+        @endif
     </div><br/>
 
     @if($message = Session::get('success'))

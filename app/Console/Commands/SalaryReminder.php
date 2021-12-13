@@ -46,14 +46,20 @@ class SalaryReminder extends Command
         $superadminemail = User::getUserEmailById($superadmin);
         $accountantemail = User::getUserEmailById($accountant);
 
-        $module = "Add User Salary Information";
-        $sender_name = $superadmin;
-        $to = $accountantemail;
-        $cc = $superadminemail;
-        $subject = "Add User Salary Information";
-        $message = "Add User Salary Information";
-        $module_id = 0;
+        // Get users for popup of add information
+        $users_array = User::getBefore7daysUserSalaryDetails();
 
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            $module = "Add User Salary Information";
+            $sender_name = $superadmin;
+            $to = $accountantemail;
+            $cc = $superadminemail;
+            $subject = "Add User Salary Information";
+            $message = "Add User Salary Information";
+            $module_id = 0;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        }
     }
 }
