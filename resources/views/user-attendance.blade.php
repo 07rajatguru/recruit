@@ -74,20 +74,18 @@
                         <table class="table table-striped table-bordered nowrap" cellspacing="0" id="attendance_table">
                             <thead>
                                 <tr>
-                                    <th style="border: 1px solid black;text-align: center;"></th>
-                                    <th style="border: 1px solid black;text-align: center;"></th>
-                                    <th style="border: 1px solid black;padding-left: 700px;"colspan="36">Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</th>
+                                    <th style="border: 1px solid black;padding-left: 900px;"colspan="40">Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</th>
                                 </tr>
                                 <tr>
                                     <th style="border: 1px solid black;text-align: center;" rowspan="2"><br/><br/>Sr. No.</th>
                                     <th style="border: 1px solid black;background-color:#d6e3bc;">ADLER EMPLOYEES</th>
-                                    <th colspan="36" style="border: 1px solid black;padding-left: 820px;">DATE</th>
+                                    <th colspan="38" style="border: 1px solid black;padding-left: 760px;">DATE</th>
                                 </tr>
 
-                                <th style="border: 1px solid black;background-color:#d6e3bc">NAME OF PERSON</th>
+                                <th style="border: 1px solid black;background-color:#d6e3bc;">NAME OF PERSON</th>
 
                                 @if(isset($list) && sizeof($list)>0)
-                                    <th style="border: 1px solid black;">Department</th>
+                                    <th style="border: 1px solid black;background-color:#d6e3bc;">Department</th>
                                     <th style="border: 1px solid black;">Working Hours</th>
                                     <th style="border: 1px solid black;">Date of Joining</th>
                                     @foreach($list as $key => $value)
@@ -100,6 +98,11 @@
                                         @break
                                     @endforeach
                                 @endif
+
+                                <th style="border: 1px solid black;">Present</th>
+                                <th style="border: 1px solid black;">WO</th>
+                                <th style="border: 1px solid black;">Days</th>
+                                <th style="border: 1px solid black;">Total Days</th>
                             </thead>
                             <tbody>
                                 
@@ -124,11 +127,11 @@
                                         <td style="color: black; border: 1px solid black;;text-align: center;">{{ $new_user_name }}</td>
 
                                         @if($department == 'Recruitment')
-                                            <td style="color: black; border: 1px solid black;background-color: #B0E0E6;"><center>{{ $department }}</center></td>
+                                            <td style="color: black; border: 1px solid black;background-color: #F2DBDB;"><center>{{ $department }}</center></td>
                                         @elseif($department == 'HR Advisory')
-                                            <td style="color: black; border: 1px solid black;background-color: #F08080;"><center>{{ $department }}</center></td>
+                                            <td style="color: black; border: 1px solid black;background-color: #DBE5F1;"><center>{{ $department }}</center></td>
                                         @elseif($department == 'Operations')
-                                            <td style="color: black; border: 1px solid black;background-color: #fff59a;"><center>{{ $department }}</center></td>
+                                            <td style="color: black; border: 1px solid black;background-color: #EAF1DD;"><center>{{ $department }}</center></td>
                                         @else
                                             <td style="color: black; border: 1px solid black;background-color: #B1A0C7;"><center>{{ $department }}</center></td>
                                         @endif
@@ -163,7 +166,7 @@
                                                     $attendance = 'H';
                                                 }
                                                 else if(isset($value1['holiday']) && $value1['holiday'] == 'Y') {
-                                                    $attendance = 'H';
+                                                    $attendance = 'PH';
                                                 }
                                                 else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
                                                     $attendance = 'N';
@@ -183,8 +186,9 @@
                                             ?>
                                             @if(isset($value1['remarks']) && $value1['remarks'] != '')
                                                 @if($attendance == 'N')
-                                                    
                                                     <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}"></td>
+                                                @elseif($attendance == 'F')
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">P</td>
                                                 @else
                                                     <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
                                                 @endif
@@ -192,6 +196,8 @@
 
                                                 @if($attendance == 'H')
                                                     <td style="border: 1px solid black;background-color:#ffc000;text-align: center;">{{ $attendance }}</td>
+                                                @elseif($attendance == 'PH')
+                                                    <td style="border: 1px solid black;background-color:#76933C;text-align: center;">{{ $attendance }}</td>
                                                 @elseif($attendance == 'F')
                                                     <td style="border: 1px solid black;background-color:#d8d8d8;text-align: center;">P</td>
                                                 @elseif($attendance == 'N')
@@ -205,6 +211,11 @@
                                                 @endif
                                             @endif
                                         @endforeach
+
+                                        <td style="border: 1px solid black;text-align:center;"></td>
+                                        <td style="border: 1px solid black;text-align:center;"></td>
+                                        <td style="border: 1px solid black;text-align:center;"></td>
+                                        <td style="border: 1px solid black;text-align:center;"></td>
                                     </tr>
                                 <?php $i++; ?>
                                 @endforeach
@@ -340,10 +351,10 @@
 
             var form = $('<form action="' + url + '" method="post">' +
             '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-            '<input type="text" name="month" value="'+month+'" />' +
-            '<input type="text" name="year" value="'+year+'" />' +
-            '<input type="text" name="page" value="'+page+'" />' +
-            '<input type="text" name="department_id" value="'+department_id+'" />' +
+            '<input type="hidden" name="month" value="'+month+'" />' +
+            '<input type="hidden" name="year" value="'+year+'" />' +
+            '<input type="hidden" name="page" value="'+page+'" />' +
+            '<input type="hidden" name="department_id" value="'+department_id+'" />' +
             '</form>');
 
             $('body').append(form);

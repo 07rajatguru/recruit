@@ -11,39 +11,39 @@
 			<table style="width: 100%;border: 5px solid #000000;">
 				@if($days == '31')
 					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
-		                <td colspan="36" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
+		                <td colspan="40" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
 					</tr>
 					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
 						<td rowspan="2" style="text-align:center;width:10;border: 5px solid #000000;">
 							<b>Sr.No</b></td>
 	                	<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">ADLER EMPLOYEES</td>
-	                	<td colspan="34" style="text-align:center;border: 5px solid #000000;"><b>DATE</b></td>
+	                	<td colspan="38" style="text-align:center;border: 5px solid #000000;"><b>DATE</b></td>
 					</tr>
 				@elseif($days == '30')
 					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
-		                <td colspan="35" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
+		                <td colspan="39" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
 					</tr>
 					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
 						<td rowspan="2" style="text-align:center;width:10;border: 5px solid #000000;">
 							<b>Sr.No</b></td>
 	                	<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">ADLER EMPLOYEES</td>
-	                	<td colspan="33" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;"><b>DATE</b></td>
+	                	<td colspan="37" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;"><b>DATE</b></td>
 					</tr>
 				@else
 					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
-		                <td colspan="33" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
+		                <td colspan="37" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
 					</tr>
 					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
 						<td rowspan="2" style="text-align:center;width:10;border: 5px solid #000000;">
 							<b>Sr.No</b></td>
 	                	<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">ADLER EMPLOYEES</td>
-	                	<td colspan="31" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;"><b>DATE</b></td>
+	                	<td colspan="35" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;"><b>DATE</b></td>
 					</tr>
 				@endif
 				<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
 					<td style="border: 5px solid #000000;"></td>
 					<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">NAME OF PERSON</th>
-	            	<td style="width:17;text-align: center;border: 5px solid #000000;"><b>Department</b></td>
+	            	<td style="width:17;text-align: center;border: 5px solid #000000;background-color:#d6e3bc;"><b>Department</b></td>
 	            	<td style="width:17;text-align: center;border: 5px solid #000000;"><b>Working Hours</b></td>
 	            	<td style="width:17;text-align: center;border: 5px solid #000000;"><b>Date of Joining</b></td>
 	            
@@ -57,6 +57,11 @@
 		                @endforeach
 		                <?php break; ?>
 		            @endforeach
+
+		            <th style="border: 5px solid #000000;text-align: center;">Present</th>
+                    <th style="border: 5px solid #000000;text-align: center;">WO</th>
+                    <th style="border: 5px solid #000000;text-align: center;">Days</th>
+                    <th style="border: 5px solid #000000;text-align: center;">Total Days</th>
 				</tr>
 				<?php $i=1; ?>
                 @foreach($list as $key=>$value)
@@ -77,11 +82,11 @@
                         <td style="border: 5px solid #000000;">{{ $new_user_name }}</td>
 
                         @if($department == 'Recruitment')
-                         	<td style="background-color: #B0E0E6;border: 5px solid #000000;">{{ $department }}</td>
+                         	<td style="background-color: #F2DBDB;border: 5px solid #000000;">{{ $department }}</td>
                         @elseif($department == 'HR Advisory')
-                            <td style="background-color: #F08080;border: 5px solid #000000;">{{ $department }}</td>
+                            <td style="background-color: #DBE5F1;border: 5px solid #000000;">{{ $department }}</td>
                         @elseif($department == 'Operations')
-                            <td style="background-color: #fff59a;border: 5px solid #000000;">{{ $department }}</td>
+                            <td style="background-color: #EAF1DD;border: 5px solid #000000;">{{ $department }}</td>
                         @else
                             <td style="background-color: #B1A0C7;border: 5px solid #000000;">{{ $department }}</td>
                         @endif
@@ -107,8 +112,8 @@
                                 if(in_array($key1, $sundays)) {
                                     $attendance = 'H';
                                 }
-                                else if(isset($value1['holiday']) && $value1['holiday'] == 'Y') {
-                                    $attendance = 'H';
+                                else if(isset($value1['holiday']) && $value1['holiday'] == 'Y'){
+                                    $attendance = 'PH';
                                 }
                                 else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
                                     $attendance = 'N';
@@ -127,26 +132,20 @@
                                 }
                             ?>
                                             
-                            @if(isset($value1['remarks']) && $value1['remarks'] != '')
-                                @if($attendance == 'N')
-                                    <td style="border: 5px solid #000000;background-color:#92D050;"></td>
-                                @else
-                                    <td style="border: 5px solid #000000;background-color:#92D050;">{{ $attendance }}</td>
-                                @endif
-                           @else
-                                @if($attendance == 'H')
-                                   <td style="border: 5px solid #000000;background-color:#ffc000;">{{ $attendance }}</td>
-                                @elseif($attendance == 'F')
-                                    <td style="border: 5px solid #000000;background-color:#d8d8d8;">P</td>
-                                @elseif($attendance == 'N')
-                                    <td style="border: 5px solid #000000;"></td>
-                                @elseif($attendance == 'A')
-                                    <td style="border: 5px solid #000000;background-color:#ff0000;">{{ $attendance }}</td>
-                                @elseif($attendance == 'HD')
-                                    <td style="border: 5px solid #000000;background-color:#d99594;">{{ $attendance }}</td>
-                                @else
-                                    <td style="border: 5px solid #000000;background-color:#ff0000;">A</td>
-                                @endif
+                            @if($attendance == 'H')
+                                <td style="border: 5px solid #000000;background-color:#ffc000;">{{ $attendance }}</td>
+                            @elseif($attendance == 'PH')
+                                <td style="border: 5px solid #000000;background-color:#76933C;">{{ $attendance }}</td>
+                            @elseif($attendance == 'F')
+                                <td style="border: 5px solid #000000;background-color:#d8d8d8;">P</td>
+                            @elseif($attendance == 'N')
+                                <td style="border: 5px solid #000000;"></td>
+                            @elseif($attendance == 'A')
+                                <td style="border: 5px solid #000000;background-color:#ff0000;">{{ $attendance }}</td>
+                            @elseif($attendance == 'HD')
+                                <td style="border: 5px solid #000000;background-color:#d99594;">{{ $attendance }}</td>
+                            @else
+                                <td style="border: 5px solid #000000;background-color:#ff0000;">A</td>
                             @endif
                         @endforeach
                     </tr>
