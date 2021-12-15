@@ -144,11 +144,11 @@
                                             <td style="background-color:lightpink;">{{ $v['loggedin_time'] }}</td>
                                         @elseif($v['total_actual_time'] == '')
                                             <td>{{ $v['loggedin_time'] }}</td>
-                                        @elseif($v['total_actual_time'] >= '06:30:00')
+                                        @elseif($v['total_actual_time'] >= '06:00:00')
                                             <td style="background-color:#B0E0E6;">{{ $v['loggedin_time'] }}</td>
-                                        @elseif($v['total_actual_time'] == '07:00:00')
+                                        @elseif($v['total_actual_time'] == '04:30:00')
                                             <td style="background-color:#fff59a;">{{ $v['loggedin_time'] }}</td>
-                                        @elseif($v['total_actual_time'] < '06:00:00')
+                                        @elseif($v['total_actual_time'] < '05:30:00')
                                             <td style="background-color:#F08080;">{{ $v['loggedin_time'] }}</td>
                                         @else
                                             <td>{{ $v['loggedin_time'] }}</td>

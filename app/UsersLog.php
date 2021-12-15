@@ -10,7 +10,7 @@ class UsersLog extends Model
 {
     public $table = "users_log";
 
-    public static function getUsersAttendance($user_id=0,$month,$year){
+    public static function getUsersAttendance($user_id=0,$month,$year) {
 
         $superadmin_role_id =  getenv('SUPERADMIN');
         $client_role_id =  getenv('CLIENT');
@@ -24,29 +24,27 @@ class UsersLog extends Model
         $query = $query->join('users','users.id','=','users_log.user_id');
         $query = $query->join('role_user','role_user.user_id','=','users.id');
         
-        if($month!=0 && $year!=0){
+        if($month!=0 && $year!=0) {
             $query = $query->where(\DB::raw('MONTH(date)'),'=', $month);
             $query = $query->where(\DB::raw('year(date)'),'=', $year);
         }
 
-        if($user_id>0){
+        if($user_id>0) {
             $query = $query->where('users.id','=',$user_id);
         }
-        else{
+        else {
             $query = $query->whereNotIn('role_id',$superadmin);
         }
 
         $query = $query->groupBy('users_log.date','users.id','users.name');
         $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','role_user.role_id' ,'date',\DB::raw('min(time) as login'),\DB::raw('max(time) as logout'));
         $query = $query->whereNotIn('status',$status_array);
-
-
         $response = $query->get();
-//print_r($response);exit;
+
         return $response;
     }
 
-    public static function getUsersAttendanceList($user_id=0,$month,$year){
+    public static function getUsersAttendanceList($user_id=0,$month,$year) {
 
         $superadmin_role_id =  getenv('SUPERADMIN');
         $client_role_id =  getenv('CLIENT');
@@ -60,7 +58,7 @@ class UsersLog extends Model
         $query = $query->where(\DB::raw('MONTH(date)'),'=', $month);
         $query = $query->where(\DB::raw('year(date)'),'=', $year);
 
-        if($user_id>0){
+        if($user_id>0) {
             $query = $query->where('users.id','=',$user_id);
         }
         
@@ -68,48 +66,30 @@ class UsersLog extends Model
         $query = $query->whereNotIn('status',$status_array);
         $query = $query->groupBy('users_log.date','users.id');
         $query = $query->whereNotIn('role_id',$superadmin);
-
         $response = $query->get();
-
-     /*  print_r($response);
-       exit;*/
 
         $list = array();
 
-       // $list_name = array();
         $list_date = array();
             $date = new Date();
-            if(sizeof($response)>0){
-                foreach ($response as $key => $value) 
-                {
-                        $login_time = $date->converttime($value->login);
-                        $logout_time = $date->converttime($value->logout);
-                        $total = ($logout_time - $login_time) / 60;
+            if(sizeof($response)>0) {
+                foreach ($response as $key => $value) {
 
-                       /* $data[] = array(
-                           $list[$value->name] = $value->name,
-                            $list[$value->date] = $value->date,
-                            $list[$value->login][date("j S",strtotime($value->date))]['login'] = date("h:i A",$login_time),
-                            $list[$value->logout][date("j S",strtotime($value->date))]['logout'] = date("h:i A",$logout_time),
-                            $list[$value->total][date("j S",strtotime($value->date))]['total'] = date('H:i', mktime(0,$total)),
-                        );
-*/
-                        $data[] = array(
+                    $login_time = $date->converttime($value->login);
+                    $logout_time = $date->converttime($value->logout);
+                    $total = ($logout_time - $login_time) / 60;
 
-                            $list[$value->name] = $value->name,
-                           /* $list[$value->login] = date("h:i A",$login_time),
-                            $list[$value->logout] = date("h:i A",$logout_time),
-                            $list[$value->total] = date('H:i', mktime(0,$total)),*/
-                        );
+                    $data[] = array(
+                        $list[$value->name] = $value->name,
+                    );
                         
-                        $data2 = array_unique($list);
+                    $data2 = array_unique($list);
                 }
-
             }      
         return $data2;
     }
 
-    public static function getattendancetype(){
+    public static function getattendancetype() {
 
         $type = array('' => 'Select Type');
         $type['login'] = 'Login';
@@ -118,7 +98,7 @@ class UsersLog extends Model
         return $type;
     }
 
-    public static function getUserAttendanceByIdDate($user_id,$date){
+    public static function getUserAttendanceByIdDate($user_id,$date) {
 
         $date_class = new Date();
 
@@ -130,7 +110,9 @@ class UsersLog extends Model
 
         $user_attendance = array();
         $i = 0;
+
         foreach ($res as $key => $value) {
+
             $user_attendance[$i]['id'] = $value->id;
             $user_attendance[$i]['user_id'] = $value->user_id;
             $user_attendance[$i]['date'] = $value->date;
@@ -175,7 +157,7 @@ class UsersLog extends Model
         return $count;
     }
 
-    public static function getUserLogInTime($user_id,$date) {
+    public static function getUserTimeByID($user_id,$date) {
 
         $date_class = new Date();
 
@@ -213,15 +195,15 @@ class UsersLog extends Model
         $query = $query->join('role_user','role_user.user_id','=','users.id');
         $query = $query->leftjoin('department','department.id','=','users.type');
         
-        if($month!=0 && $year!=0){
+        if($month!=0 && $year!=0) {
             $query = $query->where(\DB::raw('MONTH(date)'),'=', $month);
             $query = $query->where(\DB::raw('year(date)'),'=', $year);
         }
 
-        if($user_id>0){
+        if($user_id>0) {
             $query = $query->where('users.id','=',$user_id);
         }
-        else{
+        else {
             $query = $query->whereNotIn('role_id',$superadmin);
         }
 

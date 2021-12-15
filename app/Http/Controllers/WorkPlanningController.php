@@ -454,7 +454,7 @@ class WorkPlanningController extends Controller
 
         // Get Logged in Log out Time
 
-        $get_time = UsersLog::getUserLogInTime($user_id,$date);
+        $get_time = UsersLog::getUserTimeByID($user_id,$date);
 
         // Convert Logged in time
         $utc_login = $get_time['login'];
@@ -548,7 +548,7 @@ class WorkPlanningController extends Controller
         $link = $request->input('link');
 
         // Get User Loggedin Time
-        $get_time = UsersLog::getUserLogInTime($user_id,$date);
+        $get_time = UsersLog::getUserTimeByID($user_id,$date);
 
         // Get Current Time
         $current_time = date('h:i:s', time());
@@ -579,7 +579,7 @@ class WorkPlanningController extends Controller
 
             if($day == 'Saturday') {
 
-                if($total_projected_time < '05:00:00') {
+                if($total_projected_time < '04:30:00') {
                     $attendance = 'HD';
                 }
                 else {
@@ -961,7 +961,7 @@ class WorkPlanningController extends Controller
 
             if($day == 'Saturday') {
 
-                if($total_actual_time < '05:00:00') {
+                if($total_actual_time < '04:30:00') {
                     $attendance = 'HD';
                 }
                 else {
