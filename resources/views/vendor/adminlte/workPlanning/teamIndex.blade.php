@@ -138,18 +138,36 @@
                                     <td>{{ $v['added_by'] }}</td>
                                     <td>{{ $v['work_type'] }}</td>
 
-                                    @if($v['actual_login_time'] > '10:30:00')
-                                        <td style="background-color:lightpink;">{{ $v['loggedin_time'] }}</td>
-                                    @elseif($v['total_actual_time'] == '')
-                                        <td>{{ $v['loggedin_time'] }}</td>
-                                    @elseif($v['total_actual_time'] >= '08:30:00')
-                                        <td style="background-color:#B0E0E6;">{{ $v['loggedin_time'] }}</td>
-                                    @elseif($v['total_actual_time'] == '07:00:00')
-                                        <td style="background-color:#fff59a;">{{ $v['loggedin_time'] }}</td>
-                                    @elseif($v['total_actual_time'] < '08:00:00')
-                                        <td style="background-color:#F08080;">{{ $v['loggedin_time'] }}</td>
+                                    @if($v['added_day'] == 'Saturday')
+
+                                        @if($v['actual_login_time'] > '10:30:00')
+                                            <td style="background-color:lightpink;">{{ $v['loggedin_time'] }}</td>
+                                        @elseif($v['total_actual_time'] == '')
+                                            <td>{{ $v['loggedin_time'] }}</td>
+                                        @elseif($v['total_actual_time'] >= '06:30:00')
+                                            <td style="background-color:#B0E0E6;">{{ $v['loggedin_time'] }}</td>
+                                        @elseif($v['total_actual_time'] == '07:00:00')
+                                            <td style="background-color:#fff59a;">{{ $v['loggedin_time'] }}</td>
+                                        @elseif($v['total_actual_time'] < '06:00:00')
+                                            <td style="background-color:#F08080;">{{ $v['loggedin_time'] }}</td>
+                                        @else
+                                            <td>{{ $v['loggedin_time'] }}</td>
+                                        @endif
                                     @else
-                                        <td>{{ $v['loggedin_time'] }}</td>
+
+                                        @if($v['actual_login_time'] > '10:30:00')
+                                            <td style="background-color:lightpink;">{{ $v['loggedin_time'] }}</td>
+                                        @elseif($v['total_actual_time'] == '')
+                                            <td>{{ $v['loggedin_time'] }}</td>
+                                        @elseif($v['total_actual_time'] >= '08:30:00')
+                                            <td style="background-color:#B0E0E6;">{{ $v['loggedin_time'] }}</td>
+                                        @elseif($v['total_actual_time'] == '07:00:00')
+                                            <td style="background-color:#fff59a;">{{ $v['loggedin_time'] }}</td>
+                                        @elseif($v['total_actual_time'] < '08:00:00')
+                                            <td style="background-color:#F08080;">{{ $v['loggedin_time'] }}</td>
+                                        @else
+                                            <td>{{ $v['loggedin_time'] }}</td>
+                                        @endif
                                     @endif
 
                                     <td>{{ $v['loggedout_time'] }}</td>

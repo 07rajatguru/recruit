@@ -174,6 +174,9 @@ class WorkPlanning extends Model
             $work_planning_res[$i]['total_projected_time'] = $value->total_projected_time;
             $work_planning_res[$i]['total_actual_time'] = $value->total_actual_time;
 
+            // Get Day from added date
+            $work_planning_res[$i]['added_day'] = date('l', strtotime("$value->added_date"));
+
             $i++;
         }
         return $work_planning_res;
