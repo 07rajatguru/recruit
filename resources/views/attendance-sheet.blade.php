@@ -60,7 +60,7 @@
 
 		            <th style="border: 5px solid #000000;text-align: center;">Present</th>
                     <th style="border: 5px solid #000000;text-align: center;">WO</th>
-                    <th style="border: 5px solid #000000;text-align: center;">Days</th>
+                    <th style="border: 5px solid #000000;text-align: center;">PH</th>
                     <th style="border: 5px solid #000000;text-align: center;">Total Days</th>
 				</tr>
 				<?php $i=1; ?>
@@ -77,6 +77,9 @@
 
                             $working_hours = $values_array[2];
                             $working_hours = explode(':', $working_hours);
+
+                            $present = '';
+                            $week_off = sizeof($sundays);
                         ?>
                         <td style="border: 5px solid #000000;">{{ $i }}</td>
                         <td style="border: 5px solid #000000;">{{ $new_user_name }}</td>
@@ -137,17 +140,26 @@
                             @elseif($attendance == 'PH')
                                 <td style="border: 5px solid #000000;background-color:#76933C;">{{ $attendance }}</td>
                             @elseif($attendance == 'F')
+                            	<?php $present++; ?>
                                 <td style="border: 5px solid #000000;background-color:#d8d8d8;">P</td>
                             @elseif($attendance == 'N')
                                 <td style="border: 5px solid #000000;"></td>
                             @elseif($attendance == 'A')
                                 <td style="border: 5px solid #000000;background-color:#ff0000;">{{ $attendance }}</td>
                             @elseif($attendance == 'HD')
+                            	<?php $present++; ?>
                                 <td style="border: 5px solid #000000;background-color:#d99594;">{{ $attendance }}</td>
                             @else
                                 <td style="border: 5px solid #000000;background-color:#ff0000;">A</td>
                             @endif
                         @endforeach
+
+                        <td style="border: 1px solid black;text-align:center;">{{ $present }}
+                        </td>
+                        <td style="border: 1px solid black;text-align:center;">{{ $week_off }}
+                        </td>
+                        <td style="border: 1px solid black;text-align:center;"></td>
+                        <td style="border: 1px solid black;text-align:center;"></td>
                     </tr>
                 <?php $i++; ?>
                	@endforeach

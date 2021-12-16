@@ -396,10 +396,19 @@ class User extends Authenticatable
 
             foreach ($user_response as $key => $value) {
 
-                $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
-                $full_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
-               
-                $list[$full_name] = "";
+                $current_date = date('Y-m-d');
+
+                if($value->joining_date <= $current_date) {
+                    $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
+                    $full_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
+                }
+                else {
+                    $full_name = '';
+                }
+
+                if(isset($full_name) && $full_name != '') {
+                    $list[$full_name] = "";
+                }   
             }
         }
 

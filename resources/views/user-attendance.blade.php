@@ -101,7 +101,7 @@
 
                                 <th style="border: 1px solid black;">Present</th>
                                 <th style="border: 1px solid black;">WO</th>
-                                <th style="border: 1px solid black;">Days</th>
+                                <th style="border: 1px solid black;">PH</th>
                                 <th style="border: 1px solid black;">Total Days</th>
                             </thead>
                             <tbody>
@@ -121,6 +121,10 @@
 
                                             $working_hours = $values_array[2];
                                             $working_hours = explode(':', $working_hours);
+
+                                            $present = '';
+                                            $ph = '';
+                                            $week_off = '';
                                         ?>
                                         <td style="border: 1px solid black;;text-align: center;">
                                         {{ $i }}</td>
@@ -161,8 +165,38 @@
 
                                                 //$user_holidays = App\Holidays::getHolidaysByUserID($user_id,$month,$year);
 
-                                                if(in_array($key1, $sundays)) {
+                                                $today_date = date('d/m/Y');
 
+                                                if($today_date == $joining_date) {
+
+                                                    $joining_date_array = explode('/', $joining_date);
+
+                                                    if($key1 < $joining_date_array[0]) {
+                                                        $attendance = 'O';
+                                                    }
+                                                    else if(in_array($key1, $sundays)) {
+                                                        $attendance = 'H';
+                                                    }
+                                                    else if(isset($value1['holiday']) && $value1['holiday'] == 'Y') {
+                                                        $attendance = 'PH';
+                                                    }
+                                                    else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
+                                                        $attendance = 'N';
+                                                    }
+                                                    else if(isset($value1['attendance']) && $value1['attendance'] == '') {
+                                                        $attendance = 'A';
+                                                    }
+                                                    else {
+
+                                                        if(isset($value1['attendance'])) {
+                                                            $attendance = $value1['attendance'];
+                                                        }
+                                                        else {
+                                                            $attendance = '';
+                                                        }
+                                                    }
+                                                }
+                                                else if(in_array($key1, $sundays)) {
                                                     $attendance = 'H';
                                                 }
                                                 else if(isset($value1['holiday']) && $value1['holiday'] == 'Y') {
@@ -188,23 +222,38 @@
                                                 @if($attendance == 'N')
                                                     <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}"></td>
                                                 @elseif($attendance == 'F')
+                                                    <?php $present++; ?>
                                                     <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">P</td>
+                                                @elseif($attendance == 'HD')
+                                                    <?php $present++; ?>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
+                                                @elseif($attendance == 'PH')
+                                                    <?php $ph++; ?>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
+                                                @elseif($attendance == 'H')
+                                                    <?php $week_off++; ?>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
                                                 @else
                                                     <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
                                                 @endif
                                             @else
-
-                                                @if($attendance == 'H')
+                                                @if($attendance == 'O')
+                                                    <td style="border: 1px solid black;text-align: center;"></td>
+                                                @elseif($attendance == 'H')
+                                                    <?php $week_off++; ?>
                                                     <td style="border: 1px solid black;background-color:#ffc000;text-align: center;">{{ $attendance }}</td>
                                                 @elseif($attendance == 'PH')
+                                                    <?php $ph++; ?>
                                                     <td style="border: 1px solid black;background-color:#76933C;text-align: center;">{{ $attendance }}</td>
                                                 @elseif($attendance == 'F')
+                                                    <?php $present++; ?>
                                                     <td style="border: 1px solid black;background-color:#d8d8d8;text-align: center;">P</td>
                                                 @elseif($attendance == 'N')
                                                     <td style="border: 1px solid black;text-align: center;"></td>
                                                 @elseif($attendance == 'A')
                                                     <td style="border: 1px solid black;background-color:#ff0000;text-align: center;">{{ $attendance }}</td>
                                                 @elseif($attendance == 'HD')
+                                                    <?php $present++; ?>
                                                     <td style="border: 1px solid black;background-color:#d99594;text-align: center;">{{ $attendance }}</td>
                                                 @else
                                                     <td style="border: 1px solid black;background-color:#ff0000;text-align: center;">A</td>
@@ -212,9 +261,10 @@
                                             @endif
                                         @endforeach
 
-                                        <td style="border: 1px solid black;text-align:center;"></td>
-                                        <td style="border: 1px solid black;text-align:center;"></td>
-                                        <td style="border: 1px solid black;text-align:center;"></td>
+                                        <td style="border: 1px solid black;text-align:center;">     {{ $present }}</td>
+                                        <td style="border: 1px solid black;text-align:center;">
+                                            {{ $week_off }}</td>
+                                        <td style="border: 1px solid black;text-align:center;">     {{ $ph }}</td>
                                         <td style="border: 1px solid black;text-align:center;"></td>
                                     </tr>
                                 <?php $i++; ?>
