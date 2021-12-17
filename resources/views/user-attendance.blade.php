@@ -74,12 +74,12 @@
                         <table class="table table-striped table-bordered nowrap" cellspacing="0" id="attendance_table">
                             <thead>
                                 <tr>
-                                    <th style="border: 1px solid black;padding-left: 900px;"colspan="40">Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</th>
+                                    <th style="border: 1px solid black;padding-left: 900px;"colspan="41">Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</th>
                                 </tr>
                                 <tr>
                                     <th style="border: 1px solid black;text-align: center;" rowspan="2"><br/><br/>Sr. No.</th>
                                     <th style="border: 1px solid black;background-color:#d6e3bc;">ADLER EMPLOYEES</th>
-                                    <th colspan="38" style="border: 1px solid black;padding-left: 760px;">DATE</th>
+                                    <th colspan="39" style="border: 1px solid black;padding-left: 760px;">DATE</th>
                                 </tr>
 
                                 <th style="border: 1px solid black;background-color:#d6e3bc;">NAME OF PERSON</th>
@@ -102,6 +102,7 @@
                                 <th style="border: 1px solid black;">Present</th>
                                 <th style="border: 1px solid black;">WO</th>
                                 <th style="border: 1px solid black;">PH</th>
+                                <th style="border: 1px solid black;">HD</th>
                                 <th style="border: 1px solid black;">Total Days</th>
                             </thead>
                             <tbody>
@@ -122,9 +123,11 @@
                                             $working_hours = $values_array[2];
                                             $working_hours = explode(':', $working_hours);
 
-                                            $present = '';
-                                            $ph = '';
-                                            $week_off = '';
+                                            $present = 0;
+                                            $half_day = 0;
+                                            $ph = 0;
+                                            $week_off = 0;
+                                            $total_days = 0;
                                         ?>
                                         <td style="border: 1px solid black;;text-align: center;">
                                         {{ $i }}</td>
@@ -165,36 +168,10 @@
 
                                                 //$user_holidays = App\Holidays::getHolidaysByUserID($user_id,$month,$year);
 
-                                                $today_date = date('d/m/Y');
+                                                $joining_date_array = explode('/', $joining_date);
 
-                                                if($today_date == $joining_date) {
-
-                                                    $joining_date_array = explode('/', $joining_date);
-
-                                                    if($key1 < $joining_date_array[0]) {
-                                                        $attendance = 'O';
-                                                    }
-                                                    else if(in_array($key1, $sundays)) {
-                                                        $attendance = 'H';
-                                                    }
-                                                    else if(isset($value1['holiday']) && $value1['holiday'] == 'Y') {
-                                                        $attendance = 'PH';
-                                                    }
-                                                    else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
-                                                        $attendance = 'N';
-                                                    }
-                                                    else if(isset($value1['attendance']) && $value1['attendance'] == '') {
-                                                        $attendance = 'A';
-                                                    }
-                                                    else {
-
-                                                        if(isset($value1['attendance'])) {
-                                                            $attendance = $value1['attendance'];
-                                                        }
-                                                        else {
-                                                            $attendance = '';
-                                                        }
-                                                    }
+                                                if($key1 < $joining_date_array[0] && $joining_date_array[1] == $month) {
+                                                    $attendance = 'O';
                                                 }
                                                 else if(in_array($key1, $sundays)) {
                                                     $attendance = 'H';
@@ -214,7 +191,7 @@
                                                         $attendance = $value1['attendance'];
                                                     }
                                                     else {
-                                                        $attendance = '';
+                                                        $attendance = 'N';
                                                     }
                                                 }
                                             ?>
@@ -225,7 +202,7 @@
                                                     <?php $present++; ?>
                                                     <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">P</td>
                                                 @elseif($attendance == 'HD')
-                                                    <?php $present++; ?>
+                                                    <?php $half_day++; ?>
                                                     <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
                                                 @elseif($attendance == 'PH')
                                                     <?php $ph++; ?>
@@ -253,7 +230,7 @@
                                                 @elseif($attendance == 'A')
                                                     <td style="border: 1px solid black;background-color:#ff0000;text-align: center;">{{ $attendance }}</td>
                                                 @elseif($attendance == 'HD')
-                                                    <?php $present++; ?>
+                                                    <?php $half_day++; ?>
                                                     <td style="border: 1px solid black;background-color:#d99594;text-align: center;">{{ $attendance }}</td>
                                                 @else
                                                     <td style="border: 1px solid black;background-color:#ff0000;text-align: center;">A</td>
@@ -261,11 +238,16 @@
                                             @endif
                                         @endforeach
 
+                                        <?php
+                                            $total_days = $present + $week_off + $ph + $half_day;
+                                        ?>
                                         <td style="border: 1px solid black;text-align:center;">     {{ $present }}</td>
                                         <td style="border: 1px solid black;text-align:center;">
                                             {{ $week_off }}</td>
                                         <td style="border: 1px solid black;text-align:center;">     {{ $ph }}</td>
-                                        <td style="border: 1px solid black;text-align:center;"></td>
+                                        <td style="border: 1px solid black;text-align:center;">     {{ $half_day }}</td>
+                                        <td style="border: 1px solid black;text-align:center;">
+                                            {{ $total_days }}</td>
                                     </tr>
                                 <?php $i++; ?>
                                 @endforeach

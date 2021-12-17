@@ -1261,7 +1261,7 @@ class HomeController extends Controller
         }
 
         // Get Users
-        $users = User::getOtherUsersNew($user_id,'');
+        $users = User::getOtherUsersNew($user_id,'',$month,$year);
 
         // Get Attendance & Remarks
         $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,'');
@@ -1466,7 +1466,7 @@ class HomeController extends Controller
         if($all_perm || $dept_perm) {
 
             // Get Users
-            $users = User::getOtherUsersNew('',$department_id);
+            $users = User::getOtherUsersNew('',$department_id,$month,$year);
 
             // Get Attendance & Remarks
             $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,$department_id);
@@ -1659,7 +1659,7 @@ class HomeController extends Controller
             else if($page == 'Team') {
 
                 // Get Users
-                $users = User::getOtherUsersNew($user_id,'');
+                $users = User::getOtherUsersNew($user_id,'',$month,$year);
 
                 // Get Attendance & Remarks
                 $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,'');
@@ -1668,7 +1668,7 @@ class HomeController extends Controller
             else {
 
                 // Get Users
-                $users = User::getOtherUsersNew('',$department_id);
+                $users = User::getOtherUsersNew('',$department_id,$month,$year);
 
                 // Get Attendance & Remarks
                 $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,$department_id);

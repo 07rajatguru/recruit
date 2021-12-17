@@ -352,7 +352,7 @@ class User extends Authenticatable
         return $list;
     }
 
-    public static function getOtherUsersNew($user_id=0,$department_id='') {
+    public static function getOtherUsersNew($user_id=0,$department_id='',$month,$year) {
 
         $superadmin_role_id =  getenv('SUPERADMIN');
         $client_role_id =  getenv('CLIENT');
@@ -389,6 +389,10 @@ class User extends Authenticatable
             }
         }
 
+        // Get Previous data from joining date
+        $check_date = $year."-".$month."-31";
+        $query = $query->where('users.joining_date','<=',$check_date);
+
         $user_response = $query->get();
 
         $list = array();
@@ -396,19 +400,10 @@ class User extends Authenticatable
 
             foreach ($user_response as $key => $value) {
 
-                $current_date = date('Y-m-d');
-
-                if($value->joining_date <= $current_date) {
-                    $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
-                    $full_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
-                }
-                else {
-                    $full_name = '';
-                }
-
-                if(isset($full_name) && $full_name != '') {
-                    $list[$full_name] = "";
-                }   
+                $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
+                $full_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
+               
+                $list[$full_name] = "";
             }
         }
 
