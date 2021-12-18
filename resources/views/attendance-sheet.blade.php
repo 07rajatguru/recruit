@@ -21,6 +21,16 @@
 					</tr>
 				@elseif($days == '30')
 					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
+		                <td colspan="41" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
+					</tr>
+					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
+						<td rowspan="2" style="text-align:center;width:10;border: 5px solid #000000;">
+							<b>Sr.No</b></td>
+	                	<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">ADLER EMPLOYEES</td>
+	                	<td colspan="39" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;"><b>DATE</b></td>
+					</tr>
+				@elseif($days == '30')
+					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
 		                <td colspan="40" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
 					</tr>
 					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
@@ -58,12 +68,13 @@
 		                <?php break; ?>
 		            @endforeach
 
-		            <th style="border: 5px solid #000000;text-align: center;">Present</th>
-                    <th style="border: 5px solid #000000;text-align: center;">WO</th>
-                    <th style="border: 5px solid #000000;text-align: center;">PH</th>
-                    <th style="border: 5px solid #000000;text-align: center;">HD</th>
-                    <th style="border: 5px solid #000000;text-align: center;">AB</th>
-                    <th style="border: 5px solid #000000;text-align: center;">Total Days</th>
+		            <th style="border: 5px solid #000000;text-align: center;width: 10;">
+		            Present</th>
+                    <th style="border: 5px solid #000000;text-align: center;width: 6;">WO</th>
+                    <th style="border: 5px solid #000000;text-align: center;width: 6;">PH</th>
+                    <th style="border: 5px solid #000000;text-align: center;width: 6;">HD</th>
+                    <th style="border: 5px solid #000000;text-align: center;width: 6;">AB</th>
+                    <th style="border: 5px solid #000000;text-align: center;width: 12;">Total Days</th>
 				</tr>
 				<?php $i=1; ?>
                 @foreach($list as $key=>$value)
@@ -117,7 +128,7 @@
 
                                 $joining_date_array = explode('/', $joining_date);
 
-                                if($key1 < $joining_date_array[0] && $joining_date_array[1] == $month) {
+                                if($key1 < $joining_date_array[0] && $joining_date_array[1] == $month && $year <= $joining_date_array[2]) {
                                     $attendance = 'O';
                                 }
                                 else if(in_array($key1, $sundays)) {
@@ -144,7 +155,7 @@
                             ?>
                             
                             @if($attendance == 'O')
-                                <td style="border: 1px solid black;text-align: center;"></td>
+                                <td style="border: 5px solid #000000;text-align: center;"></td>
                             @elseif($attendance == 'H')
                             	<?php $week_off++; ?>
                                 <td style="border: 5px solid #000000;background-color:#ffc000;">{{ $attendance }}</td>

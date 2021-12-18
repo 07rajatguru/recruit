@@ -127,7 +127,7 @@
                                             $present = 0;$week_off = 0;$ph = 0;
                                             $half_day = 0;$absent = 0;$total_days = 0;
                                         ?>
-                                        
+
                                         <td style="border: 1px solid black;;text-align: center;">{{ $i }}</td>
                                         <td style="color: black; border: 1px solid black;;text-align: center;">{{ $new_user_name }}</td>
 
@@ -168,7 +168,7 @@
 
                                                 $joining_date_array = explode('/', $joining_date);
 
-                                                if($key1 < $joining_date_array[0] && $joining_date_array[1] == $month) {
+                                                if($key1 < $joining_date_array[0] && $joining_date_array[1] == $month && $year <= $joining_date_array[2]) {
                                                     $attendance = 'O';
                                                 }
                                                 else if(in_array($key1, $sundays)) {
