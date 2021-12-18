@@ -354,6 +354,10 @@ class User extends Authenticatable
 
     public static function getOtherUsersNew($user_id=0,$department_id='',$month,$year) {
 
+        if($month <= 9) {
+            $month = "0".$month;
+        }
+
         $superadmin_role_id =  getenv('SUPERADMIN');
         $client_role_id =  getenv('CLIENT');
         $it_role_id =  getenv('IT');

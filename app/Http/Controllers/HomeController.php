@@ -1082,11 +1082,28 @@ class HomeController extends Controller
             $year_array[$y] = $y;
         }
 
-        // Get Users
+        // Get Previous data from joining date
+
+        if($month <= 9) {
+
+            $month = "0".$month;
+        }
+        $check_date = $year."-".$month."-31";
+
+        // Get User Details
         $user_details = User::getProfileInfo($user_id);
-        $joining_date = date('d/m/Y', strtotime("$user_details->joining_date"));
-        $full_name = $user_details->first_name."-".$user_details->last_name.",".$user_details->department_name.",".$user_details->working_hours.",".$joining_date;
-        $users = array($full_name => "");
+
+        if($user_details->joining_date <= $check_date) {
+
+            $joining_date = date('d/m/Y', strtotime("$user_details->joining_date"));
+            $full_name = $user_details->first_name."-".$user_details->last_name.",".$user_details->department_name.",".$user_details->working_hours.",".$joining_date;
+            $users = array($full_name => "");
+        }
+        else {
+
+            $users = array();
+        }
+        
 
         // Get Attendance & Remarks
         $response = WorkPlanning::getWorkPlanningByUserID($user_id,$month,$year);
