@@ -53,6 +53,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\AddLeaveBalance',
         'App\Console\Commands\SetAttendanceOfWorkPlanning',
         'App\Console\Commands\AddTotalHoursOneTime',
+        'App\Console\Commands\DailyReportNew',
     ];
 
     /**

@@ -215,7 +215,7 @@ class User extends Authenticatable
         return $userArr;
     }
 
-    public static function getAllUsersEmails($type=NULL,$report=NULL,$am=NULL) {
+    public static function getAllUsersEmails($type=NULL,$report=NULL,$am=NULL,$user_id=0) {
 
         $status = 'Inactive';
         $status_array = array($status);
@@ -236,6 +236,13 @@ class User extends Authenticatable
 
         if($am!=NULL) {
             $user_query = $user_query->where('account_manager','=',$am);
+        }
+
+        if(isset($user_id) && $user_id > 0) {
+
+            $user_query = $user_query->where(function($user_query) use ($user_id) {
+                $user_query = $user_query->where('reports_to',$user_id);
+            });
         }
 
         $user_query = $user_query->whereNotIn('status',$status_array);
