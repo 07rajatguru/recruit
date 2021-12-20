@@ -76,7 +76,7 @@ class EmailTemplateController extends Controller
         $super_admin_userid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($super_admin_userid);
 
-        $to_users_array = User::getAllUsersEmails(NULL,NULL,'Yes');
+        $to_users_array = User::getAllUsersEmails(NULL,NULL,'Yes',0);
 
         $module = "Email Template";
         $sender_name = $user_id;
@@ -167,7 +167,7 @@ class EmailTemplateController extends Controller
         $super_admin_userid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($super_admin_userid);
 
-        $to_users_array = User::getAllUsersEmails(NULL,NULL,'Yes');
+        $to_users_array = User::getAllUsersEmails(NULL,NULL,'Yes',0);
 
         $module = "Email Template";
         $sender_name = $user_id;

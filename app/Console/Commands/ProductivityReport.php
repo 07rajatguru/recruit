@@ -43,7 +43,7 @@ class ProductivityReport extends Command
     public function handle() {
 
         $recruitment = getenv('RECRUITMENT');
-        $users = User::getAllUsersEmails($recruitment,'Yes');
+        $users = User::getAllUsersEmails($recruitment,'Yes','',0);
 
         foreach ($users as $key => $value) {
 
