@@ -47,14 +47,14 @@
         <thead>
             <tr>
                 <th width="2%">No</th>
-                <th width="5%">Action</th>
-                <th width="8%">Job Open to all</th>
-                <th>Name</th>
-                <th>Email</th>
+                <th width="7%">Action</th>
+                <th width="5%">Job Open to all</th>
+                <th width="8%">Name</th>
+                <th width="25%">Email</th>
                 <th>Department</th>
                 <th>Role</th>
-                <th>Working Hours</th>
-                <th>Half Day Working Hours</th>
+                <th>Working <br/>Hours</th>
+                <th>Half Day <br/>Working Hours</th>
                 <th>Status</th>
             </tr>
         </thead>

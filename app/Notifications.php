@@ -8,7 +8,7 @@ class Notifications extends Model
 {
     public $table = "notifications";
 
-    public function logNotifications($data){
+    public function logNotifications($data) {
 
         $module_id = $data['module_id'];
         $module = $data['module'];
@@ -27,22 +27,21 @@ class Notifications extends Model
         $notifications->save();
     }
 
-    public static function getAllNotificationsByUserId($userid,$read){
+    public static function getAllNotificationsByUserId($userid) {
 
         $notification_query = Notifications::query();
         $notification_query = $notification_query->where('user_id','=',$userid);
 
-        /*if(isset($read) && ($read==0 || $read==1)){
-            $notification_query = $notification_query->where('read','=',$read);
-        }*/
+        $notification_query = $notification_query->where('read','=',0);
 
         $notification_query = $notification_query->orderBy('id','desc');
         $notification_res = $notification_query->limit(15)->get();
-//print_r($notification_res);exit;
-        $notifications = array();
 
+        $notifications = array();
         $i=0;
-        foreach ($notification_res as $key=>$value){
+
+        foreach ($notification_res as $key=>$value) {
+
             $notifications[$i]['module'] = $value['module'];
             $notifications[$i]['msg'] = $value['message'];
             $notifications[$i]['read'] = $value['read'];
@@ -50,22 +49,21 @@ class Notifications extends Model
             $notifications[$i]['link'] = $value['link'];
             $i++;
         }
-
         return $notifications;
-
     }
 
-    public static function listAllNotificationsByUserId($userid){
+    public static function listAllNotificationsByUserId($userid) {
 
         $notification_query = Notifications::query();
         $notification_query = $notification_query->where('user_id','=',$userid);
         $notification_query = $notification_query->orderBy('id','desc');
         $notification_res = $notification_query->get();
-//print_r($notification_res);exit;
-        $notifications = array();
 
+        $notifications = array();
         $i=0;
-        foreach ($notification_res as $key=>$value){
+
+        foreach ($notification_res as $key=>$value) {
+
             $notifications[$i]['module'] = $value['module'];
             $notifications[$i]['msg'] = $value['message'];
             $notifications[$i]['read'] = $value['read'];
@@ -73,9 +71,6 @@ class Notifications extends Model
             $notifications[$i]['link'] = $value['link'];
             $i++;
         }
-
         return $notifications;
-
     }
-
 }

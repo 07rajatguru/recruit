@@ -11,6 +11,7 @@ use App\Events\NotificationMail;
 use App\User;
 use DB;
 use App\WorkPlanningPost;
+use App\Events\NotificationEvent;
 
 class WorkPlanningController extends Controller
 {
@@ -567,6 +568,9 @@ class WorkPlanningController extends Controller
         // Set Attendance for Farhin
         $farhin_user_id = getenv('ALLCLIENTVISIBLEUSERID');
 
+        // Set Attendance For Kazvin
+        $manager_user_id = env('MANAGERUSERID');
+
         if($user_id == $farhin_user_id) {
 
             $attendance = 'F';
@@ -574,7 +578,6 @@ class WorkPlanningController extends Controller
         else {
 
             // Get Today Day
-
             $day = date("l");
 
             if($day == 'Saturday') {
@@ -588,11 +591,23 @@ class WorkPlanningController extends Controller
             }
             else {
 
-                if($total_projected_time < '07:00:00') {
-                    $attendance = 'HD';
+                if($user_id == $manager_user_id) {
+
+                    if($total_projected_time < '06:00:00') {
+                        $attendance = 'HD';
+                    }
+                    else {
+                        $attendance = 'F';
+                    }
                 }
                 else {
-                    $attendance = 'F';
+
+                    if($total_projected_time < '07:00:00') {
+                        $attendance = 'HD';
+                    }
+                    else {
+                        $attendance = 'F';
+                    }
                 }
             }
         }
@@ -943,6 +958,9 @@ class WorkPlanningController extends Controller
         // Set Attendance for Farhin
         $farhin_user_id = getenv('ALLCLIENTVISIBLEUSERID');
 
+        // Set Attendance For Kazvin
+        $manager_user_id = env('MANAGERUSERID');
+
         // Get Work Planning Details
         $work_planning = WorkPlanning::find($id);
         $attendance = $work_planning->attendance;
@@ -970,11 +988,23 @@ class WorkPlanningController extends Controller
             }
             else {
 
-                if($total_actual_time < '07:00:00') {
-                    $attendance = 'HD';
+                if($user_id == $manager_user_id) {
+
+                    if($total_projected_time < '06:00:00') {
+                        $attendance = 'HD';
+                    }
+                    else {
+                        $attendance = 'F';
+                    }
                 }
                 else {
-                    $attendance = 'F';
+
+                    if($total_actual_time < '07:00:00') {
+                        $attendance = 'HD';
+                    }
+                    else {
+                        $attendance = 'F';
+                    }
                 }
             }
         }
@@ -1397,6 +1427,9 @@ class WorkPlanningController extends Controller
         $wp_id = $input['wp_id'];
         $content = $input['content'];
 
+        $user =  \Auth::user();
+        $user_name = $user->name;
+
         if(isset($user_id) && $user_id > 0) {
 
             $post = new WorkPlanningPost();
@@ -1407,6 +1440,21 @@ class WorkPlanningController extends Controller
             $post->updated_at = time();
             $post->save();
         }
+
+        // Notifications : On adding new remarks
+        $module_id = $wp_id;
+        $module = 'Work Planning';
+        $message = $user_name . " added new Remarks";
+        $link = route('workplanning.show',$wp_id);
+
+        // Get Added by id
+        $work_planning = WorkPlanning::getWorkPlanningDetailsById($wp_id);
+        $added_by_id = $work_planning['added_by_id'];
+
+        $user_arr = array();
+        $user_arr[] = $added_by_id;
+
+        event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
         return redirect()->route('workplanning.show',[$wp_id])->with('success','Remarks Added Successfully.');
     }

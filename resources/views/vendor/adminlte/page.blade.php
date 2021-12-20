@@ -156,8 +156,8 @@
                         </li>
 
                         <li class="dropdown messages-menu">
-                            <a href="javascript:void(0);" onclick="readAllNotifications();" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-envelope-o"></i>
-                                <span class="label label-success notification-number">4</span>
+                            <a href="javascript:void(0);" onclick="readAllNotifications();" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-bell"></i>
+                                <span class="label label-success notification-number">0</span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li class="header notification-display">You have 0 messages</li>
@@ -171,7 +171,7 @@
                                         </div>
                                     </div>
                                 </li>
-                                <li class="footer"><a href="notifications">See All Messages</a></li>
+                                <li class="footer"><a href="/notifications">See All Notifications</a></li>
                             </ul>
                         </li>
 
@@ -367,7 +367,7 @@
                 success: function(data){
                     console.log(data);
                     $(".todos-ul").empty();
-                    for (var i=0; i<data.length; i++){
+                    for (var i=0; i<data.length; i++) {
                         var li = '';
                         li += '<li class="todos-li">';
                             li += '<a href="#">';
