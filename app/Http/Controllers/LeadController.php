@@ -916,6 +916,18 @@ class LeadController extends Controller
         $client_basic_info->updated_at = time();
         $client_basic_info->delete_client = 0;
 
+        // Save Department Id for Different Dashboard
+        $vibhuti_user_id = getenv('STRATEGYUSERID');
+
+        if($user_id == $vibhuti_user_id) {
+
+            $client_basic_info->department_id = 2;
+        }
+        else {
+
+            $client_basic_info->department_id = 1;
+        }
+
         if($client_basic_info->save()) {
 
             // If client basic info added successfully then lead convert to client
