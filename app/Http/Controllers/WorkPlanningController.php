@@ -117,6 +117,7 @@ class WorkPlanningController extends Controller
         }
 
         $superadminuserid = getenv('SUPERADMINUSERID');
+        $manager_user_id = env('MANAGERUSERID');
         
         if($all_perm) {
 
@@ -168,18 +169,53 @@ class WorkPlanningController extends Controller
         }
         else {
 
-            // Get Loggedin user team
-            $users = User::getAssignedUsers($user_id);
+            if($user_id == $manager_user_id) {
 
-            if(isset($users) && sizeof($users) > 0) {
+                $team_users = User::getAssignedUsers($user_id);
 
-                foreach ($users as $key => $value) {
+                $recruitment = getenv('RECRUITMENT');
+                $type_array = array($recruitment);
+                $other_users = User::getAllUsers($type_array);
 
-                    if($key == $user_id) {
+                if(isset($team_users) && sizeof($team_users) > 0) {
 
+                    foreach ($team_users as $key => $value) {
+                        
+                        if($key == $user_id) {
+                        }
+                        else {
+                            $work_planning_res[$key."-".$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
+                        }
+                    }   
+                }
+
+                if(isset($other_users) && sizeof($other_users) > 0) {
+
+                    foreach ($other_users as $key1 => $value1) {
+                        
+                        if($key1 == $user_id) {
+                        }
+                        else {
+                            $work_planning_res[$key1."-".$value1] = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,'');
+                        }
                     }
-                    else {
-                        $work_planning_res[$key."-".$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
+                }
+            }
+            else {
+
+                // Get Loggedin user team
+                $users = User::getAssignedUsers($user_id);
+
+                if(isset($users) && sizeof($users) > 0) {
+
+                    foreach ($users as $key => $value) {
+
+                        if($key == $user_id) {
+
+                        }
+                        else {
+                            $work_planning_res[$key."-".$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
+                        }
                     }
                 }
             }
@@ -213,7 +249,7 @@ class WorkPlanningController extends Controller
             $work_planning_res = '';
         }
 
-        return view('adminlte::workPlanning.teamIndex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','user_id','superadminuserid'));
+        return view('adminlte::workPlanning.teamIndex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','user_id','superadminuserid','manager_user_id'));
     }
 
     public function getWorkPlanningDetailsByStatus($status,$month,$year) {
@@ -338,6 +374,7 @@ class WorkPlanningController extends Controller
         }
 
         $superadminuserid = getenv('SUPERADMINUSERID');
+        $manager_user_id = env('MANAGERUSERID');
 
         if($all_perm) {
 
@@ -390,18 +427,53 @@ class WorkPlanningController extends Controller
         }
         else {
 
-            // Get Loggedin user team
-            $users = User::getAssignedUsers($user_id);
+            if($user_id == $manager_user_id) {
 
-            if(isset($users) && sizeof($users) > 0) {
+                $team_users = User::getAssignedUsers($user_id);
 
-                foreach ($users as $key => $value) {
+                $recruitment = getenv('RECRUITMENT');
+                $type_array = array($recruitment);
+                $other_users = User::getAllUsers($type_array);
 
-                    if($key == $user_id) {
+                if(isset($team_users) && sizeof($team_users) > 0) {
 
+                    foreach ($team_users as $key => $value) {
+                        
+                        if($key == $user_id) {
+                        }
+                        else {
+                            $work_planning_res[$key."-".$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
+                        }
+                    }   
+                }
+
+                if(isset($other_users) && sizeof($other_users) > 0) {
+
+                    foreach ($other_users as $key1 => $value1) {
+                        
+                        if($key1 == $user_id) {
+                        }
+                        else {
+                            $work_planning_res[$key1."-".$value1] = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,'');
+                        }
                     }
-                    else {
-                        $work_planning_res[$key."-".$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status);
+                }
+            }
+            else {
+
+                // Get Loggedin user team
+                $users = User::getAssignedUsers($user_id);
+
+                if(isset($users) && sizeof($users) > 0) {
+
+                    foreach ($users as $key => $value) {
+
+                        if($key == $user_id) {
+
+                        }
+                        else {
+                            $work_planning_res[$key."-".$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status);
+                        }
                     }
                 }
             }
@@ -436,7 +508,7 @@ class WorkPlanningController extends Controller
             $work_planning_res = '';
         }
 
-        return view('adminlte::workPlanning.teamStatusIndex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','status','user_id','superadminuserid'));
+        return view('adminlte::workPlanning.teamStatusIndex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','status','user_id','superadminuserid','manager_user_id'));
     }
 
     public function create() {

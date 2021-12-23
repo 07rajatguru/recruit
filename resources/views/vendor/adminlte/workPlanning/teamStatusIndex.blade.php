@@ -94,6 +94,10 @@
                             <tr>
                                 <td colspan="9" style="text-align: center;background-color:#C4D79B;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{ $user[1] }}</b></td>
                             </tr>
+                        @elseif(isset($report_to_id) && $report_to_id == $manager_user_id && $user_id == $manager_user_id)
+                            <tr>
+                                <td colspan="9" style="text-align: center;background-color:#C4D79B;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{ $user[1] }}</b></td>
+                            </tr>
                         @elseif(isset($report_to_id) && $report_to_id != $superadminuserid)
                             <tr>
                                 <td colspan="9" style="text-align: center;background-color: #FABF8F;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{ $user[1] }}</b></td>
