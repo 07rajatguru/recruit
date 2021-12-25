@@ -50,33 +50,37 @@ class UserLeave extends Model
         }
 
         $query = $query->orderBy('user_leave.id','desc');
-        $res = $query->get();
+        $response = $query->get();
 
         $leave = array();
         $i = 0;
-        foreach ($res as $key => $value) {
-            $leave[$i]['id'] = $value->id;
-            $leave[$i]['user_id'] = $value->user_id;
-            $leave[$i]['subject'] = $value->subject;
-            if (isset($value->from_date) && $value->from_date != '') {
-                $leave[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date));
-            }
-            else {
-                $leave[$i]['from_date'] = '';
-            }
-            if (isset($value->to_date) && $value->to_date != '') {
-                $leave[$i]['to_date'] = date('d-m-Y',strtotime($value->to_date));
-            }
-            else {
-                $leave[$i]['to_date'] = '';
-            }
-            $leave[$i]['leave_type'] = $value->type_of_leave;
-            $leave[$i]['leave_category'] = $value->category;
-            $leave[$i]['status'] = $value->status;
-            $leave[$i]['user_name'] = $value->user_name;
-            $i++;
-        }
 
+        if(isset($response) && sizeof($response) > 0) {
+
+            foreach ($response as $key => $value) {
+
+                $leave[$i]['id'] = $value->id;
+                $leave[$i]['user_id'] = $value->user_id;
+                $leave[$i]['subject'] = $value->subject;
+                if (isset($value->from_date) && $value->from_date != '') {
+                    $leave[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date));
+                }
+                else {
+                    $leave[$i]['from_date'] = '';
+                }
+                if (isset($value->to_date) && $value->to_date != '') {
+                    $leave[$i]['to_date'] = date('d-m-Y',strtotime($value->to_date));
+                }
+                else {
+                    $leave[$i]['to_date'] = '';
+                }
+                $leave[$i]['leave_type'] = $value->type_of_leave;
+                $leave[$i]['leave_category'] = $value->category;
+                $leave[$i]['status'] = $value->status;
+                $leave[$i]['user_name'] = $value->user_name;
+                $i++;
+            }
+        }
         return $leave;
     }
 
@@ -198,6 +202,61 @@ class UserLeave extends Model
                 $leave[$i]['leave_category'] = $value->category;
                 $leave[$i]['status'] = $value->status;
                 
+                $i++;
+            }
+        }
+        return $leave;
+    }
+
+    public static function getUserLeavesById($user_ids,$month,$year,$category) {
+
+        $status_array = array(1,2);
+
+        $query = UserLeave::query();
+        $query = $query->join('users','users.id','=','user_leave.user_id');
+        $query = $query->select('user_leave.*','users.name as user_name');
+        
+        $query = $query->whereIn('user_leave.user_id',$user_ids);
+        $query = $query->whereIn('user_leave.status',$status_array);
+
+        if ($month != '' && $year != '') {
+            $query = $query->where(\DB::raw('month(user_leave.created_at)'),'=',$month);
+            $query = $query->where(\DB::raw('year(user_leave.created_at)'),'=',$year);
+        }
+
+        if ($category != '') {
+            $query = $query->where('user_leave.category','=',$category);
+        }
+
+        $query = $query->orderBy('user_leave.id','desc');
+        $response = $query->get();
+
+        $leave = array();
+        $i = 0;
+
+        if(isset($response) && sizeof($response) > 0) {
+
+            foreach ($response as $key => $value) {
+
+                $leave[$i]['id'] = $value->id;
+                $leave[$i]['user_id'] = $value->user_id;
+                
+                if (isset($value->from_date) && $value->from_date != '') {
+                    $leave[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date));
+                }
+                else {
+                    $leave[$i]['from_date'] = '';
+                }
+                if (isset($value->to_date) && $value->to_date != '') {
+                    $leave[$i]['to_date'] = date('d-m-Y',strtotime($value->to_date));
+                }
+                else {
+                    $leave[$i]['to_date'] = '';
+                }
+                $leave[$i]['leave_type'] = $value->type_of_leave;
+                $leave[$i]['leave_category'] = $value->category;
+                $leave[$i]['status'] = $value->status;
+                $leave[$i]['user_name'] = $value->user_name;
                 $i++;
             }
         }

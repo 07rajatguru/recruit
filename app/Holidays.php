@@ -234,14 +234,11 @@ class Holidays extends Model
                 $date = explode("-",$value->from_date);
 
                 if($date[2] < 10) {
-
                     $holidays[$i] = str_replace(0,'',$date[2]);
                 }
                 else {
-
                     $holidays[$i] = $date[2];
                 }
-                
                 $i++;
             }
         }

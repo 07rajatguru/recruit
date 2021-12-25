@@ -11,46 +11,48 @@
 			<table style="width: 100%;border: 5px solid #000000;">
 				@if($days == '31')
 					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
-		                <td colspan="42" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
+		                <td colspan="46" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
 					</tr>
 					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
 						<td rowspan="2" style="text-align:center;width:10;border: 5px solid #000000;">
 							<b>Sr.No</b></td>
 	                	<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">ADLER EMPLOYEES</td>
-	                	<td colspan="40" style="text-align:center;border: 5px solid #000000;"><b>DATE</b></td>
+	                	<td colspan="44" style="text-align:center;border: 5px solid #000000;"><b>DATE</b></td>
 					</tr>
 				@elseif($days == '30')
 					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
-		                <td colspan="41" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
+		                <td colspan="45" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
 					</tr>
 					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
 						<td rowspan="2" style="text-align:center;width:10;border: 5px solid #000000;">
 							<b>Sr.No</b></td>
 	                	<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">ADLER EMPLOYEES</td>
-	                	<td colspan="39" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;"><b>DATE</b></td>
+	                	<td colspan="43" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;"><b>DATE</b></td>
 					</tr>
-				@elseif($days == '30')
+				@elseif($days == '29')
 					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
-		                <td colspan="40" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
+		                <td colspan="44" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
 					</tr>
 					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
 						<td rowspan="2" style="text-align:center;width:10;border: 5px solid #000000;">
 							<b>Sr.No</b></td>
 	                	<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">ADLER EMPLOYEES</td>
-	                	<td colspan="38" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;"><b>DATE</b></td>
+	                	<td colspan="41" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;"><b>DATE</b></td>
 					</tr>
 				@else
 					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
-		                <td colspan="39" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
+		                <td colspan="43" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
 					</tr>
 					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
 						<td rowspan="2" style="text-align:center;width:10;border: 5px solid #000000;">
 							<b>Sr.No</b></td>
 	                	<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">ADLER EMPLOYEES</td>
-	                	<td colspan="37" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;"><b>DATE</b></td>
+	                	<td colspan="40" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;"><b>DATE</b></td>
 					</tr>
 				@endif
+
 				<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
+
 					<td style="border: 5px solid #000000;"></td>
 					<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">NAME OF PERSON</th>
 	            	<td style="width:17;text-align: center;border: 5px solid #000000;background-color:#d6e3bc;"><b>Department</b></td>
@@ -72,7 +74,11 @@
 		            Present</th>
                     <th style="border: 5px solid #000000;text-align: center;width: 6;">WO</th>
                     <th style="border: 5px solid #000000;text-align: center;width: 6;">PH</th>
+                    <th style="border: 5px solid #000000;text-align: center;width: 6;">SL</th>
+                    <th style="border: 5px solid #000000;text-align: center;width: 6;">PL</th>
                     <th style="border: 5px solid #000000;text-align: center;width: 6;">HD</th>
+                    <th style="border: 5px solid #000000;text-align: center;width: 6;">HD</th>
+                    <th style="border: 5px solid #000000;text-align: center;width: 6;">UL</th>
                     <th style="border: 5px solid #000000;text-align: center;width: 6;">AB</th>
                     <th style="border: 5px solid #000000;text-align: center;width: 12;">Total Days</th>
 				</tr>
@@ -93,6 +99,7 @@
 
                             $present = 0;$week_off = 0;$ph = 0;
                             $half_day = 0;$absent = 0;$total_days = 0;
+                            $half_day_actual = 0;
                         ?>
 
                         <td style="border: 5px solid #000000;">{{ $i }}</td>
@@ -171,7 +178,10 @@
                             	<?php $absent++; ?>
                                 <td style="border: 5px solid #000000;background-color:#ff0000;">{{ $attendance }}</td>
                             @elseif($attendance == 'HD')
-                            	<?php $half_day++; ?>
+                            	<?php 
+                                    $half_day++; 
+                                    $half_day_actual = $half_day / 2;
+                                ?>
                                 <td style="border: 5px solid #000000;background-color:#d99594;">{{ $attendance }}</td>
                             @else
                                 <td style="border: 5px solid #000000;background-color:#ff0000;">A</td>
@@ -179,13 +189,18 @@
                         @endforeach
 
                         <?php
-                            $total_days = $present + $week_off + $ph + $half_day + $absent;
+                            $total_days = $present + $week_off + $ph + $half_day_actual + $absent;
                         ?>
 
                         <td style="border: 5px solid #000000;text-align:center;">{{ $present }}</td>
                         <td style="border: 5px solid #000000;text-align:center;">{{ $week_off }}</td>
                         <td style="border: 5px solid #000000;text-align:center;">{{ $ph }}</td>
+                        <td style="border: 5px solid #000000;text-align:center;"></td>
+                        <td style="border: 5px solid #000000;text-align:center;"></td>
                         <td style="border: 5px solid #000000;text-align:center;">{{ $half_day }}</td>
+                        <td style="border: 1px solid black;text-align:center;"> 
+                        {{ $half_day_actual }}</td>
+                        <td style="border: 5px solid #000000;text-align:center;"></td>
                         <td style="border: 5px solid #000000;text-align:center;">{{ $absent }}
                         </td>
                         <td style="border: 5px solid #000000;text-align:center;">

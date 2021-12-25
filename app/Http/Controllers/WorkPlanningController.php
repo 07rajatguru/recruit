@@ -1037,10 +1037,7 @@ class WorkPlanningController extends Controller
         $work_planning = WorkPlanning::find($id);
         $attendance = $work_planning->attendance;
 
-        if($attendance == 'A') {
-
-        }
-        else if($user_id == $farhin_user_id) {
+        if($user_id == $farhin_user_id) {
 
             $attendance = 'F';
         }
@@ -1062,7 +1059,7 @@ class WorkPlanningController extends Controller
 
                 if($user_id == $manager_user_id) {
 
-                    if($total_projected_time < '06:00:00') {
+                    if($total_actual_time < '06:00:00') {
                         $attendance = 'HD';
                     }
                     else {

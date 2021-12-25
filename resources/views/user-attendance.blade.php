@@ -74,12 +74,12 @@
                         <table class="table table-striped table-bordered nowrap" cellspacing="0" id="attendance_table">
                             <thead>
                                 <tr>
-                                    <th style="border: 1px solid black;padding-left: 900px;"colspan="42">Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</th>
+                                    <th style="border: 1px solid black;padding-left: 900px;"colspan="46">Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</th>
                                 </tr>
                                 <tr>
                                     <th style="border: 1px solid black;text-align: center;" rowspan="2"><br/><br/>Sr. No.</th>
                                     <th style="border: 1px solid black;background-color:#d6e3bc;">ADLER EMPLOYEES</th>
-                                    <th colspan="40" style="border: 1px solid black;padding-left: 760px;">DATE</th>
+                                    <th colspan="44" style="border: 1px solid black;padding-left: 760px;">DATE</th>
                                 </tr>
 
                                 <th style="border: 1px solid black;background-color:#d6e3bc;">NAME OF PERSON</th>
@@ -102,7 +102,11 @@
                                 <th style="border: 1px solid black;">Present</th>
                                 <th style="border: 1px solid black;">WO</th>
                                 <th style="border: 1px solid black;">PH</th>
+                                <th style="border: 1px solid black;">SL</th>
+                                <th style="border: 1px solid black;">PL</th>
                                 <th style="border: 1px solid black;">HD</th>
+                                <th style="border: 1px solid black;">HD</th>
+                                <th style="border: 1px solid black;">UL</th>
                                 <th style="border: 1px solid black;">AB</th>
                                 <th style="border: 1px solid black;">Total Days</th>
                             </thead>
@@ -126,6 +130,7 @@
 
                                             $present = 0;$week_off = 0;$ph = 0;
                                             $half_day = 0;$absent = 0;$total_days = 0;
+                                            $half_day_actual = 0;
                                         ?>
 
                                         <td style="border: 1px solid black;;text-align: center;">{{ $i }}</td>
@@ -200,7 +205,10 @@
                                                     <?php $present++; ?>
                                                     <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">P</td>
                                                 @elseif($attendance == 'HD')
-                                                    <?php $half_day++; ?>
+                                                    <?php 
+                                                        $half_day++; 
+                                                        $half_day_actual = $half_day / 2;
+                                                    ?>
                                                     <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
                                                 @elseif($attendance == 'PH')
                                                     <?php $ph++; ?>
@@ -232,7 +240,10 @@
                                                     <?php $absent++; ?>
                                                     <td style="border: 1px solid black;background-color:#ff0000;text-align: center;">{{ $attendance }}</td>
                                                 @elseif($attendance == 'HD')
-                                                    <?php $half_day++; ?>
+                                                    <?php 
+                                                        $half_day++;
+                                                        $half_day_actual = $half_day / 2;
+                                                    ?>
                                                     <td style="border: 1px solid black;background-color:#d99594;text-align: center;">{{ $attendance }}</td>
                                                 @else
                                                     <td style="border: 1px solid black;background-color:#ff0000;text-align: center;">A</td>
@@ -241,13 +252,17 @@
                                         @endforeach
 
                                         <?php
-                                            $total_days = $present + $week_off + $ph + $half_day + $absent;
+                                            $total_days = $present + $week_off + $ph + $half_day_actual + $absent;
                                         ?>
                                         <td style="border: 1px solid black;text-align:center;">     {{ $present }}</td>
                                         <td style="border: 1px solid black;text-align:center;">
                                             {{ $week_off }}</td>
                                         <td style="border: 1px solid black;text-align:center;">     {{ $ph }}</td>
+                                        <td style="border: 1px solid black;text-align:center;">     </td>
+                                        <td style="border: 1px solid black;text-align:center;">     </td>
                                         <td style="border: 1px solid black;text-align:center;">     {{ $half_day }}</td>
+                                        <td style="border: 1px solid black;text-align:center;">     {{ $half_day_actual }}</td>
+                                        <td style="border: 1px solid black;text-align:center;">     </td>
                                         <td style="border: 1px solid black;text-align:center;">     {{ $absent }}</td>
                                         <td style="border: 1px solid black;text-align:center;">
                                             {{ $total_days }}</td>

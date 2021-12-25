@@ -1100,7 +1100,6 @@ class HomeController extends Controller
             $users = array($full_name => "");
         }
         else {
-
             $users = array();
         }
         
@@ -1108,6 +1107,12 @@ class HomeController extends Controller
         // Get Attendance & Remarks
         $response = WorkPlanning::getWorkPlanningByUserID($user_id,$month,$year);
         $user_remark = UserRemarks::getUserRemarksDetailsByUserID($user_id,$month,$year);
+
+        // Get Applied Leaves
+        $user_ids[] = $user_id;
+        $pl_leave_data = UserLeave::getUserLeavesById($user_ids,$month,$year,'Privilege Leave');
+        $sl_leave_data = UserLeave::getUserLeavesById($user_ids,$month,$year,'Sick Leave');
+        
 
         $list = array();
         for($d=1; $d<=31; $d++) {
