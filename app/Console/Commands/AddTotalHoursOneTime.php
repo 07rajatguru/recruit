@@ -39,7 +39,7 @@ class AddTotalHoursOneTime extends Command
      */
     public function handle()
     {
-        $work_planning_res = WorkPlanning::getWorkPlanningDetails(0,'','','');
+        $work_planning_res = WorkPlanning::getWorkPlanningDetails(0,'','','','');
 
         if(isset($work_planning_res) && sizeof($work_planning_res) > 0) {
 

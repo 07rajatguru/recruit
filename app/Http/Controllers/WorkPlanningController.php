@@ -51,11 +51,12 @@ class WorkPlanningController extends Controller
             $year = date('Y');
         }
 
-        $work_planning_res = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'');
+        $work_planning_res = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
 
         $pending = 0;
         $approved = 0;
         $rejected = 0;
+        $post_discuss_status = 0;
 
         if(isset($work_planning_res) && $work_planning_res != '') {
 
@@ -63,6 +64,9 @@ class WorkPlanningController extends Controller
 
                 if($work_planning['status'] == '0') {
                     $pending++;
+                }
+                else if($work_planning['status'] == '1' && $work_planning['post_discuss_status'] == '1') {
+                    $post_discuss_status++;
                 }
                 else if ($work_planning['status'] == '1') {
                     $approved++;
@@ -77,7 +81,7 @@ class WorkPlanningController extends Controller
             $work_planning_res = '';
         }
 
-        return view('adminlte::workPlanning.index',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','user_id'));
+        return view('adminlte::workPlanning.index',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','post_discuss_status','user_id'));
     }
 
     public function teamIndex() {
@@ -129,11 +133,17 @@ class WorkPlanningController extends Controller
                 if(isset($team_users) && sizeof($team_users) > 0) {
 
                     foreach ($team_users as $key => $value) {
+
+                        $response = array();
                         
                         if($key == $user_id) {
                         }
                         else {
-                            $work_planning_res[$key."-".$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
+                            $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'','');
+
+                            if(isset($response) && sizeof($response) > 0) {
+                                $work_planning_res[$key."-".$value] = $response;
+                            }
                         }
                     }   
                 }
@@ -141,11 +151,17 @@ class WorkPlanningController extends Controller
                 if(isset($other_users) && sizeof($other_users) > 0) {
 
                     foreach ($other_users as $key1 => $value1) {
+
+                        $response = array();
                         
                         if($key1 == $user_id) {
                         }
                         else {
-                            $work_planning_res[$key1."-".$value1] = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,'');
+                            $response = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,'','');
+
+                            if(isset($response) && sizeof($response) > 0) {
+                                $work_planning_res[$key1."-".$value1] = $response;
+                            }
                         }
                     }
                 }
@@ -157,11 +173,17 @@ class WorkPlanningController extends Controller
                 if(isset($users) && sizeof($users) > 0) {
 
                     foreach ($users as $key => $value) {
+
+                        $response = array();
                         
                         if($key == $user_id) {
                         }
                         else {
-                            $work_planning_res[$key."-".$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
+                            $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'','');
+
+                            if(isset($response) && sizeof($response) > 0) {
+                                $work_planning_res[$key."-".$value] = $response;
+                            }
                         }
                     }
                 }
@@ -180,11 +202,18 @@ class WorkPlanningController extends Controller
                 if(isset($team_users) && sizeof($team_users) > 0) {
 
                     foreach ($team_users as $key => $value) {
+
+                        $response = array();
                         
                         if($key == $user_id) {
                         }
                         else {
-                            $work_planning_res[$key."-".$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
+
+                            $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'','');
+                            
+                            if(isset($response) && sizeof($response) > 0) {
+                                $work_planning_res[$key."-".$value] = $response;
+                            }
                         }
                     }   
                 }
@@ -192,11 +221,18 @@ class WorkPlanningController extends Controller
                 if(isset($other_users) && sizeof($other_users) > 0) {
 
                     foreach ($other_users as $key1 => $value1) {
+
+                        $response = array();
                         
                         if($key1 == $user_id) {
                         }
                         else {
-                            $work_planning_res[$key1."-".$value1] = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,'');
+
+                            $response = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,'','');
+                            
+                            if(isset($response) && sizeof($response) > 0) {
+                                $work_planning_res[$key1."-".$value1] = $response;
+                            }
                         }
                     }
                 }
@@ -208,13 +244,20 @@ class WorkPlanningController extends Controller
 
                 if(isset($users) && sizeof($users) > 0) {
 
+                    $response = array();
+
                     foreach ($users as $key => $value) {
 
                         if($key == $user_id) {
 
                         }
                         else {
-                            $work_planning_res[$key."-".$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'');
+
+                            $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'','');
+                            
+                            if(isset($response) && sizeof($response) > 0) {
+                                $work_planning_res[$key."-".$value] = $response;
+                            }
                         }
                     }
                 }
@@ -225,6 +268,7 @@ class WorkPlanningController extends Controller
         $pending = 0;
         $approved = 0;
         $rejected = 0;
+        $post_discuss_status = 0;
 
         if(isset($work_planning_res) && $work_planning_res != '') {
 
@@ -234,6 +278,9 @@ class WorkPlanningController extends Controller
                     
                     if($value['status'] == '0') {
                         $pending++;
+                    }
+                    else if($value['status'] == '1' && $value['post_discuss_status'] == '1') {
+                        $post_discuss_status++;
                     }
                     else if ($value['status'] == '1') {
                         $approved++;
@@ -249,7 +296,7 @@ class WorkPlanningController extends Controller
             $work_planning_res = '';
         }
 
-        return view('adminlte::workPlanning.teamIndex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','user_id','superadminuserid','manager_user_id'));
+        return view('adminlte::workPlanning.teamIndex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','post_discuss_status','user_id','superadminuserid','manager_user_id'));
     }
 
     public function getWorkPlanningDetailsByStatus($status,$month,$year) {
@@ -290,19 +337,27 @@ class WorkPlanningController extends Controller
 
         if($status == 'pending') {
             $status = '0';
+            $post_discuss_status = '';
         }
         else if($status == 'approved') {
             $status = '1';
+            $post_discuss_status = '';
         }
         else if($status == 'rejected') {
             $status = '2';
+            $post_discuss_status = '';
+        }
+        else if($status == 'approval_after_post_discussion') {
+            $status = '1';
+            $post_discuss_status = '1';
         }
  
-        $work_planning_res = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,$status);
+        $work_planning_res = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,$status,$post_discuss_status);
 
         $pending = 0;
         $approved = 0;
         $rejected = 0;
+        $post_discuss_status = 0;
 
         if(isset($work_planning_res) && $work_planning_res != '') {
 
@@ -310,6 +365,9 @@ class WorkPlanningController extends Controller
 
                 if($work_planning['status'] == '0') {
                     $pending++;
+                }
+                else if($work_planning['status'] == '1' && $work_planning['post_discuss_status'] == '1') {
+                    $post_discuss_status++;
                 }
                 else if ($work_planning['status'] == '1') {
                     $approved++;
@@ -324,7 +382,7 @@ class WorkPlanningController extends Controller
             $work_planning_res = '';
         }
 
-        return view('adminlte::workPlanning.statusindex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','status','user_id'));
+        return view('adminlte::workPlanning.statusindex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','post_discuss_status','status','user_id'));
     }
 
     public function getTeamWorkPlanningDetailsByStatus($status,$month,$year) {
@@ -365,12 +423,19 @@ class WorkPlanningController extends Controller
 
         if($status == 'pending') {
             $status = '0';
+            $post_discuss_status = '';
         }
         else if($status == 'approved') {
             $status = '1';
+            $post_discuss_status = '';
         }
         else if($status == 'rejected') {
             $status = '2';
+            $post_discuss_status = '';
+        }
+        else if($status == 'approval_after_post_discussion') {
+            $status = '1';
+            $post_discuss_status = '1';
         }
 
         $superadminuserid = getenv('SUPERADMINUSERID');
@@ -387,10 +452,17 @@ class WorkPlanningController extends Controller
 
                     foreach ($team_users as $key => $value) {
                         
+                        $response = array();
+
                         if($key == $user_id) {
                         }
                         else {
-                            $work_planning_res[$key."-".$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status);
+
+                            $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status,$post_discuss_status);
+
+                            if(isset($response) && sizeof($response) > 0) {
+                                $work_planning_res[$key."-".$value] = $response;
+                            }
                         }
                     }   
                 }
@@ -398,11 +470,18 @@ class WorkPlanningController extends Controller
                 if(isset($other_users) && sizeof($other_users) > 0) {
 
                     foreach ($other_users as $key1 => $value1) {
+
+                        $response = array();
                         
                         if($key1 == $user_id) {
                         }
                         else {
-                            $work_planning_res[$key1."-".$value1] = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,$status);
+
+                            $response = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,$status,$post_discuss_status);
+
+                            if(isset($response) && sizeof($response) > 0) {
+                                $work_planning_res[$key1."-".$value1] = $response;
+                            }
                         }
                     }
                 }
@@ -414,12 +493,18 @@ class WorkPlanningController extends Controller
                 if(isset($users) && sizeof($users) > 0) {
 
                     foreach ($users as $key => $value) {
+
+                        $response = array();
                         
                         if($key == $user_id) {
-
                         }
                         else {
-                            $work_planning_res[$key."-".$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status);
+
+                            $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status,$post_discuss_status);
+
+                            if(isset($response) && sizeof($response) > 0) {
+                                $work_planning_res[$key."-".$value] = $response;
+                            }
                         }
                     }
                 }
@@ -438,11 +523,18 @@ class WorkPlanningController extends Controller
                 if(isset($team_users) && sizeof($team_users) > 0) {
 
                     foreach ($team_users as $key => $value) {
+
+                        $response = array();
                         
                         if($key == $user_id) {
                         }
                         else {
-                            $work_planning_res[$key."-".$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status);
+
+                            $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status,$post_discuss_status);
+
+                            if(isset($response) && sizeof($response) > 0) {
+                                $work_planning_res[$key."-".$value] = $response;
+                            }
                         }
                     }   
                 }
@@ -450,11 +542,18 @@ class WorkPlanningController extends Controller
                 if(isset($other_users) && sizeof($other_users) > 0) {
 
                     foreach ($other_users as $key1 => $value1) {
+
+                        $response = array();
                         
                         if($key1 == $user_id) {
                         }
                         else {
-                            $work_planning_res[$key1."-".$value1] = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,$status);
+
+                            $response = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,$status,$post_discuss_status);
+
+                            if(isset($response) && sizeof($response) > 0) {
+                                $work_planning_res[$key1."-".$value1] = $response;
+                            }
                         }
                     }
                 }
@@ -472,7 +571,12 @@ class WorkPlanningController extends Controller
 
                         }
                         else {
-                            $work_planning_res[$key."-".$value] = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status);
+
+                            $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status,$post_discuss_status);
+
+                            if(isset($response) && sizeof($response) > 0) {
+                                $work_planning_res[$key."-".$value] = $response;
+                            }
                         }
                     }
                 }
@@ -484,6 +588,8 @@ class WorkPlanningController extends Controller
         $pending = 0;
         $approved = 0;
         $rejected = 0;
+        $post_discuss_status = 0;
+
 
         if(isset($work_planning_res) && $work_planning_res != '') {
 
@@ -493,6 +599,9 @@ class WorkPlanningController extends Controller
                     
                     if($value['status'] == '0') {
                         $pending++;
+                    }
+                    else if($value['status'] == '1' && $value['post_discuss_status'] == '1') {
+                        $post_discuss_status++;
                     }
                     else if ($value['status'] == '1') {
                         $approved++;
@@ -508,7 +617,7 @@ class WorkPlanningController extends Controller
             $work_planning_res = '';
         }
 
-        return view('adminlte::workPlanning.teamStatusIndex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','status','user_id','superadminuserid','manager_user_id'));
+        return view('adminlte::workPlanning.teamStatusIndex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','post_discuss_status','status','user_id','superadminuserid','manager_user_id'));
     }
 
     public function create() {
@@ -1277,6 +1386,16 @@ class WorkPlanningController extends Controller
         if ($reply == 'Approved') {
 
             \DB::statement("UPDATE `work_planning` SET `status` = '1',`approved_by` = $user_id,`attendance` = 'F' WHERE `id` = $wp_id");
+
+            $work_planning = WorkPlanning::find($wp_id);
+
+            $post_discuss_status = $work_planning->post_discuss_status;
+
+            if($post_discuss_status != '') {
+
+                $work_planning->post_discuss_status = 1;   
+                $work_planning->save();
+            }
         }
         elseif ($reply == 'Rejected') {
 
@@ -1383,6 +1502,7 @@ class WorkPlanningController extends Controller
         $work_planning->approved_by = $user_id;
         $work_planning->reject_reply = $reject_reply;
         $work_planning->reason_of_rejection = $reason_of_rejection;
+        $work_planning->post_discuss_status = 0;
 
         if(isset($reject_reply) && $reject_reply == 'Half Day') {
             $work_planning->attendance = 'HD';
@@ -1482,7 +1602,7 @@ class WorkPlanningController extends Controller
         }
         else {
 
-            $work_planning_res = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'');
+            $work_planning_res = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
             $count = sizeof($work_planning_res);
         }
 

@@ -100,7 +100,7 @@
                                 @endif
 
                                 <th style="border: 1px solid black;">Present</th>
-                                <th style="border: 1px solid black;">WO</th>
+                                <th style="border: 1px solid black;">H</th>
                                 <th style="border: 1px solid black;">PH</th>
                                 <th style="border: 1px solid black;">SL</th>
                                 <th style="border: 1px solid black;">PL</th>

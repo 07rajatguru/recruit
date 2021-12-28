@@ -84,7 +84,7 @@ class WorkPlanning extends Model
         return $work_type;
     }
 
-    public static function getWorkPlanningDetails($user_id,$month,$year,$status='') {
+    public static function getWorkPlanningDetails($user_id,$month,$year,$status='',$post_discuss_status='') {
 
         $query = WorkPlanning::query();
         $query = $query->leftjoin('users','users.id','=','work_planning.added_by');
@@ -101,6 +101,14 @@ class WorkPlanning extends Model
 
         if(isset($status) && $status != '') {
             $query = $query->where('work_planning.status','=',$status);
+
+            if(isset($status) && $status == '1' && $post_discuss_status == '') {
+                $query = $query->where('work_planning.post_discuss_status','=',NULL);
+            }
+        }
+
+        if(isset($post_discuss_status) && $post_discuss_status != '') {
+            $query = $query->where('work_planning.post_discuss_status','=',$post_discuss_status);
         }
 
         $query = $query->select('work_planning.*','users.first_name as fnm','users.last_name as lnm');
@@ -158,6 +166,7 @@ class WorkPlanning extends Model
             
             // For Pending/Approved/Rejected
             $work_planning_res[$i]['status'] = $value->status;
+            $work_planning_res[$i]['post_discuss_status'] = $value->post_discuss_status;
 
             // For Delay Report
             $work_planning_res[$i]['report_delay'] = $value->report_delay;

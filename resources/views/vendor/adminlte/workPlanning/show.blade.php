@@ -61,9 +61,6 @@
 
             @if($loggedin_user_id == $added_by_id)
                 <a class="btn btn-primary" href="{{ route('workplanning.edit',$work_planning['id']) }}">Edit</a>
-            @endif
-
-            @if($loggedin_user_id == $added_by_id)
                 <a class="btn btn-primary" href="{{ route('workplanning.index') }}">Back</a>
             @else
                 <a class="btn btn-primary" href="{{ route('teamworkplanning.index') }}">Back

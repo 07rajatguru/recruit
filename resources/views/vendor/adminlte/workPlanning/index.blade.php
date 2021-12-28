@@ -65,6 +65,12 @@
             <a href="{{ route('workplanning.status',array('rejected',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#FF3C28;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Rejected">Rejected ({{ $rejected }})</div>
             </a>
         </div>
+
+        <div class="col-md-2" style="width: 25%;">
+            <a href="{{ route('workplanning.status',array('approval_after_post_discussion',$month,$year)) }}" style="text-decoration: none;color: black;">
+                <div style="margin:5px;height:35px;background-color:#32CD32;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Approval After Post Discussion">Approval After Post Discussion ({{ $post_discuss_status }})</div>
+            </a>
+        </div>
     </div>
 </div><br/>
 
@@ -119,17 +125,17 @@
                     @if($value['added_day'] == 'Saturday')
 
                         @if($value['actual_login_time'] > '10:30:00')
-                            <td style="background-color:lightpink;">{{ $value['loggedin_time'] }}</td>
+                            <td style="background-color:lightpink;cursor: pointer;" title="Login After 10:30">{{ $value['loggedin_time'] }}</td>
                         @elseif($value['total_actual_time'] == '')
                             <td>{{ $value['loggedin_time'] }}</td>
                         @elseif($value['total_actual_time'] >= '06:00:00')
-                            <td style="background-color:#B0E0E6;">{{ $value['loggedin_time'] }}
+                            <td style="background-color:#B0E0E6;cursor: pointer;" title="Working Hours More then 06:00">{{ $value['loggedin_time'] }}
                             </td>
                         @elseif($value['total_actual_time'] == '04:30:00')
-                            <td style="background-color:#fff59a;">{{ $value['loggedin_time'] }}
+                            <td style="background-color:#fff59a;cursor: pointer;" title="Late in / Early Go">{{ $value['loggedin_time'] }}
                             </td>
                         @elseif($value['total_actual_time'] < '05:30:00')
-                            <td style="background-color:#F08080;">{{ $value['loggedin_time'] }}
+                            <td style="background-color:#F08080;cursor: pointer;" title="Working Hours Less than 05:30">{{ $value['loggedin_time'] }}
                             </td>
                         @else
                             <td>{{ $value['loggedin_time'] }}</td>
@@ -138,18 +144,15 @@
                     @else
 
                         @if($value['actual_login_time'] > '10:30:00')
-                            <td style="background-color:lightpink;">{{ $value['loggedin_time'] }}</td>
+                            <td style="background-color:lightpink;cursor: pointer" title="Login After 10:30">{{ $value['loggedin_time'] }}</td>
                         @elseif($value['total_actual_time'] == '')
                             <td>{{ $value['loggedin_time'] }}</td>
                         @elseif($value['total_actual_time'] >= '08:30:00')
-                            <td style="background-color:#B0E0E6;">{{ $value['loggedin_time'] }}
-                            </td>
+                            <td style="background-color:#B0E0E6;cursor: pointer;" title="Working Hours More then 08:30">{{ $value['loggedin_time'] }}</td>
                         @elseif($value['total_actual_time'] == '07:00:00')
-                            <td style="background-color:#fff59a;">{{ $value['loggedin_time'] }}
-                            </td>
+                            <td style="background-color:#fff59a;cursor: pointer;" title="Late in / Early Go">{{ $value['loggedin_time'] }}</td>
                         @elseif($value['total_actual_time'] < '08:00:00')
-                            <td style="background-color:#F08080;">{{ $value['loggedin_time'] }}
-                            </td>
+                            <td style="background-color:#F08080;cursor: pointer;" title="Working Hours Less than 08:00">{{ $value['loggedin_time'] }}</td>
                         @else
                             <td>{{ $value['loggedin_time'] }}</td>
                         @endif

@@ -61,6 +61,11 @@
             <div class="col-md-2" style="width: 15%;">
                 <a href="{{ route('teamworkplanning.status',array('rejected',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#FF3C28;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Rejected">Rejected ({{ $rejected }})</div></a>
             </div>
+            <div class="col-md-2" style="width: 25%;">
+                <a href="{{ route('teamworkplanning.status',array('approval_after_post_discussion',$month,$year)) }}" style="text-decoration: none;color: black;">
+                    <div style="margin:5px;height:35px;background-color:#32CD32;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Approval After Post Discussion">Approval After Post Discussion ({{ $post_discuss_status }})</div>
+                </a>
+            </div>
         </div>
     </div><br/>
 
@@ -89,28 +94,31 @@
                         $user = explode("-", $key);
                         $report_to_id = App\User::getReportsToById($user[0]);
                     ?>
-                    <tbody>
-                        @if(isset($report_to_id) && $report_to_id == $superadminuserid && $user_id == $superadminuserid)
-                            <tr>
-                                <td colspan="9" style="text-align: center;background-color:#C4D79B;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{ $user[1] }}</b></td>
-                            </tr>
-                        @elseif(isset($report_to_id) && $report_to_id == $manager_user_id && $user_id == $manager_user_id)
-                            <tr>
-                                <td colspan="9" style="text-align: center;background-color:#C4D79B;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{ $user[1] }}</b></td>
-                            </tr>
-                        @elseif(isset($report_to_id) && $report_to_id != $superadminuserid)
-                            <tr>
-                                <td colspan="9" style="text-align: center;background-color: #FABF8F;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{ $user[1] }}</b></td>
-                            </tr>
-                        @else
-                             <tr>
-                                <td colspan="9" style="text-align: center;background-color: #FABF8F;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{ $user[1] }}</b></td>
-                            </tr>
-                        @endif
-                    </tbody>
+
+                    @if(isset($value) && sizeof($value) >0)
+                        <tbody>
+                            @if(isset($report_to_id) && $report_to_id == $superadminuserid && $user_id == $superadminuserid)
+                                <tr>
+                                    <td colspan="9" style="text-align: center;background-color:#C4D79B;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{ $user[1] }}</b></td>
+                                </tr>
+                            @elseif(isset($report_to_id) && $report_to_id == $manager_user_id && $user_id == $manager_user_id)
+                                <tr>
+                                    <td colspan="9" style="text-align: center;background-color:#C4D79B;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{ $user[1] }}</b></td>
+                                </tr>
+                            @elseif(isset($report_to_id) && $report_to_id != $superadminuserid)
+                                <tr>
+                                    <td colspan="9" style="text-align: center;background-color: #FABF8F;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{ $user[1] }}</b></td>
+                                </tr>
+                            @else
+                                 <tr>
+                                    <td colspan="9" style="text-align: center;background-color: #FABF8F;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{ $user[1] }}</b></td>
+                                </tr>
+                            @endif
+                        </tbody>
+                    @endif
                         
-                    <tbody id="data_{{$j}}">
-                        @if(isset($value) && sizeof($value) >0)
+                    @if(isset($value) && sizeof($value) >0)
+                        <tbody id="data_{{$j}}">
                             @foreach($value as $k => $v)
                                 <tr>
                                     <td>{{ ++$i }}</td>
@@ -145,30 +153,30 @@
                                     @if($v['added_day'] == 'Saturday')
 
                                         @if($v['actual_login_time'] > '10:30:00')
-                                            <td style="background-color:lightpink;">{{ $v['loggedin_time'] }}</td>
+                                            <td style="background-color:lightpink;cursor: pointer;" title="Login After 10:30">{{ $v['loggedin_time'] }}</td>
                                         @elseif($v['total_actual_time'] == '')
                                             <td>{{ $v['loggedin_time'] }}</td>
                                         @elseif($v['total_actual_time'] >= '06:00:00')
-                                            <td style="background-color:#B0E0E6;">{{ $v['loggedin_time'] }}</td>
+                                            <td style="background-color:#B0E0E6;cursor: pointer;" title="Working Hours More then 06:00">{{ $v['loggedin_time'] }}</td>
                                         @elseif($v['total_actual_time'] == '04:30:00')
-                                            <td style="background-color:#fff59a;">{{ $v['loggedin_time'] }}</td>
+                                            <td style="background-color:#fff59a;cursor: pointer;" title="Late in / Early Go">{{ $v['loggedin_time'] }}</td>
                                         @elseif($v['total_actual_time'] < '05:30:00')
-                                            <td style="background-color:#F08080;">{{ $v['loggedin_time'] }}</td>
+                                            <td style="background-color:#F08080;cursor: pointer;" title="Working Hours Less than 05:30">{{ $v['loggedin_time'] }}</td>
                                         @else
                                             <td>{{ $v['loggedin_time'] }}</td>
                                         @endif
                                     @else
 
                                         @if($v['actual_login_time'] > '10:30:00')
-                                            <td style="background-color:lightpink;">{{ $v['loggedin_time'] }}</td>
+                                            <td style="background-color:lightpink;cursor: pointer;" title="Login After 10:30">{{ $v['loggedin_time'] }}</td>
                                         @elseif($v['total_actual_time'] == '')
                                             <td>{{ $v['loggedin_time'] }}</td>
                                         @elseif($v['total_actual_time'] >= '08:30:00')
-                                            <td style="background-color:#B0E0E6;">{{ $v['loggedin_time'] }}</td>
+                                            <td style="background-color:#B0E0E6;cursor: pointer;" title="Working Hours More then 08:30">{{ $v['loggedin_time'] }}</td>
                                         @elseif($v['total_actual_time'] == '07:00:00')
-                                            <td style="background-color:#fff59a;">{{ $v['loggedin_time'] }}</td>
+                                            <td style="background-color:#fff59a;cursor: pointer;" title="Late in / Early Go">{{ $v['loggedin_time'] }}</td>
                                         @elseif($v['total_actual_time'] < '08:00:00')
-                                            <td style="background-color:#F08080;">{{ $v['loggedin_time'] }}</td>
+                                            <td style="background-color:#F08080;cursor: pointer;" title="Working Hours Less than 08:00">{{ $v['loggedin_time'] }}</td>
                                         @else
                                             <td>{{ $v['loggedin_time'] }}</td>
                                         @endif
@@ -179,16 +187,8 @@
                                     <td>{{ $v['work_planning_status_time'] }}</td>
                                 </tr>
                             @endforeach
-                        @else
-                            <tr>
-                                <td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
-                                <td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
-                                <td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
-                                <td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
-                                <td style="border: 1px solid black;"></td>
-                            </tr>
-                        @endif
-                    </tbody>
+                        </tbody>
+                    @endif
                     <?php $j++;?>
                 @endforeach
             @else

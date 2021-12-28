@@ -1013,7 +1013,7 @@ class HomeController extends Controller
             $leave_count = sizeof($leave_data);
 
             // Get Present Days Count
-            $present_days_res = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'');
+            $present_days_res = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
             $present_days = sizeof($present_days_res);
 
             // Get Early go late in count
@@ -1103,7 +1103,6 @@ class HomeController extends Controller
             $users = array();
         }
         
-
         // Get Attendance & Remarks
         $response = WorkPlanning::getWorkPlanningByUserID($user_id,$month,$year);
         $user_remark = UserRemarks::getUserRemarksDetailsByUserID($user_id,$month,$year);
@@ -1113,6 +1112,7 @@ class HomeController extends Controller
         $pl_leave_data = UserLeave::getUserLeavesById($user_ids,$month,$year,'Privilege Leave');
         $sl_leave_data = UserLeave::getUserLeavesById($user_ids,$month,$year,'Sick Leave');
         
+        print_r($pl_leave_data);exit;
 
         $list = array();
         for($d=1; $d<=31; $d++) {

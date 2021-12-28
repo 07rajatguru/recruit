@@ -72,7 +72,7 @@
 
 		            <th style="border: 5px solid #000000;text-align: center;width: 10;">
 		            Present</th>
-                    <th style="border: 5px solid #000000;text-align: center;width: 6;">WO</th>
+                    <th style="border: 5px solid #000000;text-align: center;width: 6;">H</th>
                     <th style="border: 5px solid #000000;text-align: center;width: 6;">PH</th>
                     <th style="border: 5px solid #000000;text-align: center;width: 6;">SL</th>
                     <th style="border: 5px solid #000000;text-align: center;width: 6;">PL</th>
