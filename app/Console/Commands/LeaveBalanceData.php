@@ -41,50 +41,64 @@ class LeaveBalanceData extends Command
     public function handle()
     {
         $users = User::getAllUsers();
+        $superadmin_user_id = getenv('SUPERADMINUSERID');
 
         foreach ($users as $key => $value) {
 
-            $user_data = User::getAllDetailsByUserID($key);
+            if($key == $superadmin_user_id) {
 
-            if (isset($user_data) && $user_data != '') {
+            }
+            else {
 
-                $joining_date = $user_data->joining_date;
-                $after_six_month = date('Y-m-d', strtotime("+6 month $joining_date"));
-                $current_date = date('Y-m-d');
+                $user_data = User::getAllDetailsByUserID($key);
 
-                if ($after_six_month <= $current_date) {
+                if (isset($user_data) && $user_data != '') {
 
-                    $leave_balance = LeaveBalance::getLeaveBalanceByUserId($key);
+                    $joining_date = $user_data->joining_date;
+                    $after_six_month = date('Y-m-d', strtotime("+6 month $joining_date"));
+                    $current_date = date('Y-m-d');
 
-                    if(isset($leave_balance) && $leave_balance != '') {
-                        
+                    if ($after_six_month <= $current_date) {
+
+                        $leave_data = LeaveBalance::getLeaveBalanceByUserId($key);
+
+                        if(isset($leave_balance) && $leave_balance != '') {
+
+                            $leave_balance = LeaveBalance::find($leave_data->id);
+                            $leave_balance->user_id = $key;
+                            $leave_balance->leave_total = $leave_data->leave_total + 1.5;
+                            $leave_balance->leave_remaining = $leave_data->leave_remaining + 1.5;
+                            $leave_balance->seek_leave_total = $leave_data->seek_leave_total + 0.5;
+                            $leave_balance->seek_leave_remaining = $leave_data->seek_leave_remaining + 0.5;
+                            $leave_balance->save();
+                        }
+                        else {
+
+                            //Add User Leave Balance data
+                            $leave_balance = new LeaveBalance();
+                            $leave_balance->user_id = $key;
+                            $leave_balance->leave_total = 1.5;
+                            $leave_balance->leave_taken = 0.0;
+                            $leave_balance->leave_remaining = 1.5;
+                            $leave_balance->seek_leave_total = 0.5;
+                            $leave_balance->seek_leave_taken = 0.0;
+                            $leave_balance->seek_leave_remaining = 0.5;
+                            $leave_balance->save();
+                        }
+
+                        //Add User Leave Balance data Monthwise
+                        $monthwise_leave_balance = new MonthwiseLeaveBalance();
+                        $monthwise_leave_balance->user_id = $key;
+                        $monthwise_leave_balance->pl_total = 1.5;
+                        $monthwise_leave_balance->pl_taken = 0.0;
+                        $monthwise_leave_balance->pl_remaining = 1.5;
+                        $monthwise_leave_balance->sl_total = 0.5;
+                        $monthwise_leave_balance->sl_taken = 0.0;
+                        $monthwise_leave_balance->sl_remaining = 0.5;
+                        $monthwise_leave_balance->month = date('m');
+                        $monthwise_leave_balance->year = date('Y');
+                        $monthwise_leave_balance->save();
                     }
-                    else {
-
-                        //Add User Leave Balance data
-                        $leave_balance = new LeaveBalance();
-                        $leave_balance->user_id = $key;
-                        $leave_balance->leave_total = 1.5;
-                        $leave_balance->leave_taken = 0.0;
-                        $leave_balance->leave_remaining = 1.5;
-                        $leave_balance->seek_leave_total = 0.5;
-                        $leave_balance->seek_leave_taken = 0.0;
-                        $leave_balance->seek_leave_remaining = 0.5;
-                        $leave_balance->save();
-                    }
-
-                    //Add User Leave Balance data Monthwise
-                    $monthwise_leave_balance = new MonthwiseLeaveBalance();
-                    $monthwise_leave_balance->user_id = $key;
-                    $monthwise_leave_balance->pl_total = 1.5;
-                    $monthwise_leave_balance->pl_taken = 0.0;
-                    $monthwise_leave_balance->pl_remaining = 1.5;
-                    $monthwise_leave_balance->sl_total = 0.5;
-                    $monthwise_leave_balance->sl_taken = 0.0;
-                    $monthwise_leave_balance->sl_remaining = 0.5;
-                    $monthwise_leave_balance->month = date('m');
-                    $monthwise_leave_balance->year = date('Y');
-                    $monthwise_leave_balance->save();
                 }
             }
         }

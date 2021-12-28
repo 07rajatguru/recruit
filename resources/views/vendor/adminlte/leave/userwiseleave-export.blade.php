@@ -17,13 +17,13 @@
 			@foreach($balance_array as $key => $value)
 				<tr>
 					<td style="border: 1px solid #000000;text-align: center;">{{ ++$i }}</td>
-					<td style="border: 1px solid #000000;">{{ $value['user_name'] }}</td>
-					<td style="border: 1px solid #000000;">{{ $value['pl_total'] }}</td>
-					<td style="border: 1px solid #000000;">{{ $value['pl_taken'] }}</td>
-					<td style="border: 1px solid #000000;">{{ $value['pl_remaining'] }}</td>
-					<td style="border: 1px solid #000000;">{{ $value['sl_total'] }}</td>
-					<td style="border: 1px solid #000000;">{{ $value['sl_taken'] }}</td>
-					<td style="border: 1px solid #000000;">{{ $value['sl_remaining'] }}</td>
+					<td style="border: 1px solid #000000;text-align: center;">{{ $value['user_name'] }}</td>
+					<td style="border: 1px solid #000000;text-align: center;">{{ $value['pl_total'] }}</td>
+					<td style="border: 1px solid #000000;text-align: center;">{{ $value['pl_taken'] }}</td>
+					<td style="border: 1px solid #000000;text-align: center;">{{ $value['pl_remaining'] }}</td>
+					<td style="border: 1px solid #000000;text-align: center;">{{ $value['sl_total'] }}</td>
+					<td style="border: 1px solid #000000;text-align: center;">{{ $value['sl_taken'] }}</td>
+					<td style="border: 1px solid #000000;text-align: center;">{{ $value['sl_remaining'] }}</td>
 				</tr>
 			@endforeach
 		@endif
