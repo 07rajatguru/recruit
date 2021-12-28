@@ -211,7 +211,7 @@ class LeaveController extends Controller
             }
         }
 
-        if(isset($leave_balance) && $leave_balance != '') {
+        /*if(isset($leave_balance) && $leave_balance != '') {
 
             $chart_data = Charts::create('donut', 'highcharts')
             ->title('Leave Balance Chart')
@@ -224,9 +224,11 @@ class LeaveController extends Controller
         else {
 
             $chart_data = '';
-        }
+        }*/
 
-        return view('adminlte::leave.statusindex',compact('status','leave_details','leave_balance','user_id','count','pending','approved','rejected','month_array','month','year_array','year','chart_data'));
+        $chart_data = '';
+
+        return view('adminlte::leave.statusindex',compact('status','leave_details','leave_balance','user_id','count','pending','approved','rejected','month_array','month','year_array','year','chart_data','super_admin_userid'));
     }
 
     public function userLeaveAdd() {
