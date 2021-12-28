@@ -97,7 +97,7 @@
                     </div>
 
                     <div class="form-group document" style="display: none;">
-                        <strong>Attachment: <span class = "required_fields">*</span></strong>
+                        <strong>Attachment: </strong>
                         <input type="file" name="leave_doc[]"  id="leave_doc" class="form-control" multiple>
                     </div>
                 </div>
@@ -144,9 +144,6 @@
                     "leave_type": {
                         required: true
                     },
-                    "leave_doc[]": {
-                        required: true
-                    }
                 },
                 messages: {
                     "subject": {
@@ -161,9 +158,6 @@
                     "leave_type": {
                         required: "Leave Type is Required Field."
                     },
-                    "leave_doc[]": {
-                        required: "Document File is Required Field."
-                    }
                 }
             });
         });
