@@ -126,9 +126,8 @@
                                         <a class="fa fa-circle" href="{{ route('workplanning.show',$v['id']) }}" title="Show">
                                         </a>
 
-                                        @if($user_id == $v['added_by_id'])
-                                            <a class="fa fa-edit" href="{{ route('workplanning.edit',$v['id']) }}" title="Edit"></a>
-                                        @endif
+                                        <a class="fa fa-edit" href="{{ route('workplanning.edit',$v['id']) }}" title="Edit">
+                                        </a>
                                             
                                         @permission(('work-planning-delete'))
                                             @include('adminlte::partials.deleteModal', ['data' => $v, 'name' => 'workplanning','display_name'=>'Work Planning'])

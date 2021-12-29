@@ -27,6 +27,7 @@ class WorkPlanningList extends Model
             $work_planning_list[$i]['actual_time'] = $v->actual_time;
             $work_planning_list[$i]['remarks'] = $v->remarks;
             $work_planning_list[$i]['rm_hr_remarks'] = $v->rm_hr_remarks;
+            $work_planning_list[$i]['added_by'] = $v->added_by;
 
             $i++;
         }

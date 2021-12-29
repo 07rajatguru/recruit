@@ -191,6 +191,7 @@
     @if($action == 'edit')
         <input type="hidden" value="{!! $id !!}" name="work_planning_id" id="work_planning_id">
         <input type="hidden" id="row_cnt" name="row_cnt" value="1">
+        <input type="hidden" value="{!! $loggedin_userid !!}" name="loggedin_userid" id="loggedin_userid">
     @endif
 </div>
 
@@ -456,6 +457,10 @@
                         var actual_time = data[j].actual_time;
                         var remarks = data[j].remarks;
                         var rm_hr_remarks = data[j].rm_hr_remarks;
+                        var added_by = data[j].added_by;
+
+                        var loggedin_userid = $("#loggedin_userid").val();
+
 
                         var time_array_1 = <?php echo json_encode($time_array); ?>;
                         var row_cnt = $("#row_cnt").val();
@@ -488,7 +493,16 @@
 
                         var cell5 = row.insertCell(4);
                         cell5.style.border = '1px solid black';
-                        cell5.innerHTML = '<td style="border:1px solid black;"><textarea name="rm_hr_remarks[]" placeholder="RM / HR Remarks" id="rm_hr_remarks_'+row_cnt+'" class="form-control" rows="5" disabled>'+rm_hr_remarks+'</textarea></td>';
+
+                        if(added_by != loggedin_userid) {
+
+                            cell5.innerHTML = '<td style="border:1px solid black;"><textarea name="rm_hr_remarks[]" placeholder="RM / HR Remarks" id="rm_hr_remarks_'+row_cnt+'" class="form-control" rows="5">'+rm_hr_remarks+'</textarea></td>';   
+                        }
+                        else {
+
+                            cell5.innerHTML = '<td style="border:1px solid black;"><textarea name="rm_hr_remarks[]" placeholder="RM / HR Remarks" id="rm_hr_remarks_'+row_cnt+'" class="form-control" rows="5" disabled>'+rm_hr_remarks+'</textarea></td>';
+                        }
+                        
 
                         $.each(time_array_1, function(key1, value1) {
 

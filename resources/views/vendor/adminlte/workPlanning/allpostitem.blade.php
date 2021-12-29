@@ -5,9 +5,9 @@
         ?>
 
         @if(isset($data['file']) && $data['file'] != '')
-            <img class="profile-avatar-pic" src="../../{{ $data['file'] }}" alt="author">
+            <img class="profile-avatar-pic" src="{{$app_url}}/{{ $data['file'] }}" alt="Adler Talent Solutions Pvt. Ltd." style="vertical-align: top;width: 40px;height: 40px;border-radius: 100%;overflow: hidden;margin: 5px 10px 0 0;">
         @else
-            <img class="profile-avatar-pic" src="/images/default.png" alt="author">
+            <img class="profile-avatar-pic" src="{{$app_url}}/images/default.png" alt="Adler Talent Solutions Pvt. Ltd." style="vertical-align: top;width: 40px;height: 40px;border-radius: 100%;overflow: hidden;margin: 5px 10px 0 0;">
         @endif
 
         <?php
@@ -20,15 +20,12 @@
             <div class="comment-desc">
                 <p>{{$per_post->content}}</p>
             </div>
-            <div class="user-name">
-                <a class="h6 post__author-name fn" href="#">{{ $per_post->user->name }}</a>
-            </div>
         </div>
     </div>
     <div class="right-detail"> 
         <div class="author-date">
            <div class="date-time">
-                <span>{{ $post_date }}</span>
+                <span>{{ $per_post->user->name }} --- {{ $post_date }}</span>
             </div>
         </div>   
     </div>

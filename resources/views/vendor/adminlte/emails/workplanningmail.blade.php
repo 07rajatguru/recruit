@@ -121,21 +121,6 @@
                     </p>
                 @endif
 
-                @if(isset($work_planning_post) && $work_planning_post != '')
-                    <div class="col-xs-12 col-sm-12 col-md-12">
-                        <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                            <div class="box-header col-md-6">
-                                <h4>Remarks</h4>
-                            </div>
-                            <div class="col-xs-12 col-sm-12 col-md-12">
-                                <div>
-                                    @include('adminlte::workPlanning.allpostlist',array('post' => $work_planning_post))
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @endif
-
                 <p style="font-family:Cambria, serif;font-size: 11.0pt;text-align: left;">Thanks.</p>
             </td>
         </tr>

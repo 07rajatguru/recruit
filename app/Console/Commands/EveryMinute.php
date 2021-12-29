@@ -2014,8 +2014,7 @@ class EveryMinute extends Command
 
                 $work_planning = WorkPlanning::getWorkPlanningDetailsById($value['module_id']);
                 $work_planning_list = WorkPlanningList::getWorkPlanningList($value['module_id']);
-                $work_planning_post = WorkPlanningPost::orderBy('created_at','desc')
-                ->where('work_planning_post.wp_id','=',$value['module_id'])->select('work_planning_post.*')->get();
+                $work_planning_post = WorkPlanningPost::getWorkPlanningPostList($value['module_id']);
 
                 $today_date = $work_planning['added_date'];
                 $report_delay = $work_planning['report_delay'];
@@ -2090,8 +2089,7 @@ class EveryMinute extends Command
                 $work_planning_list = WorkPlanningList::getWorkPlanningList($value['module_id']);
 
                 // Get Remarks List
-                $work_planning_post = WorkPlanningPost::orderBy('created_at','desc')
-                ->where('work_planning_post.wp_id','=',$value['module_id'])->select('work_planning_post.*')->get();
+                $work_planning_post = WorkPlanningPost::getWorkPlanningPostList($value['module_id']);
 
                 $today_date = $work_planning['added_date'];
                 $link = $work_planning['link'];
