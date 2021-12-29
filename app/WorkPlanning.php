@@ -260,6 +260,7 @@ class WorkPlanning extends Model
             $work_planning_res['total_projected_time'] = $response->total_projected_time;
             $work_planning_res['total_actual_time'] = $response->total_actual_time;
             $work_planning_res['evening_status'] = $response->evening_status;
+            $work_planning_res['delay_counter'] = $response->delay_counter;
         }
         return $work_planning_res;
     }

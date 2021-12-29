@@ -948,6 +948,19 @@ class WorkPlanningController extends Controller
             $module_id = $work_planning_id;
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+            // Set Delay Counter
+            $delay_counter = $work_planning->delay_counter;
+            $new_delay_counter = $delay_counter + 1;
+
+            if($new_delay_counter > 3) {
+
+                \DB::statement("UPDATE `work_planning` SET `delay_counter` = '$new_delay_counter', `attendance` = 'HD' WHERE id = $work_planning_id");
+            }
+            else {
+
+                \DB::statement("UPDATE `work_planning` SET `delay_counter` = '$new_delay_counter' WHERE id = $work_planning_id");
+            }
         }
 
         return redirect()->route('workplanning.index')->with('success','Work Planning Added Successfully.');
@@ -1368,6 +1381,19 @@ class WorkPlanningController extends Controller
                         $module_id = $id;
 
                         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+                        // Set Delay Counter
+                        $delay_counter = $work_planning['delay_counter'];
+                        $new_delay_counter = $delay_counter + 1;
+
+                        if($new_delay_counter > 3) {
+
+                            \DB::statement("UPDATE `work_planning` SET `delay_counter` = '$new_delay_counter', `attendance` = 'HD' WHERE id = $id");
+                        }
+                        else {
+
+                            \DB::statement("UPDATE `work_planning` SET `delay_counter` = '$new_delay_counter' WHERE id = $id");
+                        }
                     }
                 }
             }
@@ -1540,6 +1566,19 @@ class WorkPlanningController extends Controller
                 $module_id = $wp_id;
 
                 event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+                // Set Delay Counter
+                $delay_counter = $work_planning['delay_counter'];
+                $new_delay_counter = $delay_counter + 1;
+
+                if($new_delay_counter > 3) {
+
+                    \DB::statement("UPDATE `work_planning` SET `delay_counter` = '$new_delay_counter', `attendance` = 'HD' WHERE id = $wp_id");
+                }
+                else {
+
+                    \DB::statement("UPDATE `work_planning` SET `delay_counter` = '$new_delay_counter' WHERE id = $wp_id");
+                }
             }
         }
         return redirect()->route('workplanning.index')->with('success','Email Sent Successfully.');
