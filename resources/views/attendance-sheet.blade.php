@@ -11,15 +11,35 @@
 			<table style="width: 100%;border: 5px solid #000000;">
 				@if($days == '31')
 					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
+		                <td colspan="48" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
+					</tr>
+					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
+						<td rowspan="2" style="text-align:center;width:10;border: 5px solid #000000;">
+							<b>Sr.No</b></td>
+	                	<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">ADLER EMPLOYEES</td>
+	                	<td colspan="46" style="text-align:center;border: 5px solid #000000;"><b>DATE</b></td>
+					</tr>
+				@elseif($days == '30')
+					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
+		                <td colspan="47" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
+					</tr>
+					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
+						<td rowspan="2" style="text-align:center;width:10;border: 5px solid #000000;">
+							<b>Sr.No</b></td>
+	                	<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">ADLER EMPLOYEES</td>
+	                	<td colspan="45" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;"><b>DATE</b></td>
+					</tr>
+				@elseif($days == '29')
+					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
 		                <td colspan="46" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
 					</tr>
 					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
 						<td rowspan="2" style="text-align:center;width:10;border: 5px solid #000000;">
 							<b>Sr.No</b></td>
 	                	<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">ADLER EMPLOYEES</td>
-	                	<td colspan="44" style="text-align:center;border: 5px solid #000000;"><b>DATE</b></td>
+	                	<td colspan="42" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;"><b>DATE</b></td>
 					</tr>
-				@elseif($days == '30')
+				@else
 					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
 		                <td colspan="45" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
 					</tr>
@@ -27,27 +47,7 @@
 						<td rowspan="2" style="text-align:center;width:10;border: 5px solid #000000;">
 							<b>Sr.No</b></td>
 	                	<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">ADLER EMPLOYEES</td>
-	                	<td colspan="43" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;"><b>DATE</b></td>
-					</tr>
-				@elseif($days == '29')
-					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
-		                <td colspan="44" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
-					</tr>
-					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
-						<td rowspan="2" style="text-align:center;width:10;border: 5px solid #000000;">
-							<b>Sr.No</b></td>
-	                	<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">ADLER EMPLOYEES</td>
-	                	<td colspan="41" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;"><b>DATE</b></td>
-					</tr>
-				@else
-					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
-		                <td colspan="43" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
-					</tr>
-					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
-						<td rowspan="2" style="text-align:center;width:10;border: 5px solid #000000;">
-							<b>Sr.No</b></td>
-	                	<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">ADLER EMPLOYEES</td>
-	                	<td colspan="40" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;"><b>DATE</b></td>
+	                	<td colspan="42" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;"><b>DATE</b></td>
 					</tr>
 				@endif
 
@@ -80,6 +80,9 @@
                     <th style="border: 5px solid #000000;text-align: center;width: 6;">HD</th>
                     <th style="border: 5px solid #000000;text-align: center;width: 6;">UL</th>
                     <th style="border: 5px solid #000000;text-align: center;width: 6;">AB</th>
+                    <th style="border: 5px solid #000000;text-align: center;width: 10;">Days
+                    </th>
+                    <th style="border: 5px solid #000000;text-align: center;width: 12;">Total Leave</th>
                     <th style="border: 5px solid #000000;text-align: center;width: 12;">Total Days</th>
 				</tr>
 				<?php $i=1; ?>
@@ -98,8 +101,10 @@
                             $working_hours = explode(':', $working_hours);
 
                             $present = 0;$week_off = 0;$ph = 0;
-                            $half_day = 0;$absent = 0;$total_days = 0;
-                            $half_day_actual = 0;
+                            $pl = 0;$sl = 0;$ul = 0;
+                            $half_day = 0;$half_day_actual = 0;$absent = 0;
+                            $days =0;$total_leaves =0;$total_days = 0;
+                            
                         ?>
 
                         <td style="border: 5px solid #000000;">{{ $i }}</td>
@@ -144,6 +149,15 @@
                                 else if(isset($value1['holiday']) && $value1['holiday'] == 'Y'){
                                     $attendance = 'PH';
                                 }
+                                else if(isset($value1['privilege_leave']) && $value1['privilege_leave'] == 'Y') {
+                                    $attendance = 'PL';
+                                }
+                                else if(isset($value1['sick_leave']) && $value1['sick_leave'] == 'Y') {
+                                    $attendance = 'SL';
+                                }
+                                else if(isset($value1['unapproved_leave']) && $value1['unapproved_leave'] == 'Y') {
+                                    $attendance = 'UL';
+                                }
                                 else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
                                     $attendance = 'N';
                                 }
@@ -169,6 +183,15 @@
                             @elseif($attendance == 'PH')
                             	<?php $ph++; ?>
                                 <td style="border: 5px solid #000000;background-color:#76933C;">{{ $attendance }}</td>
+                            @elseif($attendance == 'PL')
+                                <?php $pl++; ?>
+                                <td style="border: 5px solid #000000;background-color:#76933C;">{{ $attendance }}</td>
+                            @elseif($attendance == 'SL')
+                                <?php $sl++; ?>
+                                <td style="border: 5px solid #000000;background-color:#76933C;">{{ $attendance }}</td>
+                            @elseif($attendance == 'UL')
+                                <?php $ul++; ?>
+                                <td style="border: 5px solid #000000;background-color:#76933C;">{{ $attendance }}</td>
                             @elseif($attendance == 'F')
                             	<?php $present++; ?>
                                 <td style="border: 5px solid #000000;background-color:#d8d8d8;">P</td>
@@ -189,20 +212,27 @@
                         @endforeach
 
                         <?php
-                            $total_days = $present + $week_off + $ph + $half_day_actual + $absent;
+
+                            $days = $present + $week_off + $ph + $half_day_actual - $ul;
+                            $total_leaves = $sl + $pl;
+                            $total_days = $sl + $days + $total_leaves;
                         ?>
 
                         <td style="border: 5px solid #000000;text-align:center;">{{ $present }}</td>
                         <td style="border: 5px solid #000000;text-align:center;">{{ $week_off }}</td>
                         <td style="border: 5px solid #000000;text-align:center;">{{ $ph }}</td>
-                        <td style="border: 5px solid #000000;text-align:center;"></td>
-                        <td style="border: 5px solid #000000;text-align:center;"></td>
+                        <td style="border: 5px solid #000000;text-align:center;">{{ $pl }}</td>
+                        <td style="border: 5px solid #000000;text-align:center;">{{ $sl }}</td>
                         <td style="border: 5px solid #000000;text-align:center;">{{ $half_day }}</td>
                         <td style="border: 1px solid black;text-align:center;"> 
                         {{ $half_day_actual }}</td>
-                        <td style="border: 5px solid #000000;text-align:center;"></td>
+                        <td style="border: 5px solid #000000;text-align:center;"> {{ $ul }}</td>
                         <td style="border: 5px solid #000000;text-align:center;">{{ $absent }}
                         </td>
+                        <td style="border: 5px solid #000000;text-align:center;">
+                        {{ $days }}</td>
+                        <td style="border: 5px solid #000000;text-align:center;">
+                        {{ $total_leaves }}</td>
                         <td style="border: 5px solid #000000;text-align:center;">
                         {{ $total_days }}</td>
                     </tr>

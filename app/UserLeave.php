@@ -208,16 +208,15 @@ class UserLeave extends Model
         return $leave;
     }
 
-    public static function getUserLeavesById($user_ids,$month,$year,$category) {
-
-        $status_array = array(1,2);
-
-        $query = UserLeave::query();
-        $query = $query->join('users','users.id','=','user_leave.user_id');
-        $query = $query->select('user_leave.*','users.name as user_name');
+    public static function getUserLeavesById($user_id,$month,$year,$category,$status) {
         
-        $query = $query->whereIn('user_leave.user_id',$user_ids);
-        $query = $query->whereIn('user_leave.status',$status_array);
+        $query = UserLeave::query();
+        $query = $query->leftjoin('users','users.id','=','user_leave.user_id');
+        $query = $query->select('user_leave.*','users.name as user_name','users.id as u_id');
+        
+        if(isset($user_id) && $user_id != 0) {
+            $query = $query->where('user_leave.user_id','=',$user_id);
+        }
 
         if ($month != '' && $year != '') {
             $query = $query->where(\DB::raw('month(user_leave.created_at)'),'=',$month);
@@ -228,7 +227,12 @@ class UserLeave extends Model
             $query = $query->where('user_leave.category','=',$category);
         }
 
+        if ($status != '') {
+            $query = $query->where('user_leave.status','=',$status);
+        }
+
         $query = $query->orderBy('user_leave.id','desc');
+        $query = $query->groupBy('user_leave.id');
         $response = $query->get();
 
         $leave = array();
@@ -238,25 +242,36 @@ class UserLeave extends Model
 
             foreach ($response as $key => $value) {
 
-                $leave[$i]['id'] = $value->id;
-                $leave[$i]['user_id'] = $value->user_id;
-                
-                if (isset($value->from_date) && $value->from_date != '') {
-                    $leave[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date));
+                if (isset($value->from_date) && $value->from_date != '' && isset($value->to_date) && $value->to_date != '') {
+
+                    $from_date = explode("-",$value->from_date);
+                    $to_date = explode("-",$value->to_date);
+
+                    if($from_date[2] < 10) {
+                        $leave[$i]['from_date'] = str_replace(0,'',$from_date[2]);
+                    }
+                    else {
+                        $leave[$i]['from_date'] = $from_date[2];
+                    }
+
+                    if($to_date[2] < 10) {
+                        $leave[$i]['to_date'] = str_replace(0,'',$to_date[2]);
+                    }
+                    else {
+                        $leave[$i]['to_date'] = $to_date[2];
+                    }
                 }
-                else {
-                    $leave[$i]['from_date'] = '';
+                else if(isset($value->from_date) && $value->from_date != '') {
+
+                    $from_date = explode("-",$value->from_date);
+
+                    if($from_date[2] < 10) {
+                        $leave[$i]['from_date'] = str_replace(0,'',$from_date[2]);
+                    }
+                    else {
+                        $leave[$i]['from_date'] = $from_date[2];
+                    }
                 }
-                if (isset($value->to_date) && $value->to_date != '') {
-                    $leave[$i]['to_date'] = date('d-m-Y',strtotime($value->to_date));
-                }
-                else {
-                    $leave[$i]['to_date'] = '';
-                }
-                $leave[$i]['leave_type'] = $value->type_of_leave;
-                $leave[$i]['leave_category'] = $value->category;
-                $leave[$i]['status'] = $value->status;
-                $leave[$i]['user_name'] = $value->user_name;
                 $i++;
             }
         }

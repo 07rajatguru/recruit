@@ -1107,13 +1107,6 @@ class HomeController extends Controller
         $response = WorkPlanning::getWorkPlanningByUserID($user_id,$month,$year);
         $user_remark = UserRemarks::getUserRemarksDetailsByUserID($user_id,$month,$year);
 
-        // Get Applied Leaves
-        $user_ids[] = $user_id;
-        $pl_leave_data = UserLeave::getUserLeavesById($user_ids,$month,$year,'Privilege Leave');
-        $sl_leave_data = UserLeave::getUserLeavesById($user_ids,$month,$year,'Sick Leave');
-        
-        //print_r($pl_leave_data);exit;
-
         $list = array();
         for($d=1; $d<=31; $d++) {
 
@@ -1125,6 +1118,9 @@ class HomeController extends Controller
                 
                 $list[$key][date('j', $time)]['remarks']='';
                 $list[$key][date('j', $time)]['holiday']='';
+                $list[$key][date('j', $time)]['privilege_leave']='';
+                $list[$key][date('j', $time)]['sick_leave']='';
+                $list[$key][date('j', $time)]['unapproved_leave']='';
             }
         }
 
@@ -1138,14 +1134,54 @@ class HomeController extends Controller
 
                 $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
 
-                // Get User id from both name & set holiday dates
+                // Get User id from both name
                 $user_name = $value->first_name."-".$value->last_name;
                 $u_id = User::getUserIdByBothName($user_name);
+
+                // Set holidays dates
                 $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
 
                 if (isset($user_holidays) && sizeof($user_holidays)>0) {
                     foreach ($user_holidays as $h_k => $h_v) {
                         $list[$combine_name][$h_v]['holiday'] = 'Y';
+                    }
+                }
+
+                // Set Leave dates
+                $pl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Privilege Leave',1);
+                $sl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Sick Leave',1);
+                $ul_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',2);
+
+                if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
+
+                    foreach ($pl_leave_data as $pl_k => $pl_v) {
+
+                        for ($pl_i=$pl_v['from_date']; $pl_i <= $pl_v['to_date']; $pl_i++) {
+
+                            $list[$combine_name][$pl_i]['privilege_leave'] = 'Y';
+                        }
+                    }
+                }
+
+                if (isset($sl_leave_data) && sizeof($sl_leave_data)>0) {
+
+                    foreach ($sl_leave_data as $sl_k => $sl_v) {
+
+                        for ($sl_i=$sl_v['from_date']; $sl_i <= $sl_v['to_date']; $sl_i++) { 
+                            
+                            $list[$combine_name][$sl_i]['sick_leave'] = 'Y';
+                        }
+                    }
+                }
+
+                if (isset($ul_leave_data) && sizeof($ul_leave_data)>0) {
+
+                    foreach ($ul_leave_data as $ul_k => $ul_v) {
+
+                        for ($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) { 
+                            
+                            $list[$combine_name][$ul_i]['unapproved_leave'] = 'Y';
+                        }
                     }
                 }
 
@@ -1207,13 +1243,53 @@ class HomeController extends Controller
 
                         $split_unm = explode(",",$key);
 
-                        // Get User id from both name & set holiday dates
+                        // Get User id from both name
                         $u_id = User::getUserIdByBothName($split_unm[0]);
+
+                        // Set holiday dates
                         $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
 
                         if (isset($user_holidays) && sizeof($user_holidays)>0) {
                             foreach ($user_holidays as $h_k => $h_v) {
                                 $list[$key][$h_v]['holiday'] = 'Y';
+                            }
+                        }
+
+                        // Set Leave dates
+                        $pl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Privilege Leave',1);
+                        $sl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Sick Leave',1);
+                        $ul_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',2);
+
+                        if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
+
+                            foreach ($pl_leave_data as $pl_k => $pl_v) {
+
+                                for ($pl_i=$pl_v['from_date']; $pl_i <= $pl_v['to_date']; $pl_i++) {
+
+                                    $list[$key][$pl_i]['privilege_leave'] = 'Y';
+                                }
+                            }
+                        }
+
+                        if (isset($sl_leave_data) && sizeof($sl_leave_data)>0) {
+
+                            foreach ($sl_leave_data as $sl_k => $sl_v) {
+
+                                for ($sl_i=$sl_v['from_date']; $sl_i <= $sl_v['to_date']; $sl_i++) { 
+                                    
+                                    $list[$key][$sl_i]['sick_leave'] = 'Y';
+                                }
+                            }
+                        }
+
+                        if (isset($ul_leave_data) && sizeof($ul_leave_data)>0) {
+
+                            foreach ($ul_leave_data as $ul_k => $ul_v) {
+
+                                for ($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) { 
+                                    
+                                    $list[$key][$ul_i]['unapproved_leave'] = 'Y';
+                                }
                             }
                         }
 
@@ -1300,6 +1376,9 @@ class HomeController extends Controller
                 
                 $list[$key][date('j', $time)]['remarks']='';
                 $list[$key][date('j', $time)]['holiday']='';
+                $list[$key][date('j', $time)]['privilege_leave']='';
+                $list[$key][date('j', $time)]['sick_leave']='';
+                $list[$key][date('j', $time)]['unapproved_leave']='';
             }
         }
 
@@ -1313,14 +1392,54 @@ class HomeController extends Controller
 
                 $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
 
-                // Get User id from both name & set holiday dates
+                // Get User id from both name
                 $user_name = $value->first_name."-".$value->last_name;
                 $u_id = User::getUserIdByBothName($user_name);
+
+                // Set holiday dates
                 $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
 
                 if (isset($user_holidays) && sizeof($user_holidays)>0) {
                     foreach ($user_holidays as $h_k => $h_v) {
                         $list[$combine_name][$h_v]['holiday'] = 'Y';
+                    }
+                }
+
+                // Set Leave dates
+                $pl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Privilege Leave',1);
+                $sl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Sick Leave',1);
+                $ul_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',2);
+
+                if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
+
+                    foreach ($pl_leave_data as $pl_k => $pl_v) {
+
+                        for ($pl_i=$pl_v['from_date']; $pl_i <= $pl_v['to_date']; $pl_i++) {
+
+                            $list[$combine_name][$pl_i]['privilege_leave'] = 'Y';
+                        }
+                    }
+                }
+
+                if (isset($sl_leave_data) && sizeof($sl_leave_data)>0) {
+
+                    foreach ($sl_leave_data as $sl_k => $sl_v) {
+
+                        for ($sl_i=$sl_v['from_date']; $sl_i <= $sl_v['to_date']; $sl_i++) { 
+                            
+                            $list[$combine_name][$sl_i]['sick_leave'] = 'Y';
+                        }
+                    }
+                }
+
+                if (isset($ul_leave_data) && sizeof($ul_leave_data)>0) {
+
+                    foreach ($ul_leave_data as $ul_k => $ul_v) {
+
+                        for ($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) { 
+                            
+                            $list[$combine_name][$ul_i]['unapproved_leave'] = 'Y';
+                        }
                     }
                 }
 
@@ -1387,13 +1506,53 @@ class HomeController extends Controller
 
                         $split_unm = explode(",",$key);
 
-                        // Get User id from both name & set holiday dates
+                        // Get User id from both name
                         $u_id = User::getUserIdByBothName($split_unm[0]);
+
+                        // Set holiday dates
                         $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
 
                         if (isset($user_holidays) && sizeof($user_holidays)>0) {
                             foreach ($user_holidays as $h_k => $h_v) {
                                 $list[$key][$h_v]['holiday'] = 'Y';
+                            }
+                        }
+
+                        // Set Leave dates
+                        $pl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Privilege Leave',1);
+                        $sl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Sick Leave',1);
+                        $ul_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',2);
+
+                        if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
+
+                            foreach ($pl_leave_data as $pl_k => $pl_v) {
+
+                                for ($pl_i=$pl_v['from_date']; $pl_i <= $pl_v['to_date']; $pl_i++) {
+
+                                    $list[$key][$pl_i]['privilege_leave'] = 'Y';
+                                }
+                            }
+                        }
+
+                        if (isset($sl_leave_data) && sizeof($sl_leave_data)>0) {
+
+                            foreach ($sl_leave_data as $sl_k => $sl_v) {
+
+                                for ($sl_i=$sl_v['from_date']; $sl_i <= $sl_v['to_date']; $sl_i++) { 
+                                    
+                                    $list[$key][$sl_i]['sick_leave'] = 'Y';
+                                }
+                            }
+                        }
+
+                        if (isset($ul_leave_data) && sizeof($ul_leave_data)>0) {
+
+                            foreach ($ul_leave_data as $ul_k => $ul_v) {
+
+                                for ($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) { 
+                                    
+                                    $list[$key][$ul_i]['unapproved_leave'] = 'Y';
+                                }
                             }
                         }
 
@@ -1505,6 +1664,9 @@ class HomeController extends Controller
                     
                     $list[$key][date('j', $time)]['remarks']='';
                     $list[$key][date('j', $time)]['holiday']='';
+                    $list[$key][date('j', $time)]['privilege_leave']='';
+                    $list[$key][date('j', $time)]['sick_leave']='';
+                    $list[$key][date('j', $time)]['unapproved_leave']='';
                 }
             }
 
@@ -1518,9 +1680,11 @@ class HomeController extends Controller
 
                     $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
 
-                    // Get User id from both name & set holiday dates
+                    // Get User id from both name 
                     $user_name = $value->first_name."-".$value->last_name;
                     $u_id = User::getUserIdByBothName($user_name);
+
+                    // Set holiday dates
                     $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
 
                     if (isset($user_holidays) && sizeof($user_holidays)>0) {
@@ -1528,6 +1692,41 @@ class HomeController extends Controller
                         foreach ($user_holidays as $h_k => $h_v) {
 
                             $list[$combine_name][$h_v]['holiday'] = 'Y';
+                        }
+                    }
+
+                    // Set Leave dates
+                    $pl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Privilege Leave',1);
+                    $sl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Sick Leave',1);
+                    $ul_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',2);
+
+                    if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
+
+                        foreach ($pl_leave_data as $pl_k => $pl_v) {
+
+                            for($pl_i=$pl_v['from_date']; $pl_i <= $pl_v['to_date']; $pl_i++) {
+                                $list[$combine_name][$pl_i]['privilege_leave'] = 'Y';
+                            }
+                        }
+                    }
+
+                    if (isset($sl_leave_data) && sizeof($sl_leave_data)>0) {
+
+                        foreach ($sl_leave_data as $sl_k => $sl_v) {
+
+                            for($sl_i=$sl_v['from_date']; $sl_i <= $sl_v['to_date']; $sl_i++) {
+                                $list[$combine_name][$sl_i]['sick_leave'] = 'Y';
+                            }
+                        }
+                    }
+
+                    if (isset($ul_leave_data) && sizeof($ul_leave_data)>0) {
+
+                        foreach ($ul_leave_data as $ul_k => $ul_v) {
+
+                            for($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) { 
+                                $list[$combine_name][$ul_i]['unapproved_leave'] = 'Y';
+                            }
                         }
                     }
 
@@ -1595,8 +1794,10 @@ class HomeController extends Controller
 
                             $split_unm = explode(",",$key);
 
-                            // Get User id from both name & set holiday dates
+                            // Get User id from both name
                             $u_id = User::getUserIdByBothName($split_unm[0]);
+
+                            // Set holiday dates
                             $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
 
                             if (isset($user_holidays) && sizeof($user_holidays)>0) {
@@ -1604,6 +1805,41 @@ class HomeController extends Controller
                                 foreach ($user_holidays as $h_k => $h_v) {
 
                                     $list[$key][$h_v]['holiday'] = 'Y';
+                                }
+                            }
+
+                            // Set Leave dates
+                            $pl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Privilege Leave',1);
+                            $sl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Sick Leave',1);
+                            $ul_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',2);
+
+                            if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
+
+                                foreach ($pl_leave_data as $pl_k => $pl_v) {
+
+                                    for($pl_i=$pl_v['from_date']; $pl_i <= $pl_v['to_date']; $pl_i++) {
+                                        $list[$key][$pl_i]['privilege_leave'] = 'Y';
+                                    }
+                                }
+                            }
+
+                            if (isset($sl_leave_data) && sizeof($sl_leave_data)>0) {
+
+                                foreach ($sl_leave_data as $sl_k => $sl_v) {
+
+                                    for($sl_i=$sl_v['from_date']; $sl_i <= $sl_v['to_date']; $sl_i++) {
+                                        $list[$key][$sl_i]['sick_leave'] = 'Y';
+                                    }
+                                }
+                            }
+
+                            if (isset($ul_leave_data) && sizeof($ul_leave_data)>0) {
+
+                                foreach ($ul_leave_data as $ul_k => $ul_v) {
+
+                                    for($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) { 
+                                        $list[$key][$ul_i]['unapproved_leave'] = 'Y';
+                                    }
                                 }
                             }
 
@@ -1710,6 +1946,9 @@ class HomeController extends Controller
                     
                     $list[$key][date('j', $time)]['remarks']='';
                     $list[$key][date('j', $time)]['holiday']='';
+                    $list[$key][date('j', $time)]['privilege_leave']='';
+                    $list[$key][date('j', $time)]['sick_leave']='';
+                    $list[$key][date('j', $time)]['unapproved_leave']='';
                 }
             }
 
@@ -1723,9 +1962,11 @@ class HomeController extends Controller
 
                     $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
 
-                    // Get User id from both name & set holiday dates
+                    // Get User id from both name
                     $user_name = $value->first_name."-".$value->last_name;
                     $u_id = User::getUserIdByBothName($user_name);
+
+                    // Set holiday dates
                     $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
 
                     if (isset($user_holidays) && sizeof($user_holidays)>0) {
@@ -1734,6 +1975,45 @@ class HomeController extends Controller
                             $list[$combine_name][$h_v]['holiday'] = 'Y';
                         }
                     }
+
+                    // Set Leave dates
+                    $pl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Privilege Leave',1);
+                    $sl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Sick Leave',1);
+                    $ul_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',2);
+
+                    if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
+
+                        foreach ($pl_leave_data as $pl_k => $pl_v) {
+
+                            for($pl_i=$pl_v['from_date']; $pl_i <= $pl_v['to_date']; $pl_i++) {
+
+                                $list[$combine_name][$pl_i]['privilege_leave'] = 'Y';
+                            }
+                        }
+                    }
+
+                    if (isset($sl_leave_data) && sizeof($sl_leave_data)>0) {
+
+                        foreach ($sl_leave_data as $sl_k => $sl_v) {
+
+                            for($sl_i=$sl_v['from_date']; $sl_i <= $sl_v['to_date']; $sl_i++) {
+                                
+                                $list[$combine_name][$sl_i]['sick_leave'] = 'Y';
+                            }
+                        }
+                    }
+
+                    if (isset($ul_leave_data) && sizeof($ul_leave_data)>0) {
+
+                        foreach ($ul_leave_data as $ul_k => $ul_v) {
+
+                            for($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) {
+                                
+                                $list[$combine_name][$ul_i]['unapproved_leave'] = 'Y';
+                            }
+                        }
+                    }
+
                     if (isset($user_remark) && sizeof($user_remark) > 0) {
 
                         foreach ($user_remark as $k => $v) {
@@ -1799,14 +2079,54 @@ class HomeController extends Controller
 
                             $split_unm = explode(",",$key);
 
-                            // Get User id from both name & set holiday dates
+                            // Get User id from both name
                             $u_id = User::getUserIdByBothName($split_unm[0]);
+
+                            // Set holiday dates
                             $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
 
                             if (isset($user_holidays) && sizeof($user_holidays)>0) {
 
                                 foreach ($user_holidays as $h_k => $h_v) {
                                     $list[$key][$h_v]['holiday'] = 'Y';
+                                }
+                            }
+
+                            // Set Leave dates
+                            $pl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Privilege Leave',1);
+                            $sl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Sick Leave',1);
+                            $ul_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',2);
+
+                            if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
+
+                                foreach ($pl_leave_data as $pl_k => $pl_v) {
+
+                                    for ($pl_i=$pl_v['from_date']; $pl_i <= $pl_v['to_date']; $pl_i++) {
+
+                                        $list[$key][$pl_i]['privilege_leave'] = 'Y';
+                                    }
+                                }
+                            }
+
+                            if (isset($sl_leave_data) && sizeof($sl_leave_data)>0) {
+
+                                foreach ($sl_leave_data as $sl_k => $sl_v) {
+
+                                    for ($sl_i=$sl_v['from_date']; $sl_i <= $sl_v['to_date']; $sl_i++) { 
+                                        
+                                        $list[$key][$sl_i]['sick_leave'] = 'Y';
+                                    }
+                                }
+                            }
+
+                            if (isset($ul_leave_data) && sizeof($ul_leave_data)>0) {
+
+                                foreach ($ul_leave_data as $ul_k => $ul_v) {
+
+                                    for ($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) { 
+                                        
+                                        $list[$key][$ul_i]['unapproved_leave'] = 'Y';
+                                    }
                                 }
                             }
 
