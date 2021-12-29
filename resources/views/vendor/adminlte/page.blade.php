@@ -191,7 +191,7 @@
                                         </div>
                                     </div>
                                 </li>
-                                <li class="footer"><a href="todos">See All Todo's</a></li>
+                                <li class="footer"><a href="/todos">See All Todo's</a></li>
                             </ul>
                         </li>
                     @endif
