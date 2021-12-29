@@ -143,9 +143,6 @@
                                 if($key1 < $joining_date_array[0] && $joining_date_array[1] == $month && $year <= $joining_date_array[2]) {
                                     $attendance = 'O';
                                 }
-                                else if(in_array($key1, $sundays)) {
-                                    $attendance = 'H';
-                                }
                                 else if(isset($value1['holiday']) && $value1['holiday'] == 'Y'){
                                     $attendance = 'PH';
                                 }
@@ -157,6 +154,9 @@
                                 }
                                 else if(isset($value1['unapproved_leave']) && $value1['unapproved_leave'] == 'Y') {
                                     $attendance = 'UL';
+                                }
+                                else if(in_array($key1, $sundays)) {
+                                    $attendance = 'H';
                                 }
                                 else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
                                     $attendance = 'N';
@@ -185,13 +185,13 @@
                                 <td style="border: 5px solid #000000;background-color:#76933C;">{{ $attendance }}</td>
                             @elseif($attendance == 'PL')
                                 <?php $pl++; ?>
-                                <td style="border: 5px solid #000000;background-color:#76933C;">{{ $attendance }}</td>
+                                <td style="border: 5px solid #000000;background-color:#8db3e2;">{{ $attendance }}</td>
                             @elseif($attendance == 'SL')
                                 <?php $sl++; ?>
-                                <td style="border: 5px solid #000000;background-color:#76933C;">{{ $attendance }}</td>
+                                <td style="border: 5px solid #000000;background-color:#7030a0;">{{ $attendance }}</td>
                             @elseif($attendance == 'UL')
                                 <?php $ul++; ?>
-                                <td style="border: 5px solid #000000;background-color:#76933C;">{{ $attendance }}</td>
+                                <td style="border: 5px solid #000000;background-color:#fac090;">{{ $attendance }}</td>
                             @elseif($attendance == 'F')
                             	<?php $present++; ?>
                                 <td style="border: 5px solid #000000;background-color:#d8d8d8;">P</td>
@@ -221,8 +221,8 @@
                         <td style="border: 5px solid #000000;text-align:center;">{{ $present }}</td>
                         <td style="border: 5px solid #000000;text-align:center;">{{ $week_off }}</td>
                         <td style="border: 5px solid #000000;text-align:center;">{{ $ph }}</td>
-                        <td style="border: 5px solid #000000;text-align:center;">{{ $pl }}</td>
                         <td style="border: 5px solid #000000;text-align:center;">{{ $sl }}</td>
+                        <td style="border: 5px solid #000000;text-align:center;">{{ $pl }}</td>
                         <td style="border: 5px solid #000000;text-align:center;">{{ $half_day }}</td>
                         <td style="border: 1px solid black;text-align:center;"> 
                         {{ $half_day_actual }}</td>

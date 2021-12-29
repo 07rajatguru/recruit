@@ -179,9 +179,6 @@
                                                 if($key1 < $joining_date_array[0] && $joining_date_array[1] == $month && $year <= $joining_date_array[2]) {
                                                     $attendance = 'O';
                                                 }
-                                                else if(in_array($key1, $sundays)) {
-                                                    $attendance = 'H';
-                                                }
                                                 else if(isset($value1['holiday']) && $value1['holiday'] == 'Y') {
                                                     $attendance = 'PH';
                                                 }
@@ -193,6 +190,9 @@
                                                 }
                                                 else if(isset($value1['unapproved_leave']) && $value1['unapproved_leave'] == 'Y') {
                                                     $attendance = 'UL';
+                                                }
+                                                else if(in_array($key1, $sundays)) {
+                                                    $attendance = 'H';
                                                 }
                                                 else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
                                                     $attendance = 'N';
@@ -227,13 +227,13 @@
                                                     <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
                                                 @elseif($attendance == 'PL')
                                                     <?php $pl++; ?>
-                                                    <td style="border: 1px solid black;background-color:#8db3e2;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
                                                 @elseif($attendance == 'SL')
                                                     <?php $sl++; ?>
-                                                    <td style="border: 1px solid black;background-color:#7030a0;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
                                                 @elseif($attendance == 'UL')
                                                     <?php $ul++; ?>
-                                                    <td style="border: 1px solid black;background-color:#fac090;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
                                                 @elseif($attendance == 'H')
                                                     <?php $week_off++; ?>
                                                     <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
