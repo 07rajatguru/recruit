@@ -244,6 +244,12 @@
                             @endif
                         </tbody>
                     </table>
+
+                    @if($loggedin_user_id != $added_by_id)
+                        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                            <button type="submit" class="btn btn-primary" onclick="sendEmail('Approved')">Send Email</button>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -419,6 +425,30 @@
                 }
             });
         }
+    }
+
+    function sendEmail() {
+
+        var wp_id = $("#wp_id").val();
+        var app_url = "{!! env('APP_URL') !!}";
+        var token = $("input[name=_token]").val();
+
+        $.ajax({
+            type: 'POST',
+            url:app_url+'/work-planning/'+wp_id+'/updateremarks',
+            data: {wp_id: wp_id, '_token':token},
+            dataType:'json',
+
+            success: function(data) {
+
+                if (data == 'success') {
+
+                    window.location.href = app_url+'/work-planning/'+wp_id+'/show';
+
+                    alert("Email Sent Successfully.");
+                }
+            }
+        });
     }
 </script>
 @endsection

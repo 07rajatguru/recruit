@@ -130,7 +130,7 @@
                         @elseif($value['total_actual_time'] == '')
                             <td>{{ $value['loggedin_time'] }}</td>
                         @elseif($value['total_actual_time'] >= '06:00:00')
-                            <td style="background-color:#B0E0E6;cursor: pointer;" title="Working Hours More then 06:00">{{ $value['loggedin_time'] }}
+                            <td style="background-color:#B0E0E6;cursor: pointer;" title="Working Hours More than 06:00">{{ $value['loggedin_time'] }}
                             </td>
                         @elseif($value['total_actual_time'] == '04:30:00')
                             <td style="background-color:#fff59a;cursor: pointer;" title="Late in / Early Go">{{ $value['loggedin_time'] }}
@@ -149,7 +149,7 @@
                         @elseif($value['total_actual_time'] == '')
                             <td>{{ $value['loggedin_time'] }}</td>
                         @elseif($value['total_actual_time'] >= '08:30:00')
-                            <td style="background-color:#B0E0E6;cursor: pointer;" title="Working Hours More then 08:30">{{ $value['loggedin_time'] }}</td>
+                            <td style="background-color:#B0E0E6;cursor: pointer;" title="Working Hours More than 08:30">{{ $value['loggedin_time'] }}</td>
                         @elseif($value['total_actual_time'] == '07:00:00')
                             <td style="background-color:#fff59a;cursor: pointer;" title="Late in / Early Go">{{ $value['loggedin_time'] }}
                             </td>

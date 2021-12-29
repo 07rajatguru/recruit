@@ -1126,6 +1126,8 @@ class WorkPlanningController extends Controller
             $total_actual_time = NULL;
         }*/
 
+        $email_value = $request->input('email_value');
+        echo $email_value;exit;
 
         $user_id = \Auth::user()->id;
         $date = date('Y-m-d');
@@ -1391,7 +1393,7 @@ class WorkPlanningController extends Controller
 
             $post_discuss_status = $work_planning->post_discuss_status;
 
-            if($post_discuss_status != '') {
+            if($post_discuss_status == 0) {
 
                 $work_planning->post_discuss_status = 1;   
                 $work_planning->save();
@@ -1477,7 +1479,7 @@ class WorkPlanningController extends Controller
         $message = "Work Planning Remarks Added - " . $date;
         $module_id = $wp_id;
 
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        //event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
         if(isset($action) && $action == 'Add') {
 
@@ -1487,6 +1489,63 @@ class WorkPlanningController extends Controller
 
             return redirect()->route('workplanning.show',$wp_id)->with('success','Remarks Updated Successfully.');
         }
+    }
+
+    public function sendRemarksEmail() {
+
+        $wp_id = $_POST['wp_id'];
+
+        // Send Email Notification
+
+        // Get Work Planning Details
+        $work_planning = WorkPlanning::getWorkPlanningDetailsById($wp_id);
+
+        $user_id = \Auth::user()->id;
+
+        //Get Reports to Email
+        $report_res = User::getReportsToUsersEmail($work_planning['added_by_id']);
+
+        if(isset($report_res->remail) && $report_res->remail!='') {
+            $reports_to_email = $report_res->remail;
+        }
+        else {
+            $reports_to_email = '';
+        }
+
+        // get superadmin email id
+        $superadmin = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($superadmin);
+
+        // Get HR email id
+        $hr = getenv('HRUSERID');
+        $hremail = User::getUserEmailById($hr);
+
+        // Get Vibhuti gmail id
+        $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
+
+        if($reports_to_email == '') {
+            $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
+        }
+        else {
+            $cc_users_array = array($reports_to_email,$superadminemail,$hremail,$vibhuti_gmail_id);
+        }
+
+        $module = "Work Planning Remarks";
+        $sender_name = $user_id;
+        $to = User::getUserEmailById($work_planning['added_by_id']);
+        $cc = implode(",",$cc_users_array);
+
+        $date = date('d/m/Y',strtotime($work_planning['added_date']));
+
+        $subject = "Work Planning Remarks Added - " . $date;
+        $message = "Work Planning Remarks Added - " . $date;
+        $module_id = $wp_id;
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+        $data = 'success';
+
+        return json_encode($data);
     }
 
     public function workPlanningRejection() {

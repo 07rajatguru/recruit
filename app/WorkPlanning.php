@@ -320,7 +320,7 @@ class WorkPlanning extends Model
             $query = $query->where('work_planning.added_date','<=',"$to_date");
         }
 
-        $query = $query->select('work_planning.id');
+        $query = $query->select('work_planning.id','work_planning.added_by');
         $work_planning_res = $query->get();
 
         return $work_planning_res;

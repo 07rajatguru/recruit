@@ -32,6 +32,7 @@ use App\TicketDiscussionPost;
 use App\TicketsDiscussionPostDoc;
 use App\WorkPlanning;
 use App\WorkPlanningList;
+use App\WorkPlanningPost;
 
 class EveryMinute extends Command
 {
@@ -2013,6 +2014,8 @@ class EveryMinute extends Command
 
                 $work_planning = WorkPlanning::getWorkPlanningDetailsById($value['module_id']);
                 $work_planning_list = WorkPlanningList::getWorkPlanningList($value['module_id']);
+                $work_planning_post = WorkPlanningPost::orderBy('created_at','desc')
+                ->where('work_planning_post.wp_id','=',$value['module_id'])->select('work_planning_post.*')->get();
 
                 $today_date = $work_planning['added_date'];
                 $report_delay = $work_planning['report_delay'];
@@ -2029,6 +2032,7 @@ class EveryMinute extends Command
                 $input['total_actual_time'] = $total_actual_time;
                 $input['module'] = $value['module'];
                 $input['work_planning_list'] = $work_planning_list;
+                $input['work_planning_post'] = $work_planning_post;
 
                 \Mail::send('adminlte::emails.workplanningmail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
@@ -2079,10 +2083,15 @@ class EveryMinute extends Command
                     ]);
                 }
 
+                // Get Work Planning Details
                 $work_planning = WorkPlanning::getWorkPlanningDetailsById($value['module_id']);
 
                 // Get Task List
                 $work_planning_list = WorkPlanningList::getWorkPlanningList($value['module_id']);
+
+                // Get Remarks List
+                $work_planning_post = WorkPlanningPost::orderBy('created_at','desc')
+                ->where('work_planning_post.wp_id','=',$value['module_id'])->select('work_planning_post.*')->get();
 
                 $today_date = $work_planning['added_date'];
                 $link = $work_planning['link'];
@@ -2095,6 +2104,7 @@ class EveryMinute extends Command
                 $input['total_projected_time'] = $total_projected_time;
                 $input['total_actual_time'] = $total_actual_time;
                 $input['work_planning_list'] = $work_planning_list;
+                $input['work_planning_post'] = $work_planning_post;
 
                 \Mail::send('adminlte::emails.workplanningmail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
@@ -2262,6 +2272,27 @@ class EveryMinute extends Command
                     $input['cc_array'] = $cc_array;
 
                      \Mail::send('adminlte::emails.listofholidaysemail', $input, function ($message) use($input) {
+                    
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                    });
+
+                    \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
+                }
+            }
+
+            else if ($value['module'] == 'Work Planning Status Reminder') {
+
+                $cc_array = explode(",",$input['cc']);
+                $work_planning = WorkPlanning::getWorkPlanningDetailsById($value['module_id']);
+
+                if(isset($work_planning) && $work_planning != '') {
+
+                    $input['module_id'] = $value['module_id'];
+                    $input['cc_array'] = $cc_array;
+                    $input['work_planning'] = $work_planning;
+
+                     \Mail::send('adminlte::emails.workplanningstatusreminder', $input, function ($message) use($input) {
                     
                         $message->from($input['from_address'], $input['from_name']);
                         $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);

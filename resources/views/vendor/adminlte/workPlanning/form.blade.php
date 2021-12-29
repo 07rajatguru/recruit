@@ -26,7 +26,7 @@
 </div>
 
 @if($action == 'edit')
-    {!! Form::model($work_planning_res,['method' => 'PATCH', 'files' => true, 'route' => ['workplanning.update', $work_planning_res['id']],'id'=>'work_planning_form', 'autocomplete' => 'off']) !!}
+    {!! Form::model($work_planning_res,['method' => 'PATCH', 'files' => true, 'route' => ['workplanning.update', $work_planning_res['id']],'id'=>'work_planning_form', 'autocomplete' => 'off','onsubmit' => "return sendEmail()"]) !!}
 @else
     {!! Form::open(['files' => true, 'route' => 'workplanning.store','id'=>'work_planning_form', 'autocomplete' => 'off']) !!}
 @endif
@@ -238,6 +238,9 @@
     </div>
 </div>
 <!-- Modal End -->
+
+
+<input type="hidden" name="email_value" id="email_value" value="">
 
 {!! Form::close() !!}
 
@@ -576,6 +579,18 @@
     function submitform() {
 
         $('#alertModal').modal('hide');
+    }
+
+    function sendEmail() {
+
+        var msg = "Send an email with updated details?";
+        var confirmvalue = confirm(msg);
+
+        if(confirmvalue) {
+
+            $("#email_value").val(confirmvalue);
+        }
+        return true;
     }
 </script>
 @endsection

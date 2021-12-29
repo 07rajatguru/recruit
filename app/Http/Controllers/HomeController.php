@@ -1112,7 +1112,7 @@ class HomeController extends Controller
         $pl_leave_data = UserLeave::getUserLeavesById($user_ids,$month,$year,'Privilege Leave');
         $sl_leave_data = UserLeave::getUserLeavesById($user_ids,$month,$year,'Sick Leave');
         
-        print_r($pl_leave_data);exit;
+        //print_r($pl_leave_data);exit;
 
         $list = array();
         for($d=1; $d<=31; $d++) {

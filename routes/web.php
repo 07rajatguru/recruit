@@ -3458,6 +3458,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'WorkPlanningController@replySend'
     ]);
 
+    Route::post('work-planning/{id}/updateremarks',[
+        'as' => 'workplanning.updateremarks',
+        'uses' => 'WorkPlanningController@sendRemarksEmail'
+    ]);
+
     Route::get('work-planning/edit/{id}',[
         'as' => 'workplanning.edit',
         'uses' => 'WorkPlanningController@edit',
