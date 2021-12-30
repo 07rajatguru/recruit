@@ -121,6 +121,45 @@
                     </p>
                 @endif
 
+                @if(isset($work_planning_post) && $work_planning_post != '')
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                            <div class="box-header with-border col-md-6"><h4>Comments</h4></div>
+                            <table width="800" cellpadding="3" cellspacing="0">
+                                @foreach($work_planning_post as $key => $value)
+                                    <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                        <?php
+                                            $data = App\UsersDoc::getUserDocInfoByIDType($value['user_id'],'Photo');
+                                        ?>
+                                            
+                                        @if(isset($data['file']) && $data['file'] != '')
+                                            <td align="left">
+                                                <img class="profile-avatar-pic" src="{{$app_url}}/{{ $data['file'] }}" alt="Adler Talent Solutions Pvt. Ltd." style="vertical-align: top;width: 40px;height: 40px;border-radius: 100%;overflow: hidden;">
+                                                <span style="margin-left:10px;">
+                                                {{ $value['added_by'] }}</span><br/>
+                                                <span style="margin-left:52px;">
+                                                {{ $value['content'] }}</span><br/>
+                                                <span style="margin-left:52px;">
+                                                {{ $value['post_date'] }}</span><br/><br/>
+                                            </td>
+                                        @else
+                                            <td align="left">
+                                                <img class="profile-avatar-pic" src="{{$app_url}}/images/default.png" alt="Adler Talent Solutions Pvt. Ltd." style="vertical-align: top;width: 40px;height: 40px;border-radius: 100%;overflow: hidden;">
+                                                <span style="margin-left:10px;">
+                                                {{ $value['added_by'] }}</span><br/>
+                                                <span style="margin-left:52px;">
+                                                {{ $value['content'] }}</span><br/>
+                                                <span style="margin-left:52px;">
+                                                {{ $value['post_date'] }}</span><br/><br/>
+                                            </td>
+                                        @endif
+                                    </tr>
+                                @endforeach
+                            </table>  
+                        </div>
+                    </div>
+                @endif
+
                 <p style="font-family:Cambria, serif;font-size: 11.0pt;text-align: left;">Thanks.</p>
             </td>
         </tr>

@@ -256,7 +256,7 @@
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                 <div class="box-header col-md-6">
-                    <h4>Remarks</h4>
+                    <h4>Comments</h4>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div>

@@ -4,11 +4,11 @@
         {!! Form::hidden('user_id', $user_id) !!}
 
         <div class="comment-area">
-           {!!Form::textarea('content',null, array('placeholder' =>'Add Remarks','id' => 'content','class' => 'form-control','rows' => 10,'required' => true,'style' => 'width:505px;border:1px solid black;')) !!}
+           {!!Form::textarea('content',null, array('placeholder' =>'Add Comment','id' => 'content','class' => 'form-control','rows' => 10,'required' => true,'style' => 'width:505px;border:1px solid black;')) !!}
         </div>
 
         <div class="button-area">
-            <button class="btn btn-primary btn-md-2">Add Remarks</button>
+            <button class="btn btn-primary btn-md-2">Add Comment</button>
         </div>
 
     {!! Form::close() !!}

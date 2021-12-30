@@ -51,6 +51,7 @@ class WorkPlanningPost extends Model
             foreach ($response as $key => $value) {
 
                 $work_planning_post_list[$i]['work_planning_post_id'] = $value->id;
+                $work_planning_post_list[$i]['user_id'] = $value->user_id;
                 $work_planning_post_list[$i]['added_by'] = $value->u_name;
                 $work_planning_post_list[$i]['work_planning_id'] = $work_planning_id;
                 $work_planning_post_list[$i]['content'] = $value->content;
