@@ -33,6 +33,7 @@ use App\TicketsDiscussionPostDoc;
 use App\WorkPlanning;
 use App\WorkPlanningList;
 use App\WorkPlanningPost;
+use App\LateInEarlyGo;
 
 class EveryMinute extends Command
 {
@@ -226,6 +227,7 @@ class EveryMinute extends Command
                 }
 
                 $input['cc_array'] = $cc_array;
+                $input['module'] = $value['module'];
 
                 \Mail::send('adminlte::emails.leavemail', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
@@ -547,7 +549,6 @@ class EveryMinute extends Command
                         'mail.encryption' => trim('ssl'),
                     ]);
                 }
-
 
                 \Mail::send('adminlte::emails.leavereply', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
@@ -2299,6 +2300,124 @@ class EveryMinute extends Command
                     \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
                 }
             }
+
+            else if ($value['module'] == 'Late In Early Go') {
+
+                $cc_array = array();
+                $cc_array = explode(",",$input['cc']);
+
+                // Get Sender name details
+                $user_details = User::getAllDetailsByUserID($value['sender_name']);
+                $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
+                $input['owner_email'] = $user_details->email;
+
+                $user_info = User::getProfileInfo($value['sender_name']);
+                $input['signature'] = $user_info['signature'];
+
+                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
+
+                $input['from_address'] = trim($user_email_details->email);
+
+                $leave = LateInEarlyGo::find($module_id);
+                $input['leave_message'] = $leave->message;
+
+                $input['leave_id'] = $module_id;
+
+                if(strpos($input['from_address'], '@gmail.com') !== false) {
+
+                    config([
+                        'mail.driver' => trim('mail'),
+                        'mail.host' => trim('smtp.gmail.com'),
+                        'mail.port' => trim('587'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('tls'),
+                    ]);
+                }
+                else {
+
+                    config([
+                        'mail.driver' => trim('smtp'),
+                        'mail.host' => trim('smtp.zoho.com'),
+                        'mail.port' => trim('465'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('ssl'),
+                    ]);
+                }
+
+                $input['cc_array'] = $cc_array;
+                $input['module'] = $value['module'];
+
+                \Mail::send('adminlte::emails.leavemail', $input, function ($message) use ($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc_array'])->bcc($input['owner_email'])->subject($input['subject']);
+
+                    if (isset($input['attachment']) && sizeof($input['attachment']) > 0) {
+                        
+                        foreach ($input['attachment'] as $key => $value) {
+                            $message->attach($value);
+                        }
+                    }
+                });
+
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'"); 
+            }
+
+            // Mail for late in early go reply approved/unapproved
+            else if ($value['module'] == 'Late In Early Go Reply') {
+
+                $cc_array = array();
+                $cc_array = explode(",",$input['cc']); 
+
+                $input['cc_array'] = array_unique($cc_array);
+
+                // Get Sender name details
+                $user_details = User::getAllDetailsByUserID($value['sender_name']);
+                $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
+
+                $user_info = User::getProfileInfo($value['sender_name']);
+                $input['signature'] = $user_info['signature'];
+
+                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
+
+                $input['from_address'] = trim($user_email_details->email);
+
+                $leave = LateInEarlyGo::find($module_id);
+                $input['leave_message'] = $leave->reply_message;
+                $input['remarks'] = $leave->remarks;
+
+                if(strpos($input['from_address'], '@gmail.com') !== false) {
+
+                    config([
+                        'mail.driver' => trim('mail'),
+                        'mail.host' => trim('smtp.gmail.com'),
+                        'mail.port' => trim('587'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('tls'),
+                    ]);
+                }
+                else {
+
+                    config([
+                        'mail.driver' => trim('smtp'),
+                        'mail.host' => trim('smtp.zoho.com'),
+                        'mail.port' => trim('465'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('ssl'),
+                    ]);
+                }
+
+                \Mail::send('adminlte::emails.leavereply', $input, function ($message) use ($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'"); 
+            }
+
         }
     }
 }

@@ -20,6 +20,7 @@ use App\UserBenchMark;
 use App\WorkPlanning;
 use App\UserLeave;
 use App\Holidays;
+use App\LateInEarlyGo;
 
 class HomeController extends Controller
 {
@@ -986,7 +987,7 @@ class HomeController extends Controller
             $present_days = 0;
 
             // Get Early go late in count
-            $leave_details = UserLeave::getLateInEarlyGoByUserID(0);
+            $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID(0);
             $earlygo_latein_count = sizeof($leave_details);
 
             // Get Optional Holidays
@@ -1017,7 +1018,7 @@ class HomeController extends Controller
             $present_days = sizeof($present_days_res);
 
             // Get Early go late in count
-            $leave_details = UserLeave::getLateInEarlyGoByUserID($user_id);
+            $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID($user_id);
             $earlygo_latein_count = sizeof($leave_details);
 
             // Get Optional Holidays
@@ -1028,7 +1029,13 @@ class HomeController extends Controller
             $fixed_holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'Fixed Leave');
             $fixed_holidays_count = sizeof($fixed_holiday_details);
         }
-        
+
+        // Get Fixed Holiday of This Year
+        $fixed_holiday_details = Holidays::getUserHolidaysByType(0,'',$year,'Fixed Leave');
+
+        // Get Optional Holiday of This Year
+        $optional_holiday_details = Holidays::getUserHolidaysByType(0,'',$year,'Optional Leave');
+
         $viewVariable = array();
         $viewVariable['pending_work_planning_count'] = $pending_work_planning_count;
         $viewVariable['leave_count'] = $leave_count;
@@ -1036,6 +1043,8 @@ class HomeController extends Controller
         $viewVariable['earlygo_latein_count'] = $earlygo_latein_count;
         $viewVariable['optional_holidays_count'] = $optional_holidays_count;
         $viewVariable['fixed_holidays_count'] = $fixed_holidays_count;
+        $viewVariable['fixed_holiday_details'] = $fixed_holiday_details;
+        $viewVariable['optional_holiday_details'] = $optional_holiday_details;
 
         return view('employee-self-service',$viewVariable);
     }

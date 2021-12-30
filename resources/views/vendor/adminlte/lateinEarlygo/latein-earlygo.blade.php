@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Early Go - Late In')
+@section('title', 'Late In / Early Go')
 
 @section('content_header')
     <h1></h1>
@@ -10,11 +10,9 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Early Go - Late In Leave Applications ({{ $count }})</h2>
+                <h2>Late In / Early Go Requests ({{ $count }})</h2>
             </div>
-            <div class="pull-right">
-                
-            </div>
+            <div class="pull-right"></div>
         </div>
     </div>
 
@@ -25,10 +23,8 @@
                 <th width="5%">Action</th>
                 <th>User Name</th>
                 <th>Sujbect</th>
-                <th>From date</th>
-                <th>To Date</th>
+                <th>Date</th>
                 <th>Leave Type</th>
-                <th>Leave Category</th>
                 <th>Status</th>
 	    	</tr>
     	</thead>
@@ -44,10 +40,8 @@
 
     		    		<td>{{ $value['user_name'] }}</td>
     		    		<td>{{ $value['subject'] }}</td>
-    		    		<td>{{ $value['from_date'] }}</td>
-    		    		<td>{{ $value['to_date'] }}</td>
+    		    		<td>{{ $value['date'] }}</td>
     		    		<td>{{ $value['leave_type'] }}</td>
-    		    		<td>{{ $value['leave_category'] }}</td>
 
     		    		@if($value['status'] == 0)
     		    			<td style="background-color:#8FB1D5;">Pending</td>

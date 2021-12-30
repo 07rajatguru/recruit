@@ -12,9 +12,7 @@
             <div class="pull-left">
                 <h2>Leave Applications ({{ $count }})</h2>
             </div>
-            <div class="pull-right">
-                
-            </div>
+            <div class="pull-right"></div>
         </div>
     </div>
 

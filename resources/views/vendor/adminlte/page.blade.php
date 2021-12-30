@@ -74,22 +74,29 @@
                                 <li>
                                     <!-- inner menu: contains the actual data -->
                                     <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 200px;">
-                                        <ul class="menu" style=" width: 100%; height;150px">
+                                        <ul class="menu" style="width: 100%;">
                                             <li>
-                                                <a href="{{getenv('APP_URL').'/work-planning'}}">Work Planning</a>
+                                                <a href="{{getenv('APP_URL').'/employee-self-service'}}" target="_blank">
+                                                Dashboard</a>
                                             </li>
                                             <li>
-                                                <a href="{{getenv('APP_URL').'/leave'}}">Leave</a>
+                                                <a href="{{getenv('APP_URL').'/late-in-early-go'}}" target="_blank">Apply For Late in / Early Go</a>
                                             </li>
                                             <li>
-                                                <a href="{{getenv('APP_URL').'/holidays'}}">Holiday</a>
+                                                <a href="{{getenv('APP_URL').'/work-planning'}}" target="_blank">Apply For Work From Home</a>
                                             </li>
                                             <li>
-                                                <a href="{{getenv('APP_URL').'/userattendance'}}">Attendance</a>
+                                                <a href="{{getenv('APP_URL').'/work-planning'}}" target="_blank">Work Planning</a>
                                             </li>
                                             <li>
+                                                <a href="{{getenv('APP_URL').'/leave'}}" target="_blank">Apply For Leave Application</a>
+                                            </li>
+                                            <li>
+                                                <a href="{{getenv('APP_URL').'/self-user-attendance'}}" target="_blank">Attendance</a>
+                                            </li>
+                                            <!-- <li>
                                                 <a href="{{getenv('APP_URL').'/ticket-discussion'}}">Ticket</a>
-                                            </li>
+                                            </li> -->
                                         </ul>
                                         
                                         <div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px;border-bottom-right-radius: 7px;border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 131.14754098360655px; background-position: initial initial; background-repeat: initial initial;">

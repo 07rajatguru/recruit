@@ -191,15 +191,9 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-leave|display-user-wise-leave']
     ]);
 
-    Route::get('present-days', [
-        'as' => 'present.days',
-        'uses' => 'WorkPlanningController@getPresentDays',
-        'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
-    ]);
-
-    Route::get('early-go-late-in', [
-        'as' => 'early.late',
-        'uses' => 'LeaveController@getLateInEarlyGo',
+    Route::get('late-in-early-go-request', [
+        'as' => 'late.early',
+        'uses' => 'LateInEarlyGoController@getLateInEarlyGo',
         'middleware' => ['permission:display-leave|display-user-wise-leave']
     ]);
 
@@ -700,12 +694,6 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-leave|display-user-wise-leave']
     ]);
 
-    Route::get('leave/count',[
-        'as' => 'leave.count',
-        'uses' => 'LeaveController@getTotalLeaves',
-        'middleware' => ['permission:display-leave|display-user-wise-leave']
-    ]);
-
     Route::get('leave/balance',[
         'as' => 'leave.balance',
         'uses' => 'LeaveController@getTotalLeaveBalance',
@@ -750,8 +738,74 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-leave']
     ]);
 
-    // Admin > Users
+    // User Late in Early go Routes
+    Route::any('/late-in-early-go',[
+        'as' => 'late-early.index',
+        'uses' => 'LateInEarlyGoController@index',
+        'middleware' => ['permission:display-leave|display-user-wise-leave|leave-add|leave-edit|leave-delete']
+    ]);
 
+    Route::get('late-in-early-go/add',[
+        'as' => 'late-early.add',
+        'uses' => 'LateInEarlyGoController@add',
+        'middleware' => ['permission:leave-add']
+    ]);
+
+    Route::post('late-in-early-go/add',[
+        'as' => 'late-early.store',
+        'uses' => 'LateInEarlyGoController@store',
+        'middleware' => ['permission:leave-add']
+    ]);
+
+    Route::get('late-in-early-go/edit/{id}',[
+        'as' => 'late-early.edit',
+        'uses' => 'LateInEarlyGoController@edit',
+        'middleware' => ['permission:leave-edit']
+    ]);
+
+    Route::patch('late-in-early-go/edit/{id}',[
+        'as' => 'late-early.update',
+        'uses' => 'LateInEarlyGoController@update',
+        'middleware' => ['permission:leave-edit']
+    ]);
+
+    Route::delete('late-in-early-go/{id}',[
+        'as' => 'late-early.destroy',
+        'uses' => 'LateInEarlyGoController@destroy',
+        'middleware' => ['permission:leave-delete']
+    ]);
+
+    Route::post('late-in-early-go/sendmail',[
+        'as' => 'late-early.sendmail',
+        'uses' => 'LateInEarlyGoController@sendMail',
+        'middleware' => ['permission:leave-add']
+    ]);
+
+    Route::get('late-in-early-go/reply/{id}',[
+        'as' => 'late-early.reply',
+        'uses' => 'LateInEarlyGoController@leaveReply',
+        'middleware' => ['permission:display-leave|display-user-wise-leave']
+    ]);
+
+    Route::post('late-in-early-go/reply/{id}',[
+        'as' => 'late-early.replysend',
+        'uses' => 'LateInEarlyGoController@leaveReplySend',
+        'middleware' => ['permission:display-leave|display-user-wise-leave']
+    ]);
+
+    Route::any('late-in-early-go/{status}/{month}/{year}', [
+        'as' => 'late-early.status',
+        'uses' => 'LateInEarlyGoController@getAllDetailsByStatus',
+        'middleware' => ['permission:display-leave|display-user-wise-leave']
+    ]);
+
+    Route::get('late-in-early-go/count',[
+        'as' => 'late-early.count',
+        'uses' => 'LateInEarlyGoController@getTotalLeaves',
+        'middleware' => ['permission:display-leave|display-user-wise-leave']
+    ]);
+
+    // Admin > Users
     Route::get('users', [
         'as' => 'users.index',
         'uses' => 'UserController@index',

@@ -356,6 +356,7 @@ class WorkPlanning extends Model
             $work_planning_res[$i]['work_type'] = $value->work_type;
             $work_planning_res[$i]['added_date'] = date('d-m-Y', strtotime("$value->added_date"));
             $work_planning_res[$i]['status'] = $value->status;
+            $work_planning_res[$i]['post_discuss_status'] = $value->post_discuss_status;
 
             // Convert Logged in time
             $utc_login = $value->loggedin_time;
@@ -404,6 +405,9 @@ class WorkPlanning extends Model
             // Get Total Projected & Actual Time
             $work_planning_res[$i]['total_projected_time'] = $value->total_projected_time;
             $work_planning_res[$i]['total_actual_time'] = $value->total_actual_time;
+
+            // Get Day from added date
+            $work_planning_res[$i]['added_day'] = date('l', strtotime("$value->added_date"));
 
             $i++;
         }

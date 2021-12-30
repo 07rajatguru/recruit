@@ -1843,31 +1843,6 @@ class WorkPlanningController extends Controller
         return view('adminlte::workPlanning.pendingstatusindex',compact('work_planning_res','count'));
     }
 
-    public function getPresentDays() {
-        
-        $user =  \Auth::user();
-        $user_id = $user->id;
-
-        // get superadmin email id
-        $superadminuserid = getenv('SUPERADMINUSERID');
-        
-        $month = date('m');
-        $year = date('Y');
-
-        if($user_id == $superadminuserid) {
-
-            $work_planning_res = array();
-            $count = 0;
-        }
-        else {
-
-            $work_planning_res = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
-            $count = sizeof($work_planning_res);
-        }
-
-        return view('adminlte::workPlanning.presentdays',compact('work_planning_res','count'));
-    }
-
     public function writePost(Request $request, $client_id) {
 
         $input = $request->all();

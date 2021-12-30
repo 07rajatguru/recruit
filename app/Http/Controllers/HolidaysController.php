@@ -268,7 +268,9 @@ class HolidaysController extends Controller
             $count = sizeof($holiday_details);
         }
 
-        return view('adminlte::holidays.typewiseholidays',compact('holiday_details','count','user_id','super_admin_userid'));
+        $name = "Optional";
+
+        return view('adminlte::holidays.typewiseholidays',compact('holiday_details','count','user_id','super_admin_userid','name'));
     }
 
     public function getFixedHolidays() {
@@ -291,6 +293,8 @@ class HolidaysController extends Controller
             $count = sizeof($holiday_details);
         }
 
-        return view('adminlte::holidays.typewiseholidays',compact('holiday_details','count','user_id','super_admin_userid'));
+        $name = "Fixed";
+        
+        return view('adminlte::holidays.typewiseholidays',compact('holiday_details','count','user_id','super_admin_userid','name'));
     }
 }

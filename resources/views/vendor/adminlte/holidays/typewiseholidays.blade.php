@@ -11,7 +11,7 @@
 	<div class="row">
 	    <div class="col-lg-12 margin-tb">
 	        <div class="pull-left">
-	           <h2>Holidays List ({{ $count or 0 }})</h2>  
+	           <h2>{{ $name }} Holidays List ({{ $count or 0 }})</h2>  
 	        </div>
 	        <div class="pull-right">
             </div>

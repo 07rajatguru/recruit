@@ -358,17 +358,7 @@ class LeaveController extends Controller
         $user_leave->status = '0';
         $user_leave->from_tommorrow_date_1 = $from_tommorrow_date_1;
         $user_leave->from_tommorrow_date_2 = $from_tommorrow_date_2;
-
-        if($leave_type == 'Early Go' || $leave_type == 'Late In') {
-
-            $user_leave->days = 0.00;
-        }
-        else {
-
-            $user_leave->days = $days;
-        }
-
-        // Save Details
+        $user_leave->days = $days;
         $user_leave->save();
 
         $leave_id = $user_leave->id;
@@ -534,17 +524,7 @@ class LeaveController extends Controller
         $user_leave->category = $leave_category;
         $user_leave->message = $message;
         $user_leave->status = '0';
-
-        if($leave_type == 'Early Go' || $leave_type == 'Late In') {
-
-            $user_leave->days = 0.00;
-        }
-        else {
-
-            $user_leave->days = $days;
-        }
-
-        // Save Details
+        $user_leave->days = $days;
         $user_leave->save();
 
         return redirect()->route('leave.index')->with('success','Leave Application Updated Successfully.');
@@ -669,8 +649,6 @@ class LeaveController extends Controller
         }
 
         if ($reply == 'Approved') {
-            
-            $approved_by = $leave_details['approved_by'];
 
             $message = "<p><b>Hello " . $user_name . " ,</b></p><p><b>Your leave has been Approved.</b></p>";
 
@@ -725,8 +703,6 @@ class LeaveController extends Controller
             }
         }
         elseif ($reply == 'Rejected') {
-
-            $approved_by = $leave_details['approved_by'];
        
             $message = "<p><b>Hello " . $user_name . " ,</b></p><p><b>Your leave has been Rejected.</b></p>";
 
@@ -782,11 +758,7 @@ class LeaveController extends Controller
             $year = date('Y');
         }
 
-        //$user_leave_data = LeaveBalance::getAllUserWiseLeave();
-
         $user_leave_data_1 = MonthwiseLeaveBalance::getMonthWiseLeaveBalance($month,$year);
-
-        //print_r($user_leave_data_1);exit;
 
         return view('adminlte::leave.userwiseleave',compact('month_array','month','year_array','year','user_leave_data_1'));
     }
@@ -865,16 +837,6 @@ class LeaveController extends Controller
         return redirect()->route('leave.userwise')->with('success','User Leave Balance Deleted Successfully');
     }
 
-    public function getTotalLeaves() {
-        
-        $loggedin_user_id = $_GET['loggedin_user_id'];
-
-        $get_leaves = UserLeave::getLateInEarlyGoByUserID($loggedin_user_id);
-        $leaves_count = sizeof($get_leaves);
-
-        return json_encode($leaves_count);
-    }
-
     public function getTotalLeaveBalance() {
         
         $loggedin_user_id = $_GET['loggedin_user_id'];
@@ -931,12 +893,10 @@ class LeaveController extends Controller
                 })->export('xls');
             }
             else {
-
                 return redirect()->route('leave.userwise')->with('error','No Data Found.');
             }
         }
         else {
-
             return view('errors.403');
         }
     }
@@ -966,25 +926,5 @@ class LeaveController extends Controller
         $count = sizeof($leave_details);
 
         return view('adminlte::leave.appliedleave',compact('leave_details','user_id','count'));
-    }
-
-    public function getLateInEarlyGo() {
-        
-        $user = \Auth::user();
-        $user_id = $user->id;
-        $super_admin_userid = getenv('SUPERADMINUSERID');
-
-        if($user_id == $super_admin_userid) {
-
-            $leave_details = UserLeave::getLateInEarlyGoByUserID(0);
-        }
-        else {
-
-            $leave_details = UserLeave::getLateInEarlyGoByUserID($user_id);
-        }
-        
-        $count = sizeof($leave_details);
-
-        return view('adminlte::leave.earlygo-latein',compact('leave_details','user_id','count'));
     }
 }

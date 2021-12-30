@@ -154,8 +154,11 @@ class Holidays extends Model
             $query = $query->where('holidays.type','=',$type);
         }
 
-        if ($month != '' && $year != '') {
+        if ($month != '') {
             $query = $query->where(\DB::raw('month(holidays.from_date)'),'=',$month);
+        }
+
+        if ($year != '') {
             $query = $query->where(\DB::raw('year(holidays.from_date)'),'=',$year);
         }
 

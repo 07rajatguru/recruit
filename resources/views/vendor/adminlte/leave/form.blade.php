@@ -22,9 +22,9 @@
 </div>
 
 @if( $action == 'edit')
-    {!! Form::model($leave, ['method' => 'PATCH','files' => true,'route' => ['leave.update', $leave->id], 'id' => 'leave_form', 'autocomplete' => 'off','onsubmit' => "return leaveValidation()"]) !!}
+    {!! Form::model($leave, ['method' => 'PATCH','files' => true,'route' => ['leave.update', $leave->id], 'id' => 'leave_form', 'autocomplete' => 'off']) !!}
 @else
-    {!! Form::open(array('route' => 'leave.store','method'=>'POST','files' => true, 'id' => 'leave_form', 'autocomplete' => 'off','onsubmit' => "return leaveValidation()")) !!}
+    {!! Form::open(array('route' => 'leave.store','method'=>'POST','files' => true, 'id' => 'leave_form', 'autocomplete' => 'off')) !!}
 @endif
 
 <div class="row">
@@ -257,61 +257,6 @@
                     });
                 }
             }
-        }
-
-        function leaveValidation() {
-
-            // For calculate leaves added by user
-
-            var loggedin_user_id = $("#loggedin_user_id").val();
-            var app_url = "{!! env('APP_URL') !!}";
-            var token = $("input[name=_token]").val();
-            var leave_type = $("#leave_type").val();
-            var from_date = $("#from_date").val();
-
-            var arr = from_date.split('-');
-            var selected_month = arr[1];
-
-            // Check monthwise leave
-
-            var month_arr = ['01','02','03','04','05','06','07','08','09','10','11','12'];
-
-            dt = new Date();
-            var current_month = month_arr[dt.getMonth()];
-
-            if(leave_type == 'Early Go' || leave_type == 'Late In') {
-
-                if(selected_month == current_month) {
-
-                    $.ajax({
-
-                        type: 'GET',
-                        url:app_url+'/leave/count',
-                        data: {'_token':token, loggedin_user_id:loggedin_user_id},
-                        dataType:'json',
-                        success: function(data) {
-
-                            if (data >= '3') { 
-                                
-                                alert('You Already Take 3 Early Go / Late In in this month.');
-                                return false;
-                            }
-                            else {
-
-                                return true;
-                            }
-                        }
-                    });
-                }
-                else {
-                    return true;
-                }
-            }
-            else {
-                return true;
-            }
-
-            return false;
         }
     </script>
 @endsection
