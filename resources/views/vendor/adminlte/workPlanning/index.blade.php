@@ -111,6 +111,8 @@
 
                     @if($value['status'] == 0)
                         <td style="background-color:#8FB1D5;">{{ $value['added_date'] }}</td>
+                    @elseif($value['status'] == 1 && $value['post_discuss_status'] == 1)
+                        <td style="background-color:#ffb347;">{{ $value['added_date'] }}</td>
                     @elseif($value['status'] == 1)
                         <td style="background-color:#32CD32;">{{ $value['added_date'] }}</td>
                     @else

@@ -112,6 +112,8 @@
 
                     @if($value['status'] == 0)
                         <td style="background-color:#8FB1D5;">{{ $value['added_date'] }}</td>
+                    @elseif($value['status'] == 1 && $value['post_discuss_status'] == 1)
+                        <td style="background-color:#ffb347;">{{ $value['added_date'] }}</td>
                     @elseif($value['status'] == 1)
                         <td style="background-color:#32CD32;">{{ $value['added_date'] }}</td>
                     @else
@@ -169,6 +171,7 @@
 </table>
 
 <input type="hidden" name="status" id="status" value="{{ $status }}">
+<input type="hidden" name="post_discuss_status" id="post_discuss_status" value="{{ $post_discuss_status }}">
 
 @stop 
 
@@ -196,9 +199,13 @@
             var month = $("#month").val();
             var year = $("#year").val();
             var status = $("#status").val();
+            var post_discuss_status = $("#post_discuss_status").val();
 
             if(status == '0') {
                 status = 'pending';
+            }
+            else if(status == '1' && post_discuss_status == '1') {
+                status = 'approval_after_post_discussion';
             }
             else if(status == '1') {
                 status = 'approved';
