@@ -1592,17 +1592,17 @@ class WorkPlanningController extends Controller
 
         if ($reply == 'Approved') {
 
-            \DB::statement("UPDATE `work_planning` SET `status` = '1',`approved_by` = $user_id,`attendance` = 'F' WHERE `id` = $wp_id");
-
             $work_planning = WorkPlanning::find($wp_id);
-
+            $status = $work_planning->status;
             $post_discuss_status = $work_planning->post_discuss_status;
 
-            if($post_discuss_status == 0) {
+            if($post_discuss_status == 0 && $status == 2) {
 
                 $work_planning->post_discuss_status = 1;   
                 $work_planning->save();
             }
+
+            \DB::statement("UPDATE `work_planning` SET `status` = '1',`approved_by` = $user_id,`attendance` = 'F' WHERE `id` = $wp_id");
         }
         elseif ($reply == 'Rejected') {
 
