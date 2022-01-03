@@ -873,13 +873,15 @@ class User extends Authenticatable
         $client = getenv('EXTERNAL');
         $client_type = array($client);
 
+        $superadmin = getenv('SUPERADMINUSERID');
         $saloni_user_id = getenv('SALONIUSERID');
+        $super_array = array($superadmin,$saloni_user_id);
 
         $query = User::query();
         $query = $query->leftjoin('users_otherinfo','users_otherinfo.user_id','=','users.id');
         $query = $query->whereNotIn('users.status',$status_array);
         $query = $query->whereNotIn('users.type',$client_type);
-        $query = $query->where('users.id','!=',$saloni_user_id);
+        $query = $query->whereNotIn('users.id',$super_array);
         $query = $query->select('users.first_name','users.last_name','users_otherinfo.date_of_birth');
         $response = $query->get();
 
@@ -893,15 +895,18 @@ class User extends Authenticatable
 
             foreach ($response as $key => $value) {
 
-                $birth_date = date('d-m',strtotime($value->date_of_birth));
+                if(isset($value->date_of_birth) && $value->date_of_birth != NULL) {
 
-                if($today_date == $birth_date) {
+                    $birth_date = date('d-m',strtotime($value->date_of_birth));
 
-                    if($birthday_date_string == '') {
-                        $birthday_date_string = $value->first_name;
-                    }
-                    else {
-                        $birthday_date_string .= " & " . $value->first_name;
+                    if($today_date == $birth_date) {
+
+                        if($birthday_date_string == '') {
+                            $birthday_date_string = $value->first_name;
+                        }
+                        else {
+                            $birthday_date_string .= " & " . $value->first_name;
+                        }
                     }
                 }
                 $i++;
@@ -911,6 +916,7 @@ class User extends Authenticatable
 
             $birthday_date_string = '';
         }
+
         return $birthday_date_string;
     }
 
@@ -922,13 +928,15 @@ class User extends Authenticatable
         $client = getenv('EXTERNAL');
         $client_type = array($client);
 
+        $superadmin = getenv('SUPERADMINUSERID');
         $saloni_user_id = getenv('SALONIUSERID');
+        $super_array = array($superadmin,$saloni_user_id);
 
         $query = User::query();
         $query = $query->leftjoin('users_otherinfo','users_otherinfo.user_id','=','users.id');
         $query = $query->whereNotIn('users.status',$status_array);
         $query = $query->whereNotIn('users.type',$client_type);
-        $query = $query->where('users.id','!=',$saloni_user_id);
+        $query = $query->whereNotIn('users.id',$super_array);
         $query = $query->select('users.first_name','users.last_name','users_otherinfo.date_of_joining');
         $response = $query->get();
 
@@ -949,17 +957,20 @@ class User extends Authenticatable
                 $number = $year_diff.$convert;
                 $joining_date = date('d-m',strtotime($value->date_of_joining));
 
-                if($today_date == $joining_date) {
+                if(isset($value->date_of_joining) && $value->date_of_joining != NULL) {
 
-                    if($work_ani_date_string == '') {
+                    if($today_date == $joining_date) {
 
-                        if($year_diff > 0) {
-                            $work_ani_date_string = $value->first_name . "'s " . $number . " Year";
+                        if($work_ani_date_string == '') {
+
+                            if($year_diff > 0) {
+                                $work_ani_date_string = $value->first_name . "'s " . $number . " Year";
+                            }
                         }
-                    }
-                    else {
-                        if($year_diff > 0) {
-                            $work_ani_date_string .= " & " . $value->first_name . "'s " . $number . " Year";
+                        else {
+                            if($year_diff > 0) {
+                                $work_ani_date_string .= " & " . $value->first_name . "'s " . $number . " Year";
+                            }
                         }
                     }
                 }
@@ -970,6 +981,7 @@ class User extends Authenticatable
 
             $work_ani_date_string = '';
         }
+        
         return $work_ani_date_string;
     }
 
