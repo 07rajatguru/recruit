@@ -68,8 +68,8 @@
         </div>
 
         <div class="col-md-2" style="width: 25%;">
-            <a href="{{ route('workplanning.status',array('approval_after_post_discussion',$month,$year)) }}" style="text-decoration: none;color: black;">
-                <div style="margin:5px;height:35px;background-color:#ffb347;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Approval After Post Discussion">Approval After Post Discussion ({{ $post_discuss_status }})</div>
+            <a href="{{ route('workplanning.status',array('approval_post_discussion',$month,$year)) }}" style="text-decoration: none;color: black;">
+                <div style="margin:5px;height:35px;background-color:#ffb347;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Approval Post Discussion">Approval Post Discussion ({{ $approval_post_discussion }})</div>
             </a>
         </div>
     </div>
@@ -205,7 +205,7 @@
                 status = 'pending';
             }
             else if(status == '1' && post_discuss_status == '1') {
-                status = 'approval_after_post_discussion';
+                status = 'approval_post_discussion';
             }
             else if(status == '1') {
                 status = 'approved';
@@ -221,6 +221,7 @@
                 '<input type="hidden" name="month" value="'+month+'" />' +
                 '<input type="hidden" name="year" value="'+year+'" />' +
                 '<input type="hidden" name="status" value="'+status+'" />' +
+                '<input type="hidden" name="post_discuss_status" value="'+post_discuss_status+'" />' +
                 '</form>');
 
             $('body').append(form);

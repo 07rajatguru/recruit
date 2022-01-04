@@ -186,6 +186,9 @@ class WorkPlanning extends Model
             // Get Day from added date
             $work_planning_res[$i]['added_day'] = date('l', strtotime("$value->added_date"));
 
+            // Get Delay Counter
+            $work_planning_res[$i]['delay_counter'] = $value->delay_counter;
+
             $i++;
         }
         return $work_planning_res;

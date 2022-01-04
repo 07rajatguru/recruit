@@ -56,7 +56,7 @@ class WorkPlanningController extends Controller
         $pending = 0;
         $approved = 0;
         $rejected = 0;
-        $post_discuss_status = 0;
+        $approval_post_discussion = 0;
 
         if(isset($work_planning_res) && $work_planning_res != '') {
 
@@ -66,7 +66,7 @@ class WorkPlanningController extends Controller
                     $pending++;
                 }
                 else if($work_planning['status'] == '1' && $work_planning['post_discuss_status'] == '1') {
-                    $post_discuss_status++;
+                    $approval_post_discussion++;
                 }
                 else if ($work_planning['status'] == '1') {
                     $approved++;
@@ -81,7 +81,7 @@ class WorkPlanningController extends Controller
             $work_planning_res = '';
         }
 
-        return view('adminlte::workPlanning.index',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','post_discuss_status','user_id'));
+        return view('adminlte::workPlanning.index',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','approval_post_discussion','user_id'));
     }
 
     public function teamIndex() {
@@ -268,7 +268,7 @@ class WorkPlanningController extends Controller
         $pending = 0;
         $approved = 0;
         $rejected = 0;
-        $post_discuss_status = 0;
+        $approval_post_discussion = 0;
 
         if(isset($work_planning_res) && $work_planning_res != '') {
 
@@ -280,7 +280,7 @@ class WorkPlanningController extends Controller
                         $pending++;
                     }
                     else if($value['status'] == '1' && $value['post_discuss_status'] == '1') {
-                        $post_discuss_status++;
+                        $approval_post_discussion++;
                     }
                     else if ($value['status'] == '1') {
                         $approved++;
@@ -296,7 +296,7 @@ class WorkPlanningController extends Controller
             $work_planning_res = '';
         }
 
-        return view('adminlte::workPlanning.teamIndex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','post_discuss_status','user_id','superadminuserid','manager_user_id'));
+        return view('adminlte::workPlanning.teamIndex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','approval_post_discussion','user_id','superadminuserid','manager_user_id'));
     }
 
     public function getWorkPlanningDetailsByStatus($status,$month,$year) {
@@ -347,7 +347,7 @@ class WorkPlanningController extends Controller
             $status = '2';
             $post_discuss_status = '';
         }
-        else if($status == 'approval_after_post_discussion') {
+        else if($status == 'approval_post_discussion') {
             $status = '1';
             $post_discuss_status = '1';
         }
@@ -357,7 +357,7 @@ class WorkPlanningController extends Controller
         $pending = 0;
         $approved = 0;
         $rejected = 0;
-        $post_discuss_status = 0;
+        $approval_post_discussion = 0;
 
         if(isset($work_planning_res) && $work_planning_res != '') {
 
@@ -367,7 +367,7 @@ class WorkPlanningController extends Controller
                     $pending++;
                 }
                 else if($work_planning['status'] == '1' && $work_planning['post_discuss_status'] == '1') {
-                    $post_discuss_status++;
+                    $approval_post_discussion++;
                 }
                 else if ($work_planning['status'] == '1') {
                     $approved++;
@@ -382,7 +382,7 @@ class WorkPlanningController extends Controller
             $work_planning_res = '';
         }
 
-        return view('adminlte::workPlanning.statusindex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','post_discuss_status','status','user_id'));
+        return view('adminlte::workPlanning.statusindex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','approval_post_discussion','status','post_discuss_status','user_id'));
     }
 
     public function getTeamWorkPlanningDetailsByStatus($status,$month,$year) {
@@ -433,7 +433,7 @@ class WorkPlanningController extends Controller
             $status = '2';
             $post_discuss_status = '';
         }
-        else if($status == 'approval_after_post_discussion') {
+        else if($status == 'approval_post_discussion') {
             $status = '1';
             $post_discuss_status = '1';
         }
@@ -588,8 +588,7 @@ class WorkPlanningController extends Controller
         $pending = 0;
         $approved = 0;
         $rejected = 0;
-        $post_discuss_status = 0;
-
+        $approval_post_discussion = 0;
 
         if(isset($work_planning_res) && $work_planning_res != '') {
 
@@ -601,7 +600,7 @@ class WorkPlanningController extends Controller
                         $pending++;
                     }
                     else if($value['status'] == '1' && $value['post_discuss_status'] == '1') {
-                        $post_discuss_status++;
+                        $approval_post_discussion++;
                     }
                     else if ($value['status'] == '1') {
                         $approved++;
@@ -617,7 +616,7 @@ class WorkPlanningController extends Controller
             $work_planning_res = '';
         }
 
-        return view('adminlte::workPlanning.teamStatusIndex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','post_discuss_status','status','user_id','superadminuserid','manager_user_id'));
+        return view('adminlte::workPlanning.teamStatusIndex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','approval_post_discussion','status','post_discuss_status','user_id','superadminuserid','manager_user_id'));
     }
 
     public function create() {
@@ -927,7 +926,7 @@ class WorkPlanningController extends Controller
 
         // If Report Delay send one more email notification
 
-        if(isset($report_delay) && $report_delay != '') {
+        if($time_diff > '01:00') {
 
             if($report_email == '') {
                 $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
@@ -950,16 +949,33 @@ class WorkPlanningController extends Controller
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
             // Set Delay Counter
-            $delay_counter = $work_planning->delay_counter;
-            $new_delay_counter = $delay_counter + 1;
 
-            if($new_delay_counter > 3) {
+            $month = date('m');
+            $year = date('Y');
+            $work_planning = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
 
-                \DB::statement("UPDATE `work_planning` SET `delay_counter` = '$new_delay_counter', `attendance` = 'HD' WHERE id = $work_planning_id");
+            if(isset($work_planning) && sizeof($work_planning) > 0) {
+
+                $delay_counter = '';
+
+                foreach ($work_planning as $key => $value) {
+                    
+                    if($delay_counter == '') {
+                        $delay_counter = $value['delay_counter'];
+                    }
+                    else {
+                        $delay_counter = $delay_counter + $value['delay_counter'];
+                    }
+                }
+            }
+
+            if($delay_counter > 3) {
+
+                \DB::statement("UPDATE `work_planning` SET `delay_counter` = '$delay_counter', `attendance` = 'HD' WHERE `id` = $work_planning_id");
             }
             else {
 
-                \DB::statement("UPDATE `work_planning` SET `delay_counter` = '$new_delay_counter' WHERE id = $work_planning_id");
+                \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1' WHERE `id` = $work_planning_id");
             }
         }
 
@@ -1383,16 +1399,34 @@ class WorkPlanningController extends Controller
                         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
                         // Set Delay Counter
-                        $delay_counter = $work_planning['delay_counter'];
-                        $new_delay_counter = $delay_counter + 1;
 
-                        if($new_delay_counter > 3) {
+                        $month = date('m');
+                        $year = date('Y');
 
-                            \DB::statement("UPDATE `work_planning` SET `delay_counter` = '$new_delay_counter', `attendance` = 'HD' WHERE id = $id");
+                        $work_planning = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
+
+                        if(isset($work_planning) && sizeof($work_planning) > 0) {
+
+                            $delay_counter = '';
+
+                            foreach ($work_planning as $key => $value) {
+                                
+                                if($delay_counter == '') {
+                                    $delay_counter = $value['delay_counter'];
+                                }
+                                else {
+                                    $delay_counter = $delay_counter + $value['delay_counter'];
+                                }
+                            }
+                        }
+
+                        if($delay_counter > 3) {
+
+                            \DB::statement("UPDATE `work_planning` SET `delay_counter` = '$delay_counter', `attendance` = 'HD' WHERE `id` = $id");
                         }
                         else {
 
-                            \DB::statement("UPDATE `work_planning` SET `delay_counter` = '$new_delay_counter' WHERE id = $id");
+                            \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1' WHERE `id` = $id");
                         }
                     }
                 }
@@ -1568,16 +1602,34 @@ class WorkPlanningController extends Controller
                 event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
                 // Set Delay Counter
-                $delay_counter = $work_planning['delay_counter'];
-                $new_delay_counter = $delay_counter + 1;
+                
+                $month = date('m');
+                $year = date('Y');
+                
+                $work_planning = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
 
-                if($new_delay_counter > 3) {
+                if(isset($work_planning) && sizeof($work_planning) > 0) {
 
-                    \DB::statement("UPDATE `work_planning` SET `delay_counter` = '$new_delay_counter', `attendance` = 'HD' WHERE id = $wp_id");
+                    $delay_counter = '';
+
+                    foreach ($work_planning as $key => $value) {
+                                
+                        if($delay_counter == '') {
+                            $delay_counter = $value['delay_counter'];
+                        }
+                        else {
+                            $delay_counter = $delay_counter + $value['delay_counter'];
+                        }
+                    }
+                }
+
+                if($delay_counter > 3) {
+
+                    \DB::statement("UPDATE `work_planning` SET `delay_counter` = '$delay_counter', `attendance` = 'HD' WHERE `id` = $wp_id");
                 }
                 else {
 
-                    \DB::statement("UPDATE `work_planning` SET `delay_counter` = '$new_delay_counter' WHERE id = $wp_id");
+                    \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1' WHERE `id` = $wp_id");
                 }
             }
         }

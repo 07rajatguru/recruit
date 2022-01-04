@@ -67,8 +67,8 @@
         </div>
 
         <div class="col-md-2" style="width: 25%;">
-            <a href="{{ route('workplanning.status',array('approval_after_post_discussion',$month,$year)) }}" style="text-decoration: none;color: black;">
-                <div style="margin:5px;height:35px;background-color:#ffb347;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Approval After Post Discussion">Approval After Post Discussion ({{ $post_discuss_status }})</div>
+            <a href="{{ route('workplanning.status',array('approval_post_discussion',$month,$year)) }}" style="text-decoration: none;color: black;">
+                <div style="margin:5px;height:35px;background-color:#ffb347;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;" title="Approval Post Discussion">Approval Post Discussion ({{ $approval_post_discussion }})</div>
             </a>
         </div>
     </div>
