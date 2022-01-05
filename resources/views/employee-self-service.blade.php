@@ -22,10 +22,10 @@
 
     <div class="row">
         <div class="col-lg-2 col-xs-4">
-            <div class="small-box bg-red" style="border-radius:20%;">
+            <div class="small-box bg-blue" style="border-radius:100%;">
                 <div class="inner">
-                    <h3>{{ $pending_work_planning_count or '0' }}</h3>
-                    <p>My Pending Work Planning</p>
+                    <h3><center>{{ $pending_work_planning_count or '0' }}</center></h3>
+                    <h5><center>My Pending Work Planning</center></h5>
                 </div>
                 <div class="icon">
                     <i class="fa fa-files-o"></i>
@@ -35,10 +35,10 @@
         </div>
 
         <div class="col-lg-2 col-xs-4">
-            <div class="small-box bg-green" style="border-radius:20%;">
+            <div class="small-box bg-yellow" style="border-radius:100%;">
                 <div class="inner">
-                    <h3>{{ $leave_count or '0' }}</h3>
-                    <p>My Applied Leave</p>
+                    <h3><center>{{ $leave_count or '0' }}</center></h3>
+                    <h5><center>My Applied Leave</center></h5>
                 </div>
                 <div class="icon">
                     <i class="fa fa-leanpub"></i>
@@ -48,10 +48,10 @@
         </div>
 
         <div class="col-lg-2 col-xs-4">
-            <div class="small-box bg-maroon" style="border-radius:20%;">
+            <div class="small-box bg-red" style="border-radius:100%;">
                 <div class="inner">
-                    <h3>{{ $present_days or '0' }}</h3>
-                    <p>My Attendance</p>
+                    <h3><center>{{ $present_days or '0' }}</center></h3>
+                    <h5><center>My Attendance</center></h5>
                 </div>
                 <div class="icon">
                     <i class="fa fa-calendar"></i>
@@ -61,10 +61,10 @@
         </div>
 
         <div class="col-lg-2 col-xs-4">
-            <div class="small-box bg-aqua" style="border-radius:20%;">
+            <div class="small-box bg-green" style="border-radius:100%;">
                 <div class="inner">
-                    <h3>{{ $earlygo_latein_count or '0' }}</h3>
-                    <p>My Late In / Early Go Request in this month</p>
+                    <h3><center>{{ $earlygo_latein_count or '0' }}</center></h3>
+                    <h5><center>My Late In / Early Go Request in this month</center></h5>
                 </div>
                 <div class="icon">
                     <i class="fa fa-file-text-o"></i>
@@ -74,10 +74,10 @@
         </div>
 
         <div class="col-lg-2 col-xs-4">
-            <div class="small-box bg-purple" style="border-radius:20%;">
+            <div class="small-box bg-purple" style="border-radius:100%;">
                 <div class="inner">
-                    <h3>{{ $optional_holidays_count or '0' }}</h3>
-                    <p>My Optional holidays in this month</p>
+                    <h3><center>{{ $optional_holidays_count or '0' }}</center></h3>
+                    <h5><center>My Optional holidays in this month</center></h5>
                 </div>
                 <div class="icon">
                     <i class="fa fa-list-alt"></i>
@@ -87,10 +87,10 @@
         </div>
 
         <div class="col-lg-2 col-xs-4">
-            <div class="small-box bg-yellow" style="border-radius:20%;">
+            <div class="small-box bg-maroon" style="border-radius:100%;">
                 <div class="inner">
-                    <h3>{{ $fixed_holidays_count or '0' }}</h3>
-                    <p>My Fixed holidays in this month</p>
+                    <h3><center>{{ $fixed_holidays_count or '0' }}</center></h3>
+                    <h5><center>My Fixed holidays in this month</center></h5>
                 </div>
                 <div class="icon">
                     <i class="fa fa-list-alt"></i>

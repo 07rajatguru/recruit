@@ -80,17 +80,17 @@
                                                 Dashboard</a>
                                             </li>
                                             <li>
-                                                <a href="{{getenv('APP_URL').'/late-in-early-go'}}" target="_blank">Apply For Late in / Early Go</a>
-                                            </li>
-                                            <li>
-                                                <a href="{{getenv('APP_URL').'/work-planning'}}" target="_blank">Apply For Work From Home</a>
-                                            </li>
-                                            <li>
                                                 <a href="{{getenv('APP_URL').'/work-planning'}}" target="_blank">Work Planning</a>
                                             </li>
                                             <li>
-                                                <a href="{{getenv('APP_URL').'/leave'}}" target="_blank">Apply For Leave Application</a>
+                                                <a href="{{getenv('APP_URL').'/late-in-early-go/add'}}" target="_blank">Apply For Late in / Early Go</a>
                                             </li>
+                                            <li>
+                                                <a href="{{getenv('APP_URL').'/leave/add'}}" target="_blank">Apply For Leave Application</a>
+                                            </li>
+                                            <!-- <li>
+                                                <a href="{{getenv('APP_URL').'/work-planning'}}" target="_blank">Apply For Work From Home</a>
+                                            </li> -->
                                             <li>
                                                 <a href="{{getenv('APP_URL').'/self-user-attendance'}}" target="_blank">Attendance</a>
                                             </li>
@@ -118,12 +118,12 @@
                                             <li>
                                                 <a href="{{getenv('APP_URL').'/work-planning/add'}}">Add Work Planning</a>
                                             </li>
-                                            <li>
+                                            <!-- <li>
                                                 <a href="{{getenv('APP_URL').'/ticket-discussion/create'}}">Add Ticket</a>
-                                            </li>
-                                            <li>
+                                            </li> -->
+                                            <!-- <li>
                                                 <a href="{{getenv('APP_URL').'/contactsphere/add'}}">Add Contact</a>
-                                            </li>
+                                            </li> -->
                                             <li>
                                                 <a href="{{getenv('APP_URL').'/lead/create'}}">Add Lead</a>
                                             </li>
