@@ -154,15 +154,23 @@ class WorkPlanning extends Model
             $dt_wp->setTimezone($tz_wp);
             $work_planning_time = $dt_wp->format('g:i A');
             $work_planning_res[$i]['work_planning_time'] = $work_planning_time;
-                
+        
             // Convert Work Planning Status Time
-            $utc_wp_status = $value->work_planning_status_time;
-            $dt_wp_status = new \DateTime($utc_wp_status);
-            $tz_wp_status = new \DateTimeZone('Asia/Kolkata');
 
-            $dt_wp_status->setTimezone($tz_wp_status);
-            $work_planning_status_time = $dt_wp_status->format('g:i A');
-            $work_planning_res[$i]['work_planning_status_time'] = $work_planning_status_time;
+            if($value->work_planning_status_time != '') {
+
+                $utc_wp_status = $value->work_planning_status_time;
+                $dt_wp_status = new \DateTime($utc_wp_status);
+                $tz_wp_status = new \DateTimeZone('Asia/Kolkata');
+
+                $dt_wp_status->setTimezone($tz_wp_status);
+                $work_planning_status_time = $dt_wp_status->format('g:i A');
+                $work_planning_res[$i]['work_planning_status_time'] = $work_planning_status_time;
+            }
+            else {
+
+                $work_planning_res[$i]['work_planning_status_time'] = '';
+            }
             
             // For Pending/Approved/Rejected
             $work_planning_res[$i]['status'] = $value->status;
@@ -188,6 +196,18 @@ class WorkPlanning extends Model
 
             // Get Delay Counter
             $work_planning_res[$i]['delay_counter'] = $value->delay_counter;
+
+            // Get Work Planning Status Date
+            $status_date = date('d-m-Y', strtotime("$value->work_planning_status_date"));
+
+            if(isset($status_date) && $status_date != '01-01-1970') {
+
+                $work_planning_res[$i]['status_date'] = $status_date;
+            }
+            else {
+
+                $work_planning_res[$i]['status_date'] = '';
+            }
 
             $i++;
         }
@@ -242,13 +262,20 @@ class WorkPlanning extends Model
             $work_planning_res['work_planning_time'] = $work_planning_time;
                 
             // Convert Work Planning Status Time
-            $utc_wp_status = $response->work_planning_status_time;
-            $dt_wp_status = new \DateTime($utc_wp_status);
-            $tz_wp_status = new \DateTimeZone('Asia/Kolkata');
+            if($response->work_planning_status_time != '') {
 
-            $dt_wp_status->setTimezone($tz_wp_status);
-            $work_planning_status_time = $dt_wp_status->format('g:i A');
-            $work_planning_res['work_planning_status_time'] = $work_planning_status_time;
+                $utc_wp_status = $response->work_planning_status_time;
+                $dt_wp_status = new \DateTime($utc_wp_status);
+                $tz_wp_status = new \DateTimeZone('Asia/Kolkata');
+
+                $dt_wp_status->setTimezone($tz_wp_status);
+                $work_planning_status_time = $dt_wp_status->format('g:i A');
+                $work_planning_res['work_planning_status_time'] = $work_planning_status_time;
+            }
+            else {
+
+                $work_planning_res['work_planning_status_time'] = '';
+            }
 
             $work_planning_res['remaining_time'] = $response->remaining_time;
             $work_planning_res['attendance'] = $response->attendance;
@@ -264,6 +291,19 @@ class WorkPlanning extends Model
             $work_planning_res['total_actual_time'] = $response->total_actual_time;
             $work_planning_res['evening_status'] = $response->evening_status;
             $work_planning_res['delay_counter'] = $response->delay_counter;
+
+            // Get Work Planning Status Date
+
+            $status_date = date('d-m-Y',strtotime($response->work_planning_status_date));
+
+            if(isset($status_date) && $status_date != '01-01-1970') {
+
+                $work_planning_res['status_date'] = $status_date;
+            }
+            else {
+
+                $work_planning_res['status_date'] = '';
+            }
         }
         return $work_planning_res;
     }
@@ -393,13 +433,22 @@ class WorkPlanning extends Model
             $work_planning_res[$i]['work_planning_time'] = $work_planning_time;
                 
             // Convert Work Planning Status Time
-            $utc_wp_status = $value->work_planning_status_time;
-            $dt_wp_status = new \DateTime($utc_wp_status);
-            $tz_wp_status = new \DateTimeZone('Asia/Kolkata');
 
-            $dt_wp_status->setTimezone($tz_wp_status);
-            $work_planning_status_time = $dt_wp_status->format('g:i A');
-            $work_planning_res[$i]['work_planning_status_time'] = $work_planning_status_time;
+            if($value->work_planning_status_time != '') {
+
+                $utc_wp_status = $value->work_planning_status_time;
+                $dt_wp_status = new \DateTime($utc_wp_status);
+                $tz_wp_status = new \DateTimeZone('Asia/Kolkata');
+
+                $dt_wp_status->setTimezone($tz_wp_status);
+                $work_planning_status_time = $dt_wp_status->format('g:i A');
+                $work_planning_res[$i]['work_planning_status_time'] = $work_planning_status_time;
+            }
+            else {
+
+                $work_planning_res[$i]['work_planning_status_time'] = '';
+            }
+            
 
             // Get Actual Database Login Logout Time
             $work_planning_res[$i]['actual_login_time'] = date("H:i:s", strtotime($loggedin_time));
@@ -411,6 +460,16 @@ class WorkPlanning extends Model
 
             // Get Day from added date
             $work_planning_res[$i]['added_day'] = date('l', strtotime("$value->added_date"));
+
+            // Get Work Planning Status Date
+            $status_date = date('d-m-Y',strtotime($value->work_planning_status_date));
+
+            if(isset($status_date) && $status_date != '01-01-1970') {
+                $work_planning_res[$i]['status_date'] = $status_date;
+            }
+            else {
+                $work_planning_res[$i]['status_date'] = '';
+            }
 
             $i++;
         }

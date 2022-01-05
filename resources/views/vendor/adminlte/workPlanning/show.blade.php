@@ -90,9 +90,14 @@
                     </tr>
                     <tr>
                         <th>Work Planning Time :</th>
-                        <td>{{ $work_planning['work_planning_time'] }}</td>
+                        <td>{{ $work_planning['added_date'] }} - {{ $work_planning['work_planning_time'] }}</td>
                         <th>Status Time :</th>
-                        <td>{{ $work_planning['work_planning_status_time'] }}</td>
+
+                        @if(isset($work_planning['status_date']) && $work_planning['status_date'] != '')
+                            <td>{{ $work_planning['status_date'] }} - {{ $work_planning['work_planning_status_time'] }}</td>
+                        @else
+                            <td>{{ $work_planning['work_planning_status_time'] }}</td>
+                        @endif
                     </tr>
 
                     @if(isset($work_planning['link']) && $work_planning['link'] != '')

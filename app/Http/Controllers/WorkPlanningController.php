@@ -81,7 +81,9 @@ class WorkPlanningController extends Controller
             $work_planning_res = '';
         }
 
-        return view('adminlte::workPlanning.index',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','approval_post_discussion','user_id'));
+        $manager_user_id = env('MANAGERUSERID');
+
+        return view('adminlte::workPlanning.index',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','approval_post_discussion','user_id','manager_user_id'));
     }
 
     public function teamIndex() {
@@ -382,7 +384,9 @@ class WorkPlanningController extends Controller
             $work_planning_res = '';
         }
 
-        return view('adminlte::workPlanning.statusindex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','approval_post_discussion','status','post_discuss_status','user_id'));
+        $manager_user_id = env('MANAGERUSERID');
+
+        return view('adminlte::workPlanning.statusindex',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','approval_post_discussion','status','post_discuss_status','user_id','manager_user_id'));
     }
 
     public function getTeamWorkPlanningDetailsByStatus($status,$month,$year) {
@@ -827,7 +831,7 @@ class WorkPlanningController extends Controller
         $work_planning->loggedin_time = $get_time['login'];
         $work_planning->loggedout_time = $get_time['logout'];
         $work_planning->work_planning_time = date('H:i:s');
-        $work_planning->work_planning_status_time = date('H:i:s');
+        //$work_planning->work_planning_status_time = date('H:i:s');
         $work_planning->remaining_time = $remaining_time;
         $work_planning->added_date = date('Y-m-d');
         $work_planning->added_by = $user_id;
@@ -952,11 +956,11 @@ class WorkPlanningController extends Controller
 
             $month = date('m');
             $year = date('Y');
+
             $work_planning = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
+            $delay_counter = '';
 
             if(isset($work_planning) && sizeof($work_planning) > 0) {
-
-                $delay_counter = '';
 
                 foreach ($work_planning as $key => $value) {
                     
@@ -1010,7 +1014,8 @@ class WorkPlanningController extends Controller
         $work_planning_res = WorkPlanning::find($id);
 
         $user_id = $work_planning_res->added_by;
-        $date = $work_planning_res->added_date;
+        $date = date('d-m-Y',strtotime($work_planning_res->added_date));
+        $status_date = date('d-m-Y',strtotime($work_planning_res->work_planning_status_date));
 
         $work_type = WorkPlanning::getWorkType();
         $selected_work_type = $work_planning_res->work_type;
@@ -1042,16 +1047,32 @@ class WorkPlanningController extends Controller
 
         $dt->setTimezone($tz);
         $work_planning_time = $dt->format('H:i:s');
-        $work_planning_time = date("g:i A", strtotime($work_planning_time));
+        $work_planning_time = $date . " - " . date("g:i A", strtotime($work_planning_time));
 
         // Convert Work Planning Status Time
-        $utc_status = $work_planning_res->work_planning_status_time;
-        $dt_status = new \DateTime($utc_status);
-        $tz_status = new \DateTimeZone('Asia/Kolkata');
+        if($work_planning_res->work_planning_status_time != '') {
 
-        $dt_status->setTimezone($tz_status);
-        $work_planning_status_time = $dt_status->format('H:i:s');
-        $work_planning_status_time = date("g:i A", strtotime($work_planning_status_time));
+            $utc_status = $work_planning_res->work_planning_status_time;
+            $dt_status = new \DateTime($utc_status);
+            $tz_status = new \DateTimeZone('Asia/Kolkata');
+
+            $dt_status->setTimezone($tz_status);
+            $work_planning_status_time = $dt_status->format('H:i:s');
+
+            if(isset($status_date) && $status_date != '01-01-1970') {
+
+                $work_planning_status_time = $status_date . " - " . date("g:i A", strtotime($work_planning_status_time));
+            }
+            else {
+
+                $work_planning_status_time = date("g:i A", strtotime($work_planning_status_time));
+            }
+        }
+        else {
+
+            $work_planning_status_time = '';
+        }
+        
 
         $minimum_working_hours = $work_planning_res->remaining_time;
 
@@ -1165,7 +1186,7 @@ class WorkPlanningController extends Controller
         $total_projected_time = $request->input('total_projected_time');
         $total_actual_time = $request->input('total_actual_time');
         $work_type = $request->input('work_type');
-        $remaining_time = $request->input('remaining_time');
+        //$remaining_time = $request->input('remaining_time');
         $link = Input::get('link');
 
         // Set Attendance for Farhin
@@ -1221,8 +1242,8 @@ class WorkPlanningController extends Controller
 
         $work_planning->attendance = $attendance;
         $work_planning->work_type = $work_type;
-        $work_planning->work_planning_status_time = date('H:i:s');
-        $work_planning->remaining_time = $remaining_time;
+        //$work_planning->work_planning_status_time = date('H:i:s');
+        //$work_planning->remaining_time = $remaining_time;
         $work_planning->link = $link;
 
         if(isset($total_projected_time) && $total_projected_time != '') {
@@ -1307,10 +1328,11 @@ class WorkPlanningController extends Controller
             if($user_id == $added_by_id) {
 
                 $work_planning_status_time = date('H:i:s');
+                $work_planning_status_date = date('Y-m-d');
 
                 $work_planning = WorkPlanning::getWorkPlanningDetailsById($id);
 
-                \DB::statement("UPDATE `work_planning` SET `work_planning_status_time` = '$work_planning_status_time', `loggedout_time` = '$work_planning_status_time', `evening_status` = 1 WHERE id = $id");
+                \DB::statement("UPDATE `work_planning` SET `work_planning_status_time` = '$work_planning_status_time',`work_planning_status_date` = '$work_planning_status_date', `evening_status` = 1 WHERE id = $id");
 
                 // Send Email Notification
 
@@ -1404,10 +1426,9 @@ class WorkPlanningController extends Controller
                         $year = date('Y');
 
                         $work_planning = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
+                        $delay_counter = '';
 
                         if(isset($work_planning) && sizeof($work_planning) > 0) {
-
-                            $delay_counter = '';
 
                             foreach ($work_planning as $key => $value) {
                                 
@@ -1492,6 +1513,7 @@ class WorkPlanningController extends Controller
     public function destroy($id) {
 
         WorkPlanningList::where('work_planning_id','=',$id)->delete();
+        WorkPlanningPost::where('wp_id','=',$id)->delete();
         WorkPlanning::where('id','=',$id)->delete();
 
         return redirect()->route('teamworkplanning.index')->with('success','Work Planning Deleted Successfully.');
@@ -1508,12 +1530,15 @@ class WorkPlanningController extends Controller
     public function sendMail() {
 
         $wp_id = $_POST['wp_id'];
+
         $work_planning_status_time = date('H:i:s');
+        $work_planning_status_date = date('Y-m-d');
+
         $user_id = \Auth::user()->id;
 
         $work_planning = WorkPlanning::getWorkPlanningDetailsById($wp_id);
 
-        \DB::statement("UPDATE `work_planning` SET `work_planning_status_time` = '$work_planning_status_time', `loggedout_time` = '$work_planning_status_time', `evening_status` = 1 WHERE id = $wp_id");
+        \DB::statement("UPDATE `work_planning` SET `work_planning_status_time` = '$work_planning_status_time',`work_planning_status_date` = '$work_planning_status_date', `evening_status` = 1 WHERE id = $wp_id");
 
         // Send Email Notification
 
@@ -1607,10 +1632,9 @@ class WorkPlanningController extends Controller
                 $year = date('Y');
                 
                 $work_planning = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
+                $delay_counter = '';
 
                 if(isset($work_planning) && sizeof($work_planning) > 0) {
-
-                    $delay_counter = '';
 
                     foreach ($work_planning as $key => $value) {
                                 
@@ -1876,7 +1900,9 @@ class WorkPlanningController extends Controller
         
         $user =  \Auth::user();
         $user_id = $user->id;
+        
         $super_admin_userid = getenv('SUPERADMINUSERID');
+        $manager_user_id = env('MANAGERUSERID');
         
         $month = date('m');
         $year = date('Y');
@@ -1892,7 +1918,7 @@ class WorkPlanningController extends Controller
             $count = sizeof($work_planning_res);
         }
 
-        return view('adminlte::workPlanning.pendingstatusindex',compact('work_planning_res','count'));
+        return view('adminlte::workPlanning.pendingstatusindex',compact('work_planning_res','count','user_id','manager_user_id'));
     }
 
     public function writePost(Request $request, $client_id) {
