@@ -395,6 +395,7 @@ class WorkPlanning extends Model
         foreach ($response as $key => $value) {
 
             $work_planning_res[$i]['id'] = $value->id;
+            $work_planning_res[$i]['added_by_id'] = $value->added_by;
             $work_planning_res[$i]['added_by'] = $value->fnm . " " . $value->lnm;
             $work_planning_res[$i]['work_type'] = $value->work_type;
             $work_planning_res[$i]['added_date'] = date('d-m-Y', strtotime("$value->added_date"));

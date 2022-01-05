@@ -168,7 +168,7 @@
                                         @endif
                                     @else
 
-                                        @if($user_id == $manager_user_id)
+                                        @if($v['added_by_id'] == $manager_user_id)
                                         
                                             @if($v['actual_login_time'] > '10:30:00')
                                                 <td style="background-color:lightpink;cursor: pointer" title="Login After 10:30">{{ $v['loggedin_time'] }}</td>
