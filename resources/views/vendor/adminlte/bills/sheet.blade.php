@@ -31,7 +31,17 @@
 				<td colspan="4" style="border: 5px solid #000000;">Name: {{ $invoice_data['client_company_name'] }}</td>
 				<td rowspan="2" style="border: 5px solid #000000;width:17;vertical-align:middle;">
 					<?php
-						$full_year =  date('Y');
+						$month = date('m', strtotime($invoice_data['joining_date']));
+
+						if($month == 1 || $month == 2 || $month == 3) {
+
+							$full_year = date('Y', strtotime($invoice_data['joining_date'])) - 1;
+						}
+						else {
+
+							$full_year =  date('Y', strtotime($invoice_data['joining_date']));
+						}
+						
                         $cur_yr = substr($full_year, -2);
                         $nxt_yr = $cur_yr + 1;
 					?>
