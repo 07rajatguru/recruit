@@ -2288,13 +2288,19 @@ class EveryMinute extends Command
             else if ($value['module'] == 'Work Planning Status Reminder') {
 
                 $cc_array = explode(",",$input['cc']);
+
                 $work_planning = WorkPlanning::getWorkPlanningDetailsById($value['module_id']);
+
+                // Get user name & work planning date
+                $user_name = $work_planning['added_by'];
+                $previous_date = $work_planning['added_date'];
 
                 if(isset($work_planning) && $work_planning != '') {
 
                     $input['module_id'] = $value['module_id'];
                     $input['cc_array'] = $cc_array;
-                    $input['work_planning'] = $work_planning;
+                    $input['user_name'] = $user_name;
+                    $input['previous_date'] = $previous_date;
 
                      \Mail::send('adminlte::emails.workplanningstatusreminder', $input, function ($message) use($input) {
                     

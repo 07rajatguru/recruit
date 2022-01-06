@@ -4,6 +4,8 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\WorkPlanning;
+use App\User;
+use App\Events\NotificationMail;
 
 class SentWorkPlanningStatusReminder extends Command
 {
@@ -58,10 +60,12 @@ class SentWorkPlanningStatusReminder extends Command
 
             foreach ($work_planning_res as $key => $value) {
 
+                $added_date = date('d-m-Y',strtotime($value->added_date));
+
                 $module = "Work Planning Status Reminder";
                 $sender_name = $superadminuserid;
                 $to = User::getUserEmailById($value->added_by);
-                $subject = "Work Planning Status Reminder";
+                $subject = "E2H Reminder – Work Planning Status - " . $added_date;
                 $message = "";
                 $module_id = $value->id;
 
@@ -69,17 +73,13 @@ class SentWorkPlanningStatusReminder extends Command
                 $report_res = User::getReportsToUsersEmail($value->added_by);
 
                 if(isset($report_res->remail) && $report_res->remail!='') {
-                    $report_email = $report_res->remail;
-                }
-                else {
-                    $report_email = '';
-                }
 
-                if($report_email == '') {
-                    $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
+                    $report_email = $report_res->remail;
+                    $cc_users_array = array($report_email,$superadminemail,$hremail,$vibhuti_gmail_id);
                 }
                 else {
-                    $cc_users_array = array($report_email,$superadminemail,$hremail,$vibhuti_gmail_id);
+                    
+                    $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
                 }
 
                 $cc = implode(",",$cc_users_array);

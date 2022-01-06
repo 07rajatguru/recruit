@@ -13,13 +13,13 @@
 
                 <b><p style="text-align: left;">Dear {{ $user_name }},</p></b>
 
-                <i><p style="text-align: left;">Greetings !</p></i>
+                <p style="text-align: left;">Greetings from Easy2Hire!</p>
 
-                <p style="text-align: left;">Please find attached the List of Holidays document for your reference. Request you to go through the same and select your optional holidays in E2H as per the eligibility criteria (mentioned in the same PDF).</p>
+                <p style="text-align: left;">This is to remind you about your Work Planning status for the date of {{ $previous_date }}. You are hereby requested to do the needful before 10.59 AM.</p>
 
-                <p style="text-align: left;">Also, post updating us with your optional leaves; you will be required to send an email a week prior intimating your reporting manager regarding your approaching optional leave.</p>
+                <p style="text-align: left;">Please note that system will send the delayed work planning report post 11 AM in case if you fail to submit the same on time.</p>
 
-                <p style="text-align: left;">In case of any further queries, Please feel free to get in touch with your reporting manager / HR Team.</p>
+                <p style="text-align: left;">Your earliest action will be highly appreciated.</p>
                 
                 <p style="text-align: left;">Thanks.<br/>Easy2Hire Team</p>
             </td>
