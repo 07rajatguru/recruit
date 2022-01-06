@@ -47,60 +47,65 @@
                     {{Form::select('year',$year_array, $year, array('id'=>'year','class'=>'form-control'))}}
                 </div>
             </div>
-            <div class="col-xs-2 col-sm-2 col-md-2">
+            <div class="col-xs-1 col-sm-1 col-md-1">
                 <div class="form-group">
                     {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
                 </div>
             </div>
+            
+            @if($user_id == $super_admin_userid)
+            @else
 
-            <div class="col-xs-2 col-sm-2 col-md-2">
-                <a href="{{ route('leave.status',array('pending',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#8FB1D5;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;width:130px;" title="Pending">Pending ({{ $pending }})</div></a>
-            </div>
+                <div class="col-xs-1 col-sm-1 col-md-1"></div>
 
-            <div class="col-xs-2 col-sm-2 col-md-2">
-                <a href="{{ route('leave.status',array('approved',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#32CD32;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;width:130px;" title="Approved">Approved ({{ $approved }})</div></a>
-            </div>
+                <div class="col-xs-1 col-sm-1 col-md-1">
+                    <a style="text-decoration: none;color: black;"><div style="margin-left:-20px;height:35px;background-color:#f17a40;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 130px;" title="Total PL">Total PL ({{ $leave_balance->leave_total or 0 }})</div>
+                    </a>
+                </div>
 
-            <div class="col-xs-2 col-sm-2 col-md-2">
-                <a href="{{ route('leave.status',array('rejected',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;width:130px;" title="Rejected">Rejected ({{ $rejected }})</div></a>
-            </div>
+                <div class="col-xs-1 col-sm-1 col-md-1">
+                    <a style="text-decoration: none;color: black;"><div style="margin-left: 20px;height:35px;background-color:#f39466;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 130px;" title="Opted PL">Opted PL ({{ $leave_balance->leave_taken or 0 }})</div>
+                    </a>
+                </div>
+
+                <div class="col-xs-1 col-sm-1 col-md-1">
+                    <a style="text-decoration: none;color: black;"><div style="margin-left: 60px;height:35px;background-color:#f6af8c;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 130px;" title="PL Balance">PL Balance ({{ $leave_balance->leave_remaining or 0 }})</div></a>
+                </div>
+
+                <br/><br/><div class="col-xs-1 col-sm-1 col-md-1"></div>
+
+                <div class="col-xs-1 col-sm-1 col-md-1">
+                    <a style="text-decoration: none;color: black;"><div style="margin-left: -20px;height:35px;background-color:#f5ac37;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 130px;" title="Total SL">Total SL ({{ $leave_balance->seek_leave_total or 0 }})</div>
+                    </a>
+                </div>
+
+                <div class="col-xs-1 col-sm-1 col-md-1">
+                    <a style="text-decoration: none;color: black;"><div style="margin-left: 20px;height:35px;background-color:#f7bb5d;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 130px;" title="Opted SL">Opted SL ({{ $leave_balance->seek_leave_taken or 0 }})</div>
+                    </a>
+                </div>
+
+                <div class="col-xs-1 col-sm-1 col-md-1">
+                    <a style="text-decoration: none;color: black;"><div style="margin-left: 60px;height:35px;background-color:#f9cb82;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 130px;" title="SL Balance">SL Balance ({{ $leave_balance->seek_leave_remaining or 0 }})</div></a>
+                </div>
+            @endif
         </div>
     </div><br/>
 
-    @if($user_id == $super_admin_userid)
-    @else
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="col-xs-2 col-sm-2 col-md-2">
-                    <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00c0ef !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 130px;" title="Total PL">Total PL ({{ $leave_balance->leave_total or 0 }})</div>
-                    </a>
-                </div>
-
-                <div class="col-xs-2 col-sm-2 col-md-2">
-                    <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00a65a !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 130px;" title="Opted PL">Opted PL ({{ $leave_balance->leave_taken or 0 }})</div>
-                    </a>
-                </div>
-
-                <div class="col-xs-2 col-sm-2 col-md-2">
-                    <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#dd4b39 !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 130px;" title="PL Balance">PL Balance ({{ $leave_balance->leave_remaining or 0 }})</div></a>
-                </div>
-
-                <div class="col-xs-2 col-sm-2 col-md-2">
-                    <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00c0ef !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 130px;" title="Total SL">Total SL ({{ $leave_balance->seek_leave_total or 0 }})</div>
-                    </a>
-                </div>
-
-                <div class="col-xs-2 col-sm-2 col-md-2">
-                    <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#00a65a !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 130px;" title="Opted SL">Opted SL ({{ $leave_balance->seek_leave_taken or 0 }})</div>
-                    </a>
-                </div>
-
-                <div class="col-xs-2 col-sm-2 col-md-2">
-                    <a style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#dd4b39 !important;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 130px;" title="SL Balance">SL Balance ({{ $leave_balance->seek_leave_remaining or 0 }})</div></a>
-                </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="col-xs-1 col-sm-1 col-md-1">
+                <a href="{{ route('leave.status',array('pending',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#8FB1D5;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;width:120px;margin-left: -5px;" title="Pending">Pending ({{ $pending }})</div></a>
             </div>
+
+            <div class="col-xs-1 col-sm-1 col-md-1">
+                <a href="{{ route('leave.status',array('approved',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#32CD32;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;width:120px;margin-left: 25px;" title="Approved">Approved ({{ $approved }})</div></a>
+            </div>
+
+            <div class="col-xs-1 col-sm-1 col-md-1">
+                <a href="{{ route('leave.status',array('rejected',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#F08080;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;width:120px;margin-left: 55px;" title="Rejected">Rejected ({{ $rejected }})</div></a>
+            </div>   
         </div>
-    @endif
+    </div>
     <br/><br/>
     
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="leave_table">
