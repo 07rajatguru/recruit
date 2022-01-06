@@ -2269,11 +2269,16 @@ class EveryMinute extends Command
 
                     $input['user_name'] = $user_name;
                     $input['cc_array'] = $cc_array;
+                    $input['attachment'] = public_path() . "/" . 'uploads/Adler_List_of_Holidays.pdf';
 
                      \Mail::send('adminlte::emails.listofholidaysemail', $input, function ($message) use($input) {
                     
                         $message->from($input['from_address'], $input['from_name']);
                         $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+
+                        if (isset($input['attachment']) && $input['attachment'] != '') {
+                            $message->attach($input['attachment']);
+                        }
                     });
 
                     \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
