@@ -927,7 +927,18 @@ class UserController extends Controller
 
             // Send email notification to user for select optional leaves
 
-            $cc_users_array = array($admin_email,$superadminemail,$hr_email);
+            //Get Reports to Email
+            $report_res = User::getReportsToUsersEmail($id);
+
+            if(isset($report_res->remail) && $report_res->remail != '') {
+
+                $report_email = $report_res->remail;
+                $cc_users_array = array($report_email,$admin_email,$superadminemail,$hr_email);
+            }
+            else {
+
+                $cc_users_array = array($admin_email,$superadminemail,$hr_email);
+            }
 
             $module = "List of Holidays";
             $sender_name = $logged_in_user_id;
