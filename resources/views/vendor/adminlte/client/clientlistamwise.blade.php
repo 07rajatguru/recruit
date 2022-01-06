@@ -45,6 +45,7 @@
 
                 <th>Status</th>
                 <th>City</th>
+                <th>Industry</th>
             </tr>
         </thead>
     </table>

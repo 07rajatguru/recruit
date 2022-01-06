@@ -3,7 +3,6 @@
 @section('title', 'Monthwise Client List')
 
 @section('content_header')
-
 @stop
 
 @section('content')
@@ -45,6 +44,7 @@
                     
                 <th>Status</th>
                 <th>City</th>
+                <th>Industry</th>
             </tr>
         </thead>
         <?php $i=0; ?>
@@ -81,6 +81,7 @@
                 @endif
 
                 <td>{{ $client['client_address'] or ''}}</td>
+                <td>{{ $client['industry_name'] or ''}}</td>
             </tr>
         @endforeach
         </tbody>

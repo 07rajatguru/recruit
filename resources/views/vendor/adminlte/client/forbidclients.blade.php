@@ -47,6 +47,7 @@
 
                 <th>Status</th>
                 <th>City</th>
+                <th>Industry</th>
                 <th>New AM</th>
             </tr>
         </thead>
@@ -67,13 +68,14 @@
             var client_cat = '';
             var client_status = '';
             var client_city = '';
+            var client_industry = '';
 
             $("#clienttype_table").dataTable({
                 
                 'bProcessing' : true,
                 'serverSide' : true,
                 "order" : [0,'desc'],
-                "columnDefs": [ {orderable: false, targets: [1]}],
+                "columnDefs": [ {orderable: false, targets: [1] },{orderable: false, targets: [6]}],
                 "ajax" : {
                     'url' : '/client/allbytype',
                     "data" : {
@@ -84,6 +86,7 @@
                         "client_cat"  : client_cat,
                         "client_status"  : client_status,
                         "client_city"  : client_city,
+                        "client_industry"  : client_industry,
                     },
                     'type' : 'get',
                     error: function() {
@@ -93,9 +96,9 @@
                 "pageLength": 25,
                 "pagingType": "full_numbers",
                 "fnRowCallback": function( Row, Data ) {
-                    if(numCols == 9) {
+                    if(numCols == 10) {
 
-                        if ( Data[8] != "0" ) {
+                        if ( Data[9] != "0" ) {
                             $('td', Row).css('background-color', '#E8E8E8');
                         }
                         else {
@@ -103,7 +106,7 @@
                         }
                     }
                     else {
-                        if ( Data[9] != "0" ) {
+                        if ( Data[8] != "0" ) {
                             $('td', Row).css('background-color', '#E8E8E8');
                         }
                         else {
@@ -115,11 +118,11 @@
 
             var table = $('#clienttype_table').DataTable();
             
-            if(numCols == 9) {
-                table.columns( [8] ).visible( false );
+            if(numCols == 10) {
+                table.columns( [9] ).visible( false );
             }
             else {
-                table.columns( [9] ).visible( false );
+                table.columns( [8] ).visible( false );
             }
         });
     </script>

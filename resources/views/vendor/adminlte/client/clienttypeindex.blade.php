@@ -26,8 +26,8 @@
 
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#changestatus" onclick="change_status()" title="Change Status">Change Status</button>
 
-                <a class="btn btn-primary" href="{{ route('client.index') }}" title="Back">Back</a>
-                <br/><br/>
+                <a class="btn btn-primary" href="{{ route('client.index') }}" title="Back">Back
+                </a><br/><br/>
 
                 @if($source == 'Left')
 
@@ -122,6 +122,7 @@
 
                 <th>Status</th>
                 <th>City</th>
+                <th>Industry</th>
                 <th>New AM</th>
             </tr>
         </thead>
@@ -300,6 +301,7 @@
             $("#client_owner").select2({width:"565px"});
             $("#client_cat").select2({width:"565px"});
             $("#client_status").select2({width:"565px"});
+            $("#client_industry").select2({width:"565px"});
 
             var source = $("#source").val();
             var numCols = $('#clienttype_table thead th').length;
@@ -309,7 +311,8 @@
             var client_contact_point = $("#client_contact_point").val();
             var client_cat = $("#client_cat").val();
             var client_status = $("#client_status").val();
-            var client_city = $("#client_city").val();  
+            var client_city = $("#client_city").val();
+            var client_industry = $("#client_industry").val();
 
             $("#clienttype_table").DataTable({
 
@@ -327,6 +330,7 @@
                         "client_cat"  : client_cat,
                         "client_status"  : client_status,
                         "client_city"  : client_city,
+                        "client_industry"  : client_industry,
                     },
                     'type' : 'get',
                     error: function() {
@@ -363,9 +367,9 @@
                 "pagingType": "full_numbers",
                 "fnRowCallback": function( Row, Data ) {
                     
-                    if(numCols == 10) {
+                    if(numCols == 11) {
 
-                        if ( Data[9] != "0" ) {
+                        if ( Data[10] != "0" ) {
                             $('td', Row).css('background-color', '#E8E8E8');
                         }
                         else {
@@ -373,7 +377,7 @@
                         }
                     }
                     else {
-                        if ( Data[8] != "0" ) {
+                        if ( Data[9] != "0" ) {
                             $('td', Row).css('background-color', '#E8E8E8');
                         }
                         else {
@@ -385,11 +389,11 @@
 
             var table = $('#clienttype_table').DataTable();
 
-            if(numCols == 10) {
-                table.columns( [9] ).visible( false );
+            if(numCols == 11) {
+                table.columns( [10] ).visible( false );
             }
             else {
-                table.columns( [8] ).visible( false );
+                table.columns( [9] ).visible( false );
             }
 
             $('#allcb').change(function() {
@@ -763,6 +767,7 @@
             $(".client_cat_cls").hide();
             $(".client_status_cls").hide();
             $(".client_city_cls").hide();
+            $(".client_industry_cls").hide();
 
             $("#client_owner").val('');
             $("#client_owner")[0].selectedIndex = '';
@@ -772,6 +777,9 @@
             $("#client_cat").val("");
             $("#client_status").val("");
             $("#client_city").val("");
+            
+            $("#client_industry").val('');
+            $("#client_industry")[0].selectedIndex = '';
         }
 
         if(selected_field == 'Company Name') {
@@ -782,6 +790,7 @@
             $(".client_cat_cls").hide();
             $(".client_status_cls").hide();
             $(".client_city_cls").hide();
+            $(".client_industry_cls").hide();
 
             $("#client_owner").val('');
             $("#client_owner")[0].selectedIndex = '';
@@ -791,6 +800,9 @@
             $("#client_cat").val("");
             $("#client_status").val("");
             $("#client_city").val("");
+            
+            $("#client_industry").val('');
+            $("#client_industry")[0].selectedIndex = '';
         }
 
         if(selected_field == 'Contact Point') {
@@ -801,6 +813,7 @@
             $(".client_cat_cls").hide();
             $(".client_status_cls").hide();
             $(".client_city_cls").hide();
+            $(".client_industry_cls").hide();
 
             $("#client_owner").val('');
             $("#client_owner")[0].selectedIndex = '';
@@ -810,6 +823,9 @@
             $("#client_cat").val("");
             $("#client_status").val("");
             $("#client_city").val("");
+            
+            $("#client_industry").val('');
+            $("#client_industry")[0].selectedIndex = '';
         }
 
         if(selected_field == 'Client Category') {
@@ -820,6 +836,7 @@
             $(".client_cat_cls").show();
             $(".client_status_cls").hide();
             $(".client_city_cls").hide();
+            $(".client_industry_cls").hide();
 
             $("#client_owner").val('');
             $("#client_owner")[0].selectedIndex = '';
@@ -829,6 +846,9 @@
             $("#client_cat").val("");
             $("#client_status").val("");
             $("#client_city").val("");
+            
+            $("#client_industry").val('');
+            $("#client_industry")[0].selectedIndex = '';
         }
 
         if(selected_field == 'Client Status') {
@@ -839,6 +859,7 @@
             $(".client_cat_cls").hide();
             $(".client_status_cls").show();
             $(".client_city_cls").hide();
+            $(".client_industry_cls").hide();
 
             $("#client_owner").val('');
             $("#client_owner")[0].selectedIndex = '';
@@ -848,6 +869,9 @@
             $("#client_cat").val("");
             $("#client_status").val("");
             $("#client_city").val("");
+            
+            $("#client_industry").val('');
+            $("#client_industry")[0].selectedIndex = '';
         }
 
         if(selected_field == 'Client City') {
@@ -858,6 +882,7 @@
             $(".client_cat_cls").hide();
             $(".client_status_cls").hide();
             $(".client_city_cls").show();
+            $(".client_industry_cls").hide();
 
             $("#client_owner").val('');
             $("#client_owner")[0].selectedIndex = '';
@@ -867,6 +892,33 @@
             $("#client_cat").val("");
             $("#client_status").val("");
             $("#client_city").val("");
+            
+            $("#client_industry").val('');
+            $("#client_industry")[0].selectedIndex = '';
+        }
+
+        if(selected_field == 'Client Industry') {
+
+            $(".client_owner_cls").hide();
+            $(".client_company_cls").hide();
+            $(".client_contact_point_cls").hide();
+            $(".client_cat_cls").hide();
+            $(".client_status_cls").hide();
+            $(".client_city_cls").hide();
+            $(".client_industry_cls").show();
+
+
+            $("#client_owner").val('');
+            $("#client_owner")[0].selectedIndex = '';
+            
+            $("#client_company").val("");
+            $("#client_contact_point").val("");
+            $("#client_cat").val("");
+            $("#client_status").val("");
+            $("#client_city").val("");
+            
+            $("#client_industry").val('');
+            $("#client_industry")[0].selectedIndex = '';
         }
     }
 
@@ -878,9 +930,10 @@
         var client_cat = $("#client_cat").val();
         var client_status = $("#client_status").val();
         var client_city = $("#client_city").val();
+        var client_industry = $("#client_industry").val();
         var source = $("#source").val();
 
-        if(client_owner == '' && client_company == '' && client_contact_point == '' && client_cat == '' && client_status == '' && client_city == '') {
+        if(client_owner == '' && client_company == '' && client_contact_point == '' && client_cat == '' && client_status == '' && client_city == '' && client_industry == '') {
 
             alert("Please enter field value.");
             return false;
@@ -895,6 +948,9 @@
             $("#client_cat").val("");
             $("#client_status").val("");
             $("#client_city").val("");
+            
+            $("#client_industry").val('');
+            $("#client_industry")[0].selectedIndex = '';
 
             var url = '/client-list/'+source+'/search';
 
@@ -906,6 +962,7 @@
             '<input type="text" name="client_cat" value="'+client_cat+'" />' +
             '<input type="text" name="client_status" value="'+client_status+'" />' +
             '<input type="text" name="client_city" value="'+client_city+'" />' +
+            '<input type="text" name="client_industry" value="'+client_industry+'" />' +
             '</form>');
 
             $('body').append(form);

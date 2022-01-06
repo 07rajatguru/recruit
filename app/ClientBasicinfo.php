@@ -55,17 +55,19 @@ class ClientBasicinfo extends Ardent
         $field_list['Client Category'] = 'Client Category';
         $field_list['Client Status'] = 'Client Status';
         $field_list['Client City'] = 'Client City';
+        $field_list['Client Industry'] = 'Client Industry';
 
         return $field_list;
     }
 
-    public static function getAllClients($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=0,$type='asc',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city) {
+    public static function getAllClients($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=0,$type='asc',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city,$client_industry) {
 
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->leftjoin('users','users.id','=', 'client_basicinfo.account_manager_id');
         $query = $query->leftjoin('users as u1','u1.id','=', 'client_basicinfo.second_line_am');
-        
+        $query = $query->leftjoin('industry', 'industry.id', '=', 'client_basicinfo.industry_id');
+
         if ($all == 1) {
 
             $query = $query->leftJoin('client_doc',function($join) {
@@ -74,7 +76,7 @@ class ClientBasicinfo extends Ardent
                 $join->where('client_doc.category','=','Client Contract');
             });
 
-            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city');
+            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city','industry.name as industry_name');
 
             if (isset($search) && $search != '') {
 
@@ -109,6 +111,7 @@ class ClientBasicinfo extends Ardent
                     }
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
+                    $query = $query->orwhere('industry.name','like',"%$search%");
 
                     if(($search == 'Yet') || ($search == 'Yet ') || ($search == 'yet') || ($search == 'yet ') || ($search == 'Yet to') || ($search == 'Yet to ' ) || ($search == 'Yet To') || ($search == 'Yet To ') || ($search == 'yet to') || ($search == 'yet to ') || ($search == 'yet To') || ($search == 'yet To ') || ($search == 'Yet to assign') || ($search == 'Yet To assign') || ($search == 'Yet To Assign') || ($search == 'Yet To assign') || ($search == 'Yet to Assign') || ($search == 'yet to Assign') || ($search == 'Yet to assign') || ($search == 'yet To Assign') || ($search == 'yet to assign')) {
                         $search = 0;
@@ -120,7 +123,7 @@ class ClientBasicinfo extends Ardent
 
         else if ($all == 0) {
 
-            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
+            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city','industry.name as industry_name');
 
             /*$manager_user_id = env('MANAGERUSERID');
             $marketing_intern_user_id = env('MARKETINGINTERNUSERID');
@@ -175,6 +178,7 @@ class ClientBasicinfo extends Ardent
 
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
+                    $query = $query->orwhere('industry.name','like',"%$search%");
 
                     if(($search == 'Yet') || ($search == 'Yet ') || ($search == 'yet') || ($search == 'yet ') || ($search == 'Yet to') || ($search == 'Yet to ' ) || ($search == 'Yet To') || ($search == 'Yet To ') || ($search == 'yet to') || ($search == 'yet to ') || ($search == 'yet To') || ($search == 'yet To ') || ($search == 'Yet to assign') || ($search == 'Yet To assign') || ($search == 'Yet To Assign') || ($search == 'Yet To assign') || ($search == 'Yet to Assign') || ($search == 'yet to Assign') || ($search == 'Yet to assign') || ($search == 'yet To Assign') || ($search == 'yet to assign')) {
                         $search = 0;
@@ -212,6 +216,10 @@ class ClientBasicinfo extends Ardent
         else if(isset($client_city) && $client_city != '') {
 
             $query = $query->where('client_address.billing_city','like',"%$client_city%");
+        }
+        else if(isset($client_industry) && $client_industry != '') {
+
+            $query = $query->where('client_basicinfo.industry_id','=',$client_industry);
         }
 
         // Not display Forbid clients
@@ -336,17 +344,21 @@ class ClientBasicinfo extends Ardent
                 $client_array[$i]['second_line_client_owner'] = false;
             }
 
+            $client_array[$i]['industry_name'] = $value->industry_name;
+
             $i++;
         }
+
         return $client_array;
     }
 
-    public static function getAllClientsCount($all=0,$user_id,$search=0,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city) {
+    public static function getAllClientsCount($all=0,$user_id,$search=0,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city,$client_industry) {
 
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->leftjoin('users','users.id','=', 'client_basicinfo.account_manager_id');
         $query = $query->leftjoin('users as u1','u1.id','=', 'client_basicinfo.second_line_am');
+        $query = $query->leftjoin('industry', 'industry.id', '=', 'client_basicinfo.industry_id');
 
         if ($all == 1) {
 
@@ -356,11 +368,11 @@ class ClientBasicinfo extends Ardent
                 $join->where('client_doc.category','=','Client Contract');
             });
 
-            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city');
+            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city','industry.name as industry_name');
         }
         else if ($all == 0) {
 
-            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
+            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city','industry.name as industry_name');
 
             /*$manager_user_id = env('MANAGERUSERID');
             $marketing_intern_user_id = env('MARKETINGINTERNUSERID');
@@ -391,7 +403,6 @@ class ClientBasicinfo extends Ardent
                 $query = $query->orwhere('client_basicinfo.name','like',"%$search%");
                 $query = $query->orwhere('client_basicinfo.coordinator_name','like',"%$search%");
                 $query = $query->orwhere('client_basicinfo.category','like',"%$search%");
-                //$query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
 
                 if ($search == 'Active' || $search == 'active') {
                     $search = 1;
@@ -416,6 +427,7 @@ class ClientBasicinfo extends Ardent
                 
                 $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                 $query = $query->orwhere('client_address.billing_city','like',"%$search%");
+                $query = $query->orwhere('industry.name','like',"%$search%");
 
                 if(($search == 'Yet') || ($search == 'Yet ') || ($search == 'yet') || ($search == 'yet ') || ($search == 'Yet to') || ($search == 'Yet to ' ) || ($search == 'Yet To') || ($search == 'Yet To ') || ($search == 'yet to') || ($search == 'yet to ') || ($search == 'yet To') || ($search == 'yet To ') || ($search == 'Yet to assign') || ($search == 'Yet To assign') || ($search == 'Yet To Assign') || ($search == 'Yet To assign') || ($search == 'Yet to Assign') || ($search == 'yet to Assign') || ($search == 'Yet to assign') || ($search == 'yet To Assign') || ($search == 'yet to assign')) {
                     
@@ -456,6 +468,10 @@ class ClientBasicinfo extends Ardent
         else if(isset($client_city) && $client_city != '') {
 
             $query = $query->where('client_address.billing_city','like',"%$client_city%");
+        }
+        else if(isset($client_industry) && $client_industry != '') {
+
+            $query = $query->where('client_basicinfo.industry_id','=',$client_industry);
         }
 
         // Not display Forbid clients
@@ -607,7 +623,8 @@ class ClientBasicinfo extends Ardent
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->leftJoin('users','users.id','=','client_basicinfo.account_manager_id');
-        $query = $query->select('client_basicinfo.*','users.name as am_name','users.id as am_id','client_address.billing_city as city');
+        $query = $query->leftjoin('industry', 'industry.id', '=', 'client_basicinfo.industry_id');
+        $query = $query->select('client_basicinfo.*','users.name as am_name','users.id as am_id','client_address.billing_city as city','industry.name as industry_name');
         $query = $query->whereRaw('MONTH(client_basicinfo.created_at) = ?',[$month]);
         $query = $query->whereRaw('YEAR(client_basicinfo.created_at) = ?',[$year]);
 
@@ -683,6 +700,8 @@ class ClientBasicinfo extends Ardent
             else {
                 $client[$i]['second_line_am_name'] = '';
             }
+
+            $client[$i]['industry_name'] = $value->industry_name;
             
             $i++;
         }
@@ -832,12 +851,13 @@ class ClientBasicinfo extends Ardent
         return $status;
     }
 
-    public static function getClientsByType($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=0,$type='asc',$status,$category=NULL,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city) {
+    public static function getClientsByType($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=0,$type='asc',$status,$category=NULL,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city,$client_industry) {
 
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
         $query = $query->leftjoin('users as u1','u1.id','=', 'client_basicinfo.second_line_am');
+        $query = $query->leftjoin('industry', 'industry.id', '=', 'client_basicinfo.industry_id');
 
         if ($all == 1) {
 
@@ -846,7 +866,7 @@ class ClientBasicinfo extends Ardent
                 $join->where('client_doc.category','=','Client Contract');
             });
 
-            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city');
+            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city','industry.name as industry_name');
 
             if (isset($search) && $search != '') {
 
@@ -860,7 +880,8 @@ class ClientBasicinfo extends Ardent
                     //$query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
-                    
+                    $query = $query->orwhere('industry.name','like',"%$search%");
+
                     if ($search == 'Active' || $search == 'active') {
                         $search = 1;
                         $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
@@ -891,7 +912,7 @@ class ClientBasicinfo extends Ardent
         }
         else if ($all == 0) {
 
-            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
+            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city','industry.name as industry_name');
 
             /*$manager_user_id = env('MANAGERUSERID');
             $marketing_intern_user_id = env('MARKETINGINTERNUSERID');
@@ -923,6 +944,7 @@ class ClientBasicinfo extends Ardent
                     //$query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
+                    $query = $query->orwhere('industry.name','like',"%$search%");
 
                     if(($search == 'Yet') || ($search == 'Yet ') || ($search == 'yet') || ($search == 'yet ') || ($search == 'Yet to') || ($search == 'Yet to ' ) || ($search == 'Yet To') || ($search == 'Yet To ') || ($search == 'yet to') || ($search == 'yet to ') || ($search == 'yet To') || ($search == 'yet To ') || ($search == 'Yet to assign') || ($search == 'Yet To assign') || ($search == 'Yet To Assign') || ($search == 'Yet To assign') || ($search == 'Yet to Assign') || ($search == 'yet to Assign') || ($search == 'Yet to assign') || ($search == 'yet To Assign') || ($search == 'yet to assign')) {
                         $search = 0;
@@ -960,6 +982,10 @@ class ClientBasicinfo extends Ardent
         else if(isset($client_city) && $client_city != '') {
 
             $query = $query->where('client_address.billing_city','like',"%$client_city%");
+        }
+        else if(isset($client_industry) && $client_industry != '') {
+
+            $query = $query->where('client_basicinfo.industry_id','=',$client_industry);
         }
 
         if (isset($status) && $status >= 0) {
@@ -1098,6 +1124,8 @@ class ClientBasicinfo extends Ardent
             else {
                 $client_array[$i]['second_line_client_owner'] = false;
             }
+
+            $client_array[$i]['industry_name'] = $value->industry_name;
             
             $i++;
         }
@@ -1105,12 +1133,13 @@ class ClientBasicinfo extends Ardent
         return $client_array;
     }
 
-    public static function getClientsByTypeCount($all=0,$user_id,$search=0,$status,$category=NULL,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city) {
+    public static function getClientsByTypeCount($all=0,$user_id,$search=0,$status,$category=NULL,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city,$client_industry) {
 
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
         $query = $query->leftjoin('users as u1','u1.id','=', 'client_basicinfo.second_line_am');
+        $query = $query->leftjoin('industry', 'industry.id', '=', 'client_basicinfo.industry_id');
 
         if ($all == 1) {
 
@@ -1119,7 +1148,7 @@ class ClientBasicinfo extends Ardent
                 $join->where('client_doc.category','=','Client Contract');
             });
 
-            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city');
+            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city','industry.name as industry_name');
 
             if (isset($search) && $search != '') {
 
@@ -1133,7 +1162,8 @@ class ClientBasicinfo extends Ardent
                     //$query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
-                    
+                    $query = $query->orwhere('industry.name','like',"%$search%");
+
                     if ($search == 'Active' || $search == 'active') {
                         $search = 1;
                         $query = $query->orwhere('client_basicinfo.status','like',"%$search%");
@@ -1165,7 +1195,7 @@ class ClientBasicinfo extends Ardent
         }
         else if ($all == 0) {
 
-            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
+            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city','industry.name as industry_name');
 
             /*$manager_user_id = env('MANAGERUSERID');
             $marketing_intern_user_id = env('MARKETINGINTERNUSERID');
@@ -1197,6 +1227,7 @@ class ClientBasicinfo extends Ardent
                     //$query = $query->orwhere('client_basicinfo.latest_remarks','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
+                    $query = $query->orwhere('industry.name','like',"%$search%");
 
                     if(($search == 'Yet') || ($search == 'Yet ') || ($search == 'yet') || ($search == 'yet ') || ($search == 'Yet to') || ($search == 'Yet to ' ) || ($search == 'Yet To') || ($search == 'Yet To ') || ($search == 'yet to') || ($search == 'yet to ') || ($search == 'yet To') || ($search == 'yet To ') || ($search == 'Yet to assign') || ($search == 'Yet To assign') || ($search == 'Yet To Assign') || ($search == 'Yet To assign') || ($search == 'Yet to Assign') || ($search == 'yet to Assign') || ($search == 'Yet to assign') || ($search == 'yet To Assign') || ($search == 'yet to assign')) {
                         $search = 0;
@@ -1234,6 +1265,10 @@ class ClientBasicinfo extends Ardent
         else if(isset($client_city) && $client_city != '') {
 
             $query = $query->where('client_address.billing_city','like',"%$client_city%");
+        }
+        else if(isset($client_industry) && $client_industry != '') {
+
+            $query = $query->where('client_basicinfo.industry_id','=',$client_industry);
         }
 
         if (isset($status) && $status >= 0) {
@@ -1549,6 +1584,7 @@ class ClientBasicinfo extends Ardent
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
+        $query = $query->leftjoin('industry', 'industry.id', '=', 'client_basicinfo.industry_id');
 
         if ($all == 1) {
 
@@ -1558,11 +1594,11 @@ class ClientBasicinfo extends Ardent
                 $join->where('client_doc.category','=','Client Contract');
             });
 
-            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city');
+            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city','industry.name as industry_name');
         }
         else if ($all == 0) {
 
-            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
+            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city','industry.name as industry_name');
 
             $query = $query->where('second_line_am',$user_id);
         }
@@ -1606,6 +1642,7 @@ class ClientBasicinfo extends Ardent
                 
                 $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                 $query = $query->orwhere('client_address.billing_city','like',"%$search%");
+                $query = $query->orwhere('industry.name','like',"%$search%");
 
                 if(($search == 'Yet') || ($search == 'Yet ') || ($search == 'yet') || ($search == 'yet ') || ($search == 'Yet to') || ($search == 'Yet to ' ) || ($search == 'Yet To') || ($search == 'Yet To ') || ($search == 'yet to') || ($search == 'yet to ') || ($search == 'yet To') || ($search == 'yet To ') || ($search == 'Yet to assign') || ($search == 'Yet To assign') || ($search == 'Yet To Assign') || ($search == 'Yet To assign') || ($search == 'Yet to Assign') || ($search == 'yet to Assign') || ($search == 'Yet to assign') || ($search == 'yet To Assign') || ($search == 'yet to assign')) {
                     
@@ -1637,6 +1674,7 @@ class ClientBasicinfo extends Ardent
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->leftjoin('users', 'users.id', '=', 'client_basicinfo.account_manager_id');
+        $query = $query->leftjoin('industry', 'industry.id', '=', 'client_basicinfo.industry_id');
 
         // Not display Forbid clients
         $query = $query->whereNotIn('client_basicinfo.status',$status_id_array);
@@ -1649,7 +1687,7 @@ class ClientBasicinfo extends Ardent
                 $join->where('client_doc.category','=','Client Contract');
             });
 
-            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city');
+            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_doc.file','client_address.billing_street2 as area','client_address.billing_city as city','industry.name as industry_name');
 
             if (isset($search) && $search != '') {
 
@@ -1684,6 +1722,7 @@ class ClientBasicinfo extends Ardent
                     }
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
+                    $query = $query->orwhere('industry.name','like',"%$search%");
 
                     if(($search == 'Yet') || ($search == 'Yet ') || ($search == 'yet') || ($search == 'yet ') || ($search == 'Yet to') || ($search == 'Yet to ' ) || ($search == 'Yet To') || ($search == 'Yet To ') || ($search == 'yet to') || ($search == 'yet to ') || ($search == 'yet To') || ($search == 'yet To ') || ($search == 'Yet to assign') || ($search == 'Yet To assign') || ($search == 'Yet To Assign') || ($search == 'Yet To assign') || ($search == 'Yet to Assign') || ($search == 'yet to Assign') || ($search == 'Yet to assign') || ($search == 'yet To Assign') || ($search == 'yet to assign')) {
                         $search = 0;
@@ -1695,7 +1734,7 @@ class ClientBasicinfo extends Ardent
 
         else if ($all == 0) {
 
-            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city');
+            $query = $query->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id','client_address.billing_street2 as area','client_address.billing_city as city','industry.name as industry_name');
 
             $query = $query->where('second_line_am',$user_id);
             
@@ -1733,6 +1772,7 @@ class ClientBasicinfo extends Ardent
 
                     $query = $query->orwhere('client_address.billing_street2','like',"%$search%");
                     $query = $query->orwhere('client_address.billing_city','like',"%$search%");
+                    $query = $query->orwhere('industry.name','like',"%$search%");
 
                     if(($search == 'Yet') || ($search == 'Yet ') || ($search == 'yet') || ($search == 'yet ') || ($search == 'Yet to') || ($search == 'Yet to ' ) || ($search == 'Yet To') || ($search == 'Yet To ') || ($search == 'yet to') || ($search == 'yet to ') || ($search == 'yet To') || ($search == 'yet To ') || ($search == 'Yet to assign') || ($search == 'Yet To assign') || ($search == 'Yet To Assign') || ($search == 'Yet To assign') || ($search == 'Yet to Assign') || ($search == 'yet to Assign') || ($search == 'Yet to assign') || ($search == 'yet To Assign') || ($search == 'yet to assign')) {
                         $search = 0;
@@ -1861,6 +1901,8 @@ class ClientBasicinfo extends Ardent
             else {
                 $client_array[$i]['second_line_client_owner'] = false;
             }
+
+            $client_array[$i]['industry_name'] = $value->industry_name;
 
             $i++;
         }
