@@ -82,7 +82,7 @@ class SentWorkPlanningStatusReminder extends Command
                     $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
                 }
 
-                $cc = implode(",",$cc_users_array);
+                $cc = "";
 
                 event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
             }

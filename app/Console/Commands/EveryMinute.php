@@ -2287,7 +2287,7 @@ class EveryMinute extends Command
 
             else if ($value['module'] == 'Work Planning Status Reminder') {
 
-                $cc_array = explode(",",$input['cc']);
+                //$cc_array = explode(",",$input['cc']);
 
                 $work_planning = WorkPlanning::getWorkPlanningDetailsById($value['module_id']);
 
@@ -2298,14 +2298,15 @@ class EveryMinute extends Command
                 if(isset($work_planning) && $work_planning != '') {
 
                     $input['module_id'] = $value['module_id'];
-                    $input['cc_array'] = $cc_array;
+                    //$input['cc_array'] = $cc_array;
                     $input['user_name'] = $user_name;
                     $input['previous_date'] = $previous_date;
 
                      \Mail::send('adminlte::emails.workplanningstatusreminder', $input, function ($message) use($input) {
                     
                         $message->from($input['from_address'], $input['from_name']);
-                        $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                        /*$message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);*/
+                        $message->to($input['to'])->subject($input['subject']);
                     });
 
                     \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
