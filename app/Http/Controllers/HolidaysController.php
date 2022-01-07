@@ -83,20 +83,26 @@ class HolidaysController extends Controller
     	$holiday->from_date = $from_date_save;
     	$holiday->to_date = $to_date_save;
     	$holiday->remarks = $remarks;
-        $holiday->department_ids = implode(",", $department_ids);
 
-    	$validator = \Validator::make(Input::all(),$holiday::$rules);
+        if(isset($department_ids) && $department_ids != '') {
 
-        if($validator->fails()){
-            return redirect('holidays/create')->withInput(Input::all())->withErrors($validator->errors());
+            $holiday->department_ids = implode(",", $department_ids);    
         }
+        else {
+
+            $holiday->department_ids = '';
+        }
+
 
         $holiday_save = $holiday->save();
         $holiday_id = $holiday->id;
 
         if (isset($holiday_id)) {
+
         	if (isset($users) && $users != '') {
+
         		foreach ($users as $key => $value) {
+
         			$holiday_user = new HolidaysUsers();
         			$holiday_user->holiday_id = $holiday_id;
         			$holiday_user->user_id = $value;
@@ -177,18 +183,24 @@ class HolidaysController extends Controller
         $holiday->from_date = $from_date_save;
         $holiday->to_date = $to_date_save;
         $holiday->remarks = $remarks;
-        $holiday->department_ids = implode(",", $department_ids);
 
-        $validator = \Validator::make(Input::all(),$holiday::$rules);
+        if(isset($department_ids) && $department_ids != '') {
 
-        if($validator->fails()){
-            return redirect('holidays/create')->withInput(Input::all())->withErrors($validator->errors());
+            $holiday->department_ids = implode(",", $department_ids);    
+        }
+        else {
+
+            $holiday->department_ids = '';
         }
 
         $holiday_save = $holiday->save();
+
         $holidays_users_delete = HolidaysUsers::where('holiday_id',$id)->delete();
+
         if (isset($users) && $users != '') {
+
             foreach ($users as $key => $value) {
+                
                 $holiday_user = new HolidaysUsers();
                 $holiday_user->holiday_id = $id;
                 $holiday_user->user_id = $value;

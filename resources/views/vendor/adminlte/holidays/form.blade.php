@@ -203,12 +203,6 @@
                     "from_date" : {
                         required: true,
                     },
-                    "user_ids[]" : {
-                        required: true,
-                    },
-                    "department_ids[]": {
-                        required: true
-                    }
                 },
                 messages: {
                     "title": {
@@ -220,12 +214,6 @@
                     "from_date" : {
                         required: "From Date is Required Field.",
                     },
-                    "user_ids[]" : {
-                        required: "Please Select Users.",
-                    },
-                    "department_ids[]": {
-                        required: "Please Select Department."
-                    }
                 }
             });
         });
