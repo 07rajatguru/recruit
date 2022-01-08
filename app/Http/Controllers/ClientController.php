@@ -574,7 +574,7 @@ class ClientController extends Controller
             if($all_perm) {
 
                 $order_column_name = self::getOrderColumnName($order);
-                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,0,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city);
+                $client_res = ClientBasicinfo::getClientsByType(1,$user->id,$limit,$offset,$search,$order_column_name,$type,0,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city,$client_industry);
                 $count = ClientBasicinfo::getClientsByTypeCount(1,$user->id,$search,0,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city,$client_industry);
 
                 $client_res_array = ClientBasicinfo::getClientsByType(1,$user->id,0,0,'',$order_column_name,$type,0,'',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city,$client_industry);
