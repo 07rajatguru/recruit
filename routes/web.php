@@ -179,6 +179,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HomeController@employeeSelfService'
     ));
 
+    Route::any('/hr-employee-service', array (
+        'uses' => 'HomeController@hrEmployeeSelfService',
+        'middleware' => ['permission:hr-employee-service-dashboard']
+    ));
+
     Route::get('work-planning/pending', [
         'as' => 'workplanning.pending',
         'uses' => 'WorkPlanningController@getPendingWorkPlanning',
@@ -325,8 +330,7 @@ Route::group(['middleware' => ['auth']], function () {
     ));
 
     Route::any('/users-attendance/{department_id}', array (
-        'uses' => 'HomeController@departmentWiseUsersAttendance',
-        'middleware' => ['permission:display-attendance-of-all-users-in-admin-panel|display-recruitment-dashboard|display-hr-advisory-dashboard'],
+        'uses' => 'HomeController@departmentWiseUsersAttendance'
     ));
 
     Route::post('attendance/export',[

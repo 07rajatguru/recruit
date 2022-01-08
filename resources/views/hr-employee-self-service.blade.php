@@ -1,12 +1,12 @@
 @extends('adminlte::page')
 
-@section('title', 'My Employee Self Service')
+@section('title', 'HR Employee Self Service')
 
 @section('content_header')
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>My Employee Self Service</h2>
+                <h2>HR Employee Self Service</h2>
             </div>
         </div>
     </div>
@@ -25,7 +25,7 @@
             <div class="small-box bg-blue" style="border-radius:100%;">
                 <div class="inner">
                     <h3><center>{{ $pending_work_planning_count or '0' }}</center></h3>
-                    <h5><center>My Pending Work Planning</center></h5>
+                    <h5><center>Pending Work Planning</center></h5>
                 </div>
                 <div class="icon">
                     <i class="fa fa-files-o"></i>
@@ -38,7 +38,7 @@
             <div class="small-box bg-yellow" style="border-radius:100%;">
                 <div class="inner">
                     <h3><center>{{ $leave_count or '0' }}</center></h3>
-                    <h5><center>My Applied Leave</center></h5>
+                    <h5><center>Applied Leave</center></h5>
                 </div>
                 <div class="icon">
                     <i class="fa fa-leanpub"></i>
@@ -51,12 +51,12 @@
             <div class="small-box bg-red" style="border-radius:100%;">
                 <div class="inner">
                     <h3><center>{{ $present_days or '0' }}</center></h3>
-                    <h5><center>My Attendance</center></h5>
+                    <h5><center>Attendance</center></h5>
                 </div>
                 <div class="icon">
                     <i class="fa fa-calendar"></i>
                 </div>
-                <a href="/self-user-attendance" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="/users-attendance/0" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -64,7 +64,7 @@
             <div class="small-box bg-green" style="border-radius:100%;">
                 <div class="inner">
                     <h3><center>{{ $earlygo_latein_count or '0' }}</center></h3>
-                    <h5><center>My Late In / Early Go Request in this month</center></h5>
+                    <h5><center>Late In / Early Go Request in this month</center></h5>
                 </div>
                 <div class="icon">
                     <i class="fa fa-file-text-o"></i>
@@ -77,7 +77,7 @@
             <div class="small-box bg-purple" style="border-radius:100%;">
                 <div class="inner">
                     <h3><center>{{ $optional_holidays_count or '0' }}</center></h3>
-                    <h5><center>My Optional holidays in this month</center></h5>
+                    <h5><center>Optional holidays in this month</center></h5>
                 </div>
                 <div class="icon">
                     <i class="fa fa-list-alt"></i>
@@ -90,7 +90,7 @@
             <div class="small-box bg-maroon" style="border-radius:100%;">
                 <div class="inner">
                     <h3><center>{{ $fixed_holidays_count or '0' }}</center></h3>
-                    <h5><center>My Fixed holidays in this month</center></h5>
+                    <h5><center>Fixed holidays in this month</center></h5>
                 </div>
                 <div class="icon">
                     <i class="fa fa-list-alt"></i>
@@ -188,7 +188,7 @@
         <div class="col-lg-6 col-xs-6">
             <div class="box box-info">
                 <div class="box-header with-border">
-                    <h3 class="box-title">List of Applied Leaves of My Team</h3>
+                    <h3 class="box-title">List of Applied Leaves</h3>
 
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>

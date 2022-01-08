@@ -77,7 +77,11 @@
                                         <ul class="menu" style="width: 100%;">
                                             <li>
                                                 <a href="{{getenv('APP_URL').'/employee-self-service'}}" target="_blank">
-                                                Dashboard</a>
+                                                MY ESS</a>
+                                            </li>
+                                            <li>
+                                                <a href="{{getenv('APP_URL').'/hr-employee-service'}}" target="_blank">
+                                                HR ESS</a>
                                             </li>
                                             <li>
                                                 <a href="{{getenv('APP_URL').'/work-planning'}}" target="_blank">Work Planning</a>

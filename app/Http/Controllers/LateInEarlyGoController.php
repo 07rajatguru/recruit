@@ -420,14 +420,13 @@ class LateInEarlyGoController extends Controller
         $super_admin_userid = getenv('SUPERADMINUSERID');
 
         if($user_id == $super_admin_userid) {
-            $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID(0);
+            $leave_details = array();
+            $count = 0;
         }
         else {
             $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID($user_id);
+            $count = sizeof($leave_details);
         }
-        
-        $count = sizeof($leave_details);
-
         return view('adminlte::lateinEarlygo.latein-earlygo',compact('leave_details','user_id','count'));
     }
 }

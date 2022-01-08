@@ -28,14 +28,14 @@ class UserLeave extends Model
         return $type;
     }
 
-    public static function getAllLeavedataByUserId($all=0,$user_id,$month,$year,$status='') {
+    public static function getAllLeavedataByUserId($all=0,$user_ids,$month,$year,$status='') {
 
         $query = UserLeave::query();
         $query = $query->join('users','users.id','=','user_leave.user_id');
         $query = $query->select('user_leave.*','users.name as user_name');
         
         if ($all == 0) {
-            $query = $query->whereIn('user_leave.user_id',$user_id);
+            $query = $query->whereIn('user_leave.user_id',$user_ids);
         }
 
         if(isset($status) && $status != '') {

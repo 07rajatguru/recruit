@@ -264,49 +264,31 @@ class HolidaysController extends Controller
         
         $user = \Auth::user();
         $user_id = $user->id;
-        $super_admin_userid = getenv('SUPERADMINUSERID');
        
         $month = date('m');
         $year = date('Y');
 
-        if($user_id == $super_admin_userid) {
-
-            $holiday_details = Holidays::getUserHolidaysByType(0,$month,$year,'Optional Leave');
-            $count = sizeof($holiday_details);
-        }
-        else {
-
-            $holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'Optional Leave');
-            $count = sizeof($holiday_details);
-        }
+        $holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'Optional Leave');
+        $count = sizeof($holiday_details);
 
         $name = "Optional";
 
-        return view('adminlte::holidays.typewiseholidays',compact('holiday_details','count','user_id','super_admin_userid','name'));
+        return view('adminlte::holidays.typewiseholidays',compact('holiday_details','count','name'));
     }
 
     public function getFixedHolidays() {
         
         $user = \Auth::user();
         $user_id = $user->id;
-        $super_admin_userid = getenv('SUPERADMINUSERID');
        
         $month = date('m');
         $year = date('Y');
 
-        if($user_id == $super_admin_userid) {
-
-            $holiday_details = Holidays::getUserHolidaysByType(0,$month,$year,'Fixed Leave');
-            $count = sizeof($holiday_details);
-        }
-        else {
-
-            $holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'Fixed Leave');
-            $count = sizeof($holiday_details);
-        }
+        $holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'Fixed Leave');
+        $count = sizeof($holiday_details);
 
         $name = "Fixed";
         
-        return view('adminlte::holidays.typewiseholidays',compact('holiday_details','count','user_id','super_admin_userid','name'));
+        return view('adminlte::holidays.typewiseholidays',compact('holiday_details','count','name'));
     }
 }

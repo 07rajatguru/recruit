@@ -912,19 +912,20 @@ class LeaveController extends Controller
 
         if($user_id == $super_admin_userid) {
 
-            $leave_details = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,'');
+            $leave_details = array();
+            $count = 0;
         }
         else {
 
-            $floor_reports_id = User::getAssignedUsers($user_id);
+            /*$floor_reports_id = User::getAssignedUsers($user_id);
             foreach ($floor_reports_id as $key => $value) {
                 $user_ids[] = $key;
-            }
+            }*/
+
+            $user_ids[] = $user_id;
             $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'');
+            $count = sizeof($leave_details);
         }
-
-        $count = sizeof($leave_details);
-
         return view('adminlte::leave.appliedleave',compact('leave_details','user_id','count'));
     }
 }

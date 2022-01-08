@@ -23,9 +23,6 @@
             <tr>
                 <th>No</th>
                 <th>Title</th>
-                @if($user_id == $super_admin_userid)
-                    <th>Users</th>
-                @endif
                 <th>From date</th>
                 <th>To date</th>
             </tr>
@@ -36,11 +33,6 @@
             <tr>
                 <td>{{ ++$i }}</td>
                 <td>{{$value['title']}}</td>
-
-                @if($user_id == $super_admin_userid)
-                    <td>{{$value['users']}}</td>
-                @endif
-                
                 <td>{{$value['from_date']}}</td>
                 <td>{{$value['to_date']}}</td>
             </tr>

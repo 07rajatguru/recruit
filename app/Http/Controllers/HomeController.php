@@ -976,40 +976,30 @@ class HomeController extends Controller
         if ($user_id == $superadmin_userid) {
 
             // Get Pending Work Planning Count
-            $work_planning = WorkPlanning::getPendingWorkPlanningDetails(0,$month,$year,0);
-            $pending_work_planning_count = sizeof($work_planning);
+            $pending_work_planning_count = 0;
 
             // Get Applied Leave Count
-            $leave_data = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,'');
-            $leave_count = sizeof($leave_data);
+            $leave_count = 0;
             
             // Set present days
             $present_days = 0;
 
             // Get Early go late in count
-            $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID(0);
-            $earlygo_latein_count = sizeof($leave_details);
-
-            // Get Optional Holidays
-            $optional_holiday_details = Holidays::getUserHolidaysByType(0,$month,$year,'Optional Leave');
-            $optional_holidays_count = sizeof($optional_holiday_details);
-
-            // Get Fixed Holidays
-            $fixed_holiday_details = Holidays::getUserHolidaysByType(0,$month,$year,'Fixed Leave');
-            $fixed_holidays_count = sizeof($fixed_holiday_details);
+            $earlygo_latein_count = 0;
         }
         else {
 
             // Get Pending Work Planning Count
-            $work_planning = WorkPlanning::getPendingWorkPlanningDetails($user_id,$month,$year,0);
+            $work_planning = WorkPlanning::getPendingWorkPlanningDetails($user_id,$month,$year);
             $pending_work_planning_count = sizeof($work_planning);
 
             // Get Applied Leave Count
-            $floor_reports_id = User::getAssignedUsers($user_id);
+            /*$floor_reports_id = User::getAssignedUsers($user_id);
             foreach ($floor_reports_id as $key => $value) {
                 $user_ids[] = $key;
-            }
+            }*/
 
+            $user_ids[] = $user_id;
             $leave_data = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'');
             $leave_count = sizeof($leave_data);
 
@@ -1020,21 +1010,45 @@ class HomeController extends Controller
             // Get Early go late in count
             $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID($user_id);
             $earlygo_latein_count = sizeof($leave_details);
-
-            // Get Optional Holidays
-            $optional_holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'Optional Leave');
-            $optional_holidays_count = sizeof($optional_holiday_details);
-
-            // Get Fixed Holidays
-            $fixed_holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'Fixed Leave');
-            $fixed_holidays_count = sizeof($fixed_holiday_details);
         }
 
-        // Get Fixed Holiday of This Year
-        $fixed_holiday_details = Holidays::getUserHolidaysByType(0,'',$year,'Fixed Leave');
+        // Get Optional Holidays of User
+        $optional_holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'Optional Leave');
+        $optional_holidays_count = sizeof($optional_holiday_details);
 
-        // Get Optional Holiday of This Year
-        $optional_holiday_details = Holidays::getUserHolidaysByType(0,'',$year,'Optional Leave');
+        // Get Fixed Holidays of User
+        $fixed_holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'Fixed Leave');
+        $fixed_holidays_count = sizeof($fixed_holiday_details);
+
+        // Get Work Anniversary dates of Current Month
+        $work_anniversary_dates = User::getUsersWorkAnniversaryDatesByMonth($month,$year);
+
+        // Get Birthday dates of Current Month
+        $birthday_dates = User::getUserBirthDatesByMonth($month,$year);
+
+        // Get Fixed Holiday of Current Year
+        $holidays = Holidays::getUserHolidaysByType(0,'',$year,'');
+
+        // Get List of applied leaves of team
+
+        $floor_reports_id = User::getAssignedUsers($user_id);
+
+        if(isset($floor_reports_id) && sizeof($floor_reports_id) > 0) {
+
+            foreach ($floor_reports_id as $key => $value) {
+
+                if($key == $user_id) {
+                }
+                else {
+                    $user_ids_array[] = $key;
+                }
+            }
+        }
+        else {
+
+            $user_ids_array = array();
+        }
+        $leave_data = UserLeave::getAllLeavedataByUserId(0,$user_ids_array,$month,$year,'');
 
         $viewVariable = array();
         $viewVariable['pending_work_planning_count'] = $pending_work_planning_count;
@@ -1043,10 +1057,85 @@ class HomeController extends Controller
         $viewVariable['earlygo_latein_count'] = $earlygo_latein_count;
         $viewVariable['optional_holidays_count'] = $optional_holidays_count;
         $viewVariable['fixed_holidays_count'] = $fixed_holidays_count;
-        $viewVariable['fixed_holiday_details'] = $fixed_holiday_details;
-        $viewVariable['optional_holiday_details'] = $optional_holiday_details;
+        $viewVariable['work_anniversary_dates'] = $work_anniversary_dates;
+        $viewVariable['birthday_dates'] = $birthday_dates;
+        $viewVariable['holidays'] = $holidays;
+        $viewVariable['leave_data'] = $leave_data;
 
         return view('employee-self-service',$viewVariable);
+    }
+
+    // HR ESS
+
+    public function hrEmployeeSelfService() {
+
+        $user = \Auth::user();
+        $user_id =  $user->id;
+
+        $date = date('Y-m-d');
+        $month = date('m');
+        $year = date('Y');
+
+        // Get Pending Work Planning Count
+        $work_planning = WorkPlanning::getPendingWorkPlanningDetails(0,$month,$year);
+        $pending_work_planning_count = sizeof($work_planning);
+
+        // Get Applied Leave Count
+        $leave_data = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,'');
+        $leave_count = sizeof($leave_data);
+            
+        // Set present days
+        $present_days = 0;
+
+        // Get Early go late in count
+        $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID(0);
+        $earlygo_latein_count = sizeof($leave_details);
+
+        // Get Optional Holidays count of current month
+        $optional_holiday_details = Holidays::getUserHolidaysByType(0,$month,$year,'Optional Leave');
+        $optional_holidays_count = sizeof($optional_holiday_details);
+
+        // Get Fixed Holidays count of current month
+        $fixed_holiday_details = Holidays::getUserHolidaysByType(0,$month,$year,'Fixed Leave');
+            $fixed_holidays_count = sizeof($fixed_holiday_details);
+
+        // Get Work Anniversary dates of Current Month
+        $work_anniversary_dates = User::getUsersWorkAnniversaryDatesByMonth($month,$year);
+
+        // Get Birthday dates of Current Month
+        $birthday_dates = User::getUserBirthDatesByMonth($month,$year);
+
+        // Get Holiday of Current Year
+        $holidays = Holidays::getUserHolidaysByType(0,'',$year,'');
+
+        // Get List of applied leaves of team
+
+        $users = User::getAllUsers();
+
+        if(isset($users) && sizeof($users) > 0) {
+            foreach ($users as $key => $value) {
+                $user_ids_array[] = $key;
+            }
+        }
+        else {
+            $user_ids_array = array();
+        }
+
+        $leave_data = UserLeave::getAllLeavedataByUserId(0,$user_ids_array,$month,$year,'');
+
+        $viewVariable = array();
+        $viewVariable['pending_work_planning_count'] = $pending_work_planning_count;
+        $viewVariable['leave_count'] = $leave_count;
+        $viewVariable['present_days'] = $present_days;
+        $viewVariable['earlygo_latein_count'] = $earlygo_latein_count;
+        $viewVariable['optional_holidays_count'] = $optional_holidays_count;
+        $viewVariable['fixed_holidays_count'] = $fixed_holidays_count;
+        $viewVariable['work_anniversary_dates'] = $work_anniversary_dates;
+        $viewVariable['birthday_dates'] = $birthday_dates;
+        $viewVariable['holidays'] = $holidays;
+        $viewVariable['leave_data'] = $leave_data;
+
+        return view('hr-employee-self-service',$viewVariable);
     }
 
     public function selfAttendance() {
@@ -1637,6 +1726,7 @@ class HomeController extends Controller
         if($department_id == 0) {
 
             $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
+            $dept_perm = '';
         }
         else if($department_id == 1) {
 
@@ -1651,6 +1741,7 @@ class HomeController extends Controller
         else {
 
             $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
+            $dept_perm = '';
         }
 
         if($all_perm || $dept_perm) {
