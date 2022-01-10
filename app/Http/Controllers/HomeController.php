@@ -691,11 +691,6 @@ class HomeController extends Controller
 
         $name = $_POST['name'];
 
-        if(isset($_POST['department_id'])) {
-
-            $department_id = $_POST['department_id'];
-        }
-
         $user = \Auth::user();
         $dateClass = new Date();
 
@@ -721,14 +716,8 @@ class HomeController extends Controller
         if($name == 'HomeAttendance') {
             return redirect('/home')->with('success', 'Remarks Added Successfully.');
         }
-        if($name == 'Self') {
-            return redirect('/self-user-attendance')->with('success', 'Remarks Added Successfully.');
-        }
-        if($name == 'Team') {
-            return redirect('/team-user-attendance')->with('success', 'Remarks Added Successfully.');
-        }
-        if($name == 'Department') {
-            return redirect('/users-attendance/'.$department_id)->with('success', 'Remarks Added Successfully.');
+        else {
+            return redirect('/users-attendance/'.$name)->with('success', 'Remarks Added Successfully.');
         }
     }
 
@@ -1133,10 +1122,13 @@ class HomeController extends Controller
         return view('hr-employee-self-service',$viewVariable);
     }
 
-    public function selfAttendance() {
+    public function usersAttendance($department_nm) {
 
         $user = \Auth::user();
         $user_id = $user->id;
+
+        // Get Attendance Type
+        $attendance_type = User::getAttendanceType();
 
         if(isset($_POST['month']) && $_POST['month']!='') {
             $month = $_POST['month'];
@@ -1175,571 +1167,87 @@ class HomeController extends Controller
             $year_array[$y] = $y;
         }
 
-        // Get Previous data from joining date
+        // Check type name wise permissions
 
-        if($month <= 9) {
+        if($department_nm == 'self') {
 
-            $month = "0".$month;
-        }
-        $check_date = $year."-".$month."-31";
+            $selected_attendance_type = 'self';
 
-        // Get User Details
-        $user_details = User::getProfileInfo($user_id);
+            $all_perm = $user->can('display-attendance-by-loggedin-user-in-admin-panel');
+            $dept_perm = '';
 
-        if($user_details->joining_date <= $check_date) {
+            // Get Previous data from joining date
 
-            $joining_date = date('d/m/Y', strtotime("$user_details->joining_date"));
-            $full_name = $user_details->first_name."-".$user_details->last_name.",".$user_details->department_name.",".$user_details->working_hours.",".$joining_date;
-            $users = array($full_name => "");
-        }
-        else {
-            $users = array();
-        }
-        
-        // Get Attendance & Remarks
-        $response = WorkPlanning::getWorkPlanningByUserID($user_id,$month,$year);
-        $user_remark = UserRemarks::getUserRemarksDetailsByUserID($user_id,$month,$year);
+            if($month <= 9) {
 
-        $list = array();
-        for($d=1; $d<=31; $d++) {
-
-            $time = mktime(12, 0, 0, $month, $d, $year);
-            foreach ($users as $key => $value) {
-              
-                if (date('n', $time) == $month)
-                    $list[$key][date('j', $time)]['attendance']='';
-                
-                $list[$key][date('j', $time)]['remarks']='';
-                $list[$key][date('j', $time)]['holiday']='';
-                $list[$key][date('j', $time)]['privilege_leave']='';
-                $list[$key][date('j', $time)]['sick_leave']='';
-                $list[$key][date('j', $time)]['unapproved_leave']='';
+                $month = "0".$month;
             }
-        }
+            $check_date = $year."-".$month."-31";
 
-        $date = new Date();
-        if(sizeof($response) > 0) {
+            // Get Users
+            $user_details = User::getProfileInfo($user_id);
 
-            foreach ($response as $key => $value) {
+            if($user_details->joining_date <= $check_date) {
 
-                $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
-                $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
-
-                $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
-
-                // Get User id from both name
-                $user_name = $value->first_name."-".$value->last_name;
-                $u_id = User::getUserIdByBothName($user_name);
-
-                // Set holidays dates
-                $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
-
-                if (isset($user_holidays) && sizeof($user_holidays)>0) {
-                    foreach ($user_holidays as $h_k => $h_v) {
-                        $list[$combine_name][$h_v]['holiday'] = 'Y';
-                    }
-                }
-
-                // Set Leave dates
-                $pl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Privilege Leave',1);
-                $sl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Sick Leave',1);
-                $ul_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',2);
-
-                if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
-
-                    foreach ($pl_leave_data as $pl_k => $pl_v) {
-
-                        for ($pl_i=$pl_v['from_date']; $pl_i <= $pl_v['to_date']; $pl_i++) {
-
-                            $list[$combine_name][$pl_i]['privilege_leave'] = 'Y';
-                        }
-                    }
-                }
-
-                if (isset($sl_leave_data) && sizeof($sl_leave_data)>0) {
-
-                    foreach ($sl_leave_data as $sl_k => $sl_v) {
-
-                        for ($sl_i=$sl_v['from_date']; $sl_i <= $sl_v['to_date']; $sl_i++) { 
-                            
-                            $list[$combine_name][$sl_i]['sick_leave'] = 'Y';
-                        }
-                    }
-                }
-
-                if (isset($ul_leave_data) && sizeof($ul_leave_data)>0) {
-
-                    foreach ($ul_leave_data as $ul_k => $ul_v) {
-
-                        for ($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) { 
-                            
-                            $list[$combine_name][$ul_i]['unapproved_leave'] = 'Y';
-                        }
-                    }
-                }
-
-                if (isset($user_remark) && sizeof($user_remark)>0) {
-                    foreach ($user_remark as $k => $v) {
-
-                        $split_month = date('n',strtotime($v['remark_date']));
-                        $split_year = date('Y',strtotime($v['remark_date']));
-
-                        if (($v['full_name'] == $combine_name) && ($v['remark_date'] == $value->added_date) && ($month == $split_month) && ($year == $split_year)) {
-                            $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
-                        }
-                        else{
-
-                            if (($v['full_name'] == $combine_name) && ($month == $split_month) && ($year == $split_year)) {
-                                $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
-                            }
-                        }
-                    }
-                }
+                $joining_date = date('d/m/Y', strtotime("$user_details->joining_date"));
+                $full_name = $user_details->first_name."-".$user_details->last_name.",".$user_details->department_name.",".$user_details->working_hours.",".$joining_date;
+                $users = array($full_name => "");
             }
-        }
-        else {
-
-            if (isset($user_remark) && sizeof($user_remark)>0) {
-
-                foreach ($user_remark as $k => $v) {
-
-                    $split_month = date('n',strtotime($v['remark_date']));
-                    $split_year = date('Y',strtotime($v['remark_date']));
-                    if (($month == $split_month) && ($year == $split_year)) {
-                        $list[$v['full_name']][$v['converted_date']]['remarks'] = $v['remarks'];
-                    }
-                }
+            else {
+                $users = array();
             }
+
+            // Get Attendance & Remarks
+            $response = WorkPlanning::getWorkPlanningByUserID($user_id,$month,$year);
+            $user_remark = UserRemarks::getUserRemarksDetailsByUserID($user_id,$month,$year);
+
+            // Set User names array for add remarks using modal popup
+            $users_name = array();
         }
+        else if($department_nm == 'team') {
 
-        // New List1
-        $list1 = array();
-        for($d1=1; $d1<=31; $d1++) {
+            $selected_attendance_type = 'team';
 
-            $time1 = mktime(12, 0, 0, $month, $d1, $year);
-            foreach ($users as $key => $value) {
+            $all_perm = $user->can('display-attendance-by-loggedin-user-in-admin-panel');
+            $dept_perm = '';
 
-                if (date('n', $time1) == $month) {
-                    $list1[$key][date('j S', $time1)]='';
-                }
-            }
+            // Get Users
+            $users = User::getOtherUsersNew($user_id,'',$month,$year);
+
+            // Get Attendance & Remarks
+            $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,'');
+            $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,'');
+
+            // Set User names array for add remarks using modal popup
+            $users_name = User::getAllUsersForRemarks($user_id,0);
         }
+        else if($department_nm == 'adler') {
 
-        if(sizeof($list)>0) {
-
-            foreach ($list as $key => $value) {
-
-                if(sizeof($value)>0) {
-
-                    $i=0;
-                    foreach ($value as $key1 => $value1) {
-
-                        $split_unm = explode(",",$key);
-
-                        // Get User id from both name
-                        $u_id = User::getUserIdByBothName($split_unm[0]);
-
-                        // Set holiday dates
-                        $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
-
-                        if (isset($user_holidays) && sizeof($user_holidays)>0) {
-                            foreach ($user_holidays as $h_k => $h_v) {
-                                $list[$key][$h_v]['holiday'] = 'Y';
-                            }
-                        }
-
-                        // Set Leave dates
-                        $pl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Privilege Leave',1);
-                        $sl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Sick Leave',1);
-                        $ul_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',2);
-
-                        if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
-
-                            foreach ($pl_leave_data as $pl_k => $pl_v) {
-
-                                for ($pl_i=$pl_v['from_date']; $pl_i <= $pl_v['to_date']; $pl_i++) {
-
-                                    $list[$key][$pl_i]['privilege_leave'] = 'Y';
-                                }
-                            }
-                        }
-
-                        if (isset($sl_leave_data) && sizeof($sl_leave_data)>0) {
-
-                            foreach ($sl_leave_data as $sl_k => $sl_v) {
-
-                                for ($sl_i=$sl_v['from_date']; $sl_i <= $sl_v['to_date']; $sl_i++) { 
-                                    
-                                    $list[$key][$sl_i]['sick_leave'] = 'Y';
-                                }
-                            }
-                        }
-
-                        if (isset($ul_leave_data) && sizeof($ul_leave_data)>0) {
-
-                            foreach ($ul_leave_data as $ul_k => $ul_v) {
-
-                                for ($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) { 
-                                    
-                                    $list[$key][$ul_i]['unapproved_leave'] = 'Y';
-                                }
-                            }
-                        }
-
-                        if (isset($user_remark) && sizeof($user_remark)>0) {
-                            foreach ($user_remark as $u_k1 => $u_v1) {
-
-                                $split_month = date('n',strtotime($u_v1['remark_date']));
-                                $split_year = date('Y',strtotime($u_v1['remark_date']));
-
-                                if (($u_v1['full_name'] == $key) && ($u_v1['converted_date'] == $key1) && ($month == $split_month) && ($year == $split_year)) {
-                                    
-                                    $list1[$u_v1['full_name']][$u_v1['converted_date']][$u_v1['remark_date']][$i] = $u_v1['remarks'];
-                                }
-                                $i++;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        $page = 'Self';
-
-        return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('sundays','page'));
-    }
-
-    public function teamUsersAttendance() {
-
-        $user = \Auth::user();
-        $user_id = $user->id;
-
-        if(isset($_POST['month']) && $_POST['month']!='') {
-            $month = $_POST['month'];
-        }
-        else {
-            $month = date("n");
-        }
-
-        if(isset($_POST['year']) && $_POST['year']!='') {
-            $year = $_POST['year'];
-        }
-        else {
-            $year = date("Y");
-        }
-
-        // Get All Sundays dates in selected month
-        $date = "$year-$month-01";
-        $first_day = date('N',strtotime($date));
-        $first_day = 7 - $first_day + 1;
-        $last_day =  date('t',strtotime($date));
-        $sundays = array();
-
-        for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
-            $sundays[] = $i;
-        }
-
-        $month_array =array();
-        for ($m=1; $m<=12; $m++) {
-            $month_array[$m] = date('M', mktime(0,0,0,$m));
-        }
-
-        $starting_year = '2021';
-        $ending_year = date('Y',strtotime('+2 year'));
-        $year_array = array();
-        for ($y=$starting_year; $y < $ending_year ; $y++) {
-            $year_array[$y] = $y;
-        }
-
-        // Get Users
-        $users = User::getOtherUsersNew($user_id,'',$month,$year);
-
-        // Get Attendance & Remarks
-        $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,'');
-        $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,'');
-
-        $list = array();
-        for($d=1; $d<=31; $d++) {
-
-            $time = mktime(12, 0, 0, $month, $d, $year);
-            foreach ($users as $key => $value) {
-              
-                if (date('n', $time) == $month)
-                    $list[$key][date('j', $time)]['attendance']='';
-                
-                $list[$key][date('j', $time)]['remarks']='';
-                $list[$key][date('j', $time)]['holiday']='';
-                $list[$key][date('j', $time)]['privilege_leave']='';
-                $list[$key][date('j', $time)]['sick_leave']='';
-                $list[$key][date('j', $time)]['unapproved_leave']='';
-            }
-        }
-
-        $date = new Date();
-        if(sizeof($response) > 0) {
-
-            foreach ($response as $key => $value) {
-
-                $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
-                $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
-
-                $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
-
-                // Get User id from both name
-                $user_name = $value->first_name."-".$value->last_name;
-                $u_id = User::getUserIdByBothName($user_name);
-
-                // Set holiday dates
-                $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
-
-                if (isset($user_holidays) && sizeof($user_holidays)>0) {
-                    foreach ($user_holidays as $h_k => $h_v) {
-                        $list[$combine_name][$h_v]['holiday'] = 'Y';
-                    }
-                }
-
-                // Set Leave dates
-                $pl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Privilege Leave',1);
-                $sl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Sick Leave',1);
-                $ul_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',2);
-
-                if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
-
-                    foreach ($pl_leave_data as $pl_k => $pl_v) {
-
-                        for ($pl_i=$pl_v['from_date']; $pl_i <= $pl_v['to_date']; $pl_i++) {
-
-                            $list[$combine_name][$pl_i]['privilege_leave'] = 'Y';
-                        }
-                    }
-                }
-
-                if (isset($sl_leave_data) && sizeof($sl_leave_data)>0) {
-
-                    foreach ($sl_leave_data as $sl_k => $sl_v) {
-
-                        for ($sl_i=$sl_v['from_date']; $sl_i <= $sl_v['to_date']; $sl_i++) { 
-                            
-                            $list[$combine_name][$sl_i]['sick_leave'] = 'Y';
-                        }
-                    }
-                }
-
-                if (isset($ul_leave_data) && sizeof($ul_leave_data)>0) {
-
-                    foreach ($ul_leave_data as $ul_k => $ul_v) {
-
-                        for ($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) { 
-                            
-                            $list[$combine_name][$ul_i]['unapproved_leave'] = 'Y';
-                        }
-                    }
-                }
-
-                if (isset($user_remark) && sizeof($user_remark)>0) {
-                    foreach ($user_remark as $k => $v) {
-
-                        $split_month = date('n',strtotime($v['remark_date']));
-                        $split_year = date('Y',strtotime($v['remark_date']));
-
-                        if (($v['full_name'] == $combine_name) && ($v['remark_date'] == $value->added_date) && ($month == $split_month) && ($year == $split_year)) {
-                            $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
-                        }
-                        else {
-
-                            if (($v['full_name'] == $combine_name) && ($month == $split_month) && ($year == $split_year)) {
-
-                                $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
-                            }
-                            else {
-
-                                $list[$v['full_name']][$v['converted_date']]['remarks'] = $v['remarks'];
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        else {
-
-            if (isset($user_remark) && sizeof($user_remark)>0) {
-
-                foreach ($user_remark as $k => $v) {
-
-                    $split_month = date('n',strtotime($v['remark_date']));
-                    $split_year = date('Y',strtotime($v['remark_date']));
-                    if (($month == $split_month) && ($year == $split_year)) {
-                        $list[$v['full_name']][$v['converted_date']]['remarks'] = $v['remarks'];
-                    }
-                }
-            }
-        }
-
-        // New List1
-        $list1 = array();
-        for($d1=1; $d1<=31; $d1++) {
-
-            $time1 = mktime(12, 0, 0, $month, $d1, $year);
-            foreach ($users as $key => $value) {
-
-                if (date('n', $time1) == $month) {
-                    $list1[$key][date('j S', $time1)]='';
-                }
-            }
-        }
-
-        if(sizeof($list)>0) {
-
-            foreach ($list as $key => $value) {
-
-                if(sizeof($value)>0) {
-
-                    $i=0;
-                    foreach ($value as $key1 => $value1) {
-
-                        $split_unm = explode(",",$key);
-
-                        // Get User id from both name
-                        $u_id = User::getUserIdByBothName($split_unm[0]);
-
-                        // Set holiday dates
-                        $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
-
-                        if (isset($user_holidays) && sizeof($user_holidays)>0) {
-                            foreach ($user_holidays as $h_k => $h_v) {
-                                $list[$key][$h_v]['holiday'] = 'Y';
-                            }
-                        }
-
-                        // Set Leave dates
-                        $pl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Privilege Leave',1);
-                        $sl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Sick Leave',1);
-                        $ul_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',2);
-
-                        if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
-
-                            foreach ($pl_leave_data as $pl_k => $pl_v) {
-
-                                for ($pl_i=$pl_v['from_date']; $pl_i <= $pl_v['to_date']; $pl_i++) {
-
-                                    $list[$key][$pl_i]['privilege_leave'] = 'Y';
-                                }
-                            }
-                        }
-
-                        if (isset($sl_leave_data) && sizeof($sl_leave_data)>0) {
-
-                            foreach ($sl_leave_data as $sl_k => $sl_v) {
-
-                                for ($sl_i=$sl_v['from_date']; $sl_i <= $sl_v['to_date']; $sl_i++) { 
-                                    
-                                    $list[$key][$sl_i]['sick_leave'] = 'Y';
-                                }
-                            }
-                        }
-
-                        if (isset($ul_leave_data) && sizeof($ul_leave_data)>0) {
-
-                            foreach ($ul_leave_data as $ul_k => $ul_v) {
-
-                                for ($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) { 
-                                    
-                                    $list[$key][$ul_i]['unapproved_leave'] = 'Y';
-                                }
-                            }
-                        }
-
-                        if (isset($user_remark) && sizeof($user_remark)>0) {
-                            foreach ($user_remark as $u_k1 => $u_v1) {
-
-                                $split_month = date('n',strtotime($u_v1['remark_date']));
-                                $split_year = date('Y',strtotime($u_v1['remark_date']));
-
-                                if (($u_v1['full_name'] == $key) && ($u_v1['converted_date'] == $key1) && ($month == $split_month) && ($year == $split_year)) {
-                                    
-                                    $list1[$u_v1['full_name']][$u_v1['converted_date']][$u_v1['remark_date']][$i] = $u_v1['remarks'];
-                                }
-                                $i++;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        $users_name = User::getAllUsersForRemarks($user_id,0);
-
-        $page = 'Team';
-
-        return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name','sundays','page'));
-    }
-
-    public function departmentWiseUsersAttendance($department_id) {
-
-        $user = \Auth::user();
-        $user_id = $user->id;
-
-        if(isset($_POST['month']) && $_POST['month']!='') {
-            $month = $_POST['month'];
-        }
-        else {
-            $month = date("n");
-        }
-
-        if(isset($_POST['year']) && $_POST['year']!='') {
-            $year = $_POST['year'];
-        }
-        else {
-            $year = date("Y");
-        }
-
-        // Get All Sundays dates in selected month
-        $date = "$year-$month-01";
-        $first_day = date('N',strtotime($date));
-        $first_day = 7 - $first_day + 1;
-        $last_day =  date('t',strtotime($date));
-        $sundays = array();
-
-        for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
-            $sundays[] = $i;
-        }
-
-        $month_array =array();
-        for ($m=1; $m<=12; $m++) {
-            $month_array[$m] = date('M', mktime(0,0,0,$m));
-        }
-
-        $starting_year = '2021';
-        $ending_year = date('Y',strtotime('+2 year'));
-        $year_array = array();
-        for ($y=$starting_year; $y < $ending_year ; $y++) {
-            $year_array[$y] = $y;
-        }
-
-        // Check department wise permissions
-
-        if($department_id == 0) {
+            $selected_attendance_type = 'adler';
 
             $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
             $dept_perm = '';
-        }
-        else if($department_id == 1) {
 
+            $department_id = 0;
+
+            // Get Users
+            $users = User::getOtherUsersNew('','',$month,$year);
+
+            // Get Attendance & Remarks
+            $response = WorkPlanning::getUsersAttendanceByWorkPlanning(0,$month,$year,0);
+            $user_remark = UserRemarks::getUserRemarksByUserIDNew(0,$month,$year,0);
+
+            // Set User names array for add remarks using modal popup
+            $users_name = User::getAllUsersForRemarks(0,$department_id);
+        }
+        else if($department_nm == 'recruitment') {
+
+            $selected_attendance_type = 'recruitment';
+
+            $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
             $dept_perm = $user->can('display-recruitment-dashboard');
-            $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
-        }
-        else if($department_id == 2) {
 
-            $dept_perm = $user->can('display-hr-advisory-dashboard');
-            $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
-        }
-        else {
-
-            $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
-            $dept_perm = '';
-        }
-
-        if($all_perm || $dept_perm) {
+            $department_id = getenv('RECRUITMENT');
 
             // Get Users
             $users = User::getOtherUsersNew('',$department_id,$month,$year);
@@ -1747,6 +1255,50 @@ class HomeController extends Controller
             // Get Attendance & Remarks
             $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,$department_id);
             $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,$department_id);
+
+            // Set User names array for add remarks using modal popup
+            $users_name = User::getAllUsersForRemarks(0,$department_id);
+        }
+        else if($department_nm == 'hr-advisory') {
+
+            $selected_attendance_type = 'hr-advisory';
+
+            $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
+            $dept_perm = $user->can('display-hr-advisory-dashboard');
+
+            $department_id = getenv('HRADVISORY');
+
+            // Get Users
+            $users = User::getOtherUsersNew('',$department_id,$month,$year);
+
+            // Get Attendance & Remarks
+            $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,$department_id);
+            $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,$department_id);
+
+            // Set User names array for add remarks using modal popup
+            $users_name = User::getAllUsersForRemarks(0,$department_id);
+        }
+        else if($department_nm == 'operations') {
+
+            $selected_attendance_type = 'operations';
+
+            $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
+            $dept_perm = '';
+
+            $department_id = getenv('OPERATIONS');
+
+            // Get Users
+            $users = User::getOtherUsersNew('',$department_id,$month,$year);
+
+            // Get Attendance & Remarks
+            $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,$department_id);
+            $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,$department_id);
+
+            // Set User names array for add remarks using modal popup
+            $users_name = User::getAllUsersForRemarks(0,$department_id);
+        }
+
+        if($all_perm || $dept_perm) {
 
             $list = array();
             for($d=1; $d<=31; $d++) {
@@ -1955,31 +1507,24 @@ class HomeController extends Controller
                     }
                 }
             }
-
-            $users_name = User::getAllUsersForRemarks(0,$department_id);
-
-            $page = 'Department';
         }
         else {
 
             return view('errors.403');
         }
 
-        return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark),compact('users_name','sundays','page','department_id'));
+        return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark,"attendance_type" => $attendance_type,"selected_attendance_type" => $selected_attendance_type),compact('users_name','sundays','department_nm'));
     }
 
-    public function exportData() {
+    public function exportAttendance() {
 
         $user = \Auth::user();
         $user_id = $user->id;
         $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
 
-        //$contacts_array = Contactsphere::getAllContacts(1,$user->id,0,0,NULL,NULL,'');
-
         if($all_perm) {
 
-            $page = $_POST['page'];
-            $department_id = $_POST['department_id'];
+            $attendance_type = $_POST['attendance_type'];
             $month = $_POST['month'];
             $year = $_POST['year'];
             
@@ -1997,19 +1542,31 @@ class HomeController extends Controller
                 $sundays[] = $i;
             }
 
-            if($page == 'Self') {
+            if($attendance_type == 'self') {
+
+                if($month <= 9) {
+                    $month = "0".$month;
+                }
+                $check_date = $year."-".$month."-31";
 
                 // Get Users
                 $user_details = User::getProfileInfo($user_id);
-                $joining_date = date('d/m/Y', strtotime("$user_details->joining_date"));
-                $full_name = $user_details->first_name."-".$user_details->last_name.",".$user_details->department_name.",".$user_details->working_hours.",".$joining_date;
-                $users = array($full_name => "");
+
+                if($user_details->joining_date <= $check_date) {
+
+                    $joining_date = date('d/m/Y', strtotime("$user_details->joining_date"));
+                    $full_name = $user_details->first_name."-".$user_details->last_name.",".$user_details->department_name.",".$user_details->working_hours.",".$joining_date;
+                    $users = array($full_name => "");
+                }
+                else {
+                    $users = array();
+                }
 
                 // Get Attendance & Remarks
                 $response = WorkPlanning::getWorkPlanningByUserID($user_id,$month,$year);
                 $user_remark = UserRemarks::getUserRemarksDetailsByUserID($user_id,$month,$year);
             }
-            else if($page == 'Team') {
+            else if($attendance_type == 'team') {
 
                 // Get Users
                 $users = User::getOtherUsersNew($user_id,'',$month,$year);
@@ -2018,7 +1575,43 @@ class HomeController extends Controller
                 $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,'');
                 $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,'');
             }
-            else {
+            else if($department_nm == 'adler') {
+
+                // Get Users
+                $users = User::getOtherUsersNew('','',$month,$year);
+
+                // Get Attendance & Remarks
+                $response = WorkPlanning::getUsersAttendanceByWorkPlanning(0,$month,$year,0);
+                $user_remark = UserRemarks::getUserRemarksByUserIDNew(0,$month,$year,0);
+
+            }
+            else if($department_nm == 'recruitment') {
+
+                $department_id = getenv('RECRUITMENT');
+
+                // Get Users
+                $users = User::getOtherUsersNew('',$department_id,$month,$year);
+
+                // Get Attendance & Remarks
+                $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,$department_id);
+                $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,$department_id);
+
+            }
+            else if($department_nm == 'hr-advisory') {
+
+                $department_id = getenv('HRADVISORY');
+
+                // Get Users
+                $users = User::getOtherUsersNew('',$department_id,$month,$year);
+
+                // Get Attendance & Remarks
+                $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,$department_id);
+                $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,$department_id);
+
+            }
+            else if($department_nm == 'operations') {
+
+                $department_id = getenv('OPERATIONS');
 
                 // Get Users
                 $users = User::getOtherUsersNew('',$department_id,$month,$year);

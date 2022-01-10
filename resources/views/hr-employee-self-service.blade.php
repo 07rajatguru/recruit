@@ -56,7 +56,7 @@
                 <div class="icon">
                     <i class="fa fa-calendar"></i>
                 </div>
-                <a href="/users-attendance/0" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="/users-attendance/adler" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 

@@ -328,6 +328,7 @@ class WorkPlanning extends Model
             $query = $query->where(\DB::raw('year(work_planning.added_date)'),'=', $year);
         }
 
+        $query = $query->whereNotIn('users.status',$status_array);
         $query = $query->whereNotIn('role_id',$superadmin);
 
         if(isset($department_id) && $department_id != '') {
@@ -346,7 +347,7 @@ class WorkPlanning extends Model
         }
 
         $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','users.working_hours as working_hours','work_planning.added_date','work_planning.attendance','users.joining_date','department.name as department_name');
-        $query = $query->whereNotIn('users.status',$status_array);
+        
 
         $response = $query->get();
         return $response;

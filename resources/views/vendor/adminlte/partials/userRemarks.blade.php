@@ -13,10 +13,6 @@
                 @if(isset($name) && $name != '')
                     <input type="hidden" name="name" id="name" value="{{ $name }}">
                 @endif
-                
-                @if(isset($department_id) && $department_id != '')
-                    <input type="hidden" name="department_id" id="department_id" value="{{ $department_id }}">
-                @endif
 
                 @if(isset($users) && sizeof($users) > 0)
                     @permission(('add-remarks-of-all-users-in-admin-panel'))

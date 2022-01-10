@@ -111,6 +111,20 @@ class User extends Authenticatable
         return $hours_array;
     }
 
+    public static function getAttendanceType() {
+
+        $attendance_type = array();
+
+        $attendance_type['self'] = 'Self';
+        $attendance_type['team'] = 'Team';
+        $attendance_type['adler'] = 'Adler';
+        $attendance_type['recruitment'] = 'Recruitment';
+        $attendance_type['hr-advisory'] = 'HR Advisory';
+        $attendance_type['operations'] = 'Operations';
+
+        return $attendance_type;
+    }
+
     public static function getUserArray($user_id) {
 
         $status = 'Inactive';
@@ -380,12 +394,11 @@ class User extends Authenticatable
         $query = $query->select('users.*','role_user.role_id as role_id','department.name as department_name');
 
         $query = $query->whereNotIn('status',$status_array);
+        $query = $query->whereNotIn('role_id',$superadmin);
 
         if(isset($department_id) && $department_id != '') {
 
             if($department_id == 0) {
-
-                $query = $query->whereNotIn('role_id',$superadmin);
             }
             else {
                 $query = $query->where('users.type','=',$department_id);
@@ -396,7 +409,6 @@ class User extends Authenticatable
             if($user_id > 0) {
 
                 $query = $query->where('users.reports_to','=',$user_id);
-                $query = $query->whereNotIn('role_id',$superadmin);
             }
         }
 
@@ -560,9 +572,7 @@ class User extends Authenticatable
             if($user_id>0) {
                 $user_query = $user_query->where('reports_to','=',$user_id);
             }
-        }
-
-        
+        }        
 
         $user_query = $user_query->orderBy('name');
         $users = $user_query->get();

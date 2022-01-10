@@ -80,8 +80,7 @@
                     <th style="border: 5px solid #000000;text-align: center;width: 6;">HD</th>
                     <th style="border: 5px solid #000000;text-align: center;width: 6;">UL</th>
                     <th style="border: 5px solid #000000;text-align: center;width: 6;">AB</th>
-                    <th style="border: 5px solid #000000;text-align: center;width: 10;">Days
-                    </th>
+                    <th style="border: 5px solid #000000;text-align: center;width: 10;">Days</th>
                     <th style="border: 5px solid #000000;text-align: center;width: 12;">Total Leave</th>
                     <th style="border: 5px solid #000000;text-align: center;width: 12;">Total Days</th>
 				</tr>
@@ -104,7 +103,6 @@
                             $pl = 0;$sl = 0;$ul = 0;
                             $half_day = 0;$half_day_actual = 0;$absent = 0;
                             $days =0;$total_leaves =0;$total_days = 0;
-                            
                         ?>
 
                         <td style="border: 5px solid #000000;">{{ $i }}</td>
@@ -155,14 +153,14 @@
                                 else if(isset($value1['unapproved_leave']) && $value1['unapproved_leave'] == 'Y') {
                                     $attendance = 'UL';
                                 }
-                                else if(in_array($key1, $sundays)) {
-                                    $attendance = 'H';
-                                }
                                 else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
                                     $attendance = 'N';
                                 }
                                 else if(isset($value1['attendance']) && $value1['attendance'] == '') {
                                     $attendance = 'A';
+                                }
+                                else if(in_array($key1, $sundays)) {
+                                    $attendance = 'H';
                                 }
                                 else {
 

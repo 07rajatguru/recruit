@@ -319,23 +319,13 @@ Route::group(['middleware' => ['auth']], function () {
         'uses'=>'HomeController@export'
     ]);
 
-    Route::any('/self-user-attendance', array (
-        'uses' => 'HomeController@selfAttendance',
-        'middleware' => ['permission:display-attendance-of-all-users-in-admin-panel|display-attendance-by-loggedin-user-in-admin-panel'],
-    ));
-
-    Route::any('/team-user-attendance', array (
-        'uses' => 'HomeController@teamUsersAttendance',
-        'middleware' => ['permission:display-attendance-of-all-users-in-admin-panel|display-attendance-by-loggedin-user-in-admin-panel'],
-    ));
-
-    Route::any('/users-attendance/{department_id}', array (
-        'uses' => 'HomeController@departmentWiseUsersAttendance'
+    Route::any('/users-attendance/{department_nm}', array (
+        'uses' => 'HomeController@usersAttendance'
     ));
 
     Route::post('attendance/export',[
         'as' => 'attendance.export',
-        'uses' => 'HomeController@exportData',
+        'uses' => 'HomeController@exportAttendance',
         'middleware' => ['permission:display-attendance-of-all-users-in-admin-panel']
     ]);
 

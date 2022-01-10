@@ -62,6 +62,7 @@ class UserRemarks extends Model
         }
 
         $query = $query->whereNotIn('status',$status_array);
+        $query = $query->whereNotIn('role_id',$superadmin);
 
         if(isset($department_id) && $department_id != '') {
 
@@ -69,12 +70,6 @@ class UserRemarks extends Model
             }
             else {
                 $query = $query->where('users.type','=',$department_id);
-            }
-
-            if($department_id == 5) {
-            }
-            else {
-                $query = $query->whereNotIn('role_id',$superadmin);
             }
         }
         else {

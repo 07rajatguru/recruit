@@ -8,7 +8,7 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-3 month_div">
+        <div class="col-md-2 month_div">
             <select class="form-control" name="month" id="month">
                 @foreach($month_list as $key=>$value)
                     <option value={{ $key }} @if($key==$month) selected="selected" @endif>{{ $value}}</option>
@@ -16,10 +16,18 @@
             </select>
         </div>
 
-        <div class="col-md-3 year_div">
+        <div class="col-md-2 year_div">
             <select class="form-control" name="year" id="year">
                 @foreach($year_list as $key=>$value)
                     <option value={{ $key }} @if($key==$year) selected="selected" @endif>{{ $value}}</option>
+                @endforeach
+            </select>
+        </div>
+
+        <div class="col-md-2 year_div">
+            <select class="form-control" name="attendance_type" id="attendance_type">
+                @foreach($attendance_type as $key=>$value)
+                    <option value={{ $key }} @if($key==$selected_attendance_type) selected="selected" @endif>{{ $value}}</option>
                 @endforeach
             </select>
         </div>
@@ -29,15 +37,7 @@
         </div>
 
         <div class="col-md-1">
-            @if(isset($page) && $page == 'Department')
-                @include('adminlte::partials.userRemarks', ['name' => $page,'users' => $users_name,'department_id' => $department_id])
-            @else
-                @if(isset($users_name) && sizeof($users_name) > 0)
-                    @include('adminlte::partials.userRemarks', ['name' => $page,'users' => $users_name])
-                @else
-                    @include('adminlte::partials.userRemarks', ['name' => $page])
-                @endif
-            @endif
+            @include('adminlte::partials.userRemarks', ['name' => $department_nm,'users' => $users_name])
         </div>
 
         @if(isset($list) && sizeof($list)>0)
@@ -191,14 +191,14 @@
                                                 else if(isset($value1['unapproved_leave']) && $value1['unapproved_leave'] == 'Y') {
                                                     $attendance = 'UL';
                                                 }
-                                                else if(in_array($key1, $sundays)) {
-                                                    $attendance = 'H';
-                                                }
                                                 else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
                                                     $attendance = 'N';
                                                 }
                                                 else if(isset($value1['attendance']) && $value1['attendance'] == '') {
                                                     $attendance = 'A';
+                                                }
+                                                else if(in_array($key1, $sundays)) {
+                                                    $attendance = 'H';
                                                 }
                                                 else {
 
@@ -359,16 +359,14 @@
             </div>
         @endforeach
     @endforeach
-
-    <input type="hidden" name="page" id="page" value="{{ $page }}">
-
-    @if(isset($page) && $page == 'Department')
-        <input type="hidden" name="department_id" id="department_id" value="{{ $department_id }}">
-    @endif
 @stop
 
 @section('customscripts')
     <script type="text/javascript">
+
+        $("#month").select2();
+        $("#year").select2();
+        $("#attendance_type").select2();
 
         $(document).ready(function() {
 
@@ -394,30 +392,16 @@
 
             var month = $("#month :selected").val();
             var year = $("#year :selected").val();
-            var page = $("#page").val();
-            var department_id = $("#department_id").val();
+            var attendance_type = $("#attendance_type :selected").val();
 
-            if(department_id >= 0) {
-
-                var url = '/users-attendance/'+department_id+'';
-            }
-            else {
-
-                if(page == 'Self') {
-                    
-                    var url = '/self-user-attendance';
-                }
-                if(page == 'Team') {
-
-                    var url = '/team-user-attendance';
-                }
-            }
+            var url = '/users-attendance/'+attendance_type+'';
 
             var form = $('<form action="' + url + '" method="post">' +
-                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                '<input type="text" name="month" value="'+month+'" />' +
-                '<input type="text" name="year" value="'+year+'" />' +
-                '</form>');
+            '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+            '<input type="hidden" name="month" value="'+month+'" />' +
+            '<input type="hidden" name="year" value="'+year+'" />' +
+            '<input type="hidden" name="attendance_type" value="'+attendance_type+'" />' +
+            '</form>');
 
             $('body').append(form);
             form.submit();
@@ -427,8 +411,7 @@
 
             var month = $("#month :selected").val();
             var year = $("#year :selected").val();
-            var page = $("#page").val();
-            var department_id = $("#department_id").val();
+            var attendance_type = $("#attendance_type :selected").val();
 
             var url = '/attendance/export';
 
@@ -436,8 +419,7 @@
             '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
             '<input type="hidden" name="month" value="'+month+'" />' +
             '<input type="hidden" name="year" value="'+year+'" />' +
-            '<input type="hidden" name="page" value="'+page+'" />' +
-            '<input type="hidden" name="department_id" value="'+department_id+'" />' +
+            '<input type="hidden" name="attendance_type" value="'+attendance_type+'" />' +
             '</form>');
 
             $('body').append(form);
