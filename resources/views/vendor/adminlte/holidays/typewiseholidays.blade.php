@@ -21,11 +21,11 @@
 	<table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="holidays_table">
         <thead>
             <tr>
-                <th>No</th>
-                <th>Title</th>
-                <th>Date</th>
+                <th width="5px">No</th>
+                <th width="10px">Title</th>
+                <th width="5px">Date</th>
                 @if($id == 1)
-                    <th>Users</th>
+                    <th width="700px">Users</th>
                 @endif
             </tr>
         </thead>
@@ -38,7 +38,7 @@
                 <td>{{$value['from_date']}}</td>
 
                 @if($id == 1)
-                    <td>{{$value['users']}}</td>
+                    <td style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">{{$value['users']}}</td>
                 @endif
             </tr>
             @endforeach
