@@ -1016,10 +1016,10 @@ class HomeController extends Controller
         $fixed_holidays_count = sizeof($fixed_holiday_details);
 
         // Get Work Anniversary dates of Current Month
-        $work_anniversary_dates = User::getUsersWorkAnniversaryDatesByMonth($month,$year);
+        $work_anniversary_dates = User::getUsersWorkAnniversaryDatesByMonth($month);
 
         // Get Birthday dates of Current Month
-        $birthday_dates = User::getUserBirthDatesByMonth($month,$year);
+        $birthday_dates = User::getUserBirthDatesByMonth($month);
 
         // Get Fixed Holiday of Current Year
         $holidays = Holidays::getUserHolidaysByType(0,'',$year,'');
@@ -1095,10 +1095,10 @@ class HomeController extends Controller
             $fixed_holidays_count = sizeof($fixed_holiday_details);
 
         // Get Work Anniversary dates of Current Month
-        $work_anniversary_dates = User::getUsersWorkAnniversaryDatesByMonth($month,$year);
+        $work_anniversary_dates = User::getUsersWorkAnniversaryDatesByMonth($month);
 
         // Get Birthday dates of Current Month
-        $birthday_dates = User::getUserBirthDatesByMonth($month,$year);
+        $birthday_dates = User::getUserBirthDatesByMonth($month);
 
         // Get Holiday of Current Year
         $holidays = Holidays::getUserHolidaysByType(0,'',$year,'');

@@ -1202,7 +1202,9 @@ class User extends Authenticatable
         return $user_id;
     }
 
-    public static function getUsersWorkAnniversaryDatesByMonth($month,$year) {
+    public static function getUsersWorkAnniversaryDatesByMonth($month) {
+
+        $year = date('Y');
 
         $status = 'Inactive';
         $status_array = array($status);
@@ -1220,11 +1222,9 @@ class User extends Authenticatable
         $query = $query->whereNotIn('users.id',$super_array);
 
         if ($month != '') {
-            $query = $query->where(\DB::raw('month(users_otherinfo.date_of_joining)'),'=',$month);
-        }
 
-        if ($year != '') {
-            $query = $query->where(\DB::raw('year(users_otherinfo.date_of_joining)'),'=',$year);
+            $query = $query->where(\DB::raw('month(users_otherinfo.date_of_joining)'),'=',$month);
+            $query = $query->where(\DB::raw('year(users_otherinfo.date_of_joining)'),'!=',$year);
         }
 
         $query = $query->select('users.first_name','users.last_name','users_otherinfo.date_of_joining');
@@ -1251,7 +1251,7 @@ class User extends Authenticatable
         return $users_array;
     }
 
-    public static function getUserBirthDatesByMonth($month,$year) {
+    public static function getUserBirthDatesByMonth($month) {
 
         $status = 'Inactive';
         $status_array = array($status);
@@ -1269,11 +1269,8 @@ class User extends Authenticatable
         $query = $query->whereNotIn('users.id',$super_array);
 
         if ($month != '') {
-            $query = $query->where(\DB::raw('month(users_otherinfo.date_of_birth)'),'=',$month);
-        }
 
-        if ($year != '') {
-            $query = $query->where(\DB::raw('year(users_otherinfo.date_of_birth)'),'=',$year);
+            $query = $query->where(\DB::raw('month(users_otherinfo.date_of_birth)'),'=',$month);
         }
 
         $query = $query->select('users.first_name','users.last_name','users_otherinfo.date_of_birth');

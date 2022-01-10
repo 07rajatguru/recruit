@@ -35,7 +35,7 @@
     	    		<tr>
     		    		<td>{{ ++$i }}</td>
                         <td>
-                            <a class="fa fa-circle" title="Show" href="{{ route('leave.reply',$value['id']) }}"></a>
+                            <a class="fa fa-circle" title="Show" href="{{ route('late-early.reply',$value['id']) }}"></a>
                         </td>
 
     		    		<td>{{ $value['user_name'] }}</td>
