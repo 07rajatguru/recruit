@@ -1896,10 +1896,11 @@ class WorkPlanningController extends Controller
         return redirect()->route('workplanning.show',$wrok_planning_id)->with('error','Report Rejected.');
     }
 
-    public function getPendingWorkPlanning(Request $request) {
+    public function getPendingWorkPlanning($id) {
         
         $user =  \Auth::user();
         $user_id = $user->id;
+        $all_perm = $user->can('hr-employee-service-dashboard');
         
         $super_admin_userid = getenv('SUPERADMINUSERID');
         $manager_user_id = env('MANAGERUSERID');
@@ -1908,14 +1909,42 @@ class WorkPlanningController extends Controller
         $year = date('Y');
 
         if($user_id == $super_admin_userid) {
-           
-           $work_planning_res = array();
-           $count = 0;
+
+            if($id == 0) {
+            
+                $work_planning_res = array();
+                $count = 0;
+            }
+            else {
+
+                if($all_perm) {
+                    
+                    $work_planning_res = WorkPlanning::getPendingWorkPlanningDetails(0,$month,$year);
+                    $count = sizeof($work_planning_res);
+                }
+                else {
+                    return view('errors.403');
+                }
+            }
         }
         else {
 
-            $work_planning_res = WorkPlanning::getPendingWorkPlanningDetails($user_id,$month,$year);
-            $count = sizeof($work_planning_res);
+            if($id == 0) {
+            
+                $work_planning_res = WorkPlanning::getPendingWorkPlanningDetails($user_id,$month,$year);
+                $count = sizeof($work_planning_res);
+            }
+            else {
+
+                if($all_perm) {
+
+                    $work_planning_res = WorkPlanning::getPendingWorkPlanningDetails(0,$month,$year);
+                    $count = sizeof($work_planning_res);
+                }
+                else {
+                    return view('errors.403');
+                }
+            }
         }
 
         return view('adminlte::workPlanning.pendingstatusindex',compact('work_planning_res','count','user_id','manager_user_id'));

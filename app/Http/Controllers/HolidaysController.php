@@ -260,35 +260,67 @@ class HolidaysController extends Controller
         return $data;exit;
     }
 
-    public function getOptionalHolidays() {
+    public function getOptionalHolidays($id) {
         
         $user = \Auth::user();
         $user_id = $user->id;
+        $all_perm = $user->can('hr-employee-service-dashboard');
        
         $month = date('m');
         $year = date('Y');
 
-        $holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'Optional Leave');
-        $count = sizeof($holiday_details);
+        if($id == 0) {
+
+            $holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'Optional Leave');
+            $count = sizeof($holiday_details);
+        }
+        else {
+
+            if($all_perm) {
+            
+                $holiday_details = Holidays::getUserHolidaysByType(0,$month,$year,'Optional Leave');
+                $count = sizeof($holiday_details);
+            }
+            else {
+
+                return view('errors.403');
+            }
+        }
 
         $name = "Optional";
 
-        return view('adminlte::holidays.typewiseholidays',compact('holiday_details','count','name'));
+        return view('adminlte::holidays.typewiseholidays',compact('holiday_details','count','name','id'));
     }
 
-    public function getFixedHolidays() {
+    public function getFixedHolidays($id) {
         
         $user = \Auth::user();
         $user_id = $user->id;
+        $all_perm = $user->can('hr-employee-service-dashboard');
        
         $month = date('m');
         $year = date('Y');
 
-        $holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'Fixed Leave');
-        $count = sizeof($holiday_details);
+        if($id == 0) {
+
+            $holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'Fixed Leave');
+            $count = sizeof($holiday_details);
+        }
+        else {
+
+            if($all_perm) {
+            
+                $holiday_details = Holidays::getUserHolidaysByType(0,$month,$year,'Fixed Leave');
+                $count = sizeof($holiday_details);
+            }
+            else {
+
+                return view('errors.403');
+            }
+        }
 
         $name = "Fixed";
         
-        return view('adminlte::holidays.typewiseholidays',compact('holiday_details','count','name'));
+        return view('adminlte::holidays.typewiseholidays',compact('holiday_details','count','name','id'));
     }
 }

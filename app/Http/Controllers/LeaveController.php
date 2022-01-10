@@ -901,30 +901,56 @@ class LeaveController extends Controller
         }
     }
 
-    public function getAppliedLeave() {
+    public function getAppliedLeave($id) {
         
         $user = \Auth::user();
         $user_id = $user->id;
+        $all_perm = $user->can('hr-employee-service-dashboard');
+
         $super_admin_userid = getenv('SUPERADMINUSERID');
        
         $month = date('m');
         $year = date('Y');
 
+        $user_ids[] = $user_id;
+
         if($user_id == $super_admin_userid) {
 
-            $leave_details = array();
-            $count = 0;
+            if($id == 0) {
+            
+                $leave_details = array();
+                $count = 0;
+            }
+            else {
+
+                if($all_perm) {
+                    
+                    $leave_details = UserLeave::getAllLeavedataByUserId(1,$user_ids,$month,$year,'');
+                    $count = sizeof($leave_details);
+                }
+                else {
+                    return view('errors.403');
+                }
+            }
         }
         else {
 
-            /*$floor_reports_id = User::getAssignedUsers($user_id);
-            foreach ($floor_reports_id as $key => $value) {
-                $user_ids[] = $key;
-            }*/
+            if($id == 0) {
 
-            $user_ids[] = $user_id;
-            $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'');
-            $count = sizeof($leave_details);
+                $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'');
+                $count = sizeof($leave_details);
+            }
+            else {
+
+                if($all_perm) {
+
+                    $leave_details = UserLeave::getAllLeavedataByUserId(1,$user_ids,$month,$year,'');
+                    $count = sizeof($leave_details);
+                }
+                else {
+                    return view('errors.403');
+                }
+            }
         }
         return view('adminlte::leave.appliedleave',compact('leave_details','user_id','count'));
     }

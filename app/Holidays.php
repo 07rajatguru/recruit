@@ -175,6 +175,7 @@ class Holidays extends Model
 
                 $holidays[$i]['id'] = $value->id;
                 $holidays[$i]['title'] = $value->title;
+                $holidays[$i]['type'] = $value->type;
 
                 if($value->from_date == '') {
                     $holidays[$i]['from_date'] = '';

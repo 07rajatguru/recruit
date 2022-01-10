@@ -184,30 +184,30 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:hr-employee-service-dashboard']
     ));
 
-    Route::get('work-planning/pending', [
+    Route::get('work-planning/pending/{id}', [
         'as' => 'workplanning.pending',
         'uses' => 'WorkPlanningController@getPendingWorkPlanning',
         'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
     ]);
 
-    Route::get('applied-leave', [
+    Route::get('applied-leave/{id}', [
         'as' => 'applied.leave',
         'uses' => 'LeaveController@getAppliedLeave',
         'middleware' => ['permission:display-leave|display-user-wise-leave']
     ]);
 
-    Route::get('late-in-early-go-request', [
+    Route::get('late-in-early-go-request/{id}', [
         'as' => 'late.early',
         'uses' => 'LateInEarlyGoController@getLateInEarlyGo',
         'middleware' => ['permission:display-leave|display-user-wise-leave']
     ]);
 
-    Route::get('optional-holidays', [
+    Route::get('optional-holidays/{id}', [
         'as' => 'optional.holidays',
         'uses' => 'HolidaysController@getOptionalHolidays'
     ]);
 
-    Route::get('fixed-holidays', [
+    Route::get('fixed-holidays/{id}', [
         'as' => 'fixed.holidays',
         'uses' => 'HolidaysController@getFixedHolidays'
     ]);

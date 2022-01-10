@@ -30,7 +30,7 @@
                 <div class="icon">
                     <i class="fa fa-files-o"></i>
                 </div>
-                <a href="{{ route('workplanning.pending') }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="work-planning/pending/0" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -43,7 +43,7 @@
                 <div class="icon">
                     <i class="fa fa-leanpub"></i>
                 </div>
-                <a href="{{ route('applied.leave') }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="applied-leave/0" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -69,7 +69,7 @@
                 <div class="icon">
                     <i class="fa fa-file-text-o"></i>
                 </div>
-                <a href="{{ route('late.early') }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="late-in-early-go-request/0" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -82,7 +82,7 @@
                 <div class="icon">
                     <i class="fa fa-list-alt"></i>
                 </div>
-                <a href="{{ route('optional.holidays') }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="optional-holidays/0" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -95,7 +95,7 @@
                 <div class="icon">
                     <i class="fa fa-list-alt"></i>
                 </div>
-                <a href="{{ route('fixed.holidays') }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="fixed-holidays/0" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
     </div>
@@ -252,6 +252,7 @@
                             <thead>
                             <tr>
                                 <th width="11%" style="border: 1px solid #00c0ef;">Sr. No.</th>
+                                <th width="100px" style="border: 1px solid #00c0ef;">Type</th>
                                 <th width="100px" style="border: 1px solid #00c0ef;">Title</th>
                                 <th width="100px" style="border: 1px solid #00c0ef;">Date</th>
                             </tr>
@@ -262,6 +263,7 @@
                                     @foreach($holidays as $key => $value)
                                         <tr>
                                             <td style="border: 1px solid #00c0ef;">{{ ++$i }}</td>
+                                            <td style="border: 1px solid #00c0ef;">{{ $value['type'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">{{ $value['title'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">{{ $value['from_date'] }} </td>
                                         </tr>

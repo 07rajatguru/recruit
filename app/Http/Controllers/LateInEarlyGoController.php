@@ -413,19 +413,51 @@ class LateInEarlyGoController extends Controller
         return json_encode($leaves_count);
     }
 
-    public function getLateInEarlyGo() {
+    public function getLateInEarlyGo($id) {
         
         $user = \Auth::user();
         $user_id = $user->id;
+        $all_perm = $user->can('hr-employee-service-dashboard');
+
         $super_admin_userid = getenv('SUPERADMINUSERID');
 
         if($user_id == $super_admin_userid) {
-            $leave_details = array();
-            $count = 0;
+
+            if($id == 0) {
+            
+                $leave_details = array();
+                $count = 0;
+            }
+            else {
+
+                if($all_perm) {
+                    
+                    $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID(0);
+                    $count = sizeof($leave_details);
+                }
+                else {
+                    return view('errors.403');
+                }
+            }
         }
         else {
-            $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID($user_id);
-            $count = sizeof($leave_details);
+
+            if($id == 0) {
+                
+                $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID($user_id);
+                $count = sizeof($leave_details);
+            }
+            else {
+
+                if($all_perm) {
+                    
+                    $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID(0);
+                    $count = sizeof($leave_details);
+                }
+                else {
+                    return view('errors.403');
+                }
+            }
         }
         return view('adminlte::lateinEarlygo.latein-earlygo',compact('leave_details','user_id','count'));
     }

@@ -23,8 +23,10 @@
             <tr>
                 <th>No</th>
                 <th>Title</th>
-                <th>From date</th>
-                <th>To date</th>
+                <th>Date</th>
+                @if($id == 1)
+                    <th>Users</th>
+                @endif
             </tr>
         </thead>
         <tbody>
@@ -34,7 +36,10 @@
                 <td>{{ ++$i }}</td>
                 <td>{{$value['title']}}</td>
                 <td>{{$value['from_date']}}</td>
-                <td>{{$value['to_date']}}</td>
+
+                @if($id == 1)
+                    <td>{{$value['users']}}</td>
+                @endif
             </tr>
             @endforeach
         </tbody>
