@@ -30,5 +30,7 @@ class DatabaseSeeder extends Seeder
         $this->call(ModuleNamesSeeder::class);
         $this->call(ModuleWisePermissionsSeeder::class);
         $this->call(NewIndustryTableSeeder::class);
+        $this->call(LeavePermissionsSeeder::class);
+        $this->call(ESSModulePermissionSeeder::class);
     }
 }

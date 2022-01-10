@@ -994,11 +994,6 @@ class HomeController extends Controller
             $pending_work_planning_count = sizeof($work_planning);
 
             // Get Applied Leave Count
-            /*$floor_reports_id = User::getAssignedUsers($user_id);
-            foreach ($floor_reports_id as $key => $value) {
-                $user_ids[] = $key;
-            }*/
-
             $user_ids[] = $user_id;
             $leave_data = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'');
             $leave_count = sizeof($leave_data);
@@ -1037,17 +1032,17 @@ class HomeController extends Controller
 
             foreach ($floor_reports_id as $key => $value) {
 
-                if($key == $user_id) {
-                }
-                else {
-                    $user_ids_array[] = $key;
-                }
+                $user_ids_array[] = $key;
             }
         }
         else {
-
             $user_ids_array = array();
         }
+
+        if (in_array($user_id, $user_ids_array)) {
+            unset($user_ids_array[array_search($user_id,$user_ids_array)]);
+        }
+
         $leave_data = UserLeave::getAllLeavedataByUserId(0,$user_ids_array,$month,$year,'');
 
         $viewVariable = array();
