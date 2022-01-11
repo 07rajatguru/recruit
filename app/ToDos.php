@@ -209,7 +209,7 @@ class ToDos extends Model
         $todo_query = $todo_query->where('to_dos.due_date','>=',$date);
 
         if($limit > 0) {
-            $todo_quer = $todo_query->limit($limit);
+            $todo_query = $todo_query->limit($limit);
         }
 
         $todo_res = $todo_query->get();

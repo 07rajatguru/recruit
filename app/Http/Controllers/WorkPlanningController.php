@@ -129,23 +129,19 @@ class WorkPlanningController extends Controller
 
             if($user_id == $superadminuserid) {
 
-                $team_users = User::getAssignedUsers($user_id);
-                $other_users = User::getAllUsers();
+                $team_users = User::getUsersByJoiningDate($user_id,'');
+                $other_users = User::getUsersByJoiningDate(0,'');
 
                 if(isset($team_users) && sizeof($team_users) > 0) {
 
                     foreach ($team_users as $key => $value) {
 
                         $response = array();
-                        
-                        if($key == $user_id) {
-                        }
-                        else {
-                            $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'','');
+     
+                        $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'','');
 
-                            if(isset($response) && sizeof($response) > 0) {
-                                $work_planning_res[$key."-".$value] = $response;
-                            }
+                        if(isset($response) && sizeof($response) > 0) {
+                            $work_planning_res[$key."-".$value] = $response;
                         }
                     }   
                 }
@@ -155,37 +151,29 @@ class WorkPlanningController extends Controller
                     foreach ($other_users as $key1 => $value1) {
 
                         $response = array();
-                        
-                        if($key1 == $user_id) {
-                        }
-                        else {
-                            $response = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,'','');
 
-                            if(isset($response) && sizeof($response) > 0) {
-                                $work_planning_res[$key1."-".$value1] = $response;
-                            }
+                        $response = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,'','');
+
+                        if(isset($response) && sizeof($response) > 0) {
+                            $work_planning_res[$key1."-".$value1] = $response;
                         }
                     }
                 }
             }
             else {
 
-                $users = User::getAllUsers();
+                $users = User::getUsersByJoiningDate(0,'');
 
                 if(isset($users) && sizeof($users) > 0) {
 
                     foreach ($users as $key => $value) {
 
                         $response = array();
-                        
-                        if($key == $user_id) {
-                        }
-                        else {
-                            $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'','');
 
-                            if(isset($response) && sizeof($response) > 0) {
-                                $work_planning_res[$key."-".$value] = $response;
-                            }
+                        $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'','');
+
+                        if(isset($response) && sizeof($response) > 0) {
+                            $work_planning_res[$key."-".$value] = $response;
                         }
                     }
                 }
@@ -195,27 +183,22 @@ class WorkPlanningController extends Controller
 
             if($user_id == $manager_user_id) {
 
-                $team_users = User::getAssignedUsers($user_id);
+                $team_users = User::getUsersByJoiningDate($user_id,'');
 
                 $recruitment = getenv('RECRUITMENT');
                 $type_array = array($recruitment);
-                $other_users = User::getAllUsers($type_array);
+                $other_users = User::getUsersByJoiningDate(0,$type_array);
 
                 if(isset($team_users) && sizeof($team_users) > 0) {
 
                     foreach ($team_users as $key => $value) {
 
                         $response = array();
-                        
-                        if($key == $user_id) {
-                        }
-                        else {
 
-                            $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'','');
+                        $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'','');
                             
-                            if(isset($response) && sizeof($response) > 0) {
-                                $work_planning_res[$key."-".$value] = $response;
-                            }
+                        if(isset($response) && sizeof($response) > 0) {
+                            $work_planning_res[$key."-".$value] = $response;
                         }
                     }   
                 }
@@ -225,16 +208,11 @@ class WorkPlanningController extends Controller
                     foreach ($other_users as $key1 => $value1) {
 
                         $response = array();
-                        
-                        if($key1 == $user_id) {
-                        }
-                        else {
 
-                            $response = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,'','');
+                        $response = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,'','');
                             
-                            if(isset($response) && sizeof($response) > 0) {
-                                $work_planning_res[$key1."-".$value1] = $response;
-                            }
+                        if(isset($response) && sizeof($response) > 0) {
+                            $work_planning_res[$key1."-".$value1] = $response;
                         }
                     }
                 }
@@ -242,24 +220,18 @@ class WorkPlanningController extends Controller
             else {
 
                 // Get Loggedin user team
-                $users = User::getAssignedUsers($user_id);
+                $users = User::getUsersByJoiningDate($user_id,'');
 
                 if(isset($users) && sizeof($users) > 0) {
 
-                    $response = array();
-
                     foreach ($users as $key => $value) {
 
-                        if($key == $user_id) {
+                        $response = array();
 
-                        }
-                        else {
-
-                            $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'','');
+                        $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,'','');
                             
-                            if(isset($response) && sizeof($response) > 0) {
-                                $work_planning_res[$key."-".$value] = $response;
-                            }
+                        if(isset($response) && sizeof($response) > 0) {
+                            $work_planning_res[$key."-".$value] = $response;
                         }
                     }
                 }
@@ -449,8 +421,8 @@ class WorkPlanningController extends Controller
 
             if($user_id == $superadminuserid) {
 
-                $team_users = User::getAssignedUsers($user_id);
-                $other_users = User::getAllUsers();
+                $team_users = User::getUsersByJoiningDate($user_id,'');
+                $other_users = User::getUsersByJoiningDate(0,'');
 
                 if(isset($team_users) && sizeof($team_users) > 0) {
 
@@ -458,15 +430,10 @@ class WorkPlanningController extends Controller
                         
                         $response = array();
 
-                        if($key == $user_id) {
-                        }
-                        else {
+                        $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status,$post_discuss_status);
 
-                            $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status,$post_discuss_status);
-
-                            if(isset($response) && sizeof($response) > 0) {
-                                $work_planning_res[$key."-".$value] = $response;
-                            }
+                        if(isset($response) && sizeof($response) > 0) {
+                            $work_planning_res[$key."-".$value] = $response;
                         }
                     }   
                 }
@@ -476,39 +443,29 @@ class WorkPlanningController extends Controller
                     foreach ($other_users as $key1 => $value1) {
 
                         $response = array();
-                        
-                        if($key1 == $user_id) {
-                        }
-                        else {
 
-                            $response = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,$status,$post_discuss_status);
+                        $response = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,$status,$post_discuss_status);
 
-                            if(isset($response) && sizeof($response) > 0) {
-                                $work_planning_res[$key1."-".$value1] = $response;
-                            }
+                        if(isset($response) && sizeof($response) > 0) {
+                            $work_planning_res[$key1."-".$value1] = $response;
                         }
                     }
                 }
             }
             else {
 
-                $users = User::getAllUsers();
+                $users = User::getUsersByJoiningDate(0,'');
 
                 if(isset($users) && sizeof($users) > 0) {
 
                     foreach ($users as $key => $value) {
 
                         $response = array();
-                        
-                        if($key == $user_id) {
-                        }
-                        else {
 
-                            $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status,$post_discuss_status);
+                        $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status,$post_discuss_status);
 
-                            if(isset($response) && sizeof($response) > 0) {
-                                $work_planning_res[$key."-".$value] = $response;
-                            }
+                        if(isset($response) && sizeof($response) > 0) {
+                            $work_planning_res[$key."-".$value] = $response;
                         }
                     }
                 }
@@ -518,27 +475,22 @@ class WorkPlanningController extends Controller
 
             if($user_id == $manager_user_id) {
 
-                $team_users = User::getAssignedUsers($user_id);
+                $team_users = User::getUsersByJoiningDate($user_id,'');
 
                 $recruitment = getenv('RECRUITMENT');
                 $type_array = array($recruitment);
-                $other_users = User::getAllUsers($type_array);
+                $other_users = User::getUsersByJoiningDate(0,$type_array);
 
                 if(isset($team_users) && sizeof($team_users) > 0) {
 
                     foreach ($team_users as $key => $value) {
 
                         $response = array();
-                        
-                        if($key == $user_id) {
-                        }
-                        else {
 
-                            $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status,$post_discuss_status);
+                        $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status,$post_discuss_status);
 
-                            if(isset($response) && sizeof($response) > 0) {
-                                $work_planning_res[$key."-".$value] = $response;
-                            }
+                        if(isset($response) && sizeof($response) > 0) {
+                            $work_planning_res[$key."-".$value] = $response;
                         }
                     }   
                 }
@@ -548,16 +500,11 @@ class WorkPlanningController extends Controller
                     foreach ($other_users as $key1 => $value1) {
 
                         $response = array();
-                        
-                        if($key1 == $user_id) {
-                        }
-                        else {
 
-                            $response = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,$status,$post_discuss_status);
+                        $response = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,$status,$post_discuss_status);
 
-                            if(isset($response) && sizeof($response) > 0) {
-                                $work_planning_res[$key1."-".$value1] = $response;
-                            }
+                        if(isset($response) && sizeof($response) > 0) {
+                            $work_planning_res[$key1."-".$value1] = $response;
                         }
                     }
                 }
@@ -565,22 +512,18 @@ class WorkPlanningController extends Controller
             else {
 
                 // Get Loggedin user team
-                $users = User::getAssignedUsers($user_id);
+                $users = User::getUsersByJoiningDate($user_id,'');
 
                 if(isset($users) && sizeof($users) > 0) {
 
                     foreach ($users as $key => $value) {
 
-                        if($key == $user_id) {
+                        $response = array();
 
-                        }
-                        else {
+                        $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status,$post_discuss_status);
 
-                            $response = WorkPlanning::getWorkPlanningDetails($key,$month,$year,$status,$post_discuss_status);
-
-                            if(isset($response) && sizeof($response) > 0) {
-                                $work_planning_res[$key."-".$value] = $response;
-                            }
+                        if(isset($response) && sizeof($response) > 0) {
+                            $work_planning_res[$key."-".$value] = $response;
                         }
                     }
                 }

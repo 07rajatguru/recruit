@@ -9,7 +9,11 @@
 @section('content')
 
     <div class="row">
-
+        @if($message = Session::get('success'))
+            <div class="alert alert-success">
+                <p>{{ $message }}</p>
+            </div>
+        @endif
         <div class="filter_section">
             <div class="month_div col-md-4 col-sm-6 col-xs-12">
                 <select class="form-control" name="month" id="month">
@@ -29,12 +33,12 @@
 
             @permission(('display-attendance-of-all-users'))
                 <div class="attendance_submit col-md-1 col-sm-4">
-                    <input class="btn btn-success btn-block" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" style="width:100px;" />
+                    <input class="btn btn-primary btn-block" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" style="width:100px;" />
                 </div>
                 
-                <div class="filter-ex-btn col-md-1 col-sm-4">
+                {{--<div class="filter-ex-btn col-md-1 col-sm-4">
                     <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()" style="width:100px;">Export</a>
-                </div>
+                </div>--}}
 
                 <div class="attendance_submit col-md-1 col-sm-4">
                     @include('adminlte::partials.userRemarks', ['name' => 'HomeAttendance','users' => $users_name])
@@ -80,7 +84,7 @@
                                 <span> Logout </span><hr>
                                 <span> Total </span>
                             </th>
-                            
+
                             @foreach($value as $key1=>$value1)
                                 @if(isset($value1['remarks']) && $value1['remarks'] != '')
                                     <td style="border: 1px solid black;background-color:#B0E0E6;" data-toggle="modal" data-target="#remarksModel-{{ str_replace(' ','',$key) }}{{ str_replace(' ','',$key1) }}">

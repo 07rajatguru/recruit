@@ -359,6 +359,7 @@ class User extends Authenticatable
             $query = $query->where('id','=',$user_id);
         }
 
+        $query = $query->orderBy('users.joining_date','ASC');
         $user_response = $query->get();
 
         $list = array();
@@ -415,7 +416,7 @@ class User extends Authenticatable
         // Get Previous data from joining date
         $check_date = $year."-".$month."-31";
         $query = $query->where('users.joining_date','<=',$check_date);
-
+        $query = $query->orderBy('users.joining_date','ASC');
         $user_response = $query->get();
 
         $list = array();
@@ -1299,5 +1300,46 @@ class User extends Authenticatable
             }
         }
         return $users_array;
+    }
+
+    public static function getUsersByJoiningDate($user_id,$department_id='') {
+
+        $status = 'Inactive';
+        $status_array = array($status);
+
+        $client = getenv('EXTERNAL');
+        $client_type = array($client);
+
+        $superadmin = getenv('SUPERADMINUSERID');
+        $saloni_user_id = getenv('SALONIUSERID');
+        $super_array = array($superadmin,$saloni_user_id);
+
+        $user_query = User::query();
+
+        if(isset($user_id) && $user_id > 0) {
+            $user_query = $user_query->where('reports_to',$user_id);
+        }
+
+        if(isset($department_id) && $department_id != '') {
+            $user_query = $user_query->whereIn('type',$department_id);
+        }
+
+        $user_query = $user_query->whereNotIn('status',$status_array);
+        $user_query = $user_query->whereNotIn('type',$client_type);
+        $user_query = $user_query->whereNotIn('id',$super_array);
+        $user_query = $user_query->orderBy('joining_date','ASC');
+
+        $users = $user_query->get();
+
+        $userArr = array();
+
+        if(isset($users) && sizeof($users)) {
+
+            foreach ($users as $user) {
+
+                $userArr[$user->id] = $user->name;
+            }
+        }
+        return $userArr;
     }
 }

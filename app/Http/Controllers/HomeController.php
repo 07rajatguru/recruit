@@ -9,7 +9,6 @@ use App\UsersLog;
 use Illuminate\Http\Request;
 use App\User;
 use App\Date;
-use App\ClientBasicinfo;
 use App\JobOpen;
 use App\JobAssociateCandidates;
 use Excel;
@@ -458,17 +457,17 @@ class HomeController extends Controller
             $users = User::getOtherUsers($user_id);
         }
 
-        if(isset($_POST['month']) && $_POST['month']!=''){
+        if(isset($_POST['month']) && $_POST['month']!='') {
             $month = $_POST['month'];
         }
-        else{
+        else {
             $month = date("n");
         }
 
-        if(isset($_POST['year']) && $_POST['year']!=''){
+        if(isset($_POST['year']) && $_POST['year']!='') {
             $year = $_POST['year'];
         }
-        else{
+        else {
             $year = date("Y");
         }
 
@@ -485,30 +484,34 @@ class HomeController extends Controller
         }
 
         $list = array();
-        for($d=1; $d<=31; $d++)
-        {
+        for($d=1; $d<=31; $d++) {
+
             $time = mktime(12, 0, 0, $month, $d, $year);
+
             foreach ($users as $key => $value) {
-              //  echo date('m', $time);exit;
+              
                 if (date('n', $time) == $month)
-                    $list[$key][date('j', $time)]['login']='';
-                $list[$key][date('j', $time)]['logout']='';
-                $list[$key][date('j', $time)]['total']='';
-                $list[$key][date('j', $time)]['remarks']='';
+                    $list[$key][date('j', $time)]['login'] = '';
+
+                $list[$key][date('j', $time)]['logout'] = '';
+                $list[$key][date('j', $time)]['total'] = '';
+                $list[$key][date('j', $time)]['remarks'] = '';
             }
         }
 
         if($display_attendance) {
+
             $response = UsersLog::getUsersAttendance(0,$month,$year);
-            $user_remark = UserRemarks::getUserRemarksByUserid(0);
+            $user_remark = UserRemarks::getUserRemarksByUserid(0,$month,$year);
         }
         else if($display_attendance_by_user) {
+
             $response = UsersLog::getUsersAttendance($user_id,$month,$year);
-            $user_remark = UserRemarks::getUserRemarksByUserid($user_id);
+            $user_remark = UserRemarks::getUserRemarksByUserid($user_id,$month,$year);
         }
 
         $date = new Date();
-        if(sizeof($response)>0){
+        if(sizeof($response)>0) {
             foreach ($response as $key => $value) {
 
                 $login_time = $date->converttime($value->login);
@@ -524,18 +527,25 @@ class HomeController extends Controller
                 $list[$combine_name][date("j",strtotime($value->date))]['total'] = date('H:i', mktime(0,$total));
 
                 if (isset($user_remark) && sizeof($user_remark)>0) {
+
                     foreach ($user_remark as $k => $v) {
 
                         $split_month = date('n',strtotime($v['remark_date']));
                         $split_year = date('Y',strtotime($v['remark_date']));
 
                         if (($v['full_name'] == $combine_name) && ($v['remark_date'] == $value->date) && ($month == $split_month) && ($year == $split_year)) {
+
                             $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
                         }
-                        else{
+                        else {
 
                             if (($v['full_name'] == $combine_name) && ($month == $split_month) && ($year == $split_year)) {
+
                                 $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
+                            }
+                            else {
+
+                                $list[$v['full_name']][$v['converted_date']]['remarks'] = $v['remarks'];
                             }
                         }
                     }
@@ -557,22 +567,27 @@ class HomeController extends Controller
 
         // New List1
         $list1 = array();
-        for($d1=1; $d1<=31; $d1++)
-        {
+        for($d1=1; $d1<=31; $d1++) {
+
             $time1=mktime(12, 0, 0, $month, $d1, $year);
-            foreach ($users as $key => $value)
-            {
+            foreach ($users as $key => $value) {
+
                 if (date('n', $time1)==$month)
                     $list1[$key][date('j S', $time1)]='';
             }
         }
 
         if(sizeof($list)>0) {
+
             foreach ($list as $key => $value) {
+
                 if(sizeof($value)>0) {
+
                     $i=0;
                     foreach ($value as $key1 => $value1) {
+
                         if (isset($user_remark) && sizeof($user_remark)>0) {
+
                             foreach ($user_remark as $u_k1 => $u_v1) {
 
                                 $split_month = date('n',strtotime($u_v1['remark_date']));
@@ -607,7 +622,7 @@ class HomeController extends Controller
             $response = UsersLog::getUsersAttendance($user_id,0,0);
 
             // get selected user remarks
-            $user_remarks = UserRemarks::getUserRemarksByUserid($user_id);
+            $user_remarks = UserRemarks::getUserRemarksByUserid($user_id,0,0);
         }
         else {
 
@@ -615,7 +630,7 @@ class HomeController extends Controller
             $response = UsersLog::getUsersAttendance($loggedin_userid,0,0);
 
             // get logged in user remarks
-            $user_remarks = UserRemarks::getUserRemarksByUserid($loggedin_userid);
+            $user_remarks = UserRemarks::getUserRemarksByUserid($loggedin_userid,0,0);
         }
 
         $date = new Date();

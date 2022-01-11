@@ -8,15 +8,33 @@ class UserRemarks extends Model
 {
     public $table = 'user_remarks';
 
-    public static function getUserRemarksByUserid($user_id = 0) {
+    public static function getUserRemarksByUserid($user_id = 0,$month,$year) {
+
+        $status = 'Inactive';
+        $status_array = array($status);
+
+        $superadmin_role_id =  getenv('SUPERADMIN');
+        $client_role_id =  getenv('CLIENT');
+        $it_role_id =  getenv('IT');
+        $superadmin = array($superadmin_role_id,$client_role_id,$it_role_id);
 
     	$query = UserRemarks::query();
         $query = $query->join('users','users.id','=','user_remarks.user_id');
+        $query = $query->join('role_user','role_user.user_id','=','users.id');
     	$query = $query->select('user_remarks.*','users.name as user_name','users.first_name as first_name','users.last_name as last_name');
 
     	if (isset($user_id) && $user_id > 0) {
     		$query = $query->where('user_remarks.user_id',$user_id);
     	}
+
+        if($month!=0 && $year!=0) {
+
+            $query = $query->where(\DB::raw('MONTH(user_remarks.date)'),'=', $month);
+            $query = $query->where(\DB::raw('year(user_remarks.date)'),'=', $year);
+        }
+
+        $query = $query->whereNotIn('status',$status_array);
+        $query = $query->whereNotIn('role_id',$superadmin);
     	$res = $query->get();
 
         $remarks = array();

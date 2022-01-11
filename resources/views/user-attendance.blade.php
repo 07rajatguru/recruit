@@ -191,14 +191,14 @@
                                                 else if(isset($value1['unapproved_leave']) && $value1['unapproved_leave'] == 'Y') {
                                                     $attendance = 'UL';
                                                 }
+                                                else if(in_array($key1, $sundays)) {
+                                                    $attendance = 'H';
+                                                }
                                                 else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
                                                     $attendance = 'N';
                                                 }
                                                 else if(isset($value1['attendance']) && $value1['attendance'] == '') {
                                                     $attendance = 'A';
-                                                }
-                                                else if(in_array($key1, $sundays)) {
-                                                    $attendance = 'H';
                                                 }
                                                 else {
 
