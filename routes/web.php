@@ -3551,6 +3551,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'WorkPlanningController@getWorkPlanningTaskById'
     ]);
 
+    Route::post('work-planning/approval', [
+        'as' => 'workplanning.approval',
+        'uses' => 'WorkPlanningController@workPlanningApproval'
+    ]);
+
     Route::post('work-planning/rejection', [
         'as' => 'workplanning.rejection',
         'uses' => 'WorkPlanningController@workPlanningRejection'

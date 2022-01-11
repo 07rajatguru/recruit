@@ -96,7 +96,7 @@
                         $report_to_id = App\User::getReportsToById($user[0]);
                     ?>
 
-                    @if(isset($value) && sizeof($value) >0)
+                    @if(isset($value) && sizeof($value) > 0)
                         <tbody>
                             @if(isset($report_to_id) && $report_to_id == $superadminuserid && $user_id == $superadminuserid)
                                 <tr>

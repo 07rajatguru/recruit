@@ -1767,6 +1767,38 @@ class WorkPlanningController extends Controller
         return json_encode($data);
     }
 
+    public function workPlanningApproval() {
+
+        $user_id = \Auth::user()->id;
+
+        $approval_reply = Input::get('approval_reply');
+        $wrok_planning_id = Input::get('wrok_planning_id');
+
+        $work_planning = WorkPlanning::find($wrok_planning_id);
+        $status = $work_planning->status;
+        $post_discuss_status = $work_planning->post_discuss_status;
+
+        if($post_discuss_status == 0 && $status == 2) {
+
+            $work_planning->post_discuss_status = 1;   
+        }
+
+        $work_planning->status = 1;
+        $work_planning->approved_by = $user_id;
+
+        if(isset($approval_reply) && $approval_reply == 'Half Day') {
+
+            $work_planning->attendance = 'HD';
+        }
+        else {
+            $work_planning->attendance = 'F';
+        }
+
+        $work_planning->save();
+
+        return redirect()->route('workplanning.show',[$wrok_planning_id])->with('success','Report Approved.');
+    }
+
     public function workPlanningRejection() {
 
         $user_id = \Auth::user()->id;

@@ -44,7 +44,7 @@
                 <h4>{{ $work_planning['added_date'] }} ( Rejected By {{ $appr_rejct_by }} )</h4>
             @endif
         </div>
-        <div class="pull-right">
+        {{--<div class="pull-right">
             @if($loggedin_user_id == $added_by_id)
 
             @else
@@ -65,6 +65,22 @@
             @else
                 <a class="btn btn-primary" href="{{ route('teamworkplanning.index') }}">Back
                 </a>
+            @endif
+        </div>--}}
+
+        <div class="pull-right">
+
+            @if($loggedin_user_id == $added_by_id)
+
+                <a class="btn btn-primary" href="{{ route('workplanning.edit',$work_planning['id']) }}">Edit</a>
+                <a class="btn btn-primary" href="{{ route('workplanning.index') }}">Back</a>
+            @else
+
+                @if($work_planning['evening_status'] == 1)
+                    <button type="submit" class="btn btn-success" onclick="updateStatus('Approved')">Approved</button>
+                    <button type="submit" class="btn btn-danger" onclick="updateStatus('Rejected')">Rejected</button>
+                @endif
+                <a class="btn btn-primary" href="{{ route('teamworkplanning.index') }}">Back</a>
             @endif
         </div>
     </div>
@@ -310,7 +326,40 @@
 @endforeach
 
 <!-- Modal Start -->
-<div class="modal text-left fade" id="alertModal">
+<div class="modal text-left fade" id="approvalModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Select Option</h4>
+            </div>
+
+            {!! Form::open(['method' => 'POST', 'route' => 'workplanning.approval','id' => 'approval_form']) !!}
+                <div class="modal-body">
+                    <div class="form-group">
+
+                        {!! Form::radio('approval_reply','Half Day',false,['id' => 'approval_reply']) !!}
+                        {!! Form::label('For Half Day') !!} &nbsp;
+
+                        {!! Form::radio('approval_reply','Full Day',false,['id' => 'approval_reply']) !!}
+                        {!! Form::label('For Full Day') !!}
+
+                        <input type="hidden" name="wrok_planning_id" id="wrok_planning_id" value="{{ $wp_id }}">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel
+                    </button>
+                </div>
+            {!! Form::close() !!}
+        </div>
+    </div>
+</div>
+<!-- Modal End -->
+
+<!-- Modal Start -->
+<div class="modal text-left fade" id="rejectionModal">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -346,6 +395,7 @@
     </div>
 </div>
 <!-- Modal End -->
+
 @endsection
 
 @section('customscripts')
@@ -370,8 +420,18 @@
     });
 
     function updateStatus(check) {
-        
-        var wp_id = $("#wp_id").val();
+
+        if(check == 'Approved') {
+
+            $("#approvalModal").modal('show');
+        }
+
+        if(check == 'Rejected') {
+
+            $("#rejectionModal").modal('show');
+        }
+
+        /*var wp_id = $("#wp_id").val();
         var app_url = "{!! env('APP_URL') !!}";
         var token = $("input[name=_token]").val();
 
@@ -399,7 +459,7 @@
                     }
                 }
             });
-        }
+        }*/
     }
 
     function deletePost(id) {
