@@ -1590,7 +1590,7 @@ class HomeController extends Controller
                 $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,'');
                 $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,'');
             }
-            else if($department_nm == 'adler') {
+            else if($attendance_type == 'adler') {
 
                 // Get Users
                 $users = User::getOtherUsersNew('','',$month,$year);
@@ -1600,7 +1600,7 @@ class HomeController extends Controller
                 $user_remark = UserRemarks::getUserRemarksByUserIDNew(0,$month,$year,0);
 
             }
-            else if($department_nm == 'recruitment') {
+            else if($attendance_type == 'recruitment') {
 
                 $department_id = getenv('RECRUITMENT');
 
@@ -1612,7 +1612,7 @@ class HomeController extends Controller
                 $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,$department_id);
 
             }
-            else if($department_nm == 'hr-advisory') {
+            else if($attendance_type == 'hr-advisory') {
 
                 $department_id = getenv('HRADVISORY');
 
@@ -1624,7 +1624,7 @@ class HomeController extends Controller
                 $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,$department_id);
 
             }
-            else if($department_nm == 'operations') {
+            else if($attendance_type == 'operations') {
 
                 $department_id = getenv('OPERATIONS');
 
