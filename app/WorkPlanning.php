@@ -117,100 +117,104 @@ class WorkPlanning extends Model
         $i=0;
         $work_planning_res = array();
 
-        foreach ($response as $key => $value) {
+        if(isset($response) && sizeof($response) > 0) {
 
-            $work_planning_res[$i]['id'] = $value->id;
-            $work_planning_res[$i]['added_by_id'] = $value->added_by;
-            $work_planning_res[$i]['added_by'] = $value->fnm . " " . $value->lnm;
-            $work_planning_res[$i]['work_type'] = $value->work_type;
-            $work_planning_res[$i]['added_date'] = date('d-m-Y', strtotime("$value->added_date"));
+            foreach ($response as $key => $value) {
 
-            // Convert Logged in time
-            $utc_login = $value->loggedin_time;
-            $dt_login = new \DateTime($utc_login);
-            $tz_login = new \DateTimeZone('Asia/Kolkata');
+                $work_planning_res[$i]['id'] = $value->id;
+                $work_planning_res[$i]['added_by_id'] = $value->added_by;
+                $work_planning_res[$i]['added_by'] = $value->fnm . " " . $value->lnm;
+                $work_planning_res[$i]['work_type'] = $value->work_type;
+                $work_planning_res[$i]['added_date'] = date('d-m-Y', strtotime("$value->added_date"));
 
-            $dt_login->setTimezone($tz_login);
-            $loggedin_time = $dt_login->format('H:i:s');
-            $loggedin_time = date("g:i A", strtotime($loggedin_time));
+                // Convert Logged in time
+                $utc_login = $value->loggedin_time;
+                $dt_login = new \DateTime($utc_login);
+                $tz_login = new \DateTimeZone('Asia/Kolkata');
 
-            // Convert Logged in time
-            $utc_logout = $value->loggedout_time;
-            $dt_logout = new \DateTime($utc_logout);
-            $tz_logout = new \DateTimeZone('Asia/Kolkata');
+                $dt_login->setTimezone($tz_login);
+                $loggedin_time = $dt_login->format('H:i:s');
+                $loggedin_time = date("g:i A", strtotime($loggedin_time));
 
-            $dt_logout->setTimezone($tz_logout);
-            $loggedout_time = $dt_logout->format('H:i:s');
-            $loggedout_time = date("g:i A", strtotime($loggedout_time));
+                // Convert Logged in time
+                $utc_logout = $value->loggedout_time;
+                $dt_logout = new \DateTime($utc_logout);
+                $tz_logout = new \DateTimeZone('Asia/Kolkata');
 
-            $work_planning_res[$i]['loggedin_time'] = $loggedin_time;
-            $work_planning_res[$i]['loggedout_time'] = $loggedout_time;
+                $dt_logout->setTimezone($tz_logout);
+                $loggedout_time = $dt_logout->format('H:i:s');
+                $loggedout_time = date("g:i A", strtotime($loggedout_time));
 
-            // Convert Work Planning Time
-            $utc_wp = $value->work_planning_time;
-            $dt_wp = new \DateTime($utc_wp);
-            $tz_wp = new \DateTimeZone('Asia/Kolkata');
+                $work_planning_res[$i]['loggedin_time'] = $loggedin_time;
+                $work_planning_res[$i]['loggedout_time'] = $loggedout_time;
 
-            $dt_wp->setTimezone($tz_wp);
-            $work_planning_time = $dt_wp->format('g:i A');
-            $work_planning_res[$i]['work_planning_time'] = $work_planning_time;
-        
-            // Convert Work Planning Status Time
+                // Convert Work Planning Time
+                $utc_wp = $value->work_planning_time;
+                $dt_wp = new \DateTime($utc_wp);
+                $tz_wp = new \DateTimeZone('Asia/Kolkata');
 
-            if($value->work_planning_status_time != '') {
-
-                $utc_wp_status = $value->work_planning_status_time;
-                $dt_wp_status = new \DateTime($utc_wp_status);
-                $tz_wp_status = new \DateTimeZone('Asia/Kolkata');
-
-                $dt_wp_status->setTimezone($tz_wp_status);
-                $work_planning_status_time = $dt_wp_status->format('g:i A');
-                $work_planning_res[$i]['work_planning_status_time'] = $work_planning_status_time;
-            }
-            else {
-
-                $work_planning_res[$i]['work_planning_status_time'] = '';
-            }
+                $dt_wp->setTimezone($tz_wp);
+                $work_planning_time = $dt_wp->format('g:i A');
+                $work_planning_res[$i]['work_planning_time'] = $work_planning_time;
             
-            // For Pending/Approved/Rejected
-            $work_planning_res[$i]['status'] = $value->status;
-            $work_planning_res[$i]['post_discuss_status'] = $value->post_discuss_status;
+                // Convert Work Planning Status Time
 
-            // For Delay Report
-            $work_planning_res[$i]['report_delay'] = $value->report_delay;
-            $work_planning_res[$i]['report_delay_content'] = $value->report_delay_content;
+                if($value->work_planning_status_time != '') {
 
-            // Get All Task List
-            $work_planning_res[$i]['task_list'] = WorkPlanningList::getWorkPlanningList($value->id);
+                    $utc_wp_status = $value->work_planning_status_time;
+                    $dt_wp_status = new \DateTime($utc_wp_status);
+                    $tz_wp_status = new \DateTimeZone('Asia/Kolkata');
 
-            // Get Actual Database Login Logout Time
-            $work_planning_res[$i]['actual_login_time'] = date("H:i:s", strtotime($loggedin_time));
-            $work_planning_res[$i]['actual_logout_time'] = date("H:i:s", strtotime($loggedout_time));
-            
-            // Get Total Projected & Actual Time
-            $work_planning_res[$i]['total_projected_time'] = $value->total_projected_time;
-            $work_planning_res[$i]['total_actual_time'] = $value->total_actual_time;
+                    $dt_wp_status->setTimezone($tz_wp_status);
+                    $work_planning_status_time = $dt_wp_status->format('g:i A');
+                    $work_planning_res[$i]['work_planning_status_time'] = $work_planning_status_time;
+                }
+                else {
 
-            // Get Day from added date
-            $work_planning_res[$i]['added_day'] = date('l', strtotime("$value->added_date"));
+                    $work_planning_res[$i]['work_planning_status_time'] = '';
+                }
+                
+                // For Pending/Approved/Rejected
+                $work_planning_res[$i]['status'] = $value->status;
+                $work_planning_res[$i]['post_discuss_status'] = $value->post_discuss_status;
 
-            // Get Delay Counter
-            $work_planning_res[$i]['delay_counter'] = $value->delay_counter;
+                // For Delay Report
+                $work_planning_res[$i]['report_delay'] = $value->report_delay;
+                $work_planning_res[$i]['report_delay_content'] = $value->report_delay_content;
 
-            // Get Work Planning Status Date
-            $status_date = date('d-m-Y', strtotime("$value->work_planning_status_date"));
+                // Get All Task List
+                $work_planning_res[$i]['task_list'] = WorkPlanningList::getWorkPlanningList($value->id);
 
-            if(isset($status_date) && $status_date != '01-01-1970') {
+                // Get Actual Database Login Logout Time
+                $work_planning_res[$i]['actual_login_time'] = date("H:i:s", strtotime($loggedin_time));
+                $work_planning_res[$i]['actual_logout_time'] = date("H:i:s", strtotime($loggedout_time));
+                
+                // Get Total Projected & Actual Time
+                $work_planning_res[$i]['total_projected_time'] = $value->total_projected_time;
+                $work_planning_res[$i]['total_actual_time'] = $value->total_actual_time;
 
-                $work_planning_res[$i]['status_date'] = $status_date;
+                // Get Day from added date
+                $work_planning_res[$i]['added_day'] = date('l', strtotime("$value->added_date"));
+
+                // Get Delay Counter
+                $work_planning_res[$i]['delay_counter'] = $value->delay_counter;
+
+                // Get Work Planning Status Date
+                $status_date = date('d-m-Y', strtotime("$value->work_planning_status_date"));
+
+                if(isset($status_date) && $status_date != '01-01-1970') {
+
+                    $work_planning_res[$i]['status_date'] = $status_date;
+                }
+                else {
+
+                    $work_planning_res[$i]['status_date'] = '';
+                }
+
+                $i++;
             }
-            else {
-
-                $work_planning_res[$i]['status_date'] = '';
-            }
-
-            $i++;
         }
+
         return $work_planning_res;
     }
 
@@ -347,9 +351,8 @@ class WorkPlanning extends Model
             }
         }
 
-        $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','users.working_hours as working_hours','work_planning.added_date','work_planning.attendance','users.joining_date','department.name as department_name');
+        $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','users.working_hours as working_hours','work_planning.added_date','work_planning.attendance','users.joining_date','department.name as department_name','work_planning.status');
         
-
         $response = $query->get();
         return $response;
     }
@@ -494,7 +497,7 @@ class WorkPlanning extends Model
             $query = $query->where(\DB::raw('year(work_planning.added_date)'),'=', $year);
         }
 
-        $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','users.working_hours as working_hours','work_planning.added_date','work_planning.attendance','users_otherinfo.date_of_joining as joining_date','department.name as department_name');
+        $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','users.working_hours as working_hours','work_planning.added_date','work_planning.attendance','users_otherinfo.date_of_joining as joining_date','department.name as department_name','work_planning.status');
 
         $response = $query->get();
         return $response;

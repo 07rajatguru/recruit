@@ -197,6 +197,9 @@
                                                 else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
                                                     $attendance = 'N';
                                                 }
+                                                else if(isset($value1['attendance']) && $value1['attendance'] == 'WPP') {
+                                                    $attendance = 'WPP';
+                                                }
                                                 else if(isset($value1['attendance']) && $value1['attendance'] == '') {
                                                     $attendance = 'A';
                                                 }
@@ -237,6 +240,8 @@
                                                 @elseif($attendance == 'H')
                                                     <?php $week_off++; ?>
                                                     <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
+                                                @elseif($attendance == 'WPP')
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}"></td>
                                                 @elseif($attendance == 'A')
                                                     <?php $absent++; ?>
                                                     <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
@@ -266,6 +271,8 @@
                                                     <td style="border: 1px solid black;background-color:#d8d8d8;text-align: center;">P</td>
                                                 @elseif($attendance == 'N')
                                                     <td style="border: 1px solid black;text-align: center;"></td>
+                                                @elseif($attendance == 'WPP')
+                                                    <td style="border: 1px solid black;text-align: center;background-color: #8FB1D5;"></td>
                                                 @elseif($attendance == 'A')
                                                     <?php $absent++; ?>
                                                     <td style="border: 1px solid black;background-color:#ff0000;text-align: center;">{{ $attendance }}</td>

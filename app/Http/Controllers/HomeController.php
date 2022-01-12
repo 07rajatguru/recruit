@@ -1340,7 +1340,14 @@ class HomeController extends Controller
                     $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
                     $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
 
-                    $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
+                    if($value->status > 0) {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
+                    }
+                    else {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WPP';
+                    }
 
                     // Get User id from both name 
                     $user_name = $value->first_name."-".$value->last_name;
@@ -1663,7 +1670,14 @@ class HomeController extends Controller
                     $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
                     $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
 
-                    $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
+                    if($value->status > 0) {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
+                    }
+                    else {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WPP';
+                    }
 
                     // Get User id from both name
                     $user_name = $value->first_name."-".$value->last_name;
