@@ -39,9 +39,9 @@
             @if($work_planning['status'] == 0)
                 <h4>{{ $work_planning['added_date'] }}</h4>
             @elseif($work_planning['status'] == 1)
-                <h4>{{ $work_planning['added_date'] }} ( Approved By {{ $appr_rejct_by }} )</h4>
+                <h4>{{ $work_planning['added_date'] }} ( Approved By {{ $appr_rejct_by }}  - For {{ $work_planning['approval_reply'] }})</h4>
             @else
-                <h4>{{ $work_planning['added_date'] }} ( Rejected By {{ $appr_rejct_by }} )</h4>
+                <h4>{{ $work_planning['added_date'] }} ( Rejected By {{ $appr_rejct_by }})</h4>
             @endif
         </div>
         {{--<div class="pull-right">
@@ -140,7 +140,7 @@
                             <th>Reason of Rejection :</th>
 
                             @if(isset($work_planning['reject_reply']) && $work_planning['reject_reply'] != '')
-                                <td colspan="3">{{ $work_planning['reject_reply'] }} - {{ $work_planning['reason_of_rejection'] }}</td>
+                                <td colspan="3">For {{ $work_planning['reject_reply'] }} - {{ $work_planning['reason_of_rejection'] }}</td>
                             @else
                                 <td colspan="3">{{ $work_planning['reason_of_rejection'] }}</td>
                             @endif

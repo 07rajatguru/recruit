@@ -1783,6 +1783,7 @@ class WorkPlanningController extends Controller
             $work_planning->post_discuss_status = 1;   
         }
 
+        $work_planning->approval_reply = $approval_reply;
         $work_planning->status = 1;
         $work_planning->approved_by = $user_id;
 

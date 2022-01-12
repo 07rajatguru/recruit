@@ -291,6 +291,7 @@ class WorkPlanning extends Model
             $work_planning_res['total_actual_time'] = $response->total_actual_time;
             $work_planning_res['evening_status'] = $response->evening_status;
             $work_planning_res['delay_counter'] = $response->delay_counter;
+            $work_planning_res['approval_reply'] = $response->approval_reply;
 
             // Get Work Planning Status Date
 
