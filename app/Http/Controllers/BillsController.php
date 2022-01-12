@@ -219,7 +219,7 @@ class BillsController extends Controller
 
                 $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
 
-                if($access || ($user_id == $value['uploaded_by'])) {
+                if($access || ($user_id == $value['uploaded_by']) || ($user_id == $value['account_manager_id'])) {
                     
                     $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
 
@@ -260,7 +260,7 @@ class BillsController extends Controller
             }
             else if ($title == 'Recovery') {
 
-                if($access || ($user_id == $value['uploaded_by'])) {
+                if($access || ($user_id == $value['uploaded_by']) || ($user_id == $value['account_manager_id'])) {
 
                     $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
 
@@ -563,7 +563,7 @@ class BillsController extends Controller
 
                 $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
 
-                if($access || ($user_id == $value['uploaded_by'])) {
+                if($access || ($user_id == $value['uploaded_by']) || ($user_id == $value['account_manager_id'])) {
                     
                     $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
 
@@ -603,7 +603,7 @@ class BillsController extends Controller
             }
             else if ($title == 'Cancel Recovery') {
 
-                if($access || ($user_id == $value['uploaded_by'])) {
+                if($access || ($user_id == $value['uploaded_by']) || ($user_id == $value['account_manager_id'])) {
 
                     $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
 

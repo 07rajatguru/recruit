@@ -142,7 +142,7 @@ class Bills extends Model
         $bills_query = $bills_query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
-        $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name','candidate_basicinfo.lname','client_basicinfo.id as client_id','job_openings.remote_working as remote_working');
+        $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name','candidate_basicinfo.lname','client_basicinfo.id as client_id','job_openings.remote_working as remote_working','client_basicinfo.account_manager_id');
 
         if($all==0) {
             $bills_query = $bills_query->where(function($bills_query) use ($user_id) {
@@ -324,6 +324,7 @@ class Bills extends Model
             }
             $bills[$i]['lead_efforts'] = $lead_efforts_str;
             $bills[$i]['client_id'] = $value->client_id;
+            $bills[$i]['account_manager_id'] = $value->account_manager_id;
 
             $i++;
         }
@@ -435,7 +436,7 @@ class Bills extends Model
         $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
 
         $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name'
-        ,'candidate_basicinfo.lname','job_openings.remote_working as remote_working');
+        ,'candidate_basicinfo.lname','job_openings.remote_working as remote_working','client_basicinfo.account_manager_id');
 
         if($all==0) {
 
@@ -617,6 +618,7 @@ class Bills extends Model
                 }
             }
             $bills[$i]['lead_efforts'] = $lead_efforts_str;
+            $bills[$i]['account_manager_id'] = $value->account_manager_id;
             $i++;
         }
 
