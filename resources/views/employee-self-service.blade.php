@@ -116,7 +116,7 @@
                         <table class="table no-margin" style="border: 1px solid #00c0ef;">
                             <thead>
                             <tr>
-                                <th width="5px" style="border: 1px solid #00c0ef;">Sr. No.</th>
+                                <th width="5px" style="border: 1px solid #00c0ef;text-align: center;">Sr. No.</th>
                                 <th width="100px" style="border: 1px solid #00c0ef;">Employee Name</th>
                                 <th width="100px" style="border: 1px solid #00c0ef;">Date</th>
                             </tr>
@@ -126,7 +126,7 @@
                                 <tbody>
                                     @foreach($work_anniversary_dates as $key => $value)
                                         <tr>
-                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}</td>
+                                            <td style="border: 1px solid #00c0ef;text-align: center;">{{ ++$i }}</td>
                                             <td style="border: 1px solid #00c0ef;">{{ $key }} </td>
                                             <td style="border: 1px solid #00c0ef;">{{ $value }}</td>
                                         </tr>
@@ -157,7 +157,7 @@
                         <table class="table no-margin" style="border: 1px solid #00c0ef;">
                             <thead>
                             <tr>
-                                <th width="5px" style="border: 1px solid #00c0ef;">Sr. No.</th>
+                                <th width="5px" style="border: 1px solid #00c0ef;text-align: center;">Sr. No.</th>
                                 <th width="100px" style="border: 1px solid #00c0ef;">Employee Name</th>
                                 <th width="100px" style="border: 1px solid #00c0ef;">Date</th>
                             </tr>
@@ -167,7 +167,7 @@
                                 <tbody>
                                     @foreach($birthday_dates as $key1 => $value1)
                                         <tr>
-                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}</td>
+                                            <td style="border: 1px solid #00c0ef;text-align: center;">{{ ++$i }}</td>
                                             <td style="border: 1px solid #00c0ef;">{{ $key1 }} </td>
                                             <td style="border: 1px solid #00c0ef;">{{ $value1 }}</td>
                                         </tr>

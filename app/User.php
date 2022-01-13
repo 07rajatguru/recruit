@@ -1254,8 +1254,7 @@ class User extends Authenticatable
                 $convert = date("S", mktime(0, 0, 0, 0, $year_diff, 0));
                 $number = $year_diff.$convert;
 
-                $joining_date = date('d-m-Y',strtotime($value->date_of_joining));
-
+                $joining_date = date('jS F',strtotime($value->date_of_joining));
                 $users_array[$value->first_name . " " . $value->last_name] = $joining_date;
             }
         }
@@ -1294,7 +1293,7 @@ class User extends Authenticatable
 
             foreach ($response as $key => $value) {
 
-                $birth_date = date('d-m-Y',strtotime($value->date_of_birth));
+                $birth_date = date('jS F',strtotime($value->date_of_birth));
 
                 $users_array[$value->first_name . " " . $value->last_name] = $birth_date;
             }
