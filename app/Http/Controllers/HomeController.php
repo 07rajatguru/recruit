@@ -1025,7 +1025,7 @@ class HomeController extends Controller
         // Get Birthday dates of Current Month
         $birthday_dates = User::getUserBirthDatesByMonth($month);
 
-        // Get Fixed Holiday of Current Year
+        // Get Holiday of Current Year
         $holidays = Holidays::getUserHolidaysByType(0,'',$year,'');
 
         // Get List of applied leaves of team

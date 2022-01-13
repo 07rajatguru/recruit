@@ -25,5 +25,12 @@
             </td>
         </tr>
     </table>
+    <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 0px 50px 54px;">
+        <tr>
+            <td align="center" style="padding: 0px;">
+                <a style="border: black; background-color: #00c0ef;color: white;padding: 15px 50px 15px 50px; border-radius: 18px;font-size: 14px;width: 59%;" class="btn btn-primary" formtarget="_blank" href="{{getenv('APP_URL').'/list-of-holidays/'.$module_id }}">Select Option</a>
+            </td>
+        </tr>
+    </table>
 </body>
 </html>

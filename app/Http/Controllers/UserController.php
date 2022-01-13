@@ -31,6 +31,8 @@ use App\Department;
 use App\Events\NotificationMail;
 use App\UserBenchMark;
 use App\RolewiseUserBenchmark;
+use App\Holidays;
+use App\HolidaysUsers;
 
 class UserController extends Controller
 {
@@ -394,6 +396,22 @@ class UserController extends Controller
         $cc = implode(",",$cc_users_array);
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+        // Assign Fixed Holidays to new user
+
+        $year = date('Y');
+        $fixed_holidays = Holidays::getUserHolidaysByType(0,0,$year,'Fixed Leave');
+
+        if(isset($fixed_holidays) && sizeof($fixed_holidays) > 0){
+
+            foreach ($fixed_holidays as $key => $value) {
+
+                $holiday_user = new HolidaysUsers();
+                $holiday_user->holiday_id = $value['id'];
+                $holiday_user->user_id = $user_id;
+                $holiday_user->save();
+            }
+        }
 
         return redirect()->route('users.index')->with('success','User Added Successfully.');
     }
@@ -1013,6 +1031,7 @@ class UserController extends Controller
         UserOthersInfo::where('user_id','=',$id)->delete();
         ProcessVisibleUser::where('user_id',$id)->delete();
         TrainingVisibleUser::where('user_id',$id)->delete();
+        HolidaysUsers::where('user_id',$id)->delete();
         UsersFamily::where('user_id',$id)->delete();
         UsersEmailPwd::where('user_id',$id)->delete();
         RoleUser::where('user_id','=',$id)->delete();

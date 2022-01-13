@@ -79,7 +79,7 @@
                 responsive: true,
                 stateSave : true,
                 "columnDefs": [{orderable: false, targets: [1]}],
-                "order" : [0, 'desc'],
+                "order" : [0, 'asc'],
             } );
 
             if ( ! table.data().any() ) {

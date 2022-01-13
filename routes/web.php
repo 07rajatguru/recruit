@@ -212,6 +212,16 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HolidaysController@getFixedHolidays'
     ]);
 
+    Route::get('list-of-holidays/{uid}', [
+        'as' => 'listof.holidays',
+        'uses' => 'HolidaysController@selectHolidays'
+    ]);
+
+    Route::post('holidays/sentholidays',[
+        'as' => 'holidays.sentholidays',
+        'uses' => 'HolidaysController@sentOptionalHolidayEmail'
+    ]);
+
     // Dashboard
 
     Route::any('/dashboard', array (

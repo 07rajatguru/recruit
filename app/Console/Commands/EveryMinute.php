@@ -34,6 +34,7 @@ use App\WorkPlanning;
 use App\WorkPlanningList;
 use App\WorkPlanningPost;
 use App\LateInEarlyGo;
+use App\Holidays;
 
 class EveryMinute extends Command
 {
@@ -115,6 +116,7 @@ class EveryMinute extends Command
             $input['app_url'] = $app_url;
             $module_id = $value['module_id'];
             $sender_id = $value['sender_name'];
+            $input['module'] = $value['module'];
 
             if ($value['module'] == 'Job Open' || $value['module'] == 'Job Open to All') {
 
@@ -173,6 +175,7 @@ class EveryMinute extends Command
 
                 $cc_array = array();
                 $cc_array = explode(",",$input['cc']);
+                $input['cc_array'] = $cc_array;
 
                 // Get Sender name details
                 $user_details = User::getAllDetailsByUserID($value['sender_name']);
@@ -225,9 +228,6 @@ class EveryMinute extends Command
                         'mail.encryption' => trim('ssl'),
                     ]);
                 }
-
-                $input['cc_array'] = $cc_array;
-                $input['module'] = $value['module'];
 
                 \Mail::send('adminlte::emails.leavemail', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
@@ -440,7 +440,6 @@ class EveryMinute extends Command
 
                 $client = ClientBasicinfo::getClientDetailsById($module_id);
 
-                $input['module'] = $value['module'];
                 $input['module_id'] = $value['module_id'];
                 $input['to_array'] = $to_array;
                 $input['cc_array'] = $cc_array;
@@ -1195,7 +1194,6 @@ class EveryMinute extends Command
 
                 $client = ClientBasicinfo::getClientDetailsById($module_id);
 
-                $input['module'] = $value['module'];
                 $input['module_id'] = $value['module_id'];
                 $input['to_array'] = $to_array;
                 $input['cc_array'] = $cc_array;
@@ -2030,7 +2028,6 @@ class EveryMinute extends Command
                 $input['link'] = $link;
                 $input['total_projected_time'] = $total_projected_time;
                 $input['total_actual_time'] = $total_actual_time;
-                $input['module'] = $value['module'];
                 $input['work_planning_list'] = $work_planning_list;
                 $input['work_planning_post'] = $work_planning_post;
 
@@ -2099,7 +2096,6 @@ class EveryMinute extends Command
 
                 $input['today_date'] = $today_date;
                 $input['link'] = $link;
-                $input['module'] = $value['module'];
                 $input['total_projected_time'] = $total_projected_time;
                 $input['total_actual_time'] = $total_actual_time;
                 $input['work_planning_list'] = $work_planning_list;
@@ -2242,7 +2238,6 @@ class EveryMinute extends Command
                 $loggedout_time = $work_planning['loggedout_time'];
                 $work_planning_time = $work_planning['work_planning_time'];
 
-                $input['module'] = $value['module'];
                 $input['user_name'] = $user_name;
                 $input['added_date'] = date('d/m/Y',strtotime($added_date));
                 $input['loggedin_time'] = $loggedin_time;
@@ -2270,6 +2265,7 @@ class EveryMinute extends Command
                     $input['user_name'] = $user_name;
                     $input['cc_array'] = $cc_array;
                     $input['attachment'] = public_path() . "/" . 'uploads/Adler_List_of_Holidays.pdf';
+                    $input['module_id'] = $value['module_id'];
 
                      \Mail::send('adminlte::emails.listofholidaysemail', $input, function ($message) use($input) {
                     
@@ -2317,6 +2313,7 @@ class EveryMinute extends Command
 
                 $cc_array = array();
                 $cc_array = explode(",",$input['cc']);
+                $input['cc_array'] = $cc_array;
 
                 // Get Sender name details
                 $user_details = User::getAllDetailsByUserID($value['sender_name']);
@@ -2357,9 +2354,6 @@ class EveryMinute extends Command
                         'mail.encryption' => trim('ssl'),
                     ]);
                 }
-
-                $input['cc_array'] = $cc_array;
-                $input['module'] = $value['module'];
 
                 \Mail::send('adminlte::emails.leavemail', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
@@ -2430,6 +2424,71 @@ class EveryMinute extends Command
                 \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'"); 
             }
 
+            // Mail for selected optional holidays
+            else if ($value['module'] == 'Optional Holidays') {
+
+                $cc_array = array();
+                $cc_array = explode(",",$input['cc']);
+                $input['cc_array'] = array_unique($cc_array);
+
+                // Get Sender name details
+                $user_details = User::getAllDetailsByUserID($value['sender_name']);
+                $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
+
+                $user_info = User::getProfileInfo($value['sender_name']);
+                $input['signature'] = $user_info['signature'];
+
+                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
+
+                $input['from_address'] = trim($user_email_details->email);
+
+                $module_ids_array = explode(",", $module_id);
+
+                $selected_holidays = array();
+
+                if(isset($module_ids_array) && sizeof($module_ids_array) > 0) {
+
+                    foreach ($module_ids_array as $key => $value) {
+                        
+                        $holidays = Holidays::find($value);
+                        $title = $holidays->title;
+
+                        array_push($selected_holidays,$title);
+                    }
+                }
+
+                $input['selected_holidays'] = $selected_holidays;
+
+                if(strpos($input['from_address'], '@gmail.com') !== false) {
+
+                    config([
+                        'mail.driver' => trim('mail'),
+                        'mail.host' => trim('smtp.gmail.com'),
+                        'mail.port' => trim('587'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('tls'),
+                    ]);
+                }
+                else {
+
+                    config([
+                        'mail.driver' => trim('smtp'),
+                        'mail.host' => trim('smtp.zoho.com'),
+                        'mail.port' => trim('465'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('ssl'),
+                    ]);
+                }
+
+                \Mail::send('adminlte::emails.selectedoptionalholidaysemail', $input, function ($message) use ($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'"); 
+            }
         }
     }
 }

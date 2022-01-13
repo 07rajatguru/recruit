@@ -6,7 +6,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class Holidays extends Model
 {
-
 	public $table = "holidays";
 
     public static $rules = array(
@@ -37,7 +36,7 @@ class Holidays extends Model
 
         $query = Holidays::query();
         $query = $query->select('holidays.*');
-        $query = $query->orderBy('holidays.from_date','DESC');
+        $query = $query->orderBy('holidays.from_date','ASC');
         $res = $query->get();
 
         $holidays = array();
@@ -104,7 +103,7 @@ class Holidays extends Model
 
         $query = Holidays::query();
         $query = $query->select('from_date');
-        $query = $query->where('type','=','fixed');
+        $query = $query->where('type','=','Fixed Leave');
         $res = $query->get();
 
         $fixed_date = array();

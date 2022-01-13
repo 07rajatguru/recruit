@@ -9,6 +9,7 @@ use App\HolidaysUsers;
 use App\User;
 use App\Date;
 use App\Department;
+use App\Events\NotificationMail;
 
 class HolidaysController extends Controller
 {
@@ -323,4 +324,136 @@ class HolidaysController extends Controller
         
         return view('adminlte::holidays.typewiseholidays',compact('holiday_details','count','name','id'));
     }
+
+    public function selectHolidays($uid) {
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        if($uid == $user_id) {
+
+            $user_details = User::getAllDetailsByUserID($user_id);
+
+            $joining_date = date('d-m-Y',strtotime($user_details->joining_date));
+
+            $month = date('m',strtotime($joining_date));
+
+            if($month >= 4 && $month <= 7) {
+                $length = 3;
+            }
+            elseif($month >= 8 && $month <= 11) {
+                $length = 2;
+            }
+            else {
+                $length = 1;
+            }
+
+            $holidays = Holidays::getAllholidaysList();
+
+            $fixed_holiday_list = array();
+            $optional_holiday_list = array();
+            $i=0;
+            $j=0;
+
+            if(isset($holidays) && sizeof($holidays) > 0) {
+
+                foreach($holidays as $key => $value) {
+
+                    if($value['type'] == 'Optional Leave') {
+
+                        $optional_holiday_list[$j]['id'] = $value['id'];
+                        $optional_holiday_list[$j]['title'] = $value['title'];
+
+                        $j++;
+                    }
+                    if($value['type'] == 'Fixed Leave') {
+
+                        $fixed_holiday_list[$i]['id'] = $value['id'];
+                        $fixed_holiday_list[$i]['title'] = $value['title'];
+                        $i++;
+                    }   
+                }
+            }
+
+            return view('adminlte::holidays.listofholidays',compact('fixed_holiday_list','optional_holiday_list','length'));
+        }
+        else {
+            return view('errors.403');
+        }
+    }
+
+    public function sentOptionalHolidayEmail() {
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        if (isset($_POST['religious_holiday']) && $_POST['religious_holiday'] != '') {
+            $religious_holiday = $_POST['religious_holiday'];
+        }
+
+        $selected_leaves = $_POST['selected_leaves'];
+
+        if (isset($selected_leaves) && $selected_leaves != '') {
+
+            $leave_ids_array = explode(",", $selected_leaves);
+
+            if(isset($leave_ids_array) && sizeof($leave_ids_array) > 0) {
+
+                foreach ($leave_ids_array as $key => $value) {
+                        
+                    $holiday_user = new HolidaysUsers();
+                    $holiday_user->holiday_id = $value;
+                    $holiday_user->user_id = $user_id;
+                    $holiday_user->save();
+                }
+
+                // Get Superadmin email
+                $super_admin_userid = getenv('SUPERADMINUSERID');
+                $superadminemail = User::getUserEmailById($super_admin_userid);
+
+                //Get Reports to Email
+                $report_res = User::getReportsToUsersEmail($user_id);
+
+                if(isset($report_res->remail) && $report_res->remail!='') {
+                    $report_email = $report_res->remail;
+                }
+                else {
+                    $report_email = '';
+                }
+
+                // Get HR email id
+                $hr = getenv('HRUSERID');
+                $hremail = User::getUserEmailById($hr);
+
+                // Get Vibhuti gmail id
+                $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
+
+                if($report_email == '') {
+
+                    $cc_users_array = array($hremail,$vibhuti_gmail_id);
+                }
+                else {
+                    $cc_users_array = array($report_email,$hremail,$vibhuti_gmail_id);
+                }
+
+                $module = "Optional Holidays";
+                $sender_name = $user_id;
+                $to = $superadminemail;
+                $subject = "Selected Optional Holidays";
+                $message = "Selected Optional Holidays";
+                $module_id = $selected_leaves;
+                $cc = implode(",",$cc_users_array);
+
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+                    }
+
+            $msg['success'] = 'Success';
+        }
+        else {
+            $msg['err'] = '<b>Please Select Leave.</b>';
+            $msg['msg'] = "Fail";
+        }
+        return $msg;
+    }
+
 }

@@ -561,12 +561,15 @@ class LeaveController extends Controller
         $hr = getenv('HRUSERID');
         $hremail = User::getUserEmailById($hr);
 
+        // Get Vibhuti gmail id
+        $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
+
         if($report_email == '') {
 
-            $cc_users_array = array($hremail);
+            $cc_users_array = array($hremail,$vibhuti_gmail_id);
         }
         else {
-            $cc_users_array = array($report_email,$hremail);
+            $cc_users_array = array($report_email,$hremail,$vibhuti_gmail_id);
         }
 
         $module = "Leave";
@@ -640,12 +643,15 @@ class LeaveController extends Controller
         $hr = getenv('HRUSERID');
         $hremail = User::getUserEmailById($hr);
 
+        // Get Vibhuti gmail id
+        $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
+
         if($report_email == '') {
 
-            $cc_users_array = array($superadminemail,$hremail);
+            $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
         }
         else {
-            $cc_users_array = array($superadminemail,$hremail,$report_email);
+            $cc_users_array = array($superadminemail,$hremail,$report_email,$vibhuti_gmail_id);
         }
 
         if ($reply == 'Approved') {
