@@ -10,6 +10,11 @@
         <div class="button-area">
             <button class="btn btn-primary btn-md-2">Add Comment</button>
         </div>
-
     {!! Form::close() !!}
+
+    @if($user_id != $added_by_id)
+        <div class="button-area">
+            <button type="button" class="btn btn-primary" onclick="sendEmail('Approved')" style="margin-top:-52px;margin-left: 150px;">Send Email</button>
+        </div>
+    @endif
 </div>

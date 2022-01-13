@@ -1617,16 +1617,18 @@ class WorkPlanningController extends Controller
 
             if($post_discuss_status == 0 && $status == 2) {
 
-                $work_planning->post_discuss_status = 1;   
-                $work_planning->save();
+                $work_planning->post_discuss_status = 1;
             }
 
-            \DB::statement("UPDATE `work_planning` SET `status` = '1',`approved_by` = $user_id,`attendance` = 'F' WHERE `id` = $wp_id");
+            $work_planning->status = 1;
+            $work_planning->approved_by = $user_id;
+            $work_planning->attendance = 'F';
+            $work_planning->save();
         }
-        elseif ($reply == 'Rejected') {
+       /* elseif ($reply == 'Rejected') {
 
             \DB::statement("UPDATE `work_planning` SET `status` = '2',`approved_by` = $user_id,`attendance` = 'A' WHERE `id` = $wp_id");
-        }
+        }*/
 
         $data = 'success';
 

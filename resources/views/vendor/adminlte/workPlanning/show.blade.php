@@ -35,50 +35,27 @@
 <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-
             @if($work_planning['status'] == 0)
                 <h4>{{ $work_planning['added_date'] }}</h4>
             @elseif($work_planning['status'] == 1)
-                <h4>{{ $work_planning['added_date'] }} ( Approved By {{ $appr_rejct_by }}  - For {{ $work_planning['approval_reply'] }})</h4>
+                <h4>{{ $work_planning['added_date'] }} ( Approved By {{ $appr_rejct_by }})</h4>
             @else
                 <h4>{{ $work_planning['added_date'] }} ( Rejected By {{ $appr_rejct_by }})</h4>
             @endif
         </div>
-        {{--<div class="pull-right">
-            @if($loggedin_user_id == $added_by_id)
-
-            @else
-                @if($work_planning['status'] == 2)
-                    <button type="submit" class="btn btn-success" onclick="updateStatus('Approved')">Approved</button>
-                    <button type="submit" class="btn btn-danger" onclick="updateStatus('Rejected')" disabled="disabled">Rejected</button>
-                @elseif($added_date <= $yesterday_date && $work_planning['evening_status'] == 0 && $work_planning['status'] == 0)
-                    <button type="submit" class="btn btn-danger" onclick="updateStatus('Rejected')">Rejected</button>
-                @elseif($work_planning['evening_status'] == 1 && $work_planning['status'] == 0)
-                    <button type="submit" class="btn btn-success" onclick="updateStatus('Approved')">Approved</button>
-                    <button type="submit" class="btn btn-danger" onclick="updateStatus('Rejected')">Rejected</button>
-                @endif
-            @endif
-
-            @if($loggedin_user_id == $added_by_id)
-                <a class="btn btn-primary" href="{{ route('workplanning.edit',$work_planning['id']) }}">Edit</a>
-                <a class="btn btn-primary" href="{{ route('workplanning.index') }}">Back</a>
-            @else
-                <a class="btn btn-primary" href="{{ route('teamworkplanning.index') }}">Back
-                </a>
-            @endif
-        </div>--}}
 
         <div class="pull-right">
-
             @if($loggedin_user_id == $added_by_id)
-
                 <a class="btn btn-primary" href="{{ route('workplanning.edit',$work_planning['id']) }}">Edit</a>
                 <a class="btn btn-primary" href="{{ route('workplanning.index') }}">Back</a>
             @else
-
                 @if($work_planning['evening_status'] == 1)
-                    <button type="submit" class="btn btn-success" onclick="updateStatus('Approved')">Approved</button>
-                    <button type="submit" class="btn btn-danger" onclick="updateStatus('Rejected')">Rejected</button>
+                    @if($work_planning['status'] == 1)
+                        <button type="submit" class="btn btn-success" onclick="updateStatus('Approved')" disabled="disabled">Approve</button>
+                    @else
+                        <button type="submit" class="btn btn-success" onclick="updateStatus('Approved')">Approve</button>
+                    @endif
+                    <button type="submit" class="btn btn-danger" onclick="updateStatus('Rejected')">Reject</button>
                 @endif
                 <a class="btn btn-primary" href="{{ route('teamworkplanning.index') }}">Back</a>
             @endif
@@ -266,30 +243,31 @@
                         </tbody>
                     </table>
 
-                    @if($loggedin_user_id != $added_by_id)
-                        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                            <button type="submit" class="btn btn-primary" onclick="sendEmail('Approved')">Send Email</button>
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        <h4>Comments</h4>
+                    </div>
+                    <div class="col-md-12">
+                        <div>
+                            @include('adminlte::workPlanning.postnew',array('wp_id' => $wp_id,'user_id'=>$loggedin_user_id,'added_by_id'=>$added_by_id))   
                         </div>
-                    @endif
+
+                        <div>
+                            @include('adminlte::workPlanning.postlist',array('post' => $work_planning_post))
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-12">
+        <!-- <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
                 <div class="box-header col-md-6">
-                    <h4>Comments</h4>
+                    <h4>Daily Activity</h4>
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12">
-                    <div>
-                        @include('adminlte::workPlanning.postnew',array('wp_id' => $wp_id,'user_id'=>$loggedin_user_id))   
-                    </div>
-
-                    <div>
-                        @include('adminlte::workPlanning.postlist',array('post' => $work_planning_post))
-                    </div>
+                    
                 </div>
             </div>
-        </div>
+        </div> -->
     </div>
 @endif
 
@@ -421,7 +399,7 @@
 
     function updateStatus(check) {
 
-        if(check == 'Approved') {
+        /*if(check == 'Approved') {
 
             $("#approvalModal").modal('show');
         }
@@ -429,15 +407,15 @@
         if(check == 'Rejected') {
 
             $("#rejectionModal").modal('show');
-        }
+        }*/
 
-        /*var wp_id = $("#wp_id").val();
+        var wp_id = $("#wp_id").val();
         var app_url = "{!! env('APP_URL') !!}";
         var token = $("input[name=_token]").val();
 
         if(check == 'Rejected') {
 
-            $("#alertModal").modal('show');
+            $("#rejectionModal").modal('show');
         }
         else {
 
@@ -459,7 +437,7 @@
                     }
                 }
             });
-        }*/
+        }
     }
 
     function deletePost(id) {
