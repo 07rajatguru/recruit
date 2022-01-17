@@ -21,7 +21,7 @@ class NewIndustryTableSeeder extends Seeder
             array('id' => 4, 'name' => 'Ceramic'),
             array('id' => 5, 'name' => 'Automation'),
             array('id' => 6, 'name' => 'BFSI'),
-            array('id' => 7, 'name' => 'BPO/KPO'),
+            array('id' => 7, 'name' => 'BPO / KPO / Mortgage Solutions'),
             array('id' => 8, 'name' => 'Building Material'),
             array('id' => 9, 'name' => 'CA Firm'),
             array('id' => 10, 'name' => 'Chemicals / Petrochemicals'),
@@ -53,7 +53,7 @@ class NewIndustryTableSeeder extends Seeder
             array('id' => 36, 'name' => 'Metal'),
             array('id' => 37, 'name' => 'Oil & Gas'),
             array('id' => 38, 'name' => 'Packaging / Printing'),
-            array('id' => 39, 'name' => 'Pharmaceuticals'),
+            array('id' => 39, 'name' => 'Pharma / BioPharma'),
             array('id' => 40, 'name' => 'Real Estate'),
             array('id' => 41, 'name' => 'Retail'),
             array('id' => 42, 'name' => 'Service'),
@@ -64,6 +64,9 @@ class NewIndustryTableSeeder extends Seeder
             array('id' => 47, 'name' => 'Travel'),
             array('id' => 48, 'name' => 'Water / Wastewater'),
             array('id' => 49, 'name' => 'Other'),
+            array('id' => 50, 'name' => 'Turnkey / Interior / PMC'),
+            array('id' => 51, 'name' => 'Clinical – CRO'),
+            array('id' => 52, 'name' => 'Paints'),
         );
 
         DB::table("industry")->insert($data);

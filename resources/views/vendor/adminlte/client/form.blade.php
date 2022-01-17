@@ -127,7 +127,7 @@
 
                         <div class="form-group {{ $errors->has('industry_id') ? 'has-error' : '' }}">
                             <strong>Industry : <span class = "required_fields">*</span> </strong>
-                            {!! Form::select('industry_id', $industry,$industry_id, array('id'=>'industry_id','class' => 'form-control', 'tabindex' => '12' )) !!}
+                            {!! Form::select('industry_id', $industry,$industry_id, array('id'=>'industry_id','class' => 'form-control', 'tabindex' => '12','placeholder' => 'Select Industry')) !!}
                             @if ($errors->has('industry_id'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('industry_id') }}</strong>
@@ -310,7 +310,7 @@
                         </div>
 
                         <div class="form-group">
-                            <strong>City : </strong>
+                            <strong>City : <span class = "required_fields">*</span> </strong>
                             @if($action == 'copy')
                                 {!! Form::text('billing_city', $billing_city, array('id'=>'billing_city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '24')) !!}
                             @else
@@ -481,56 +481,58 @@
             
             $("#clientForm").validate({
                 rules: {
-                        "name": {
-                            required: true
-                        },
-                        "display_name": {
-                            required: true
-                        },
-                        "mail": {
-                            required: true
-                        },
-                        "mobile": {
-                            required: true
-                        },
-                        "industry_id": {
-                            required: true
-                        },
-                        "status" : {
-                            required: true
-                        },
-                        "contact_point" : {
-                            required: true
-                        },
-                        "client_category" : {
-                            required: true,
-                        }
+                        
+                    "name": {
+                        required: true
+                    },
+                    "display_name": {
+                        required: true
+                    },
+                    "mail": {
+                        required: true
+                    },
+                    "mobile": {
+                        required: true
+                    },
+                    "industry_id": {
+                        required: true
+                    },
+                    "contact_point" : {
+                        required: true
+                    },
+                    "client_category" : {
+                        required: true,
+                    },
+                    "billing_city" : {
+                        required: true,
+                    },
                 },
                 messages: {
-                        "name": {
-                            required: "Company Name is Required."
-                        },
-                        "display_name": {
-                            required: "Display Name is Required."
-                        },
-                        "mail": {
-                            required: "Email is Required."
-                        },
-                        "mobile": {
-                            required: "Mobile Number is Required."
-                        },
-                        "industry_id": {
-                            required: "Industry is Required."
-                        },
-                        "status": {
-                            required: "Status is Required."
-                        },
-                        "contact_point" :{
-                            required: "Contact Point is Required."
-                        },
-                        "client_category" : {
-                            required: "Client Category is Required.",
-                        }
+                        
+                    "name": {
+                        required: "Company Name is Required."
+                    },
+                    "display_name": {
+                        required: "Display Name is Required."
+                    },
+                    "mail": {
+                        required: "Email is Required."
+                    },
+                    "mobile": {
+                        required: "Mobile Number is Required."
+                    },
+                    "industry_id": {
+                        required: "Industry is Required."
+                    },
+                    "contact_point" :{
+                        required: "Contact Point is Required."
+                    },
+                    "client_category" : {
+                        required: "Client Category is Required.",
+                    },
+                    "billing_city" : {
+                        required: "City is Required."
+                    },
                 }
             });
 
