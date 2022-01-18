@@ -63,6 +63,8 @@
                 $role_id = key($userRole);
                 $user_obj = new User();
                 $isClient = $user_obj::isClient($role_id);
+                $superadmin_userid = getenv('SUPERADMINUSERID');
+                $hr_userid = getenv('HRUSERID');
             ?>
                     
             <div class="navbar-custom-menu">
@@ -79,10 +81,12 @@
                                                 <a href="{{getenv('APP_URL').'/employee-self-service'}}" target="_blank">
                                                 MY ESS</a>
                                             </li>
-                                            <li>
-                                                <a href="{{getenv('APP_URL').'/hr-employee-service'}}" target="_blank">
-                                                HR ESS</a>
-                                            </li>
+                                            @if($user_id == $superadmin_userid || $user_id == $hr_userid)
+                                                <li>
+                                                    <a href="{{getenv('APP_URL').'/hr-employee-service'}}" target="_blank">
+                                                    HR ESS</a>
+                                                </li>
+                                            @endif
                                             <li>
                                                 <a href="{{getenv('APP_URL').'/work-planning'}}" target="_blank">Work Planning</a>
                                             </li>
@@ -92,9 +96,9 @@
                                             <li>
                                                 <a href="{{getenv('APP_URL').'/leave/add'}}" target="_blank">Apply For Leave Application</a>
                                             </li>
-                                            <!-- <li>
-                                                <a href="{{getenv('APP_URL').'/work-planning'}}" target="_blank">Apply For Work From Home</a>
-                                            </li> -->
+                                            <li>
+                                                <a href="{{getenv('APP_URL').'/work-from-home/add'}}" target="_blank">Apply For Work From Home</a>
+                                            </li>
                                             <li>
                                                 <a href="{{getenv('APP_URL').'/self-user-attendance'}}" target="_blank">Attendance</a>
                                             </li>

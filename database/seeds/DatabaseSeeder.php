@@ -17,7 +17,6 @@ class DatabaseSeeder extends Seeder
         $this->call(RoleUserTableSeeder::class);
         $this->call(CandidateSourceTableSeeder::class);
         $this->call(CandidateStatusTableSeeder::class);
-        $this->call(IndustryTableSeeder::class);
         $this->call(StatusTableSeeder::class);
         $this->call(CandidateStatusUpdateTableSeeder::class);
         $this->call(StateTableSeeder::class);
@@ -32,5 +31,6 @@ class DatabaseSeeder extends Seeder
         $this->call(NewIndustryTableSeeder::class);
         $this->call(LeavePermissionsSeeder::class);
         $this->call(ESSModulePermissionSeeder::class);
+        $this->call(WorkFromHomePermissionSeeder::class);
     }
 }

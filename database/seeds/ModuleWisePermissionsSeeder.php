@@ -450,7 +450,7 @@ class ModuleWisePermissionsSeeder extends Seeder
 
 			array('id' => '188','module_id' => '15','name' => 'display-user-wise-ticket', 'display_name' => 'Display User wise Tickets List','description' => 'Display User wise Tickets List.', 'created_at' => '2021-08-08 18:30:00', 'updated_at' => '2021-07-08 18:30:00'),
 
-			// Add Ticket Discussion Permissions
+			// Add Work Planning Permissions
 
 			array('id' => '189','module_id' => '16','name' => 'work-planning-add', 'display_name' => 'Add Work Planning','description' => 'Add Work Planning.', 'created_at' => '2021-07-20 16:00:00', 'updated_at' => '2021-07-20 16:00:00'),
 

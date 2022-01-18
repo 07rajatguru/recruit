@@ -47,6 +47,10 @@ class ModuleNamesSeeder extends Seeder
 			array('id' => '15','name' => 'Ticket-Discussion','description' => 'Ticket Discussion Module', 'created_at' => '2021-07-08 16:00:00', 'updated_at' => '2021-07-08 16:00:00','status' => '1'),
 
 			array('id' => '16','name' => 'Work-Planning','description' => 'Work Planning Module', 'created_at' => '2021-07-20 16:00:00', 'updated_at' => '2021-07-20 16:00:00','status' => '1'),
+
+			array('id' => '17','name' => 'Leave','description' => 'Leave Module', 'created_at' => '2021-10-01 14:00:00', 'updated_at' => '2021-10-01 14:00:00','status' => '1'),
+
+			array('id' => '18','name' => 'Work-From-Home','description' => 'Work From Home Module', 'created_at' => '2022-01-17 13:00:00', 'updated_at' => '2022-01-17 13:00:00','status' => '1'),
 		);
 
 		DB::table("module")->insert($data);

@@ -3590,6 +3590,63 @@ Route::group(['middleware' => ['auth']], function () {
 
     // Work Planning Comment Section End
 
+    // Work From Home Routes Start
+
+    Route::any('work-from-home',[
+        'as' => 'workfromhome.index',
+        'uses' => 'WorkFromHomeController@index',
+        'middleware' => ['permission:display-work-from-home|display-user-wise-work-from-home|work-from-home-add|work-from-home-edit|work-from-home-delete']
+    ]);
+
+    Route::any('work-from-home/{status}/{month}/{year}', [
+        'as' => 'workfromhome.status',
+        'uses' => 'WorkFromHomeController@getWorkFromHomeRequestsByStatus',
+        'middleware' => ['permission:display-work-from-home|display-user-wise-work-from-home']
+    ]);
+
+    Route::get('work-from-home/add',[
+        'as' => 'workfromhome.add',
+        'uses' => 'WorkFromHomeController@create',
+        'middleware' => ['permission:work-from-home-add']
+    ]);
+
+    Route::post('work-from-home/add',[
+        'as' => 'workfromhome.store',
+        'uses' => 'WorkFromHomeController@store',
+        'middleware' => ['permission:work-from-home-add']
+    ]);
+
+    Route::get('work-from-home/{id}/show', [
+        'as' => 'workfromhome.show',
+        'uses' => 'WorkFromHomeController@show',
+        'middleware' => ['permission:display-work-from-home|display-user-wise-work-from-home']
+    ]);
+
+    Route::post('work-from-home/{id}/show',[
+        'as' => 'workfromhome.replysend',
+        'uses' => 'WorkFromHomeController@replySend'
+    ]);
+
+    Route::get('work-from-home/edit/{id}',[
+        'as' => 'workfromhome.edit',
+        'uses' => 'WorkFromHomeController@edit',
+        'middleware' => ['permission:work-from-home-edit']
+    ]);
+
+    Route::patch('work-from-home/edit/{id}',[
+        'as' => 'workfromhome.update',
+        'uses' => 'WorkFromHomeController@update',
+        'middleware' => ['permission:work-from-home-edit']
+    ]);
+
+    Route::delete('work-from-home/{id}',[
+        'as' => 'workfromhome.destroy',
+        'uses' => 'WorkFromHomeController@destroy',
+        'middleware' => ['permission:work-from-home-delete']
+    ]);
+
+    // Work From Home Routes End
+
     // Rolewise Bench Mark Routes
     Route::get('bench-mark',[
         'as' => 'rolewisebenchmark.index',
