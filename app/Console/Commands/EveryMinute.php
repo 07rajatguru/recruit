@@ -35,6 +35,7 @@ use App\WorkPlanningList;
 use App\WorkPlanningPost;
 use App\LateInEarlyGo;
 use App\Holidays;
+use App\WorkFromHome;
 
 class EveryMinute extends Command
 {
@@ -2483,6 +2484,111 @@ class EveryMinute extends Command
                 }
 
                 \Mail::send('adminlte::emails.selectedoptionalholidaysemail', $input, function ($message) use ($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'"); 
+            }
+
+            else if ($value['module'] == 'Work From Home Request') {
+
+                $cc_array = array();
+                $cc_array = explode(",",$input['cc']);
+                $input['cc_array'] = $cc_array;
+
+                // Get Sender name details
+                $user_details = User::getAllDetailsByUserID($value['sender_name']);
+                $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
+                $input['owner_email'] = $user_details->email;
+
+                $user_info = User::getProfileInfo($value['sender_name']);
+                $input['signature'] = $user_info['signature'];
+
+                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
+
+                $input['from_address'] = trim($user_email_details->email);
+
+                $work_from_home_res = WorkFromHome::find($module_id);
+                $input['work_from_home_res'] = $work_from_home_res;
+
+                if(strpos($input['from_address'], '@gmail.com') !== false) {
+
+                    config([
+                        'mail.driver' => trim('mail'),
+                        'mail.host' => trim('smtp.gmail.com'),
+                        'mail.port' => trim('587'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('tls'),
+                    ]);
+                }
+                else {
+
+                    config([
+                        'mail.driver' => trim('smtp'),
+                        'mail.host' => trim('smtp.zoho.com'),
+                        'mail.port' => trim('465'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('ssl'),
+                    ]);
+                }
+
+                \Mail::send('adminlte::emails.workfromhomerequestemail', $input, function ($message) use ($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc_array'])->bcc($input['owner_email'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'"); 
+            }
+
+            // Mail for Work From Home Request reply Approve / Reject
+            else if ($value['module'] == 'Work From Home Request Reply') {
+
+                $cc_array = array();
+                $cc_array = explode(",",$input['cc']); 
+
+                $input['cc_array'] = array_unique($cc_array);
+
+                // Get Sender name details
+
+                $user_details = User::getAllDetailsByUserID($value['sender_name']);
+                $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
+
+                $user_info = User::getProfileInfo($value['sender_name']);
+                $input['signature'] = $user_info['signature'];
+
+                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
+                $input['from_address'] = trim($user_email_details->email);
+
+                if(strpos($input['from_address'], '@gmail.com') !== false) {
+
+                    config([
+                        'mail.driver' => trim('mail'),
+                        'mail.host' => trim('smtp.gmail.com'),
+                        'mail.port' => trim('587'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('tls'),
+                    ]);
+                }
+                else {
+
+                    config([
+                        'mail.driver' => trim('smtp'),
+                        'mail.host' => trim('smtp.zoho.com'),
+                        'mail.port' => trim('465'),
+                        'mail.username' => trim($user_email_details->email),
+                        'mail.password' => trim($user_email_details->password),
+                        'mail.encryption' => trim('ssl'),
+                    ]);
+                }
+
+                $work_from_home_res = WorkFromHome::find($module_id);
+                $input['reply_message'] = $work_from_home_res->reply_message;
+
+                \Mail::send('adminlte::emails.workfromhomerequestreplyemail', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
                 });

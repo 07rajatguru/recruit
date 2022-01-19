@@ -34,7 +34,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>{!! $work_from_home_res['subject'] !!}</h2>
+                <h3>{!! $work_from_home_res['subject'] !!}</h3>
             </div>
             <div class="pull-right">
                 <a class="btn btn-primary" href="{{ route('workfromhome.index') }}">Back</a>
@@ -100,11 +100,8 @@
 
 <input type="hidden" name="work_from_home_id" id="work_from_home_id" value="{{ $work_from_home_id }}">
 <input type="hidden" name="loggedin_user_id" id="loggedin_user_id" value="{{ $loggedin_user_id }}">
-
-<input type="hidden" name="reason" id="reason" value="{{ $work_from_home_res['reason'] }}">
 <input type="hidden" name="user_name" id="user_name" value="{{ $work_from_home_res['added_by'] }}">
 <input type="hidden" name="user_id" id="user_id" value="{{ $work_from_home_res['user_id'] }}">
-<input type="hidden" name="subject" id="subject" value="{{ $work_from_home_res['subject'] }}">
 <input type="hidden" name="appr_rejct_by" id="appr_rejct_by" value="{{ $work_from_home_res['appr_rejct_by'] }}">
 <input type="hidden" name="from_date" id="from_date" value="{{ $work_from_home_res['from_date'] }}">
 <input type="hidden" name="to_date" id="to_date" value="{{ $work_from_home_res['to_date'] }}">
@@ -120,11 +117,9 @@
         var work_from_home_id = $("#work_from_home_id").val();
         var app_url = "{!! env('APP_URL') !!}";
         var token = $("input[name=_token]").val();
-        var reason = $("#reason").val();
         var user_name = $("#user_name").val();
         var loggedin_user_id = $("#loggedin_user_id").val();
         var user_id = $("#user_id").val();
-        var subject = $("#subject").val();
         var appr_rejct_by = $("#appr_rejct_by").val();
 
         var from_date = $("#from_date").val();
@@ -135,10 +130,13 @@
         $.ajax({
             type: 'POST',
             url:app_url+'/work-from-home/'+work_from_home_id+'/show',
-            data: {work_from_home_id: work_from_home_id, 'check':check, '_token':token, reason:reason, user_name:user_name, loggedin_user_id:loggedin_user_id,user_id:user_id,subject:subject,appr_rejct_by:appr_rejct_by},
+            data: {work_from_home_id: work_from_home_id, 'check':check, '_token':token, user_name:user_name, loggedin_user_id:loggedin_user_id, user_id:user_id, appr_rejct_by:appr_rejct_by, from_date:from_date, to_date:to_date},
             dataType:'json',
+
             success: function(data) {
-                if (data == 'success') { 
+
+                if (data == 'success') {
+
                     window.location.reload();
                     alert('Reply Send Successfully.');
                 }

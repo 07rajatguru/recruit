@@ -8,7 +8,6 @@ use App\WorkFromHome;
 use App\Events\NotificationMail;
 use App\User;
 use DB;
-use App\Events\NotificationEvent;
 use App\Date;
 
 class WorkFromHomeController extends Controller
@@ -279,11 +278,11 @@ class WorkFromHomeController extends Controller
 
         $work_from_home_id = $_POST['work_from_home_id'];
         $reply = $_POST['check'];
-        $reason = $_POST['reason'];
-        $subject = $_POST['subject'];
         $user_name = $_POST['user_name'];
         $loggedin_user_id = $_POST['loggedin_user_id'];
         $user_id = $_POST['user_id'];
+        $from_date = $_POST['from_date'];
+        $to_date = $_POST['to_date'];
 
         // Email Notifications
 
@@ -317,38 +316,27 @@ class WorkFromHomeController extends Controller
             $cc_users_array = array($report_email,$superadminemail,$hremail,$vibhuti_gmail_id);
         }
 
+        $module = "Work From Home Request Reply";
+        $sender_name = $loggedin_user_id;
+        $to = $user_email;
+        $cc = implode(",",$cc_users_array);
+        $subject = "Work From Home Request - " . $from_date . " To " . $to_date;
+        $module_id = $work_from_home_id;
+
         if ($reply == 'Approved') {
 
             $message = "<p><b>Hello " . $user_name . " ,</b></p><p><b>Your Request has been Approved.</b></p>";
 
-            $module = "Work From Home Request Reply";
-            $sender_name = $loggedin_user_id;
-            $to = $user_email;
-            $cc = implode(",",$cc_users_array);
-            $subject = $subject;
-            $body_message = $message;
-            $module_id = $work_from_home_id;
-
-            event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
-
-            \DB::statement("UPDATE `work_from_home` SET `status` = '1',`appr_rejct_by`=$loggedin_user_id WHERE `id` = $work_from_home_id");
+            \DB::statement("UPDATE `work_from_home` SET `status` = '1',`appr_rejct_by` = $loggedin_user_id,`reply_message` = '$message' WHERE `id` = $work_from_home_id");
         }
         elseif ($reply == 'Rejected') {
        
             $message = "<p><b>Hello " . $user_name . " ,</b></p><p><b>Your Request has been Rejected.</b></p>";
 
-            $module = "Work From Home Request Reply";
-            $sender_name = $loggedin_user_id;
-            $to = $user_email;
-            $cc = implode(",",$cc_users_array);
-            $subject = $subject;
-            $body_message = $message;
-            $module_id = $work_from_home_id;
-
-            event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
-
-            \DB::statement("UPDATE `work_from_home` SET `status` = '2',`appr_rejct_by`=$loggedin_user_id WHERE `id` = $work_from_home_id");
+            \DB::statement("UPDATE `work_from_home` SET `status` = '2',`appr_rejct_by` = $loggedin_user_id,`reply_message` = '$message' WHERE `id` = $work_from_home_id");
         }
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
         $data = 'success';
 
