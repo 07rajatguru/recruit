@@ -526,6 +526,14 @@ class EveryMinute extends Command
                 $leave = UserLeave::find($module_id);
                 $input['leave_message'] = $leave->reply_message;
                 $input['remarks'] = $leave->remarks;
+                $input['days'] = $leave->days;
+                $input['status'] = $leave->status;
+                $input['type_of_leave'] = $leave->type_of_leave;
+                $input['from_date'] = date('d-m-Y',strtotime($leave->from_date));
+                $input['to_date'] = date('d-m-Y',strtotime($leave->to_date));
+
+                $user_name = User::getUserNameByEmail($input['to']);
+                $input['user_name'] = $user_name;
 
                 if(strpos($input['from_address'], '@gmail.com') !== false) {
 
