@@ -2331,6 +2331,8 @@ class BillsController extends Controller
         $bill_id = $_POST['id'];
         $invoice_data = Bills::getJoinConfirmationMail($bill_id);
 
+        pritn
+
         // Set invoice name
         $date = date('dmY');
         $in_nm = $invoice_data['client_company_name'] . " - " . $invoice_data['candidate_name'] . " - " . $date;
@@ -2338,10 +2340,13 @@ class BillsController extends Controller
         // Replace / with - for save excel format
         $invoice_name =  str_replace("/","-",$in_nm);
         
-        if(isset($invoice_data['gst_no']) && $invoice_data['gst_no'] == '') {
+        if($invoice_data['client_company_name'] != 'International Centre for Entrepreneurship and Career Development') {
 
-            return redirect('/recovery')->with('error','Please add GST No. of Client to Generate the Invoice.')
-            ->with('selected_year',$year);
+            if(isset($invoice_data['gst_no']) && $invoice_data['gst_no'] == '') {
+
+                return redirect('/recovery')->with('error','Please add GST No. of Client to Generate the Invoice.')
+                ->with('selected_year',$year);
+            }
         }
 
         // Generate excel sheet and save at bill id location

@@ -56,13 +56,23 @@
 				</td>
 				<td></td>
 			</tr>
-			<tr>
-				<td></td>
-				<td colspan="5" style="border: 5px solid #000000;">GST Number- {{ $invoice_data['gst_no'] }}</td>
-				<td colspan="4" style="border: 5px solid #000000;">GST Number- {{ $invoice_data['gst_no'] }}</td>
-				<td style="border: 5px solid #000000;vertical-align:middle;height: 20;text-align: left;"><b>Dt- _________</b></td>
-				<td></td>
-			</tr>
+			@if($invoice_data['client_company_name'] != 'International Centre for Entrepreneurship and Career Development')
+				<tr>
+					<td></td>
+					<td colspan="5" style="border: 5px solid #000000;">GST Number- {{ $invoice_data['gst_no'] }}</td>
+					<td colspan="4" style="border: 5px solid #000000;">GST Number- {{ $invoice_data['gst_no'] }}</td>
+					<td style="border: 5px solid #000000;vertical-align:middle;height: 20;text-align: left;"><b>Dt- _________</b></td>
+					<td></td>
+				</tr>
+			@else
+				<tr>
+					<td></td>
+					<td colspan="5" style="border: 5px solid #000000;">GST Number - NA</td>
+					<td colspan="4" style="border: 5px solid #000000;">GST Number - NA</td>
+					<td style="border: 5px solid #000000;vertical-align:middle;height: 20;text-align: left;"><b>Dt- _________</b></td>
+					<td></td>
+				</tr>
+			@endif
 			<tr>
 				<td></td><th colspan="10" style="border: 5px solid #000000;"></th><td></td>
 			</tr>
