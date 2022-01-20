@@ -478,6 +478,7 @@ class Bills extends Model
                 }
 
                 $bills_query = $bills_query->where('users.name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('client_basicinfo.display_name','like',"%$search%");
                 $bills_query = $bills_query->orwhere('bills.company_name','like',"%$search%");
                 $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
                 $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
@@ -670,6 +671,7 @@ class Bills extends Model
                 }
                 
                 $bills_query = $bills_query->where('users.name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('client_basicinfo.display_name','like',"%$search%");
                 $bills_query = $bills_query->orwhere('bills.company_name','like',"%$search%");
                 $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
                 $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");

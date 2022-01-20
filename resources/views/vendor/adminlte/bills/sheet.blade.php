@@ -157,40 +157,63 @@
 				<td style="text-align: center;border: 5px solid #000000;">{{ $invoice_data['fees'] }}</td>
 				<td></td>
 			</tr>
-			@if(isset($invoice_data['gst_check']) && $invoice_data['gst_check'] == '24')
-			<tr>
-				<td></td>
-				<td style="border: 5px solid #000000;"></td>
-				<td colspan="8" style="text-align: right;border: 5px solid #000000;">CGST  @ 9%</td>
-				<td style="text-align: center;border: 5px solid #000000;">{{ $invoice_data['cgst'] }}</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td></td>
-				<td style="border: 5px solid #000000;"></td>
-				<td colspan="8" style="text-align: right;border: 5px solid #000000;">SGST  @ 9%</td>
-				<td style="text-align: center;border: 5px solid #000000;">{{ $invoice_data['sgst'] }}</td>
-				<td></td>
-			</tr>
+			@if($invoice_data['client_company_name'] == 'International Centre for Entrepreneurship and Career Development')
+				<tr>
+					<td></td>
+					<td style="border: 5px solid #000000;"></td>
+					<td colspan="8" style="text-align: right;border: 5px solid #000000;">CGST  @ 0%</td>
+					<td style="text-align: center;border: 5px solid #000000;">0</td>
+					<td></td>
+				</tr>
+				<tr>
+					<td></td>
+					<td style="border: 5px solid #000000;"></td>
+					<td colspan="8" style="text-align: right;border: 5px solid #000000;">SGST  @ 0%</td>
+					<td style="text-align: center;border: 5px solid #000000;">0</td>
+					<td></td>
+				</tr>
 			@else
-			<tr>
-				<td></td>
-				<td style="border: 5px solid #000000;"></td>
-				<td colspan="8" style="text-align: right;border: 5px solid #000000;">IGST  @ 18%</td>
-				<td style="text-align: center;border: 5px solid #000000;">{{ $invoice_data['gst'] }}</td>
-				<td></td>
-			</tr>
-			<tr>
-				<td></td><td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
-				<td></td><td></td>
-			</tr>
+
+				@if(isset($invoice_data['gst_check']) && $invoice_data['gst_check'] == '24')
+					<tr>
+						<td></td>
+						<td style="border: 5px solid #000000;"></td>
+						<td colspan="8" style="text-align: right;border: 5px solid #000000;">CGST  @ 9%</td>
+						<td style="text-align: center;border: 5px solid #000000;">{{ $invoice_data['cgst'] }}</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td style="border: 5px solid #000000;"></td>
+						<td colspan="8" style="text-align: right;border: 5px solid #000000;">SGST  @ 9%</td>
+						<td style="text-align: center;border: 5px solid #000000;">{{ $invoice_data['sgst'] }}</td>
+						<td></td>
+					</tr>
+				@else
+					<tr>
+						<td></td>
+						<td style="border: 5px solid #000000;"></td>
+						<td colspan="8" style="text-align: right;border: 5px solid #000000;">IGST  @ 18%</td>
+						<td style="text-align: center;border: 5px solid #000000;">{{ $invoice_data['gst'] }}</td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td><td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td> <td></td>
+						<td></td><td></td>
+					</tr>
+				@endif
 			@endif
 			<tr>
 				<td></td>
 				<td style="text-align: center;border: 5px solid #000000;height: 30;vertical-align:middle;font-weight: bold;font-size: 11;">INR:</td>
 				<td colspan="7" style="text-align: center;border: 5px solid #000000;height: 30;vertical-align:middle;font-weight: bold;font-size: 11;width: 20;">{{ $invoice_data['amount_in_words'] }}</td>
 				<td style="text-align: center;border: 5px solid #000000;height: 30;vertical-align:middle;font-weight: bold;font-size: 11;">Total</td>
-				<td style="text-align: center;border: 5px solid #000000;height: 30;vertical-align:middle;font-weight: bold;font-size: 11;">{{ $invoice_data['billing_amount'] }}</td>
+
+				@if($invoice_data['client_company_name'] == 'International Centre for Entrepreneurship and Career Development')
+					<td style="text-align: center;border: 5px solid #000000;height: 30;vertical-align:middle;font-weight: bold;font-size: 11;">{{ $invoice_data['fees'] }}</td>
+				@else
+					<td style="text-align: center;border: 5px solid #000000;height: 30;vertical-align:middle;font-weight: bold;font-size: 11;">{{ $invoice_data['billing_amount'] }}</td>
+				@endif
 				<td></td>
 			</tr>
 			<tr>

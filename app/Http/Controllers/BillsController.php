@@ -2331,8 +2331,6 @@ class BillsController extends Controller
         $bill_id = $_POST['id'];
         $invoice_data = Bills::getJoinConfirmationMail($bill_id);
 
-        pritn
-
         // Set invoice name
         $date = date('dmY');
         $in_nm = $invoice_data['client_company_name'] . " - " . $invoice_data['candidate_name'] . " - " . $date;
