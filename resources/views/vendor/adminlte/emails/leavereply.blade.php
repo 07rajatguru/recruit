@@ -46,7 +46,6 @@
                         <p style="text-align: left;">You are hereby requested to co-ordinate with your Reporting Manager and plan the delegation of ongoing tasks within the team to avoid any further delay or communication gap.</p>
 
                         <p style="text-align: left;">In case of any changes, please connect with your Reporting Manager.</p>
-                    @endif
 
                     @elseif($days >= '2' && $status == '1' && $type_of_leave == 'Full Day')
 
@@ -55,7 +54,6 @@
                         <p style="text-align: left;">You are hereby requested to co-ordinate with your Reporting Manager and plan the delegation of ongoing tasks within the team to avoid any further delay or communication gap.</p>
 
                         <p style="text-align: left;">In case of any changes, please connect with your Reporting Manager.</p>
-                    @endif
 
                     @elseif($days == '0.5' && $status == '1' && $type_of_leave == 'Half Day')
 
@@ -64,16 +62,14 @@
                         <p style="text-align: left;">You are hereby requested to co-ordinate with your Reporting Manager and plan the delegation of ongoing tasks within the team to avoid any further delay or communication gap.</p>
 
                         <p style="text-align: left;">In case of any changes, please connect with your Reporting Manager.</p>
-                    @endif
 
-                    @elseif($days >= 1 && $status == 1 && $type_of_leave == 'Half Day')
+                    @elseif($days >= '1' && $status == '1' && $type_of_leave == 'Half Day')
 
                         <p style="text-align: left;">This is to inform you that your leave has been approved for the (First half/Second half) from {{ $from_date }} to {{ $to_date }}.</p>
 
                         <p style="text-align: left;">You are hereby requested to co-ordinate with your Reporting Manager and plan the delegation of ongoing tasks within the team to avoid any further delay or communication gap.</p>
 
                         <p style="text-align: left;">In case of any changes, please connect with your Reporting Manager.</p>
-                    @endif
 
                     @elseif($days == '0.5' && $status == '2' && $type_of_leave == 'Half Day')
 
@@ -82,27 +78,24 @@
                         <p style="text-align: left;">You are hereby requested to understand the reason of rejection as per the remarks mentioned in E2H.</p>
 
                         <p style="text-align: left;">In case of any queries/discussion, feel free to connect with your Reporting Manager.</p>
-                    @endif
 
-                    @elseif($days >= 1 && $status == '2' && $type_of_leave == 'Half Day')
+                    @elseif($days >= '1' && $status == '2' && $type_of_leave == 'Half Day')
 
                         <p style="text-align: left;">This is to inform you that your leave has been rejected for the (First half/Second half) from {{ $from_date }} to {{ $to_date }}.</p>
 
                         <p style="text-align: left;">You are hereby requested to understand the reason of rejection as per the remarks mentioned in E2H.</p>
 
                         <p style="text-align: left;">In case of any queries/discussion, feel free to connect with your Reporting Manager.</p>
-                    @endif
 
-                    @elseif($days == 1 && $status == 2 && $type_of_leave == 'Full Day')
+                    @elseif($days == '1' && $status == '2' && $type_of_leave == 'Full Day')
 
                         <p style="text-align: left;">This is to inform you that your leave has been rejected for the {{ $from_date }}.</p>
 
                         <p style="text-align: left;">You are hereby requested to understand the reason of rejection as per the remarks mentioned in E2H.</p>
 
                         <p style="text-align: left;">In case of any queries/discussion, feel free to connect with your Reporting Manager.</p>
-                    @endif
 
-                    @elseif($days >= 2 && $status == 2 && $type_of_leave == 'Full Day')
+                    @elseif($days >= '2' && $status == '2' && $type_of_leave == 'Full Day')
 
                         <p style="text-align: left;">This is to inform you that your leave has been rejected from {{ $from_date }} to {{ $to_date }}.</p>
 
