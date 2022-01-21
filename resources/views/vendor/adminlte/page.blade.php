@@ -100,7 +100,7 @@
                                                 <a href="{{getenv('APP_URL').'/work-from-home/add'}}" target="_blank">Apply For Work From Home</a>
                                             </li>
                                             <li>
-                                                <a href="{{getenv('APP_URL').'/self-user-attendance'}}" target="_blank">Attendance</a>
+                                                <a href="{{getenv('APP_URL').'/users-attendance/self'}}" target="_blank">Attendance</a>
                                             </li>
                                             <!-- <li>
                                                 <a href="{{getenv('APP_URL').'/ticket-discussion'}}">Ticket</a>

@@ -621,52 +621,6 @@ class WorkPlanningController extends Controller
 
     public function store(Request $request) {
 
-        /*// Get Total Projected Time
-        $projected_time = Input::get('projected_time');
-        $sum = strtotime('00:00:00');
-        $totaltime = 0;
-
-        foreach($projected_time as $value) {
-      
-            $timeinsec = strtotime($value) - $sum;
-            $totaltime = $totaltime + $timeinsec;
-        }
-
-        // Set Hours
-        $h = intval($totaltime / 3600);
-
-        if(strlen($h) == 1) {
-            $h = "0".$h;
-        }
-        else {
-            $h = $h;
-        }
-        $totaltime = $totaltime - ($h * 3600);
-
-        // Set Minutes
-        $m = intval($totaltime / 60);
-
-        if(strlen($m) == 1) {
-            $m = "0".$m;
-        }
-        else {
-            $m = $m;
-        }
-
-        // Set Seconds
-        $s = $totaltime - ($m * 60);
-
-        if(strlen($s) == 1) {
-            $s = "0".$s;
-        }
-        else {
-            $s = $s;
-        }
-
-        // Set Total Projected Time
-        $total_projected_time = "$h:$m:$s";
-*/
-
         $user_id = \Auth::user()->id;
         $date = date('Y-m-d');
 
@@ -918,7 +872,7 @@ class WorkPlanningController extends Controller
 
             if($delay_counter > 3) {
 
-                \DB::statement("UPDATE `work_planning` SET `delay_counter` = '$delay_counter', `attendance` = 'HD' WHERE `id` = $work_planning_id");
+                \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1', `attendance` = 'HD' WHERE `id` = $work_planning_id");
             }
             else {
 
@@ -1026,101 +980,6 @@ class WorkPlanningController extends Controller
 
     public function update(Request $request,$id) {
 
-        /*// Calculate Total Projected Time
-        $projected_time = Input::get('projected_time');
-        $sum = strtotime('00:00:00');
-        $totaltime = 0;
-
-        foreach($projected_time as $value) {
-      
-            $timeinsec = strtotime($value) - $sum;
-            $totaltime = $totaltime + $timeinsec;
-        }
-
-        // Set Hours
-        $h = intval($totaltime / 3600);
-
-        if(strlen($h) == 1) {
-            $h = "0".$h;
-        }
-        else {
-            $h = $h;
-        }
-        $totaltime = $totaltime - ($h * 3600);
-
-        // Set Minutes
-        $m = intval($totaltime / 60);
-
-        if(strlen($m) == 1) {
-            $m = "0".$m;
-        }
-        else {
-            $m = $m;
-        }
-
-        // Set Seconds
-        $s = $totaltime - ($m * 60);
-
-        if(strlen($s) == 1) {
-            $s = "0".$s;
-        }
-        else {
-            $s = $s;
-        }
-
-        // Set Total Projected Time
-        $total_projected_time = "$h:$m:$s";
-
-        // Get Total Actual Time
-        $actual_time = Input::get('actual_time');
-        $sum = strtotime('00:00:00');
-        $totalactualtime = 0;
-
-        if(isset($actual_time) && sizeof($actual_time) > 0) {
-
-            foreach($actual_time as $value) {
-          
-                $timeinsec = strtotime($value) - $sum;
-                $totalactualtime = $totalactualtime + $timeinsec;
-            }
-
-            // Set Hours
-            $h = intval($totalactualtime / 3600);
-
-            if(strlen($h) == 1) {
-                $h = "0".$h;
-            }
-            else {
-                $h = $h;
-            }
-            $totalactualtime = $totalactualtime - ($h * 3600);
-
-            // Set Minutes
-            $m = intval($totalactualtime / 60);
-
-            if(strlen($m) == 1) {
-                $m = "0".$m;
-            }
-            else {
-                $m = $m;
-            }
-
-            // Set Seconds
-            $s = $totalactualtime - ($m * 60);
-
-            if(strlen($s) == 1) {
-                $s = "0".$s;
-            }
-            else {
-                $s = $s;
-            }
-
-            $total_actual_time = "$h:$m:$s";
-        }
-        else {
-            $total_actual_time = NULL;
-        }*/
-
         $email_value = $request->input('email_value');
         
         $user_id = \Auth::user()->id;
@@ -1129,7 +988,6 @@ class WorkPlanningController extends Controller
         $total_projected_time = $request->input('total_projected_time');
         $total_actual_time = $request->input('total_actual_time');
         $work_type = $request->input('work_type');
-        //$remaining_time = $request->input('remaining_time');
         $link = Input::get('link');
 
         // Set Attendance for Farhin
@@ -1185,8 +1043,6 @@ class WorkPlanningController extends Controller
 
         $work_planning->attendance = $attendance;
         $work_planning->work_type = $work_type;
-        //$work_planning->work_planning_status_time = date('H:i:s');
-        //$work_planning->remaining_time = $remaining_time;
         $work_planning->link = $link;
 
         if(isset($total_projected_time) && $total_projected_time != '') {
@@ -1386,12 +1242,23 @@ class WorkPlanningController extends Controller
 
                         if($delay_counter > 3) {
 
-                            \DB::statement("UPDATE `work_planning` SET `delay_counter` = '$delay_counter', `attendance` = 'HD' WHERE `id` = $id");
+                            \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1', `attendance` = 'HD' WHERE `id` = $id");
                         }
                         else {
 
                             \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1' WHERE `id` = $id");
                         }
+                    }
+                }
+
+                // Get last two days work planning result as WFH Policy
+                if($work_type == 'WFH') {
+
+                    $work_planning_res = WorkPlanning::getBefore2daysWorkPlanningDetails($user_id,$work_planning_date);
+
+                    if(isset($work_planning_res) && sizeof($work_planning_res) >= 2) {
+
+                        \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $id");
                     }
                 }
             }
@@ -1530,6 +1397,20 @@ class WorkPlanningController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
+        // Get last two days work planning result as WFH Policy
+
+        $work_type = $work_planning['work_type'];
+        
+        if($work_type == 'WFH') {
+            
+            $work_planning_res = WorkPlanning::getBefore2daysWorkPlanningDetails($user_id,$work_planning['added_date']);
+
+            if(isset($work_planning_res) && sizeof($work_planning_res) >= 2) {
+
+                \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $wp_id");
+            }
+        }
+
         // If Status not add tomorrow before 11:00 AM then send email notifications
 
         $today_date = date("d-m-Y");
@@ -1592,7 +1473,7 @@ class WorkPlanningController extends Controller
 
                 if($delay_counter > 3) {
 
-                    \DB::statement("UPDATE `work_planning` SET `delay_counter` = '$delay_counter', `attendance` = 'HD' WHERE `id` = $wp_id");
+                    \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1', `attendance` = 'HD' WHERE `id` = $wp_id");
                 }
                 else {
 
@@ -1622,7 +1503,6 @@ class WorkPlanningController extends Controller
 
             $work_planning->status = 1;
             $work_planning->approved_by = $user_id;
-            $work_planning->attendance = 'F';
             $work_planning->save();
         }
        /* elseif ($reply == 'Rejected') {

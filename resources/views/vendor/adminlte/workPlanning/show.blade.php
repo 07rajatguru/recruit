@@ -57,6 +57,9 @@
                     @endif
                     <button type="submit" class="btn btn-danger" onclick="updateStatus('Rejected')">Reject</button>
                 @endif
+                @if($work_planning['evening_status'] == 0)
+                    <button type="submit" class="btn btn-danger" onclick="updateStatus('Rejected')">Reject</button>
+                @endif
                 <a class="btn btn-primary" href="{{ route('teamworkplanning.index') }}">Back</a>
             @endif
         </div>
