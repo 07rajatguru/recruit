@@ -261,117 +261,120 @@
                 </div>
             </div>
         </div>
+    </div>
+@endif
+
+@if(isset($user_details->daily_report) && $user_details->daily_report == 'Yes')
+    <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <div class="box-header col-md-6">
-                    <h3>Daily Activity</h3>
-                </div>
+                <div class="box-header col-md-6"><h3>Daily Activity</h3></div>
                 <div class="col-xs-12 col-sm-12 col-md-12">
-                    <div>
-                        @if(isset($user_details->cv_report) && $user_details->cv_report == 'Yes')
-                            <table cellspacing="0" width="100%">
-                                <tr>
-                                    <td colspan="5" style="text-align:left;">
-                                        <u><b><h4>No of CVs Associated : {{ $associate_count or '0'}}</h4></b></u>
-                                    </td>
+                    @if(isset($user_details->cv_report) && $user_details->cv_report == 'Yes')
+                        <table cellspacing="0" width="100%">
+                            <tr>
+                                <td colspan="5" style="text-align:left;">
+                                    <u><b><h4>No of CVs Associated : {{ $associate_count or '0'}}</h4></b></u>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="daily_report_cv_table">
+                            <thead>
+                                <tr style="background-color: #f39c12;">
+                                    <th width="5%">No</th>
+                                    <th width="30%">Position Name</th>
+                                    <th width="30%">Company Name</th>
+                                    <th width="20%">Location</th>
+                                    <th width="15%">No of Resumes</th>
                                 </tr>
-                            </table>
-
-                            <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="daily_report_cv_table">
-                                <thead>
-                                    <tr style="background-color: #f39c12;">
-                                        <th width="5%">No</th>
-                                        <th width="30%">Position Name</th>
-                                        <th width="30%">Company Name</th>
-                                        <th width="20%">Location</th>
-                                        <th width="15%">No of Resumes</th>
-                                    </tr>
-                                </thead>
-                                <?php $i = 0;?>
-                                @foreach($associate_daily as $key => $value)
-                                    <tr>
-                                        <td>{{++$i}}</td>
-                                        <td>{{ $value['posting_title'] }}</td>
-                                        <td>{{ $value['company'] }}</td>
-                                        <td>{{ $value['location'] }}</td>
-                                        <td>{{ $value['associate_candidate_count'] }}</td>
-                                    </tr>
-                                @endforeach
-                            </table>
-                        @endif
-
-                        @if(isset($user_details->interview_report) && $user_details->interview_report == 'Yes')
-                            <table cellspacing="0" width="100%">
+                            </thead>
+                            <?php $i = 0;?>
+                            @foreach($associate_daily as $key => $value)
                                 <tr>
-                                    <td colspan="7" style="text-align:left;">
-                                        <u><b><h4>No of Interview Scheduled : {{ $interview_count or '0'}}</h4></b></u>
-                                    </td>
+                                    <td>{{++$i}}</td>
+                                    <td>{{ $value['posting_title'] }}</td>
+                                    <td>{{ $value['company'] }}</td>
+                                    <td>{{ $value['location'] }}</td>
+                                    <td>{{ $value['associate_candidate_count'] }}</td>
                                 </tr>
-                            </table>
+                            @endforeach
+                        </table>
+                    @endif
 
-                            <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="daily_report_interview_table">
-                                <thead>
-                                    <tr style="background-color: #7598d9">
-                                        <th>No</th>
-                                        <th>Position</th>
-                                        <th>Candidate Name</th>
-                                        <th>Interview Date</th>
-                                        <th>Interview Time</th>
-                                        <th>Contact No.</th>
-                                        <th>Email ID</th>
-                                    </tr>
-                                </thead>
-                                <?php $i=0;?>
-                                @foreach($interview_daily as $key=>$value)
-                                    <tr>
-                                        <td>{{ ++$i }}</td>
-                                        <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['posting_title'] }}</td>
-                                        <td>{{ $value['cname'] }}</td>
-                                        <td>{{ date('d/m/Y',strtotime($value['interview_date'])) }}</td>
-                                        <td>{{ date('h:i A',strtotime($value['interview_time'])) }}</td>
-                                        <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['cmobile'] }}</td>
-                                        <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['cemail'] }}</td>
-                                    </tr>
-                                @endforeach
-                            </table>
-                        @endif
+                    @if(isset($user_details->interview_report) && $user_details->interview_report == 'Yes')
+                        <table cellspacing="0" width="100%">
+                            <tr>
+                                <td colspan="7" style="text-align:left;">
+                                    <u><b><h4>No of Interview Scheduled : {{ $interview_count or '0'}}</h4></b></u>
+                                </td>
+                            </tr>
+                        </table>
 
-                        @if(isset($user_details->lead_report) && $user_details->lead_report == 'Yes')
-                            <table cellspacing="0" width="100%">
+                        <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="daily_report_interview_table">
+                            <thead>
+                                <tr style="background-color: #7598d9">
+                                    <th>No</th>
+                                    <th>Position</th>
+                                    <th>Candidate Name</th>
+                                    <th>Interview Date</th>
+                                    <th>Interview Time</th>
+                                    <th>Contact No.</th>
+                                    <th>Email ID</th>
+                                </tr>
+                            </thead>
+                            <?php $i=0;?>
+                            @foreach($interview_daily as $key=>$value)
                                 <tr>
-                                    <td colspan="7" style="text-align:left;">
-                                        <u><b><h4>No of Leads Added : {{$lead_count or '0'}}</h4></b></u>
-                                    </td>
+                                    <td>{{ ++$i }}</td>
+                                    <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['posting_title'] }}</td>
+                                    <td>{{ $value['cname'] }}</td>
+                                    <td>{{ date('d/m/Y',strtotime($value['interview_date'])) }}</td>
+                                    <td>{{ date('h:i A',strtotime($value['interview_time'])) }}</td>
+                                    <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['cmobile'] }}</td>
+                                    <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['cemail'] }}</td>
                                 </tr>
-                            </table>
+                            @endforeach
+                        </table>
+                    @endif
 
-                            <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="daily_report_leads_table">
-                                <thead>
-                                    <tr style="background-color: #C4D79B">
-                                        <th>No</th>
-                                        <th>Company Name</th>
-                                        <th>Contact Point</th>
-                                        <th>Email ID</th>
-                                        <th>Mobile No.</th>
-                                        <th>City</th>
-                                        <th>Website</th>
-                                    </tr>
-                                </thead>
-                                <?php $i=0;?>
-                                @foreach($leads_daily as $key=>$value)
-                                    <tr>
-                                        <td>{{ ++$i }}</td>
-                                        <td>{{ $value['company_name'] }}</td>
-                                        <td>{{ $value['contact_point'] }}</td>
-                                        <td>{{ $value['email'] }}</td>
-                                        <td>{{ $value['mobile'] }}</td>
-                                        <td>{{ $value['city'] }}</td>
-                                        <td>{{ $value['website'] }}</td>
-                                    </tr>
-                                @endforeach
-                            </table>
-                        @endif
-                    </div>
+                    @if(isset($user_details->lead_report) && $user_details->lead_report == 'Yes')
+                        <table cellspacing="0" width="100%">
+                            <tr>
+                                <td colspan="7" style="text-align:left;">
+                                    <u><b><h4>No of Leads Added : {{$lead_count or '0'}}</h4></b>
+                                    </u>
+                                </td>
+                            </tr>
+                        </table>
+
+                        <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="daily_report_leads_table">
+                            <thead>
+                                <tr style="background-color: #C4D79B">
+                                    <th>No</th>
+                                    <th>Company Name</th>
+                                    <th>Contact Point</th>
+                                    <th>Email ID</th>
+                                    <th>Mobile No.</th>
+                                    <th>City</th>
+                                    <th>Website</th>
+                                </tr>
+                            </thead>
+                            <?php $i=0;?>
+                            @foreach($leads_daily as $key=>$value)
+                                <tr>
+                                    <td>{{ ++$i }}</td>
+                                    <td>{{ $value['company_name'] }}</td>
+                                    <td>{{ $value['contact_point'] }}</td>
+                                    <td>{{ $value['email'] }}</td>
+                                    <td>{{ $value['mobile'] }}</td>
+                                    <td>{{ $value['city'] }}</td>
+                                    <td>{{ $value['website'] }}</td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    @endif
+
                     <br/><center><a class="btn btn-success" title="Click here for more information" target="_blank" onclick="viewDailyReport();">Click here for more information</a></center><br/>
                     <input type="hidden" name="users_id" id="users_id" value="{{ $added_by_id }}">
 
