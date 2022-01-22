@@ -12,6 +12,9 @@ use App\User;
 use DB;
 use App\WorkPlanningPost;
 use App\Events\NotificationEvent;
+use App\JobAssociateCandidates;
+use App\Lead;
+use App\Interview;
 
 class WorkPlanningController extends Controller
 {
@@ -901,7 +904,23 @@ class WorkPlanningController extends Controller
         // Get Yesterday Date
         $yesterday_date = date("Y-m-d", strtotime("-1 days"));
 
-        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','wp_id','loggedin_user_id','added_by_id','appr_rejct_by','work_planning_post','added_date','yesterday_date'));
+        // Get All daily report activity
+        $associate_res = JobAssociateCandidates::getDailyReportAssociate($added_by_id,$added_date);
+        $associate_daily = $associate_res['associate_data'];
+        $associate_count = $associate_res['cvs_cnt'];
+
+        // Get Leads with count
+        $leads = Lead::getDailyReportLeads($added_by_id,$added_date);
+        $leads_daily = $leads['leads_data'];
+        $lead_count = Lead::getDailyReportLeadCount($added_by_id,$added_date);
+
+        $interview_daily = Interview::getDailyReportInterview($added_by_id,$added_date);
+        $interview_count = sizeof($interview_daily);
+
+        // Get users reports
+        $user_details = User::getAllDetailsByUserID($added_by_id);
+
+        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','wp_id','loggedin_user_id','added_by_id','appr_rejct_by','work_planning_post','added_date','yesterday_date','associate_daily','associate_count','leads_daily','lead_count','interview_daily','interview_count','user_details'));
     }
 
     public function edit($id) {
@@ -1258,7 +1277,7 @@ class WorkPlanningController extends Controller
 
                     if(isset($work_planning_res) && sizeof($work_planning_res) >= 2) {
 
-                        \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $id");
+                        //\DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $id");
                     }
                 }
             }
@@ -1398,7 +1417,6 @@ class WorkPlanningController extends Controller
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
         // Get last two days work planning result as WFH Policy
-
         $work_type = $work_planning['work_type'];
         
         if($work_type == 'WFH') {
@@ -1407,7 +1425,7 @@ class WorkPlanningController extends Controller
 
             if(isset($work_planning_res) && sizeof($work_planning_res) >= 2) {
 
-                \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $wp_id");
+                //\DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $wp_id");
             }
         }
 
