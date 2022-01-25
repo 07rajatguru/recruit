@@ -333,6 +333,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HomeController@usersAttendance'
     ));
 
+    Route::any('/my-attendance', array (
+        'middleware' => ['permission:display-attendance-of-all-users|display-attendance-by-loggedin-user'],
+        'uses' => 'HomeController@myAttendance'
+    ));
+
     Route::post('attendance/export',[
         'as' => 'attendance.export',
         'uses' => 'HomeController@exportAttendance',

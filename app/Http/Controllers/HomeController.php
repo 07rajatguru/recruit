@@ -1878,4 +1878,52 @@ class HomeController extends Controller
             }
         }
     }
+
+    public function myAttendance() {
+
+        $user_id =  \Auth::user()->id;
+
+        // Get Attendance & Remarks
+        $response = WorkPlanning::getAttendanceByWorkPlanning($user_id);
+
+        $date = new Date();
+
+        if($response->count()>0) {
+
+            foreach ($response as $k=>$v) {
+
+                $attendance = '';
+
+                $attendance = $v->attendance;
+
+                $color = '';
+                if($attendance == 'A'){
+                    $color= '#B0E0E6';
+                }
+                else if ($attendance == 'P') {
+                    $color= '#FFFACD';
+                }
+                else {
+                    $color= '#F08080';
+                }
+                // "Login:9:30 PM \n Logout:6:30 PM \n Total : 9 "
+                $events[] = Calendar::event(
+                    $attendance,
+                    true,
+                    $v->date,
+                    $v->date,
+                    null,
+                    [
+                        'color' => $color,
+                    ]
+                );
+            }
+        }
+
+        $calendar = Calendar::addEvents($events);
+
+        $users_name = User::getAllUsersForRemarks(0,0);
+        
+        return view('my-attendance', compact('calendar','users_name'));
+    }
 }

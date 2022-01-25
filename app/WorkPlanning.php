@@ -520,4 +520,22 @@ class WorkPlanning extends Model
         
         return $work_planning_res;
     }
+
+    public static function getAttendanceByWorkPlanning($user_id=0) {
+
+        $month = date('m');
+        $year = date('Y');
+
+        $query = WorkPlanning::query();
+        $query = $query->leftjoin('users','users.id','=','work_planning.added_by');
+        $query = $query->where('users.reports_to','=',$user_id);
+            
+        $query = $query->where(\DB::raw('MONTH(work_planning.added_date)'),'=', $month);
+        $query = $query->where(\DB::raw('year(work_planning.added_date)'),'=', $year);
+                
+        $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','users.working_hours as working_hours','work_planning.added_date','work_planning.attendance','users.joining_date','work_planning.status');
+        
+        $response = $query->get();
+        return $response;
+    }
 }
