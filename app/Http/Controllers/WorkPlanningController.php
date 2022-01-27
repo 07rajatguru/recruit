@@ -15,6 +15,7 @@ use App\Events\NotificationEvent;
 use App\JobAssociateCandidates;
 use App\Lead;
 use App\Interview;
+use App\WorkFromHome;
 
 class WorkPlanningController extends Controller
 {
@@ -1273,11 +1274,11 @@ class WorkPlanningController extends Controller
                 // Get last two days work planning result as WFH Policy
                 if($work_type == 'WFH') {
 
-                    $work_planning_res = WorkPlanning::getBefore2daysWorkPlanningDetails($user_id,$work_planning_date);
+                    $work_from_home_res = WorkFromHome::getBefore2daysWorkFromHomeRequests($user_id,$work_planning_date);
 
-                    if(isset($work_planning_res) && sizeof($work_planning_res) >= 2) {
+                    if(isset($work_from_home_res) && sizeof($work_from_home_res) > 0) {
 
-                        //\DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $id");
+                        \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $id");
                     }
                 }
             }
@@ -1421,11 +1422,11 @@ class WorkPlanningController extends Controller
         
         if($work_type == 'WFH') {
             
-            $work_planning_res = WorkPlanning::getBefore2daysWorkPlanningDetails($user_id,$work_planning['added_date']);
+            $work_from_home_res = WorkFromHome::getBefore2daysWorkFromHomeRequests($user_id,$work_planning['added_date']);
 
-            if(isset($work_planning_res) && sizeof($work_planning_res) >= 2) {
+            if(isset($work_from_home_res) && sizeof($work_from_home_res) > 0) {
 
-                //\DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $wp_id");
+                \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $wp_id");
             }
         }
 

@@ -198,6 +198,20 @@ class WorkFromHomeController extends Controller
             $to_date = NULL;
         }
 
+        // Calculate All Dates
+
+        $first_dt = strtotime($from_date);
+        $last_dt = strtotime($to_date);
+
+        $selected_dates = array();
+        $current = $first_dt;
+
+        while($current <= $last_dt) { 
+
+            $selected_dates[] = date('Y-m-d', $current);
+            $current = strtotime('+1 day', $current);
+        }
+
         // Get All fields values
         $subject = Input::get('subject');
         $reason = Input::get('reason');
@@ -208,6 +222,7 @@ class WorkFromHomeController extends Controller
         $work_from_home_request->subject = $subject;
         $work_from_home_request->from_date = $from_date;
         $work_from_home_request->to_date = $to_date;
+        $work_from_home_request->selected_dates = implode(",", $selected_dates);
         $work_from_home_request->reason = $reason;
         $work_from_home_request->save();
 
@@ -376,6 +391,19 @@ class WorkFromHomeController extends Controller
             $to_date = NULL;
         }
 
+        // Calculate All Dates
+
+        $first_dt = strtotime($from_date);
+        $last_dt = strtotime($to_date);
+
+        $selected_dates = array();
+        $current = $first_dt;
+
+        while($current <= $last_dt) { 
+
+            $selected_dates[] = date('Y-m-d', $current);
+            $current = strtotime('+1 day', $current);
+        }
         // Get All fields values
         $subject = Input::get('subject');
         $reason = Input::get('reason');
@@ -384,6 +412,7 @@ class WorkFromHomeController extends Controller
         $work_from_home_request->subject = $subject;
         $work_from_home_request->from_date = $from_date;
         $work_from_home_request->to_date = $to_date;
+        $work_from_home_request->selected_dates = implode(",", $selected_dates);
         $work_from_home_request->reason = $reason;
         $work_from_home_request->save();
 

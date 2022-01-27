@@ -107,4 +107,21 @@ class WorkFromHome extends Model
         }
         return $work_from_home_res;
     }
+
+    public static function getBefore2daysWorkFromHomeRequests($user_id,$apply_date) {
+
+        $yesterday_date = date('Y-m-d',strtotime("$apply_date -1days"));
+        $before_yesterday_date = date('Y-m-d', strtotime("$apply_date -2days"));
+        $dates = $before_yesterday_date . "," . $yesterday_date;
+
+        $query = WorkFromHome::query();
+
+        $query = $query->where('selected_dates','like',"%$dates%");
+        $query = $query->where('user_id','=',$user_id);
+        $query = $query->where('status','=',1);
+        $query = $query->select('work_from_home.*');
+        $response = $query->get();
+
+        return $response;
+    }
 }

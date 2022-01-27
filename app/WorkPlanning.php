@@ -503,24 +503,6 @@ class WorkPlanning extends Model
         return $response;
     }
 
-    public static function getBefore2daysWorkPlanningDetails($user_id,$added_date) {
-
-        $yesterday_date = date('Y-m-d',strtotime("$added_date -1days"));
-        $before_yesterday_date = date('Y-m-d', strtotime("$added_date -2days"));
-
-        $dates_array = array($yesterday_date,$before_yesterday_date);
-
-        $query = WorkPlanning::query();
-        $query = $query->whereIn('work_planning.added_date',$dates_array);
-        $query = $query->where('work_planning.work_type','=','WFH');
-        $query = $query->where('work_planning.added_by','=',$user_id);
-        $query = $query->select('work_planning.*');
-        $query = $query->orderBy('work_planning.id','ASC');
-        $work_planning_res = $query->get();
-        
-        return $work_planning_res;
-    }
-
     public static function getAttendanceByWorkPlanning($user_id=0) {
 
         $month = date('m');
