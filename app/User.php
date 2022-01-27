@@ -125,6 +125,18 @@ class User extends Authenticatable
         return $attendance_type;
     }
 
+    public static function getEmploymentType() {
+
+        $employment_type = array();
+
+        $employment_type['Employee'] = 'Employee';
+        $employment_type['Professional'] = 'Professional';
+        $employment_type['Trainee'] = 'Trainee';
+        $employment_type['Intern'] = 'Intern';
+
+        return $employment_type;
+    }
+
     public static function getUserArray($user_id) {
 
         $status = 'Inactive';

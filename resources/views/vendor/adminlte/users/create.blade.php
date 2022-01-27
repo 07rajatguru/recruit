@@ -128,7 +128,6 @@
                                 @endif
                             </div> -->
 
-                            
                             <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
                                 <strong>Department : <span class = "required_fields">*</span> </strong>
                                 {!! Form::select('type', $departments,null, array('id'=>'type','class' => 'form-control','tabindex' => '9','onchange' => 'getRoles()')) !!}
@@ -185,6 +184,24 @@
                                         <strong>{{ $errors->first('half_day_working_hours') }}</strong>
                                     </span>
                                 @endif
+                            </div>
+
+                            <div class="form-group {{ $errors->has('employment_type') ? 'has-error' : '' }}">
+                                <strong>Employment Type : <span class = "required_fields">*</span> </strong>
+                                {!! Form::select('employment_type', $employment_type,null, array('id'=>'employment_type','class' => 'form-control','tabindex' => '14','onchange' => 'getRoles()')) !!}
+                                @if ($errors->has('employment_type'))
+                                    <span class="help-block">
+                                        <strong>{{ $errors->first('employment_type') }}</strong>
+                                    </span>
+                                @endif
+                            </div>
+
+                            <div class="form-group hr_adv" style="display: none;">
+                                <strong> HR Advisory With or Without Recruitment : </strong> &nbsp;&nbsp;
+                                {!! Form::radio('hr_adv_recruitemnt','Yes', false) !!}
+                                {!! Form::label('With Recruitment') !!} &nbsp;&nbsp;
+                                {!! Form::radio('hr_adv_recruitemnt','No',true) !!}
+                                {!! Form::label('Without Recruitment') !!}
                             </div>
 
                             <div class="form-group {{ $errors->has('joining_date') ? 'has-error' : '' }}">

@@ -116,7 +116,10 @@ class UserController extends Controller
         $selected_working_hours = '';
         $selected_half_day_working_hours = '';
 
-        return view('adminlte::users.create',compact('roles','roles_id','reports_to','companies','company_id','type','floor_incharge','departments','department_id','hours_array','selected_working_hours','selected_half_day_working_hours'));
+        $employment_type  = User::getEmploymentType();
+        $employment_type = array_fill_keys(array(''),'Select Employment Type')+$employment_type;
+
+        return view('adminlte::users.create',compact('roles','roles_id','reports_to','companies','company_id','type','floor_incharge','departments','department_id','hours_array','selected_working_hours','selected_half_day_working_hours','employment_type'));
     }
 
     /**
