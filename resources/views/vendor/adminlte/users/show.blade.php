@@ -49,17 +49,19 @@
                             <td>{{ $user->half_day_working_hours }}</td>
                         </tr>
 
-                        @if(isset($user->intern_month) && $user->intern_month != '')
+                        @if(isset($user->employment_type) && $user->employment_type == 'Intern')
                             <tr>
                                 <th>Employment Type :</th>
-                                <td>{{ $user->employment_type }}</td>
-                                <th>Intern for How Many Month? :</th>
-                                <td>{{ $user->intern_month }} Month</td>
+                                <td>{{ $user->employment_type }} - for {{ $user->intern_month }} Months</td>
+                                <th>Status :</th>
+                                <td>{{ $user->status }}</td>
                             </tr>
                         @else
                             <tr>
                                 <th>Employment Type :</th>
-                                <td colspan="3">{{ $user->employment_type }}</td>
+                                <td>{{ $user->employment_type }}</td>
+                                <th>Status :</th>
+                                <td>{{ $user->status }}</td>
                             </tr>
                         @endif
                     </table>
