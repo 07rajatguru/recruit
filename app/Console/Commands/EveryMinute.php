@@ -2458,10 +2458,19 @@ class EveryMinute extends Command
                 if(isset($module_ids_array) && sizeof($module_ids_array) > 0) {
 
                     foreach ($module_ids_array as $key => $value) {
-                        
-                        $holidays = Holidays::find($value);
-                        $title = $holidays->title;
 
+                        if(strpos($value, "-") !== false) {
+
+                            $values_array = explode("-",$value);
+
+                            $holidays = Holidays::find($values_array[0]);
+                            $title = $values_array[1];
+                        }
+                        else {
+
+                            $holidays = Holidays::find($value);
+                            $title = $holidays->title;
+                        }
                         array_push($selected_holidays,$title);
                     }
                 }

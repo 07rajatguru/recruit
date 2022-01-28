@@ -337,6 +337,9 @@ class HolidaysController extends Controller
             $joining_date = date('d-m-Y',strtotime($user_details->joining_date));
 
             $month = date('m',strtotime($joining_date));
+            $year = date('Y',strtotime($joining_date));
+            $current_year = date('Y');
+            $last_year = $current_year - 1;
 
             if($user_details->employment_type == 'Intern') {
 
@@ -349,11 +352,17 @@ class HolidaysController extends Controller
             }
             else {
 
-                if($month >= 4 && $month <= 7) {
+                if($year < $current_year && $year != $last_year) {
                     $length = 3;
                 }
-                elseif($month >= 8 && $month <= 11) {
+                elseif(($month >= 4 && $month <= 7 && $year == $current_year) || ($month >= 4 && $month <= 7 && $year == $last_year)) {
+                    $length = 3;
+                }
+                elseif(($month >= 8 && $month <= 11 && $year == $current_year) || ($month >= 8 && $month <= 11 && $year == $last_year)) {
                     $length = 2;
+                }
+                elseif($month >= 12 && $month <= 03 && $year == $current_year) {
+                    $length = 1;
                 }
                 else {
                     $length = 1;
@@ -453,7 +462,14 @@ class HolidaysController extends Controller
                 $to = $superadminemail;
                 $subject = "Selected Optional Holidays";
                 $message = "Selected Optional Holidays";
-                $module_id = $selected_leaves;
+
+                if($religious_holiday == '') {
+                    $module_id = $selected_leaves;
+                }
+                else {
+                    $module_id = $selected_leaves . "-" . $religious_holiday;
+                }
+                
                 $cc = implode(",",$cc_users_array);
 
                 event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));

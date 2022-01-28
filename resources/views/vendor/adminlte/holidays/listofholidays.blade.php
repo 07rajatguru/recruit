@@ -140,6 +140,7 @@
                         if (msg.success == 'Success') {
 
                             alert("Email Sent Successfully.");
+                            window.location.reload();
                         }
                     }
                 });
