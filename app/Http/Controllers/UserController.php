@@ -207,6 +207,10 @@ class UserController extends Controller
         $dateClass = new Date();
         $joining_date = $request->input('joining_date');
 
+        // Get Employement Type
+        $employment_type = $request->input('employment_type');
+        $intern_month = $request->input('intern_month');
+
         $user->secondary_email = $request->input('semail');
         $user->daily_report = $check_report;
         $user->reports_to = $reports_to;
@@ -227,6 +231,9 @@ class UserController extends Controller
         else {
             $user->joining_date = NULL;
         }
+
+        $user->employment_type = $employment_type;
+        $user->intern_month = $intern_month;
 
         $users = $user->save();
 
@@ -536,7 +543,11 @@ class UserController extends Controller
         $selected_working_hours = $user->working_hours;
         $selected_half_day_working_hours = $user->half_day_working_hours;
 
-        return view('adminlte::users.edit',compact('id','user','roles','roles_id', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge','semail','departments','department_id','hr_adv_recruitemnt','cv_report','interview_report','lead_report','hours_array','selected_working_hours','selected_half_day_working_hours','joining_date'));
+        $employment_type  = User::getEmploymentType();
+        $employment_type = array_fill_keys(array(''),'Select Employment Type')+$employment_type;
+        $intern_month = $user->intern_month;
+
+        return view('adminlte::users.edit',compact('id','user','roles','roles_id', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge','semail','departments','department_id','hr_adv_recruitemnt','cv_report','interview_report','lead_report','hours_array','selected_working_hours','selected_half_day_working_hours','joining_date','employment_type','intern_month'));
     }
 
     /**
@@ -597,6 +608,10 @@ class UserController extends Controller
         // Get Joining Date
         $dateClass = new Date();
         $joining_date = $request->input('joining_date');
+
+        // Get Employement Type
+        $employment_type = $request->input('employment_type');
+        $intern_month = $request->input('intern_month');
         
         // Start Report Status
 
@@ -652,6 +667,9 @@ class UserController extends Controller
             $new_value_array['joining_date'] = '';
         }
 
+        $new_value_array['employment_type'] = $employment_type;
+        $new_value_array['intern_month'] = $intern_month;
+
         $new_value_array['check_report'] = $check_report;
         $new_value_array['cv_report'] = $set_cv_report;
         $new_value_array['interview_report'] = $set_interview_report;
@@ -685,6 +703,9 @@ class UserController extends Controller
             $old_joining_date = '';
         }
 
+        $old_employment_type = $user_all_info->employment_type;
+        $old_intern_month = $user_all_info->intern_month;
+
         $old_check_report = $user_all_info->daily_report;
         $old_cv_report = $user_all_info->cv_report;
         $old_interview_report = $user_all_info->interview_report;
@@ -706,6 +727,8 @@ class UserController extends Controller
         $old_value_array['working_hours'] = $old_working_hours;
         $old_value_array['half_day_working_hours'] = $old_half_day_working_hours;
         $old_value_array['joining_date'] = $old_joining_date;
+        $old_value_array['employment_type'] = $old_employment_type;
+        $old_value_array['intern_month'] = $old_intern_month;
 
         $old_value_array['check_report'] = $old_check_report;
         $old_value_array['cv_report'] = $old_cv_report;
@@ -846,6 +869,20 @@ class UserController extends Controller
         else {
             $joining_date_value = 0;
         }
+
+        if($employment_type != $old_employment_type) {
+            $employment_type_value = 1;
+        }
+        else {
+            $employment_type_value = 0;
+        }
+
+        if($intern_month != $old_intern_month) {
+            $intern_month_value = 1;
+        }
+        else {
+            $intern_month_value = 0;
+        }
         
         // Save new value
 
@@ -880,11 +917,14 @@ class UserController extends Controller
             $user->joining_date = NULL;
         }
 
+        $user->employment_type = $employment_type;
+        $user->intern_month = $intern_month;
+
         $user->save();
         
         // Send email notification when user information is update
 
-        if($first_name_value != 0 || $last_name_value != 0 || $name_value != 0 || $email_value != 0 || $semail_value != 0 || $company_id_value != 0 || $department_value != 0 || $hr_adv_recruitemnt_value != 0 || $role_id_value != 0 || $reports_to_value != 0 || $check_report_value != 0 || $cv_report_value != 0 || $interview_report_value != 0 || $lead_report_value != 0 || $status_value != 0 || $account_manager_value != 0 || $working_hours_value != 0 || $half_day_working_hours_value != 0 || $joining_date_value != 0) {
+        if($first_name_value != 0 || $last_name_value != 0 || $name_value != 0 || $email_value != 0 || $semail_value != 0 || $company_id_value != 0 || $department_value != 0 || $hr_adv_recruitemnt_value != 0 || $role_id_value != 0 || $reports_to_value != 0 || $check_report_value != 0 || $cv_report_value != 0 || $interview_report_value != 0 || $lead_report_value != 0 || $status_value != 0 || $account_manager_value != 0 || $working_hours_value != 0 || $half_day_working_hours_value != 0 || $joining_date_value != 0 || $employment_type_value != 0 || $intern_month_value != 0) {
 
             $logged_in_user_id = \Auth::user()->id;
             $logged_in_user_name = \Auth::user()->name;

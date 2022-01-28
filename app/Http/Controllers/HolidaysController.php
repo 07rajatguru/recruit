@@ -338,14 +338,26 @@ class HolidaysController extends Controller
 
             $month = date('m',strtotime($joining_date));
 
-            if($month >= 4 && $month <= 7) {
-                $length = 3;
-            }
-            elseif($month >= 8 && $month <= 11) {
-                $length = 2;
+            if($user_details->employment_type == 'Intern') {
+
+                if($user_details->intern_month == 3) {
+                    $length = 1;
+                }
+                if($user_details->intern_month == 6) {
+                    $length = 2;
+                }
             }
             else {
-                $length = 1;
+
+                if($month >= 4 && $month <= 7) {
+                    $length = 3;
+                }
+                elseif($month >= 8 && $month <= 11) {
+                    $length = 2;
+                }
+                else {
+                    $length = 1;
+                }
             }
 
             $holidays = Holidays::getAllholidaysList();

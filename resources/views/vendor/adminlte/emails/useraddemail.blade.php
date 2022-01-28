@@ -72,6 +72,25 @@
                                 </tr>
 
                                 <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>Employment Type</b></td>
+
+                                    @if($users_details['employment_type'] == 'Intern')
+                                        <td align="left">{{ $users_details['employment_type'] }} - {{ $users_details['intern_month'] }} Months</td>
+                                    @else
+                                        <td align="left">{{ $users_details['employment_type'] }}
+                                        </td>
+                                    @endif
+                                </tr>
+
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>Joining Date</b></td>
+                                    <?php
+                                        $joining_date = date('d-m-Y',strtotime($users_details['joining_date']));
+                                    ?>
+                                    <td align="left">{{ $joining_date }}</td>
+                                </tr>
+
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
                                     <td align="left"><b>Generate Report</b></td>
                                     <td align="left">{{ $users_details['daily_report'] }}</td>
                                 </tr>

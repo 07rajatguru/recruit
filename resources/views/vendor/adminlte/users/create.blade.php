@@ -188,7 +188,7 @@
 
                             <div class="form-group {{ $errors->has('employment_type') ? 'has-error' : '' }}">
                                 <strong>Employment Type : <span class = "required_fields">*</span> </strong>
-                                {!! Form::select('employment_type', $employment_type,null, array('id'=>'employment_type','class' => 'form-control','tabindex' => '14','onchange' => 'getRoles()')) !!}
+                                {!! Form::select('employment_type', $employment_type,null, array('id'=>'employment_type','class' => 'form-control','tabindex' => '14','onchange' => 'getInternMonth()')) !!}
                                 @if ($errors->has('employment_type'))
                                     <span class="help-block">
                                         <strong>{{ $errors->first('employment_type') }}</strong>
@@ -196,12 +196,12 @@
                                 @endif
                             </div>
 
-                            <div class="form-group hr_adv" style="display: none;">
-                                <strong> HR Advisory With or Without Recruitment : </strong> &nbsp;&nbsp;
-                                {!! Form::radio('hr_adv_recruitemnt','Yes', false) !!}
-                                {!! Form::label('With Recruitment') !!} &nbsp;&nbsp;
-                                {!! Form::radio('hr_adv_recruitemnt','No',true) !!}
-                                {!! Form::label('Without Recruitment') !!}
+                            <div class="form-group intern_months" style="display: none;">
+                                <strong>Intern for How Many Month?: </strong> &nbsp;&nbsp;
+                                {!! Form::radio('intern_month','3', false) !!}
+                                {!! Form::label('3 Month') !!} &nbsp;&nbsp;
+                                {!! Form::radio('intern_month','6',false) !!}
+                                {!! Form::label('6 Month') !!}
                             </div>
 
                             <div class="form-group {{ $errors->has('joining_date') ? 'has-error' : '' }}">
@@ -300,6 +300,7 @@
         $(document).ready(function() {
 
             getRoles();
+            getInternMonth();
 
             $("#type").select2();
             $("#roles").select2({placeholder: 'Select Role'});
@@ -307,6 +308,7 @@
             $("#company_id").select2();
             $("#working_hours").select2();
             $("#half_day_working_hours").select2();
+            $("#employment_type").select2();
 
             $("#joining_date").datepicker({
                 format: "dd-mm-yyyy",
@@ -348,6 +350,9 @@
                     "joining_date": {
                         required: true
                     },
+                    "employment_type": {
+                        required: true
+                    },
                 },
                 messages: {
                     "first_name": {
@@ -373,6 +378,9 @@
                     },
                     "joining_date": {
                         required: "Please Select Joining Date."
+                    },
+                    "employment_type": {
+                        required: "Please Select Type of Employment."
                     },
                 }
             });
@@ -474,6 +482,20 @@
                 $("#interview_report").prop("checked", false);
                 $("#lead_report").prop("checked", false);
                 $(".report_class").hide();
+            }
+        }
+
+        function getInternMonth() {
+
+            var employment_type = $("#employment_type").val();
+
+            if(employment_type == 'Intern') {
+
+                $(".intern_months").show();
+            }
+            else {
+
+                $(".intern_months").hide();
             }
         }
     </script>

@@ -100,6 +100,30 @@
                                 </tr>
 
                                 <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                    <td align="left"><b>Employment Type</b></td>
+                                    
+                                    @if($old_value_array['employment_type'] == 'Intern')
+                                        @if($old_value_array['intern_month'] != '')
+                                            <td align="left">{{ $old_value_array['employment_type'] }} - {{ $old_value_array['intern_month'] }} Months</td>
+                                        @else
+                                            <td align="left">{{ $old_value_array['employment_type'] }}</td>
+                                        @endif
+                                    @else
+                                        <td align="left">{{ $old_value_array['employment_type'] }}</td>
+                                    @endif
+
+                                    @if($new_value_array['employment_type'] == 'Intern')
+                                        @if($new_value_array['intern_month'] != '')
+                                            <td align="left">{{ $new_value_array['employment_type'] }} - {{ $new_value_array['intern_month'] }} Months</td>
+                                        @else
+                                            <td align="left">{{ $new_value_array['employment_type'] }}</td>
+                                        @endif
+                                    @else
+                                        <td align="left">{{ $new_value_array['employment_type'] }}</td>
+                                    @endif
+                                </tr>
+
+                                <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
                                     <td align="left"><b>Joining Date</b></td>
                                     <td align="left">
                                         {{ $old_value_array['joining_date'] }}</td>
