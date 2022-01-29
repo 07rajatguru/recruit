@@ -361,8 +361,11 @@ class HolidaysController extends Controller
                 elseif(($month >= 8 && $month <= 11 && $year == $current_year) || ($month >= 8 && $month <= 11 && $year == $last_year)) {
                     $length = 2;
                 }
-                elseif($month >= 12 && $month <= 03 && $year == $current_year) {
+                elseif(($month >= 12 && $month <= 03 && $year == $current_year) || ($month >= 12 && $month <= 03 && $year == $last_year)) {
                     $length = 1;
+                }
+                elseif($year == $last_year) {
+                    $length = 3;
                 }
                 else {
                     $length = 1;
@@ -469,7 +472,7 @@ class HolidaysController extends Controller
                 else {
                     $module_id = $selected_leaves . "-" . $religious_holiday;
                 }
-                
+
                 $cc = implode(",",$cc_users_array);
 
                 event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));

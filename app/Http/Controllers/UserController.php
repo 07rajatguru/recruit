@@ -334,6 +334,13 @@ class UserController extends Controller
  
         $users_otherinfo = new UserOthersInfo();
         $users_otherinfo->user_id = $user_id;
+
+        if(isset($joining_date) && $joining_date != '') {
+            $users_otherinfo->date_of_joining = $dateClass->changeDMYtoYMD($joining_date);
+        }
+        else {
+            $users_otherinfo->date_of_joining = NULL;
+        }
         $users_otherinfo->save();
     
         // Get Benchmark from rolewise table
