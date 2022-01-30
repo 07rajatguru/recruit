@@ -35,13 +35,6 @@
 
         $(document).ready(function() {
 
-            $("#date").datepicker({
-                format: "dd-mm-yyyy",
-                autoclose: true,
-            });
-            
-            $("#user_id").select2({width : '570px'});
-            $("#selected_user_id").select2({width : '470px',placeholder : 'Select User'});
         });
     </script>
     {!! $calendar->script() !!}

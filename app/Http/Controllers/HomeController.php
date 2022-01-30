@@ -1883,41 +1883,188 @@ class HomeController extends Controller
 
         $user_id =  \Auth::user()->id;
 
-        // Get Attendance & Remarks
+        // Get Attendance By Users Work Planning Sheet
         $response = WorkPlanning::getAttendanceByWorkPlanning($user_id);
 
-        $date = new Date();
+        // Set Array
+        $list = array();
+        $month = date('m');
+        $year = date('Y');
 
-        if($response->count()>0) {
+        for($d=1; $d<=31; $d++) {
 
-            foreach ($response as $k=>$v) {
+            $time = mktime(12, 0, 0, $month, $d, $year);
+                  
+            if (date('n', $time) == $month) {
+                $list[$user_id][date('j', $time)]['attendance']='';
+            }
 
-                $attendance = '';
+            $list[$user_id][date('j', $time)]['holiday']='';
+            $list[$user_id][date('j', $time)]['privilege_leave']='';
+            $list[$user_id][date('j', $time)]['sick_leave']='';
+            $list[$user_id][date('j', $time)]['unapproved_leave']='';
+        }
+        
+        if(isset($response) && sizeof($response) > 0) {
 
-                $attendance = $v->attendance;
+            foreach ($response as $key => $value) {
 
-                $color = '';
-                if($attendance == 'A'){
-                    $color= '#B0E0E6';
-                }
-                else if ($attendance == 'P') {
-                    $color= '#FFFACD';
+                if($value->status > 0) {
+
+                    $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
                 }
                 else {
-                    $color= '#F08080';
+
+                    $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'WPP';
                 }
-                // "Login:9:30 PM \n Logout:6:30 PM \n Total : 9 "
-                $events[] = Calendar::event(
-                    $attendance,
-                    true,
-                    $v->date,
-                    $v->date,
-                    null,
-                    [
-                        'color' => $color,
-                    ]
-                );
+
+                // Set holiday dates
+                $user_holidays = Holidays::getHolidaysByUserID($user_id,$month,$year);
+
+                if (isset($user_holidays) && sizeof($user_holidays)>0) {
+
+                    foreach ($user_holidays as $h_k => $h_v) {
+
+                        $list[$user_id][$h_v]['holiday'] = 'Y';
+                    }
+                }
+
+                // Set Leave dates
+                $pl_leave_data = UserLeave::getUserLeavesById($user_id,$month,$year,'Privilege Leave',1);
+                $sl_leave_data = UserLeave::getUserLeavesById($user_id,$month,$year,'Sick Leave',1);
+                $ul_leave_data = UserLeave::getUserLeavesById($user_id,$month,$year,'',2);
+
+                if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
+
+                    foreach ($pl_leave_data as $pl_k => $pl_v) {
+
+                        for($pl_i=$pl_v['from_date']; $pl_i <= $pl_v['to_date']; $pl_i++) {
+                            $list[$user_id][$pl_i]['privilege_leave'] = 'Y';
+                        }
+                    }
+                }
+
+                if (isset($sl_leave_data) && sizeof($sl_leave_data)>0) {
+
+                    foreach ($sl_leave_data as $sl_k => $sl_v) {
+
+                        for($sl_i=$sl_v['from_date']; $sl_i <= $sl_v['to_date']; $sl_i++) {
+                            $list[$user_id][$sl_i]['sick_leave'] = 'Y';
+                        }
+                    }
+                }
+
+                if (isset($ul_leave_data) && sizeof($ul_leave_data)>0) {
+
+                    foreach ($ul_leave_data as $ul_k => $ul_v) {
+
+                        for($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) { 
+                            $list[$user_id][$ul_i]['unapproved_leave'] = 'Y';
+                        }
+                    }
+                }
             }
+        }
+
+        // Get All Sundays dates in selected month
+        $date = "$year-$month-01";
+        $first_day = date('N',strtotime($date));
+        $first_day = 7 - $first_day + 1;
+        $last_day =  date('t',strtotime($date));
+        $sundays = array();
+
+        for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+            $sundays[] = $i;
+        }
+
+        if(isset($list) && sizeof($list) > 0) {
+
+            foreach ($list as $k=>$v) {
+
+                foreach($v as $key1=>$value1) {
+
+                    $attendance = '';
+                    $color = '';
+
+                    if($key1 < 10) {
+
+                        $key1 = "0$key1";
+                    }
+                    $added_date = "$year-$month-$key1";
+
+                    // Set Attendance Variable
+                    if(isset($value1['holiday']) && $value1['holiday'] == 'Y') {
+                        
+                        $attendance = 'PH';
+                        $color = '#76933C';
+                    }
+                    else if(isset($value1['privilege_leave']) && $value1['privilege_leave'] == 'Y') {
+                        
+                        $attendance = 'PL';
+                        $color = '#8db3e2';
+                    }
+                    else if(isset($value1['sick_leave']) && $value1['sick_leave'] == 'Y') {
+                        
+                        $attendance = 'SL';
+                        $color = '#7030a0';
+                    }
+                    else if(isset($value1['unapproved_leave']) && $value1['unapproved_leave'] == 'Y') {
+                        
+                        $attendance = 'UL';
+                        $color = '#fac090';
+                    }
+                    else if(in_array($key1, $sundays)) {
+                        
+                        $attendance = 'H';
+                        $color = '#ffc000';
+                    }
+                    else if(isset($value1['attendance']) && $value1['attendance'] == 'F') {
+
+                        $attendance = 'F';
+                        $color = '#d8d8d8';
+                    }
+                    else if(isset($value1['attendance']) && $value1['attendance'] == 'WPP') {
+
+                        $attendance = '';
+                        $color = '#8db3e2';
+                    }
+                    else if(isset($value1['attendance']) && $value1['attendance'] == 'A') {
+
+                        $attendance = 'A';
+                        $color = '#ff0000';
+                    }
+                    else if(isset($value1['attendance']) && $value1['attendance'] == 'HD') {
+
+                        $attendance = 'HD';
+                        $color = '#d99594';
+                    }
+                    else {
+
+                        if(isset($value1['attendance'])) {
+                            $attendance = $value1['attendance'];
+                        }
+                        else {
+                            $attendance = '';
+                        }
+                        $color = 'white';
+                    }
+                
+                    $events[] = Calendar::event(
+                        $attendance,
+                        true,
+                        $added_date,
+                        $added_date,
+                        null,
+                        [
+                            'color' => $color,
+                        ]
+                    );
+                }
+            }
+        }
+        else {
+
+            $events = array();
         }
 
         $calendar = Calendar::addEvents($events);
