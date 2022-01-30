@@ -425,4 +425,57 @@ class WorkFromHomeController extends Controller
 
         return redirect()->route('workfromhome.index')->with('success','Request Deleted Successfully.');
     }
+
+    public function getAllRequests($id) {
+        
+        $user =  \Auth::user();
+        $user_id = $user->id;
+        $all_perm = $user->can('hr-employee-service-dashboard');
+        
+        $super_admin_userid = getenv('SUPERADMINUSERID');
+        
+        $month = date('m');
+        $year = date('Y');
+
+        if($user_id == $super_admin_userid) {
+
+            if($id == 0) {
+            
+                $work_from_home_res = array();
+                $count = 0;
+            }
+            else {
+
+                if($all_perm) {
+                    
+                    $work_from_home_res = WorkFromHome::getAllWorkFromHomeRequestsByUserId(1,0,$month,$year,'');
+                    $count = sizeof($work_from_home_res);
+                }
+                else {
+                    return view('errors.403');
+                }
+            }
+        }
+        else {
+
+            if($id == 0) {
+            
+                $work_from_home_res = WorkFromHome::getAllWorkFromHomeRequestsByUserId(0,$user_id,$month,$year,'');
+                $count = sizeof($work_from_home_res);
+            }
+            else {
+
+                if($all_perm) {
+
+                    $work_from_home_res = WorkFromHome::getAllWorkFromHomeRequestsByUserId(1,0,$month,$year);
+                    $count = sizeof($work_from_home_res);
+                }
+                else {
+                    return view('errors.403');
+                }
+            }
+        }
+
+        return view('adminlte::workFromHome.workfromhomerequest',compact('work_from_home_res','count','user_id'));
+    }
 }

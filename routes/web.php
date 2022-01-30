@@ -222,6 +222,12 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HolidaysController@sentOptionalHolidayEmail'
     ]);
 
+    Route::get('work-from-home-request/{id}', [
+        'as' => 'workfromhome.request',
+        'uses' => 'WorkFromHomeController@getAllRequests',
+        'middleware' => ['permission:display-work-from-home|display-user-wise-work-from-home']
+    ]);
+
     // Dashboard
 
     Route::any('/dashboard', array (

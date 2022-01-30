@@ -36,11 +36,11 @@
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
             @if($work_planning['status'] == 0)
-                <h4>{{ $work_planning['added_date'] }}</h4>
+                <h4>{{ $work_planning['added_date'] }} - {{ $added_day }}</h4>
             @elseif($work_planning['status'] == 1)
-                <h4>{{ $work_planning['added_date'] }} ( Approved By {{ $appr_rejct_by }})</h4>
+                <h4>{{ $work_planning['added_date'] }} - {{ $added_day }} ( Approved By {{ $appr_rejct_by }})</h4>
             @else
-                <h4>{{ $work_planning['added_date'] }} ( Rejected By {{ $appr_rejct_by }})</h4>
+                <h4>{{ $work_planning['added_date'] }} - {{ $added_day }} ( Rejected By {{ $appr_rejct_by }})</h4>
             @endif
         </div>
 

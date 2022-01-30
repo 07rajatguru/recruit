@@ -20,6 +20,7 @@ use App\WorkPlanning;
 use App\UserLeave;
 use App\Holidays;
 use App\LateInEarlyGo;
+use App\WorkFromHome;
 
 class HomeController extends Controller
 {
@@ -1122,6 +1123,10 @@ class HomeController extends Controller
 
         $leave_data = UserLeave::getAllLeavedataByUserId(0,$user_ids_array,$month,$year,'');
 
+        // Get Work From Requests
+        $work_from_home_res = WorkFromHome::getAllWorkFromHomeRequestsByUserId(1,0,$month,$year,'');
+        $work_from_home_res_count = sizeof($work_from_home_res);
+
         $viewVariable = array();
         $viewVariable['pending_work_planning_count'] = $pending_work_planning_count;
         $viewVariable['leave_count'] = $leave_count;
@@ -1133,6 +1138,7 @@ class HomeController extends Controller
         $viewVariable['birthday_dates'] = $birthday_dates;
         $viewVariable['holidays'] = $holidays;
         $viewVariable['leave_data'] = $leave_data;
+        $viewVariable['work_from_home_res_count'] = $work_from_home_res_count;
 
         return view('hr-employee-self-service',$viewVariable);
     }

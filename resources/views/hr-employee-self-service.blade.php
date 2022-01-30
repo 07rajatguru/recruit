@@ -73,7 +73,7 @@
             </div>
         </div>
 
-        <div class="col-lg-2 col-xs-4">
+        <!-- <div class="col-lg-2 col-xs-4">
             <div class="small-box bg-purple" style="border-radius:100%;">
                 <div class="inner">
                     <h3><center>{{ $optional_holidays_count or '0' }}</center></h3>
@@ -83,6 +83,19 @@
                     <i class="fa fa-list-alt"></i>
                 </div>
                 <a href="optional-holidays/1" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
+            </div>
+        </div> -->
+
+        <div class="col-lg-2 col-xs-4">
+            <div class="small-box bg-purple" style="border-radius:100%;">
+                <div class="inner">
+                    <h3><center>{{ $work_from_home_res_count or '0' }}</center></h3>
+                    <h5><center>Work From Home Request in this month</center></h5>
+                </div>
+                <div class="icon">
+                    <i class="fa fa-list-alt"></i>
+                </div>
+                <a href="work-from-home-request/1" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 

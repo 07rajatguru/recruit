@@ -898,6 +898,7 @@ class WorkPlanningController extends Controller
         $added_by_id = $work_planning['added_by_id'];
         $appr_rejct_by = User::getUserNameById($work_planning['appr_rejct_by']);
         $added_date = date("Y-m-d",strtotime($work_planning['added_date']));
+        $added_day = date("l",strtotime($work_planning['added_date']));
 
         $work_planning_post = WorkPlanningPost::orderBy('created_at','desc')
         ->where('work_planning_post.wp_id','=',$wp_id)->select('work_planning_post.*')->get();
@@ -921,7 +922,7 @@ class WorkPlanningController extends Controller
         // Get users reports
         $user_details = User::getAllDetailsByUserID($added_by_id);
 
-        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','wp_id','loggedin_user_id','added_by_id','appr_rejct_by','work_planning_post','added_date','yesterday_date','associate_daily','associate_count','leads_daily','lead_count','interview_daily','interview_count','user_details'));
+        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','wp_id','loggedin_user_id','added_by_id','appr_rejct_by','work_planning_post','added_date','yesterday_date','associate_daily','associate_count','leads_daily','lead_count','interview_daily','interview_count','user_details','added_day'));
     }
 
     public function edit($id) {
