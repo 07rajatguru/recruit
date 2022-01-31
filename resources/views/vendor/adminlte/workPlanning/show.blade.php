@@ -66,71 +66,73 @@
     </div>
 </div>
 
-<div class="row">
-    <div class="col-xs-12 col-sm-12 col-md-12">
-        <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-            <div class="box-header col-md-6"></div>
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <table class="table table-bordered">
-                    <tr>
-                        <th>User Name :</th>
-                        <td>{{ $work_planning['added_by'] }}</td>
-                        <th>Work Location :</th>
-                        <td>{{ $work_planning['work_type'] }}</td>
-                    </tr>
-                    <tr>
-                        <th>Logged-in Time :</th>
-                        <td>{{ $work_planning['loggedin_time'] }}</td>
-                        <th>Logged-out Time :</th>
-                        <td>{{ $work_planning['loggedout_time'] }}</td>
-                    </tr>
-                    <tr>
-                        <th>Work Planning Time :</th>
-                        <td>{{ $work_planning['added_date'] }} - {{ $work_planning['work_planning_time'] }}</td>
-                        <th>Status Time :</th>
+@if( $work_planning['loggedin_time'] != '')
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                <div class="box-header col-md-6"></div>
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <table class="table table-bordered">
+                        <tr>
+                            <th>User Name :</th>
+                            <td>{{ $work_planning['added_by'] }}</td>
+                            <th>Work Location :</th>
+                            <td>{{ $work_planning['work_type'] }}</td>
+                        </tr>
+                        <tr>
+                            <th>Logged-in Time :</th>
+                            <td>{{ $work_planning['loggedin_time'] }}</td>
+                            <th>Logged-out Time :</th>
+                            <td>{{ $work_planning['loggedout_time'] }}</td>
+                        </tr>
+                        <tr>
+                            <th>Work Planning Time :</th>
+                            <td>{{ $work_planning['added_date'] }} - {{ $work_planning['work_planning_time'] }}</td>
+                            <th>Status Time :</th>
 
-                        @if(isset($work_planning['status_date']) && $work_planning['status_date'] != '')
-                            <td>{{ $work_planning['status_date'] }} - {{ $work_planning['work_planning_status_time'] }}</td>
-                        @else
-                            <td>{{ $work_planning['work_planning_status_time'] }}</td>
+                            @if(isset($work_planning['status_date']) && $work_planning['status_date'] != '')
+                                <td>{{ $work_planning['status_date'] }} - {{ $work_planning['work_planning_status_time'] }}</td>
+                            @else
+                                <td>{{ $work_planning['work_planning_status_time'] }}</td>
+                            @endif
+                        </tr>
+
+                        @if(isset($work_planning['link']) && $work_planning['link'] != '')
+                            <tr>
+                                <th>Link :</th>
+                                <td colspan="4"><a href="{{ $work_planning['link'] }}" target="_blank">{{ $work_planning['link'] }}</a></td>
+                            </tr>
                         @endif
-                    </tr>
 
-                    @if(isset($work_planning['link']) && $work_planning['link'] != '')
-                        <tr>
-                            <th>Link :</th>
-                            <td colspan="4"><a href="{{ $work_planning['link'] }}" target="_blank">{{ $work_planning['link'] }}</a></td>
-                        </tr>
-                    @endif
+                        @if(isset($work_planning['report_delay']) && $work_planning['report_delay'] != '')
+                            <tr>
+                                <th>Reason of Delay Report :</th>
 
-                    @if(isset($work_planning['report_delay']) && $work_planning['report_delay'] != '')
-                        <tr>
-                            <th>Reason of Delay Report :</th>
+                                @if(isset($work_planning['report_delay_content']) && $work_planning['report_delay_content'] != '')
+                                    <td colspan="3">{{ $work_planning['report_delay'] }} - {{ $work_planning['report_delay_content'] }}</td>
+                                @else
+                                    <td colspan="3">{{ $work_planning['report_delay'] }}</td>
+                                @endif
+                            </tr>
+                        @endif
 
-                            @if(isset($work_planning['report_delay_content']) && $work_planning['report_delay_content'] != '')
-                                <td colspan="3">{{ $work_planning['report_delay'] }} - {{ $work_planning['report_delay_content'] }}</td>
-                            @else
-                                <td colspan="3">{{ $work_planning['report_delay'] }}</td>
-                            @endif
-                        </tr>
-                    @endif
+                        @if(isset($work_planning['reason_of_rejection']) && $work_planning['reason_of_rejection'] != '')
+                            <tr>
+                                <th>Reason of Rejection :</th>
 
-                    @if(isset($work_planning['reason_of_rejection']) && $work_planning['reason_of_rejection'] != '')
-                        <tr>
-                            <th>Reason of Rejection :</th>
-
-                            @if(isset($work_planning['reject_reply']) && $work_planning['reject_reply'] != '')
-                                <td colspan="3">For {{ $work_planning['reject_reply'] }} - {{ $work_planning['reason_of_rejection'] }}</td>
-                            @else
-                                <td colspan="3">{{ $work_planning['reason_of_rejection'] }}</td>
-                            @endif
-                        </tr>
-                    @endif
-                </table>
+                                @if(isset($work_planning['reject_reply']) && $work_planning['reject_reply'] != '')
+                                    <td colspan="3">For {{ $work_planning['reject_reply'] }} - {{ $work_planning['reason_of_rejection'] }}</td>
+                                @else
+                                    <td colspan="3">{{ $work_planning['reason_of_rejection'] }}</td>
+                                @endif
+                            </tr>
+                        @endif
+                    </table>
+                </div>
             </div>
         </div>
     </div>
-</div>
+@endif
 
 @if(isset($work_planning_list) && sizeof($work_planning_list) > 0)
     <div class="row">
@@ -265,127 +267,129 @@
 @endif
 
 @if(isset($user_details->daily_report) && $user_details->daily_report == 'Yes')
-    <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <div class="box-header col-md-6"><h3>Daily Activity</h3></div>
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    @if(isset($user_details->cv_report) && $user_details->cv_report == 'Yes')
-                        <table cellspacing="0" width="100%">
-                            <tr>
-                                <td colspan="5" style="text-align:left;">
-                                    <u><b><h4>No of CVs Associated : {{ $associate_count or '0'}}</h4></b></u>
-                                </td>
-                            </tr>
-                        </table>
-
-                        <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="daily_report_cv_table">
-                            <thead>
-                                <tr style="background-color: #f39c12;">
-                                    <th width="5%">No</th>
-                                    <th width="30%">Position Name</th>
-                                    <th width="30%">Company Name</th>
-                                    <th width="20%">Location</th>
-                                    <th width="15%">No of Resumes</th>
-                                </tr>
-                            </thead>
-                            <?php $i = 0;?>
-                            @foreach($associate_daily as $key => $value)
+    @if($associate_count > 0 || $interview_count > 0 || $lead_count > 0)
+        <div class="row">
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                    <div class="box-header col-md-6"><h3>Daily Activity</h3></div>
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        @if(isset($user_details->cv_report) && $user_details->cv_report == 'Yes')
+                            <table cellspacing="0" width="100%">
                                 <tr>
-                                    <td>{{++$i}}</td>
-                                    <td>{{ $value['posting_title'] }}</td>
-                                    <td>{{ $value['company'] }}</td>
-                                    <td>{{ $value['location'] }}</td>
-                                    <td>{{ $value['associate_candidate_count'] }}</td>
+                                    <td colspan="5" style="text-align:left;">
+                                        <u><b><h4>No of CVs Associated : {{ $associate_count or '0'}}</h4></b></u>
+                                    </td>
                                 </tr>
-                            @endforeach
-                        </table>
-                    @endif
+                            </table>
 
-                    @if(isset($user_details->interview_report) && $user_details->interview_report == 'Yes')
-                        <table cellspacing="0" width="100%">
-                            <tr>
-                                <td colspan="7" style="text-align:left;">
-                                    <u><b><h4>No of Interview Scheduled : {{ $interview_count or '0'}}</h4></b></u>
-                                </td>
-                            </tr>
-                        </table>
+                            <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="daily_report_cv_table">
+                                <thead>
+                                    <tr style="background-color: #f39c12;">
+                                        <th width="5%">No</th>
+                                        <th width="30%">Position Name</th>
+                                        <th width="30%">Company Name</th>
+                                        <th width="20%">Location</th>
+                                        <th width="15%">No of Resumes</th>
+                                    </tr>
+                                </thead>
+                                <?php $i = 0;?>
+                                @foreach($associate_daily as $key => $value)
+                                    <tr>
+                                        <td>{{++$i}}</td>
+                                        <td>{{ $value['posting_title'] }}</td>
+                                        <td>{{ $value['company'] }}</td>
+                                        <td>{{ $value['location'] }}</td>
+                                        <td>{{ $value['associate_candidate_count'] }}</td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        @endif
 
-                        <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="daily_report_interview_table">
-                            <thead>
-                                <tr style="background-color: #7598d9">
-                                    <th>No</th>
-                                    <th>Position</th>
-                                    <th>Candidate Name</th>
-                                    <th>Interview Date</th>
-                                    <th>Interview Time</th>
-                                    <th>Contact No.</th>
-                                    <th>Email ID</th>
-                                </tr>
-                            </thead>
-                            <?php $i=0;?>
-                            @foreach($interview_daily as $key=>$value)
+                        @if(isset($user_details->interview_report) && $user_details->interview_report == 'Yes')
+                            <table cellspacing="0" width="100%">
                                 <tr>
-                                    <td>{{ ++$i }}</td>
-                                    <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['posting_title'] }}</td>
-                                    <td>{{ $value['cname'] }}</td>
-                                    <td>{{ date('d/m/Y',strtotime($value['interview_date'])) }}</td>
-                                    <td>{{ date('h:i A',strtotime($value['interview_time'])) }}</td>
-                                    <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['cmobile'] }}</td>
-                                    <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['cemail'] }}</td>
+                                    <td colspan="7" style="text-align:left;">
+                                        <u><b><h4>No of Interview Scheduled : {{ $interview_count or '0'}}</h4></b></u>
+                                    </td>
                                 </tr>
-                            @endforeach
-                        </table>
-                    @endif
+                            </table>
 
-                    @if(isset($user_details->lead_report) && $user_details->lead_report == 'Yes')
-                        <table cellspacing="0" width="100%">
-                            <tr>
-                                <td colspan="7" style="text-align:left;">
-                                    <u><b><h4>No of Leads Added : {{$lead_count or '0'}}</h4></b>
-                                    </u>
-                                </td>
-                            </tr>
-                        </table>
+                            <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="daily_report_interview_table">
+                                <thead>
+                                    <tr style="background-color: #7598d9">
+                                        <th>No</th>
+                                        <th>Position</th>
+                                        <th>Candidate Name</th>
+                                        <th>Interview Date</th>
+                                        <th>Interview Time</th>
+                                        <th>Contact No.</th>
+                                        <th>Email ID</th>
+                                    </tr>
+                                </thead>
+                                <?php $i=0;?>
+                                @foreach($interview_daily as $key=>$value)
+                                    <tr>
+                                        <td>{{ ++$i }}</td>
+                                        <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['posting_title'] }}</td>
+                                        <td>{{ $value['cname'] }}</td>
+                                        <td>{{ date('d/m/Y',strtotime($value['interview_date'])) }}</td>
+                                        <td>{{ date('h:i A',strtotime($value['interview_time'])) }}</td>
+                                        <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['cmobile'] }}</td>
+                                        <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['cemail'] }}</td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        @endif
 
-                        <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="daily_report_leads_table">
-                            <thead>
-                                <tr style="background-color: #C4D79B">
-                                    <th>No</th>
-                                    <th>Company Name</th>
-                                    <th>Contact Point</th>
-                                    <th>Email ID</th>
-                                    <th>Mobile No.</th>
-                                    <th>City</th>
-                                    <th>Website</th>
-                                </tr>
-                            </thead>
-                            <?php $i=0;?>
-                            @foreach($leads_daily as $key=>$value)
+                        @if(isset($user_details->lead_report) && $user_details->lead_report == 'Yes')
+                            <table cellspacing="0" width="100%">
                                 <tr>
-                                    <td>{{ ++$i }}</td>
-                                    <td>{{ $value['company_name'] }}</td>
-                                    <td>{{ $value['contact_point'] }}</td>
-                                    <td>{{ $value['email'] }}</td>
-                                    <td>{{ $value['mobile'] }}</td>
-                                    <td>{{ $value['city'] }}</td>
-                                    <td>{{ $value['website'] }}</td>
+                                    <td colspan="7" style="text-align:left;">
+                                        <u><b><h4>No of Leads Added : {{$lead_count or '0'}}</h4></b>
+                                        </u>
+                                    </td>
                                 </tr>
-                            @endforeach
-                        </table>
-                    @endif
+                            </table>
 
-                    <br/><center><a class="btn btn-success" title="Click here for more information" target="_blank" onclick="viewDailyReport();">Click here for more information</a></center><br/>
-                    <input type="hidden" name="users_id" id="users_id" value="{{ $added_by_id }}">
+                            <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="daily_report_leads_table">
+                                <thead>
+                                    <tr style="background-color: #C4D79B">
+                                        <th>No</th>
+                                        <th>Company Name</th>
+                                        <th>Contact Point</th>
+                                        <th>Email ID</th>
+                                        <th>Mobile No.</th>
+                                        <th>City</th>
+                                        <th>Website</th>
+                                    </tr>
+                                </thead>
+                                <?php $i=0;?>
+                                @foreach($leads_daily as $key=>$value)
+                                    <tr>
+                                        <td>{{ ++$i }}</td>
+                                        <td>{{ $value['company_name'] }}</td>
+                                        <td>{{ $value['contact_point'] }}</td>
+                                        <td>{{ $value['email'] }}</td>
+                                        <td>{{ $value['mobile'] }}</td>
+                                        <td>{{ $value['city'] }}</td>
+                                        <td>{{ $value['website'] }}</td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        @endif
 
-                    <?php
-                        $added_date = date('Y-m-d',strtotime($work_planning['added_date']));
-                    ?>
-                    <input type="hidden" name="date" id="date" value="{{ $added_date }}">
+                        <br/><center><a class="btn btn-success" title="Click here for more information" target="_blank" onclick="viewDailyReport();">Click here for more information</a></center><br/>
+                        <input type="hidden" name="users_id" id="users_id" value="{{ $added_by_id }}">
+
+                        <?php
+                            $added_date = date('Y-m-d',strtotime($work_planning['added_date']));
+                        ?>
+                        <input type="hidden" name="date" id="date" value="{{ $added_date }}">
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
+    @endif
 @endif
 
 <input type="hidden" name="wp_id" id="wp_id" value="{{ $wp_id }}">

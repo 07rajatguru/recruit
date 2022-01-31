@@ -4,10 +4,7 @@ namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
 use App\User;
-use App\JobAssociateCandidates;
-use App\Interview;
-use App\Lead;
-use App\Events\NotificationMail;
+use App\WorkPlanning;
 
 class MonthlyReport extends Command
 {
@@ -23,7 +20,7 @@ class MonthlyReport extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Command for add all sundays entry in Work Planning Table';
 
     /**
      * Create a new command instance.
@@ -42,7 +39,7 @@ class MonthlyReport extends Command
      */
     public function handle()
     {
-        $recruitment = getenv('RECRUITMENT');
+        /*$recruitment = getenv('RECRUITMENT');
         $users_all = User::getAllUsersEmails($recruitment,'Yes');
 
         foreach ($users_all as $k1 => $v1) {
@@ -60,6 +57,49 @@ class MonthlyReport extends Command
             $sender_name = $k1;
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        }*/
+
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $management = getenv('MANAGEMENT');
+        $type_array = array($recruitment,$hr_advisory,$management);
+
+        $users = User::getAllUsersExpectSuperAdmin($type_array);
+
+        if(isset($users) && sizeof($users) > 0) {
+
+            $month = date('m');
+            $year = date('Y');
+
+            // Get All Sundays dates in current month
+            $date = "$year-$month-01";
+            $first_day = date('N',strtotime($date));
+            $first_day = 7 - $first_day + 1;
+            $last_day =  date('t',strtotime($date));
+            $sundays = array();
+
+            for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+
+                if($i < 10) {
+                    $i = "0$i";
+                }
+                $sundays[] = $i;
+            }
+
+            if(isset($sundays) && sizeof($sundays) > 0) {
+
+                foreach ($sundays as $k => $v) {
+
+                    foreach ($users as $key => $value) {
+
+                        $work_planning = new WorkPlanning();
+                        $work_planning->work_type = 'WFH';
+                        $work_planning->added_date = "$year-$month-$v";
+                        $work_planning->added_by = $key;
+                        $work_planning->save();
+                    }
+                }
+            }
         }
     }
 }

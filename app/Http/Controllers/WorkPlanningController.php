@@ -26,21 +26,6 @@ class WorkPlanningController extends Controller
         $all_perm = $user->can('display-work-planning');
         $userwise_perm = $user->can('display-user-wise-work-planning');
 
-        // Get Selected Month
-        $month_array = array();
-        for ($i = 1; $i <= 12 ; $i++) {
-            $month_array[$i] = date('M',mktime(0,0,0,$i));
-        }
-
-        // Get Selected Year
-        $starting_year = '2021';
-        $ending_year = date('Y',strtotime('+2 year'));
-
-        $year_array = array();
-        for ($y = $starting_year; $y < $ending_year ; $y++) {
-            $year_array[$y] = $y;
-        }
-
         if (isset($_POST['month']) && $_POST['month'] != 0) {
             $month = $_POST['month'];
         }
@@ -54,6 +39,25 @@ class WorkPlanningController extends Controller
         else {
             $year = date('Y');
         }
+
+        // Get Selected Month
+        $month_array = array();
+        for ($i = 1; $i <= 12 ; $i++) {
+            $month_array[$i] = date('M',mktime(0,0,0,$i,$month,$year));
+        }
+
+        // Get Selected Year
+        $starting_year = '2021';
+        $ending_year = date('Y',strtotime('+2 year'));
+
+        $year_array = array();
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
+        }
+
+        
+
+       
 
         $work_planning_res = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
 
@@ -97,21 +101,6 @@ class WorkPlanningController extends Controller
         $all_perm = $user->can('display-work-planning');
         $userwise_perm = $user->can('display-user-wise-work-planning');
 
-        // Get Selected Month
-        $month_array = array();
-        for ($i = 1; $i <= 12 ; $i++) {
-            $month_array[$i] = date('M',mktime(0,0,0,$i));
-        }
-
-        // Get Selected Year
-        $starting_year = '2021';
-        $ending_year = date('Y',strtotime('+2 year'));
-
-        $year_array = array();
-        for ($y = $starting_year; $y < $ending_year ; $y++) {
-            $year_array[$y] = $y;
-        }
-
         if (isset($_POST['month']) && $_POST['month'] != 0) {
             $month = $_POST['month'];
         }
@@ -124,6 +113,21 @@ class WorkPlanningController extends Controller
         }
         else {
             $year = date('Y');
+        }
+
+        // Get Selected Month
+        $month_array = array();
+        for ($i = 1; $i <= 12 ; $i++) {
+            $month_array[$i] = date('M',mktime(0,0,0,$i,$month,$year));
+        }
+
+        // Get Selected Year
+        $starting_year = '2021';
+        $ending_year = date('Y',strtotime('+2 year'));
+
+        $year_array = array();
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
         }
 
         $superadminuserid = getenv('SUPERADMINUSERID');
@@ -284,21 +288,6 @@ class WorkPlanningController extends Controller
         $all_perm = $user->can('display-work-planning');
         $userwise_perm = $user->can('display-user-wise-work-planning');
 
-        // Get Selected Month
-        $month_array = array();
-        for ($i = 1; $i <= 12 ; $i++) {
-            $month_array[$i] = date('M',mktime(0,0,0,$i));
-        }
-
-        // Get Selected Year
-        $starting_year = '2021';
-        $ending_year = date('Y',strtotime('+2 year'));
-
-        $year_array = array();
-        for ($y = $starting_year; $y < $ending_year ; $y++) {
-            $year_array[$y] = $y;
-        }
-
         if (isset($month) && $month != 0) {
             $month = $month;
         }
@@ -313,6 +302,21 @@ class WorkPlanningController extends Controller
             $year = date('Y');
         }
 
+        // Get Selected Month
+        $month_array = array();
+        for ($i = 1; $i <= 12 ; $i++) {
+            $month_array[$i] = date('M',mktime(0,0,0,$i,$month,$year));
+        }
+
+        // Get Selected Year
+        $starting_year = '2021';
+        $ending_year = date('Y',strtotime('+2 year'));
+
+        $year_array = array();
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
+        }
+        
         if($status == 'pending') {
             $status = '0';
             $post_discuss_status = '';
@@ -372,21 +376,6 @@ class WorkPlanningController extends Controller
         $all_perm = $user->can('display-work-planning');
         $userwise_perm = $user->can('display-user-wise-work-planning');
 
-        // Get Selected Month
-        $month_array = array();
-        for ($i = 1; $i <= 12 ; $i++) {
-            $month_array[$i] = date('M',mktime(0,0,0,$i));
-        }
-
-        // Get Selected Year
-        $starting_year = '2021';
-        $ending_year = date('Y',strtotime('+2 year'));
-
-        $year_array = array();
-        for ($y = $starting_year; $y < $ending_year ; $y++) {
-            $year_array[$y] = $y;
-        }
-
         if (isset($month) && $month != 0) {
             $month = $month;
         }
@@ -399,6 +388,21 @@ class WorkPlanningController extends Controller
         }
         else {
             $year = date('Y');
+        }
+
+        // Get Selected Month
+        $month_array = array();
+        for ($i = 1; $i <= 12 ; $i++) {
+            $month_array[$i] = date('M',mktime(0,0,0,$i,$month,$year));
+        }
+
+        // Get Selected Year
+        $starting_year = '2021';
+        $ending_year = date('Y',strtotime('+2 year'));
+
+        $year_array = array();
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
         }
 
         if($status == 'pending') {
@@ -941,31 +945,51 @@ class WorkPlanningController extends Controller
         $time_array = WorkPlanning::getTimeArray();
 
         // Convert Logged in time
-        $utc_login = $work_planning_res->loggedin_time;
-        $dt_login = new \DateTime($utc_login);
-        $tz_login = new \DateTimeZone('Asia/Kolkata');
+        if($work_planning_res->loggedin_time != '') {
 
-        $dt_login->setTimezone($tz_login);
-        $loggedin_time = $dt_login->format('H:i:s');
-        $loggedin_time = date("g:i A", strtotime($loggedin_time));
+            $utc_login = $work_planning_res->loggedin_time;
+            $dt_login = new \DateTime($utc_login);
+            $tz_login = new \DateTimeZone('Asia/Kolkata');
+
+            $dt_login->setTimezone($tz_login);
+            $loggedin_time = $dt_login->format('H:i:s');
+            $loggedin_time = date("g:i A", strtotime($loggedin_time));
+        }
+        else {
+
+            $loggedin_time = '';
+        }
 
         // Convert Logged in time
-        $utc_logout = $work_planning_res->loggedout_time;
-        $dt_logout = new \DateTime($utc_logout);
-        $tz_logout = new \DateTimeZone('Asia/Kolkata');
+        if($work_planning_res->loggedout_time != '') {
 
-        $dt_logout->setTimezone($tz_logout);
-        $loggedout_time = $dt_logout->format('H:i:s');
-        $loggedout_time = date("g:i A", strtotime($loggedout_time));
+            $utc_logout = $work_planning_res->loggedout_time;
+            $dt_logout = new \DateTime($utc_logout);
+            $tz_logout = new \DateTimeZone('Asia/Kolkata');
 
+            $dt_logout->setTimezone($tz_logout);
+            $loggedout_time = $dt_logout->format('H:i:s');
+            $loggedout_time = date("g:i A", strtotime($loggedout_time));
+        }
+        else {
+
+            $loggedout_time = '';
+        }
         // Convert Work Planning Time
-        $utc = $work_planning_res->work_planning_time;
-        $dt = new \DateTime($utc);
-        $tz = new \DateTimeZone('Asia/Kolkata');
+        if($work_planning_res->loggedout_time != '') {
 
-        $dt->setTimezone($tz);
-        $work_planning_time = $dt->format('H:i:s');
-        $work_planning_time = $date . " - " . date("g:i A", strtotime($work_planning_time));
+            $utc = $work_planning_res->work_planning_time;
+            $dt = new \DateTime($utc);
+            $tz = new \DateTimeZone('Asia/Kolkata');
+
+            $dt->setTimezone($tz);
+            $work_planning_time = $dt->format('H:i:s');
+            $work_planning_time = $date . " - " . date("g:i A", strtotime($work_planning_time));
+        }
+        else {
+
+            $work_planning_time = '';
+        }
 
         // Convert Work Planning Status Time
         if($work_planning_res->work_planning_status_time != '') {

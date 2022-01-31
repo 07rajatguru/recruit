@@ -125,7 +125,7 @@ class UsersLog extends Model
             $logout_time = $date_class->converttime($value->logout);
             $total = ($logout_time - $login_time) / 60;
 
-            $user_attendance[$i]['total'] = date('H:i', mktime(0,$total));;
+            $user_attendance[$i]['total'] = date('H:i', mktime(0,$total));
             $i++;
         }
 
