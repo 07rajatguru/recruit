@@ -28,21 +28,6 @@ class LeaveController extends Controller
         $all_perm = $user->can('display-leave');
         $userwise_perm = $user->can('display-user-wise-leave');
 
-        // Get Selected Month
-        $month_array = array();
-        for ($i = 1; $i <= 12 ; $i++) {
-            $month_array[$i] = date('M',mktime(0,0,0,$i));
-        }
-
-        // Get Selected Year
-        $starting_year = '2021';
-        $ending_year = date('Y',strtotime('+2 year'));
-
-        $year_array = array();
-        for ($y = $starting_year; $y < $ending_year ; $y++) {
-            $year_array[$y] = $y;
-        }
-
         if (isset($_POST['month']) && $_POST['month'] != 0) {
             $month = $_POST['month'];
         }
@@ -55,6 +40,21 @@ class LeaveController extends Controller
         }
         else {
             $year = date('Y');
+        }
+
+        // Get Selected Month
+        $month_array = array();
+        for ($i = 1; $i <= 12 ; $i++) {
+            $month_array[$i] = date('M',mktime(0,0,0,$i,1,$year));
+        }
+
+        // Get Selected Year
+        $starting_year = '2021';
+        $ending_year = date('Y',strtotime('+2 year'));
+
+        $year_array = array();
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
         }
 
         // Get userwise leave balance
@@ -129,16 +129,7 @@ class LeaveController extends Controller
         // Get Selected Month
         $month_array = array();
         for ($i = 1; $i <= 12 ; $i++) {
-            $month_array[$i] = date('M',mktime(0,0,0,$i));
-        }
-
-        // Get Selected Year
-        $starting_year = '2021';
-        $ending_year = date('Y',strtotime('+2 year'));
-
-        $year_array = array();
-        for ($y = $starting_year; $y < $ending_year ; $y++) {
-            $year_array[$y] = $y;
+            $month_array[$i] = date('M',mktime(0,0,0,$i,1,$year));
         }
 
         if (isset($month) && $month != 0) {
@@ -153,6 +144,15 @@ class LeaveController extends Controller
         }
         else {
             $year = date('Y');
+        }
+
+        // Get Selected Year
+        $starting_year = '2021';
+        $ending_year = date('Y',strtotime('+2 year'));
+
+        $year_array = array();
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
         }
 
         // Set Status value
@@ -735,21 +735,6 @@ class LeaveController extends Controller
     // Starts All User Leave Balance Module function
     public function userWiseLeave() {
 
-        // Get Selected Month
-        $month_array = array();
-        for ($i = 1; $i <= 12 ; $i++) {
-            $month_array[$i] = date('M',mktime(0,0,0,$i));
-        }
-
-        // Get Selected Year
-        $starting_year = '2021';
-        $ending_year = date('Y',strtotime('+2 year'));
-
-        $year_array = array();
-        for ($y = $starting_year; $y < $ending_year ; $y++) {
-            $year_array[$y] = $y;
-        }
-
         if (isset($_POST['month']) && $_POST['month'] != 0) {
             $month = $_POST['month'];
         }
@@ -762,6 +747,21 @@ class LeaveController extends Controller
         }
         else {
             $year = date('Y');
+        }
+
+        // Get Selected Month
+        $month_array = array();
+        for ($i = 1; $i <= 12 ; $i++) {
+            $month_array[$i] = date('M',mktime(0,0,0,$i,1,$year));
+        }
+
+        // Get Selected Year
+        $starting_year = '2021';
+        $ending_year = date('Y',strtotime('+2 year'));
+
+        $year_array = array();
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
         }
 
         $user_leave_data_1 = MonthwiseLeaveBalance::getMonthWiseLeaveBalance($month,$year);

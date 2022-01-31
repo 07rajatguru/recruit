@@ -21,21 +21,6 @@ class LateInEarlyGoController extends Controller
         $all_perm = $user->can('display-leave');
         $userwise_perm = $user->can('display-user-wise-leave');
 
-        // Get Selected Month
-        $month_array = array();
-        for ($i = 1; $i <= 12 ; $i++) {
-            $month_array[$i] = date('M',mktime(0,0,0,$i));
-        }
-
-        // Get Selected Year
-        $starting_year = '2021';
-        $ending_year = date('Y',strtotime('+2 year'));
-
-        $year_array = array();
-        for ($y = $starting_year; $y < $ending_year ; $y++) {
-            $year_array[$y] = $y;
-        }
-
         if (isset($_POST['month']) && $_POST['month'] != 0) {
             $month = $_POST['month'];
         }
@@ -48,6 +33,21 @@ class LateInEarlyGoController extends Controller
         }
         else {
             $year = date('Y');
+        }
+
+        // Get Selected Month
+        $month_array = array();
+        for ($i = 1; $i <= 12 ; $i++) {
+            $month_array[$i] = date('M',mktime(0,0,0,$i,1,$year));
+        }
+
+        // Get Selected Year
+        $starting_year = '2021';
+        $ending_year = date('Y',strtotime('+2 year'));
+
+        $year_array = array();
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
         }
 
         if($all_perm) {
@@ -93,21 +93,6 @@ class LateInEarlyGoController extends Controller
         $all_perm = $user->can('display-leave');
         $userwise_perm = $user->can('display-user-wise-leave');
 
-        // Get Selected Month
-        $month_array = array();
-        for ($i = 1; $i <= 12 ; $i++) {
-            $month_array[$i] = date('M',mktime(0,0,0,$i));
-        }
-
-        // Get Selected Year
-        $starting_year = '2021';
-        $ending_year = date('Y',strtotime('+2 year'));
-
-        $year_array = array();
-        for ($y = $starting_year; $y < $ending_year ; $y++) {
-            $year_array[$y] = $y;
-        }
-
         if (isset($month) && $month != 0) {
             $month = $month;
         }
@@ -120,6 +105,21 @@ class LateInEarlyGoController extends Controller
         }
         else {
             $year = date('Y');
+        }
+
+        // Get Selected Month
+        $month_array = array();
+        for ($i = 1; $i <= 12 ; $i++) {
+            $month_array[$i] = date('M',mktime(0,0,0,$i,1,$year));
+        }
+
+        // Get Selected Year
+        $starting_year = '2021';
+        $ending_year = date('Y',strtotime('+2 year'));
+
+        $year_array = array();
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
         }
 
         // Set Status value

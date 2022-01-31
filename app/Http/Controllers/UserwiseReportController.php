@@ -12,7 +12,7 @@ use Excel;
 
 class UserwiseReportController extends Controller
 {
-    public function index(){
+    public function index() {
 
     	$user = \Auth::user();
         $user_id = $user->id;
@@ -51,8 +51,8 @@ class UserwiseReportController extends Controller
         }
 
         // Year Data
-        $starting_year = '2017'; /*date('Y',strtotime('-1 year'))*/;
-        $ending_year = date('Y',strtotime('+10 year'));
+        $starting_year = '2014'; /*date('Y',strtotime('-1 year'))*/;
+        $ending_year = date('Y',strtotime('+2 year'));
         $default = date('Y');
 
         $year_array = array();
@@ -444,11 +444,11 @@ class UserwiseReportController extends Controller
     	return view("adminlte::reports.userwise",compact('users','select','month_array','quater','year_array','default','userwise_report','userwise','user_name','total'));
     }
 
-    public function export(){
+    public function export() {
 
-        Excel::create('Userwise Report', function($excel){
+        Excel::create('Userwise Report', function($excel) {
 
-            $excel->sheet('Sheet 1', function($sheet){
+            $excel->sheet('Sheet 1', function($sheet) {
                 $user = \Auth::user();
                 $user_id = $user->id;
 

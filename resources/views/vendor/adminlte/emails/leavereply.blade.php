@@ -31,82 +31,103 @@
                 </td>
             </tr>
         </table> -->
-        <table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif;" align="left">
-            <tr>
-                <td width="600" style="font-family:Cambria, serif;font-size: 11.0pt;">
 
-                    <b><p style="text-align: left;">Dear {{ $user_name }},</p></b>
+        @if(isset($module) && $module == 'Late In Early Go Reply')
+             <table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif;" align="left">
+                <tr>
+                    <td width="600" style="font-family:Cambria, serif;font-size: 11.0pt;">
 
-                    <p style="text-align: left;">Greetings from Easy2Hire!</p>
+                        <b><p style="text-align: left;">Dear {{ $user_name }},</p></b>
 
-                    @if($days == '1' && $status == '1' && $type_of_leave == 'Full Day')
+                        <p style="text-align: left;">Greetings from Easy2Hire!</p>
 
-                        <p style="text-align: left;">This is to inform you that your leave has been approved for the date of {{ $from_date }}</p>
-
-                        <p style="text-align: left;">You are hereby requested to co-ordinate with your Reporting Manager and plan the delegation of ongoing tasks within the team to avoid any further delay or communication gap.</p>
+                        <p style="text-align: left;">This is to inform you that your request has been approved for the date of {{ $date }}</p>
 
                         <p style="text-align: left;">In case of any changes, please connect with your Reporting Manager.</p>
 
-                    @elseif($days >= '2' && $status == '1' && $type_of_leave == 'Full Day')
+                        <p style="text-align: left;">Thanks.<br/>Easy2Hire Team</p>
+                    </td>
+                </tr>
+            </table>
+        @else
 
-                        <p style="text-align: left;">This is to inform you that your leave has been approved from {{ $from_date }} to {{ $to_date }}.</p>
+            <table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif;" align="left">
+                <tr>
+                    <td width="600" style="font-family:Cambria, serif;font-size: 11.0pt;">
 
-                        <p style="text-align: left;">You are hereby requested to co-ordinate with your Reporting Manager and plan the delegation of ongoing tasks within the team to avoid any further delay or communication gap.</p>
+                        <b><p style="text-align: left;">Dear {{ $user_name }},</p></b>
 
-                        <p style="text-align: left;">In case of any changes, please connect with your Reporting Manager.</p>
+                        <p style="text-align: left;">Greetings from Easy2Hire!</p>
 
-                    @elseif($days == '0.5' && $status == '1' && $type_of_leave == 'Half Day')
+                        @if($days == '1' && $status == '1' && $type_of_leave == 'Full Day')
 
-                        <p style="text-align: left;">This is to inform you that your leave has been approved for the (First half/Second half) of {{ $from_date }}.</p>
+                            <p style="text-align: left;">This is to inform you that your leave has been approved for the date of {{ $from_date }}</p>
 
-                        <p style="text-align: left;">You are hereby requested to co-ordinate with your Reporting Manager and plan the delegation of ongoing tasks within the team to avoid any further delay or communication gap.</p>
+                            <p style="text-align: left;">You are hereby requested to co-ordinate with your Reporting Manager and plan the delegation of ongoing tasks within the team to avoid any further delay or communication gap.</p>
 
-                        <p style="text-align: left;">In case of any changes, please connect with your Reporting Manager.</p>
+                            <p style="text-align: left;">In case of any changes, please connect with your Reporting Manager.</p>
 
-                    @elseif($days >= '1' && $status == '1' && $type_of_leave == 'Half Day')
+                        @elseif($days >= '2' && $status == '1' && $type_of_leave == 'Full Day')
 
-                        <p style="text-align: left;">This is to inform you that your leave has been approved for the (First half/Second half) from {{ $from_date }} to {{ $to_date }}.</p>
+                            <p style="text-align: left;">This is to inform you that your leave has been approved from {{ $from_date }} to {{ $to_date }}.</p>
 
-                        <p style="text-align: left;">You are hereby requested to co-ordinate with your Reporting Manager and plan the delegation of ongoing tasks within the team to avoid any further delay or communication gap.</p>
+                            <p style="text-align: left;">You are hereby requested to co-ordinate with your Reporting Manager and plan the delegation of ongoing tasks within the team to avoid any further delay or communication gap.</p>
 
-                        <p style="text-align: left;">In case of any changes, please connect with your Reporting Manager.</p>
+                            <p style="text-align: left;">In case of any changes, please connect with your Reporting Manager.</p>
 
-                    @elseif($days == '0.5' && $status == '2' && $type_of_leave == 'Half Day')
+                        @elseif($days == '0.5' && $status == '1' && $type_of_leave == 'Half Day')
 
-                        <p style="text-align: left;">This is to inform you that your leave has been rejected for the (First half/Second half) of {{ $from_date }}.</p>
+                            <p style="text-align: left;">This is to inform you that your leave has been approved for the (First half/Second half) of {{ $from_date }}.</p>
 
-                        <p style="text-align: left;">You are hereby requested to understand the reason of rejection as per the remarks mentioned in E2H.</p>
+                            <p style="text-align: left;">You are hereby requested to co-ordinate with your Reporting Manager and plan the delegation of ongoing tasks within the team to avoid any further delay or communication gap.</p>
 
-                        <p style="text-align: left;">In case of any queries/discussion, feel free to connect with your Reporting Manager.</p>
+                            <p style="text-align: left;">In case of any changes, please connect with your Reporting Manager.</p>
 
-                    @elseif($days >= '1' && $status == '2' && $type_of_leave == 'Half Day')
+                        @elseif($days >= '1' && $status == '1' && $type_of_leave == 'Half Day')
 
-                        <p style="text-align: left;">This is to inform you that your leave has been rejected for the (First half/Second half) from {{ $from_date }} to {{ $to_date }}.</p>
+                            <p style="text-align: left;">This is to inform you that your leave has been approved for the (First half/Second half) from {{ $from_date }} to {{ $to_date }}.</p>
 
-                        <p style="text-align: left;">You are hereby requested to understand the reason of rejection as per the remarks mentioned in E2H.</p>
+                            <p style="text-align: left;">You are hereby requested to co-ordinate with your Reporting Manager and plan the delegation of ongoing tasks within the team to avoid any further delay or communication gap.</p>
 
-                        <p style="text-align: left;">In case of any queries/discussion, feel free to connect with your Reporting Manager.</p>
+                            <p style="text-align: left;">In case of any changes, please connect with your Reporting Manager.</p>
 
-                    @elseif($days == '1' && $status == '2' && $type_of_leave == 'Full Day')
+                        @elseif($days == '0.5' && $status == '2' && $type_of_leave == 'Half Day')
 
-                        <p style="text-align: left;">This is to inform you that your leave has been rejected for the {{ $from_date }}.</p>
+                            <p style="text-align: left;">This is to inform you that your leave has been rejected for the (First half/Second half) of {{ $from_date }}.</p>
 
-                        <p style="text-align: left;">You are hereby requested to understand the reason of rejection as per the remarks mentioned in E2H.</p>
+                            <p style="text-align: left;">You are hereby requested to understand the reason of rejection as per the remarks mentioned in E2H.</p>
 
-                        <p style="text-align: left;">In case of any queries/discussion, feel free to connect with your Reporting Manager.</p>
+                            <p style="text-align: left;">In case of any queries/discussion, feel free to connect with your Reporting Manager.</p>
 
-                    @elseif($days >= '2' && $status == '2' && $type_of_leave == 'Full Day')
+                        @elseif($days >= '1' && $status == '2' && $type_of_leave == 'Half Day')
 
-                        <p style="text-align: left;">This is to inform you that your leave has been rejected from {{ $from_date }} to {{ $to_date }}.</p>
+                            <p style="text-align: left;">This is to inform you that your leave has been rejected for the (First half/Second half) from {{ $from_date }} to {{ $to_date }}.</p>
 
-                        <p style="text-align: left;">You are hereby requested to understand the reason of rejection as per the remarks mentioned in E2H.</p>
+                            <p style="text-align: left;">You are hereby requested to understand the reason of rejection as per the remarks mentioned in E2H.</p>
 
-                        <p style="text-align: left;">In case of any queries/discussion, feel free to connect with your Reporting Manager.</p>
-                    @endif
-                    
-                    <p style="text-align: left;">Thanks.<br/>Easy2Hire Team</p>
-                </td>
-            </tr>
-        </table>
+                            <p style="text-align: left;">In case of any queries/discussion, feel free to connect with your Reporting Manager.</p>
+
+                        @elseif($days == '1' && $status == '2' && $type_of_leave == 'Full Day')
+
+                            <p style="text-align: left;">This is to inform you that your leave has been rejected for the {{ $from_date }}.</p>
+
+                            <p style="text-align: left;">You are hereby requested to understand the reason of rejection as per the remarks mentioned in E2H.</p>
+
+                            <p style="text-align: left;">In case of any queries/discussion, feel free to connect with your Reporting Manager.</p>
+
+                        @elseif($days >= '2' && $status == '2' && $type_of_leave == 'Full Day')
+
+                            <p style="text-align: left;">This is to inform you that your leave has been rejected from {{ $from_date }} to {{ $to_date }}.</p>
+
+                            <p style="text-align: left;">You are hereby requested to understand the reason of rejection as per the remarks mentioned in E2H.</p>
+
+                            <p style="text-align: left;">In case of any queries/discussion, feel free to connect with your Reporting Manager.</p>
+                        @endif
+                        
+                        <p style="text-align: left;">Thanks.<br/>Easy2Hire Team</p>
+                    </td>
+                </tr>
+            </table>
+        @endif
     </body>
 </html>

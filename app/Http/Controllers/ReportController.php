@@ -1170,21 +1170,6 @@ class ReportController extends Controller
         // Get user Bench Mark from master
         $user_bench_mark = UserBenchMark::getBenchMarkByUserID($user_id);
 
-        // Get Selected Month
-        $month_array = array();
-        for ($i=1; $i <=12 ; $i++) {
-            $month_array[$i] = date('M',mktime(0,0,0,$i));
-        }
-
-        // Get Selected Year
-        $starting_year = '2020';
-        $ending_year = date('Y',strtotime('+5 year'));
-
-        $year_array = array();
-        for ($y = $starting_year; $y < $ending_year ; $y++) {
-            $year_array[$y] = $y;
-        }
-
         if (isset($_POST['month']) && $_POST['month']!=0) {
             $month = $_POST['month'];
         }
@@ -1197,6 +1182,21 @@ class ReportController extends Controller
         }
         else {
             $year = date('Y');
+        }
+
+        // Get Selected Month
+        $month_array = array();
+        for ($i=1; $i <=12 ; $i++) {
+            $month_array[$i] = date('M',mktime(0,0,0,$i,1,$year));
+        }
+
+        // Get Selected Year
+        $starting_year = '2020';
+        $ending_year = date('Y',strtotime('+5 year'));
+
+        $year_array = array();
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
         }
 
         // Set Week wise Date Array
@@ -1429,20 +1429,6 @@ class ReportController extends Controller
                 }
             }
         }
-        // Get Selected Month
-        $month_array = array();
-        for ($i = 1; $i <= 12 ; $i++) {
-            $month_array[$i] = date('M',mktime(0,0,0,$i));
-        }
-
-        // Get Selected Year
-        $starting_year = '2020';
-        $ending_year = date('Y',strtotime('+5 year'));
-
-        $year_array = array();
-        for ($y = $starting_year; $y < $ending_year ; $y++) {
-            $year_array[$y] = $y;
-        }
 
         if (isset($_POST['month']) && $_POST['month'] != 0) {
             $month = $_POST['month'];
@@ -1456,6 +1442,21 @@ class ReportController extends Controller
         }
         else {
             $year = date('Y');
+        }
+        
+        // Get Selected Month
+        $month_array = array();
+        for ($i = 1; $i <= 12 ; $i++) {
+            $month_array[$i] = date('M',mktime(0,0,0,$i,1,$year));
+        }
+
+        // Get Selected Year
+        $starting_year = '2020';
+        $ending_year = date('Y',strtotime('+5 year'));
+
+        $year_array = array();
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
         }
 
         // Set Week wise Date Array

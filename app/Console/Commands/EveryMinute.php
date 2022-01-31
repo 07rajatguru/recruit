@@ -2398,9 +2398,13 @@ class EveryMinute extends Command
 
                 $input['from_address'] = trim($user_email_details->email);
 
-                $leave = LateInEarlyGo::find($module_id);
-                $input['leave_message'] = $leave->reply_message;
-                $input['remarks'] = $leave->remarks;
+                $late_in_early_go = LateInEarlyGo::find($module_id);
+                $input['leave_message'] = $late_in_early_go->reply_message;
+                $input['remarks'] = $late_in_early_go->remarks;
+                $input['date'] = date('d-m-Y',strtotime($late_in_early_go->date);
+
+                $user_name = User::getUserNameByEmail($input['to']);
+                $input['user_name'] = $user_name;
 
                 if(strpos($input['from_address'], '@gmail.com') !== false) {
 

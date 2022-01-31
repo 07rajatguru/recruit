@@ -306,11 +306,14 @@ class EligibilityReportController extends Controller
         $user =  \Auth::user();
         $all_perm = $user->can('display-eligibility-report-of-all-users');
 
+        $month = date('m');
+        $year = date('Y');
+
         if ($all_perm) {
 
             $month_array = array();
             for ($i=1; $i <=12 ; $i++) { 
-                $month_array[$i] = date('M',mktime(0,0,0,$i));
+                $month_array[$i] = date('M',mktime(0,0,0,$i,1,$year));
             }
 
             // Year Data
@@ -322,9 +325,7 @@ class EligibilityReportController extends Controller
             for ($y=$starting_year; $y < $ending_year ; $y++) { 
                 $year_array[$y] = $y;
             }
-            $month = date('m');
-            $year = date('Y');
-
+            
             return view('adminlte::reports.eligibilityreportcreate',compact('month_array','year_array','month','year'));
         }
         else {
@@ -355,7 +356,8 @@ class EligibilityReportController extends Controller
             
             $achieved = 0;
 
-            $month_name = date('M',mktime(0, 0, 0, $month, 1));
+            $month_name = date('M',mktime(0, 0, 0, $month,1,$year));
+
             $month_data = $month_name.'-'.$year;
             $start_month = date('Y-m-d',strtotime("first day of $month_data"));
             $last_month = date('Y-m-d',strtotime("last day of $month_data"));

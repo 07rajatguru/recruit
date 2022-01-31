@@ -338,7 +338,7 @@ class HomeController extends Controller
 
         $month_array = array();
         for ($m=1; $m<=12; $m++) {
-            $month_array[$m] = date('M', mktime(0,0,0,$m));
+            $month_array[$m] = date('M', mktime(0,0,0,$m,1,$year));
         }
 
         // Year Data
@@ -474,7 +474,7 @@ class HomeController extends Controller
 
         $month_array =array();
         for ($m=1; $m<=12; $m++) {
-            $month_array[$m] = date('M', mktime(0,0,0,$m));
+            $month_array[$m] = date('M', mktime(0,0,0,$m,1,$year));
         }
 
         $starting_year = '2016';
@@ -1178,7 +1178,7 @@ class HomeController extends Controller
 
         $month_array =array();
         for ($m=1; $m<=12; $m++) {
-            $month_array[$m] = date('M', mktime(0,0,0,$m));
+            $month_array[$m] = date('M', mktime(0,0,0,$m,1,$year));
         }
 
         $starting_year = '2021';
@@ -1556,7 +1556,7 @@ class HomeController extends Controller
             $month = $_POST['month'];
             $year = $_POST['year'];
             
-            $month_name = date("F", mktime(0, 0, 0, $month, 10));
+            $month_name = date("F", mktime(0, 0, 0, $month, 10,$year));
             $sheet_name = 'Attendance-'.$month_name."-".$year;
 
             // Get All Sundays dates in selected month

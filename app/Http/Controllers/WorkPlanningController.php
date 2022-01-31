@@ -43,7 +43,7 @@ class WorkPlanningController extends Controller
         // Get Selected Month
         $month_array = array();
         for ($i = 1; $i <= 12 ; $i++) {
-            $month_array[$i] = date('M',mktime(0,0,0,$i,$month,$year));
+            $month_array[$i] = date('M',mktime(0,0,0,$i,1,$year));
         }
 
         // Get Selected Year
@@ -54,10 +54,6 @@ class WorkPlanningController extends Controller
         for ($y = $starting_year; $y < $ending_year ; $y++) {
             $year_array[$y] = $y;
         }
-
-        
-
-       
 
         $work_planning_res = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
 
@@ -118,7 +114,7 @@ class WorkPlanningController extends Controller
         // Get Selected Month
         $month_array = array();
         for ($i = 1; $i <= 12 ; $i++) {
-            $month_array[$i] = date('M',mktime(0,0,0,$i,$month,$year));
+            $month_array[$i] = date('M',mktime(0,0,0,$i,1,$year));
         }
 
         // Get Selected Year
@@ -305,7 +301,7 @@ class WorkPlanningController extends Controller
         // Get Selected Month
         $month_array = array();
         for ($i = 1; $i <= 12 ; $i++) {
-            $month_array[$i] = date('M',mktime(0,0,0,$i,$month,$year));
+            $month_array[$i] = date('M',mktime(0,0,0,$i,1,$year));
         }
 
         // Get Selected Year
@@ -316,7 +312,7 @@ class WorkPlanningController extends Controller
         for ($y = $starting_year; $y < $ending_year ; $y++) {
             $year_array[$y] = $y;
         }
-        
+
         if($status == 'pending') {
             $status = '0';
             $post_discuss_status = '';
@@ -333,7 +329,7 @@ class WorkPlanningController extends Controller
             $status = '1';
             $post_discuss_status = '1';
         }
- 
+
         $work_planning_res = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,$status,$post_discuss_status);
 
         $pending = 0;
@@ -393,7 +389,7 @@ class WorkPlanningController extends Controller
         // Get Selected Month
         $month_array = array();
         for ($i = 1; $i <= 12 ; $i++) {
-            $month_array[$i] = date('M',mktime(0,0,0,$i,$month,$year));
+            $month_array[$i] = date('M',mktime(0,0,0,$i,1,$year));
         }
 
         // Get Selected Year

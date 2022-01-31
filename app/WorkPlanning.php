@@ -128,37 +128,58 @@ class WorkPlanning extends Model
                 $work_planning_res[$i]['added_date'] = date('d-m-Y', strtotime("$value->added_date"));
 
                 // Convert Logged in time
-                $utc_login = $value->loggedin_time;
-                $dt_login = new \DateTime($utc_login);
-                $tz_login = new \DateTimeZone('Asia/Kolkata');
+                if($value->loggedin_time != '') {
 
-                $dt_login->setTimezone($tz_login);
-                $loggedin_time = $dt_login->format('H:i:s');
-                $loggedin_time = date("g:i A", strtotime($loggedin_time));
+                    $utc_login = $value->loggedin_time;
+                    $dt_login = new \DateTime($utc_login);
+                    $tz_login = new \DateTimeZone('Asia/Kolkata');
 
-                // Convert Logged in time
-                $utc_logout = $value->loggedout_time;
-                $dt_logout = new \DateTime($utc_logout);
-                $tz_logout = new \DateTimeZone('Asia/Kolkata');
+                    $dt_login->setTimezone($tz_login);
+                    $loggedin_time = $dt_login->format('H:i:s');
+                    $loggedin_time = date("g:i A", strtotime($loggedin_time));
+                }
+                else {
 
-                $dt_logout->setTimezone($tz_logout);
-                $loggedout_time = $dt_logout->format('H:i:s');
-                $loggedout_time = date("g:i A", strtotime($loggedout_time));
+                    $loggedin_time = '';
+                }
 
                 $work_planning_res[$i]['loggedin_time'] = $loggedin_time;
+
+                // Convert Logged in time
+                if($value->loggedout_time != '') {
+
+                    $utc_logout = $value->loggedout_time;
+                    $dt_logout = new \DateTime($utc_logout);
+                    $tz_logout = new \DateTimeZone('Asia/Kolkata');
+
+                    $dt_logout->setTimezone($tz_logout);
+                    $loggedout_time = $dt_logout->format('H:i:s');
+                    $loggedout_time = date("g:i A", strtotime($loggedout_time));
+                }
+                else {
+
+                    $loggedout_time = '';
+                }
+
                 $work_planning_res[$i]['loggedout_time'] = $loggedout_time;
 
                 // Convert Work Planning Time
-                $utc_wp = $value->work_planning_time;
-                $dt_wp = new \DateTime($utc_wp);
-                $tz_wp = new \DateTimeZone('Asia/Kolkata');
+                if($value->work_planning_time != '') {
 
-                $dt_wp->setTimezone($tz_wp);
-                $work_planning_time = $dt_wp->format('g:i A');
-                $work_planning_res[$i]['work_planning_time'] = $work_planning_time;
+                    $utc_wp = $value->work_planning_time;
+                    $dt_wp = new \DateTime($utc_wp);
+                    $tz_wp = new \DateTimeZone('Asia/Kolkata');
+
+                    $dt_wp->setTimezone($tz_wp);
+                    $work_planning_time = $dt_wp->format('g:i A');
+                    $work_planning_res[$i]['work_planning_time'] = $work_planning_time;
+                }
+                else {
+
+                    $work_planning_res[$i]['work_planning_time'] = '';
+                }
             
                 // Convert Work Planning Status Time
-
                 if($value->work_planning_status_time != '') {
 
                     $utc_wp_status = $value->work_planning_status_time;
@@ -254,7 +275,7 @@ class WorkPlanning extends Model
             }
 
             // Convert Logged in time
-            if($response->loggedin_time != '') {
+            if($response->loggedout_time != '') {
 
                 $utc_logout = $response->loggedout_time;
                 $dt_logout = new \DateTime($utc_logout);
@@ -264,7 +285,6 @@ class WorkPlanning extends Model
                 $loggedout_time = $dt_logout->format('H:i:s');
                 $loggedout_time = date("g:i A", strtotime($loggedout_time));
 
-                
                 $work_planning_res['loggedout_time'] = $loggedout_time;
             }
             else {
@@ -273,7 +293,7 @@ class WorkPlanning extends Model
             }
 
             // Convert Work Planning Time
-            if($response->loggedin_time != '') {
+            if($response->work_planning_time != '') {
 
                 $utc_wp = $response->work_planning_time;
                 $dt_wp = new \DateTime($utc_wp);
@@ -432,38 +452,58 @@ class WorkPlanning extends Model
             $work_planning_res[$i]['post_discuss_status'] = $value->post_discuss_status;
 
             // Convert Logged in time
-            $utc_login = $value->loggedin_time;
-            $dt_login = new \DateTime($utc_login);
-            $tz_login = new \DateTimeZone('Asia/Kolkata');
+            if($value->loggedin_time != '') {
 
-            $dt_login->setTimezone($tz_login);
-            $loggedin_time = $dt_login->format('H:i:s');
-            $loggedin_time = date("g:i A", strtotime($loggedin_time));
+                $utc_login = $value->loggedin_time;
+                $dt_login = new \DateTime($utc_login);
+                $tz_login = new \DateTimeZone('Asia/Kolkata');
+
+                $dt_login->setTimezone($tz_login);
+                $loggedin_time = $dt_login->format('H:i:s');
+                $loggedin_time = date("g:i A", strtotime($loggedin_time));
+            }
+            else {
+
+                $loggedin_time = '';
+            }
 
             $work_planning_res[$i]['loggedin_time'] = $loggedin_time;
 
             // Convert Logged out time
-            $utc_logout = $value->loggedout_time;
-            $dt_logout = new \DateTime($utc_logout);
-            $tz_logout = new \DateTimeZone('Asia/Kolkata');
+            if($value->loggedout_time != '') {
 
-            $dt_logout->setTimezone($tz_logout);
-            $loggedout_time = $dt_logout->format('H:i:s');
-            $loggedout_time = date("g:i A", strtotime($loggedout_time));
+                $utc_logout = $value->loggedout_time;
+                $dt_logout = new \DateTime($utc_logout);
+                $tz_logout = new \DateTimeZone('Asia/Kolkata');
+
+                $dt_logout->setTimezone($tz_logout);
+                $loggedout_time = $dt_logout->format('H:i:s');
+                $loggedout_time = date("g:i A", strtotime($loggedout_time));
+            }
+            else {
+
+                $loggedout_time = '';
+            }
 
             $work_planning_res[$i]['loggedout_time'] = $loggedout_time;
 
             // Convert Work Planning Time
-            $utc_wp = $value->work_planning_time;
-            $dt_wp = new \DateTime($utc_wp);
-            $tz_wp = new \DateTimeZone('Asia/Kolkata');
+            if($value->work_planning_time != '') {
 
-            $dt_wp->setTimezone($tz_wp);
-            $work_planning_time = $dt_wp->format('g:i A');
+                $utc_wp = $value->work_planning_time;
+                $dt_wp = new \DateTime($utc_wp);
+                $tz_wp = new \DateTimeZone('Asia/Kolkata');
+
+                $dt_wp->setTimezone($tz_wp);
+                $work_planning_time = $dt_wp->format('g:i A');
+            }
+            else {
+
+                $work_planning_time = '';
+            }
             $work_planning_res[$i]['work_planning_time'] = $work_planning_time;
                 
             // Convert Work Planning Status Time
-
             if($value->work_planning_status_time != '') {
 
                 $utc_wp_status = $value->work_planning_status_time;
@@ -472,13 +512,13 @@ class WorkPlanning extends Model
 
                 $dt_wp_status->setTimezone($tz_wp_status);
                 $work_planning_status_time = $dt_wp_status->format('g:i A');
-                $work_planning_res[$i]['work_planning_status_time'] = $work_planning_status_time;
             }
             else {
 
-                $work_planning_res[$i]['work_planning_status_time'] = '';
+                $work_planning_status_time = '';
             }
             
+            $work_planning_res[$i]['work_planning_status_time'] = $work_planning_status_time;
 
             // Get Actual Database Login Logout Time
             $work_planning_res[$i]['actual_login_time'] = date("H:i:s", strtotime($loggedin_time));

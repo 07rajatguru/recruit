@@ -33,8 +33,8 @@ class LateInEarlyGo extends Model
         }
 
         if ($month != '' && $year != '') {
-            $query = $query->where(\DB::raw('month(late_in_early_go.created_at)'),'=',$month);
-            $query = $query->where(\DB::raw('year(late_in_early_go.created_at)'),'=',$year);
+            $query = $query->where(\DB::raw('month(late_in_early_go.date)'),'=',$month);
+            $query = $query->where(\DB::raw('year(late_in_early_go.date)'),'=',$year);
         }
 
         $query = $query->orderBy('late_in_early_go.id','desc');

@@ -22,8 +22,8 @@ class SelectionReportController extends Controller
         }
 
         // Year Data
-        $starting_year = '2017'; /*date('Y',strtotime('-1 year'))*/;
-        $ending_year = date('Y',strtotime('+10 year'));
+        $starting_year = '2014'; /*date('Y',strtotime('-1 year'))*/;
+        $ending_year = date('Y',strtotime('+2 year'));
         $default = date('Y');
 
         $year_array = array();
