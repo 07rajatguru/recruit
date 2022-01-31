@@ -2401,7 +2401,7 @@ class EveryMinute extends Command
                 $late_in_early_go = LateInEarlyGo::find($module_id);
                 $input['leave_message'] = $late_in_early_go->reply_message;
                 $input['remarks'] = $late_in_early_go->remarks;
-                $input['date'] = date('d-m-Y',strtotime($late_in_early_go->date);
+                $input['date'] = date('d-m-Y',strtotime($late_in_early_go->date));
 
                 $user_name = User::getUserNameByEmail($input['to']);
                 $input['user_name'] = $user_name;

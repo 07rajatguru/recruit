@@ -139,78 +139,88 @@
                                         @endif
                                     </td>
 
-                                    @if($v['status'] == 0)
-                                        <td style="background-color:#8FB1D5;">{{ $v['added_date'] }}</td>
-                                    @elseif($v['status'] == 1 && $v['post_discuss_status'] == 1)
-                                        <td style="background-color:#ffb347;">{{ $v['added_date'] }}</td>
-                                    @elseif($v['status'] == 1)
-                                        <td style="background-color:#32CD32;">{{ $v['added_date'] }}</td>
+                                    @if($v['added_day'] == 'Sunday')
+
+                                        <td style="background-color:#ffc000;">{{ $v['added_date'] }}</td>
                                     @else
-                                        <td style="background-color:#FF3C28;">{{ $v['added_date'] }}</td>
+
+                                        @if($v['status'] == 0)
+                                            <td style="background-color:#8FB1D5;">{{ $v['added_date'] }}</td>
+                                        @elseif($v['status'] == 1 && $v['post_discuss_status'] == 1)
+                                            <td style="background-color:#ffb347;">{{ $v['added_date'] }}</td>
+                                        @elseif($v['status'] == 1)
+                                            <td style="background-color:#32CD32;">{{ $v['added_date'] }}</td>
+                                        @else
+                                            <td style="background-color:#FF3C28;">{{ $v['added_date'] }}</td>
+                                        @endif
                                     @endif
                          
-                                    <td>{{ $v['added_by'] }}</td>
-                                    <td>{{ $v['work_type'] }}</td>
-
-                                    @if($v['added_day'] == 'Saturday')
-
-                                        @if($v['actual_login_time'] > '10:30:00')
-                                            <td style="background-color:lightpink;cursor: pointer;" title="Login After 10:30">{{ $v['loggedin_time'] }}</td>
-                                        @elseif($v['total_actual_time'] == '')
-                                            <td>{{ $v['loggedin_time'] }}</td>
-                                        @elseif($v['total_actual_time'] >= '06:00:00')
-                                            <td style="background-color:#B0E0E6;cursor: pointer;" title="Working Hours More than 06:00">{{ $v['loggedin_time'] }}</td>
-                                        @elseif($v['total_actual_time'] == '04:30:00')
-                                            <td style="background-color:#fff59a;cursor: pointer;" title="Late in / Early Go">{{ $v['loggedin_time'] }}</td>
-                                        @elseif($v['total_actual_time'] < '05:30:00')
-                                            <td style="background-color:#F08080;cursor: pointer;" title="Working Hours Less than 05:30">{{ $v['loggedin_time'] }}</td>
-                                        @else
-                                            <td>{{ $v['loggedin_time'] }}</td>
-                                        @endif
-
+                                    @if($v['added_day'] == 'Sunday')
+                                        <td colspan="7"><center><b>Sunday</b></center></td>
                                     @else
+                                        <td>{{ $v['added_by'] }}</td>
+                                        <td>{{ $v['work_type'] }}</td>
 
-                                        @if($v['added_by_id'] == $manager_user_id)
-
-                                            @if($v['actual_login_time'] > '10:30:00')
-                                                <td style="background-color:lightpink;cursor: pointer" title="Login After 10:30">{{ $v['loggedin_time'] }}</td>
-                                            @elseif($v['total_actual_time'] == '')
-                                                <td>{{ $v['loggedin_time'] }}</td>
-                                            @elseif($v['total_actual_time'] >= '07:30:00')
-                                                <td style="background-color:#B0E0E6;cursor: pointer;" title="Working Hours More than 07:30">{{ $v['loggedin_time'] }}</td>
-                                            @elseif($v['total_actual_time'] == '06:00:00')
-                                                <td style="background-color:#fff59a;cursor: pointer;" title="Late in / Early Go">{{ $v['loggedin_time'] }}</td>
-                                            @elseif($v['total_actual_time'] < '07:00:00')
-                                                <td style="background-color:#F08080;cursor: pointer;" title="Working Hours Less than 07:00">{{ $v['loggedin_time'] }}</td>
-                                            @else
-                                                <td>{{ $v['loggedin_time'] }}</td>
-                                            @endif
-                                        @else
+                                        @if($v['added_day'] == 'Saturday')
 
                                             @if($v['actual_login_time'] > '10:30:00')
                                                 <td style="background-color:lightpink;cursor: pointer;" title="Login After 10:30">{{ $v['loggedin_time'] }}</td>
                                             @elseif($v['total_actual_time'] == '')
                                                 <td>{{ $v['loggedin_time'] }}</td>
-                                            @elseif($v['total_actual_time'] >= '08:30:00')
-                                                <td style="background-color:#B0E0E6;cursor: pointer;" title="Working Hours More than 08:30">{{ $v['loggedin_time'] }}</td>
-                                            @elseif($v['total_actual_time'] == '07:00:00')
+                                            @elseif($v['total_actual_time'] >= '06:00:00')
+                                                <td style="background-color:#B0E0E6;cursor: pointer;" title="Working Hours More than 06:00">{{ $v['loggedin_time'] }}</td>
+                                            @elseif($v['total_actual_time'] == '04:30:00')
                                                 <td style="background-color:#fff59a;cursor: pointer;" title="Late in / Early Go">{{ $v['loggedin_time'] }}</td>
-                                            @elseif($v['total_actual_time'] < '08:00:00')
-                                                <td style="background-color:#F08080;cursor: pointer;" title="Working Hours Less than 08:00">{{ $v['loggedin_time'] }}</td>
+                                            @elseif($v['total_actual_time'] < '05:30:00')
+                                                <td style="background-color:#F08080;cursor: pointer;" title="Working Hours Less than 05:30">{{ $v['loggedin_time'] }}</td>
                                             @else
                                                 <td>{{ $v['loggedin_time'] }}</td>
                                             @endif
+
+                                        @else
+
+                                            @if($v['added_by_id'] == $manager_user_id)
+
+                                                @if($v['actual_login_time'] > '10:30:00')
+                                                    <td style="background-color:lightpink;cursor: pointer" title="Login After 10:30">{{ $v['loggedin_time'] }}</td>
+                                                @elseif($v['total_actual_time'] == '')
+                                                    <td>{{ $v['loggedin_time'] }}</td>
+                                                @elseif($v['total_actual_time'] >= '07:30:00')
+                                                    <td style="background-color:#B0E0E6;cursor: pointer;" title="Working Hours More than 07:30">{{ $v['loggedin_time'] }}</td>
+                                                @elseif($v['total_actual_time'] == '06:00:00')
+                                                    <td style="background-color:#fff59a;cursor: pointer;" title="Late in / Early Go">{{ $v['loggedin_time'] }}</td>
+                                                @elseif($v['total_actual_time'] < '07:00:00')
+                                                    <td style="background-color:#F08080;cursor: pointer;" title="Working Hours Less than 07:00">{{ $v['loggedin_time'] }}</td>
+                                                @else
+                                                    <td>{{ $v['loggedin_time'] }}</td>
+                                                @endif
+                                            @else
+
+                                                @if($v['actual_login_time'] > '10:30:00')
+                                                    <td style="background-color:lightpink;cursor: pointer;" title="Login After 10:30">{{ $v['loggedin_time'] }}</td>
+                                                @elseif($v['total_actual_time'] == '')
+                                                    <td>{{ $v['loggedin_time'] }}</td>
+                                                @elseif($v['total_actual_time'] >= '08:30:00')
+                                                    <td style="background-color:#B0E0E6;cursor: pointer;" title="Working Hours More than 08:30">{{ $v['loggedin_time'] }}</td>
+                                                @elseif($v['total_actual_time'] == '07:00:00')
+                                                    <td style="background-color:#fff59a;cursor: pointer;" title="Late in / Early Go">{{ $v['loggedin_time'] }}</td>
+                                                @elseif($v['total_actual_time'] < '08:00:00')
+                                                    <td style="background-color:#F08080;cursor: pointer;" title="Working Hours Less than 08:00">{{ $v['loggedin_time'] }}</td>
+                                                @else
+                                                    <td>{{ $v['loggedin_time'] }}</td>
+                                                @endif
+                                            @endif
                                         @endif
-                                    @endif
 
-                                    <td>{{ $v['loggedout_time'] }}</td>
-                                    <td>{{ $v['added_date'] }} - {{ $v['work_planning_time'] }}
-                                    </td>
+                                        <td>{{ $v['loggedout_time'] }}</td>
+                                        <td>{{ $v['added_date'] }} - {{ $v['work_planning_time'] }}
+                                        </td>
 
-                                    @if(isset($v['status_date']) && $v['status_date'] != '')
-                                        <td>{{ $v['status_date'] }} - {{ $v['work_planning_status_time'] }}</td>
-                                    @else
-                                        <td>{{ $v['work_planning_status_time'] }}</td>
+                                        @if(isset($v['status_date']) && $v['status_date'] != '')
+                                            <td>{{ $v['status_date'] }} - {{ $v['work_planning_status_time'] }}</td>
+                                        @else
+                                            <td>{{ $v['work_planning_status_time'] }}</td>
+                                        @endif
                                     @endif
                                 </tr>
                             @endforeach

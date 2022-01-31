@@ -93,7 +93,6 @@ class MonthlyReport extends Command
                     foreach ($users as $key => $value) {
 
                         $work_planning = new WorkPlanning();
-                        $work_planning->work_type = 'WFH';
                         $work_planning->added_date = "$year-$month-$v";
                         $work_planning->added_by = $key;
                         $work_planning->save();
