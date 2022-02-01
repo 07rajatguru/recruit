@@ -61,8 +61,8 @@ class MonthlyReport extends Command
 
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
-        $management = getenv('MANAGEMENT');
-        $type_array = array($recruitment,$hr_advisory,$management);
+        $operations = getenv('OPERATIONS');
+        $type_array = array($recruitment,$hr_advisory,$operations);
 
         $users = User::getAllUsersExpectSuperAdmin($type_array);
 

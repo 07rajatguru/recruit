@@ -122,27 +122,29 @@
                         <tbody id="data_{{$j}}" style="display:none;">
                             @foreach($value as $k => $v)
                                 <tr>
-                                    <td>{{ ++$i }}</td>
-                                    <td>
-                                        <a class="fa fa-circle" href="{{ route('workplanning.show',$v['id']) }}" title="Show">
-                                        </a>
-                                            
-                                        <a class="fa fa-edit" href="{{ route('workplanning.edit',$v['id']) }}" title="Edit">
-                                        </a>
-                                            
-                                        @permission(('work-planning-delete'))
-                                            @include('adminlte::partials.deleteModal', ['data' => $v, 'name' => 'workplanning','display_name'=>'Work Planning'])
-                                        @endpermission
-
-                                        @if($user_id == $v['added_by_id'])
-                                            @include('adminlte::partials.sendWorkPlanningReport', ['data' => $v, 'name' => 'workplanning'])
-                                        @endif
-                                    </td>
-
-                                    @if($v['added_day'] == 'Sunday')
-
-                                        <td style="background-color:#ffc000;">{{ $v['added_date'] }}</td>
+                                    @if($v['added_day'] == 'Sunday' && $v['loggedin_time'] == '')
+                                        <td>{{ ++$i }}</td>
+                                        <td></td>
+                                        <td style="background-color:#ffc000;">
+                                        {{ $v['added_date'] }}</td>
+                                        <td colspan="7"><center><b>Sunday</b></center></td>
                                     @else
+                                        <td>{{ ++$i }}</td>
+                                        <td>
+                                            <a class="fa fa-circle" href="{{ route('workplanning.show',$v['id']) }}" title="Show">
+                                            </a>
+                                                
+                                            <a class="fa fa-edit" href="{{ route('workplanning.edit',$v['id']) }}" title="Edit">
+                                            </a>
+                                                
+                                            @permission(('work-planning-delete'))
+                                                @include('adminlte::partials.deleteModal', ['data' => $v, 'name' => 'workplanning','display_name'=>'Work Planning'])
+                                            @endpermission
+
+                                            @if($user_id == $v['added_by_id'])
+                                                @include('adminlte::partials.sendWorkPlanningReport', ['data' => $v, 'name' => 'workplanning'])
+                                            @endif
+                                        </td>
 
                                         @if($v['status'] == 0)
                                             <td style="background-color:#8FB1D5;">{{ $v['added_date'] }}</td>
@@ -153,11 +155,7 @@
                                         @else
                                             <td style="background-color:#FF3C28;">{{ $v['added_date'] }}</td>
                                         @endif
-                                    @endif
-                         
-                                    @if($v['added_day'] == 'Sunday')
-                                        <td colspan="7"><center><b>Sunday</b></center></td>
-                                    @else
+
                                         <td>{{ $v['added_by'] }}</td>
                                         <td>{{ $v['work_type'] }}</td>
 

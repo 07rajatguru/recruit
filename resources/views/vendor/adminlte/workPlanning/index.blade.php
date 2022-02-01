@@ -94,26 +94,26 @@
         @if(isset($work_planning_res) && $work_planning_res != '')
             @foreach ($work_planning_res as $key => $value)
                 <tr>
-                    <td>{{ ++$i }}</td>
-
-                    <td>
-                        <a class="fa fa-circle" href="{{ route('workplanning.show',$value['id']) }}" title="Show"></a>
-
-                        <a class="fa fa-edit" href="{{ route('workplanning.edit',$value['id']) }}" title="Edit"></a>
-                        
-                        @permission(('work-planning-delete'))
-                            @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'workplanning','display_name'=>'Work Planning'])
-                        @endpermission
-
-                        @if($user_id == $value['added_by_id'])
-                            @include('adminlte::partials.sendWorkPlanningReport', ['data' => $value, 'name' => 'workplanning'])
-                        @endif
-                    </td>
-
-                    @if($value['added_day'] == 'Sunday')
-
+                    @if($value['added_day'] == 'Sunday' && $value['loggedin_time'] == '')
+                        <td>{{ ++$i }}</td>
+                        <td></td>
                         <td style="background-color:#ffc000;">{{ $value['added_date'] }}</td>
+                        <td colspan="7"><center><b>Sunday</b></center></td>
                     @else
+                        <td>{{ ++$i }}</td>
+                        <td>
+                            <a class="fa fa-circle" href="{{ route('workplanning.show',$value['id']) }}" title="Show"></a>
+
+                            <a class="fa fa-edit" href="{{ route('workplanning.edit',$value['id']) }}" title="Edit"></a>
+                            
+                            @permission(('work-planning-delete'))
+                                @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'workplanning','display_name'=>'Work Planning'])
+                            @endpermission
+
+                            @if($user_id == $value['added_by_id'])
+                                @include('adminlte::partials.sendWorkPlanningReport', ['data' => $value, 'name' => 'workplanning'])
+                            @endif
+                        </td>
 
                         @if($value['status'] == 0)
                             <td style="background-color:#8FB1D5;">{{ $value['added_date'] }}</td>
@@ -124,12 +124,7 @@
                         @else
                             <td style="background-color:#FF3C28;">{{ $value['added_date'] }}</td>
                         @endif
-                    @endif
 
-
-                    @if($value['added_day'] == 'Sunday')
-                        <td colspan="7"><center><b>Sunday</b></center></td>
-                    @else
                         <td>{{ $value['added_by'] }}</td>
                         <td>{{ $value['work_type'] }}</td>
 
@@ -170,7 +165,6 @@
                                     <td>{{ $value['loggedin_time'] }}</td>
                                 @endif
                             @else
-
                                 @if($value['actual_login_time'] > '10:30:00')
                                     <td style="background-color:lightpink;cursor: pointer" title="Login After 10:30">{{ $value['loggedin_time'] }}</td>
                                 @elseif($value['total_actual_time'] == '')
@@ -186,7 +180,7 @@
                                 @endif
                             @endif
                         @endif
-                    
+
                         <td>{{ $value['loggedout_time'] }}</td>
                         <td>{{ $value['added_date'] }} - {{ $value['work_planning_time'] }}</td>
 
