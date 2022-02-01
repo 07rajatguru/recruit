@@ -587,4 +587,15 @@ class WorkPlanning extends Model
         $response = $query->get();
         return $response;
     }
+
+    public static function getWorkPlanningByAddedDateAndUserID($date,$user_id) {
+
+        $query = WorkPlanning::query();
+        $query = $query->where('work_planning.added_date','=',"$date");
+        $query = $query->where('work_planning.added_by','=',$user_id);
+        $query = $query->select('work_planning.id');
+        $work_planning_res = $query->first();
+
+        return $work_planning_res;
+    }
 }

@@ -650,6 +650,9 @@ class WorkPlanningController extends Controller
         $report_delay = Input::get('report_delay');
         $report_delay_content = Input::get('report_delay_content');
 
+        // Get Today Day
+        $day = date("l");
+
         // Set Attendance for Farhin
         $farhin_user_id = getenv('ALLCLIENTVISIBLEUSERID');
 
@@ -662,9 +665,6 @@ class WorkPlanningController extends Controller
         }
         else {
 
-            // Get Today Day
-            $day = date("l");
-
             if($day == 'Saturday') {
 
                 if($total_projected_time < '04:30:00') {
@@ -672,6 +672,31 @@ class WorkPlanningController extends Controller
                 }
                 else {
                     $attendance = 'F';
+                }
+            }
+            else if($day == 'Sunday') {
+
+                if($user_id == $manager_user_id) {
+
+                    if($total_projected_time < '06:00:00') {
+                        $attendance = 'HD';
+                    }
+                    else {
+                        $attendance = 'F';
+                    }
+
+                    $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($date,$user_id);
+                }
+                else {
+
+                    if($total_projected_time < '07:00:00') {
+                        $attendance = 'HD';
+                    }
+                    else {
+                        $attendance = 'F';
+                    }
+                    
+                    $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($date,$user_id);
                 }
             }
             else {
@@ -725,23 +750,48 @@ class WorkPlanningController extends Controller
             }
         }
 
-        $work_planning = new WorkPlanning();
-        $work_planning->attendance = $attendance;
-        $work_planning->status = '0';
-        $work_planning->work_type = $work_type;
-        $work_planning->loggedin_time = $get_time['login'];
-        $work_planning->loggedout_time = $get_time['logout'];
-        $work_planning->work_planning_time = date('H:i:s');
-        //$work_planning->work_planning_status_time = date('H:i:s');
-        $work_planning->remaining_time = $remaining_time;
-        $work_planning->added_date = date('Y-m-d');
-        $work_planning->added_by = $user_id;
-        $work_planning->report_delay = $report_delay;
-        $work_planning->report_delay_content = $report_delay_content;
-        $work_planning->link = $link;
-        $work_planning->total_projected_time = $total_projected_time;
-        $work_planning->evening_status = 0;
-        $work_planning->save();
+        if(isset($get_work_planning_res) && $get_work_planning_res != '') {
+
+            $exist_wp_id = $get_work_planning_res->id;
+
+            $work_planning = WorkPlanning::find($exist_wp_id);
+            $work_planning->attendance = $attendance;
+            $work_planning->status = '0';
+            $work_planning->work_type = $work_type;
+            $work_planning->loggedin_time = $get_time['login'];
+            $work_planning->loggedout_time = $get_time['logout'];
+            $work_planning->work_planning_time = date('H:i:s');
+            $work_planning->remaining_time = $remaining_time;
+            $work_planning->added_date = date('Y-m-d');
+            $work_planning->added_by = $user_id;
+            $work_planning->report_delay = $report_delay;
+            $work_planning->report_delay_content = $report_delay_content;
+            $work_planning->link = $link;
+            $work_planning->total_projected_time = $total_projected_time;
+            $work_planning->evening_status = 0;
+            $work_planning->save();
+        }
+        else {
+
+            $work_planning = new WorkPlanning();
+            $work_planning->attendance = $attendance;
+            $work_planning->status = '0';
+            $work_planning->work_type = $work_type;
+            $work_planning->loggedin_time = $get_time['login'];
+            $work_planning->loggedout_time = $get_time['logout'];
+            $work_planning->work_planning_time = date('H:i:s');
+            $work_planning->remaining_time = $remaining_time;
+            $work_planning->added_date = date('Y-m-d');
+            $work_planning->added_by = $user_id;
+            $work_planning->report_delay = $report_delay;
+            $work_planning->report_delay_content = $report_delay_content;
+            $work_planning->link = $link;
+            $work_planning->total_projected_time = $total_projected_time;
+            $work_planning->evening_status = 0;
+            $work_planning->save();   
+        }
+
+        
 
         $work_planning_id = $work_planning->id;
 
