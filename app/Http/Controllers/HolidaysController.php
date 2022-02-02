@@ -10,6 +10,7 @@ use App\User;
 use App\Date;
 use App\Department;
 use App\Events\NotificationMail;
+use App\WorkPlanning;
 
 class HolidaysController extends Controller
 {
@@ -98,6 +99,8 @@ class HolidaysController extends Controller
         $holiday_save = $holiday->save();
         $holiday_id = $holiday->id;
 
+        $super_admin_userid = getenv('SUPERADMINUSERID');
+
         if (isset($holiday_id)) {
 
         	if (isset($users) && $users != '') {
@@ -108,6 +111,15 @@ class HolidaysController extends Controller
         			$holiday_user->holiday_id = $holiday_id;
         			$holiday_user->user_id = $value;
         			$holiday_user->save();
+
+                    if($value != $super_admin_userid) {
+
+                        //Add Entry in Work Planning
+                        $work_planning = new WorkPlanning();
+                        $work_planning->added_date = $from_date_save;
+                        $work_planning->added_by = $value;
+                        $work_planning->save();
+                    }
         		}
         	}
         }
@@ -196,7 +208,10 @@ class HolidaysController extends Controller
 
         $holiday_save = $holiday->save();
 
+        // Delete Exist Entry
         $holidays_users_delete = HolidaysUsers::where('holiday_id',$id)->delete();
+
+        $super_admin_userid = getenv('SUPERADMINUSERID');
 
         if (isset($users) && $users != '') {
 
@@ -206,6 +221,23 @@ class HolidaysController extends Controller
                 $holiday_user->holiday_id = $id;
                 $holiday_user->user_id = $value;
                 $holiday_user->save();
+
+                if($value != $super_admin_userid) {
+
+                    $exist_work_planning = WorkPlanning::getWorkPlanningByAddedDateAndUserID($from_date_save,$value);
+
+                    if(isset($exist_work_planning) && $exist_work_planning != '') {
+
+                    }
+                    else {
+
+                        //Add Entry in Work Planning
+                        $work_planning = new WorkPlanning();
+                        $work_planning->added_date = $from_date_save;
+                        $work_planning->added_by = $value;
+                        $work_planning->save();
+                    }
+                }
             }
         }
 

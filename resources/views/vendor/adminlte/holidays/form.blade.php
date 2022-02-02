@@ -49,7 +49,7 @@
 
                         <div class="">
                             <div class="form-group {{ $errors->has('from_date') ? 'has-error' : '' }}">
-                                <strong>From Date : <span class = "required_fields">*</span> </strong>
+                                <strong>From Date : </strong>
                                 {!! Form::text('from_date',isset($from_date) ? $from_date : null, array('id'=>'from_date','class' => 'form-control','tabindex' => '3' )) !!}
                                 @if ($errors->has('from_date'))
                                     <span class="help-block">
@@ -200,9 +200,6 @@
                     "type" : {
                         required: true,
                     },
-                    "from_date" : {
-                        required: true,
-                    },
                 },
                 messages: {
                     "title": {
@@ -210,9 +207,6 @@
                     },
                     "type" : {
                         required: "Type is Required Field.",
-                    },
-                    "from_date" : {
-                        required: "From Date is Required Field.",
                     },
                 }
             });

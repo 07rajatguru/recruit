@@ -121,11 +121,17 @@ class WorkPlanning extends Model
 
             foreach ($response as $key => $value) {
 
+                // Check for sundays
                 $added_day = date('l', strtotime("$value->added_date"));
-                $sunday_date = date('Y-m-d', strtotime("$value->added_date"));
+                $get_date = date('Y-m-d', strtotime("$value->added_date"));
                 $current_date = date('Y-m-d');
 
-                if($added_day == 'Sunday' && $value->loggedin_time == '' && $sunday_date > $current_date) {
+                // Check for holidays
+                $holidays_dates = Holidays::getUsersHolidays($value->added_by);
+
+                if (in_array($get_date,$holidays_dates) && $value->loggedin_time == '' && $get_date > $current_date) {
+                }
+                else if($added_day == 'Sunday' && $value->loggedin_time == '' && $get_date > $current_date) {
                 }
                 else {
 

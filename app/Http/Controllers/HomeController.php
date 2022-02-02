@@ -1079,10 +1079,6 @@ class HomeController extends Controller
         // Get Pending Work Planning Count
         $work_planning = WorkPlanning::getPendingWorkPlanningDetails(0,$month,$year);
         $pending_work_planning_count = sizeof($work_planning);
-
-        // Get Applied Leave Count
-        $leave_data = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,'');
-        $leave_count = sizeof($leave_data);
             
         // Set present days
         $present_days = 0;
@@ -1121,7 +1117,9 @@ class HomeController extends Controller
             $user_ids_array = array();
         }
 
+        // Get Applied Leave Count
         $leave_data = UserLeave::getAllLeavedataByUserId(0,$user_ids_array,$month,$year,'');
+        $leave_count = sizeof($leave_data);
 
         // Get Work From Requests
         $work_from_home_res = WorkFromHome::getAllWorkFromHomeRequestsByUserId(1,0,$month,$year,'');
