@@ -94,16 +94,43 @@
         @if(isset($work_planning_res) && $work_planning_res != '')
             @foreach ($work_planning_res as $key => $value)
                 <tr>
-                    @if($value['added_day'] == 'Sunday' && $value['loggedin_time'] == '')
-                        <td>{{ ++$i }}</td>
-                        <td></td>
+                    <?php
+
+                        $holiday_data = array();
+                        $leave_data = array();
+
+                        $added_date = date('Y-m-d',strtotime($value['added_date']));
+                        $holiday_data = App\Holidays::getHolidayByDateAndID($added_date,$value['added_by_id']);
+                        $leave_data = App\UserLeave::getLeaveByDateAndID($added_date,$value['added_by_id']);
+                    ?>
+
+                    @if(isset($leave_data) && $leave_data != '')
+
+                        <td>{{ ++$i }}</td><td></td>
+
+                        @if($leave_data->category == 'Sick Leave')
+
+                            <td style="background-color:#7030a0;">{{ $value['added_date'] }}</td>
+                            <td colspan="7"><center><b>{{ $leave_data->category }}</b></center>
+                            </td>
+                        @else
+                        
+                            <td style="background-color:#8db3e2;">{{ $value['added_date'] }}</td>
+                            <td colspan="7"><center><b>{{ $leave_data->category }}</b></center>
+                            </td>
+                        @endif
+
+                    @elseif(isset($holiday_data) && $holiday_data != '')
+
+                        <td>{{ ++$i }}</td><td></td>
+                        <td style="background-color:#76933C;">{{ $value['added_date'] }}</td>
+                        <td colspan="7"><center><b>{{ $holiday_data['title'] }} - ({{ $holiday_data['type'] }})</b></center></td>
+
+                    @elseif($value['added_day'] == 'Sunday' && $value['loggedin_time'] == '')
+
+                        <td>{{ ++$i }}</td><td></td>
                         <td style="background-color:#ffc000;">{{ $value['added_date'] }}</td>
                         <td colspan="7"><center><b>Sunday</b></center></td>
-                    @elseif($value['added_day'] != 'Sunday' && $value['loggedin_time'] == '')
-                        <td>{{ ++$i }}</td>
-                        <td></td>
-                        <td style="background-color:#76933C;">{{ $value['added_date'] }}</td>
-                        <td colspan="7"><center><b>Holiday</b></center></td>
                     @else
                         <td>{{ ++$i }}</td>
                         <td>

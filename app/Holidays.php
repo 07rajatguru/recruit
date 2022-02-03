@@ -247,4 +247,16 @@ class Holidays extends Model
         }
         return $holidays;
     }
+
+    public static function getHolidayByDateAndID($date,$user_id) {
+
+        $query = Holidays::query();
+        $query = $query->join('holidays_users','holidays_users.holiday_id','=','holidays.id');
+        $query = $query->where('holidays_users.user_id',$user_id);
+        $query = $query->select('holidays.title','holidays.type');
+        $query = $query->where('from_date','=',$date);
+        $response = $query->first();
+
+        return $response;
+    }
 }

@@ -226,4 +226,21 @@ class UserLeave extends Model
         }
         return $leave;
     }
+
+    public static function getLeaveByDateAndID($date,$user_id) {
+
+        $query = UserLeave::query();
+
+        $query = $query->where(function($query) use ($date) {
+
+            $query = $query->where('user_leave.from_date','=',$date);
+            $query = $query->orwhere('user_leave.to_date','=',$date);
+        });
+
+        $query = $query->where('user_leave.user_id','=',$user_id);
+        $query = $query->select('user_leave.category');
+        $response = $query->first();
+
+        return $response;
+    }
 }

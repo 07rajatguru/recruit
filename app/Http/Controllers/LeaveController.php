@@ -16,11 +16,15 @@ use App\MonthwiseLeaveBalance;
 use Excel;
 use Charts;
 use DB;
+use App\WorkPlanning;
+use DatePeriod;
+use DateTime;
+use DateInterval;
 
 class LeaveController extends Controller
 {
     public function index() {
-        
+
         $user = \Auth::user();
         $user_id = $user->id;
         $super_admin_userid = getenv('SUPERADMINUSERID');
@@ -706,6 +710,44 @@ class LeaveController extends Controller
             }
             else {
 
+            }
+
+            // Add Entry in work planning when any leave is approved
+            $period = new DatePeriod(
+                new DateTime($leave_details['from_date']),
+                new DateInterval('P1D'),
+                new DateTime($leave_details['to_date'])
+            );
+
+            foreach ($period as $key => $value) {
+
+                $added_date = $value->format('Y-m-d');
+
+                $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($added_date,$user_id);
+
+                if(isset($get_work_planning_res) && $get_work_planning_res != '') {
+                }
+                else {
+
+                    $work_planning = new WorkPlanning();
+                    $work_planning->added_date = $added_date;
+                    $work_planning->added_by = $user_id;
+                    $work_planning->save();
+                }
+            }
+
+            //Add only to_date in work planning
+            $converted_to_date = date('Y-m-d',strtotime($leave_details['to_date']));
+            $get_to_date_work_planning = WorkPlanning::getWorkPlanningByAddedDateAndUserID($converted_to_date,$user_id);
+
+            if(isset($get_to_date_work_planning) && $get_to_date_work_planning != '') {
+            }
+            else {
+
+                $work_planning = new WorkPlanning();
+                $work_planning->added_date = $converted_to_date;
+                $work_planning->added_by = $user_id;
+                $work_planning->save();
             }
         }
         elseif ($reply == 'Rejected') {
