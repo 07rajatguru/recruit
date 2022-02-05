@@ -129,9 +129,9 @@ class WorkPlanning extends Model
                 // Check for holidays
                 $holidays_dates = Holidays::getUsersHolidays($value->added_by);
 
-                if (in_array($get_date,$holidays_dates) && $value->loggedin_time == '' && $get_date > $current_date) {
+                if (in_array($get_date,$holidays_dates) && $value->loggedin_time == '' && $get_date >= $current_date) {
                 }
-                else if($added_day == 'Sunday' && $value->loggedin_time == '' && $get_date > $current_date) {
+                else if($added_day == 'Sunday' && $value->loggedin_time == '' && $get_date >= $current_date) {
                 }
                 else {
 

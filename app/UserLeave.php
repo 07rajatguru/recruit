@@ -126,6 +126,7 @@ class UserLeave extends Model
             $leave_data['type_of_leave'] = $res->type_of_leave;
             $leave_data['days'] = $res->days;
             $leave_data['remarks'] = $res->remarks;
+            $leave_data['selected_dates'] = $res->selected_dates;
         }
 
         return $leave_data;
@@ -231,14 +232,11 @@ class UserLeave extends Model
 
         $query = UserLeave::query();
 
-        $query = $query->where(function($query) use ($date) {
-
-            $query = $query->where('user_leave.from_date','=',$date);
-            $query = $query->orwhere('user_leave.to_date','=',$date);
-        });
-
-        $query = $query->where('user_leave.user_id','=',$user_id);
-        $query = $query->select('user_leave.category');
+        $query = $query->where('selected_dates','like',"%$date%");
+        $query = $query->where('user_id','=',$user_id);
+        $query = $query->where('status','=',1);
+        $query = $query->where('type_of_leave','=','Full Day');
+        $query = $query->select('category');
         $response = $query->first();
 
         return $response;
