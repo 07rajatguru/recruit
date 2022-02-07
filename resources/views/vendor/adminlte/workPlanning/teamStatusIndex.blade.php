@@ -120,6 +120,12 @@
                     @if(isset($value) && sizeof($value) >0)
                         <tbody id="data_{{$j}}">
                             @foreach($value as $k => $v)
+                                <?php
+
+                                    $added_date = date('Y-m-d',strtotime($v['added_date']));
+                                    $wfh_data = array();
+                                    $wfh_data = App\WorkFromHome::getWorkFromHomeRequestByDate($added_date,$v['added_by_id']);
+                                ?>
                                 <tr>
                                     <td>{{ ++$i }}</td>
                                     <td>
@@ -149,7 +155,12 @@
                                     @endif
                          
                                     <td>{{ $v['added_by'] }}</td>
-                                    <td>{{ $v['work_type'] }}</td>
+
+                                    @if(isset($wfh_data) && sizeof($wfh_data) > 0)
+                                        <td style="background-color:#BEBEBE;cursor: pointer;" title="Work From Home Request">{{ $v['work_type'] }}</td>
+                                    @else
+                                        <td>{{ $v['work_type'] }}</td>
+                                    @endif
 
                                     @if($v['added_day'] == 'Saturday')
 

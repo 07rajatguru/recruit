@@ -93,16 +93,18 @@
 
         @if(isset($work_planning_res) && $work_planning_res != '')
             @foreach ($work_planning_res as $key => $value)
+                <?php
+
+                    $holiday_data = array();
+                    $leave_data = array();
+                    $wfh_data = array();
+
+                    $added_date = date('Y-m-d',strtotime($value['added_date']));
+                    $holiday_data = App\Holidays::getHolidayByDateAndID($added_date,$value['added_by_id']);
+                    $leave_data = App\UserLeave::getLeaveByDateAndID($added_date,$value['added_by_id']);
+                    $wfh_data = App\WorkFromHome::getWorkFromHomeRequestByDate($added_date,$value['added_by_id']);
+                ?>
                 <tr>
-                    <?php
-
-                        $holiday_data = array();
-                        $leave_data = array();
-
-                        $added_date = date('Y-m-d',strtotime($value['added_date']));
-                        $holiday_data = App\Holidays::getHolidayByDateAndID($added_date,$value['added_by_id']);
-                        $leave_data = App\UserLeave::getLeaveByDateAndID($added_date,$value['added_by_id']);
-                    ?>
                     @if($value['loggedin_time'] != '')
 
                         <td>{{ ++$i }}</td>
@@ -131,7 +133,12 @@
                         @endif
 
                         <td>{{ $value['added_by'] }}</td>
-                        <td>{{ $value['work_type'] }}</td>
+
+                        @if(isset($wfh_data) && sizeof($wfh_data) > 0)
+                            <td style="background-color:#BEBEBE;cursor: pointer;" title="Work From Home Request">{{ $value['work_type'] }}</td>
+                        @else
+                            <td>{{ $value['work_type'] }}</td>
+                        @endif
 
                         @if($value['added_day'] == 'Saturday')
 

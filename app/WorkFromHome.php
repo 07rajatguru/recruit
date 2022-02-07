@@ -124,4 +124,17 @@ class WorkFromHome extends Model
 
         return $response;
     }
+
+    public static function getWorkFromHomeRequestByDate($apply_date,$user_id) {
+
+        $query = WorkFromHome::query();
+
+        $query = $query->where('selected_dates','like',"%$apply_date%");
+        $query = $query->where('user_id','=',$user_id);
+        $query = $query->where('status','=',1);
+        $query = $query->select('work_from_home.id');
+        $response = $query->get();
+
+        return $response;
+    }
 }

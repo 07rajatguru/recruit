@@ -94,6 +94,12 @@
 
         @if(isset($work_planning_res) && $work_planning_res != '')
             @foreach ($work_planning_res as $key => $value)
+                <?php
+
+                    $added_date = date('Y-m-d',strtotime($value['added_date']));
+                    $wfh_data = array();
+                    $wfh_data = App\WorkFromHome::getWorkFromHomeRequestByDate($added_date,$value['added_by_id']);
+                ?>
                 <tr>
                     <td>{{ ++$i }}</td>
                     <td>
@@ -121,7 +127,12 @@
                     @endif
 
                     <td>{{ $value['added_by'] }}</td>
-                    <td>{{ $value['work_type'] }}</td>
+
+                    @if(isset($wfh_data) && sizeof($wfh_data) > 0)
+                        <td style="background-color:#BEBEBE;cursor: pointer;" title="Work From Home Request">{{ $value['work_type'] }}</td>
+                    @else
+                        <td>{{ $value['work_type'] }}</td>
+                    @endif
 
                     @if($value['added_day'] == 'Saturday')
 
