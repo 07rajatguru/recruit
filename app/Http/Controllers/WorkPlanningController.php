@@ -791,11 +791,9 @@ class WorkPlanningController extends Controller
             $work_planning->save();   
         }
 
-        
-
-        $work_planning_id = $work_planning->id;
-
         // Add Listing Rows
+        $work_planning_id = $work_planning->id;
+        
         $task = array();
         $task = Input::get('task');
 
@@ -879,9 +877,15 @@ class WorkPlanningController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-        // If Report Delay send one more email notification
+        // If Report Delay & current time is grater than 10:30 then send email notification
+        $current_date = date('Y-m-d H:i:s');
+        $utc = $current_date;
+        $dt = new \DateTime($utc);
+        $tz = new \DateTimeZone('Asia/Kolkata'); // or whatever zone you're after
+        $dt->setTimezone($tz);
+        $cur_time = $dt->format('H:i');
 
-        if($time_diff > '01:00') {
+        if($cur_time > '10:30' && $time_diff > '01:00') {
 
             if($report_email == '') {
                 $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
