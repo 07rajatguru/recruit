@@ -208,8 +208,8 @@
                             <td style="background-color:#7030a0;">{{ $value['added_date'] }}</td>
                             <td colspan="7"><center><b>{{ $leave_data->category }}</b></center></td>
                         @else
-                            <td style="background-color:#b284be;">{{ $value['added_date'] }}</td>
-                            <td colspan="7"><center><b>On Leave</b></center></td>
+                            <td style="background-color:#fd5e53;">{{ $value['added_date'] }}</td>
+                            <td colspan="7"><center><b>Absent</b></center></td>
                         @endif
 
                     @elseif(isset($holiday_data) && $holiday_data != '')
