@@ -168,7 +168,7 @@
 				<td colspan="10"></td>
 			</tr>
 			<tr>
-				<td colspan="10"><img src="{{ public_path().'/images/Signature.png' }}" height="70px" width="70px" /></td>
+				<td colspan="10"><img src="{{ public_path().'/images/Raj_Signature.png' }}" height="70px" width="70px" /></td>
 			</tr>
 			<tr>
 				<td colspan="10"><b>Authorized Signatory</b></td>

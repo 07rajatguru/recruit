@@ -258,7 +258,7 @@
 					<img src="{{ public_path().'/images/Blank_Signature.png' }}" height="90%" width="90%" />
 				</td> 
 				<td style="width: 13;" colspan="10">
-					<img src="{{ public_path().'/images/Signature.png' }}" height="90%" />
+					<img src="{{ public_path().'/images/Raj_Signature.png' }}" height="90%" />
 				</td>
 				<td>
 					<img src="{{ public_path().'/images/Blank_Signature.png' }}" height="90%" width="90%" />
