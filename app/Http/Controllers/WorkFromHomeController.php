@@ -457,7 +457,8 @@ class WorkFromHomeController extends Controller
 
             if($id == 0) {
             
-                $work_from_home_res = WorkFromHome::getAllWorkFromHomeRequestsByUserId(0,$user_id,$month,$year,'');
+                $user_ids[] = $user_id;
+                $work_from_home_res = WorkFromHome::getAllWorkFromHomeRequestsByUserId(0,$user_ids,$month,$year,'');
                 $count = sizeof($work_from_home_res);
             }
             else {
