@@ -47,9 +47,10 @@
                 <th>Posting Title</th>
                 <th>Candidate</th>
                 <th>Candidate <br/>Contact No.</th>
+                <th>Candidate Email</th>
                 <th>Interview Date</th>
-                <th>Interview Venue</th>
                 <th>Status</th>
+                <th>Interview Venue</th>
             </tr>
         </thead>
         <?php $i=0; ?>
@@ -86,9 +87,11 @@
                     
                     <td>{{ $attendedinterview['candidate_fname'] }}</td>
                     <td>{{ $attendedinterview['contact'] }}</td>
+                    <td>{{ $attendedinterview['candidate_email'] }}</td>
                     <td>{{ date('d-m-Y h:i A',strtotime($attendedinterview['interview_date'])) }}</td>
-                    <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $attendedinterview['location'] or ''}}</td>
                     <td>{{ $attendedinterview['status'] }}</td>
+                    <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $attendedinterview['location'] or ''}}</td>
+                    
                 </tr>
             @endforeach
         </tbody>

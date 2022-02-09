@@ -206,7 +206,8 @@ class InterviewController extends Controller
 
             $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['client_name'] . '-' . $value['posting_title'] . ', ' . $value['city'] . '</a>';
             $date = '<a style="color:black; text-decoration:none;">'. date('d-m-Y h:i A',strtotime($value['interview_date'])) . '</a>';
-
+            $candidate_email = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['candidate_email'] . '</a>';
+            
             $location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['location'] . '</a>';
             $action .= '<a title="Show"  class="fa fa-circle" href="'. route('interview.show',$value['id']) .'" style="margin:3px;"></a>';
             $action .= '<a title="Edit" class="fa fa-edit" href="'.route('interview.edit',array($value['id'],'index')).'" style="margin:3px;"></a>';
@@ -221,7 +222,7 @@ class InterviewController extends Controller
                 $action .= $delete;
             }
 
-            $data = array(++$j,$checkbox,$action,$posting_title,$value['candidate_fname'],$value['contact'],$date,$value['candidate_owner'],$value['status'],$location,$color);
+            $data = array(++$j,$checkbox,$action,$posting_title,$value['candidate_fname'],$value['contact'],$candidate_email,$date,$value['candidate_owner'],$value['status'],$location,$color);
             $interview[$i] = $data;
             $i++;
         }
@@ -430,8 +431,13 @@ class InterviewController extends Controller
             }
 
             $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['client_name'] . '-' . $value['posting_title'] . ', ' . $value['city'] . '</a>';
+
+            $candidate_email = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['candidate_email'] . '</a>';
+
             $date = '<a style="color:black; text-decoration:none;">'. date('d-m-Y h:i A',strtotime($value['interview_date'])) . '</a>';
+
             $location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['location'] . '</a>';
+
             $action .= '<a title="Show"  class="fa fa-circle" href="'. route('interview.show',$value['id']) .'" style="margin:3px;"></a>';
             $action .= '<a title="Edit" class="fa fa-edit" href="'.route('interview.edit',array($value['id'],'index')).'" style="margin:3px;"></a>';
 
@@ -445,7 +451,7 @@ class InterviewController extends Controller
                 $action .= $delete;
             }
 
-            $data = array(++$j,$checkbox,$action,$posting_title,$value['candidate_fname'],$value['contact'],$date,$value['candidate_owner'],$value['status'],$location,$color);
+            $data = array(++$j,$checkbox,$action,$posting_title,$value['candidate_fname'],$value['contact'],$candidate_email,$date,$value['candidate_owner'],$value['status'],$location,$color);
             $interview[$i] = $data;
             $i++;
         }

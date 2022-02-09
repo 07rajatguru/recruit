@@ -90,6 +90,7 @@
                 <th>Posting Title</th>
                 <th>Candidate</th>
                 <th>Candidate <br/>Contact No.</th>
+                <th>Candidate Email</th>
                 <th>Interview Date</th>
                 <th>Candidate Owner</th>
                 <th>Status</th>
@@ -183,7 +184,7 @@
 
                 'bProcessing' : true,
                 'serverSide' : true,
-                "order" : [6,'desc'],
+                "order" : [7,'desc'],
                 "columnDefs": [ { "targets": 1, "searchable": false, "orderable": false },
                                 { "targets": 2, "searchable": false, "orderable": false },
                             ],
