@@ -3676,7 +3676,7 @@ class ClientController extends Controller
                 $list_array[$j]['attended_interviews'] = $attended_interviews;
 
                 $job_details = JobOpen::getJobById($client_jobs_value['id']);
-                $list_array[$j]['posting_title'] = $job_details['posting_title'];
+                $list_array[$j]['posting_title'] = $job_details['posting_title'] . " - " . $job_details['city'];
 
                 $j++;
             }

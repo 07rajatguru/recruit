@@ -2149,7 +2149,7 @@ class EveryMinute extends Command
                             $list_array[$j]['attended_interviews'] = $attended_interviews;
 
                             $job_details = JobOpen::getJobById($v1);
-                            $list_array[$j]['posting_title'] = $job_details['posting_title'];
+                            $list_array[$j]['posting_title'] = $job_details['posting_title'] . " - " . $job_details['city'];
 
                             $client_info = ClientBasicinfo::getClientInfoByJobId($v1);
                             $client_name = $client_info['coordinator_prefix'] . " " .  $client_info['coordinator_name'];
