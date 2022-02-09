@@ -11,7 +11,7 @@
 	<div class="row">
 	    <div class="col-lg-12 margin-tb">
 	        <div class="pull-left">
-	           <h2>{{ $name }} Holidays List ({{ $count or 0 }})</h2>  
+	           <h2>Holiday List ({{ $count or 0 }})</h2>  
 	        </div>
 	        <div class="pull-right">
             </div>
@@ -22,6 +22,7 @@
         <thead>
             <tr>
                 <th width="5px">No</th>
+                <th width="10px">Type</th>
                 <th width="10px">Title</th>
                 <th width="5px">Date</th>
                 @if($id == 1)
@@ -34,6 +35,7 @@
             @foreach($holiday_details as $key => $value)
             <tr>
                 <td>{{ ++$i }}</td>
+                <td>{{$value['type']}}</td>
                 <td>{{$value['title']}}</td>
                 <td>{{$value['from_date']}}</td>
 
@@ -53,7 +55,7 @@
             var table = jQuery('#holidays_table').DataTable({
                 responsive: true,
                 stateSave : true,
-                "order" : [2, 'desc'],
+                "order" : [3, 'desc'],
             } );
 
             if ( ! table.data().any() ) {

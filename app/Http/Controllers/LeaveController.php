@@ -928,16 +928,13 @@ class LeaveController extends Controller
         }
     }
 
-    public function getAppliedLeave($id) {
+    public function getAppliedLeave($id,$month,$year) {
         
         $user = \Auth::user();
         $user_id = $user->id;
         $all_perm = $user->can('hr-employee-service-dashboard');
 
         $super_admin_userid = getenv('SUPERADMINUSERID');
-       
-        $month = date('m');
-        $year = date('Y');
 
         $user_ids[] = $user_id;
 

@@ -184,32 +184,27 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:hr-employee-service-dashboard']
     ));
 
-    Route::get('work-planning/pending/{id}', [
+    Route::get('work-planning/pending/{id}/{month}/{year}', [
         'as' => 'workplanning.pending',
         'uses' => 'WorkPlanningController@getPendingWorkPlanning',
         'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
     ]);
 
-    Route::get('applied-leave/{id}', [
+    Route::get('applied-leave/{id}/{month}/{year}', [
         'as' => 'applied.leave',
         'uses' => 'LeaveController@getAppliedLeave',
         'middleware' => ['permission:display-leave|display-user-wise-leave']
     ]);
 
-    Route::get('late-in-early-go-request/{id}', [
+    Route::get('late-in-early-go-request/{id}/{month}/{year}', [
         'as' => 'late.early',
         'uses' => 'LateInEarlyGoController@getLateInEarlyGo',
         'middleware' => ['permission:display-leave|display-user-wise-leave']
     ]);
 
-    Route::get('optional-holidays/{id}', [
-        'as' => 'optional.holidays',
-        'uses' => 'HolidaysController@getOptionalHolidays'
-    ]);
-
-    Route::get('fixed-holidays/{id}', [
-        'as' => 'fixed.holidays',
-        'uses' => 'HolidaysController@getFixedHolidays'
+    Route::get('holidays/{id}/{month}/{year}', [
+        'as' => 'my.holidays',
+        'uses' => 'HolidaysController@getMyHolidays'
     ]);
 
     Route::get('list-of-holidays/{uid}', [
@@ -222,7 +217,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HolidaysController@sentOptionalHolidayEmail'
     ]);
 
-    Route::get('work-from-home-request/{id}', [
+    Route::get('work-from-home-request/{id}/{month}/{year}', [
         'as' => 'workfromhome.request',
         'uses' => 'WorkFromHomeController@getAllRequests',
         'middleware' => ['permission:display-work-from-home|display-user-wise-work-from-home']
@@ -335,7 +330,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses'=>'HomeController@export'
     ]);
 
-    Route::any('/users-attendance/{department_nm}', array (
+    Route::any('/users-attendance/{department_nm}/{month}/{year}', array (
         'uses' => 'HomeController@usersAttendance'
     ));
 

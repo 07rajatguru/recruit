@@ -401,7 +401,7 @@
             var year = $("#year :selected").val();
             var attendance_type = $("#attendance_type :selected").val();
 
-            var url = '/users-attendance/'+attendance_type+'';
+            var url = '/users-attendance/'+attendance_type+'/'+month+'/'+year;
 
             var form = $('<form action="' + url + '" method="post">' +
             '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +

@@ -406,14 +406,16 @@ class LateInEarlyGoController extends Controller
     public function getTotalLeaves() {
         
         $loggedin_user_id = $_GET['loggedin_user_id'];
+        $month = date('m');
+        $year = date('Y');
 
-        $get_leaves = LateInEarlyGo::getLateInEarlyGoByUserID($loggedin_user_id);
+        $get_leaves = LateInEarlyGo::getLateInEarlyGoByUserID($loggedin_user_id,$month,$year);
         $leaves_count = sizeof($get_leaves);
 
         return json_encode($leaves_count);
     }
 
-    public function getLateInEarlyGo($id) {
+    public function getLateInEarlyGo($id,$month,$year) {
         
         $user = \Auth::user();
         $user_id = $user->id;
@@ -432,7 +434,7 @@ class LateInEarlyGoController extends Controller
 
                 if($all_perm) {
                     
-                    $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID(0);
+                    $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID(0,$month,$year);
                     $count = sizeof($leave_details);
                 }
                 else {
@@ -444,14 +446,14 @@ class LateInEarlyGoController extends Controller
 
             if($id == 0) {
                 
-                $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID($user_id);
+                $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID($user_id,$month,$year);
                 $count = sizeof($leave_details);
             }
             else {
 
                 if($all_perm) {
                     
-                    $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID(0);
+                    $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID(0,$month,$year);
                     $count = sizeof($leave_details);
                 }
                 else {

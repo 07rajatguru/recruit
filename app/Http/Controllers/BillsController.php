@@ -18,7 +18,7 @@ use App\Utils;
 use App\Events\NotificationMail;
 use App\BillsLeadEfforts;
 use App\BillDate;
-//use PDF;
+use PDF;
 use App\RoleUser;
 
 class BillsController extends Controller
@@ -310,10 +310,10 @@ class BillsController extends Controller
 
                             $action .= '<a title="Download Invoice" href="'. route('invoice.excel',$value['id']) .'" style="margin:3px;"><i  class="fa fa-download"></i></a>';
                         }
-                        /*if(isset($value['pdf_invoice_url']) && $value['pdf_invoice_url'] != NULL){
+                        if(isset($value['pdf_invoice_url']) && $value['pdf_invoice_url'] != NULL){
 
-                           $action .= '<a title="Download PDF" href="'. route('invoice.pdf',$value['id']) .'" style="margin:3px;"><i  class="fa fa-file-pdf-o"></i></a>';
-                        }*/
+                           $action .= '<a title="Download PDF" href="'. route('invoice.pdf',$value['id']) .'" style="margin:3px;"><i class="fa fa-file-pdf-o"></i></a>';
+                        }
                     }
                 }
                 if($cancel_bill_perm) {
@@ -650,10 +650,10 @@ class BillsController extends Controller
 
                             $action .= '<a title="Download Invoice" href="'. route('invoice.excel',$value['id']) .'" style="margin:3px;"><i class="fa fa-download"></i></a>';
                         }
-                        /*if(isset($value['pdf_invoice_url']) && $value['pdf_invoice_url'] != NULL){
+                        if(isset($value['pdf_invoice_url']) && $value['pdf_invoice_url'] != NULL){
 
                            $action .= '<a title="Download PDF" href="'. route('invoice.pdf',$value['id']) .'" style="margin:3px;"><i class="fa fa-file-pdf-o"></i></a>';
-                        }*/
+                        }
                     }
                 }
                 if($cancel_bill_perm) {
@@ -2389,10 +2389,10 @@ class BillsController extends Controller
 
         // Generate PDF and save at bill id location
         
-        /*$pdf = PDF::loadView('adminlte::bills.pdfview', compact('invoice_data'));
+        $pdf = PDF::loadView('adminlte::bills.pdfview', compact('invoice_data'));
         //$customPaper = array(0,0,800,750);
         $pdf->setPaper('A4', 'portrait');
-        $pdf->save(public_path('uploads/bills/'.$id.'/'.$id.'_Invoice.pdf'));*/
+        $pdf->save(public_path('uploads/bills/'.$id.'/'.$invoice_name.'.pdf'));
 
         $user_id = \Auth::user()->id;
 
@@ -2442,14 +2442,22 @@ class BillsController extends Controller
         return redirect('/recovery')->with('success','Payment Received Successfully.')->with('selected_year',$year);
     }
 
-    /*public function DownloadInvoicePDF($id) {
+    public function DownloadInvoicePDF($id) {
 
         $invoice_data = Bills::getJoinConfirmationMail($id);
+
+        // Set invoice name
+        $date = date('dmY');
+        $in_nm = $invoice_data['client_company_name'] . " - " . $invoice_data['candidate_name'] . " - " . $date;
+
+        // Replace / with - for save excel format
+        $invoice_name =  str_replace("/","-",$in_nm);
+
         $pdf = PDF::loadView('adminlte::bills.pdfview', compact('invoice_data'));
-        //$customPaper = array(0,0,800,750);
         $pdf->setPaper('A4', 'portrait');
-        return $pdf->download($id.'_Invoice'.'.pdf');
-    }*/
+
+        return $pdf->download($invoice_name.'.pdf');
+    }
 
     public function DownloadInvoiceExcel($id) {
 

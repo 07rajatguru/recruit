@@ -65,6 +65,8 @@
                 $isClient = $user_obj::isClient($role_id);
                 $superadmin_userid = getenv('SUPERADMINUSERID');
                 $hr_userid = getenv('HRUSERID');
+                $month = date("m");
+                $year = date("Y");
             ?>
                     
             <div class="navbar-custom-menu">
@@ -100,7 +102,7 @@
                                                 <a href="{{getenv('APP_URL').'/work-from-home/add'}}" target="_blank">Apply For Work From Home</a>
                                             </li>
                                             <li>
-                                                <a href="{{getenv('APP_URL').'/users-attendance/self'}}" target="_blank">Attendance</a>
+                                                <a href="/users-attendance/self/{{ $month }}/{{ $year }}" target="_blank">Attendance</a>
                                             </li>
                                             <!-- <li>
                                                 <a href="{{getenv('APP_URL').'/ticket-discussion'}}">Ticket</a>

@@ -601,13 +601,15 @@ class EveryMinute extends Command
                 $bill_invoice = BillsDoc::getBillInvoice($module_id,'Invoice');
 
                 $input['xls_attachment'] = public_path() . "/" . $bill_invoice['file'];
-                //$input['pdf_attachment'] = public_path() . '/uploads/bills/'.$module_id.'/'.$module_id.'_invoice.pdf';
+
+                $pdf_url = str_replace(".xls", ".pdf", $bill_invoice['file']);
+                $input['pdf_attachment'] = public_path() . "/" . $pdf_url;
                 
                 \Mail::send('adminlte::emails.invoicegenerate', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
                     $message->attach($input['xls_attachment']);
-                    //$message->attach($input['pdf_attachment']);
+                    $message->attach($input['pdf_attachment']);
                 });
 
                 \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");

@@ -284,15 +284,18 @@ class Bills extends Model
             $bills[$i]['efforts'] = $efforts_str;
             $bills[$i]['job_confirmation'] = $value->joining_confirmation_mail;
 
-            // Generate Excel Invoice URL
+            // Generate Excel & PDF Invoice URL
 
             $bill_invoice = BillsDoc::getBillInvoice($value->id,'Invoice');
 
             if(isset($bill_invoice) && $bill_invoice != '') {
+
                 $excel_url = $bill_invoice['file'];
+                $pdf_url = str_replace(".xls", ".pdf", $bill_invoice['file']);
             }
             else {
                 $excel_url = '';
+                $pdf_url = '';
             }
 
             if (!file_exists($excel_url) && !is_dir($excel_url)) {
@@ -302,14 +305,12 @@ class Bills extends Model
                 $bills[$i]['excel_invoice_url'] = $excel_url;
             }
 
-            // Generate PDF Invoice URL
-            /*$pdf_url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.pdf';
             if (!file_exists($pdf_url) && !is_dir($pdf_url)) {
                 $bills[$i]['pdf_invoice_url'] = NULL;
             }
             else{
                 $bills[$i]['pdf_invoice_url'] = $pdf_url;
-            }*/
+            }
 
             // get lead employee efforts
             $lead_efforts = BillsLeadEfforts::getLeadEmployeeEffortsNameById($value->id);
@@ -599,13 +600,13 @@ class Bills extends Model
             }
 
             // Generate PDF Invoice URL
-            /*$pdf_url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.pdf';
+            $pdf_url = 'uploads/bills/'.$value->id.'/'.$value->id.'_invoice.pdf';
             if (!file_exists($pdf_url) && !is_dir($pdf_url)) {
                 $bills[$i]['pdf_invoice_url'] = NULL;
             }
             else{
                 $bills[$i]['pdf_invoice_url'] = $pdf_url;
-            }*/
+            }
 
             // get lead employee efforts
             $lead_efforts = BillsLeadEfforts::getLeadEmployeeEffortsNameById($value->id);

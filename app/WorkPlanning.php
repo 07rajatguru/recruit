@@ -448,7 +448,6 @@ class WorkPlanning extends Model
             $query = $query->where(\DB::raw('year(work_planning.added_date)'),'=',$year);
         }
         $query = $query->where('work_planning.status','=',0);
-        $query = $query->where('users.status','=','Active');
 
         $query = $query->select('work_planning.*','users.first_name as fnm','users.last_name as lnm');
         $response = $query->get();

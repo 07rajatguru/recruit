@@ -101,10 +101,7 @@ class LateInEarlyGo extends Model
         return $leave_data;
     }
 
-    public static function getLateInEarlyGoByUserID($loggedin_user_id) {
-
-        $month = date('m');
-        $year = date('Y');
+    public static function getLateInEarlyGoByUserID($loggedin_user_id,$month,$year) {
 
         $query = LateInEarlyGo::query();
         $query = $query->join('users','users.id','late_in_early_go.user_id');
@@ -114,8 +111,10 @@ class LateInEarlyGo extends Model
             $query = $query->where('late_in_early_go.user_id',$loggedin_user_id);
         }
 
-        $query = $query->where(\DB::raw('month(late_in_early_go.date)'),'=',$month);
-        $query = $query->where(\DB::raw('year(late_in_early_go.date)'),'=',$year);
+        if ($month != '' && $year != '') {
+            $query = $query->where(\DB::raw('month(late_in_early_go.date)'),'=',$month);
+            $query = $query->where(\DB::raw('year(late_in_early_go.date)'),'=',$year);
+        }
 
         $response = $query->get();
 

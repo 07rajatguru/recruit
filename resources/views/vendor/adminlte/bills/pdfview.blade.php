@@ -22,14 +22,28 @@
 			<tr>
 				<th colspan="4" style="text-align: center;background: #add8e6;border: 1px solid #000000;">Bill to Party</th>
 				<th colspan="4" style="text-align: center;background: #add8e6;border: 1px solid #000000;">Ship to Party</th>
-				<th colspan="2" style="text-align: center;background: #add8e6;border: 1px solid #000000;">
-				</th>
+				<th colspan="2" style="text-align: center;background: #add8e6;border: 1px solid #000000;"></th>
 			</tr>
 			<tr>
 				<td colspan="4" style="border: 1px solid #000000;"><b>Name:</b> {{ $invoice_data['company_name'] }}</td>
 				<td colspan="4" style="border: 1px solid #000000;"><b>Name:</b> {{ $invoice_data['company_name'] }}</td>
-				<td colspan="2" rowspan="2" style="border: 1px solid #000000;"><center><b> Invoice No. :
-				</center><br/> <center>ATS/18-19/___</center></b></td>
+				<td colspan="2" rowspan="2" style="border: 1px solid #000000;">
+					<?php
+						$month = date('m', strtotime($invoice_data['joining_date']));
+
+						if($month == 1 || $month == 2 || $month == 3) {
+
+							$full_year = date('Y', strtotime($invoice_data['joining_date'])) - 1;
+						}
+						else {
+
+							$full_year =  date('Y', strtotime($invoice_data['joining_date']));
+						}
+						
+                        $cur_yr = substr($full_year, -2);
+                        $nxt_yr = $cur_yr + 1;
+					?>
+					<b> Invoice No. :<br/> ATS/{{ $cur_yr }}-{{ $nxt_yr }}/___</b></td>
 			</tr>
 			<tr>
 				<td colspan="4" style="border: 1px solid #000000;"><b>Address:</b> {{ $invoice_data['billing_address'] }}</td>

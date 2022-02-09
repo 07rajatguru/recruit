@@ -1630,7 +1630,7 @@ class WorkPlanningController extends Controller
         $rm_hr_remarks = $_POST['rm_hr_remarks'];
         $action = $_POST['action'];
 
-        \DB::statement("UPDATE `work_planning_list` SET `rm_hr_remarks` = '$rm_hr_remarks' WHERE `id` = '$task_id'");
+        \DB::statement("UPDATE `work_planning_list` SET `rm_hr_remarks` = $rm_hr_remarks WHERE `id` = '$task_id'");
 
 
         /*$work_planning = WorkPlanning::getWorkPlanningDetailsById($wp_id);
@@ -1848,7 +1848,7 @@ class WorkPlanningController extends Controller
         return redirect()->route('workplanning.show',$wrok_planning_id)->with('error','Report Rejected.');
     }
 
-    public function getPendingWorkPlanning($id) {
+    public function getPendingWorkPlanning($id,$month,$year) {
         
         $user =  \Auth::user();
         $user_id = $user->id;
@@ -1856,9 +1856,6 @@ class WorkPlanningController extends Controller
         
         $super_admin_userid = getenv('SUPERADMINUSERID');
         $manager_user_id = env('MANAGERUSERID');
-        
-        $month = date('m');
-        $year = date('Y');
 
         if($user_id == $super_admin_userid) {
 

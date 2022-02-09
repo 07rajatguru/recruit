@@ -962,63 +962,57 @@ class HomeController extends Controller
 
         $user = \Auth::user();
         $user_id =  $user->id;
-        $superadmin_userid = getenv('SUPERADMINUSERID');
 
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-
-        $user_obj = new User();
-        $isClient = $user_obj::isClient($role_id);
-
-        if($isClient) {
-            return redirect()->route('jobopen.index');
-        }
-
-        $date = date('Y-m-d');
-        $month = date('m');
-        $year = date('Y');
-
-        if ($user_id == $superadmin_userid) {
-
-            // Get Pending Work Planning Count
-            $pending_work_planning_count = 0;
-
-            // Get Applied Leave Count
-            $leave_count = 0;
-            
-            // Set present days
-            $present_days = 0;
-
-            // Get Early go late in count
-            $earlygo_latein_count = 0;
+        if(isset($_POST['month']) && $_POST['month']!='') {
+            $month = $_POST['month'];
         }
         else {
-
-            // Get Pending Work Planning Count
-            $work_planning = WorkPlanning::getPendingWorkPlanningDetails($user_id,$month,$year);
-            $pending_work_planning_count = sizeof($work_planning);
-
-            // Get Applied Leave Count
-            $user_ids[] = $user_id;
-            $leave_data = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'');
-            $leave_count = sizeof($leave_data);
-
-            // Get Present Days Count
-            $present_days_res = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
-            $present_days = sizeof($present_days_res);
-
-            // Get Early go late in count
-            $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID($user_id);
-            $earlygo_latein_count = sizeof($leave_details);
+            $month = date("n");
         }
 
-        // Get Optional Holidays of User
-        $optional_holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'Optional Leave');
-        $optional_holidays_count = sizeof($optional_holiday_details);
+        if(isset($_POST['year']) && $_POST['year']!='') {
+            $year = $_POST['year'];
+        }
+        else {
+            $year = date("Y");
+        }
 
-        // Get Fixed Holidays of User
-        $fixed_holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'Fixed Leave');
-        $fixed_holidays_count = sizeof($fixed_holiday_details);
+        $month_array =array();
+        for ($m=1; $m<=12; $m++) {
+            $month_array[$m] = date('M', mktime(0,0,0,$m,1,$year));
+        }
+
+        $starting_year = '2021';
+        $ending_year = date('Y',strtotime('+2 year'));
+        $year_array = array();
+        for ($y=$starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
+        }
+
+        // Get Pending Work Planning Count
+        $work_planning = WorkPlanning::getPendingWorkPlanningDetails($user_id,$month,$year);
+        $pending_work_planning_count = sizeof($work_planning);
+
+        // Get Applied Leave Count
+        $user_ids[] = $user_id;
+        $leave_data = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'');
+        $leave_count = sizeof($leave_data);
+
+        // Get Present Days Count
+        $present_days_res = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
+        $present_days = sizeof($present_days_res);
+
+        // Get Early go late in count
+        $latein_earlygo_details = LateInEarlyGo::getLateInEarlyGoByUserID($user_id,$month,$year);
+        $earlygo_latein_count = sizeof($latein_earlygo_details);
+
+        // Get work from home request count
+        $wfh_data = WorkFromHome::getAllWorkFromHomeRequestsByUserId(0,$user_ids,$month,$year,'');
+        $work_from_home_res_count = sizeof($wfh_data);
+
+        // Get Holidays of User
+        $holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'');
+        $holidays_count = sizeof($holiday_details);
 
         // Get Work Anniversary dates of Current Month
         $work_anniversary_dates = User::getUsersWorkAnniversaryDatesByMonth($month);
@@ -1029,14 +1023,11 @@ class HomeController extends Controller
         // Get Holiday of Current Year
         $holidays = Holidays::getUserHolidaysByType(0,'',$year,'');
 
-        // Get List of applied leaves of team
+        // Get Assigners users
+        $assigned_users = User::getAssignedUsers($user_id);
 
-        $floor_reports_id = User::getAssignedUsers($user_id);
-
-        if(isset($floor_reports_id) && sizeof($floor_reports_id) > 0) {
-
-            foreach ($floor_reports_id as $key => $value) {
-
+        if(isset($assigned_users) && sizeof($assigned_users) > 0) {
+            foreach ($assigned_users as $key => $value) {
                 $user_ids_array[] = $key;
             }
         }
@@ -1048,19 +1039,34 @@ class HomeController extends Controller
             unset($user_ids_array[array_search($user_id,$user_ids_array)]);
         }
 
+        // Get List of applied late in early go requests of my team
+        $latein_earlygo_data = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(0,$user_ids_array,$month,$year,'');
+
+        // Get List of applied leaves of my team
         $leave_data = UserLeave::getAllLeavedataByUserId(0,$user_ids_array,$month,$year,'');
+
+        // Get List of applied work from home requests of my team
+        $wfh_data = WorkFromHome::getAllWorkFromHomeRequestsByUserId(0,$user_ids_array,$month,$year,'');
 
         $viewVariable = array();
         $viewVariable['pending_work_planning_count'] = $pending_work_planning_count;
         $viewVariable['leave_count'] = $leave_count;
         $viewVariable['present_days'] = $present_days;
         $viewVariable['earlygo_latein_count'] = $earlygo_latein_count;
-        $viewVariable['optional_holidays_count'] = $optional_holidays_count;
-        $viewVariable['fixed_holidays_count'] = $fixed_holidays_count;
+        $viewVariable['holidays_count'] = $holidays_count;
+
         $viewVariable['work_anniversary_dates'] = $work_anniversary_dates;
         $viewVariable['birthday_dates'] = $birthday_dates;
         $viewVariable['holidays'] = $holidays;
+
+        $viewVariable['latein_earlygo_data'] = $latein_earlygo_data;
         $viewVariable['leave_data'] = $leave_data;
+        $viewVariable['wfh_data'] = $wfh_data;
+
+        $viewVariable['month_array'] = $month_array;
+        $viewVariable['year_array'] = $year_array;
+        $viewVariable['month'] = $month;
+        $viewVariable['year'] = $year;
 
         return view('employee-self-service',$viewVariable);
     }
@@ -1072,28 +1078,51 @@ class HomeController extends Controller
         $user = \Auth::user();
         $user_id =  $user->id;
 
-        $date = date('Y-m-d');
-        $month = date('m');
-        $year = date('Y');
+        if(isset($_POST['month']) && $_POST['month']!='') {
+            $month = $_POST['month'];
+        }
+        else {
+            $month = date("n");
+        }
+
+        if(isset($_POST['year']) && $_POST['year']!='') {
+            $year = $_POST['year'];
+        }
+        else {
+            $year = date("Y");
+        }
+
+        $month_array =array();
+        for ($m=1; $m<=12; $m++) {
+            $month_array[$m] = date('M', mktime(0,0,0,$m,1,$year));
+        }
+
+        $starting_year = '2021';
+        $ending_year = date('Y',strtotime('+2 year'));
+        $year_array = array();
+        for ($y=$starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
+        }
 
         // Get Pending Work Planning Count
         $work_planning = WorkPlanning::getPendingWorkPlanningDetails(0,$month,$year);
         $pending_work_planning_count = sizeof($work_planning);
-            
-        // Set present days
-        $present_days = 0;
 
-        // Get Early go late in count
-        $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID(0);
-        $earlygo_latein_count = sizeof($leave_details);
+        // Get List of applied leaves
+        $leave_data = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,'');
+        $leave_count = sizeof($leave_data);
 
-        // Get Optional Holidays count of current month
-        $optional_holiday_details = Holidays::getUserHolidaysByType(0,$month,$year,'Optional Leave');
-        $optional_holidays_count = sizeof($optional_holiday_details);
+        // Get List of applied late in early go requests
+        $latein_earlygo_data = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(1,0,$month,$year,'');
+        $earlygo_latein_count = sizeof($latein_earlygo_data);
 
-        // Get Fixed Holidays count of current month
-        $fixed_holiday_details = Holidays::getUserHolidaysByType(0,$month,$year,'Fixed Leave');
-            $fixed_holidays_count = sizeof($fixed_holiday_details);
+        // Get List of applied work from home requests
+        $wfh_data = WorkFromHome::getAllWorkFromHomeRequestsByUserId(1,0,$month,$year,'');
+        $work_from_home_res_count = sizeof($wfh_data);
+
+        // Get Holidays count of current month
+        $holiday_details = Holidays::getUserHolidaysByType(0,$month,$year,'');
+        $holidays_count = sizeof($holiday_details);
 
         // Get Work Anniversary dates of Current Month
         $work_anniversary_dates = User::getUsersWorkAnniversaryDatesByMonth($month);
@@ -1104,44 +1133,30 @@ class HomeController extends Controller
         // Get Holiday of Current Year
         $holidays = Holidays::getUserHolidaysByType(0,'',$year,'');
 
-        // Get List of applied leaves of team
-
-        $users = User::getAllUsers();
-
-        if(isset($users) && sizeof($users) > 0) {
-            foreach ($users as $key => $value) {
-                $user_ids_array[] = $key;
-            }
-        }
-        else {
-            $user_ids_array = array();
-        }
-
-        // Get Applied Leave Count
-        $leave_data = UserLeave::getAllLeavedataByUserId(0,$user_ids_array,$month,$year,'');
-        $leave_count = sizeof($leave_data);
-
-        // Get Work From Requests
-        $work_from_home_res = WorkFromHome::getAllWorkFromHomeRequestsByUserId(1,0,$month,$year,'');
-        $work_from_home_res_count = sizeof($work_from_home_res);
-
         $viewVariable = array();
         $viewVariable['pending_work_planning_count'] = $pending_work_planning_count;
         $viewVariable['leave_count'] = $leave_count;
-        $viewVariable['present_days'] = $present_days;
         $viewVariable['earlygo_latein_count'] = $earlygo_latein_count;
-        $viewVariable['optional_holidays_count'] = $optional_holidays_count;
-        $viewVariable['fixed_holidays_count'] = $fixed_holidays_count;
+        $viewVariable['work_from_home_res_count'] = $work_from_home_res_count;
+        $viewVariable['holidays_count'] = $holidays_count;
+        
         $viewVariable['work_anniversary_dates'] = $work_anniversary_dates;
         $viewVariable['birthday_dates'] = $birthday_dates;
         $viewVariable['holidays'] = $holidays;
+
+        $viewVariable['latein_earlygo_data'] = $latein_earlygo_data;
         $viewVariable['leave_data'] = $leave_data;
-        $viewVariable['work_from_home_res_count'] = $work_from_home_res_count;
+        $viewVariable['wfh_data'] = $wfh_data;
+
+        $viewVariable['month_array'] = $month_array;
+        $viewVariable['year_array'] = $year_array;
+        $viewVariable['month'] = $month;
+        $viewVariable['year'] = $year;
 
         return view('hr-employee-self-service',$viewVariable);
     }
 
-    public function usersAttendance($department_nm) {
+    public function usersAttendance($department_nm,$month,$year) {
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -1149,15 +1164,13 @@ class HomeController extends Controller
         // Get Attendance Type
         $attendance_type = User::getAttendanceType();
 
-        if(isset($_POST['month']) && $_POST['month']!='') {
-            $month = $_POST['month'];
+        if(isset($month) && $month !='') {
         }
         else {
             $month = date("n");
         }
 
-        if(isset($_POST['year']) && $_POST['year']!='') {
-            $year = $_POST['year'];
+        if(isset($year) && $year !='') {
         }
         else {
             $year = date("Y");

@@ -13,9 +13,9 @@ class WorkFromHome extends Model
         $query = WorkFromHome::query();
         $query = $query->join('users','users.id','=','work_from_home.user_id');
         $query = $query->select('work_from_home.*','users.name as user_name');
-        
+
         if ($all == 0) {
-            $query = $query->where('work_from_home.user_id',$user_id);
+            $query = $query->whereIn('work_from_home.user_id',$user_id);
         }
 
         if(isset($status) && $status != '') {

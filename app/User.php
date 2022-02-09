@@ -1316,9 +1316,6 @@ class User extends Authenticatable
 
     public static function getUsersByJoiningDate($user_id,$department_id='') {
 
-        $status = 'Inactive';
-        $status_array = array($status);
-
         $client = getenv('EXTERNAL');
         $client_type = array($client);
 
@@ -1336,7 +1333,6 @@ class User extends Authenticatable
             $user_query = $user_query->whereIn('type',$department_id);
         }
 
-        $user_query = $user_query->whereNotIn('status',$status_array);
         $user_query = $user_query->whereNotIn('type',$client_type);
         $user_query = $user_query->whereNotIn('id',$super_array);
         $user_query = $user_query->orderBy('joining_date','ASC');

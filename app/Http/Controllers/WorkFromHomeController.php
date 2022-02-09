@@ -426,16 +426,13 @@ class WorkFromHomeController extends Controller
         return redirect()->route('workfromhome.index')->with('success','Request Deleted Successfully.');
     }
 
-    public function getAllRequests($id) {
+    public function getAllRequests($id,$month,$year) {
         
         $user =  \Auth::user();
         $user_id = $user->id;
         $all_perm = $user->can('hr-employee-service-dashboard');
         
         $super_admin_userid = getenv('SUPERADMINUSERID');
-        
-        $month = date('m');
-        $year = date('Y');
 
         if($user_id == $super_admin_userid) {
 

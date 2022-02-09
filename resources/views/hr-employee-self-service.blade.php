@@ -5,8 +5,30 @@
 @section('content_header')
     <div class="row">
         <div class="col-lg-12 margin-tb">
-            <div class="pull-left">
-                <h2>HR Employee Service</h2>
+            <div class="col-md-12">
+                <div class="col-md-4">
+                    <h2>HR Employee Service</h2>
+                </div>
+
+                <div class="col-md-2" style="margin-top: 20px;">
+                    <select class="form-control" name="month" id="month">
+                        @foreach($month_array as $key=>$value)
+                            <option value={{ $key }} @if($key==$month) selected="selected" @endif>{{ $value}}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-2" style="margin-top: 20px;">
+                    <select class="form-control" name="year" id="year">
+                        @foreach($year_array as $key=>$value)
+                            <option value={{ $key }} @if($key==$year) selected="selected" @endif>{{ $value}}</option>
+                        @endforeach
+                    </select>
+                </div>
+
+                <div class="col-md-2" style="margin-top: 20px;">
+                    <input class="btn btn-primary btn-block" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" style="width:100px;"/>
+                </div>
             </div>
         </div>
     </div>
@@ -30,7 +52,7 @@
                 <div class="icon">
                     <i class="fa fa-files-o"></i>
                 </div>
-                <a href="work-planning/pending/1" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="work-planning/pending/1/{{ $month }}/{{ $year }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -43,20 +65,20 @@
                 <div class="icon">
                     <i class="fa fa-leanpub"></i>
                 </div>
-                <a href="applied-leave/1" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="applied-leave/1/{{ $month }}/{{ $year }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
         <div class="col-lg-2 col-xs-4">
             <div class="small-box bg-red" style="border-radius:100%;">
                 <div class="inner">
-                    <h3><center>{{ $present_days or '0' }}</center></h3>
+                    <h3><center>0</center></h3>
                     <h5><center>Attendance</center></h5>
                 </div>
                 <div class="icon">
                     <i class="fa fa-calendar"></i>
                 </div>
-                <a href="/users-attendance/adler" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="/users-attendance/adler/{{ $month }}/{{ $year }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -69,22 +91,9 @@
                 <div class="icon">
                     <i class="fa fa-file-text-o"></i>
                 </div>
-                <a href="late-in-early-go-request/1" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="late-in-early-go-request/1/{{ $month }}/{{ $year }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
-
-        <!-- <div class="col-lg-2 col-xs-4">
-            <div class="small-box bg-purple" style="border-radius:100%;">
-                <div class="inner">
-                    <h3><center>{{ $optional_holidays_count or '0' }}</center></h3>
-                    <h5><center>Optional holidays in this month</center></h5>
-                </div>
-                <div class="icon">
-                    <i class="fa fa-list-alt"></i>
-                </div>
-                <a href="optional-holidays/1" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
-            </div>
-        </div> -->
 
         <div class="col-lg-2 col-xs-4">
             <div class="small-box bg-purple" style="border-radius:100%;">
@@ -95,20 +104,20 @@
                 <div class="icon">
                     <i class="fa fa-list-alt"></i>
                 </div>
-                <a href="work-from-home-request/1" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="work-from-home-request/1/{{ $month }}/{{ $year }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
         <div class="col-lg-2 col-xs-4">
             <div class="small-box bg-maroon" style="border-radius:100%;">
                 <div class="inner">
-                    <h3><center>{{ $fixed_holidays_count or '0' }}</center></h3>
-                    <h5><center>Fixed holidays in this month</center></h5>
+                    <h3><center>{{ $holidays_count or '0' }}</center></h3>
+                    <h5><center>Holidays in this month</center></h5>
                 </div>
                 <div class="icon">
                     <i class="fa fa-list-alt"></i>
                 </div>
-                <a href="fixed-holidays/1" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="holidays/1/{{ $month }}/{{ $year }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
     </div>
@@ -155,6 +164,58 @@
             </div>
         </div>
 
+         <div class="col-lg-6 col-xs-6">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">List of Applied Late In / Early Go Requests</h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table no-margin" style="border: 1px solid #00c0ef;">
+                            <thead>
+                            <tr>
+                                <th width="11%" style="border: 1px solid #00c0ef;">Sr. No.</th>
+                                <th width="100px" style="border: 1px solid #00c0ef;">User Name</th>
+                                <th width="100px" style="border: 1px solid #00c0ef;">Subject</th>
+                                <th width="100px" style="border: 1px solid #00c0ef;">Date</th>
+                                <th width="100px" style="border: 1px solid #00c0ef;">Type</th>
+                                <th width="100px" style="border: 1px solid #00c0ef;">View Details</th>
+                            </tr>
+                            </thead>
+                            @if(isset($latein_earlygo_data) && sizeof($latein_earlygo_data) > 0)
+                            <?php $i = 0; ?>
+                                <tbody>
+                                    @foreach($latein_earlygo_data as $key => $value)
+                                        <tr>
+                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}</td>
+                                            <td style="border: 1px solid #00c0ef;">{{ $value['user_name'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ $value['subject'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ $value['date'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ $value['leave_type'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                                <a title="View Details" href="{{ route('late-early.reply',$value['id']) }}" target="_blank">View</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            @else
+                                <tbody><tr><td colspan="6">No Data Found.</td></tr></tbody>
+                            @endif
+                        </table>
+                    </div>
+                    <div class="box-footer clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
         <div class="col-lg-6 col-xs-6">
             <div class="box box-info">
                 <div class="box-header with-border">
@@ -195,9 +256,6 @@
                 </div>
             </div>
         </div>
-    </div>
-
-    <div class="row">
         <div class="col-lg-6 col-xs-6">
             <div class="box box-info">
                 <div class="box-header with-border">
@@ -247,7 +305,9 @@
                 </div>
             </div>
         </div>
+    </div>
 
+    <div class="row">
         <div class="col-lg-6 col-xs-6">
             <div class="box box-info">
                 <div class="box-header with-border">
@@ -291,12 +351,81 @@
                 </div>
             </div>
         </div>
+        <div class="col-lg-6 col-xs-6">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">List of Applied Work From Home Requests</h3>
+
+                    <div class="box-tools pull-right">
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
+                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                    </div>
+                </div>
+                <div class="box-body">
+                    <div class="table-responsive">
+                        <table class="table no-margin" style="border: 1px solid #00c0ef;">
+                            <thead>
+                            <tr>
+                                <th width="11%" style="border: 1px solid #00c0ef;">Sr. No.</th>
+                                <th width="100px" style="border: 1px solid #00c0ef;">User Name</th>
+                                <th width="100px" style="border: 1px solid #00c0ef;">Subject</th>
+                                <th width="100px" style="border: 1px solid #00c0ef;">From Date</th>
+                                <th width="100px" style="border: 1px solid #00c0ef;">To Date</th>
+                                <th width="100px" style="border: 1px solid #00c0ef;">View Details</th>
+                            </tr>
+                            </thead>
+                            @if(isset($wfh_data) && sizeof($wfh_data) > 0)
+                            <?php $i = 0; ?>
+                                <tbody>
+                                    @foreach($wfh_data as $key => $value)
+                                        <tr>
+                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}</td>
+                                            <td style="border: 1px solid #00c0ef;">{{ $value['user_name'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ $value['subject'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ $value['from_date'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ $value['to_date'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                                <a title="View Details" href="{{ route('workfromhome.show',$value['id']) }}" target="_blank">View</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            @else
+                                <tbody><tr><td colspan="6">No Data Found.</td></tr></tbody>
+                            @endif
+                        </table>
+                    </div>
+                    <div class="box-footer clearfix"></div>
+                </div>
+            </div>
+        </div>
     </div>
 @stop
 
 @section('customscripts')
     <script>
         jQuery(document).ready(function () {
+
+            $("#month").select2();
+            $("#year").select2();
         });
+
+        function filter_data() {
+
+            var month = $("#month :selected").val();
+            var year = $("#year :selected").val();
+
+            var url = '/hr-employee-service';
+
+            var form = $('<form action="' + url + '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="text" name="month" value="'+month+'" />' +
+                '<input type="text" name="year" value="'+year+'" />' +
+                '</form>');
+
+            $('body').append(form);
+            form.submit();
+        }
     </script>
 @stop
