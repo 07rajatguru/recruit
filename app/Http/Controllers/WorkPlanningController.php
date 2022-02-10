@@ -1630,7 +1630,7 @@ class WorkPlanningController extends Controller
         $rm_hr_remarks = $_POST['rm_hr_remarks'];
         $action = $_POST['action'];
 
-        \DB::statement("UPDATE `work_planning_list` SET `rm_hr_remarks` = $rm_hr_remarks WHERE `id` = '$task_id'");
+        \DB::statement("UPDATE `work_planning_list` SET `rm_hr_remarks` = '$rm_hr_remarks' WHERE `id` = '$task_id'");
 
 
         /*$work_planning = WorkPlanning::getWorkPlanningDetailsById($wp_id);
