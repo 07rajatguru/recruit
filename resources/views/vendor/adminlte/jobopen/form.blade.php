@@ -951,6 +951,14 @@
 
                             $(".div_"+department_id).append(html);
                             $(".div_"+department_id).show();
+
+                            if(action == 'add') {
+
+                                var isChecked = $("#departments_all").is(":checked");
+                                if(isChecked == true) {
+                                    $('.department_class').prop('checked', true);
+                                }
+                            }
                         }
                     }
                     else {
