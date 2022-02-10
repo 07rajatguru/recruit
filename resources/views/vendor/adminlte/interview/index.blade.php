@@ -92,15 +92,12 @@
                 <th>Candidate <br/>Contact No.</th>
                 <th>Candidate Email</th>
                 <th>Interview Date</th>
-                <th>Candidate Owner</th>
+                <th>Candidate <br/>Owner</th>
                 <th>Status</th>
                 <th>Interview Venue</th>
             </tr>
         </thead>
-        <?php $i=0; ?>
-
-        <tbody>
-        </tbody>
+        <tbody></tbody>
     </table>
 
     <div id="modal-mail" class="modal text-left fade interview-mail" style="display: none;">
@@ -111,18 +108,19 @@
                     <h1 class="modal-title">Schedule Multiple Interview Mail</h1>
                 </div>
                 {!! Form::open(['method' => 'POST', 'route' => 'interview.multipleinterviewschedule','id'=>'subject_form'])!!}
-                <div class="modal-body check-id">
-                    
-                </div>
+                
+                <div class="modal-body check-id"></div>
+
                 <input type="hidden" name="inter_ids" id="inter_ids" value="">
+
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary" id="yes-btn">Send</button>
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
                 {!! Form::close() !!}
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+            </div>
+        </div>
+    </div>
 
     <div id="modal-status" class="modal text-left fade interview_status" style="display: none;">
         <div class="modal-dialog">
@@ -148,9 +146,9 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
                 {!! Form::close() !!}
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+            </div>
+        </div>
+    </div>
 
     <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
 @stop
@@ -205,7 +203,7 @@
                 "pagingType": "full_numbers",
                 stateSave : true,
                 "fnRowCallback": function( Row, Data ) {
-                    $('td:eq(3)', Row).css('background-color', Data[10]);
+                    $('td:eq(3)', Row).css('background-color', Data[11]);
                 }
             });
 
@@ -220,6 +218,7 @@
                     });
                 }
             });
+
             $('.interview_ids').change(function() {
                 if ($(this).prop('checked')) {
                     if ($('.interview_ids:checked').length == $('.interview_ids').length) {
@@ -263,12 +262,13 @@
                 "pagingType": "full_numbers",
                 stateSave : true,
                 "fnRowCallback": function( Row, Data ) {
-                    $('td:eq(3)', Row).css('background-color', Data[10]);
+                    $('td:eq(3)', Row).css('background-color', Data[11]);
                 }
             });
         }
 
         function checkIdsforMail() {
+
             var token = $('input[name="csrf_token"]').val();
             var interview_ids = new Array();
 
@@ -284,13 +284,18 @@
                 type: 'POST',
                 url: 'interview/checkidsmail',
                 data: { interview_ids:interview_ids, '_token':token },
-                success: function(msg){   
+                
+                success: function(msg) {
+
                     $(".interview-mail").show();
+
                     if (msg.success == 'success') {
+
                         $(".check-id").append(msg.mail);
                         document.getElementById("yes-btn").disabled = false;
                     }
-                    else{
+                    else {
+                        
                         $(".check-id").append(msg.err);
                         document.getElementById("yes-btn").disabled = true;
                     }

@@ -1,3 +1,11 @@
+@section('customs_css')
+    <style>
+        .error{
+            color:#f56954 !important;
+        }
+    </style>
+@endsection
+
 @extends('adminlte::page')
 
 @section('title', 'Interview')
@@ -10,7 +18,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2> {{$source}} Interview ({{ $count }})</h2>
+                <h2>{{$source}} Interview ({{ $count }})</h2>
             </div>
             <div class="pull-right">
                 @permission(('send-consolidated-schedule'))
@@ -28,25 +36,23 @@
 
     <div class="row">
         <div class="col-lg-12 margin-tb">
-            <div class="col-md-2">
+            <div class="col-md-2 col-sm-3">
                 <a href="{{ route('interview.today') }}" style="text-decoration: none;color: black;"><div style="width:100px;height:40px;background-color:#8FB1D5;padding:9px 25px;font-weight: 600;border-radius: 22px;">Today</div></a>
-            </div>&nbsp;
-            
-            <div class="col-md-2">
+            </div>
+            <div class="col-md-2 col-sm-3">
                 <a href="{{ route('interview.tomorrow') }}" style="text-decoration: none;color: black;"><div style="width:100px;height:40px;background-color:#feb80a;padding:9px 17px;font-weight: 600;border-radius: 22px;">Tomorrow</div></a>
-            </div>&nbsp;
-
-            <div class="col-md-2">
+            </div>
+            <div class="col-md-2 col-sm-3">
                 <a href="{{ route('interview.thisweek') }}" style="text-decoration: none;color: black;"><div style="width:120px;height:40px;background-color:#C4D79B;padding:9px 25px;font-weight: 600;border-radius: 22px;">This Week</div></a>
-            </div>&nbsp;
-
-            <div class="col-md-2">
+            </div>
+            <div class="col-md-2 col-sm-3">
                 <a href="{{ route('interview.upcomingprevious') }}" style="text-decoration: none;color: black;"><div style="width:165px;height:40px;background-color:#F08080;padding:9px 17px;font-weight: 600;border-radius: 22px;">Upcoming/Previous</div></a>
             </div>
         </div>
     </div>
 
-    <br/>
+    <br>
+
     @if ($message = Session::get('success'))
         <div class="alert alert-success">
             <p>{{ $message }}</p>
@@ -59,18 +65,18 @@
         </div>
     @endif
 
-    <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="interview_table">
+    <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="type_interview_table">
         <thead>
             <tr>
                 <th>No</th>
                 <th>{{ Form::checkbox('interview[]',0 ,null,array('id'=>'allcb')) }}</th>
-                <th width="80px">Action</th>
+                <th>Action</th>
                 <th>Posting Title</th>
                 <th>Candidate</th>
                 <th>Candidate <br/>Contact No.</th>
                 <th>Candidate Email</th>
                 <th>Interview Date</th>
-                <th>Candidate Owner</th>
+                <th>Candidate <br/>Owner</th>
                 <th>Status</th>
                 <th>Interview Venue</th>
             </tr>
@@ -81,13 +87,12 @@
     <div id="modal-mail" class="modal text-left fade interview-mail" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
-
                 <div class="modal-header">
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                     <h1 class="modal-title">Schedule Multiple Interview Mail</h1>
                 </div>
 
-                {!! Form::open(['method' => 'POST', 'route' => 'interview.multipleinterviewschedule']) !!}
+                {!! Form::open(['method' => 'POST', 'route' => 'interview.multipleinterviewschedule','id'=>'subject_form']) !!}
 
                 <div class="modal-body check-id"></div>
 
@@ -127,9 +132,9 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
                 {!! Form::close() !!}
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+            </div>
+        </div>
+    </div>
 
     <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
 @stop
@@ -138,6 +143,20 @@
     <script>
         $(document).ready(function() {
 
+            $("#subject_form").validate({
+
+                rules: {
+                    "subject": {
+                        required: true
+                    }
+                },
+                messages: {
+                    "subject": {
+                        required: "Subject is Required Field."
+                    },
+                }
+            });
+
             $(".date").datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true
@@ -145,21 +164,19 @@
 
             var source = $("#source").val();
 
-            $("#interview_table").dataTable({
+            $("#type_interview_table").dataTable({
 
                 'bProcessing' : true,
                 'serverSide' : true,
                 "order" : [7,'desc'],
-                "columnDefs": [ 
-                    { "targets": 1, "searchable": false, "orderable": false },
-                    { "targets": 2, "searchable": false, "orderable": false },
-                ],
-
+                "columnDefs": [ { "targets": 1, "searchable": false, "orderable": false },
+                                { "targets": 2, "searchable": false, "orderable": false },
+                            ],
                 "ajax" : {
                     'url' : '/interview/allbytype',
-                    data : {"source" : source},
+                    data : {source:source},
                     'type' : 'get',
-                    error: function() {
+                    error: function(){
 
                     }
                 },
@@ -168,7 +185,7 @@
                 "pagingType": "full_numbers",
                 stateSave : true,
                 "fnRowCallback": function( Row, Data ) {
-                    $('td:eq(3)', Row).css('background-color', Data[10]);
+                    $('td:eq(3)', Row).css('background-color', Data[11]);
                 }
             });
 

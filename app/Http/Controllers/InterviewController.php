@@ -74,7 +74,7 @@ class InterviewController extends Controller
         return view('adminlte::interview.index', compact('count','source','year_array','year','interview_status'));
     }
 
-    public static function getInterviewOrderColumnName($order) {
+    public function getInterviewOrderColumnName($order) {
 
         $order_column_name = '';
 
@@ -92,15 +92,18 @@ class InterviewController extends Controller
                 $order_column_name = "candidate_basicinfo.mobile";
             }
             else if ($order == 6) {
-                $order_column_name = "interview.interview_date";
+                $order_column_name = "candidate_basicinfo.email";
             }
             else if ($order == 7) {
-                $order_column_name = "users.name";
+                $order_column_name = "interview.interview_date";
             }
             else if ($order == 8) {
-                $order_column_name = "interview.status";
+                $order_column_name = "users.name";
             }
             else if ($order == 9) {
+                $order_column_name = "interview.status";
+            }
+            else if ($order == 10) {
                 $order_column_name = "interview.location";
             }
         }
@@ -206,6 +209,8 @@ class InterviewController extends Controller
 
             $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['client_name'] . '-' . $value['posting_title'] . ', ' . $value['city'] . '</a>';
             $date = '<a style="color:black; text-decoration:none;">'. date('d-m-Y h:i A',strtotime($value['interview_date'])) . '</a>';
+
+            $contact = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['contact'] . '</a>';
             $candidate_email = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['candidate_email'] . '</a>';
             
             $location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['location'] . '</a>';
@@ -222,7 +227,7 @@ class InterviewController extends Controller
                 $action .= $delete;
             }
 
-            $data = array(++$j,$checkbox,$action,$posting_title,$value['candidate_fname'],$value['contact'],$candidate_email,$date,$value['candidate_owner'],$value['status'],$location,$color);
+            $data = array(++$j,$checkbox,$action,$posting_title,$value['candidate_fname'],$contact,$candidate_email,$date,$value['candidate_owner'],$value['status'],$location,$color);
             $interview[$i] = $data;
             $i++;
         }
@@ -395,7 +400,7 @@ class InterviewController extends Controller
                 $count = Interview::getInterviewsCountByType(0,$user->id,'upcomingprevious',$search);
             }
         }
-        
+
         $interview = array();
         $i = 0;$j = 0;
         $interview_status = Interview::getEditInterviewStatus();
@@ -432,6 +437,8 @@ class InterviewController extends Controller
 
             $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['client_name'] . '-' . $value['posting_title'] . ', ' . $value['city'] . '</a>';
 
+            $contact = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['contact'] . '</a>';
+
             $candidate_email = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['candidate_email'] . '</a>';
 
             $date = '<a style="color:black; text-decoration:none;">'. date('d-m-Y h:i A',strtotime($value['interview_date'])) . '</a>';
@@ -451,7 +458,7 @@ class InterviewController extends Controller
                 $action .= $delete;
             }
 
-            $data = array(++$j,$checkbox,$action,$posting_title,$value['candidate_fname'],$value['contact'],$candidate_email,$date,$value['candidate_owner'],$value['status'],$location,$color);
+            $data = array(++$j,$checkbox,$action,$posting_title,$value['candidate_fname'],$contact,$candidate_email,$date,$value['candidate_owner'],$value['status'],$location,$color);
             $interview[$i] = $data;
             $i++;
         }
