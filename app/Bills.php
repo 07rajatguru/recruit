@@ -1809,4 +1809,154 @@ class Bills extends Model
         }
         return $person_data;
     }
+
+    public static function getConfirmationWiseRecovery($all=0,$user_id=0,$confirmation,$current_year=NULL,$next_year=NULL) {
+
+        $cancel_bill = 1;
+        $cancel = array($cancel_bill);
+
+        $bills_query = Bills::query();
+        $bills_query = $bills_query->join('job_openings','job_openings.id','=','bills.job_id');
+        $bills_query = $bills_query->leftjoin('bills_efforts','bills_efforts.bill_id','=','bills.id');
+        $bills_query = $bills_query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
+        $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
+        $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name','candidate_basicinfo.lname','client_basicinfo.id as client_id','job_openings.remote_working as remote_working','client_basicinfo.account_manager_id');
+
+        if($all==0) {
+            $bills_query = $bills_query->where(function($bills_query) use ($user_id) {
+
+                $bills_query = $bills_query->where('bills_efforts.employee_name',$user_id);
+                $bills_query = $bills_query->orwhere('client_basicinfo.account_manager_id',$user_id);
+            });
+        }
+
+        // Get data by financial year
+        if (isset($current_year) && $current_year != NULL) {
+            $bills_query = $bills_query->where('bills.date_of_joining','>=',$current_year);
+        }
+        if (isset($next_year) && $next_year != NULL) {
+            $bills_query = $bills_query->where('bills.date_of_joining','<=',$next_year);
+        }
+
+        $bills_query = $bills_query->where('bills.status','=','1');
+        $bills_query = $bills_query->where('bills.joining_confirmation_mail','=',$confirmation);
+        $bills_query = $bills_query->whereNotIn('cancel_bill',$cancel);
+
+        $bills_query = $bills_query->groupBy('bills.id');
+
+        $bills_res = $bills_query->get();
+
+        $bills = array();
+        $i = 0 ;
+        $date_class = new Date();
+
+        foreach ($bills_res as $key => $value) {
+
+            $bills[$i]['id'] = $value->id;
+            $bills[$i]['company_name'] = $value->company_name;
+            $bills[$i]['candidate_name'] = $value->candidate_name;
+            $bills[$i]['candidate_contact_number'] = $value->candidate_contact_number;
+            $bills[$i]['designation_offered'] = $value->designation_offered;
+            $bills[$i]['date_of_joining'] = $date_class->changeYMDtoDMY($value->date_of_joining);
+            $bills[$i]['date_of_joining_ts'] = strtotime($value->date_of_joining);
+
+            if($value->remote_working == '1') {
+
+                $bills[$i]['job_location'] = "Remote";
+            }
+            else {
+
+                $bills[$i]['job_location'] = $value->job_location;
+            }
+
+            $salary = str_replace(",", "", $value->fixed_salary);
+            $salary = (int)$salary;
+            $bills[$i]['fixed_salary'] = round($salary);
+
+            $bills[$i]['percentage_charged'] = $value->percentage_charged;
+            $bills[$i]['source'] = $value->source;
+            $bills[$i]['client_name'] = $value->client_name;
+            $bills[$i]['client_contact_number'] = $value->client_contact_number;
+            $bills[$i]['client_email_id'] = $value->client_email_id;
+            $bills[$i]['address_of_communication'] = $value->address_of_communication;
+            $bills[$i]['user_name'] = $value->name;
+            $bills[$i]['status'] = $value->status;
+            $bills[$i]['uploaded_by'] = $value->uploaded_by;
+            $bills[$i]['posting_title'] = $value->posting_title;
+            $bills[$i]['display_name'] = $value->display_name;
+
+             if($value->remote_working == '1') {
+
+                $bills[$i]['city'] = "Remote";
+            }
+            else {
+
+                $bills[$i]['city'] = $value->city;
+            }
+
+            $bills[$i]['cname'] = $value->full_name;
+            $bills[$i]['cancel_bill'] = $value->cancel_bill;
+
+            // get employee efforts
+            $efforts = Bills::getEmployeeEffortsNameById($value->id);
+            $efforts_str = '';
+            foreach ($efforts as $k=>$v){
+                if($efforts_str==''){
+                    $efforts_str = $k .'('.(int)$v . '%)';
+                }
+                else{
+                    $efforts_str .= ', '. $k .'('.(int)$v . '%)';
+                }
+            }
+            $bills[$i]['efforts'] = $efforts_str;
+            $bills[$i]['job_confirmation'] = $value->joining_confirmation_mail;
+
+            // Generate Excel & PDF Invoice URL
+
+            $bill_invoice = BillsDoc::getBillInvoice($value->id,'Invoice');
+
+            if(isset($bill_invoice) && $bill_invoice != '') {
+
+                $excel_url = $bill_invoice['file'];
+                $pdf_url = str_replace(".xls", ".pdf", $bill_invoice['file']);
+            }
+            else {
+                $excel_url = '';
+                $pdf_url = '';
+            }
+
+            if (!file_exists($excel_url) && !is_dir($excel_url)) {
+                $bills[$i]['excel_invoice_url'] = NULL;
+            }
+            else{
+                $bills[$i]['excel_invoice_url'] = $excel_url;
+            }
+
+            if (!file_exists($pdf_url) && !is_dir($pdf_url)) {
+                $bills[$i]['pdf_invoice_url'] = NULL;
+            }
+            else{
+                $bills[$i]['pdf_invoice_url'] = $pdf_url;
+            }
+
+            // get lead employee efforts
+            $lead_efforts = BillsLeadEfforts::getLeadEmployeeEffortsNameById($value->id);
+            $lead_efforts_str = '';
+            foreach ($lead_efforts as $k=>$v){
+                if($lead_efforts_str==''){
+                    $lead_efforts_str = $k .'('.(int)$v . '%)';
+                }
+                else{
+                    $lead_efforts_str .= ', '. $k .'('.(int)$v . '%)';
+                }
+            }
+            $bills[$i]['lead_efforts'] = $lead_efforts_str;
+            $bills[$i]['client_id'] = $value->client_id;
+            $bills[$i]['account_manager_id'] = $value->account_manager_id;
+
+            $i++;
+        }
+        return $bills;
+    }
 }

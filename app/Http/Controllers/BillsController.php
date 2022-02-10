@@ -303,17 +303,15 @@ class BillsController extends Controller
                             $payment = $payment_received->render();
                             $action .= $payment;
                         }
-                        /*if(isset($value['invoice_url']) && $value['invoice_url'] != NULL){
-                            $action .= '<a target="_blank" href="'.$value['invoice_url'].'" style="margin:2px;"><i  class="fa fa-fw fa-download"></i></a>';
-                        }*/
+
                         if(isset($value['excel_invoice_url']) && $value['excel_invoice_url'] != NULL){
 
                             $action .= '<a title="Download Invoice" href="'. route('invoice.excel',$value['id']) .'" style="margin:3px;"><i  class="fa fa-download"></i></a>';
                         }
-                        if(isset($value['pdf_invoice_url']) && $value['pdf_invoice_url'] != NULL){
+                        /*if(isset($value['pdf_invoice_url']) && $value['pdf_invoice_url'] != NULL){
 
                            $action .= '<a title="Download PDF" href="'. route('invoice.pdf',$value['id']) .'" style="margin:3px;"><i class="fa fa-file-pdf-o"></i></a>';
-                        }
+                        }*/
                     }
                 }
                 if($cancel_bill_perm) {
@@ -643,17 +641,15 @@ class BillsController extends Controller
                             $payment = $payment_received->render();
                             $action .= $payment;
                         }
-                        /*if(isset($value['invoice_url']) && $value['invoice_url'] != NULL){
-                            $action .= '<a target="_blank" href="'.$value['invoice_url'].'" style="margin:2px;"><i  class="fa fa-fw fa-download"></i></a>';
-                        }*/
+
                         if(isset($value['excel_invoice_url']) && $value['excel_invoice_url'] != NULL){
 
                             $action .= '<a title="Download Invoice" href="'. route('invoice.excel',$value['id']) .'" style="margin:3px;"><i class="fa fa-download"></i></a>';
                         }
-                        if(isset($value['pdf_invoice_url']) && $value['pdf_invoice_url'] != NULL){
+                        /*if(isset($value['pdf_invoice_url']) && $value['pdf_invoice_url'] != NULL){
 
                            $action .= '<a title="Download PDF" href="'. route('invoice.pdf',$value['id']) .'" style="margin:3px;"><i class="fa fa-file-pdf-o"></i></a>';
-                        }
+                        }*/
                     }
                 }
                 if($cancel_bill_perm) {
@@ -2544,5 +2540,58 @@ class BillsController extends Controller
             }
         }
         exit;
+    }
+
+    // Display recovery listing by confirmation
+    public function confirmationWiseRecoveryListing($confirmation,$year) {
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        $all_recovery_perm = $user->can('display-recovery');
+        $loggedin_recovery_perm = $user->can('display-recovery-by-loggedin-user');
+        $can_owner_recovery_perm = $user->can('display-recovery-by-candidate-owner');
+
+        if (isset($year) && $year != 0) {
+
+            $year_data = explode(", ", $year);
+            $year1 = $year_data[0];
+            $year2 = $year_data[1];
+            $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
+            $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+
+            $financial_year = date('F-Y',strtotime("$current_year")) . " to " . date('F-Y',strtotime("$next_year"));
+        }
+        else {
+
+            $year = NULL;
+            $current_year = NULL;
+            $next_year = NULL;
+
+            $financial_year = '';
+        }
+
+        if($all_recovery_perm) {
+
+            $response = Bills::getConfirmationWiseRecovery(1,0,$confirmation,$current_year,$next_year);
+            $access = true;
+        }
+        else if ($loggedin_recovery_perm || $can_owner_recovery_perm) {
+
+            $response = Bills::getConfirmationWiseRecovery(0,$user_id,$confirmation,$current_year,$next_year);
+            $access = false;
+        }
+
+        $count = sizeof($response);
+
+        $viewVariable = array();
+        $viewVariable['recovery_list'] = $response;
+        $viewVariable['count'] = $count;
+        $viewVariable['access'] = $access;
+        $viewVariable['financial_year'] = $financial_year;
+        $viewVariable['year'] = $year;
+        $viewVariable['user_id'] = $user_id;
+
+        return view('adminlte::bills.confirmationwiserecovery', $viewVariable);
     }
 }
