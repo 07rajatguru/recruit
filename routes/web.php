@@ -2032,6 +2032,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-recovery|display-recovery-by-loggedin-user|display-recovery-by-candidate-owner']
     ]);
 
+    Route::get('recovery/cancel/{confirmation}/{year}',[
+        'as' => 'cancelrecovery.confirmation',
+        'uses' => 'BillsController@confirmationWiseCancelRecoveryListing',
+        'middleware' => ['permission:cancel-bill']
+    ]);
+
     Route::get('forecasting/{id}/edit', [
         'as' => 'forecasting.edit',
         'uses' => 'BillsController@edit',

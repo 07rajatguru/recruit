@@ -262,6 +262,8 @@ class BillsController extends Controller
 
                 if($access || ($user_id == $value['uploaded_by']) || ($user_id == $value['account_manager_id'])) {
 
+                    $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
+
                     $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
 
                     if($cancel_bill_perm) {
@@ -602,6 +604,8 @@ class BillsController extends Controller
             else if ($title == 'Cancel Recovery') {
 
                 if($access || ($user_id == $value['uploaded_by']) || ($user_id == $value['account_manager_id'])) {
+
+                    $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
 
                     $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
 
@@ -2542,7 +2546,7 @@ class BillsController extends Controller
         exit;
     }
 
-    // Display recovery listing by confirmation
+    // Display Recovery listing by confirmation
     public function confirmationWiseRecoveryListing($confirmation,$year) {
 
         $user = \Auth::user();
@@ -2571,14 +2575,72 @@ class BillsController extends Controller
             $financial_year = '';
         }
 
+        $cancel = 0;
+
         if($all_recovery_perm) {
 
-            $response = Bills::getConfirmationWiseRecovery(1,0,$confirmation,$current_year,$next_year);
+            $response = Bills::getConfirmationWiseRecovery(1,0,$confirmation,$current_year,$next_year,$cancel);
             $access = true;
         }
         else if ($loggedin_recovery_perm || $can_owner_recovery_perm) {
 
-            $response = Bills::getConfirmationWiseRecovery(0,$user_id,$confirmation,$current_year,$next_year);
+            $response = Bills::getConfirmationWiseRecovery(0,$user_id,$confirmation,$current_year,$next_year,$cancel);
+            $access = false;
+        }
+
+        $count = sizeof($response);
+
+        $viewVariable = array();
+        $viewVariable['recovery_list'] = $response;
+        $viewVariable['count'] = $count;
+        $viewVariable['access'] = $access;
+        $viewVariable['financial_year'] = $financial_year;
+        $viewVariable['year'] = $year;
+        $viewVariable['user_id'] = $user_id;
+
+        return view('adminlte::bills.confirmationwiserecovery', $viewVariable);
+    }
+
+    // Display Cancel Recovery listing by confirmation
+    public function confirmationWiseCancelRecoveryListing($confirmation,$year) {
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        $all_recovery_perm = $user->can('display-recovery');
+        $loggedin_recovery_perm = $user->can('display-recovery-by-loggedin-user');
+        $can_owner_recovery_perm = $user->can('display-recovery-by-candidate-owner');
+        $cancel_bill_perm = $user->can('cancel-bill');
+
+        if (isset($year) && $year != 0) {
+
+            $year_data = explode(", ", $year);
+            $year1 = $year_data[0];
+            $year2 = $year_data[1];
+            $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
+            $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+
+            $financial_year = date('F-Y',strtotime("$current_year")) . " to " . date('F-Y',strtotime("$next_year"));
+        }
+        else {
+
+            $year = NULL;
+            $current_year = NULL;
+            $next_year = NULL;
+
+            $financial_year = '';
+        }
+
+        $cancel = 1;
+
+        if($all_recovery_perm && $cancel_bill_perm) {
+
+            $response = Bills::getConfirmationWiseRecovery(1,0,$confirmation,$current_year,$next_year,$cancel);
+            $access = true;
+        }
+        else if(($loggedin_recovery_perm && $cancel_bill_perm) || ($can_owner_recovery_perm && $cancel_bill_perm)) {
+
+            $response = Bills::getConfirmationWiseRecovery(0,$user_id,$confirmation,$current_year,$next_year,$cancel);
             $access = false;
         }
 

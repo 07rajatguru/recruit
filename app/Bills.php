@@ -1810,9 +1810,8 @@ class Bills extends Model
         return $person_data;
     }
 
-    public static function getConfirmationWiseRecovery($all=0,$user_id=0,$confirmation,$current_year=NULL,$next_year=NULL) {
+    public static function getConfirmationWiseRecovery($all=0,$user_id=0,$confirmation,$current_year=NULL,$next_year=NULL,$cancel_bill) {
 
-        $cancel_bill = 1;
         $cancel = array($cancel_bill);
 
         $bills_query = Bills::query();
@@ -1841,7 +1840,7 @@ class Bills extends Model
 
         $bills_query = $bills_query->where('bills.status','=','1');
         $bills_query = $bills_query->where('bills.joining_confirmation_mail','=',$confirmation);
-        $bills_query = $bills_query->whereNotIn('cancel_bill',$cancel);
+        $bills_query = $bills_query->where('cancel_bill','=',$cancel);
 
         $bills_query = $bills_query->groupBy('bills.id');
 

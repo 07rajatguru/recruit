@@ -22,11 +22,7 @@
             @endif
         </div>
         <div class="pull-right">
-            @if($status==0)
-                <a class="btn btn-primary" href="{{ route('forecasting.index') }}">Back</a>
-            @else
-                <a class="btn btn-primary" href="{{ route('bills.recovery') }}">Back</a>
-            @endif
+            <a class="btn btn-primary" href="{{ url()->previous() }}">Back</a>
         </div>
     </div>
 </div>

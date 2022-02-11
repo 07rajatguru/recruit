@@ -26,7 +26,7 @@
                 <h2>{{ $billsdetails['company_name'] }}</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('forecasting.index') }}">Back</a>
+                <a class="btn btn-primary" href="{{ url()->previous() }}">Back</a>
             </div>
         </div>
     </div>
