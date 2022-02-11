@@ -22,7 +22,7 @@
 </div>
 
 @if( $action == 'edit')
-    {!! Form::model($leave, ['method' => 'PATCH','files' => true,'route' => ['leave.update', $leave->id], 'id' => 'leave_form', 'autocomplete' => 'off']) !!}
+    {!! Form::model($leave, ['method' => 'PATCH','files' => true,'route' => ['leave.update', $leave->id], 'id' => 'leave_form', 'autocomplete' => 'off','onsubmit' => "return sendEmail()"]) !!}
 @else
     {!! Form::open(array('route' => 'leave.store','method'=>'POST','files' => true, 'id' => 'leave_form', 'autocomplete' => 'off')) !!}
 @endif
@@ -113,6 +113,10 @@
 
     <input type="hidden" name="loggedin_user_id" id="loggedin_user_id" value="{{ $loggedin_user_id }}">
 </div>
+
+<input type="hidden" name="email_value" id="email_value" value="">
+
+{!! Form::close() !!}
 
 @section('customscripts')
     <script type="text/javascript">
@@ -257,6 +261,18 @@
                     });
                 }
             }
+        }
+
+        function sendEmail() {
+
+            var msg = "Send an email with updated details?";
+            var confirmvalue = confirm(msg);
+
+            if(confirmvalue) {
+
+                $("#email_value").val(confirmvalue);
+            }
+            return true;
         }
     </script>
 @endsection

@@ -398,6 +398,48 @@ class LeaveController extends Controller
         	}
         }
 
+        // Send email notification
+        $leave_details = UserLeave::getLeaveDetails($leave_id);
+
+        //Get Superadmin Email
+        $superadminuserid = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($superadminuserid);
+
+        //Get Reports to Email
+        $report_res = User::getReportsToUsersEmail($user_id);
+
+        if(isset($report_res->remail) && $report_res->remail!='') {
+            $report_email = $report_res->remail;
+        }
+        else {
+            $report_email = '';
+        }
+
+        // Get HR email id
+        $hr = getenv('HRUSERID');
+        $hremail = User::getUserEmailById($hr);
+
+        // Get Vibhuti gmail id
+        $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
+
+        if($report_email == '') {
+
+            $cc_users_array = array($hremail,$vibhuti_gmail_id);
+        }
+        else {
+            $cc_users_array = array($report_email,$hremail,$vibhuti_gmail_id);
+        }
+
+        $module = "Leave";
+        $sender_name = $user_id;
+        $to = $superadminemail;
+        $cc = implode(",",$cc_users_array);
+        $subject = $leave_details['subject'];
+        $body_message = $leave_details['message'];
+        $module_id = $leave_id;
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+
         return redirect()->route('leave.index')->with('success','Leave Application Added Successfully');
     }
 
@@ -423,6 +465,8 @@ class LeaveController extends Controller
     }
 
     public function update(Request $request,$id) {
+
+        $email_value = $request->input('email_value');
 
         $user_id = \Auth::user()->id;
         $dateClass = new Date();
@@ -530,6 +574,50 @@ class LeaveController extends Controller
         $user_leave->selected_dates = implode(",", $dates);
         $user_leave->save();
 
+        if(isset($email_value) && $email_value != '') {
+
+            $leave_details = UserLeave::getLeaveDetails($id);
+
+            //Get Superadmin Email
+            $superadminuserid = getenv('SUPERADMINUSERID');
+            $superadminemail = User::getUserEmailById($superadminuserid);
+
+            //Get Reports to Email
+            $report_res = User::getReportsToUsersEmail($user_id);
+
+            if(isset($report_res->remail) && $report_res->remail!='') {
+                $report_email = $report_res->remail;
+            }
+            else {
+                $report_email = '';
+            }
+
+            // Get HR email id
+            $hr = getenv('HRUSERID');
+            $hremail = User::getUserEmailById($hr);
+
+            // Get Vibhuti gmail id
+            $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
+
+            if($report_email == '') {
+
+                $cc_users_array = array($hremail,$vibhuti_gmail_id);
+            }
+            else {
+                $cc_users_array = array($report_email,$hremail,$vibhuti_gmail_id);
+            }
+
+            $module = "Leave";
+            $sender_name = $user_id;
+            $to = $superadminemail;
+            $cc = implode(",",$cc_users_array);
+            $subject = $leave_details['subject'];
+            $body_message = $leave_details['message'];
+            $module_id = $id;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+        }
+
         return redirect()->route('leave.index')->with('success','Leave Application Updated Successfully.');
     }
 
@@ -546,7 +634,7 @@ class LeaveController extends Controller
 
         $user_id = \Auth::user()->id;
 
-        // get superadmin email id
+        //Get Superadmin Email
         $superadminuserid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($superadminuserid);
 
@@ -629,6 +717,7 @@ class LeaveController extends Controller
 
         $user_email = User::getUserEmailById($user_id);
     
+        //Get Superadmin Email
         $superadminuserid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($superadminuserid);
 
