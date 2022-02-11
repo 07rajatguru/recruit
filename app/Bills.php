@@ -1812,8 +1812,6 @@ class Bills extends Model
 
     public static function getConfirmationWiseRecovery($all=0,$user_id=0,$confirmation,$current_year=NULL,$next_year=NULL,$cancel_bill) {
 
-        $cancel = array($cancel_bill);
-
         $bills_query = Bills::query();
         $bills_query = $bills_query->join('job_openings','job_openings.id','=','bills.job_id');
         $bills_query = $bills_query->leftjoin('bills_efforts','bills_efforts.bill_id','=','bills.id');
@@ -1830,6 +1828,10 @@ class Bills extends Model
             });
         }
 
+        $bills_query = $bills_query->where('bills.status','=','1');
+        $bills_query = $bills_query->where('bills.joining_confirmation_mail','=',$confirmation);
+        $bills_query = $bills_query->where('cancel_bill','=',$cancel_bill);
+
         // Get data by financial year
         if (isset($current_year) && $current_year != NULL) {
             $bills_query = $bills_query->where('bills.date_of_joining','>=',$current_year);
@@ -1837,10 +1839,6 @@ class Bills extends Model
         if (isset($next_year) && $next_year != NULL) {
             $bills_query = $bills_query->where('bills.date_of_joining','<=',$next_year);
         }
-
-        $bills_query = $bills_query->where('bills.status','=','1');
-        $bills_query = $bills_query->where('bills.joining_confirmation_mail','=',$confirmation);
-        $bills_query = $bills_query->where('cancel_bill','=',$cancel);
 
         $bills_query = $bills_query->groupBy('bills.id');
 

@@ -163,7 +163,7 @@
 
                 responsive: true,
                 "order" : [5,'desc'],
-                "columnDefs": [ {orderable: false, targets: [0]}],
+                "columnDefs": [ {orderable: false, targets: [1]}],
                 "pageLength": 25,
                 stateSave: true
             });

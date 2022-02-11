@@ -2561,8 +2561,8 @@ class BillsController extends Controller
             $year_data = explode(", ", $year);
             $year1 = $year_data[0];
             $year2 = $year_data[1];
-            $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
-            $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+            $current_year = date('Y-m-d',strtotime("first day of $year1"));
+            $next_year = date('Y-m-d',strtotime("last day of $year2"));
 
             $financial_year = date('F-Y',strtotime("$current_year")) . " to " . date('F-Y',strtotime("$next_year"));
         }
@@ -2617,8 +2617,8 @@ class BillsController extends Controller
             $year_data = explode(", ", $year);
             $year1 = $year_data[0];
             $year2 = $year_data[1];
-            $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
-            $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+            $current_year = date('Y-m-d',strtotime("first day of $year1"));
+            $next_year = date('Y-m-d',strtotime("last day of $year2"));
 
             $financial_year = date('F-Y',strtotime("$current_year")) . " to " . date('F-Y',strtotime("$next_year"));
         }
