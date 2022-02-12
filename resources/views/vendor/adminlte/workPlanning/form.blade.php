@@ -246,6 +246,7 @@
 {!! Form::close() !!}
 
 @section('customscripts')
+<script src="https://cdn.ckeditor.com/4.6.2/standard-all/ckeditor.js"></script>
 <script type="text/javascript">
 
     $(document).ready(function() {
@@ -257,7 +258,18 @@
         if(action == 'add') {
 
             for(j = 1; j <= 5; j++) {
+
                 $("#projected_time_"+j).select2({width:"130px"});
+
+                CKEDITOR.replace( 'remarks_'+j+'', {
+                    customConfig: '/js/ckeditor_config.js',
+                    height: '100px',
+                });
+
+                CKEDITOR.replace( 'rm_hr_remarks_'+j+'', {
+                    customConfig: '/js/ckeditor_config.js',
+                    height: '100px',
+                });
             }
 
             checkTime();
@@ -412,6 +424,16 @@
             $("#actual_time_"+row_cnt).select2();
         }
 
+        CKEDITOR.replace( 'remarks_'+row_cnt+'', {
+            customConfig: '/js/ckeditor_config.js',
+            height: '100px',
+        });
+
+        CKEDITOR.replace( 'rm_hr_remarks_'+row_cnt+'', {
+            customConfig: '/js/ckeditor_config.js',
+            height: '100px',
+        });
+
         var row_cnt_new = parseInt(row_cnt)+1;
         $("#row_cnt").val(row_cnt_new);
 
@@ -530,6 +552,16 @@
 
                         $("#projected_time_"+row_cnt).select2({width:"130px"});
                         $("#actual_time_"+row_cnt).select2({width:"130px"});
+                        
+                        CKEDITOR.replace( 'remarks_'+row_cnt+'', {
+                            customConfig: '/js/ckeditor_config.js',
+                            height: '100px',
+                        });
+
+                        CKEDITOR.replace( 'rm_hr_remarks_'+row_cnt+'', {
+                            customConfig: '/js/ckeditor_config.js',
+                            height: '100px',
+                        });
                         
                         var row_cnt_new = parseInt(row_cnt)+1;
                         $("#row_cnt").val(row_cnt_new);
