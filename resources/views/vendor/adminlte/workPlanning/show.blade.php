@@ -152,8 +152,23 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <?php $i=1; ?>
+                            <?php 
+
+                                $i=1;
+                                $wp_list_id = '';
+                            ?>
                             @foreach($work_planning_list as $key=>$value)
+                                <?php
+
+                                    if($wp_list_id == '') {
+
+                                        $wp_list_id = $value['work_planning_list_id'];
+                                    }
+                                    else {
+
+                                        $wp_list_id = $wp_list_id . "," . $value['work_planning_list_id'];    
+                                    }
+                                ?>
                                 <tr>
                                     <td style="border:1px solid black;text-align: center;">{{ $i++ }}</td>
                                     <td style="border:1px solid black;">{!! $value['task'] !!}</td>
@@ -260,6 +275,8 @@
                             @include('adminlte::workPlanning.postlist',array('post' => $work_planning_post))
                         </div>
                     </div>
+
+                    <input type="hidden" name="wp_list_id_string" id="wp_list_id_string" value="{{ $wp_list_id }}">
                 </div>
             </div>
         </div>
@@ -500,9 +517,21 @@
 @section('customscripts')
 <link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
+<script src="https://cdn.ckeditor.com/4.6.2/standard-all/ckeditor.js"></script>
 <script type="text/javascript">
 
     $(document).ready(function() {
+
+        // Set Editor for Remarks
+        var wp_list_id_string = $("#wp_list_id_string").val();
+        var wp_list_id_arr = wp_list_id_string.split(",");
+
+        for (var i = 0; i < wp_list_id_arr.length; i++) {
+            
+            CKEDITOR.replace( 'rm_hr_remarks_'+wp_list_id_arr[i]+'', {
+                customConfig: '/js/ckeditor_config.js',
+            });
+        }
 
         $("#reject_form").validate({
             rules: {

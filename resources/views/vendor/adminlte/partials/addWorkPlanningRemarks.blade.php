@@ -11,7 +11,7 @@
             </div>
             <div class="modal-body">
                 <div class="form-group">
-                    <textarea id="rm_hr_remarks_{{ $data['work_planning_list_id'] }}" name="rm_hr_remarks" class="form-control" rows="5" placeholder = "RM / HR Remarks"></textarea>
+                    <textarea id="rm_hr_remarks_{{ $data['work_planning_list_id'] }}" name="rm_hr_remarks" class="form-control" placeholder = "RM / HR Remarks"></textarea>
                 </div>
             </div>
 

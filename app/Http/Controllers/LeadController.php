@@ -918,8 +918,9 @@ class LeadController extends Controller
 
         // Save Department Id for Different Dashboard
         $vibhuti_user_id = getenv('STRATEGYUSERID');
+        $account_manager_id = $input['account_manager'];
 
-        if($user_id == $vibhuti_user_id) {
+        if($account_manager_id == $vibhuti_user_id) {
 
             $client_basic_info->department_id = 2;
         }
