@@ -2026,18 +2026,6 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:cancel-bill']
     ]);
 
-    Route::get('recovery/{confirmation}/{year}',[
-        'as' => 'recovery.confirmation',
-        'uses' => 'BillsController@confirmationWiseRecoveryListing',
-        'middleware' => ['permission:display-recovery|display-recovery-by-loggedin-user|display-recovery-by-candidate-owner']
-    ]);
-
-    Route::get('recovery/cancel/{confirmation}/{year}',[
-        'as' => 'cancelrecovery.confirmation',
-        'uses' => 'BillsController@confirmationWiseCancelRecoveryListing',
-        'middleware' => ['permission:cancel-bill']
-    ]);
-
     Route::get('forecasting/{id}/edit', [
         'as' => 'forecasting.edit',
         'uses' => 'BillsController@edit',
@@ -2105,6 +2093,18 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'billattachments.upload',
         'uses' => 'BillsController@upload',
         'middleware' => ['permission:forecasting-edit']
+    ]);
+
+    Route::get('recovery/{confirmation}/{year}',[
+        'as' => 'recovery.confirmation',
+        'uses' => 'BillsController@confirmationWiseRecoveryListing',
+        'middleware' => ['permission:display-recovery|display-recovery-by-loggedin-user|display-recovery-by-candidate-owner']
+    ]);
+
+    Route::get('recovery/cancel/{confirmation}/{year}',[
+        'as' => 'cancelrecovery.confirmation',
+        'uses' => 'BillsController@confirmationWiseCancelRecoveryListing',
+        'middleware' => ['permission:cancel-bill']
     ]);
 
     // for recovery joining confirmation mail route

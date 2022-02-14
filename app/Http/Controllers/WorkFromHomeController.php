@@ -55,7 +55,8 @@ class WorkFromHomeController extends Controller
         }
         else if($userwise_perm) {
 
-            $work_from_home_res = WorkFromHome::getAllWorkFromHomeRequestsByUserId(0,$user_id,$month,$year,''); 
+            $user_ids[] = $user_id;
+            $work_from_home_res = WorkFromHome::getAllWorkFromHomeRequestsByUserId(0,$user_ids,$month,$year,''); 
         }
 
         $pending = 0;
@@ -138,7 +139,8 @@ class WorkFromHomeController extends Controller
         }
         else if($userwise_perm) {
 
-            $work_from_home_res = WorkFromHome::getAllWorkFromHomeRequestsByUserId(0,$user_id,$month,$year,$status); 
+            $user_ids[] = $user_id;
+            $work_from_home_res = WorkFromHome::getAllWorkFromHomeRequestsByUserId(0,$user_ids,$month,$year,$status); 
         }
 
         $pending = 0;
