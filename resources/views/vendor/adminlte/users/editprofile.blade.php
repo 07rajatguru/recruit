@@ -1282,7 +1282,6 @@
 
             CKEDITOR.replace( 'signature', {
                 filebrowserUploadUrl: '{{ route('upload.signature',['_token' => csrf_token() ]) }}',
-                customConfig: '/js/ckeditor_config.js'
             });
 
             CKEDITOR.on('dialogDefinition', function( ev ) {
