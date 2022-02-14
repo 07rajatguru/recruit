@@ -55,6 +55,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\AddTotalHoursOneTime',
         'App\Console\Commands\DailyReportNew',
         'App\Console\Commands\SentWorkPlanningStatusReminder',
+        'App\Console\Commands\PendingWorkPlanningReminderScript',
         
     ];
 

@@ -2618,6 +2618,40 @@ class EveryMinute extends Command
 
                 \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'"); 
             }
+
+            else if ($value['module'] == "Pending Work Planning Reminder") {
+
+                $from_date = date('Y-m-d',strtotime("-4 days"));
+                $to_date = date("Y-m-d");
+
+                $assigned_users = User::getAllUsersForRemarks($value['sender_name'],0);
+
+                if(isset($assigned_users) && sizeof($assigned_users) > 0) {
+
+                    $user_ids = array();
+                    foreach ($assigned_users as $key1 => $value1) {
+                            
+                        if($key1 != '') {
+                            $user_ids[] = $key1;
+                        }
+                    }
+                }
+
+                $user_name = User::getUserNameByEmail($input['to']);
+                $input['user_name'] = $user_name;
+
+                $work_planning_res = WorkPlanning::getPendingWorkPlanningsByDate($user_ids,$from_date,$to_date);
+
+                $input['work_planning_res'] = $work_planning_res;
+
+                \Mail::send('adminlte::emails.pendingworkplanningreminder', $input, function ($message) use($input) {
+
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
+            }
         }
     }
 }
