@@ -9,8 +9,12 @@
                 <div class="col-md-4">
                     <h2>Employee Self Service</h2>
                 </div>
-
-                <div class="col-md-2" style="margin-top: 20px;">
+            </div>
+        </div>
+        
+        <div class="col-lg-12 margin-tb">
+            <div class="col-md-12">
+                <div class="col-md-1">
                     <select class="form-control" name="month" id="month">
                         @foreach($month_array as $key=>$value)
                             <option value={{ $key }} @if($key==$month) selected="selected" @endif>{{ $value}}</option>
@@ -18,7 +22,7 @@
                     </select>
                 </div>
 
-                <div class="col-md-2" style="margin-top: 20px;">
+                <div class="col-md-1">
                     <select class="form-control" name="year" id="year">
                         @foreach($year_array as $key=>$value)
                             <option value={{ $key }} @if($key==$year) selected="selected" @endif>{{ $value}}</option>
@@ -26,8 +30,8 @@
                     </select>
                 </div>
 
-                <div class="col-md-2" style="margin-top: 20px;">
-                    <input class="btn btn-primary btn-block" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" style="width:100px;"/>
+                <div class="col-md-1">
+                    <input class="btn btn-primary btn-block" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" style="width:90px;"/>
                 </div>
             </div>
         </div>
@@ -408,8 +412,8 @@
     <script>
         jQuery(document).ready(function () {
 
-            $("#month").select2();
-            $("#year").select2();
+            $("#month").select2({width : '90px'});
+            $("#year").select2({width : '90px'});
         });
 
         function filter_data() {

@@ -148,7 +148,7 @@
                                 <th style="border:1px solid black;text-align: center;">Projected <br/>Time</th>
                                 <th style="border:1px solid black;text-align: center;">Actual <br/>Time</th>
                                 <th style="border:1px solid black;">Remarks</th>
-                                <th style="border:1px solid black;">Reporting Manager / <br/>HR Remarks</th>
+                                <th style="border:1px solid black;">Reporting Manager / HR Remarks</th>
                             </tr>
                         </thead>
                         <tbody>
