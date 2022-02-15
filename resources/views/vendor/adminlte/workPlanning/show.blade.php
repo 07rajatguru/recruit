@@ -143,12 +143,12 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th width="5%" style="border:1px solid black;text-align: center;">Sr No.</th>
-                                <th width="25%" style="border:1px solid black;">Task</th>
-                                <th width="10%" style="border:1px solid black;text-align: center;">Projected Time</th>
-                                <th width="10%" style="border:1px solid black;text-align: center;">Actual Time</th>
-                                <th width="25%" style="border:1px solid black;">Remarks</th>
-                                <th width="25%" style="border:1px solid black;">Reporting Manager / HR Remarks</th>
+                                <th style="border:1px solid black;text-align: center;">Sr No.</th>
+                                <th style="border:1px solid black;">Task</th>
+                                <th style="border:1px solid black;text-align: center;">Projected <br/>Time</th>
+                                <th style="border:1px solid black;text-align: center;">Actual <br/>Time</th>
+                                <th style="border:1px solid black;">Remarks</th>
+                                <th style="border:1px solid black;">Reporting Manager / <br/>HR Remarks</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -170,8 +170,8 @@
                                     }
                                 ?>
                                 <tr>
-                                    <td style="border:1px solid black;text-align: center;">{{ $i++ }}</td>
-                                    <td style="border:1px solid black;">{!! $value['task'] !!}</td>
+                                    <td style="border:1px solid black;text-align: center;width: 5%;">{{ $i++ }}</td>
+                                    <td style="border:1px solid black;width: 20%;">{!! $value['task'] !!}</td>
                                     <?php
                                         $projected_time = array();$actual_time = array();
 
@@ -186,30 +186,30 @@
 
                                     @if(isset($projected_time)  && sizeof($projected_time) > 0)
                                         @if($projected_time[0] == 0)
-                                            <td style="border:1px solid black;text-align: center;">{{ $projected_time[1] }} Min.</td>
+                                            <td style="border:1px solid black;text-align: center;width: 8%;">{{ $projected_time[1] }} Min.</td>
                                         @else
-                                            <td style="border:1px solid black;text-align: center;">{{ $projected_time[0] }}:{{ $projected_time[1] }} Hours</td>
+                                            <td style="border:1px solid black;text-align: center;width: 8%;">{{ $projected_time[0] }}:{{ $projected_time[1] }} Hours</td>
                                         @endif
                                     @else
-                                        <td style="border:1px solid black;text-align: center;">{{ $value['projected_time'] }}</td>
+                                        <td style="border:1px solid black;text-align: center;width: 8%;">{{ $value['projected_time'] }}</td>
                                     @endif
 
                                     @if(isset($actual_time) && sizeof($actual_time) > 0)
                                         @if($actual_time[0] == 0)
-                                            <td style="border:1px solid black;text-align: center;">{{ $actual_time[1] }} Min.</td>
+                                            <td style="border:1px solid black;text-align: center;width: 7%;">{{ $actual_time[1] }} Min.</td>
                                         @else
-                                            <td style="border:1px solid black;text-align: center;">{{ $actual_time[0] }}:{{ $actual_time[1] }} Hours</td>
+                                            <td style="border:1px solid black;text-align: center;width: 7%;">{{ $actual_time[0] }}:{{ $actual_time[1] }} Hours</td>
                                         @endif
                                     @else
-                                        <td style="border:1px solid black;text-align: center;">{{ $value['actual_time'] }}</td>
+                                        <td style="border:1px solid black;text-align: center;width: 7%;">{{ $value['actual_time'] }}</td>
                                     @endif
 
-                                    <td style="border:1px solid black;">{!! $value['remarks'] !!}</td>
+                                    <td style="border:1px solid black;width: 30%;">{!! $value['remarks'] !!}</td>
 
                                     @if($value['rm_hr_remarks'] == '')
 
                                         @if($loggedin_user_id != $added_by_id)
-                                            <td style="border:1px solid black;">
+                                            <td style="border:1px solid black;width: 30%;">
                                                 @include('adminlte::partials.addWorkPlanningRemarks', ['data' => $value, 'name' => 'workplanning','work_planning' => $work_planning])
                                             </td>
                                         @else
@@ -218,11 +218,11 @@
                                     @else
 
                                         @if($loggedin_user_id != $added_by_id)
-                                            <td style="border:1px solid black;">{!! $value['rm_hr_remarks'] !!}
+                                            <td style="border:1px solid black;width: 30%;">{!! $value['rm_hr_remarks'] !!}
                                                 <button type="button" data-toggle="modal" data-target="#modal-edit-remarks-{!! $value['work_planning_list_id']!!}">Edit</button>
                                             </td>
                                         @else
-                                            <td style="border:1px solid black;">{!! $value['rm_hr_remarks'] !!}</td>
+                                            <td style="border:1px solid black;width: 30%;">{!! $value['rm_hr_remarks'] !!}</td>
                                         @endif
                                     @endif
                                 </tr>
