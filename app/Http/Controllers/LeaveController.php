@@ -1020,51 +1020,38 @@ class LeaveController extends Controller
     public function getAppliedLeave($id,$month,$year) {
         
         $user = \Auth::user();
-        $user_id = $user->id;
         $all_perm = $user->can('hr-employee-service-dashboard');
 
-        $super_admin_userid = getenv('SUPERADMINUSERID');
+        $user_id = $user->id;
+        $user_ids[] = $user_id;        
 
-        $user_ids[] = $user_id;
+        if($id == 0) {
 
-        if($user_id == $super_admin_userid) {
+            $pending_leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,0);
 
-            if($id == 0) {
-            
-                $leave_details = array();
-                $count = 0;
-            }
-            else {
+            $approved_leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,1);
 
-                if($all_perm) {
-                    
-                    $leave_details = UserLeave::getAllLeavedataByUserId(1,$user_ids,$month,$year,'');
-                    $count = sizeof($leave_details);
-                }
-                else {
-                    return view('errors.403');
-                }
-            }
+            $rejected_leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,2);
         }
         else {
 
-            if($id == 0) {
+            if($all_perm) {
 
-                $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'');
-                $count = sizeof($leave_details);
+                $pending_leave_details = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,0);
+
+                $approved_leave_details = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,1);
+
+                $rejected_leave_details = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,2);
             }
             else {
-
-                if($all_perm) {
-
-                    $leave_details = UserLeave::getAllLeavedataByUserId(1,$user_ids,$month,$year,'');
-                    $count = sizeof($leave_details);
-                }
-                else {
-                    return view('errors.403');
-                }
+                return view('errors.403');
             }
         }
-        return view('adminlte::leave.appliedleave',compact('leave_details','user_id','count'));
+
+        $pending_count = sizeof($pending_leave_details);
+        $approved_count = sizeof($approved_leave_details);
+        $rejected_count = sizeof($rejected_leave_details);
+
+        return view('adminlte::leave.appliedleave',compact('pending_leave_details','pending_count','approved_leave_details','approved_count','rejected_leave_details','rejected_count'));
     }
 }

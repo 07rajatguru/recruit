@@ -41,6 +41,9 @@ class UserLeave extends Model
         if(isset($status) && $status != '') {
             $query = $query->where('user_leave.status','=',$status);
         }
+        else if(isset($status) && $status >= '0') {
+            $query = $query->where('user_leave.status','=',$status);
+        }
 
         if ($month != '' && $year != '') {
 
