@@ -417,7 +417,7 @@ class UserController extends Controller
         // Assign Fixed Holidays to new user
 
         $year = date('Y');
-        $fixed_holidays = Holidays::getUserHolidaysByType(0,0,$year,'Fixed Leave');
+        $fixed_holidays = Holidays::getUserHolidaysByType(0,'',$year,'Fixed Leave');
 
         if(isset($fixed_holidays) && sizeof($fixed_holidays) > 0){
 
