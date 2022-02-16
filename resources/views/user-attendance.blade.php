@@ -218,82 +218,86 @@
                                             ?>
                                             @if(isset($value1['remarks']) && $value1['remarks'] != '')
                                                 @if($attendance == 'N')
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}"></td>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added"></td>
                                                 @elseif($attendance == 'F')
                                                     <?php $present++; ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">P</td>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">P</td>
                                                 @elseif($attendance == 'HD')
                                                     <?php 
                                                         $half_day++; 
                                                         $half_day_actual = $half_day / 2;
                                                     ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">
+                                                    {{ $attendance }}</td>
                                                 @elseif($attendance == 'PH')
                                                     <?php $ph++; ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">
+                                                    {{ $attendance }}</td>
                                                 @elseif($attendance == 'PL')
                                                     <?php $pl++; ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">
+                                                    {{ $attendance }}</td>
                                                 @elseif($attendance == 'SL')
                                                     <?php $sl++; ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">
+                                                    {{ $attendance }}</td>
                                                 @elseif($attendance == 'UL')
                                                     <?php $ul++; ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">
+                                                    {{ $attendance }}</td>
                                                 @elseif($attendance == 'H')
                                                     <?php $week_off++; ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">
+                                                    {{ $attendance }}</td>
                                                 @elseif($attendance == 'WPP')
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}"></td>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added"></td>
                                                 @elseif($attendance == 'A')
                                                     <?php $absent++; ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">
+                                                    {{ $attendance }}</td>
                                                 @else
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}">{{ $attendance }}</td>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">
+                                                    {{ $attendance }}</td>
                                                 @endif
                                             @else
                                                 @if($attendance == 'O')
                                                     <td style="border: 1px solid black;text-align: center;"></td>
                                                 @elseif($attendance == 'H')
                                                     <?php $week_off++; ?>
-                                                    <td style="border: 1px solid black;background-color:#ffc000;text-align: center;">{{ $attendance }}
-                                                    </td>
+                                                    <td style="border: 1px solid black;background-color:#ffc000;text-align: center;cursor: pointer;" title="Sunday">{{ $attendance }}</td>
                                                 @elseif($attendance == 'PH')
                                                     <?php $ph++; ?>
-                                                    <td style="border: 1px solid black;background-color:#76933C;text-align: center;">{{ $attendance }}
-                                                    </td>
+                                                    <td style="border: 1px solid black;background-color:#76933C;text-align: center;cursor: pointer;" title="Paid Holiday">{{ $attendance }}</td>
                                                 @elseif($attendance == 'PL')
                                                     <?php $pl++; ?>
-                                                    <td style="border: 1px solid black;background-color:#8db3e2;text-align: center;">{{ $attendance }}
-                                                    </td>
+                                                    <td style="border: 1px solid black;background-color:#8db3e2;text-align: center;cursor: pointer;" title="Privilege Leave">{{ $attendance }}</td>
                                                 @elseif($attendance == 'SL')
                                                     <?php $sl++; ?>
-                                                    <td style="border: 1px solid black;background-color:#7030a0;text-align: center;">{{ $attendance }}
-                                                    </td>
+                                                    <td style="border: 1px solid black;background-color:#7030a0;text-align: center;cursor: pointer;" title="Sick Leave">{{ $attendance }}</td>
                                                 @elseif($attendance == 'UL')
                                                     <?php $ul++; ?>
-                                                    <td style="border: 1px solid black;background-color:#fac090;text-align: center;">{{ $attendance }}
-                                                    </td>
+                                                    <td style="border: 1px solid black;background-color:#fac090;text-align: center;" title="Unapproved Leave">
+                                                    {{ $attendance }}</td>
                                                 @elseif($attendance == 'F')
                                                     <?php $present++; ?>
-                                                    <td style="border: 1px solid black;background-color:#d8d8d8;text-align: center;">P</td>
+                                                    <td style="border: 1px solid black;background-color:#d8d8d8;text-align: center;cursor: pointer;" title="Present">
+                                                    P</td>
                                                 @elseif($attendance == 'N')
                                                     <td style="border: 1px solid black;text-align: center;"></td>
                                                 @elseif($attendance == 'WPP')
-                                                    <td style="border: 1px solid black;text-align: center;background-color: #8FB1D5;"></td>
+                                                    <td style="border: 1px solid black;text-align: center;background-color: #8FB1D5;cursor: pointer;" title="Pending Work Planning">
+                                                    </td>
                                                 @elseif($attendance == 'A')
                                                     <?php $absent++; ?>
-                                                    <td style="border: 1px solid black;background-color:#ff0000;text-align: center;">{{ $attendance }}
-                                                    </td>
+                                                    <td style="border: 1px solid black;background-color:#ff0000;text-align: center;cursor: pointer;" title="Absent">{{ $attendance }}</td>
                                                 @elseif($attendance == 'HD')
                                                     <?php 
                                                         $half_day++;
                                                         $half_day_actual = $half_day / 2;
                                                     ?>
-                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;">{{ $attendance }}
-                                                    </td>
+                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;" title="Half Day">{{ $attendance }}</td>
                                                 @else
-                                                    <td style="border: 1px solid black;background-color:#ff0000;text-align: center;">A</td>
+                                                    <td style="border: 1px solid black;background-color:#ff0000;text-align: center;cursor: pointer;" title="Absent">A</td>
                                                 @endif
                                             @endif
                                         @endforeach

@@ -183,38 +183,37 @@
                                 <td style="border: 5px solid #000000;text-align: center;"></td>
                             @elseif($attendance == 'H')
                             	<?php $week_off++; ?>
-                                <td style="border: 5px solid #000000;background-color:#ffc000;">{{ $attendance }}</td>
+                                <td style="border: 5px solid #000000;background-color:#ffc000;"  title="Sunday">{{ $attendance }}</td>
                             @elseif($attendance == 'PH')
                             	<?php $ph++; ?>
-                                <td style="border: 5px solid #000000;background-color:#76933C;">{{ $attendance }}</td>
+                                <td style="border: 5px solid #000000;background-color:#76933C;" title="Paid Holiday">{{ $attendance }}</td>
                             @elseif($attendance == 'PL')
                                 <?php $pl++; ?>
-                                <td style="border: 5px solid #000000;background-color:#8db3e2;">{{ $attendance }}</td>
+                                <td style="border: 5px solid #000000;background-color:#8db3e2;" title="Privilege Leave">{{ $attendance }}</td>
                             @elseif($attendance == 'SL')
                                 <?php $sl++; ?>
-                                <td style="border: 5px solid #000000;background-color:#7030a0;">{{ $attendance }}</td>
+                                <td style="border: 5px solid #000000;background-color:#7030a0;" title="Sick Leave">{{ $attendance }}</td>
                             @elseif($attendance == 'UL')
                                 <?php $ul++; ?>
-                                <td style="border: 5px solid #000000;background-color:#fac090;">{{ $attendance }}</td>
+                                <td style="border: 5px solid #000000;background-color:#fac090;" title="Unapproved Leave">{{ $attendance }}</td>
                             @elseif($attendance == 'F')
                             	<?php $present++; ?>
-                                <td style="border: 5px solid #000000;background-color:#d8d8d8;">P</td>
+                                <td style="border: 5px solid #000000;background-color:#d8d8d8;" title="Present">P</td>
                             @elseif($attendance == 'N')
                                 <td style="border: 5px solid #000000;"></td>
                             @elseif($attendance == 'WPP')
-                                <td style="border: 5px solid #000000;background-color: #8FB1D5;">
-                                </td>
+                                <td style="border: 5px solid #000000;background-color:#8FB1D5;" title="Pending Work Planning"></td>
                             @elseif($attendance == 'A')
                             	<?php $absent++; ?>
-                                <td style="border: 5px solid #000000;background-color:#ff0000;">{{ $attendance }}</td>
+                                <td style="border: 5px solid #000000;background-color:#ff0000;" title="Absent">{{ $attendance }}</td>
                             @elseif($attendance == 'HD')
                             	<?php 
                                     $half_day++; 
                                     $half_day_actual = $half_day / 2;
                                 ?>
-                                <td style="border: 5px solid #000000;background-color:#d99594;">{{ $attendance }}</td>
+                                <td style="border: 5px solid #000000;background-color:#d99594;" title="Half Day">{{ $attendance }}</td>
                             @else
-                                <td style="border: 5px solid #000000;background-color:#ff0000;">A</td>
+                                <td style="border: 5px solid #000000;background-color:#ff0000;" title="Absent">A</td>
                             @endif
                         @endforeach
 
