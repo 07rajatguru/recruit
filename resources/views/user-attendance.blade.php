@@ -179,8 +179,8 @@
                                                 if($key1 < $joining_date_array[0] && $joining_date_array[1] == $month && $year <= $joining_date_array[2]) {
                                                     $attendance = 'O';
                                                 }
-                                                else if(isset($value1['holiday']) && $value1['holiday'] == 'Y') {
-                                                    $attendance = 'PH';
+                                                else if(isset($value1['attendance']) && $value1['attendance'] == 'HD') {
+                                                    $attendance = 'HD';
                                                 }
                                                 else if(isset($value1['privilege_leave']) && $value1['privilege_leave'] == 'Y') {
                                                     $attendance = 'PL';
@@ -190,6 +190,9 @@
                                                 }
                                                 else if(isset($value1['unapproved_leave']) && $value1['unapproved_leave'] == 'Y') {
                                                     $attendance = 'UL';
+                                                }
+                                                else if(isset($value1['holiday']) && $value1['holiday'] == 'Y') {
+                                                    $attendance = 'PH';
                                                 }
                                                 else if(in_array($key1, $sundays)) {
                                                     $attendance = 'H';
@@ -253,19 +256,24 @@
                                                     <td style="border: 1px solid black;text-align: center;"></td>
                                                 @elseif($attendance == 'H')
                                                     <?php $week_off++; ?>
-                                                    <td style="border: 1px solid black;background-color:#ffc000;text-align: center;">{{ $attendance }}</td>
+                                                    <td style="border: 1px solid black;background-color:#ffc000;text-align: center;">{{ $attendance }}
+                                                    </td>
                                                 @elseif($attendance == 'PH')
                                                     <?php $ph++; ?>
-                                                    <td style="border: 1px solid black;background-color:#76933C;text-align: center;">{{ $attendance }}</td>
+                                                    <td style="border: 1px solid black;background-color:#76933C;text-align: center;">{{ $attendance }}
+                                                    </td>
                                                 @elseif($attendance == 'PL')
                                                     <?php $pl++; ?>
-                                                    <td style="border: 1px solid black;background-color:#8db3e2;text-align: center;">{{ $attendance }}</td>
+                                                    <td style="border: 1px solid black;background-color:#8db3e2;text-align: center;">{{ $attendance }}
+                                                    </td>
                                                 @elseif($attendance == 'SL')
                                                     <?php $sl++; ?>
-                                                    <td style="border: 1px solid black;background-color:#7030a0;text-align: center;">{{ $attendance }}</td>
+                                                    <td style="border: 1px solid black;background-color:#7030a0;text-align: center;">{{ $attendance }}
+                                                    </td>
                                                 @elseif($attendance == 'UL')
                                                     <?php $ul++; ?>
-                                                    <td style="border: 1px solid black;background-color:#fac090;text-align: center;">{{ $attendance }}</td>
+                                                    <td style="border: 1px solid black;background-color:#fac090;text-align: center;">{{ $attendance }}
+                                                    </td>
                                                 @elseif($attendance == 'F')
                                                     <?php $present++; ?>
                                                     <td style="border: 1px solid black;background-color:#d8d8d8;text-align: center;">P</td>
@@ -275,13 +283,15 @@
                                                     <td style="border: 1px solid black;text-align: center;background-color: #8FB1D5;"></td>
                                                 @elseif($attendance == 'A')
                                                     <?php $absent++; ?>
-                                                    <td style="border: 1px solid black;background-color:#ff0000;text-align: center;">{{ $attendance }}</td>
+                                                    <td style="border: 1px solid black;background-color:#ff0000;text-align: center;">{{ $attendance }}
+                                                    </td>
                                                 @elseif($attendance == 'HD')
                                                     <?php 
                                                         $half_day++;
                                                         $half_day_actual = $half_day / 2;
                                                     ?>
-                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;">{{ $attendance }}</td>
+                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;">{{ $attendance }}
+                                                    </td>
                                                 @else
                                                     <td style="border: 1px solid black;background-color:#ff0000;text-align: center;">A</td>
                                                 @endif
@@ -293,19 +303,30 @@
                                             $total_leaves = $sl + $pl;
                                             $total_days = $sl + $days + $total_leaves;
                                         ?>
-                                        <td style="border: 1px solid black;text-align:center;">     {{ $present }}</td>
                                         <td style="border: 1px solid black;text-align:center;">
-                                            {{ $week_off }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">     {{ $ph }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">     {{ $sl }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">     {{ $pl }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">     {{ $half_day }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">     {{ $half_day_actual }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">     {{ $ul }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">     {{ $absent }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">     {{ $days }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">     {{ $total_leaves }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">     {{ $total_days }}</td>
+                                        {{ $present }}</td>
+                                        <td style="border: 1px solid black;text-align:center;">
+                                        {{ $week_off }}</td>
+                                        <td style="border: 1px solid black;text-align:center;">
+                                        {{ $ph }}</td>
+                                        <td style="border: 1px solid black;text-align:center;">
+                                        {{ $sl }}</td>
+                                        <td style="border: 1px solid black;text-align:center;">
+                                        {{ $pl }}</td>
+                                        <td style="border: 1px solid black;text-align:center;">
+                                        {{ $half_day }}</td>
+                                        <td style="border: 1px solid black;text-align:center;">
+                                        {{ $half_day_actual }}</td>
+                                        <td style="border: 1px solid black;text-align:center;">
+                                        {{ $ul }}</td>
+                                        <td style="border: 1px solid black;text-align:center;">
+                                        {{ $absent }}</td>
+                                        <td style="border: 1px solid black;text-align:center;">
+                                        {{ $days }}</td>
+                                        <td style="border: 1px solid black;text-align:center;">
+                                        {{ $total_leaves }}</td>
+                                        <td style="border: 1px solid black;text-align:center;">
+                                        {{ $total_days }}</td>
                                     </tr>
                                 <?php $i++; ?>
                                 @endforeach

@@ -1361,6 +1361,10 @@ class HomeController extends Controller
 
                         $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
                     }
+                    else if($value->status == NULL && $value->loggedin_time == NULL) {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = '';
+                    }
                     else {
 
                         $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WPP';
@@ -1385,7 +1389,6 @@ class HomeController extends Controller
                     $pl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Privilege Leave',1);
                     $sl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Sick Leave',1);
                     $ul_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',2);
-                    $approved_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',1);
 
                     if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
 
@@ -1413,16 +1416,6 @@ class HomeController extends Controller
 
                             for($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) { 
                                 $list[$combine_name][$ul_i]['unapproved_leave'] = 'Y';
-                            }
-                        }
-                    }
-
-                    if (isset($approved_leave_data) && sizeof($approved_leave_data)>0) {
-
-                        foreach ($approved_leave_data as $ap_l_k => $ap_l_v) {
-
-                            for($ap_l_i=$ap_l_v['from_date']; $ap_l_i <= $ap_l_v['to_date']; $ap_l_i++) { 
-                                $list[$combine_name][$ap_l_i]['approved_leave'] = 'Y';
                             }
                         }
                     }
@@ -1509,7 +1502,6 @@ class HomeController extends Controller
                             $pl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Privilege Leave',1);
                             $sl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Sick Leave',1);
                             $ul_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',2);
-                            $approved_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',1);
 
                             if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
 
@@ -1537,16 +1529,6 @@ class HomeController extends Controller
 
                                     for($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) { 
                                         $list[$key][$ul_i]['unapproved_leave'] = 'Y';
-                                    }
-                                }
-                            }
-
-                            if (isset($approved_leave_data) && sizeof($approved_leave_data)>0) {
-
-                                foreach ($approved_leave_data as $ap_l_k => $ap_l_v) {
-
-                                    for($ap_l_i=$ap_l_v['from_date']; $ap_l_i <= $ap_l_v['to_date']; $ap_l_i++) { 
-                                        $list[$combine_name][$ap_l_i]['approved_leave'] = 'Y';
                                     }
                                 }
                             }
@@ -1713,6 +1695,10 @@ class HomeController extends Controller
 
                         $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
                     }
+                    else if($value->status == NULL && $value->loggedin_time == NULL) {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = '';
+                    }
                     else {
 
                         $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WPP';
@@ -1736,7 +1722,6 @@ class HomeController extends Controller
                     $pl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Privilege Leave',1);
                     $sl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Sick Leave',1);
                     $ul_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',2);
-                    $approved_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',1);
 
                     if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
 
@@ -1767,16 +1752,6 @@ class HomeController extends Controller
                             for($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) {
                                 
                                 $list[$combine_name][$ul_i]['unapproved_leave'] = 'Y';
-                            }
-                        }
-                    }
-
-                    if (isset($approved_leave_data) && sizeof($approved_leave_data)>0) {
-
-                        foreach ($approved_leave_data as $ap_l_k => $ap_l_v) {
-
-                            for($ap_l_i=$ap_l_v['from_date']; $ap_l_i <= $ap_l_v['to_date']; $ap_l_i++) { 
-                                $list[$combine_name][$ap_l_i]['approved_leave'] = 'Y';
                             }
                         }
                     }
@@ -1863,7 +1838,6 @@ class HomeController extends Controller
                             $pl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Privilege Leave',1);
                             $sl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Sick Leave',1);
                             $ul_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',2);
-                            $approved_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',1);
 
                             if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
 
@@ -1891,20 +1865,9 @@ class HomeController extends Controller
 
                                 foreach ($ul_leave_data as $ul_k => $ul_v) {
 
-
                                     for ($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) { 
                                         
                                         $list[$key][$ul_i]['unapproved_leave'] = 'Y';
-                                    }
-                                }
-                            }
-
-                            if (isset($approved_leave_data) && sizeof($approved_leave_data)>0) {
-
-                                foreach ($approved_leave_data as $ap_l_k => $ap_l_v) {
-
-                                    for($ap_l_i=$ap_l_v['from_date']; $ap_l_i <= $ap_l_v['to_date']; $ap_l_i++) { 
-                                        $list[$combine_name][$ap_l_i]['approved_leave'] = 'Y';
                                     }
                                 }
                             }
@@ -1975,6 +1938,10 @@ class HomeController extends Controller
 
                     $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
                 }
+                else if($value->status == NULL && $value->loggedin_time == NULL) {
+
+                    $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = '';
+                }
                 else {
 
                     $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'WPP';
@@ -1995,7 +1962,6 @@ class HomeController extends Controller
                 $pl_leave_data = UserLeave::getUserLeavesById($user_id,$month,$year,'Privilege Leave',1);
                 $sl_leave_data = UserLeave::getUserLeavesById($user_id,$month,$year,'Sick Leave',1);
                 $ul_leave_data = UserLeave::getUserLeavesById($user_id,$month,$year,'',2);
-                $approved_leave_data = UserLeave::getUserLeavesById($user_id,$month,$year,'',1);
 
                 if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
 
@@ -2023,16 +1989,6 @@ class HomeController extends Controller
 
                         for($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) { 
                             $list[$user_id][$ul_i]['unapproved_leave'] = 'Y';
-                        }
-                    }
-                }
-
-                if (isset($approved_leave_data) && sizeof($approved_leave_data)>0) {
-
-                    foreach ($approved_leave_data as $ap_l_k => $ap_l_v) {
-
-                        for($ap_l_i=$ap_l_v['from_date']; $ap_l_i <= $ap_l_v['to_date']; $ap_l_i++) { 
-                            $list[$user_id][$ap_l_i]['approved_leave'] = 'Y';
                         }
                     }
                 }
@@ -2085,11 +2041,6 @@ class HomeController extends Controller
                         
                         $attendance = 'UL';
                         $color = '#fac090';
-                    }
-                    else if(isset($value1['approved_leave']) && $value1['approved_leave'] == 'Y') {
-                        
-                        $attendance = 'AL';
-                        $color = '#b284be';
                     }
                     else if(in_array($key1, $sundays)) {
                         

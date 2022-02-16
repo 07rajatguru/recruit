@@ -141,8 +141,8 @@
                                 if($key1 < $joining_date_array[0] && $joining_date_array[1] == $month && $year <= $joining_date_array[2]) {
                                     $attendance = 'O';
                                 }
-                                else if(isset($value1['holiday']) && $value1['holiday'] == 'Y'){
-                                    $attendance = 'PH';
+                                else if(isset($value1['attendance']) && $value1['attendance'] == 'HD') {
+                                    $attendance = 'HD';
                                 }
                                 else if(isset($value1['privilege_leave']) && $value1['privilege_leave'] == 'Y') {
                                     $attendance = 'PL';
@@ -152,6 +152,9 @@
                                 }
                                 else if(isset($value1['unapproved_leave']) && $value1['unapproved_leave'] == 'Y') {
                                     $attendance = 'UL';
+                                }
+                                else if(isset($value1['holiday']) && $value1['holiday'] == 'Y'){
+                                    $attendance = 'PH';
                                 }
                                 else if(in_array($key1, $sundays)) {
                                     $attendance = 'H';
@@ -171,7 +174,7 @@
                                         $attendance = $value1['attendance'];
                                     }
                                     else {
-                                        $attendance = '';
+                                        $attendance = 'N';
                                     }
                                 }
                             ?>
@@ -231,14 +234,11 @@
                         <td style="border: 1px solid black;text-align:center;"> 
                         {{ $half_day_actual }}</td>
                         <td style="border: 5px solid #000000;text-align:center;"> {{ $ul }}</td>
-                        <td style="border: 5px solid #000000;text-align:center;">{{ $absent }}
+                        <td style="border: 5px solid #000000;text-align:center;">{{ $absent }}</td>
+                        <td style="border: 5px solid #000000;text-align:center;">{{ $days }}</td>
+                        <td style="border: 5px solid #000000;text-align:center;">{{ $total_leaves }}
                         </td>
-                        <td style="border: 5px solid #000000;text-align:center;">
-                        {{ $days }}</td>
-                        <td style="border: 5px solid #000000;text-align:center;">
-                        {{ $total_leaves }}</td>
-                        <td style="border: 5px solid #000000;text-align:center;">
-                        {{ $total_days }}</td>
+                        <td style="border: 5px solid #000000;text-align:center;">{{ $total_days }}</td>
                     </tr>
                 <?php $i++; ?>
                	@endforeach

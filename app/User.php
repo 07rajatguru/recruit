@@ -393,13 +393,16 @@ class User extends Authenticatable
             $month = "0".$month;
         }
 
-        $superadmin_role_id =  getenv('SUPERADMIN');
-        $client_role_id =  getenv('CLIENT');
-        $it_role_id =  getenv('IT');
-        $superadmin = array($superadmin_role_id,$client_role_id,$it_role_id);
+        $superadmin_user_id = getenv('SUPERADMINUSERID');
+        $saloni_user_id = getenv('SALONIUSERID');
+        $jasmine_user_id = getenv('JASMINEUSERID');
+        $super_array = array($superadmin_user_id,$saloni_user_id,$jasmine_user_id);
 
         $status = 'Inactive';
         $status_array = array($status);
+
+        $client = getenv('EXTERNAL');
+        $client_type = array($client);
         
         $query = User::query();
         $query = $query->join('role_user','role_user.user_id','=','users.id');
@@ -407,8 +410,9 @@ class User extends Authenticatable
 
         $query = $query->select('users.*','role_user.role_id as role_id','department.name as department_name');
 
-        $query = $query->whereNotIn('status',$status_array);
-        $query = $query->whereNotIn('role_id',$superadmin);
+        $query = $query->whereNotIn('users.status',$status_array);
+        $query = $query->whereNotIn('users.id',$super_array);
+        $query = $query->whereNotIn('users.type',$client_type);
 
         if(isset($department_id) && $department_id != '') {
 
