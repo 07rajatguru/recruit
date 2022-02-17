@@ -141,8 +141,17 @@
                                 if($key1 < $joining_date_array[0] && $joining_date_array[1] == $month && $year <= $joining_date_array[2]) {
                                     $attendance = 'O';
                                 }
+                                else if(isset($value1['attendance']) && $value1['attendance'] == 'WPP') {
+                                    $attendance = 'WPP';
+                                }
                                 else if(isset($value1['attendance']) && $value1['attendance'] == 'HD') {
                                     $attendance = 'HD';
+                                }
+                                else if(isset($value1['attendance']) && $value1['attendance'] == 'WFHHD') {
+                                    $attendance = 'WFHHD';
+                                }
+                                else if(isset($value1['attendance']) && $value1['attendance'] == 'HDR') {
+                                    $attendance = 'HDR';
                                 }
                                 else if(isset($value1['privilege_leave']) && $value1['privilege_leave'] == 'Y') {
                                     $attendance = 'PL';
@@ -162,58 +171,72 @@
                                 else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
                                     $attendance = 'N';
                                 }
-                                else if(isset($value1['attendance']) && $value1['attendance'] == 'WPP') {
-                                    $attendance = 'WPP';
-                                }
                                 else if(isset($value1['attendance']) && $value1['attendance'] == '') {
                                     $attendance = 'A';
                                 }
+                                else if(isset($value1['attendance']) && $value1['attendance'] == 'P') {
+                                    $attendance = 'P';
+                                }
+                                else if(isset($value1['attendance']) && $value1['attendance'] == 'WFHP') {
+                                    $attendance = 'WFHP';
+                                }
+                                else if(isset($value1['attendance']) && $value1['attendance'] == 'FR') {
+                                    $attendance = 'FR';
+                                }
                                 else {
-
-                                    if(isset($value1['attendance'])) {
-                                        $attendance = $value1['attendance'];
-                                    }
-                                    else {
-                                        $attendance = 'N';
-                                    }
+                                    $attendance = 'N';
                                 }
                             ?>
                             
-                            @if($attendance == 'O')
+                            @if($attendance == 'N' || $attendance == 'O')
                                 <td style="border: 5px solid #000000;text-align: center;"></td>
-                            @elseif($attendance == 'H')
-                            	<?php $week_off++; ?>
-                                <td style="border: 5px solid #000000;background-color:#ffc000;"  title="Sunday">{{ $attendance }}</td>
-                            @elseif($attendance == 'PH')
-                            	<?php $ph++; ?>
-                                <td style="border: 5px solid #000000;background-color:#76933C;" title="Paid Holiday">{{ $attendance }}</td>
-                            @elseif($attendance == 'PL')
-                                <?php $pl++; ?>
-                                <td style="border: 5px solid #000000;background-color:#8db3e2;" title="Privilege Leave">{{ $attendance }}</td>
-                            @elseif($attendance == 'SL')
-                                <?php $sl++; ?>
-                                <td style="border: 5px solid #000000;background-color:#7030a0;" title="Sick Leave">{{ $attendance }}</td>
-                            @elseif($attendance == 'UL')
-                                <?php $ul++; ?>
-                                <td style="border: 5px solid #000000;background-color:#fac090;" title="Unapproved Leave">{{ $attendance }}</td>
-                            @elseif($attendance == 'F')
-                            	<?php $present++; ?>
-                                <td style="border: 5px solid #000000;background-color:#d8d8d8;" title="Present">P</td>
-                            @elseif($attendance == 'N')
-                                <td style="border: 5px solid #000000;"></td>
                             @elseif($attendance == 'WPP')
                                 <td style="border: 5px solid #000000;background-color:#8FB1D5;" title="Pending Work Planning"></td>
-                            @elseif($attendance == 'A')
-                            	<?php $absent++; ?>
-                                <td style="border: 5px solid #000000;background-color:#ff0000;" title="Absent">{{ $attendance }}</td>
                             @elseif($attendance == 'HD')
-                            	<?php 
+                                <?php 
                                     $half_day++; 
                                     $half_day_actual = $half_day / 2;
                                 ?>
-                                <td style="border: 5px solid #000000;background-color:#d99594;" title="Half Day">{{ $attendance }}</td>
-                            @else
+                                <td style="border: 5px solid #000000;background-color:#d99594;" title="Half Day">HD</td>
+                            @elseif($attendance == 'HDR')
+                                <?php 
+                                    $half_day++; 
+                                    $half_day_actual = $half_day / 2;
+                                ?>
+                                <td style="border: 5px solid #000000;background-color:#d99594;color: white;" title="Half Day Rejection">HD</td>
+                            @elseif($attendance == 'WFHHD')
+                                <?php 
+                                    $half_day++; 
+                                    $half_day_actual = $half_day / 2;
+                                ?>
+                                <td style="border: 5px solid #000000;background-color:#d99594;color: white;" title="Half Day Work From Home">HD</td>
+                            @elseif($attendance == 'PL')
+                                <?php $pl++; ?>
+                                <td style="border: 5px solid #000000;background-color:#8db3e2;" title="Privilege Leave">PL</td>
+                            @elseif($attendance == 'SL')
+                                <?php $sl++; ?>
+                                <td style="border: 5px solid #000000;background-color:#7030a0;" title="Sick Leave">SL</td>
+                            @elseif($attendance == 'UL')
+                                <?php $ul++; ?>
+                                <td style="border: 5px solid #000000;background-color:#fac090;" title="Unapproved Leave">UL</td>
+                            @elseif($attendance == 'PH')
+                                <?php $ph++; ?>
+                                <td style="border: 5px solid #000000;background-color:#76933C;" title="Paid Holiday">PH</td>
+                            @elseif($attendance == 'H')
+                                <?php $week_off++; ?>
+                                <td style="border: 5px solid #000000;background-color:#ffc000;"  title="Sunday">H</td>
+                            @elseif($attendance == 'P')
+                            	<?php $present++; ?>
+                                <td style="border: 5px solid #000000;background-color:#d8d8d8;" title="Present">P</td>
+                            @elseif($attendance == 'WFHP')
+                                <?php $present++; ?>
+                                <td style="border: 5px solid #000000;background-color:#d8d8d8;color: white;" title="Work From Home">P</td>
+                            @elseif($attendance == 'A')
+                            	<?php $absent++; ?>
                                 <td style="border: 5px solid #000000;background-color:#ff0000;" title="Absent">A</td>
+                            @elseif($attendance == 'FR')
+                                <?php $absent++; ?>
+                                <td style="border: 5px solid #000000;background-color:#ff0000;color: white;" title="Full Day Rejection">A</td>
                             @endif
                         @endforeach
 

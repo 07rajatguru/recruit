@@ -1357,22 +1357,44 @@ class HomeController extends Controller
                     $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
                     $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
 
-                    if($value->status > 0) {
-
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
-                    }
-                    else if($value->status == NULL && $value->loggedin_time == NULL) {
-
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = '';
-                    }
-                    else {
-
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WPP';
-                    }
-
                     // Get User id from both name 
                     $user_name = $value->first_name."-".$value->last_name;
                     $u_id = User::getUserIdByBothName($user_name);
+
+                    $wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id);
+
+                    if($value->status == NULL && $value->loggedin_time == NULL) {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = '';
+                    }
+                    else if($value->status == 0) {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WPP';
+                    }
+                    else if($value->status == 1 && $value->attendance == 'HD' && isset($wfh_data) && sizeof($wfh_data) > 0) {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WFHHD';
+                    }
+                    else if($value->status == 1 && $value->attendance == 'F' && isset($wfh_data) && sizeof($wfh_data) > 0) {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WFHP';
+                    }
+                    else if($value->status == 1 && $value->attendance == 'HD') {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'HD';
+                    }
+                    else if($value->status == 1 && $value->attendance == 'F') {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'P';
+                    }
+                    else if($value->status == 2 && $value->attendance == 'HD') {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'HDR';
+                    }
+                    else if($value->status == 2 && $value->attendance == 'A') {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'FR';
+                    }
 
                     // Set holiday dates
                     $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
@@ -1691,22 +1713,44 @@ class HomeController extends Controller
                     $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
                     $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
 
-                    if($value->status > 0) {
-
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
-                    }
-                    else if($value->status == NULL && $value->loggedin_time == NULL) {
-
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = '';
-                    }
-                    else {
-
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WPP';
-                    }
-
                     // Get User id from both name
                     $user_name = $value->first_name."-".$value->last_name;
                     $u_id = User::getUserIdByBothName($user_name);
+
+                    $wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id);
+
+                    if($value->status == NULL && $value->loggedin_time == NULL) {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = '';
+                    }
+                    else if($value->status == 0) {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WPP';
+                    }
+                    else if($value->status == 1 && $value->attendance == 'HD' && isset($wfh_data) && sizeof($wfh_data) > 0) {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WFHHD';
+                    }
+                    else if($value->status == 1 && $value->attendance == 'F' && isset($wfh_data) && sizeof($wfh_data) > 0) {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WFHP';
+                    }
+                    else if($value->status == 1 && $value->attendance == 'HD') {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'HD';
+                    }
+                    else if($value->status == 1 && $value->attendance == 'F') {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'P';
+                    }
+                    else if($value->status == 2 && $value->attendance == 'HD') {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'HDR';
+                    }
+                    else if($value->status == 2 && $value->attendance == 'A') {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'FR';
+                    }
 
                     // Set holiday dates
                     $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
@@ -1934,17 +1978,39 @@ class HomeController extends Controller
 
             foreach ($response as $key => $value) {
 
-                if($value->status > 0) {
+                $wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$user_id);
 
-                    $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = $value->attendance;
-                }
-                else if($value->status == NULL && $value->loggedin_time == NULL) {
+                if($value->status == NULL && $value->loggedin_time == NULL) {
 
                     $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = '';
                 }
-                else {
+                else if($value->status == 0) {
 
                     $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'WPP';
+                }
+                else if($value->status == 1 && $value->attendance == 'HD' && isset($wfh_data) && sizeof($wfh_data) > 0) {
+
+                    $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'WFHHD';
+                }
+                else if($value->status == 1 && $value->attendance == 'F' && isset($wfh_data) && sizeof($wfh_data) > 0) {
+
+                    $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'WFHP';
+                }
+                else if($value->status == 1 && $value->attendance == 'HD') {
+
+                    $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'HD';
+                }
+                else if($value->status == 1 && $value->attendance == 'F') {
+
+                    $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'P';
+                }
+                else if($value->status == 2 && $value->attendance == 'HD') {
+
+                    $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'HDR';
+                }
+                else if($value->status == 2 && $value->attendance == 'A') {
+
+                    $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'FR';
                 }
 
                 // Set holiday dates
