@@ -1376,11 +1376,28 @@ class JobOpenController extends Controller
         $job_id = 0;
 
         // Get users whose report to user is logged-in user
-
         $user_ids_list = User::getAssignedUsers($loggedin_user_id);
         $loggedin_user_report_to = User::getReportsToById($loggedin_user_id);
 
-        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','super_admin_user_id','loggedin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox','adler_job_disclosed_checkbox','remote_working','departments','selected_departments','job_id','user_ids_list','loggedin_user_report_to'));
+        if(isset($user_ids_list) && sizeof($user_ids_list) > 0) {
+
+            $user_ids_array = array();
+            $i=0;
+
+            foreach ($user_ids_list as $key => $value) {
+                
+                $user_ids_array[$i] = $key;
+                $i++;
+            }
+        }
+        else {
+
+            $user_ids_array[] = $loggedin_user_report_to;
+        }
+
+        $open_to_all = '0';
+
+        return view('adminlte::jobopen.create', compact('user_id','action', 'industry','no_of_positions', 'client', 'users', 'job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','super_admin_user_id','loggedin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox','adler_job_disclosed_checkbox','remote_working','departments','selected_departments','job_id','user_ids_array','open_to_all'));
     }
 
     public function store(Request $request) {
@@ -1390,6 +1407,12 @@ class JobOpenController extends Controller
         $user_id = \Auth::user()->id;
         $user_name = \Auth::user()->name;
         $loggedin_email = \Auth::user()->email;
+
+        // Get HR Role id from env
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
 
         $input = $request->all();
 
@@ -1424,8 +1447,16 @@ class JobOpenController extends Controller
         $thousand_to = $input['thousand_to'];
         $work_exp_from = $input['work_experience_from'];
         $work_exp_to = $input['work_experience_to'];
-        $department_ids = $input['department_ids'];
 
+        if($hr_role_id == $get_role_id) {
+
+            $department_ids = '1,2,3';
+        }
+        else {
+
+            $department_ids = '1,2';
+        }
+        
         if (isset($no_of_positions) && $no_of_positions == '')
             $no_of_positions = 0;
         if (isset($qualifications) && $qualifications == '')
@@ -1540,7 +1571,7 @@ class JobOpenController extends Controller
         $job_open->adler_career_checkbox = $adler_career_checkbox;
         $job_open->adler_job_disclosed_checkbox = $adler_job_disclosed_checkbox;
         $job_open->remote_working = $remote_working;
-        $job_open->department_ids = implode(",", $department_ids);
+        $job_open->department_ids = $department_ids;
 
         $validator = \Validator::make(Input::all(),$job_open::$rules);
 
@@ -2135,7 +2166,10 @@ class JobOpenController extends Controller
         $selected_departments = explode(",",$job_open->department_ids);
         $job_id = $id;
 
-        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users','job_type','job_priorities', 'job_open', 'date_opened', 'target_date','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','super_admin_user_id','loggedin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox','adler_job_disclosed_checkbox','remote_working','departments','selected_departments','job_id'));
+        $user_ids_array = array();
+        $open_to_all = $job_open->open_to_all;
+
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users','job_type','job_priorities', 'job_open', 'date_opened', 'target_date','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','super_admin_user_id','loggedin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox','adler_job_disclosed_checkbox','remote_working','departments','selected_departments','job_id','user_ids_array','open_to_all'));
     }
 
     public function editClosedJob($id,$year) {
@@ -2344,11 +2378,14 @@ class JobOpenController extends Controller
                 $departments[$r->id] = $r->name;
             }
         }
+
+        $user_ids_array = array();
         
         $selected_departments = explode(",",$job_open->department_ids);
         $job_id = $id;
+        $open_to_all = $job_open->open_to_all;
 
-        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','year','loggedin_user_id','super_admin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox','adler_job_disclosed_checkbox','remote_working','departments','selected_departments','job_id'));
+        return view('adminlte::jobopen.edit', compact('user_id','action', 'industry', 'client', 'users', 'job_type','job_priorities', 'job_open', 'date_opened', 'target_date','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','upload_type','client_hierarchy_name','year','loggedin_user_id','super_admin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox','adler_job_disclosed_checkbox','remote_working','departments','selected_departments','job_id','user_ids_array','open_to_all'));
     }
 
     public function update(Request $request, $id) {
@@ -2356,6 +2393,13 @@ class JobOpenController extends Controller
         $dateClass = new Date();
 
         $user_id = \Auth::user()->id;
+
+        // Get HR Role id from env
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
+
         $input = $request->all();
 
         if(isset($input['year']) && $input['year'] != '') {
@@ -2447,7 +2491,14 @@ class JobOpenController extends Controller
             $remote_working = '0';
         }
 
-        $department_ids = $request->input('department_ids');
+        if($hr_role_id == $get_role_id) {
+
+            $department_ids = '1,2,3';
+        }
+        else {
+
+            $department_ids = '1,2';
+        }
 
         $job_open = JobOpen::find($id);
         $job_open->posting_title = $posting_title;
@@ -2476,7 +2527,7 @@ class JobOpenController extends Controller
         $job_open->adler_career_checkbox = $adler_career_checkbox;
         $job_open->adler_job_disclosed_checkbox = $adler_job_disclosed_checkbox;
         $job_open->remote_working = $remote_working;
-        $job_open->department_ids = implode(",", $department_ids);
+        $job_open->department_ids = $department_ids;
 
         $validator = \Validator::make(Input::all(),$job_open::$rules);
 
@@ -2753,11 +2804,14 @@ class JobOpenController extends Controller
                 $departments[$r->id] = $r->name;
             }
         }
+
+        $user_ids_array = array();
         
         $selected_departments = explode(",",$job_open->department_ids);
         $job_id = $id;
+        $open_to_all = $job_open->open_to_all;
 
-        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users','job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','upload_type','loggedin_user_id','super_admin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox','adler_job_disclosed_checkbox','remote_working','departments','selected_departments','job_id'));
+        return view('adminlte::jobopen.create', compact('no_of_positions','posting_title','job_open','user_id','action', 'industry', 'client', 'users','job_type','job_priorities','selected_users','lacs','thousand','lacs_from','thousand_from','lacs_to','thousand_to','work_from','work_to','work_exp_from','work_exp_to','select_all_users','client_hierarchy_name','upload_type','loggedin_user_id','super_admin_user_id','strategy_user_id','bhagyashree_user_id','arjun_user_id','tanisha_user_id','job_open_checkbox','adler_career_checkbox','adler_job_disclosed_checkbox','remote_working','departments','selected_departments','job_id','open_to_all','user_ids_array'));
     }
 
     public function clonestore(Request $request) {
@@ -2766,6 +2820,13 @@ class JobOpenController extends Controller
 
         $user_id = \Auth::user()->id;
         $user_name = \Auth::user()->name;
+
+        // Get HR Role id from env
+        $hr_role_id = getenv('HR');
+
+        // Get logged in user role id
+        $get_role_id = RoleUser::getRoleIdByUserId($user_id);
+
         $input = $request->all();
 
         $max_id = JobOpen::find(\DB::table('job_openings')->max('id'));
@@ -2881,7 +2942,14 @@ class JobOpenController extends Controller
             $remote_working = '0';
         }
 
-        $department_ids = $request->input('department_ids');
+        if($hr_role_id == $get_role_id) {
+
+            $department_ids = '1,2,3';
+        }
+        else {
+
+            $department_ids = '1,2';
+        }
 
         $job_open = new JobOpen();
         $job_open->job_id = $job_unique_id;
@@ -2913,7 +2981,7 @@ class JobOpenController extends Controller
         $job_open->adler_career_checkbox = $adler_career_checkbox;
         $job_open->adler_job_disclosed_checkbox = $adler_job_disclosed_checkbox;
         $job_open->remote_working = $remote_working;
-        $job_open->department_ids = implode(",", $department_ids);
+        $job_open->department_ids = $department_ids;
 
         $validator = \Validator::make(Input::all(),$job_open::$rules);
 
@@ -5197,10 +5265,9 @@ class JobOpenController extends Controller
 
     public function getUsersByJobID() {
 
-        $department_ids = $_GET['department_selected_items'];
         $job_id = $_GET['job_id'];
 
-        $users = User::getJobUsersByDepartmentIDArray($department_ids);
+        $users = User::getAllUsers();
 
         $job_user_res = \DB::table('job_visible_users')
         ->join('users','users.id','=','job_visible_users.user_id')
@@ -5220,16 +5287,14 @@ class JobOpenController extends Controller
 
         foreach ($users as $key => $value) {
 
-            if(in_array($value['id'], $selected_users)) {
+            if(in_array($key, $selected_users)) {
                 $data[$j]['checked'] = '1';
             }
             else {
                 $data[$j]['checked'] = '0';
             }
             
-            $data[$j]['id'] = $value['id'];
-            $data[$j]['type'] = $value['type'];
-            $data[$j]['name'] = $value['name'];
+            $data[$j]['id'] = $key;
 
             $j++;
         }

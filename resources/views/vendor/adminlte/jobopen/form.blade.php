@@ -232,27 +232,40 @@
 
                     <div class="form-group {{ $errors->has('user_ids') ? 'has-error' : '' }}">
                         <strong>Select Users who can access the job : <span class = "required_fields">*</span></strong><br/>&nbsp;&nbsp;
-                        <input type="checkbox" id="departments_all" checked="" /><strong>Select All</strong><br/>
+                        <input type="checkbox" id="departments_all"/><strong>Select All</strong><br/>
 
-                        @foreach($departments as $k=>$v)&nbsp;&nbsp; 
-                            {!! Form::checkbox('department_ids[]', $k,in_array($k,$selected_departments), array('id'=>'department_ids','class' => 'department_ids','checked','onclick' => 'displayUsers("'.$k.'")')) !!}
-                            {!! Form::label ($v) !!}
-                        @endforeach
+                            @if($open_to_all == '1')
+                                @foreach($departments as $k=>$v)&nbsp;&nbsp;
 
-                        <br/><br/>
+                                    <input type="checkbox" name="department_ids[]" id="department_ids_{{ $k }}" onclick="displayUsers('{{ $k }}');" class="department_ids" checked="" />{!! Form::label ($v) !!}
+                                @endforeach <br/><br/>
+                            @else
 
-                        <?php 
-                            $id = '';
-                        ?>
+                                @foreach($departments as $k=>$v)&nbsp;&nbsp;
+
+                                    <input type="checkbox" name="department_ids[]" id="department_ids_{{ $k }}" onclick="displayUsers('{{ $k }}');" class="department_ids" />{!! Form::label ($v) !!}
+                                @endforeach <br/><br/>
+                            @endif
+
                         @foreach($departments as $k=>$v)
-                            <div class="div_{{ $k }}" style="margin-left: 12px;display:none;">
-                            </div>
                             <?php
-                                $id = $id . "," . $k;
+                                $users = App\User::getJobUsersByDepartmentId($k);
                             ?>
-                        @endforeach
+                            <div class="div_{{ $k }}" style="margin-left: 12px;">
+                                
+                                @foreach($users as $u_k => $u_v)
+                                    @if(in_array($u_v['id'],$user_ids_array))
+                                        <input type="checkbox" name="user_ids[]" value="{{ $u_v['id'] }}" class="user_ids_class" checked="" id="user_id_{{ $u_v['id'] }}">
+                                        <b><span style="font-size:15px;">{{ $u_v['name'] }}</span>
+                                        &nbsp;</b>
+                                    @else
+                                        <input type="checkbox" name="user_ids[]" value="{{ $u_v['id'] }}" class="user_ids_class" id="user_id_{{ $u_v['id'] }}">
+                                        <b><span style="font-size:15px;">{{ $u_v['name'] }}</span>&nbsp;</b>
+                                    @endif
+                                @endforeach
 
-                        <input type="hidden" name="id_string" id="id_string" value="{{ $id }}">
+                            </div>
+                        @endforeach
                     </div>
 
                     <div class="">
@@ -590,21 +603,6 @@
 <input type="hidden" name="job_id" id="job_id" value="{{ $job_id }}">
 </div>
 
-@if($action == 'add')
-    <?php $u_id = ''; ?>
-    @foreach($user_ids_list as $u_k => $u_v)
-        <?php
-            $u_id = $u_id . "," . $u_k;
-        ?>
-    @endforeach
-
-    <?php
-        $u_id = $u_id . "," . $loggedin_user_report_to;
-    ?>
-
-    <input type="hidden" name="u_id" id="u_id" value="{{ $u_id }}">
-@endif
-
 {!! Form::close() !!}
 
 @section('customscripts')
@@ -621,34 +619,16 @@
                 }
             });
 
+            getClientId();
+
             $("#departments_all").click(function () {
                 
                 $('.department_ids').prop('checked', this.checked);
-
-                var isChecked = $("#departments_all").is(":checked");
-                var id_string = $("#id_string").val();
-                var id_arr = id_string.split(",");
-
-                if(isChecked == true) {
-                    $('.department_ids').prop('checked', this.checked);
-                    for (var i = 1; i < id_arr.length; i++) {
-                        displayUsers(id_arr[i]);
-                    }
-                }
-                else {
-                    $('.department_ids').prop('checked', false);
-                    $('.department_class').prop('checked', false);
-
-                    for (var i = 1; i < id_arr.length; i++) {
-                        $(".div_"+id_arr[i]).hide();
-                    }
-                }
+                $('.user_ids_class').prop('checked', this.checked);
             });
 
             $(".department_ids").click(function () {
                 $("#departments_all").prop('checked', ($('.department_ids:checked').length == $('.department_ids').length) ? true : false);
-
-                displayUsers();
             });
 
             var action = $("#action").val();
@@ -681,9 +661,6 @@
                     "thousand_to":{
                         required:true
                     },
-                    "user_ids[]": {
-                        required : true,
-                    },
                     /*"candidate_tracker": {
                         required : true,
                     },*/
@@ -692,9 +669,6 @@
                     },
                     "level_id": {
                         required : true,
-                    },
-                    "department_ids[]": {
-                        required: true
                     },
                 },
                 messages: {
@@ -717,9 +691,6 @@
                     "thousand_to": {
                         required: "Please Select Value"
                     },
-                    "user_ids[]": {
-                        required : "User is Required Field.",
-                    },
                     /*"candidate_tracker": {
                         required : "Please Select Candidate Tracker",
                     },*/
@@ -729,22 +700,8 @@
                     "level_id": {
                         required : "Please Select Position",
                     },
-                    "department_ids[]": {
-                        required: "Please Select Department."
-                    },
                 }
             });
-
-            // Set users
-
-            if(action == 'add') {
-                var id_string = $("#id_string").val();
-                var id_arr = id_string.split(",");
-
-                for (var i = 1; i < id_arr.length; i++) {
-                    displayUsers(id_arr[i]);
-                }
-            }
 
             if(action == 'edit') {
 
@@ -881,16 +838,6 @@
 
         function displayUsers(department_id) {
 
-            var action = $("#action").val();
-
-            if(action == 'add') {
-
-                var u_id = $("#u_id").val();
-                var u_id_array = u_id.split(",");
-
-                var arrayOfUIds = u_id_array.map(Number);
-            }
-
             $.ajax({
 
                 url:'/getjobusers/bydepartment',
@@ -898,91 +845,27 @@
                 dataType:'json',
                 success: function(data) {
 
-                    // for department_ids
-                    var department_items = document.getElementsByName('department_ids[]');
-                    var department_selected_items = "";
+                    var isChecked = $("#department_ids_"+department_id).is(":checked");
 
-                    for(var i=0; i < department_items.length; i++) {
+                    if(isChecked == true) {
 
-                        if(department_items[i].type == 'checkbox' && department_items[i].checked == true)
-                            department_selected_items += department_items[i].value+",";
-                    }
+                        for (var i = 0; i < data.length; i++) {
 
-                    var search_str = ","+department_id+",";
-                    var search_str_2 = department_id+",";
-
-                    var bool_1 = department_selected_items.includes(department_id);
-                    var bool_2 = department_selected_items.search(search_str) > -1;
-                    var bool_3 = department_selected_items.search(search_str_2) > -1;
-
-                    if(bool_1 == true || bool_2 == true || bool_3 == true) {
-
-                        if(data.length > 0) {
-
-                            $(".div_"+department_id).html('');
-
-                            var html = '';
-                           
-                            for (var i = 0; i < data.length; i++) {
-
-                                if(action == 'add') {
-                                    if(arrayOfUIds.indexOf(data[i].id) !== -1) {
-
-                                        html += '<input type="checkbox" name="user_ids[]" value="'+data[i].id+'" class="department_class" checked>';
-                                        html += '&nbsp;&nbsp;';
-                                        html += '<b><span style="font-size:15px;">'+data[i].name+'</span>&nbsp;&nbsp;</b>';
-                                    }
-                                    else {
-
-                                        html += '<input type="checkbox" name="user_ids[]" value="'+data[i].id+'" class="department_class">';
-                                        html += '&nbsp;&nbsp;';
-                                        html += '<b><span style="font-size:15px;">'+data[i].name+'</span>&nbsp;&nbsp;</b>';
-                                    }
-                                }
-                                else {
-
-                                    html += '<input type="checkbox" name="user_ids[]" value="'+data[i].id+'" class="department_class">';
-                                    html += '&nbsp;&nbsp;';
-                                    html += '<b><span style="font-size:15px;">'+data[i].name+'</span>&nbsp;&nbsp;</b>';
-                                }
-                            }
-
-                            html += '<br/>';
-
-                            $(".div_"+department_id).append(html);
-                            $(".div_"+department_id).show();
-
-                            if(action == 'add') {
-
-                                var isChecked = $("#departments_all").is(":checked");
-                                if(isChecked == true) {
-                                    $('.department_class').prop('checked', true);
-                                }
-                            }
+                            $("#user_id_"+data[i].id).prop('checked',true);
                         }
                     }
                     else {
 
-                        $(".div_"+department_id).html('');
-                        $(".div_"+department_id).hide();
-                    }
+                        for (var i = 0; i < data.length; i++) {
 
-                    getClientId();
+                            $("#user_id_"+data[i].id).prop('checked',false);
+                        }
+                    }
                 }
             });
         }
 
         function loadUsers() {
-
-            // for department_ids
-            var department_items = document.getElementsByName('department_ids[]');
-            var department_selected_items = "";
-
-            for(var i=0; i<department_items.length; i++) {
-
-                if(department_items[i].type == 'checkbox' && department_items[i].checked == true)
-                    department_selected_items += department_items[i].value+",";
-            }
 
             var job_id = $("#job_id").val();
 
@@ -990,7 +873,7 @@
 
                 url:'/getUsersByJobID',
                 method:'GET',
-                data:{'job_id':job_id,'department_selected_items':department_selected_items},
+                data:{'job_id':job_id},
                 dataType:'json',
                 success: function(data) {
 
@@ -998,24 +881,10 @@
 
                         for (var i = 0; i < data.length; i++) {
 
-                            var html = '';
-
                             if(data[i].checked == '1') {
 
-                                html += '<input type="checkbox" name="user_ids[]" value="'+data[i].id+'" class="department_class" checked>';
-                                html += '&nbsp;&nbsp;';
-                                html += '<b><span style="font-size:15px;">'+data[i].name+'</span></b>&nbsp;&nbsp;';
+                                $("input[value='" + data[i].id + "']").prop('checked', true);
                             }
-
-                            if(data[i].checked == '0') {
-
-                                html += '<input type="checkbox" name="user_ids[]" value="'+data[i].id+'" class="department_class">';
-                                html += '&nbsp;&nbsp;';
-                                html += '<b><span style="font-size:15px;">'+data[i].name+'</span></b>&nbsp;&nbsp;';
-                            }
-
-                            $(".div_"+data[i].type).append(html);
-                            $(".div_"+data[i].type).show();
                         }
                     }
                 }
