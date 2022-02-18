@@ -162,8 +162,11 @@
                                 else if(isset($value1['unapproved_leave']) && $value1['unapproved_leave'] == 'Y') {
                                     $attendance = 'UL';
                                 }
-                                else if(isset($value1['holiday']) && $value1['holiday'] == 'Y'){
+                                else if(isset($value1['fixed_holiday']) && $value1['fixed_holiday'] == 'Y') {
                                     $attendance = 'PH';
+                                }
+                                else if(isset($value1['optional_holiday']) && $value1['optional_holiday'] == 'Y') {
+                                    $attendance = 'OH';
                                 }
                                 else if(in_array($key1, $sundays)) {
                                     $attendance = 'H';
@@ -222,6 +225,9 @@
                             @elseif($attendance == 'PH')
                                 <?php $ph++; ?>
                                 <td style="border: 5px solid #000000;background-color:#76933C;" title="Paid Holiday">PH</td>
+                            @elseif($attendance == 'OH')
+                                <?php $ph++; ?>
+                                <td style="border: 5px solid #000000;background-color:#76933C;" title="Paid Holiday">OH</td>
                             @elseif($attendance == 'H')
                                 <?php $week_off++; ?>
                                 <td style="border: 5px solid #000000;background-color:#ffc000;"  title="Sunday">H</td>

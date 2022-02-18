@@ -1011,7 +1011,7 @@ class HomeController extends Controller
         $work_from_home_res_count = sizeof($wfh_data);
 
         // Get Holidays of User
-        $holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'');
+        $holiday_details = Holidays::getUserHolidays($user_id,$month,$year);
         $holidays_count = sizeof($holiday_details);
 
         // Get Work Anniversary dates of Current Month
@@ -1021,7 +1021,7 @@ class HomeController extends Controller
         $birthday_dates = User::getUserBirthDatesByMonth($month);
 
         // Get Holiday of Current Year
-        $holidays = Holidays::getUserHolidaysByType(0,'',$year,'');
+        $holidays = Holidays::getUserHolidays(0,'',$year);
 
         // Get Assigners users
         $assigned_users = User::getAssignedUsers($user_id);
@@ -1121,7 +1121,7 @@ class HomeController extends Controller
         $work_from_home_res_count = sizeof($wfh_data);
 
         // Get Holidays count of current month
-        $holiday_details = Holidays::getUserHolidaysByType(0,$month,$year,'');
+        $holiday_details = Holidays::getUserHolidays(0,$month,$year);
         $holidays_count = sizeof($holiday_details);
 
         // Get Work Anniversary dates of Current Month
@@ -1131,7 +1131,7 @@ class HomeController extends Controller
         $birthday_dates = User::getUserBirthDatesByMonth($month);
 
         // Get Holiday of Current Year
-        $holidays = Holidays::getUserHolidaysByType(0,'',$year,'');
+        $holidays = Holidays::getUserHolidays(0,'',$year);
 
         $viewVariable = array();
         $viewVariable['pending_work_planning_count'] = $pending_work_planning_count;
@@ -1342,7 +1342,8 @@ class HomeController extends Controller
                         $list[$key][date('j', $time)]['attendance']='';
                     
                     $list[$key][date('j', $time)]['remarks']='';
-                    $list[$key][date('j', $time)]['holiday']='';
+                    $list[$key][date('j', $time)]['fixed_holiday']='';
+                    $list[$key][date('j', $time)]['optional_holiday']='';
                     $list[$key][date('j', $time)]['privilege_leave']='';
                     $list[$key][date('j', $time)]['sick_leave']='';
                     $list[$key][date('j', $time)]['unapproved_leave']='';
@@ -1397,13 +1398,23 @@ class HomeController extends Controller
                     }
 
                     // Set holiday dates
-                    $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
+                    $fixed_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Fixed Leave');
 
-                    if (isset($user_holidays) && sizeof($user_holidays)>0) {
+                    if (isset($fixed_holidays) && sizeof($fixed_holidays)>0) {
 
-                        foreach ($user_holidays as $h_k => $h_v) {
+                        foreach ($fixed_holidays as $f_h_k => $f_h_v) {
 
-                            $list[$combine_name][$h_v]['holiday'] = 'Y';
+                            $list[$combine_name][$f_h_v]['fixed_holiday'] = 'Y';
+                        }
+                    }
+
+                    $optional_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Optional Leave');
+
+                    if (isset($optional_holidays) && sizeof($optional_holidays)>0) {
+
+                        foreach ($optional_holidays as $o_h_k => $o_h_v) {
+
+                            $list[$combine_name][$o_h_v]['optional_holiday'] = 'Y';
                         }
                     }
 
@@ -1510,13 +1521,23 @@ class HomeController extends Controller
                             $u_id = User::getUserIdByBothName($split_unm[0]);
 
                             // Set holiday dates
-                            $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
+                            $fixed_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Fixed Leave');
 
-                            if (isset($user_holidays) && sizeof($user_holidays)>0) {
+                            if (isset($fixed_holidays) && sizeof($fixed_holidays)>0) {
 
-                                foreach ($user_holidays as $h_k => $h_v) {
+                                foreach ($fixed_holidays as $f_h_k => $f_h_v) {
 
-                                    $list[$key][$h_v]['holiday'] = 'Y';
+                                    $list[$key][$f_h_v]['fixed_holiday'] = 'Y';
+                                }
+                            }
+
+                            $optional_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Optional Leave');
+
+                            if (isset($optional_holidays) && sizeof($optional_holidays)>0) {
+
+                                foreach ($optional_holidays as $o_h_k => $o_h_v) {
+
+                                    $list[$key][$o_h_v]['optional_holiday'] = 'Y';
                                 }
                             }
 
@@ -1698,7 +1719,8 @@ class HomeController extends Controller
                         $list[$key][date('j', $time)]['attendance']='';
                     
                     $list[$key][date('j', $time)]['remarks']='';
-                    $list[$key][date('j', $time)]['holiday']='';
+                    $list[$key][date('j', $time)]['fixed_holiday']='';
+                    $list[$key][date('j', $time)]['optional_holiday']='';
                     $list[$key][date('j', $time)]['privilege_leave']='';
                     $list[$key][date('j', $time)]['sick_leave']='';
                     $list[$key][date('j', $time)]['unapproved_leave']='';
@@ -1753,12 +1775,23 @@ class HomeController extends Controller
                     }
 
                     // Set holiday dates
-                    $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
+                    $fixed_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Fixed Leave');
 
-                    if (isset($user_holidays) && sizeof($user_holidays)>0) {
+                    if (isset($fixed_holidays) && sizeof($fixed_holidays)>0) {
 
-                        foreach ($user_holidays as $h_k => $h_v) {
-                            $list[$combine_name][$h_v]['holiday'] = 'Y';
+                        foreach ($fixed_holidays as $f_h_k => $f_h_v) {
+
+                            $list[$combine_name][$f_h_v]['fixed_holiday'] = 'Y';
+                        }
+                    }
+
+                    $optional_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Optional Leave');
+
+                    if (isset($optional_holidays) && sizeof($optional_holidays)>0) {
+
+                        foreach ($optional_holidays as $o_h_k => $o_h_v) {
+
+                            $list[$combine_name][$o_h_v]['optional_holiday'] = 'Y';
                         }
                     }
 
@@ -1869,12 +1902,23 @@ class HomeController extends Controller
                             $u_id = User::getUserIdByBothName($split_unm[0]);
 
                             // Set holiday dates
-                            $user_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year);
+                            $fixed_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Fixed Leave');
 
-                            if (isset($user_holidays) && sizeof($user_holidays)>0) {
+                            if (isset($fixed_holidays) && sizeof($fixed_holidays)>0) {
 
-                                foreach ($user_holidays as $h_k => $h_v) {
-                                    $list[$key][$h_v]['holiday'] = 'Y';
+                                foreach ($fixed_holidays as $f_h_k => $f_h_v) {
+
+                                    $list[$key][$f_h_v]['fixed_holiday'] = 'Y';
+                                }
+                            }
+
+                            $optional_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Optional Leave');
+
+                            if (isset($optional_holidays) && sizeof($optional_holidays)>0) {
+
+                                foreach ($optional_holidays as $o_h_k => $o_h_v) {
+
+                                    $list[$key][$o_h_v]['optional_holiday'] = 'Y';
                                 }
                             }
 
@@ -2014,13 +2058,23 @@ class HomeController extends Controller
                 }
 
                 // Set holiday dates
-                $user_holidays = Holidays::getHolidaysByUserID($user_id,$month,$year);
+                $fixed_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Fixed Leave');
 
-                if (isset($user_holidays) && sizeof($user_holidays)>0) {
+                if (isset($fixed_holidays) && sizeof($fixed_holidays)>0) {
 
-                    foreach ($user_holidays as $h_k => $h_v) {
+                    foreach ($fixed_holidays as $f_h_k => $f_h_v) {
 
-                        $list[$user_id][$h_v]['holiday'] = 'Y';
+                        $list[$user_id][$f_h_v]['fixed_holiday'] = 'Y';
+                    }
+                }
+
+                $optional_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Optional Leave');
+
+                if (isset($optional_holidays) && sizeof($optional_holidays)>0) {
+
+                    foreach ($optional_holidays as $o_h_k => $o_h_v) {
+
+                        $list[$user_id][$o_h_v]['optional_holiday'] = 'Y';
                     }
                 }
 

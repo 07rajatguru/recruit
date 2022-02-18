@@ -200,8 +200,11 @@
                                                 else if(isset($value1['unapproved_leave']) && $value1['unapproved_leave'] == 'Y') {
                                                     $attendance = 'UL';
                                                 }
-                                                else if(isset($value1['holiday']) && $value1['holiday'] == 'Y') {
+                                                else if(isset($value1['fixed_holiday']) && $value1['fixed_holiday'] == 'Y') {
                                                     $attendance = 'PH';
+                                                }
+                                                else if(isset($value1['optional_holiday']) && $value1['optional_holiday'] == 'Y') {
+                                                    $attendance = 'OH';
                                                 }
                                                 else if(in_array($key1, $sundays)) {
                                                     $attendance = 'H';
@@ -252,6 +255,9 @@
                                                 @elseif($attendance == 'PH')
                                                     <?php $ph++; ?>
                                                     <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">PH</td>
+                                                @elseif($attendance == 'OH')
+                                                    <?php $ph++; ?>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">OH</td>
                                                 @elseif($attendance == 'H')
                                                     <?php $week_off++; ?>
                                                     <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">H</td>
@@ -304,6 +310,9 @@
                                                 @elseif($attendance == 'PH')
                                                     <?php $ph++; ?>
                                                     <td style="border: 1px solid black;background-color:#76933C;text-align: center;cursor: pointer;" title="Paid Holiday">PH</td>
+                                                @elseif($attendance == 'OH')
+                                                    <?php $ph++; ?>
+                                                    <td style="border: 1px solid black;background-color:#76933C;text-align: center;cursor: pointer;" title="Optional Holiday">OH</td>
                                                 @elseif($attendance == 'H')
                                                     <?php $week_off++; ?>
                                                     <td style="border: 1px solid black;background-color:#ffc000;text-align: center;cursor: pointer;" title="Sunday">H</td>

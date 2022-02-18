@@ -301,14 +301,14 @@ class HolidaysController extends Controller
 
         if($id == 0) {
 
-            $holiday_details = Holidays::getUserHolidaysByType($user_id,$month,$year,'');
+            $holiday_details = Holidays::getUserHolidays($user_id,$month,$year);
             $count = sizeof($holiday_details);
         }
         else {
 
             if($all_perm) {
             
-                $holiday_details = Holidays::getUserHolidaysByType(0,$month,$year,'');
+                $holiday_details = Holidays::getUserHolidays(0,$month,$year);
                 $count = sizeof($holiday_details);
             }
             else {

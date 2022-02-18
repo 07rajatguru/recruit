@@ -139,7 +139,7 @@ class Holidays extends Model
         return $holiday_dates;
     }
 
-    public static function getUserHolidaysByType($user_id,$month,$year,$type) {
+    public static function getUserHolidays($user_id,$month,$year) {
 
         $query = Holidays::query();
         $query = $query->leftjoin('holidays_users','holidays_users.holiday_id','=','holidays.id');
@@ -147,10 +147,6 @@ class Holidays extends Model
 
         if(isset($user_id) && $user_id != 0) {
             $query = $query->where('holidays_users.user_id','=',$user_id);
-        }
-
-        if(isset($type) && $type != '') {
-            $query = $query->where('holidays.type','=',$type);
         }
 
         if ($month != '') {
@@ -212,7 +208,7 @@ class Holidays extends Model
         return $holidays;
     }
 
-    public static function getHolidaysByUserID($user_id,$month,$year) {
+    public static function getHolidaysByUserID($user_id,$month,$year,$type) {
 
         $query = Holidays::query();
         $query = $query->leftjoin('holidays_users','holidays_users.holiday_id','=','holidays.id');
@@ -225,6 +221,10 @@ class Holidays extends Model
         if ($month != '' && $year != '') {
             $query = $query->where(\DB::raw('month(holidays.from_date)'),'=',$month);
             $query = $query->where(\DB::raw('year(holidays.from_date)'),'=',$year);
+        }
+
+        if(isset($type) && $type != '') {
+            $query = $query->where('holidays.type','=',$type);
         }
 
         $query = $query->orderBy('from_date','ASC');
