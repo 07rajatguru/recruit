@@ -101,7 +101,7 @@
 
                     $added_date = date('Y-m-d',strtotime($value['added_date']));
                     $holiday_data = App\Holidays::getHolidayByDateAndID($added_date,$value['added_by_id']);
-                    $leave_data = App\UserLeave::getLeaveByDateAndID($added_date,$value['added_by_id']);
+                    $leave_data = App\UserLeave::getLeaveByDateAndID($added_date,$value['added_by_id'],'1','Full Day');
                     $wfh_data = App\WorkFromHome::getWorkFromHomeRequestByDate($added_date,$value['added_by_id']);
                 ?>
                 <tr>

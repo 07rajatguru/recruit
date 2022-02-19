@@ -16,6 +16,8 @@ use App\JobAssociateCandidates;
 use App\Lead;
 use App\Interview;
 use App\WorkFromHome;
+use App\Holidays;
+use App\UserLeave;
 
 class WorkPlanningController extends Controller
 {
@@ -1276,7 +1278,6 @@ class WorkPlanningController extends Controller
                 event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
                 // If Status not add tomorrow before 11:00 AM then send email notifications
-
                 $today_date = date("d-m-Y");
                 $work_planning_date = $work_planning['added_date'];
 
@@ -1289,59 +1290,71 @@ class WorkPlanningController extends Controller
                     $current_date_time = $dt->format('d-m-Y H:i:s');
 
                     // Get Today Eleven O'clock Time
-
                     $eleven = date('d-m-Y 11:00:00');
 
-                    if($current_date_time > $eleven) {
+                    // If yesterday is sunday,holiday or leave then email is not sent
+                    $yesterday = date("l", strtotime("-1 days"));
+                    $yesterday_date = date("Y-m-d", strtotime("-1 days"));
 
-                        if($report_email == '') {
-                            $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
-                        }
-                        else {
-                            $cc_users_array = array($report_email,$superadminemail,$hremail,$vibhuti_gmail_id);
-                        }
+                    $holidays = Holidays::getHolidayByDateAndID($yesterday_date,$added_by_id);
+                    $leave_data = UserLeave::getLeaveByDateAndID($yesterday_date,$added_by_id,'','');
 
-                        $module = "Work Planning Status Delay";
-                        $sender_name = $superadminuserid;
-                        $to = User::getUserEmailById($work_planning['added_by_id']);
-                        $cc = implode(",",$cc_users_array);
+                    if($yesterday == 'Sunday' || (isset($holidays) && $holidays != '') || (isset($leave_data) && $leave_data != '')) {
 
-                        $date = date('d/m/Y',strtotime($work_planning['added_date']));
+                    }
+                    else {
 
-                        $subject = "Delay of Work Planning Status - " . $work_planning_date;
-                        $message = "Delay of Work Planning Status - " . $work_planning_date;
-                        $module_id = $id;
+                        if($current_date_time > $eleven) {
 
-                        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+                            if($report_email == '') {
+                                $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
+                            }
+                            else {
+                                $cc_users_array = array($report_email,$superadminemail,$hremail,$vibhuti_gmail_id);
+                            }
 
-                        // Set Delay Counter
+                            $module = "Work Planning Status Delay";
+                            $sender_name = $superadminuserid;
+                            $to = User::getUserEmailById($work_planning['added_by_id']);
+                            $cc = implode(",",$cc_users_array);
 
-                        $month = date('m');
-                        $year = date('Y');
+                            $date = date('d/m/Y',strtotime($work_planning['added_date']));
 
-                        $work_planning = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
-                        $delay_counter = '';
+                            $subject = "Delay of Work Planning Status - " . $work_planning_date;
+                            $message = "Delay of Work Planning Status - " . $work_planning_date;
+                            $module_id = $id;
 
-                        if(isset($work_planning) && sizeof($work_planning) > 0) {
+                            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-                            foreach ($work_planning as $key => $value) {
-                                
-                                if($delay_counter == '') {
-                                    $delay_counter = $value['delay_counter'];
-                                }
-                                else {
-                                    $delay_counter = $delay_counter + $value['delay_counter'];
+                            // Set Delay Counter
+
+                            $month = date('m');
+                            $year = date('Y');
+
+                            $work_planning = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
+                            $delay_counter = '';
+
+                            if(isset($work_planning) && sizeof($work_planning) > 0) {
+
+                                foreach ($work_planning as $key => $value) {
+                                    
+                                    if($delay_counter == '') {
+                                        $delay_counter = $value['delay_counter'];
+                                    }
+                                    else {
+                                        $delay_counter = $delay_counter + $value['delay_counter'];
+                                    }
                                 }
                             }
-                        }
 
-                        if($delay_counter > 3) {
+                            if($delay_counter > 3) {
 
-                            \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1', `attendance` = 'HD' WHERE `id` = $id");
-                        }
-                        else {
+                                \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1', `attendance` = 'HD' WHERE `id` = $id");
+                            }
+                            else {
 
-                            \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1' WHERE `id` = $id");
+                                \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1' WHERE `id` = $id");
+                            }
                         }
                     }
                 }
@@ -1506,9 +1519,9 @@ class WorkPlanningController extends Controller
         }
 
         // If Status not add tomorrow before 11:00 AM then send email notifications
-
         $today_date = date("d-m-Y");
         $work_planning_date = $work_planning['added_date'];
+        $added_by_id = $work_planning['added_by_id'];
 
         if($work_planning_date != $today_date) {
 
@@ -1519,59 +1532,71 @@ class WorkPlanningController extends Controller
             $current_date_time = $dt->format('d-m-Y H:i:s');
 
             // Get Today Eleven O'clock Time
-
             $eleven = date('d-m-Y 11:00:00');
 
-            if($current_date_time > $eleven) {
+            // If yesterday is sunday,holiday or leave then email is not sent
+            $yesterday = date("l", strtotime("-1 days"));
+            $yesterday_date = date("Y-m-d", strtotime("-1 days"));
 
-                if($report_email == '') {
-                    $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
-                }
-                else {
-                    $cc_users_array = array($report_email,$superadminemail,$hremail,$vibhuti_gmail_id);
-                }
+            $holidays = Holidays::getHolidayByDateAndID($yesterday_date,$added_by_id);
+            $leave_data = UserLeave::getLeaveByDateAndID($yesterday_date,$added_by_id,'','');
 
-                $module = "Work Planning Status Delay";
-                $sender_name = $superadminuserid;
-                $to = User::getUserEmailById($work_planning['added_by_id']);
-                $cc = implode(",",$cc_users_array);
+            if($yesterday == 'Sunday' || (isset($holidays) && $holidays != '') || (isset($leave_data) && $leave_data != '')) {
 
-                $date = date('d/m/Y',strtotime($work_planning['added_date']));
+            }
+            else {
 
-                $subject = "Delay of Work Planning Status - " . $work_planning_date;
-                $message = "Delay of Work Planning Status - " . $work_planning_date;
-                $module_id = $wp_id;
+                if($current_date_time > $eleven) {
 
-                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+                    if($report_email == '') {
+                        $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
+                    }
+                    else {
+                        $cc_users_array = array($report_email,$superadminemail,$hremail,$vibhuti_gmail_id);
+                    }
 
-                // Set Delay Counter
-                
-                $month = date('m');
-                $year = date('Y');
-                
-                $work_planning = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
-                $delay_counter = '';
+                    $module = "Work Planning Status Delay";
+                    $sender_name = $superadminuserid;
+                    $to = User::getUserEmailById($added_by_id);
+                    $cc = implode(",",$cc_users_array);
 
-                if(isset($work_planning) && sizeof($work_planning) > 0) {
+                    $date = date('d/m/Y',strtotime($work_planning_date));
 
-                    foreach ($work_planning as $key => $value) {
-                                
-                        if($delay_counter == '') {
-                            $delay_counter = $value['delay_counter'];
-                        }
-                        else {
-                            $delay_counter = $delay_counter + $value['delay_counter'];
+                    $subject = "Delay of Work Planning Status - " . $work_planning_date;
+                    $message = "Delay of Work Planning Status - " . $work_planning_date;
+                    $module_id = $wp_id;
+
+                    event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+                    // Set Delay Counter
+                    
+                    $month = date('m');
+                    $year = date('Y');
+                    
+                    $work_planning = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
+                    $delay_counter = '';
+
+                    if(isset($work_planning) && sizeof($work_planning) > 0) {
+
+                        foreach ($work_planning as $key => $value) {
+                                    
+                            if($delay_counter == '') {
+                                $delay_counter = $value['delay_counter'];
+                            }
+                            else {
+                                $delay_counter = $delay_counter + $value['delay_counter'];
+                            }
                         }
                     }
-                }
 
-                if($delay_counter > 3) {
+                    if($delay_counter > 3) {
 
-                    \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1', `attendance` = 'HD' WHERE `id` = $wp_id");
-                }
-                else {
+                        \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1', `attendance` = 'HD' WHERE `id` = $wp_id");
+                    }
+                    else {
 
-                    \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1' WHERE `id` = $wp_id");
+                        \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1' WHERE `id` = $wp_id");
+                    }
                 }
             }
         }

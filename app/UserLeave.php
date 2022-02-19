@@ -231,14 +231,21 @@ class UserLeave extends Model
         return $leave;
     }
 
-    public static function getLeaveByDateAndID($date,$user_id) {
+    public static function getLeaveByDateAndID($date,$user_id,$status=0,$type_of_leave='') {
 
         $query = UserLeave::query();
 
         $query = $query->where('selected_dates','like',"%$date%");
         $query = $query->where('user_id','=',$user_id);
-        $query = $query->where('status','=',1);
-        $query = $query->where('type_of_leave','=','Full Day');
+
+        if(isset($status) && $status != '') {
+            $query = $query->where('status','=',$status);
+        }
+
+        if(isset($type_of_leave) && $type_of_leave != '') {
+            $query = $query->where('type_of_leave','=',$type_of_leave);
+        }
+
         $query = $query->select('category');
         $response = $query->first();
 
