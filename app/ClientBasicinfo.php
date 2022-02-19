@@ -1911,8 +1911,7 @@ class ClientBasicinfo extends Ardent
 
     public static function getBefore7daysClientDetails($user_id) {
 
-        $status_id = '3';
-        $status_id_array = array($status_id);
+        $status_id_array = array('0','1','2');
         $date = date('Y-m-d h:m:s', strtotime('-7 days'));
 
         $query = ClientBasicinfo::query();
@@ -1921,9 +1920,9 @@ class ClientBasicinfo extends Ardent
         $query = $query->where('client_basicinfo.account_manager_id',$user_id);
 
         // Not display Forbid clients
-        $query = $query->whereNotIn('client_basicinfo.status',$status_id_array);
+        $query = $query->whereIn('client_basicinfo.status',$status_id_array);
         
-        // Not Display Delete Client Status '1' Entry
+        // Not Display Delete Client Entry
         $query = $query->where('client_basicinfo.delete_client','=','0');
 
         // Get before 7 days client list
@@ -1938,7 +1937,7 @@ class ClientBasicinfo extends Ardent
         $query = $query->select('client_basicinfo.*');
 
         $query = $query->groupBy('client_basicinfo.id');
-        $query = $query->orderBy('client_basicinfo.id','desc');
+        $query = $query->orderBy('client_basicinfo.name','asc');
         $response = $query->get();
 
         $i=0;
