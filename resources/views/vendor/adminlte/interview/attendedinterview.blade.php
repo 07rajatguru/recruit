@@ -86,7 +86,7 @@
                     @endif
                     
                     <td>{{ $attendedinterview['candidate_fname'] }}</td>
-                    <td>{{ $attendedinterview['contact'] }}</td>
+                    <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $attendedinterview['contact'] }}</td>
                     <td>{{ $attendedinterview['candidate_email'] }}</td>
                     <td>{{ date('d-m-Y h:i A',strtotime($attendedinterview['interview_date'])) }}</td>
                     <td>{{ $attendedinterview['status'] }}</td>
