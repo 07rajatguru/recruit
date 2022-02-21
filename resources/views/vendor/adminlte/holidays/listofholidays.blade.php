@@ -46,13 +46,30 @@
 
                                     <?php $i=0; ?>
                                     @foreach($optional_holiday_list as $key => $value)
+
+                                        <?php
+                                            $data = App\HolidaysUsers::checkUserHoliday($uid,$value['id']);
+                                        ?>
+
                                         <tr style="font-family:Cambria, serif;font-size: 13.0pt;">
                                             <td align="center">{{ ++$i }}</td>
                                             @if($value['title'] == 'Any other Religious Holiday for respective community - Please specify')
-                                                <td align="left" style="padding-left: 10px;">  <input type = "checkbox" name=holiday value="{{ $value['id'] }}" class=others_holiday id="{{ $value['id'] }}"/>  {{ $value['title'] }}   <input type="text" name="religious_holiday" id="religious_holiday"><br/>
+                                                <td align="left" style="padding-left: 10px;">
+                                                    <input type = "checkbox" name=holiday value="{{ $value['id'] }}" class=others_holiday id="{{ $value['id'] }}"/>{{ $value['title'] }}
+                                                    <input type="text" name="religious_holiday" id="religious_holiday"><br/>
                                                 </td>
                                             @else
-                                                <td align="left" style="padding-left: 10px;">  <input type = "checkbox" name=holiday value="{{ $value['id'] }}" class=others_holiday id="{{ $value['id'] }}"/>  {{ $value['title'] }}</td>
+
+                                                @if(isset($data) && $data != '')
+                                                    <td align="left" style="padding-left: 10px;">
+                                                        <input type = "checkbox" name=holiday value="{{ $value['id'] }}" class=others_holiday id="{{ $value['id'] }}" checked=""/>{{ $value['title'] }}
+                                                    </td>
+                                                @else
+
+                                                    <td align="left" style="padding-left: 10px;">
+                                                        <input type = "checkbox" name=holiday value="{{ $value['id'] }}" class=others_holiday id="{{ $value['id'] }}"/>{{ $value['title'] }}
+                                                    </td>
+                                                @endif
                                             @endif
                                         </tr>
                                     @endforeach

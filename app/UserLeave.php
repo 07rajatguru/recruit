@@ -246,7 +246,19 @@ class UserLeave extends Model
             $query = $query->where('type_of_leave','=',$type_of_leave);
         }
 
-        $query = $query->select('category');
+        $query = $query->select('category','id');
+        $response = $query->first();
+
+        return $response;
+    }
+
+    public static function getLeaveByFromDateAndID($from_date,$user_id) {
+
+        $query = UserLeave::query();
+
+        $query = $query->where('from_date','=',$from_date);
+        $query = $query->where('user_id','=',$user_id);
+        $query = $query->select('user_leave.*');
         $response = $query->first();
 
         return $response;

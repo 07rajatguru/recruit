@@ -2652,6 +2652,31 @@ class EveryMinute extends Command
 
                 \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
+
+            else if ($value['module'] == 'Leave Application Reminder') {
+
+                $cc_array = explode(",",$input['cc']);
+
+                $leave_details = UserLeave::getLeaveDetails($value['module_id']);
+
+                // Get user name
+                $user_name = $leave_details['uname'];
+
+                if(isset($leave_details) && $leave_details != '') {
+
+                    $input['module_id'] = $value['module_id'];
+                    $input['cc_array'] = $cc_array;
+                    $input['user_name'] = $user_name;
+
+                     \Mail::send('adminlte::emails.leaveapplicationreminder', $input, function ($message) use($input) {
+                    
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                    });
+
+                    \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
+                }
+            }
         }
     }
 }

@@ -394,7 +394,7 @@ class HolidaysController extends Controller
                 }
             }
 
-            return view('adminlte::holidays.listofholidays',compact('fixed_holiday_list','optional_holiday_list','length'));
+            return view('adminlte::holidays.listofholidays',compact('fixed_holiday_list','optional_holiday_list','length','uid'));
         }
         else {
             return view('errors.403');
@@ -407,7 +407,12 @@ class HolidaysController extends Controller
         $user_id = $user->id;
 
         if (isset($_POST['religious_holiday']) && $_POST['religious_holiday'] != '') {
+            
             $religious_holiday = $_POST['religious_holiday'];
+        }
+        else {
+
+            $religious_holiday = '';
         }
 
         $selected_leaves = $_POST['selected_leaves'];
@@ -481,5 +486,4 @@ class HolidaysController extends Controller
         }
         return $msg;
     }
-
 }
