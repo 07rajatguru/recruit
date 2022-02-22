@@ -30,7 +30,7 @@
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-            <div class="box-header with-border col-md-6 ">
+            <div class="box-header with-border col-md-6">
                 <h3 class="box-title">Basic Information</h3>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
@@ -91,9 +91,17 @@
                         </div>
                     </div>
 
-                    <div class="form-group">
-                        <strong>Leave Category: </strong>
-                        {!! Form::select('leave_category', $leave_category,$selected_leave_category, array('id' => 'leave_category', 'class' => 'form-control','tabindex' => '5', 'onchange' => 'category();' )) !!}
+                    <div class="form-group {{ $errors->has('leave_category') ? 'has-error' : '' }}">
+                        <strong>Leave Category: <span class = "required_fields">*</span></strong>
+                        {{-- {!! Form::select('leave_category', $leave_category, $selected_leave_category, array('id' => 'leave_category', 'class' => 'form-control','tabindex' => '5', 'onchange' => 'category();' )) !!} --}}
+
+                        {!! Form::select('leave_category', $leave_category, $selected_leave_category, array('id' => 'leave_category', 'class' => 'form-control','tabindex' => '5')) !!}
+
+                        @if ($errors->has('leave_category'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('leave_category') }}</strong>
+                            </span>
+                        @endif
                     </div>
 
                     <div class="form-group document" style="display: none;">
@@ -148,6 +156,9 @@
                     "leave_type": {
                         required: true
                     },
+                    "leave_category": {
+                        required: true
+                    },
                 },
                 messages: {
                     "subject": {
@@ -161,6 +172,9 @@
                     },
                     "leave_type": {
                         required: "Leave Type is Required Field."
+                    },
+                    "leave_category": {
+                        required: "Leave Category is Required Field."
                     },
                 }
             });

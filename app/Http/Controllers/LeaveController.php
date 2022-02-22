@@ -237,12 +237,24 @@ class LeaveController extends Controller
         $action = 'add';
 
         $leave_type = UserLeave::getLeaveType();
-        $leave_category = UserLeave::getLeaveCategory();
 
         $selected_leave_type = '';
         $selected_leave_category = '';
 
         $loggedin_user_id = \Auth::user()->id;
+
+        // Get user employeement type for set leave category
+        $user_details = User::getAllDetailsByUserID($loggedin_user_id);
+        $user_details = User::getAllDetailsByUserID($loggedin_user_id);
+
+        if($user_details->employment_type == 'Trainee' || $user_details->employment_type == 'Intern') {
+
+            $leave_category = array('LWP' => "LWP");
+        }
+        else {
+
+            $leave_category = UserLeave::getLeaveCategory();
+        }
         
         return view('adminlte::leave.create',compact('action','leave_type','leave_category','selected_leave_type','selected_leave_category','loggedin_user_id'));
     }
@@ -448,7 +460,6 @@ class LeaveController extends Controller
         $action = 'edit';
 
         $leave_type = UserLeave::getLeaveType();
-        $leave_category = UserLeave::getLeaveCategory();
 
         $leave = UserLeave::find($id);
 
@@ -460,6 +471,17 @@ class LeaveController extends Controller
         $to_date = $dateClass->changeYMDtoDMY($leave->to_date);
 
         $loggedin_user_id = \Auth::user()->id;
+
+        // Get user employeement type for set leave category
+        $user_details = User::getAllDetailsByUserID($loggedin_user_id);
+        if($user_details->employment_type == 'Trainee' || $user_details->employment_type == 'Intern') {
+
+            $leave_category = array('LWP' => "LWP");
+        }
+        else {
+
+            $leave_category = UserLeave::getLeaveCategory();
+        }
         
         return view('adminlte::leave.edit',compact('action','leave_type','leave_category','leave','selected_leave_type','selected_leave_category','from_date','to_date','loggedin_user_id'));
     }
@@ -771,30 +793,36 @@ class LeaveController extends Controller
                 // Update Leave Balance
                 $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
 
-                $leave_taken = $leave_balance_details['leave_taken'];
-                $leave_remaining = $leave_balance_details['leave_remaining'];
+                if(isset($leave_balance_details) && $leave_balance_details != '') {
 
-                $new_leave_taken = $leave_taken + $days;
-                $new_leave_remaining = $leave_remaining - $days;
+                    $leave_taken = $leave_balance_details['leave_taken'];
+                    $leave_remaining = $leave_balance_details['leave_remaining'];
 
-                \DB::statement("UPDATE `leave_balance` SET `leave_taken` = '$new_leave_taken', `leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
+                    $new_leave_taken = $leave_taken + $days;
+                    $new_leave_remaining = $leave_remaining - $days;
 
-                \DB::statement("UPDATE `monthwise_leave_balance` SET `pl_taken` = '$new_leave_taken', `pl_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id' AND `month` = '$month' AND `year` = '$year'");
+                    \DB::statement("UPDATE `leave_balance` SET `leave_taken` = '$new_leave_taken', `leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
+
+                    \DB::statement("UPDATE `monthwise_leave_balance` SET `pl_taken` = '$new_leave_taken', `pl_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id' AND `month` = '$month' AND `year` = '$year'");
+                }
             }
             else if($leave_category == 'Sick Leave') {
 
                 // Update Leave Balance
                 $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
 
-                $seek_leave_taken = $leave_balance_details['seek_leave_taken'];
-                $seek_leave_remaining = $leave_balance_details['seek_leave_remaining'];
+                if(isset($leave_balance_details) && $leave_balance_details != '') {
 
-                $new_leave_taken = $seek_leave_taken + $days;
-                $new_leave_remaining = $seek_leave_remaining - $days;
+                    $seek_leave_taken = $leave_balance_details['seek_leave_taken'];
+                    $seek_leave_remaining = $leave_balance_details['seek_leave_remaining'];
 
-                \DB::statement("UPDATE `leave_balance` SET `seek_leave_taken` = '$new_leave_taken', `seek_leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
+                    $new_leave_taken = $seek_leave_taken + $days;
+                    $new_leave_remaining = $seek_leave_remaining - $days;
 
-                \DB::statement("UPDATE `monthwise_leave_balance` SET `sl_taken` = '$new_leave_taken', `sl_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id' AND `month` = '$month' AND `year` = '$year'");
+                    \DB::statement("UPDATE `leave_balance` SET `seek_leave_taken` = '$new_leave_taken', `seek_leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
+
+                    \DB::statement("UPDATE `monthwise_leave_balance` SET `sl_taken` = '$new_leave_taken', `sl_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id' AND `month` = '$month' AND `year` = '$year'");
+                }
             }
             else {
 
