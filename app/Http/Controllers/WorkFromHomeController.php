@@ -431,51 +431,145 @@ class WorkFromHomeController extends Controller
     public function getAllRequests($id,$month,$year) {
         
         $user =  \Auth::user();
-        $user_id = $user->id;
         $all_perm = $user->can('hr-employee-service-dashboard');
-        
+
         $super_admin_userid = getenv('SUPERADMINUSERID');
+        
+        $user_id = $user->id;
+        $user_ids[] = $user_id;
+
+        if($id == 0) {
+
+            $pending_wfh_requests = WorkFromHome::getAllWorkFromHomeRequestsByUserId(0,$user_ids,$month,$year,0);
+
+            $approved_wfh_requests = WorkFromHome::getAllWorkFromHomeRequestsByUserId(0,$user_ids,$month,$year,1);
+
+            $rejected_wfh_requests = WorkFromHome::getAllWorkFromHomeRequestsByUserId(0,$user_ids,$month,$year,2);
+
+            $pending_count = sizeof($pending_wfh_requests);
+            $approved_count = sizeof($approved_wfh_requests);
+            $rejected_count = sizeof($rejected_wfh_requests); 
+        }
+        else {
+
+            if($all_perm) {
+                    
+                $pending_wfh_requests = WorkFromHome::getAllWorkFromHomeRequestsByUserId(1,0,$month,$year,0);
+
+                $approved_wfh_requests = WorkFromHome::getAllWorkFromHomeRequestsByUserId(1,0,$month,$year,1);
+
+                $rejected_wfh_requests = WorkFromHome::getAllWorkFromHomeRequestsByUserId(1,0,$month,$year,2);
+
+                $pending_count = sizeof($pending_wfh_requests);
+                $approved_count = sizeof($approved_wfh_requests);
+                $rejected_count = sizeof($rejected_wfh_requests);
+            }
+            else {
+                return view('errors.403');
+            }
+        }
 
         if($user_id == $super_admin_userid) {
 
-            if($id == 0) {
-            
-                $work_from_home_res = array();
-                $count = 0;
+            // Get Pending Requests
+            if(isset($pending_wfh_requests) && sizeof($pending_wfh_requests) > 0) {
+
+                $all_pending_wfh_requests = array();
+                $team_pending_wfh_requests = array();
+                $i = 0;
+
+                foreach ($pending_wfh_requests as $key => $value) {
+
+                    $report_to_id = User::getReportsToById($value['user_id']);
+
+                    if($report_to_id == $super_admin_userid) {
+                        $team_pending_wfh_requests[$i] = $value;
+                    }
+                    else {
+                        $all_pending_wfh_requests[$i] = $value;
+                    }
+                    $i++;
+                }
+                $pending_count = sizeof($team_pending_wfh_requests) + sizeof($all_pending_wfh_requests);
             }
             else {
 
-                if($all_perm) {
-                    
-                    $work_from_home_res = WorkFromHome::getAllWorkFromHomeRequestsByUserId(1,0,$month,$year,'');
-                    $count = sizeof($work_from_home_res);
+                $team_pending_wfh_requests = array();
+                $all_pending_wfh_requests = array();
+                $pending_count = 0;
+            }
+
+            // Get Approved Requests
+            if(isset($approved_wfh_requests) && sizeof($approved_wfh_requests) > 0) {
+
+                $all_approved_wfh_requests = array();
+                $team_approved_wfh_requests = array();
+                $i = 0;
+
+                foreach ($approved_wfh_requests as $key => $value) {
+
+                    $report_to_id = User::getReportsToById($value['user_id']);
+
+                    if($report_to_id == $super_admin_userid) {
+                        $team_approved_wfh_requests[$i] = $value;
+                    }
+                    else {
+                        $all_approved_wfh_requests[$i] = $value;
+                    }
+                    $i++;
                 }
-                else {
-                    return view('errors.403');
+                $approved_count = sizeof($team_approved_wfh_requests) + sizeof($all_approved_wfh_requests);
+            }
+            else {
+
+                $team_approved_wfh_requests = array();
+                $all_approved_wfh_requests = array();
+                $approved_count = 0;
+            }
+
+            // Get Rejected Requests
+            if(isset($rejected_wfh_requests) && sizeof($rejected_wfh_requests) > 0) {
+
+                $all_rejected_wfh_requests = array();
+                $team_rejected_wfh_requests = array();
+                $i = 0;
+
+                foreach ($rejected_wfh_requests as $key => $value) {
+
+                    $report_to_id = User::getReportsToById($value['user_id']);
+
+                    if($report_to_id == $super_admin_userid) {
+                        $team_rejected_wfh_requests[$i] = $value;
+                    }
+                    else {
+                        $all_rejected_wfh_requests[$i] = $value;
+                    }
+                    $i++;
                 }
+                $rejected_count = sizeof($team_rejected_wfh_requests) + sizeof($all_rejected_wfh_requests);
+            }
+            else {
+
+                $team_rejected_wfh_requests = array();
+                $all_rejected_wfh_requests = array();
+                $rejected_count = 0;
             }
         }
         else {
 
-            if($id == 0) {
-            
-                $user_ids[] = $user_id;
-                $work_from_home_res = WorkFromHome::getAllWorkFromHomeRequestsByUserId(0,$user_ids,$month,$year,'');
-                $count = sizeof($work_from_home_res);
-            }
-            else {
+            $team_pending_wfh_requests = array();
+            $all_pending_wfh_requests = array();
+            $pending_count = 0;
 
-                if($all_perm) {
+            $team_approved_wfh_requests = array();
+            $all_approved_wfh_requests = array();
+            $approved_count = 0;
 
-                    $work_from_home_res = WorkFromHome::getAllWorkFromHomeRequestsByUserId(1,0,$month,$year);
-                    $count = sizeof($work_from_home_res);
-                }
-                else {
-                    return view('errors.403');
-                }
-            }
+            $team_rejected_wfh_requests = array();
+            $all_rejected_wfh_requests = array();
+            $rejected_count = 0;
         }
 
-        return view('adminlte::workFromHome.workfromhomerequest',compact('work_from_home_res','count','user_id'));
+        return view('adminlte::workFromHome.workfromhomerequest',compact('pending_wfh_requests','pending_count','approved_wfh_requests','approved_count','rejected_wfh_requests','rejected_count','user_id','super_admin_userid','team_pending_wfh_requests','all_pending_wfh_requests','team_approved_wfh_requests','all_approved_wfh_requests','team_rejected_wfh_requests','all_rejected_wfh_requests'));
     }
 }

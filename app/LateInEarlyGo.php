@@ -31,6 +31,9 @@ class LateInEarlyGo extends Model
         if(isset($status) && $status != '') {
             $query = $query->where('late_in_early_go.status','=',$status);
         }
+        else if(isset($status) && $status >= '0') {
+            $query = $query->where('late_in_early_go.status','=',$status);
+        }
 
         if ($month != '' && $year != '') {
             $query = $query->where(\DB::raw('month(late_in_early_go.date)'),'=',$month);
@@ -99,49 +102,5 @@ class LateInEarlyGo extends Model
         }
 
         return $leave_data;
-    }
-
-    public static function getLateInEarlyGoByUserID($loggedin_user_id,$month,$year) {
-
-        $query = LateInEarlyGo::query();
-        $query = $query->join('users','users.id','late_in_early_go.user_id');
-        $query = $query->select('late_in_early_go.*','users.name as user_name');
-
-        if ($loggedin_user_id > 0) {
-            $query = $query->where('late_in_early_go.user_id',$loggedin_user_id);
-        }
-
-        if ($month != '' && $year != '') {
-            $query = $query->where(\DB::raw('month(late_in_early_go.date)'),'=',$month);
-            $query = $query->where(\DB::raw('year(late_in_early_go.date)'),'=',$year);
-        }
-
-        $response = $query->get();
-
-        $leave = array();
-        $i = 0;
-
-        if(isset($response) && $response != '') {
-
-            foreach ($response as $key => $value) {
-
-                $leave[$i]['id'] = $value->id;
-                $leave[$i]['user_name'] = $value->user_name;
-                $leave[$i]['subject'] = $value->subject;
-
-                if (isset($value->date) && $value->date != '') {
-                    $leave[$i]['date'] = date('d-m-Y',strtotime($value->date));
-                }
-                else {
-                    $leave[$i]['date'] = '';
-                }
-                
-                $leave[$i]['leave_type'] = $value->leave_type;
-                $leave[$i]['status'] = $value->status;
-                
-                $i++;
-            }
-        }
-        return $leave;
     }
 }

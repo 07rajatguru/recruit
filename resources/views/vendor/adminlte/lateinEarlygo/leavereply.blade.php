@@ -10,7 +10,7 @@
 	<div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>{!! $leave_details['subject'] !!}</h2>
+                <h2>{!! $leave_details['subject'] !!} ({{ $leave_details['date'] }})</h2>
             </div>
             <div class="pull-right">
                 <a class="btn btn-primary" href="{{ route('late-early.index') }}">Back</a>
@@ -27,11 +27,6 @@
                         <tr>
                             <th>User Name</th>
                             <td>{{ $leave_details['uname'] }}</td>
-                            <th>Date</th>
-                            <td>{{ $leave_details['date'] }}</td>
-                        </tr>
-
-                        <tr>
                             <th>Leave Type</th>
                             <td>{{ $leave_details['leave_type'] }}</td>
                             <th>Status</th>
@@ -50,10 +45,12 @@
                             <td colspan="6">{!! $leave_details['message'] !!}</td>
                         </tr>
 
-                        <tr>
-                            <th>Remarks</th>
-                            <td colspan="6">{!! $leave_details['remarks'] !!}</td>
-                        </tr>
+                        @if(isset($leave_details['remarks']) && $leave_details['remarks'] != '')
+                            <tr>
+                                <th>Remarks</th>
+                                <td colspan="6">{!! $leave_details['remarks'] !!}</td>
+                            </tr>
+                        @endif
                     </table>
             	</div>
             </div>

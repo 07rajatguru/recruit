@@ -1050,8 +1050,10 @@ class LeaveController extends Controller
         $user = \Auth::user();
         $all_perm = $user->can('hr-employee-service-dashboard');
 
+        $super_admin_userid = getenv('SUPERADMINUSERID');
+
         $user_id = $user->id;
-        $user_ids[] = $user_id;        
+        $user_ids[] = $user_id;
 
         if($id == 0) {
 
@@ -1060,6 +1062,10 @@ class LeaveController extends Controller
             $approved_leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,1);
 
             $rejected_leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,2);
+
+            $pending_count = sizeof($pending_leave_details);
+            $approved_count = sizeof($approved_leave_details);
+            $rejected_count = sizeof($rejected_leave_details);
         }
         else {
 
@@ -1070,16 +1076,129 @@ class LeaveController extends Controller
                 $approved_leave_details = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,1);
 
                 $rejected_leave_details = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,2);
+
+                $pending_count = sizeof($pending_leave_details);
+                $approved_count = sizeof($approved_leave_details);
+                $rejected_count = sizeof($rejected_leave_details);
             }
             else {
                 return view('errors.403');
             }
         }
 
-        $pending_count = sizeof($pending_leave_details);
-        $approved_count = sizeof($approved_leave_details);
-        $rejected_count = sizeof($rejected_leave_details);
+        if($user_id == $super_admin_userid) {
 
-        return view('adminlte::leave.appliedleave',compact('pending_leave_details','pending_count','approved_leave_details','approved_count','rejected_leave_details','rejected_count'));
+            // Get Pending Leave Details
+            if(isset($pending_leave_details) && sizeof($pending_leave_details) > 0) {
+
+                $all_pending_leave_details = array();
+                $team_pending_leave_details = array();
+                $i = 0;
+
+                foreach ($pending_leave_details as $key => $value) {
+
+                    $report_to_id = User::getReportsToById($value['user_id']);
+
+                    if($report_to_id == $super_admin_userid) {
+
+                        $team_pending_leave_details[$i] = $value;
+                    }
+                    else {
+
+                        $all_pending_leave_details[$i] = $value;
+                    }
+
+                    $i++;
+                }
+
+                $pending_count = sizeof($team_pending_leave_details) + sizeof($all_pending_leave_details);
+            }
+            else {
+
+                $team_pending_leave_details = array();
+                $all_pending_leave_details = array();
+                $pending_count = 0;
+            }
+
+            // Get Approved Leave Details
+            if(isset($approved_leave_details) && sizeof($approved_leave_details) > 0) {
+
+                $all_approved_leave_details = array();
+                $team_approved_leave_details = array();
+                $i = 0;
+
+                foreach ($approved_leave_details as $key => $value) {
+
+                    $report_to_id = User::getReportsToById($value['user_id']);
+
+                    if($report_to_id == $super_admin_userid) {
+
+                        $team_approved_leave_details[$i] = $value;
+                    }
+                    else {
+
+                        $all_approved_leave_details[$i] = $value;
+                    }
+
+                    $i++;
+                }
+
+                $approved_count = sizeof($team_approved_leave_details) + sizeof($all_approved_leave_details);
+            }
+            else {
+
+                $team_approved_leave_details = array();
+                $all_approved_leave_details = array();
+                $approved_count = 0;
+            }
+
+            // Get Rejected Leave Details
+            if(isset($rejected_leave_details) && sizeof($rejected_leave_details) > 0) {
+
+                $all_rejected_leave_details = array();
+                $team_rejected_leave_details = array();
+                $i = 0;
+
+                foreach ($rejected_leave_details as $key => $value) {
+
+                    $report_to_id = User::getReportsToById($value['user_id']);
+
+                    if($report_to_id == $super_admin_userid) {
+
+                        $team_rejected_leave_details[$i] = $value;
+                    }
+                    else {
+
+                        $all_rejected_leave_details[$i] = $value;
+                    }
+
+                    $i++;
+                }
+
+                $rejected_count = sizeof($team_rejected_leave_details) + sizeof($all_rejected_leave_details);
+            }
+            else {
+
+                $team_rejected_leave_details = array();
+                $all_rejected_leave_details = array();
+                $rejected_count = 0;
+            }
+        }
+        else {
+
+            $team_pending_leave_details = array();
+            $all_pending_leave_details = array();
+            $pending_count = 0;
+
+            $team_approved_leave_details = array();
+            $all_approved_leave_details = array();
+            $approved_count = 0;
+
+            $team_rejected_leave_details = array();
+            $all_rejected_leave_details = array();
+            $rejected_count = 0;
+        }
+
+        return view('adminlte::leave.appliedleave',compact('pending_leave_details','pending_count','approved_leave_details','approved_count','rejected_leave_details','rejected_count','user_id','super_admin_userid','team_pending_leave_details','all_pending_leave_details','team_approved_leave_details','all_approved_leave_details','team_rejected_leave_details','all_rejected_leave_details'));
     }
 }

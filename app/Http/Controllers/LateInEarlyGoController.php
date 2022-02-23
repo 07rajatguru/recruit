@@ -408,8 +408,10 @@ class LateInEarlyGoController extends Controller
         $loggedin_user_id = $_GET['loggedin_user_id'];
         $month = date('m');
         $year = date('Y');
+        
+        $user_ids[] = $loggedin_user_id;
 
-        $get_leaves = LateInEarlyGo::getLateInEarlyGoByUserID($loggedin_user_id,$month,$year);
+        $get_leaves = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(0,$user_ids,$month,$year,'');
         $leaves_count = sizeof($get_leaves);
 
         return json_encode($leaves_count);
@@ -418,49 +420,157 @@ class LateInEarlyGoController extends Controller
     public function getLateInEarlyGo($id,$month,$year) {
         
         $user = \Auth::user();
-        $user_id = $user->id;
         $all_perm = $user->can('hr-employee-service-dashboard');
 
         $super_admin_userid = getenv('SUPERADMINUSERID');
 
+        $user_id = $user->id;
+        $user_ids[] = $user_id;
+
+        if($id == 0) {
+                    
+            $pending_leave_details = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(0,$user_ids,$month,$year,0);
+
+            $approved_leave_details = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(0,$user_ids,$month,$year,1);
+
+            $rejected_leave_details = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(0,$user_ids,$month,$year,2);
+
+            $pending_count = sizeof($pending_leave_details);
+            $approved_count = sizeof($approved_leave_details);
+            $rejected_count = sizeof($rejected_leave_details); 
+        }
+        else {
+
+            if($all_perm) {
+                    
+                $pending_leave_details = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(1,0,$month,$year,0);
+
+                $approved_leave_details = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(1,0,$month,$year,1);
+
+                $rejected_leave_details = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(1,0,$month,$year,2);
+
+                $pending_count = sizeof($pending_leave_details);
+                $approved_count = sizeof($approved_leave_details);
+                $rejected_count = sizeof($rejected_leave_details);
+            }
+            else {
+                return view('errors.403');
+            }
+        }
+
         if($user_id == $super_admin_userid) {
 
-            if($id == 0) {
-            
-                $leave_details = array();
-                $count = 0;
+            // Get Pending Leave Details
+            if(isset($pending_leave_details) && sizeof($pending_leave_details) > 0) {
+
+                $all_pending_leave_details = array();
+                $team_pending_leave_details = array();
+                $i = 0;
+
+                foreach ($pending_leave_details as $key => $value) {
+
+                    $report_to_id = User::getReportsToById($value['user_id']);
+
+                    if($report_to_id == $super_admin_userid) {
+
+                        $team_pending_leave_details[$i] = $value;
+                    }
+                    else {
+
+                        $all_pending_leave_details[$i] = $value;
+                    }
+
+                    $i++;
+                }
+
+                $pending_count = sizeof($team_pending_leave_details) + sizeof($all_pending_leave_details);
             }
             else {
 
-                if($all_perm) {
-                    
-                    $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID(0,$month,$year);
-                    $count = sizeof($leave_details);
+                $team_pending_leave_details = array();
+                $all_pending_leave_details = array();
+                $pending_count = 0;
+            }
+
+            // Get Approved Leave Details
+            if(isset($approved_leave_details) && sizeof($approved_leave_details) > 0) {
+
+                $all_approved_leave_details = array();
+                $team_approved_leave_details = array();
+                $i = 0;
+
+                foreach ($approved_leave_details as $key => $value) {
+
+                    $report_to_id = User::getReportsToById($value['user_id']);
+
+                    if($report_to_id == $super_admin_userid) {
+
+                        $team_approved_leave_details[$i] = $value;
+                    }
+                    else {
+
+                        $all_approved_leave_details[$i] = $value;
+                    }
+
+                    $i++;
                 }
-                else {
-                    return view('errors.403');
+
+                $approved_count = sizeof($team_approved_leave_details) + sizeof($all_approved_leave_details);
+            }
+            else {
+
+                $team_approved_leave_details = array();
+                $all_approved_leave_details = array();
+                $approved_count = 0;
+            }
+
+            // Get Rejected Leave Details
+            if(isset($rejected_leave_details) && sizeof($rejected_leave_details) > 0) {
+
+                $all_rejected_leave_details = array();
+                $team_rejected_leave_details = array();
+                $i = 0;
+
+                foreach ($rejected_leave_details as $key => $value) {
+
+                    $report_to_id = User::getReportsToById($value['user_id']);
+
+                    if($report_to_id == $super_admin_userid) {
+
+                        $team_rejected_leave_details[$i] = $value;
+                    }
+                    else {
+
+                        $all_rejected_leave_details[$i] = $value;
+                    }
+
+                    $i++;
                 }
+
+                $rejected_count = sizeof($team_rejected_leave_details) + sizeof($all_rejected_leave_details);
+            }
+            else {
+
+                $team_rejected_leave_details = array();
+                $all_rejected_leave_details = array();
+                $rejected_count = 0;
             }
         }
         else {
 
-            if($id == 0) {
-                
-                $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID($user_id,$month,$year);
-                $count = sizeof($leave_details);
-            }
-            else {
+            $team_pending_leave_details = array();
+            $all_pending_leave_details = array();
+            $pending_count = 0;
 
-                if($all_perm) {
-                    
-                    $leave_details = LateInEarlyGo::getLateInEarlyGoByUserID(0,$month,$year);
-                    $count = sizeof($leave_details);
-                }
-                else {
-                    return view('errors.403');
-                }
-            }
+            $team_approved_leave_details = array();
+            $all_approved_leave_details = array();
+            $approved_count = 0;
+
+            $team_rejected_leave_details = array();
+            $all_rejected_leave_details = array();
+            $rejected_count = 0;
         }
-        return view('adminlte::lateinEarlygo.latein-earlygo',compact('leave_details','user_id','count'));
+
+        return view('adminlte::lateinEarlygo.latein-earlygo',compact('pending_leave_details','pending_count','approved_leave_details','approved_count','rejected_leave_details','rejected_count','user_id','super_admin_userid','team_pending_leave_details','all_pending_leave_details','team_approved_leave_details','all_approved_leave_details','team_rejected_leave_details','all_rejected_leave_details'));
     }
 }

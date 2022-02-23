@@ -48,7 +48,7 @@
         	    		<th width="5%">No</th>
                         <th width="5%">Action</th>
                         <th>User Name</th>
-                        <th>Sujbect</th>
+                        <th>Subject</th>
                         <th>From date</th>
                         <th>To Date</th>
                         <th>Leave Type</th>
@@ -58,30 +58,83 @@
             	</thead>
                 <?php $i=0; ?>
             	<tbody>
-                    @if(isset($pending_leave_details) && sizeof($pending_leave_details) > 0)
-                		@foreach($pending_leave_details as $key => $value)
-            	    		<tr>
-            		    		<td>{{ ++$i }}</td>
-                                <td>
-                                    <a class="fa fa-circle" title="Show" href="{{ route('leave.reply',$value['id']) }}"></a>
-                                </td>
+                    @if($user_id == $super_admin_userid)
+                        @if(isset($team_pending_leave_details) && sizeof($team_pending_leave_details) > 0)
+                            @foreach($team_pending_leave_details as $key => $value)
+                                <tr>
+                                    <td>{{ ++$i }}</td>
+                                    <td>
+                                        <a class="fa fa-circle" title="Show" href="{{ route('leave.reply',$value['id']) }}"></a>
+                                    </td>
 
-            		    		<td>{{ $value['user_name'] }}</td>
-            		    		<td>{{ $value['subject'] }}</td>
-            		    		<td>{{ $value['from_date'] }}</td>
-            		    		<td>{{ $value['to_date'] }}</td>
-            		    		<td>{{ $value['leave_type'] }}</td>
-            		    		<td>{{ $value['leave_category'] }}</td>
+                                    <td style="background-color:#C4D79B;">{{ $value['user_name'] }}</td>
+                                    <td>{{ $value['subject'] }}</td>
+                                    <td>{{ $value['from_date'] }}</td>
+                                    <td>{{ $value['to_date'] }}</td>
+                                    <td>{{ $value['leave_type'] }}</td>
+                                    <td>{{ $value['leave_category'] }}</td>
 
-            		    		@if($value['status'] == 0)
-            		    			<td style="background-color:#8FB1D5;">Pending</td>
-            		    		@elseif($value['status'] == 1)
-            		    			<td style="background-color:#32CD32;">Approved</td>
-            		    		@elseif($value['status'] == 2)
-            		    			<td style="background-color:#F08080;">Rejected</td>
-            		    		@endif
-            		    	</tr>
-                		@endforeach
+                                    @if($value['status'] == 0)
+                                        <td style="background-color:#8FB1D5;">Pending</td>
+                                    @elseif($value['status'] == 1)
+                                        <td style="background-color:#32CD32;">Approved</td>
+                                    @elseif($value['status'] == 2)
+                                        <td style="background-color:#F08080;">Rejected</td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        @endif
+                        @if(isset($all_pending_leave_details) && sizeof($all_pending_leave_details) > 0)
+                            @foreach($all_pending_leave_details as $key => $value)
+                                <tr>
+                                    <td>{{ ++$i }}</td>
+                                    <td>
+                                        <a class="fa fa-circle" title="Show" href="{{ route('leave.reply',$value['id']) }}"></a>
+                                    </td>
+
+                                    <td>{{ $value['user_name'] }}</td>
+                                    <td>{{ $value['subject'] }}</td>
+                                    <td>{{ $value['from_date'] }}</td>
+                                    <td>{{ $value['to_date'] }}</td>
+                                    <td>{{ $value['leave_type'] }}</td>
+                                    <td>{{ $value['leave_category'] }}</td>
+
+                                    @if($value['status'] == 0)
+                                        <td style="background-color:#8FB1D5;">Pending</td>
+                                    @elseif($value['status'] == 1)
+                                        <td style="background-color:#32CD32;">Approved</td>
+                                    @elseif($value['status'] == 2)
+                                        <td style="background-color:#F08080;">Rejected</td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        @endif
+                    @else
+                        @if(isset($pending_leave_details) && sizeof($pending_leave_details) > 0)
+                    		@foreach($pending_leave_details as $key => $value)
+                	    		<tr>
+                		    		<td>{{ ++$i }}</td>
+                                    <td>
+                                        <a class="fa fa-circle" title="Show" href="{{ route('leave.reply',$value['id']) }}"></a>
+                                    </td>
+
+                		    		<td>{{ $value['user_name'] }}</td>
+                		    		<td>{{ $value['subject'] }}</td>
+                		    		<td>{{ $value['from_date'] }}</td>
+                		    		<td>{{ $value['to_date'] }}</td>
+                		    		<td>{{ $value['leave_type'] }}</td>
+                		    		<td>{{ $value['leave_category'] }}</td>
+
+                		    		@if($value['status'] == 0)
+                		    			<td style="background-color:#8FB1D5;">Pending</td>
+                		    		@elseif($value['status'] == 1)
+                		    			<td style="background-color:#32CD32;">Approved</td>
+                		    		@elseif($value['status'] == 2)
+                		    			<td style="background-color:#F08080;">Rejected</td>
+                		    		@endif
+                		    	</tr>
+                    		@endforeach
+                        @endif
                     @endif
             	</tbody>
             </table>
@@ -101,7 +154,7 @@
                         <th width="5%">No</th>
                         <th width="5%">Action</th>
                         <th>User Name</th>
-                        <th>Sujbect</th>
+                        <th>Subject</th>
                         <th>From date</th>
                         <th>To Date</th>
                         <th>Leave Type</th>
@@ -111,30 +164,83 @@
                 </thead>
                 <?php $i=0; ?>
                 <tbody>
-                    @if(isset($approved_leave_details) && sizeof($approved_leave_details) > 0)
-                        @foreach($approved_leave_details as $key => $value)
-                            <tr>
-                                <td>{{ ++$i }}</td>
-                                <td>
-                                    <a class="fa fa-circle" title="Show" href="{{ route('leave.reply',$value['id']) }}"></a>
-                                </td>
+                    @if($user_id == $super_admin_userid)
+                        @if(isset($team_approved_leave_details) && sizeof($team_approved_leave_details) > 0)
+                            @foreach($team_approved_leave_details as $key => $value)
+                                <tr>
+                                    <td>{{ ++$i }}</td>
+                                    <td>
+                                        <a class="fa fa-circle" title="Show" href="{{ route('leave.reply',$value['id']) }}"></a>
+                                    </td>
 
-                                <td>{{ $value['user_name'] }}</td>
-                                <td>{{ $value['subject'] }}</td>
-                                <td>{{ $value['from_date'] }}</td>
-                                <td>{{ $value['to_date'] }}</td>
-                                <td>{{ $value['leave_type'] }}</td>
-                                <td>{{ $value['leave_category'] }}</td>
+                                    <td style="background-color:#C4D79B;">{{ $value['user_name'] }}</td>
+                                    <td>{{ $value['subject'] }}</td>
+                                    <td>{{ $value['from_date'] }}</td>
+                                    <td>{{ $value['to_date'] }}</td>
+                                    <td>{{ $value['leave_type'] }}</td>
+                                    <td>{{ $value['leave_category'] }}</td>
 
-                                @if($value['status'] == 0)
-                                    <td style="background-color:#8FB1D5;">Pending</td>
-                                @elseif($value['status'] == 1)
-                                    <td style="background-color:#32CD32;">Approved</td>
-                                @elseif($value['status'] == 2)
-                                    <td style="background-color:#F08080;">Rejected</td>
-                                @endif
-                            </tr>
-                        @endforeach
+                                    @if($value['status'] == 0)
+                                        <td style="background-color:#8FB1D5;">Pending</td>
+                                    @elseif($value['status'] == 1)
+                                        <td style="background-color:#32CD32;">Approved</td>
+                                    @elseif($value['status'] == 2)
+                                        <td style="background-color:#F08080;">Rejected</td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        @endif
+                        @if(isset($all_approved_leave_details) && sizeof($all_approved_leave_details) > 0)
+                            @foreach($all_approved_leave_details as $key => $value)
+                                <tr>
+                                    <td>{{ ++$i }}</td>
+                                    <td>
+                                        <a class="fa fa-circle" title="Show" href="{{ route('leave.reply',$value['id']) }}"></a>
+                                    </td>
+
+                                    <td>{{ $value['user_name'] }}</td>
+                                    <td>{{ $value['subject'] }}</td>
+                                    <td>{{ $value['from_date'] }}</td>
+                                    <td>{{ $value['to_date'] }}</td>
+                                    <td>{{ $value['leave_type'] }}</td>
+                                    <td>{{ $value['leave_category'] }}</td>
+
+                                    @if($value['status'] == 0)
+                                        <td style="background-color:#8FB1D5;">Pending</td>
+                                    @elseif($value['status'] == 1)
+                                        <td style="background-color:#32CD32;">Approved</td>
+                                    @elseif($value['status'] == 2)
+                                        <td style="background-color:#F08080;">Rejected</td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        @endif
+                    @else
+                        @if(isset($approved_leave_details) && sizeof($approved_leave_details) > 0)
+                            @foreach($approved_leave_details as $key => $value)
+                                <tr>
+                                    <td>{{ ++$i }}</td>
+                                    <td>
+                                        <a class="fa fa-circle" title="Show" href="{{ route('leave.reply',$value['id']) }}"></a>
+                                    </td>
+
+                                    <td>{{ $value['user_name'] }}</td>
+                                    <td>{{ $value['subject'] }}</td>
+                                    <td>{{ $value['from_date'] }}</td>
+                                    <td>{{ $value['to_date'] }}</td>
+                                    <td>{{ $value['leave_type'] }}</td>
+                                    <td>{{ $value['leave_category'] }}</td>
+
+                                    @if($value['status'] == 0)
+                                        <td style="background-color:#8FB1D5;">Pending</td>
+                                    @elseif($value['status'] == 1)
+                                        <td style="background-color:#32CD32;">Approved</td>
+                                    @elseif($value['status'] == 2)
+                                        <td style="background-color:#F08080;">Rejected</td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        @endif
                     @endif
                 </tbody>
             </table>
@@ -154,7 +260,7 @@
                         <th width="5%">No</th>
                         <th width="5%">Action</th>
                         <th>User Name</th>
-                        <th>Sujbect</th>
+                        <th>Subject</th>
                         <th>From date</th>
                         <th>To Date</th>
                         <th>Leave Type</th>
@@ -164,30 +270,83 @@
                 </thead>
                 <?php $i=0; ?>
                 <tbody>
-                    @if(isset($rejected_leave_details) && sizeof($rejected_leave_details) > 0)
-                        @foreach($rejected_leave_details as $key => $value)
-                            <tr>
-                                <td>{{ ++$i }}</td>
-                                <td>
-                                    <a class="fa fa-circle" title="Show" href="{{ route('leave.reply',$value['id']) }}"></a>
-                                </td>
+                    @if($user_id == $super_admin_userid)
+                        @if(isset($team_rejected_leave_details) && sizeof($team_rejected_leave_details) > 0)
+                            @foreach($team_rejected_leave_details as $key => $value)
+                                <tr>
+                                    <td>{{ ++$i }}</td>
+                                    <td>
+                                        <a class="fa fa-circle" title="Show" href="{{ route('leave.reply',$value['id']) }}"></a>
+                                    </td>
 
-                                <td>{{ $value['user_name'] }}</td>
-                                <td>{{ $value['subject'] }}</td>
-                                <td>{{ $value['from_date'] }}</td>
-                                <td>{{ $value['to_date'] }}</td>
-                                <td>{{ $value['leave_type'] }}</td>
-                                <td>{{ $value['leave_category'] }}</td>
+                                    <td style="background-color:#C4D79B;">{{ $value['user_name'] }}</td>
+                                    <td>{{ $value['subject'] }}</td>
+                                    <td>{{ $value['from_date'] }}</td>
+                                    <td>{{ $value['to_date'] }}</td>
+                                    <td>{{ $value['leave_type'] }}</td>
+                                    <td>{{ $value['leave_category'] }}</td>
 
-                                @if($value['status'] == 0)
-                                    <td style="background-color:#8FB1D5;">Pending</td>
-                                @elseif($value['status'] == 1)
-                                    <td style="background-color:#32CD32;">Approved</td>
-                                @elseif($value['status'] == 2)
-                                    <td style="background-color:#F08080;">Rejected</td>
-                                @endif
-                            </tr>
-                        @endforeach
+                                    @if($value['status'] == 0)
+                                        <td style="background-color:#8FB1D5;">Pending</td>
+                                    @elseif($value['status'] == 1)
+                                        <td style="background-color:#32CD32;">Approved</td>
+                                    @elseif($value['status'] == 2)
+                                        <td style="background-color:#F08080;">Rejected</td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        @endif
+                        @if(isset($all_rejected_leave_details) && sizeof($all_rejected_leave_details) > 0)
+                            @foreach($all_rejected_leave_details as $key => $value)
+                                <tr>
+                                    <td>{{ ++$i }}</td>
+                                    <td>
+                                        <a class="fa fa-circle" title="Show" href="{{ route('leave.reply',$value['id']) }}"></a>
+                                    </td>
+
+                                    <td>{{ $value['user_name'] }}</td>
+                                    <td>{{ $value['subject'] }}</td>
+                                    <td>{{ $value['from_date'] }}</td>
+                                    <td>{{ $value['to_date'] }}</td>
+                                    <td>{{ $value['leave_type'] }}</td>
+                                    <td>{{ $value['leave_category'] }}</td>
+
+                                    @if($value['status'] == 0)
+                                        <td style="background-color:#8FB1D5;">Pending</td>
+                                    @elseif($value['status'] == 1)
+                                        <td style="background-color:#32CD32;">Approved</td>
+                                    @elseif($value['status'] == 2)
+                                        <td style="background-color:#F08080;">Rejected</td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        @endif
+                    @else
+                        @if(isset($rejected_leave_details) && sizeof($rejected_leave_details) > 0)
+                            @foreach($rejected_leave_details as $key => $value)
+                                <tr>
+                                    <td>{{ ++$i }}</td>
+                                    <td>
+                                        <a class="fa fa-circle" title="Show" href="{{ route('leave.reply',$value['id']) }}"></a>
+                                    </td>
+
+                                    <td>{{ $value['user_name'] }}</td>
+                                    <td>{{ $value['subject'] }}</td>
+                                    <td>{{ $value['from_date'] }}</td>
+                                    <td>{{ $value['to_date'] }}</td>
+                                    <td>{{ $value['leave_type'] }}</td>
+                                    <td>{{ $value['leave_category'] }}</td>
+
+                                    @if($value['status'] == 0)
+                                        <td style="background-color:#8FB1D5;">Pending</td>
+                                    @elseif($value['status'] == 1)
+                                        <td style="background-color:#32CD32;">Approved</td>
+                                    @elseif($value['status'] == 2)
+                                        <td style="background-color:#F08080;">Rejected</td>
+                                    @endif
+                                </tr>
+                            @endforeach
+                        @endif
                     @endif
                 </tbody>
             </table>

@@ -74,7 +74,7 @@
                 <th>No</th>
                 <th width="40px">Action</th>
                 <th>User Name</th>
-                <th>Sujbect</th>
+                <th>Subject</th>
                 <th>Date</th>
                 <th>Leave Type</th>
                 <th>Status</th>

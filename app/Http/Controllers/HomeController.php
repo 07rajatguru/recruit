@@ -1003,7 +1003,7 @@ class HomeController extends Controller
         $present_days = sizeof($present_days_res);
 
         // Get Early go late in count
-        $latein_earlygo_details = LateInEarlyGo::getLateInEarlyGoByUserID($user_id,$month,$year);
+        $latein_earlygo_details = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(0,$user_ids,$month,$year,'');
         $earlygo_latein_count = sizeof($latein_earlygo_details);
 
         // Get work from home request count

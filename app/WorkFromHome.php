@@ -21,6 +21,9 @@ class WorkFromHome extends Model
         if(isset($status) && $status != '') {
             $query = $query->where('work_from_home.status','=',$status);
         }
+        else if(isset($status) && $status >= '0') {
+            $query = $query->where('work_from_home.status','=',$status);
+        }
 
         if ($month != '' && $year != '') {
             $query = $query->where(\DB::raw('month(work_from_home.from_date)'),'=',$month);
