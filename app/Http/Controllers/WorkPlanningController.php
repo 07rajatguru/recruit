@@ -1921,7 +1921,43 @@ class WorkPlanningController extends Controller
             }
         }
 
-        return view('adminlte::workPlanning.pendingstatusindex',compact('work_planning_res','count','user_id','manager_user_id'));
+        if($user_id == $super_admin_userid) {
+
+            if(isset($work_planning_res) && sizeof($work_planning_res) > 0) {
+
+                $all_work_planning_res = array();
+                $team_work_planning_res = array();
+                $i = 0;
+
+                foreach ($work_planning_res as $key => $value) {
+
+                    $report_to_id = User::getReportsToById($value['added_by_id']);
+
+                    if($report_to_id == $super_admin_userid) {
+
+                        $team_work_planning_res[$i] = $value;
+                    }
+                    else {
+
+                        $all_work_planning_res[$i] = $value;
+                    }
+
+                    $i++;
+                }
+            }
+            else {
+
+                $all_work_planning_res = array();
+                $team_work_planning_res = array();
+            }
+        }
+        else {
+
+            $all_work_planning_res = array();
+            $team_work_planning_res = array();
+        }
+
+        return view('adminlte::workPlanning.pendingstatusindex',compact('work_planning_res','count','user_id','super_admin_userid','manager_user_id','all_work_planning_res','team_work_planning_res'));
     }
 
     public function writePost(Request $request, $client_id) {

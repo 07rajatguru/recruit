@@ -79,10 +79,12 @@
                                     <!-- inner menu: contains the actual data -->
                                     <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 200px;">
                                         <ul class="menu" style="width: 100%;">
-                                            <li>
-                                                <a href="{{getenv('APP_URL').'/employee-self-service'}}" target="_blank">
-                                                MY ESS</a>
-                                            </li>
+                                            @if($user_id != $superadmin_userid)
+                                                <li>
+                                                    <a href="{{getenv('APP_URL').'/employee-self-service'}}" target="_blank">
+                                                    MY ESS</a>
+                                                </li>
+                                            @endif
                                             @if($user_id == $superadmin_userid || $user_id == $hr_userid)
                                                 <li>
                                                     <a href="{{getenv('APP_URL').'/hr-employee-service'}}" target="_blank">
