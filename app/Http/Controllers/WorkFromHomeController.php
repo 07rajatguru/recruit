@@ -559,15 +559,12 @@ class WorkFromHomeController extends Controller
 
             $team_pending_wfh_requests = array();
             $all_pending_wfh_requests = array();
-            $pending_count = 0;
 
             $team_approved_wfh_requests = array();
             $all_approved_wfh_requests = array();
-            $approved_count = 0;
 
             $team_rejected_wfh_requests = array();
             $all_rejected_wfh_requests = array();
-            $rejected_count = 0;
         }
 
         return view('adminlte::workFromHome.workfromhomerequest',compact('pending_wfh_requests','pending_count','approved_wfh_requests','approved_count','rejected_wfh_requests','rejected_count','user_id','super_admin_userid','team_pending_wfh_requests','all_pending_wfh_requests','team_approved_wfh_requests','all_approved_wfh_requests','team_rejected_wfh_requests','all_rejected_wfh_requests'));

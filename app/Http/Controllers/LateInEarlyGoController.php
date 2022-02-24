@@ -560,15 +560,12 @@ class LateInEarlyGoController extends Controller
 
             $team_pending_leave_details = array();
             $all_pending_leave_details = array();
-            $pending_count = 0;
 
             $team_approved_leave_details = array();
             $all_approved_leave_details = array();
-            $approved_count = 0;
 
             $team_rejected_leave_details = array();
             $all_rejected_leave_details = array();
-            $rejected_count = 0;
         }
 
         return view('adminlte::lateinEarlygo.latein-earlygo',compact('pending_leave_details','pending_count','approved_leave_details','approved_count','rejected_leave_details','rejected_count','user_id','super_admin_userid','team_pending_leave_details','all_pending_leave_details','team_approved_leave_details','all_approved_leave_details','team_rejected_leave_details','all_rejected_leave_details'));
