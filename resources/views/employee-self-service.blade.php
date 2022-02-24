@@ -102,7 +102,7 @@
         <div class="col-lg-2 col-xs-4">
             <div class="small-box bg-purple" style="border-radius:100%;">
                 <div class="inner">
-                    <h3><center>{{ $work_from_home_res_count or '0' }}</center></h3>
+                    <h3><center>{{ $work_from_count or '0' }}</center></h3>
                     <h5><center>My Work From Home Request in this month</center></h5>
                 </div>
                 <div class="icon">

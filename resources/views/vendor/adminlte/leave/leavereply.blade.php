@@ -54,21 +54,23 @@
                             <td colspan="6">{!! $leave_details['message'] !!}</td>
                         </tr>
 
-                        <tr>
-                            <th>Remarks</th>
-                            <td colspan="6">{!! $leave_details['remarks'] !!}</td>
-                        </tr>
+                        @if(isset($leave_details['remarks']) && $leave_details['remarks'] != '')
+                            <tr>
+                                <th>Remarks</th>
+                                <td colspan="6">{!! $leave_details['remarks'] !!}</td>
+                            </tr>
+                        @endif
 
                         @if(isset($leave_details['category']) && $leave_details['category'] == 'Privilege Leave')
                             <tr>
                                 <th>Note : </th>
-                                <td colspan="6">As per leave policy, the employee is expected to applied for Privileged leaves with 3 days prior intimation.
+                                <td colspan="6">As per leave policy, the employee is expected to apply for Privileged leaves with 3 days prior intimation.
                                 The approver is expected to understand the reason of leave application before approving or rejecting.</td>
                             </tr>
                         @elseif(isset($leave_details['category']) && $leave_details['category'] == 'Sick Leave')
                             <tr>
                                 <th>Note : </th>
-                                <td colspan="6">To avail the benefit of sick leave as per leave policy, the employee is expected to apply for it immediately after returning from the leave in case if not applied before. For more than two working days, the employee is expected to submit a medical certificate to the Reporting Manager to approve the same.</td>
+                                <td colspan="6">To avail the benefit of sick leave as per leave policy, the employee is expected to apply for it immediately after returning from the leave in case if not apply before. For more than two working days, the employee is expected to submit a medical certificate to the Reporting Manager to approve the same.</td>
                             </tr>
                         @endif
                     </table>
@@ -214,12 +216,15 @@
 
         $("#check").val(check);
 
-        if(type_of_leave == 'Early Go' || type_of_leave == 'Late In') {
+        if(from_date == created_at || from_date == from_tommorrow_date_1 || from_date == from_tommorrow_date_2 || check == 'Rejected') {
+
+            $("#remarksmodal").modal('show');
+        }
+        else {
 
             var remarks = '';
 
             $.ajax({
-                
                 type: 'POST',
                 url:app_url+'/leave/reply/'+leave_id,
                 data: {leave_id: leave_id, 'check':check, '_token':token, msg:msg, user_name:user_name, loggedin_user_id:loggedin_user_id,user_id:user_id,subject:subject,approved_by:approved_by,'remarks':remarks},
@@ -232,35 +237,19 @@
                 }
             });
         }
-        else {
-
-            if(from_date == created_at || from_date == from_tommorrow_date_1 || from_date == from_tommorrow_date_2) {
-
-                $("#remarksmodal").modal('show');
-            }
-            else {
-
-                var remarks = '';
-
-                $.ajax({
-                    type: 'POST',
-                    url:app_url+'/leave/reply/'+leave_id,
-                    data: {leave_id: leave_id, 'check':check, '_token':token, msg:msg, user_name:user_name, loggedin_user_id:loggedin_user_id,user_id:user_id,subject:subject,approved_by:approved_by,'remarks':remarks},
-                    dataType:'json',
-                    success: function(data) {
-                        if (data == 'success') { 
-                            window.location.reload();
-                            alert('Reply Send Successfully.');
-                        }
-                    }
-                });
-            }
-        }
     }
 
     function hideModal() {
 
-        alert("Remarks Added Successfully.");
+        var remarks = $("#remarks").val();
+
+        if(remarks == '') {
+
+            alert("Please Add Remarks");
+            return false;
+        }
+
+        //alert("Remarks Added Successfully.");
 
         $("#remarksmodal").modal('hide');
         
@@ -274,20 +263,19 @@
         var user_id = $("#user_id").val();
         var subject = $("#subject").val();
         var approved_by = $("#approved_by").val();
-        var remarks = $("#remarks").val();
 
         $.ajax({
 
-                type: 'POST',
-                url:app_url+'/leave/reply/'+leave_id,
-                data: {leave_id: leave_id, 'check':check, '_token':token, msg:msg, user_name:user_name, loggedin_user_id:loggedin_user_id,user_id:user_id,subject:subject,approved_by:approved_by,'remarks':remarks},
-                dataType:'json',
-                success: function(data){
-                    if (data == 'success') { 
-                        window.location.reload();
-                        alert('Reply Send Successfully.');
-                    }
+            type: 'POST',
+            url:app_url+'/leave/reply/'+leave_id,
+            data: {leave_id: leave_id, 'check':check, '_token':token, msg:msg, user_name:user_name, loggedin_user_id:loggedin_user_id,user_id:user_id,subject:subject,approved_by:approved_by,'remarks':remarks},
+            dataType:'json',
+            success: function(data){
+                if (data == 'success') { 
+                    window.location.reload();
+                    alert('Reply Send Successfully.');
                 }
+            }
         });
     }
 </script>

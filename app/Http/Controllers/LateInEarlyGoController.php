@@ -427,6 +427,21 @@ class LateInEarlyGoController extends Controller
         $user_id = $user->id;
         $user_ids[] = $user_id;
 
+        // Set Blank Array
+
+        $all_pending_leave_details = array();
+        $team_pending_leave_details = array();
+
+        $all_approved_leave_details = array();
+        $team_approved_leave_details = array();
+
+        $all_rejected_leave_details = array();
+        $team_rejected_leave_details = array();
+
+        $pending_count = 0;
+        $approved_count = 0;
+        $rejected_count = 0;
+
         if($id == 0) {
                     
             $pending_leave_details = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(0,$user_ids,$month,$year,0);
@@ -463,8 +478,6 @@ class LateInEarlyGoController extends Controller
             // Get Pending Leave Details
             if(isset($pending_leave_details) && sizeof($pending_leave_details) > 0) {
 
-                $all_pending_leave_details = array();
-                $team_pending_leave_details = array();
                 $i = 0;
 
                 foreach ($pending_leave_details as $key => $value) {
@@ -485,18 +498,10 @@ class LateInEarlyGoController extends Controller
 
                 $pending_count = sizeof($team_pending_leave_details) + sizeof($all_pending_leave_details);
             }
-            else {
-
-                $team_pending_leave_details = array();
-                $all_pending_leave_details = array();
-                $pending_count = 0;
-            }
 
             // Get Approved Leave Details
             if(isset($approved_leave_details) && sizeof($approved_leave_details) > 0) {
 
-                $all_approved_leave_details = array();
-                $team_approved_leave_details = array();
                 $i = 0;
 
                 foreach ($approved_leave_details as $key => $value) {
@@ -517,18 +522,10 @@ class LateInEarlyGoController extends Controller
 
                 $approved_count = sizeof($team_approved_leave_details) + sizeof($all_approved_leave_details);
             }
-            else {
-
-                $team_approved_leave_details = array();
-                $all_approved_leave_details = array();
-                $approved_count = 0;
-            }
 
             // Get Rejected Leave Details
             if(isset($rejected_leave_details) && sizeof($rejected_leave_details) > 0) {
 
-                $all_rejected_leave_details = array();
-                $team_rejected_leave_details = array();
                 $i = 0;
 
                 foreach ($rejected_leave_details as $key => $value) {
@@ -549,23 +546,6 @@ class LateInEarlyGoController extends Controller
 
                 $rejected_count = sizeof($team_rejected_leave_details) + sizeof($all_rejected_leave_details);
             }
-            else {
-
-                $team_rejected_leave_details = array();
-                $all_rejected_leave_details = array();
-                $rejected_count = 0;
-            }
-        }
-        else {
-
-            $team_pending_leave_details = array();
-            $all_pending_leave_details = array();
-
-            $team_approved_leave_details = array();
-            $all_approved_leave_details = array();
-
-            $team_rejected_leave_details = array();
-            $all_rejected_leave_details = array();
         }
 
         return view('adminlte::lateinEarlygo.latein-earlygo',compact('pending_leave_details','pending_count','approved_leave_details','approved_count','rejected_leave_details','rejected_count','user_id','super_admin_userid','team_pending_leave_details','all_pending_leave_details','team_approved_leave_details','all_approved_leave_details','team_rejected_leave_details','all_rejected_leave_details'));

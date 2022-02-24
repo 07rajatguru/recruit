@@ -438,6 +438,20 @@ class WorkFromHomeController extends Controller
         $user_id = $user->id;
         $user_ids[] = $user_id;
 
+        // Set Blank Array
+        $team_pending_wfh_requests = array();
+        $all_pending_wfh_requests = array();
+
+        $team_approved_wfh_requests = array();
+        $all_approved_wfh_requests = array();
+
+        $team_rejected_wfh_requests = array();
+        $all_rejected_wfh_requests = array();
+
+        $pending_count = 0;
+        $approved_count = 0;
+        $rejected_count = 0;
+
         if($id == 0) {
 
             $pending_wfh_requests = WorkFromHome::getAllWorkFromHomeRequestsByUserId(0,$user_ids,$month,$year,0);
@@ -474,8 +488,6 @@ class WorkFromHomeController extends Controller
             // Get Pending Requests
             if(isset($pending_wfh_requests) && sizeof($pending_wfh_requests) > 0) {
 
-                $all_pending_wfh_requests = array();
-                $team_pending_wfh_requests = array();
                 $i = 0;
 
                 foreach ($pending_wfh_requests as $key => $value) {
@@ -492,18 +504,10 @@ class WorkFromHomeController extends Controller
                 }
                 $pending_count = sizeof($team_pending_wfh_requests) + sizeof($all_pending_wfh_requests);
             }
-            else {
-
-                $team_pending_wfh_requests = array();
-                $all_pending_wfh_requests = array();
-                $pending_count = 0;
-            }
 
             // Get Approved Requests
             if(isset($approved_wfh_requests) && sizeof($approved_wfh_requests) > 0) {
 
-                $all_approved_wfh_requests = array();
-                $team_approved_wfh_requests = array();
                 $i = 0;
 
                 foreach ($approved_wfh_requests as $key => $value) {
@@ -520,18 +524,10 @@ class WorkFromHomeController extends Controller
                 }
                 $approved_count = sizeof($team_approved_wfh_requests) + sizeof($all_approved_wfh_requests);
             }
-            else {
-
-                $team_approved_wfh_requests = array();
-                $all_approved_wfh_requests = array();
-                $approved_count = 0;
-            }
 
             // Get Rejected Requests
             if(isset($rejected_wfh_requests) && sizeof($rejected_wfh_requests) > 0) {
 
-                $all_rejected_wfh_requests = array();
-                $team_rejected_wfh_requests = array();
                 $i = 0;
 
                 foreach ($rejected_wfh_requests as $key => $value) {
@@ -548,23 +544,6 @@ class WorkFromHomeController extends Controller
                 }
                 $rejected_count = sizeof($team_rejected_wfh_requests) + sizeof($all_rejected_wfh_requests);
             }
-            else {
-
-                $team_rejected_wfh_requests = array();
-                $all_rejected_wfh_requests = array();
-                $rejected_count = 0;
-            }
-        }
-        else {
-
-            $team_pending_wfh_requests = array();
-            $all_pending_wfh_requests = array();
-
-            $team_approved_wfh_requests = array();
-            $all_approved_wfh_requests = array();
-
-            $team_rejected_wfh_requests = array();
-            $all_rejected_wfh_requests = array();
         }
 
         return view('adminlte::workFromHome.workfromhomerequest',compact('pending_wfh_requests','pending_count','approved_wfh_requests','approved_count','rejected_wfh_requests','rejected_count','user_id','super_admin_userid','team_pending_wfh_requests','all_pending_wfh_requests','team_approved_wfh_requests','all_approved_wfh_requests','team_rejected_wfh_requests','all_rejected_wfh_requests'));

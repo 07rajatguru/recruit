@@ -1008,7 +1008,7 @@ class HomeController extends Controller
 
         // Get work from home request count
         $wfh_data = WorkFromHome::getAllWorkFromHomeRequestsByUserId(0,$user_ids,$month,$year,'');
-        $work_from_home_res_count = sizeof($wfh_data);
+        $work_from_count = sizeof($wfh_data);
 
         // Get Holidays of User
         $holiday_details = Holidays::getUserHolidays($user_id,$month,$year);
@@ -1053,6 +1053,7 @@ class HomeController extends Controller
         $viewVariable['leave_count'] = $leave_count;
         $viewVariable['present_days'] = $present_days;
         $viewVariable['earlygo_latein_count'] = $earlygo_latein_count;
+        $viewVariable['work_from_count'] = $work_from_count;
         $viewVariable['holidays_count'] = $holidays_count;
 
         $viewVariable['work_anniversary_dates'] = $work_anniversary_dates;
@@ -1072,11 +1073,11 @@ class HomeController extends Controller
     }
 
     // HR ESS
-
     public function hrEmployeeSelfService() {
 
         $user = \Auth::user();
         $user_id =  $user->id;
+        $superadmin_userid = getenv('SUPERADMINUSERID');
 
         if(isset($_POST['month']) && $_POST['month']!='') {
             $month = $_POST['month'];
@@ -1104,21 +1105,113 @@ class HomeController extends Controller
             $year_array[$y] = $y;
         }
 
+        // Set All Array Empty
+        $team_leave_details = array();
+        $all_leave_details = array();
+
+        $team_latein_earlygo_details = array();
+        $all_latein_earlygo_details = array();
+
+        $team_wfh_details = array();
+        $all_wfh_details = array();
+
+        $leave_data = array();
+        $latein_earlygo_data = array();
+        $wfh_data = array();
+
+        $leave_count = 0;
+        $earlygo_latein_count = 0;
+        $work_from_count = 0;
+
         // Get Pending Work Planning Count
         $work_planning = WorkPlanning::getPendingWorkPlanningDetails(0,$month,$year);
         $pending_work_planning_count = sizeof($work_planning);
 
-        // Get List of applied leaves
-        $leave_data = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,'');
-        $leave_count = sizeof($leave_data);
+        if($user_id == $superadmin_userid) {
 
-        // Get List of applied late in early go requests
-        $latein_earlygo_data = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(1,0,$month,$year,'');
-        $earlygo_latein_count = sizeof($latein_earlygo_data);
+            // Get List of applied leaves
+            $leaves_data = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,'');
 
-        // Get List of applied work from home requests
-        $wfh_data = WorkFromHome::getAllWorkFromHomeRequestsByUserId(1,0,$month,$year,'');
-        $work_from_home_res_count = sizeof($wfh_data);
+            // Get Leave Details By Team & All users
+            if(isset($leaves_data) && sizeof($leaves_data) > 0) {
+
+                $i = 0;
+
+                foreach ($leaves_data as $key => $value) {
+
+                    $report_to_id = User::getReportsToById($value['user_id']);
+
+                    if($report_to_id == $superadmin_userid) {
+                        $team_leave_details[$i] = $value;
+                    }
+                    else {
+                        $all_leave_details[$i] = $value;
+                    }
+                    $i++;
+                }
+                $leave_count = sizeof($team_leave_details) + sizeof($all_leave_details);
+            }
+
+            // Get List of applied late in early go requests
+            $late_early_data = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(1,0,$month,$year,'');
+
+            // Get Late In Early Go Details By Team & All users
+            if(isset($late_early_data) && sizeof($late_early_data) > 0) {
+
+                $i = 0;
+
+                foreach ($late_early_data as $key => $value) {
+
+                    $report_to_id = User::getReportsToById($value['user_id']);
+
+                    if($report_to_id == $superadmin_userid) {
+                        $team_latein_earlygo_details[$i] = $value;
+                    }
+                    else {
+                        $all_latein_earlygo_details[$i] = $value;
+                    }
+                    $i++;
+                }
+                $earlygo_latein_count = sizeof($team_latein_earlygo_details) + sizeof($all_latein_earlygo_details);
+            }
+
+            // Get List of applied work from home requests
+            $wfh_request_data = WorkFromHome::getAllWorkFromHomeRequestsByUserId(1,0,$month,$year,'');
+            
+            // Get Work From Home Requests Details By Team & All users
+            if(isset($wfh_request_data) && sizeof($wfh_request_data) > 0) {
+
+                $i = 0;
+
+                foreach ($wfh_request_data as $key => $value) {
+
+                    $report_to_id = User::getReportsToById($value['user_id']);
+
+                    if($report_to_id == $superadmin_userid) {
+                        $team_wfh_details[$i] = $value;
+                    }
+                    else {
+                        $all_wfh_details[$i] = $value;
+                    }
+                    $i++;
+                }
+                $work_from_count = sizeof($team_wfh_details) + sizeof($all_wfh_details);
+            }
+        }
+        else {
+
+            // Get List of applied leaves
+            $leave_data = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,'');
+            $leave_count = sizeof($leave_data);
+
+            // Get List of applied late in early go requests
+            $latein_earlygo_data = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(1,0,$month,$year,'');
+            $earlygo_latein_count = sizeof($latein_earlygo_data);
+
+            // Get List of applied work from home requests
+            $wfh_data = WorkFromHome::getAllWorkFromHomeRequestsByUserId(1,0,$month,$year,'');
+            $work_from_count = sizeof($wfh_data);
+        }
 
         // Get Holidays count of current month
         $holiday_details = Holidays::getUserHolidays(0,$month,$year);
@@ -1137,7 +1230,7 @@ class HomeController extends Controller
         $viewVariable['pending_work_planning_count'] = $pending_work_planning_count;
         $viewVariable['leave_count'] = $leave_count;
         $viewVariable['earlygo_latein_count'] = $earlygo_latein_count;
-        $viewVariable['work_from_home_res_count'] = $work_from_home_res_count;
+        $viewVariable['work_from_count'] = $work_from_count;
         $viewVariable['holidays_count'] = $holidays_count;
         
         $viewVariable['work_anniversary_dates'] = $work_anniversary_dates;
@@ -1152,6 +1245,13 @@ class HomeController extends Controller
         $viewVariable['year_array'] = $year_array;
         $viewVariable['month'] = $month;
         $viewVariable['year'] = $year;
+
+        $viewVariable['team_leave_details'] = $team_leave_details;
+        $viewVariable['all_leave_details'] = $all_leave_details;
+        $viewVariable['team_latein_earlygo_details'] = $team_latein_earlygo_details;
+        $viewVariable['all_latein_earlygo_details'] = $all_latein_earlygo_details;
+        $viewVariable['team_wfh_details'] = $team_wfh_details;
+        $viewVariable['all_wfh_details'] = $all_wfh_details;
 
         return view('hr-employee-self-service',$viewVariable);
     }

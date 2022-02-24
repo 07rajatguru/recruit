@@ -6,9 +6,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="col-md-12">
-                <div class="col-md-4">
-                    <h2>HR Employee Service</h2>
-                </div>
+                <div class="col-md-4"><h2>HR Employee Service</h2></div>
             </div>
         </div>
 
@@ -53,9 +51,7 @@
                     <h3><center>{{ $pending_work_planning_count or '0' }}</center></h3>
                     <h5><center>Pending Work Planning</center></h5>
                 </div>
-                <div class="icon">
-                    <i class="fa fa-files-o"></i>
-                </div>
+                <div class="icon"><i class="fa fa-files-o"></i></div>
                 <a href="work-planning/pending/1/{{ $month }}/{{ $year }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
@@ -66,9 +62,7 @@
                     <h3><center>{{ $leave_count or '0' }}</center></h3>
                     <h5><center>Applied Leave</center></h5>
                 </div>
-                <div class="icon">
-                    <i class="fa fa-leanpub"></i>
-                </div>
+                <div class="icon"><i class="fa fa-leanpub"></i></div>
                 <a href="applied-leave/1/{{ $month }}/{{ $year }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
@@ -79,9 +73,7 @@
                     <h3><center>0</center></h3>
                     <h5><center>Attendance</center></h5>
                 </div>
-                <div class="icon">
-                    <i class="fa fa-calendar"></i>
-                </div>
+                <div class="icon"><i class="fa fa-calendar"></i></div>
                 <a href="/users-attendance/adler/{{ $month }}/{{ $year }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
@@ -92,9 +84,7 @@
                     <h3><center>{{ $earlygo_latein_count or '0' }}</center></h3>
                     <h5><center>Late In / Early Go Request in this month</center></h5>
                 </div>
-                <div class="icon">
-                    <i class="fa fa-file-text-o"></i>
-                </div>
+                <div class="icon"><i class="fa fa-file-text-o"></i></div>
                 <a href="late-in-early-go-request/1/{{ $month }}/{{ $year }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
@@ -102,12 +92,10 @@
         <div class="col-lg-2 col-xs-4">
             <div class="small-box bg-purple" style="border-radius:100%;">
                 <div class="inner">
-                    <h3><center>{{ $work_from_home_res_count or '0' }}</center></h3>
+                    <h3><center>{{ $work_from_count or '0' }}</center></h3>
                     <h5><center>Work From Home Request in this month</center></h5>
                 </div>
-                <div class="icon">
-                    <i class="fa fa-list-alt"></i>
-                </div>
+                <div class="icon"><i class="fa fa-list-alt"></i></div>
                 <a href="work-from-home-request/1/{{ $month }}/{{ $year }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
@@ -118,9 +106,7 @@
                     <h3><center>{{ $holidays_count or '0' }}</center></h3>
                     <h5><center>Holidays in this month</center></h5>
                 </div>
-                <div class="icon">
-                    <i class="fa fa-list-alt"></i>
-                </div>
+                <div class="icon"><i class="fa fa-list-alt"></i></div>
                 <a href="holidays/1/{{ $month }}/{{ $year }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
@@ -132,8 +118,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Employee's Work Anniversary in This Month</h3>
                     <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                     </div>
                 </div>
@@ -153,8 +138,10 @@
                                     @foreach($work_anniversary_dates as $key => $value)
                                         <tr>
                                             <td style="border: 1px solid #00c0ef;text-align: center;">{{ ++$i }}</td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $key }} </td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $value }}</td>
+                                            <td style="border: 1px solid #00c0ef;">{{ $key }}
+                                            </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ $value }}
+                                            </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -174,9 +161,10 @@
                     <h3 class="box-title">List of Applied Late In / Early Go Requests</h3>
 
                     <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>
-                        <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse">
+                            <i class="fa fa-minus"></i></button>
+                        <button type="button" class="btn btn-box-tool" data-widget="remove">
+                            <i class="fa fa-times"></i></button>
                     </div>
                 </div>
                 <div class="box-body">
@@ -185,7 +173,8 @@
                             <thead>
                             <tr>
                                 <th width="11%" style="border: 1px solid #00c0ef;">Sr. No.</th>
-                                <th width="100px" style="border: 1px solid #00c0ef;">User Name</th>
+                                <th width="100px" style="border: 1px solid #00c0ef;">User Name
+                                </th>
                                 <th width="100px" style="border: 1px solid #00c0ef;">Subject</th>
                                 <th width="100px" style="border: 1px solid #00c0ef;">Date</th>
                                 <th width="100px" style="border: 1px solid #00c0ef;">Type</th>
@@ -197,17 +186,70 @@
                                 <tbody>
                                     @foreach($latein_earlygo_data as $key => $value)
                                         <tr>
-                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}</td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $value['user_name'] }} </td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $value['subject'] }} </td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $value['date'] }} </td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $value['leave_type'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}
+                                            </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['user_name'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['subject'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['date'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['leave_type'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">
                                                 <a title="View Details" href="{{ route('late-early.reply',$value['id']) }}" target="_blank">View</a>
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
+                            @endif
+
+                            @if(isset($team_latein_earlygo_details) && sizeof($team_latein_earlygo_details) > 0)
+                            <?php $i = 0; ?>
+                                <tbody>
+                                    @foreach($team_latein_earlygo_details as $key => $value)
+                                        <tr>
+                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}
+                                            </td>
+                                            <td style="border: 1px solid #00c0ef;background-color:#C4D79B;">{{ $value['user_name'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['subject'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['date'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['leave_type'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                                <a title="View Details" href="{{ route('late-early.reply',$value['id']) }}" target="_blank">View</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            @endif
+
+                            @if(isset($all_latein_earlygo_details) && sizeof($all_latein_earlygo_details) > 0)
+                            <?php $i = 0; ?>
+                                <tbody>
+                                    @foreach($all_latein_earlygo_details as $key => $value)
+                                        <tr>
+                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}
+                                            </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['user_name'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['subject'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['date'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['leave_type'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                                <a title="View Details" href="{{ route('late-early.reply',$value['id']) }}" target="_blank">View</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            @endif
+
+                            @if((isset($team_latein_earlygo_details) && sizeof($team_latein_earlygo_details) > 0) || (isset($all_latein_earlygo_details) && sizeof($all_latein_earlygo_details) > 0) || (isset($latein_earlygo_data) && sizeof($latein_earlygo_data) > 0))
                             @else
                                 <tbody><tr><td colspan="6">No Data Found.</td></tr></tbody>
                             @endif
@@ -225,8 +267,7 @@
                 <div class="box-header with-border">
                     <h3 class="box-title">Employee's Birthday in This Month</h3>
                     <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                     </div>
                 </div>
@@ -246,7 +287,8 @@
                                     @foreach($birthday_dates as $key1 => $value1)
                                         <tr>
                                             <td style="border: 1px solid #00c0ef;text-align: center;">{{ ++$i }}</td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $key1 }} </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ $key1 }}
+                                            </td>
                                             <td style="border: 1px solid #00c0ef;">{{ $value1 }}</td>
                                         </tr>
                                     @endforeach
@@ -266,8 +308,7 @@
                     <h3 class="box-title">List of Applied Leaves</h3>
 
                     <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                     </div>
                 </div>
@@ -277,29 +318,85 @@
                             <thead>
                             <tr>
                                 <th width="11%" style="border: 1px solid #00c0ef;">Sr. No.</th>
-                                <th width="100px" style="border: 1px solid #00c0ef;">User Name</th>
+                                <th width="100px" style="border: 1px solid #00c0ef;">User Name
+                                </th>
                                 <th width="100px" style="border: 1px solid #00c0ef;">Subject</th>
-                                <th width="100px" style="border: 1px solid #00c0ef;">From Date</th>
+                                <th width="100px" style="border: 1px solid #00c0ef;">From Date
+                                </th>
                                 <th width="100px" style="border: 1px solid #00c0ef;">To Date</th>
                                 <th width="100px" style="border: 1px solid #00c0ef;">View Details</th>
                             </tr>
                             </thead>
+
                             @if(isset($leave_data) && sizeof($leave_data) > 0)
                             <?php $i = 0; ?>
                                 <tbody>
                                     @foreach($leave_data as $key => $value)
                                         <tr>
-                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}</td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $value['user_name'] }} </td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $value['subject'] }} </td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $value['from_date'] }} </td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $value['to_date'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}
+                                            </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['user_name'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['subject'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['from_date'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['to_date'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">
                                                 <a title="View Details" href="{{ route('leave.reply',$value['id']) }}" target="_blank">View</a>
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
+                            @endif
+
+                            @if(isset($team_leave_details) && sizeof($team_leave_details) > 0)
+                            <?php $i = 0; ?>
+                                <tbody>
+                                    @foreach($team_leave_details as $key => $value)
+                                        <tr>
+                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}
+                                            </td>
+                                            <td style="border: 1px solid #00c0ef;background-color:#C4D79B;">{{ $value['user_name'] }}</td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['subject'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['from_date'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['to_date'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                                <a title="View Details" href="{{ route('leave.reply',$value['id']) }}" target="_blank">View</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            @endif
+
+                            @if(isset($all_leave_details) && sizeof($all_leave_details) > 0)
+                            <?php $i = 0; ?>
+                                <tbody>
+                                    @foreach($all_leave_details as $key => $value)
+                                        <tr>
+                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}
+                                            </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['user_name'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['subject'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['from_date'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['to_date'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                                <a title="View Details" href="{{ route('leave.reply',$value['id']) }}" target="_blank">View</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            @endif
+
+                            @if((isset($team_leave_details) && sizeof($team_leave_details) > 0) || (isset($all_leave_details) && sizeof($all_leave_details) > 0) || (isset($leave_data) && sizeof($leave_data) > 0))
                             @else
                                 <tbody><tr><td colspan="6">No Data Found.</td></tr></tbody>
                             @endif
@@ -318,8 +415,7 @@
                     <h3 class="box-title">List of Holidays in This Year</h3>
 
                     <div class="box-tools pull-right">
-                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
-                        </button>
+                        <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i></button>
                         <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
                     </div>
                 </div>
@@ -339,10 +435,14 @@
                                 <tbody>
                                     @foreach($holidays as $key => $value)
                                         <tr>
-                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}</td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $value['type'] }} </td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $value['title'] }} </td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $value['from_date'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}
+                                            </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['type'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['title'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['from_date'] }} </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -372,9 +472,11 @@
                             <thead>
                             <tr>
                                 <th width="11%" style="border: 1px solid #00c0ef;">Sr. No.</th>
-                                <th width="100px" style="border: 1px solid #00c0ef;">User Name</th>
+                                <th width="100px" style="border: 1px solid #00c0ef;">User Name
+                                </th>
                                 <th width="100px" style="border: 1px solid #00c0ef;">Subject</th>
-                                <th width="100px" style="border: 1px solid #00c0ef;">From Date</th>
+                                <th width="100px" style="border: 1px solid #00c0ef;">From Date
+                                </th>
                                 <th width="100px" style="border: 1px solid #00c0ef;">To Date</th>
                                 <th width="100px" style="border: 1px solid #00c0ef;">View Details</th>
                             </tr>
@@ -384,17 +486,70 @@
                                 <tbody>
                                     @foreach($wfh_data as $key => $value)
                                         <tr>
-                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}</td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $value['user_name'] }} </td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $value['subject'] }} </td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $value['from_date'] }} </td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $value['to_date'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}
+                                            </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['user_name'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['subject'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['from_date'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['to_date'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">
                                                 <a title="View Details" href="{{ route('workfromhome.show',$value['id']) }}" target="_blank">View</a>
                                             </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
+                            @endif
+
+                            @if(isset($team_wfh_details) && sizeof($team_wfh_details) > 0)
+                            <?php $i = 0; ?>
+                                <tbody>
+                                    @foreach($team_wfh_details as $key => $value)
+                                        <tr>
+                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}
+                                            </td>
+                                            <td style="border: 1px solid #00c0ef;background-color:#C4D79B;">{{ $value['user_name'] }}</td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['subject'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['from_date'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['to_date'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                                <a title="View Details" href="{{ route('workfromhome.show',$value['id']) }}" target="_blank">View</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            @endif
+
+                            @if(isset($all_wfh_details) && sizeof($all_wfh_details) > 0)
+                            <?php $i = 0; ?>
+                                <tbody>
+                                    @foreach($all_wfh_details as $key => $value)
+                                        <tr>
+                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}
+                                            </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['user_name'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['subject'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['from_date'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ $value['to_date'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                                <a title="View Details" href="{{ route('workfromhome.show',$value['id']) }}" target="_blank">View</a>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            @endif
+
+                            @if((isset($team_wfh_details) && sizeof($team_wfh_details) > 0) || (isset($all_wfh_details) && sizeof($all_wfh_details) > 0) || (isset($wfh_data) && sizeof($wfh_data) > 0))
                             @else
                                 <tbody><tr><td colspan="6">No Data Found.</td></tr></tbody>
                             @endif
