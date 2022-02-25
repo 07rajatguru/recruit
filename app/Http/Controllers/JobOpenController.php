@@ -1075,7 +1075,7 @@ class JobOpenController extends Controller
 
             $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
 
-            $action .= '<a title="Send Vacancy Details"  class="fa fa-send" href="'.route('jobs.sendvd',$value['id']).'" style="margin:3px;"></a>';
+            $action .= '<a title="Sent Vacancy Details"  class="fa fa-send" href="'.route('jobs.sendvd',$value['id']).'" style="margin:3px;"></a>';
 
             if(isset($value['access']) && $value['access'] == 1) {
 
@@ -4201,7 +4201,7 @@ class JobOpenController extends Controller
 
             $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
 
-            $action .= '<a title="Send Vacancy Details"  class="fa fa-send" href="'.route('jobs.sendvd',$value['id']).'" style="margin:3px;"></a>';
+            $action .= '<a title="Sent Vacancy Details"  class="fa fa-send" href="'.route('jobs.sendvd',$value['id']).'" style="margin:3px;"></a>';
 
             if(isset($value['access']) && $value['access'] == 1) {
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobclose.edit',['id' => $value['id'],'year' => $year]).'" style="margin:3px;"></a>';
@@ -5028,7 +5028,7 @@ class JobOpenController extends Controller
 
             $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
 
-            $action .= '<a title="Send Vacancy Details"  class="fa fa-send" href="'.route('jobs.sendvd',$value['id']).'" style="margin:3px;"></a>';
+            $action .= '<a title="Sent Vacancy Details"  class="fa fa-send" href="'.route('jobs.sendvd',$value['id']).'" style="margin:3px;"></a>';
 
             if(isset($value['access']) && $value['access'] == 1) {
 

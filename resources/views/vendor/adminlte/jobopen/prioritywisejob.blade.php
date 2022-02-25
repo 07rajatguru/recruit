@@ -117,7 +117,7 @@
                         <td>
                             <a title="Show" class="fa fa-circle" href="{{ route('jobopen.show',$value['id']) }}"></a>
 
-                            <a title="Send Vacancy Details" class="fa fa-send" href="{{ route('jobs.sendvd',$value['id']) }}"></a>
+                            <a title="Sent Vacancy Details" class="fa fa-send" href="{{ route('jobs.sendvd',$value['id']) }}"></a>
 
                             @if(isset($value['access']) && $value['access']==1)
                                 <a title="Edit" class="fa fa-edit" href="{{ route('jobopen.edit',$value['id']) }}"></a>
