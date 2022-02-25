@@ -41,7 +41,7 @@ class LeaveApplicationReminder extends Command
     public function handle()
     {
         $from = date('Y-m-d');
-        $date = date('Y-m-d',strtotime("$from +2days"));
+        $date = date('Y-m-d',strtotime("$from +3days"));
 
         // Get All Users
         $users = User::getAllUsers();
