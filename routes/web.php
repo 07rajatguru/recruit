@@ -755,6 +755,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-leave|display-user-wise-leave|leave-add|leave-edit|leave-delete']
     ]);
 
+    Route::get('late-in-early-go/count',[
+        'as' => 'late-early.count',
+        'uses' => 'LateInEarlyGoController@getTotalLeaves',
+        'middleware' => ['permission:display-leave|display-user-wise-leave']
+    ]);
+
     Route::get('late-in-early-go/add',[
         'as' => 'late-early.add',
         'uses' => 'LateInEarlyGoController@add',
@@ -806,12 +812,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::any('late-in-early-go/{status}/{month}/{year}', [
         'as' => 'late-early.status',
         'uses' => 'LateInEarlyGoController@getAllDetailsByStatus',
-        'middleware' => ['permission:display-leave|display-user-wise-leave']
-    ]);
-
-    Route::get('late-in-early-go/count',[
-        'as' => 'late-early.count',
-        'uses' => 'LateInEarlyGoController@getTotalLeaves',
         'middleware' => ['permission:display-leave|display-user-wise-leave']
     ]);
 
@@ -1618,6 +1618,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('jobs/{id}', [
         'as' => 'jobopen.show',
         'uses' => 'JobOpenController@show',
+        'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
+    ]);
+
+    Route::get('jobs-send-vd/{job_id}', [
+        'as' => 'jobs.sendvd',
+        'uses' => 'JobOpenController@sendVacancyDetailsEmail',
         'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
     ]);
 

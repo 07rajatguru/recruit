@@ -35,7 +35,13 @@
                                     <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
                                         <td style="font-family:Cambria, serif;font-size: 11.0pt;">
                                             <b><p style="margin-top: 0px; margin-bottom: 14px;">
-                                            Dear {{$candidate_name}},</p></b>
+
+                                            @if(isset($candidate_name) && $candidate_name != '')
+                                                Dear {{$candidate_name}},</p></b>
+                                            @else
+                                                Dear Team,</p></b>
+                                            @endif
+
                                             <i><p>Greetings from Adler Talent Solutions !! </p></i>
                                             <p style="text-align: justify;">
                      

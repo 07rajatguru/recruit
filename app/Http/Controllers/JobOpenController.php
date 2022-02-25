@@ -1075,6 +1075,8 @@ class JobOpenController extends Controller
 
             $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
 
+            $action .= '<a title="Send Vacancy Details"  class="fa fa-send" href="'.route('jobs.sendvd',$value['id']).'" style="margin:3px;"></a>';
+
             if(isset($value['access']) && $value['access'] == 1) {
 
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobopen.edit',$value['id']).'" style="margin:3px;"></a>';
@@ -4199,6 +4201,8 @@ class JobOpenController extends Controller
 
             $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
 
+            $action .= '<a title="Send Vacancy Details"  class="fa fa-send" href="'.route('jobs.sendvd',$value['id']).'" style="margin:3px;"></a>';
+
             if(isset($value['access']) && $value['access'] == 1) {
                 $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobclose.edit',['id' => $value['id'],'year' => $year]).'" style="margin:3px;"></a>';
         
@@ -5023,6 +5027,8 @@ class JobOpenController extends Controller
             $checkbox = '';
 
             $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
+
+            $action .= '<a title="Send Vacancy Details"  class="fa fa-send" href="'.route('jobs.sendvd',$value['id']).'" style="margin:3px;"></a>';
 
             if(isset($value['access']) && $value['access'] == 1) {
 
@@ -6093,5 +6099,79 @@ class JobOpenController extends Controller
         );
 
         echo json_encode($json_data);exit;
+    }
+
+    public function sendVacancyDetailsEmail($job_id) {
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $user_email = $user->email;
+
+        // Get Company description by logged in user
+        $user_company_details = User::getCompanyDetailsByUserID($user_id);
+
+        // job Details
+        $job_details = JobOpen::getJobById($job_id);
+        $attachments = JobOpenDoc::getJobDocByJobId($job_id,'Job Description');
+
+        $file_path_array = array();
+        $j=0;
+
+        if (isset($attachments) && $attachments != '') {
+
+            foreach ($attachments as $key => $value) {
+
+                if (isset($value) && $value != '') {
+                    $file_path = public_path() . "/" . $value['file'];
+                }
+                else {
+                    $file_path = '';
+                }
+                
+                $file_path_array[$j] = $file_path;
+                $j++;
+            }
+        }
+
+        $from_name = getenv('FROM_NAME');
+        $from_address = getenv('FROM_ADDRESS');
+        $app_url = getenv('APP_URL');
+
+        $input['from_name'] = $from_name;
+        $input['from_address'] = $from_address;
+        $input['app_url'] = $app_url;
+
+        $input['to'] = $user_email;
+        $input['city'] = $job_details['city'];
+        $input['company_name'] = $job_details['company_name'];
+        $input['company_url'] = $job_details['company_url'];
+        $input['company_desc'] = $user_company_details['description'];
+        $input['client_desc'] = $job_details['client_desc'];
+        $input['job_designation'] = $job_details['new_posting_title'];
+        $input['job_location'] = $job_details['job_location'];
+        $input['job_description'] = $job_details['job_description'];
+
+        if (isset($file_path_array) && sizeof($file_path_array) > 0) {
+            $input['file_path'] = $file_path_array;
+        }
+     
+        \Mail::send('adminlte::emails.candidateassociatemail', $input, function ($message) use($input) {
+
+            $message->from($input['from_address'], $input['from_name']);
+            $message->to($input['to'])->subject('Vacancy Details - '.$input['company_name'].' - '. $input['city']);
+
+            if (isset($input['file_path']) && sizeof($input['file_path']) > 0) {
+
+                foreach ($input['file_path'] as $k1 => $v1) {
+
+                    if(isset($v1) && $v1 != '') {
+                        $message->attach($v1);
+                    }
+                }
+            }
+        });
+
+        //return redirect()->route('jobopen.index')->with('success','Email Sent Successfully.');
+        return redirect()->back()->with('success','Email Sent Successfully.');
     }
 }
