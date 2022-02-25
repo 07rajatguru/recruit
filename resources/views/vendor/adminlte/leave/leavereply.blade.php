@@ -127,20 +127,17 @@
 @else
     @if($leave_details['status'] == 0)
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            <button type="submit" class="btn btn-success" onclick="permission('Approved')" title="Approve">Approve</button> 
-            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="submit" class="btn btn-success" onclick="permission('Approved')" title="Approve">Approve</button> &nbsp;&nbsp;&nbsp;&nbsp;
             <button type="submit" class="btn btn-danger" onclick="permission('Rejected')" title="Reject">Reject</button>
         </div>
     @elseif($leave_details['status'] == 1)
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            <button type="button" class="btn btn-success" disabled="disabled">Approved by {{ $leave_details['approved_by'] }}</button>
-            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="button" class="btn btn-success" disabled="disabled">Approved by {{ $leave_details['approved_by'] }}</button>&nbsp;&nbsp;&nbsp;&nbsp;
             <button type="submit" class="btn btn-danger" onclick="permission('Rejected')" title="Reject">Reject</button>
         </div>
     @elseif($leave_details['status'] == 2)
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            <button type="submit" class="btn btn-success" onclick="permission('Approved')" title="Approve">Approve</button> 
-            &nbsp;&nbsp;&nbsp;&nbsp;
+            <button type="submit" class="btn btn-success" onclick="permission('Approved')" title="Approve">Approve</button> &nbsp;&nbsp;&nbsp;&nbsp;
             <button type="button" class="btn btn-danger" disabled="disabled">Rejected by {{ $leave_details['approved_by'] }}</button>
         </div>
     @endif
@@ -232,7 +229,7 @@
                 success: function(data) {
                     if (data == 'success') { 
                         window.location.reload();
-                        alert('Reply Send Successfully.');
+                        alert('Reply Sent Successfully.');
                     }
                 }
             });
@@ -273,7 +270,7 @@
             success: function(data){
                 if (data == 'success') { 
                     window.location.reload();
-                    alert('Reply Send Successfully.');
+                    alert('Reply Sent Successfully.');
                 }
             }
         });

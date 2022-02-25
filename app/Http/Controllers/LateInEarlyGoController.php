@@ -211,6 +211,41 @@ class LateInEarlyGoController extends Controller
         $user_leave->status = '0';
         $user_leave->save();
 
+        // Sent Email Notification
+
+        $leave_id = $user_leave->id;
+        $leave_details = LateInEarlyGo::getLateInEarlyGoDetailsById($leave_id);
+
+        // Get Superadmin email id
+        $superadminuserid = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($superadminuserid);
+
+        // Get HR email id
+        $hr = getenv('HRUSERID');
+        $hremail = User::getUserEmailById($hr);
+
+        //Get Reports to Email
+        $report_res = User::getReportsToUsersEmail($user_id);
+
+        if(isset($report_res->remail) && $report_res->remail!='') {
+
+            $report_email = $report_res->remail;
+            $cc_users_array = array($report_email,$hremail);
+        }
+        else {
+            $cc_users_array = array($hremail);
+        }
+
+        $module = "Late In Early Go";
+        $sender_name = $user_id;
+        $to = $superadminemail;
+        $cc = implode(",",$cc_users_array);
+        $subject = $leave_details['subject'];
+        $body_message = $leave_details['message'];
+        $module_id = $leave_id;
+
+        event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+
         return redirect()->route('late-early.index')->with('success','Request Added Successfully.');
     }
 
@@ -241,7 +276,7 @@ class LateInEarlyGoController extends Controller
         else {
             $date = NULL;
         }
-
+        
         // Get All fields values
         $subject = Input::get('subject');
         $leave_type = Input::get('leave_type');
@@ -274,26 +309,20 @@ class LateInEarlyGoController extends Controller
         $superadminuserid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($superadminuserid);
 
-        //Get Reports to Email
-        $report_res = User::getReportsToUsersEmail($user_id);
-
-        if(isset($report_res->remail) && $report_res->remail!='') {
-            $report_email = $report_res->remail;
-        }
-        else {
-            $report_email = '';
-        }
-
         // Get HR email id
         $hr = getenv('HRUSERID');
         $hremail = User::getUserEmailById($hr);
 
-        if($report_email == '') {
+        //Get Reports to Email
+        $report_res = User::getReportsToUsersEmail($user_id);
 
-            $cc_users_array = array($hremail);
+        if(isset($report_res->remail) && $report_res->remail != '') {
+            
+            $report_email = $report_res->remail;
+            $cc_users_array = array($report_email,$hremail);
         }
         else {
-            $cc_users_array = array($report_email,$hremail);
+            $cc_users_array = array($hremail);
         }
 
         $module = "Late In Early Go";
@@ -342,27 +371,22 @@ class LateInEarlyGoController extends Controller
         $superadminuserid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($superadminuserid);
 
-        //Get Reports to Email
-        $report_res = User::getReportsToUsersEmail($user_id);
-
-        if(isset($report_res->remail) && $report_res->remail!='') {
-            $report_email = $report_res->remail;
-        }
-        else {
-            $report_email = '';
-        }
-
         // Get HR email id
         $hr = getenv('HRUSERID');
         $hremail = User::getUserEmailById($hr);
 
-        if($report_email == '') {
+        //Get Reports to Email
+        $report_res = User::getReportsToUsersEmail($user_id);
 
-            $cc_users_array = array($superadminemail,$hremail);
-        }
-        else {
+        if(isset($report_res->remail) && $report_res->remail!='') {
+            
+            $report_email = $report_res->remail;
             $cc_users_array = array($superadminemail,$hremail,$report_email);
         }
+        else {
+            $cc_users_array = array($superadminemail,$hremail);
+        }
+        
 
         if ($reply == 'Approved') {
 

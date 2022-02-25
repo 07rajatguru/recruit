@@ -37,7 +37,7 @@
             <div class="row">
                 <div class="col-lg-12 margin-tb">
                     <div class="pull-left">
-                        <h2>Leave Applications ({{ $pending_count }})</h2>
+                        <h2>Late In / Early Go Requests ({{ $pending_count }})</h2>
                     </div>
                 </div>
             </div>
@@ -135,7 +135,7 @@
             <div class="row">
                 <div class="col-lg-12 margin-tb">
                     <div class="pull-left">
-                        <h2>Leave Applications ({{ $approved_count }})</h2>
+                        <h2>Late In / Early Go Requests ({{ $approved_count }})</h2>
                     </div>
                 </div>
             </div>
@@ -233,7 +233,7 @@
             <div class="row">
                 <div class="col-lg-12 margin-tb">
                     <div class="pull-left">
-                        <h2>Leave Applications ({{ $rejected_count }})</h2>
+                        <h2>Late In / Early Go Requests ({{ $rejected_count }})</h2>
                     </div>
                 </div>
             </div>

@@ -83,9 +83,11 @@
             {!! Form::submit(isset($leave) ? 'Update' : 'Submit', ['class' => 'btn btn-primary']) !!}
         </div>
     </div>
-
-    <input type="hidden" name="loggedin_user_id" id="loggedin_user_id" value="{{ $loggedin_user_id }}">
 </div>
+
+<input type="hidden" name="loggedin_user_id" id="loggedin_user_id" value="{{ $loggedin_user_id }}">
+
+{!! Form::close() !!}
 
 @section('customscripts')
     <script type="text/javascript">
@@ -154,7 +156,7 @@
                     dataType:'json',
                     success: function(data) {
 
-                        if (data >= '3') { 
+                        if (data >= '3') {
                                 
                             alert('You Already Take 3 Early Go / Late In in this month.');
                             return false;

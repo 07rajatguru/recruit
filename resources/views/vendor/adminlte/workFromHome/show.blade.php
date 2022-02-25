@@ -138,7 +138,7 @@
                 if (data == 'success') {
 
                     window.location.reload();
-                    alert('Reply Send Successfully.');
+                    alert('Reply Sent Successfully.');
                 }
             }
         });
