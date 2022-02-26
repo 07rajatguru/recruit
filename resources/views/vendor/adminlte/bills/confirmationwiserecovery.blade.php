@@ -130,7 +130,23 @@
                     @endif
 
                     <td>{{ $value['company_name'] }},{{ $value['city'] }}</td>
-                    <td>{{ $value['cname'] }}</td>
+
+                    @if($value['job_confirmation'] == 0)
+                        <td style="background-color:white;">{{ $value['cname'] }}</td>
+
+                    @elseif($value['job_confirmation'] == 1)
+                        <td style="background-color:#00B0F0;">{{ $value['cname'] }}</td>
+
+                    @elseif($value['job_confirmation'] == 2)
+                        <td style="background-color:#FFA500;">{{ $value['cname'] }}</td>
+
+                    @elseif($value['job_confirmation'] == 3)
+                        <td style="background-color:#FFC0CB;">{{ $value['cname'] }}</td>
+
+                    @elseif($value['job_confirmation'] == 4)
+                        <td style="background-color:#32CD32;">{{ $value['cname'] }}</td>
+                    @endif
+
                     <td>{{ $value['date_of_joining'] }}</td>
                     <td>{{ $value['fixed_salary'] }}</td>
                     <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['efforts'] }}</td>

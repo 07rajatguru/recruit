@@ -579,7 +579,7 @@
                     $("#pymnt_rcv").html("(" + 0 + ")");
                   }
 
-                  $("#no_action_href").attr("href", '/recovery/0/'+year);
+                  $("#no_action_href").attr("href", '/recovery/cancel/0/'+year);
                   $("#jc_sent_href").attr("href", '/recovery/cancel/1/'+year);
                   $("#got_con_href").attr("href", '/recovery/cancel/2/'+year);
                   $("#invoice_gen_href").attr("href", '/recovery/cancel/3/'+year);
