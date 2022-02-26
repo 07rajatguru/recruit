@@ -920,7 +920,7 @@ class WorkPlanningController extends Controller
                 }
             }
 
-            if($delay_counter >= 3) {
+            if($delay_counter > 3) {
 
                 \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1', `attendance` = 'HD' WHERE `id` = $work_planning_id");
             }
@@ -1328,7 +1328,7 @@ class WorkPlanningController extends Controller
                                 }
                             }
 
-                            if($delay_counter >= 3) {
+                            if($delay_counter > 3) {
 
                                 \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1', `attendance` = 'HD' WHERE `id` = $id");
                             }
@@ -1559,7 +1559,7 @@ class WorkPlanningController extends Controller
                         }
                     }
 
-                    if($delay_counter >= 3) {
+                    if($delay_counter > 3) {
 
                         \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1', `attendance` = 'HD' WHERE `id` = $wp_id");
                     }
