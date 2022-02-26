@@ -18,7 +18,7 @@ use App\Utils;
 use App\Events\NotificationMail;
 use App\BillsLeadEfforts;
 use App\BillDate;
-use PDF;
+//use PDF;
 use App\RoleUser;
 
 class BillsController extends Controller
@@ -2407,10 +2407,10 @@ class BillsController extends Controller
 
         // Generate PDF and save at bill id location
         
-        $pdf = PDF::loadView('adminlte::bills.pdfview', compact('invoice_data'));
+        /*$pdf = PDF::loadView('adminlte::bills.pdfview', compact('invoice_data'));
         //$customPaper = array(0,0,800,750);
         $pdf->setPaper('A4', 'portrait');
-        $pdf->save(public_path('uploads/bills/'.$id.'/'.$invoice_name.'.pdf'));
+        $pdf->save(public_path('uploads/bills/'.$id.'/'.$invoice_name.'.pdf'));*/
 
         $user_id = \Auth::user()->id;
 

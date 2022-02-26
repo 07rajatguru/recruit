@@ -292,6 +292,19 @@ class EligibilityReportController extends Controller
                 foreach ($users as $key => $value) {
                     $eligible_detail[$value][$year] = Eligibilityworking::getEligibilityDataByUser($key,$first_year,$last_year);
                 }
+
+                if(isset($eligible_data) && $eligible_data != '') {
+                }
+                else {
+                    $eligible_data = array();
+                }
+
+                if(isset($eligible_detail) && $eligible_detail != '') {
+                }
+                else {
+                    $eligible_detail = array();
+                }
+                
                 $eligible['eligible_data'] = $eligible_data;
                 $eligible['eligible_detail'] = $eligible_detail;
 
