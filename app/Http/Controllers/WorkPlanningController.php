@@ -83,7 +83,6 @@ class WorkPlanningController extends Controller
             }
         }
         else {
-
             $work_planning_res = '';
         }
 
@@ -565,7 +564,6 @@ class WorkPlanningController extends Controller
             }
         }
         else {
-
             $work_planning_res = '';
         }
 
@@ -587,7 +585,6 @@ class WorkPlanningController extends Controller
         $date = date('Y-m-d');
 
         // Get Logged in Log out Time
-
         $get_time = UsersLog::getUserTimeByID($user_id,$date);
 
         // Convert Logged in time
@@ -613,7 +610,6 @@ class WorkPlanningController extends Controller
         $work_planning_status_time = '';
 
         // Get Working Hours
-
         $user_details = User::getAllDetailsByUserID($user_id);
         $minimum_working_hours = $user_details->working_hours;
 
@@ -837,13 +833,6 @@ class WorkPlanningController extends Controller
         //Get Reports to Email
         $report_res = User::getReportsToUsersEmail($user_id);
 
-        if(isset($report_res->remail) && $report_res->remail!='') {
-            $report_email = $report_res->remail;
-        }
-        else {
-            $report_email = '';
-        }
-
         // get superadmin email id
         $superadminuserid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($superadminuserid);
@@ -855,15 +844,17 @@ class WorkPlanningController extends Controller
         // Get Vibhuti gmail id
         $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
 
-        if($report_email == '') {
-
-            $to_email = $superadminemail;
-            $cc_users_array = array($hremail,$vibhuti_gmail_id);
-        }
-        else {
-        
+        if(isset($report_res->remail) && $report_res->remail != '') {
+            
+            $report_email = $report_res->remail;
             $to_email = $report_email;
             $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
+        }
+        else {
+            
+            $report_email = '';
+            $to_email = $superadminemail;
+            $cc_users_array = array($hremail,$vibhuti_gmail_id);
         }
 
         $module = "Work Planning";
@@ -910,7 +901,6 @@ class WorkPlanningController extends Controller
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
             // Set Delay Counter
-
             $month = date('m');
             $year = date('Y');
 
@@ -1098,7 +1088,6 @@ class WorkPlanningController extends Controller
         $added_by_id = $work_planning->added_by;
 
         if($user_id == $farhin_user_id) {
-
             $attendance = 'F';
         }
         else {
@@ -1192,7 +1181,6 @@ class WorkPlanningController extends Controller
                     $work_planning_list->projected_time = $projected_time[$j];
                 }
                 else {
-
                     $work_planning_list->projected_time = '';
                 }
 
@@ -1200,7 +1188,6 @@ class WorkPlanningController extends Controller
                     $work_planning_list->actual_time = $actual_time[$j];
                 }
                 else {
-
                     $work_planning_list->actual_time = '';
                 }
 
@@ -1210,7 +1197,6 @@ class WorkPlanningController extends Controller
                     $work_planning_list->rm_hr_remarks = $rm_hr_remarks[$j];
                 }
                 else {
-
                     $work_planning_list->rm_hr_remarks = '';
                 }
 
@@ -1235,13 +1221,6 @@ class WorkPlanningController extends Controller
                 //Get Reports to Email
                 $report_res = User::getReportsToUsersEmail($user_id);
 
-                if(isset($report_res->remail) && $report_res->remail!='') {
-                    $report_email = $report_res->remail;
-                }
-                else {
-                    $report_email = '';
-                }
-
                 // get superadmin email id
                 $superadminuserid = getenv('SUPERADMINUSERID');
                 $superadminemail = User::getUserEmailById($superadminuserid);
@@ -1253,17 +1232,19 @@ class WorkPlanningController extends Controller
                 // Get Vibhuti gmail id
                 $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
 
-                if($report_email == '') {
-
-                    $to_email = $superadminemail;
-                    $cc_users_array = array($hremail,$vibhuti_gmail_id);
-                }
-                else {
-                
+                if(isset($report_res->remail) && $report_res->remail != '') {
+                    
+                    $report_email = $report_res->remail;
                     $to_email = $report_email;
                     $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
                 }
-        
+                else {
+                    
+                    $report_email = '';
+                    $to_email = $superadminemail;
+                    $cc_users_array = array($hremail,$vibhuti_gmail_id);
+                }
+
                 $module = "Work Planning";
                 $sender_name = $user_id;
                 $to = $to_email;
@@ -1380,13 +1361,6 @@ class WorkPlanningController extends Controller
                 //Get Reports to Email
                 $report_res = User::getReportsToUsersEmail($work_planning['added_by_id']);
 
-                if(isset($report_res->remail) && $report_res->remail!='') {
-                    $reports_to_email = $report_res->remail;
-                }
-                else {
-                    $reports_to_email = '';
-                }
-
                 // get superadmin email id
                 $superadmin = getenv('SUPERADMINUSERID');
                 $superadminemail = User::getUserEmailById($superadmin);
@@ -1398,11 +1372,13 @@ class WorkPlanningController extends Controller
                 // Get Vibhuti gmail id
                 $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
 
-                if($reports_to_email == '') {
-                    $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
+                if(isset($report_res->remail) && $report_res->remail != '') {
+                    
+                    $reports_to_email = $report_res->remail;
+                    $cc_users_array = array($reports_to_email,$superadminemail,$hremail,$vibhuti_gmail_id);
                 }
                 else {
-                    $cc_users_array = array($reports_to_email,$superadminemail,$hremail,$vibhuti_gmail_id);
+                    $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
                 }
 
                 $module = "Work Planning Remarks";
@@ -1463,13 +1439,6 @@ class WorkPlanningController extends Controller
         //Get Reports to Email
         $report_res = User::getReportsToUsersEmail($user_id);
 
-        if(isset($report_res->remail) && $report_res->remail!='') {
-            $report_email = $report_res->remail;
-        }
-        else {
-            $report_email = '';
-        }
-
         // get superadmin email id
         $superadminuserid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($superadminuserid);
@@ -1481,15 +1450,17 @@ class WorkPlanningController extends Controller
         // Get Vibhuti gmail id
         $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
 
-        if($report_email == '') {
-
-            $to_email = $superadminemail;
-            $cc_users_array = array($hremail,$vibhuti_gmail_id);
-        }
-        else {
-        
+        if(isset($report_res->remail) && $report_res->remail != '') {
+            
+            $report_email = $report_res->remail;
             $to_email = $report_email;
             $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
+        }
+        else {
+
+            $report_email = '';
+            $to_email = $superadminemail;
+            $cc_users_array = array($hremail,$vibhuti_gmail_id);
         }
         
         $module = "Work Planning";
@@ -1569,7 +1540,6 @@ class WorkPlanningController extends Controller
                     event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
                     // Set Delay Counter
-                    
                     $month = date('m');
                     $year = date('Y');
                     
@@ -1624,10 +1594,6 @@ class WorkPlanningController extends Controller
             $work_planning->approved_by = $user_id;
             $work_planning->save();
         }
-       /* elseif ($reply == 'Rejected') {
-
-            \DB::statement("UPDATE `work_planning` SET `status` = '2',`approved_by` = $user_id,`attendance` = 'A' WHERE `id` = $wp_id");
-        }*/
 
         $data = 'success';
 
@@ -1657,50 +1623,6 @@ class WorkPlanningController extends Controller
 
         \DB::statement("UPDATE `work_planning_list` SET `rm_hr_remarks` = '$rm_hr_remarks' WHERE `id` = '$task_id'");
 
-
-        /*$work_planning = WorkPlanning::getWorkPlanningDetailsById($wp_id);
-        $user_id = \Auth::user()->id;
-
-        $report_res = User::getReportsToUsersEmail($work_planning['added_by_id']);
-
-        if(isset($report_res->remail) && $report_res->remail!='') {
-            $reports_to_email = $report_res->remail;
-        }
-        else {
-            $reports_to_email = '';
-        }
-
-        // get superadmin email id
-        $superadmin = getenv('SUPERADMINUSERID');
-        $superadminemail = User::getUserEmailById($superadmin);
-
-        // Get HR email id
-        $hr = getenv('HRUSERID');
-        $hremail = User::getUserEmailById($hr);
-
-        // Get Vibhuti gmail id
-        $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
-
-        if($reports_to_email == '') {
-            $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
-        }
-        else {
-            $cc_users_array = array($reports_to_email,$superadminemail,$hremail,$vibhuti_gmail_id);
-        }
-
-        $module = "Work Planning Remarks";
-        $sender_name = $user_id;
-        $to = User::getUserEmailById($work_planning['added_by_id']);
-        $cc = implode(",",$cc_users_array);
-
-        $date = date('d/m/Y',strtotime($work_planning['added_date']));
-
-        $subject = "Work Planning Remarks Added - " . $date;
-        $message = "Work Planning Remarks Added - " . $date;
-        $module_id = $wp_id;
-
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));*/
-
         if(isset($action) && $action == 'Add') {
 
             return redirect()->route('workplanning.show',$wp_id)->with('success','Remarks Added Successfully.');
@@ -1725,13 +1647,6 @@ class WorkPlanningController extends Controller
         //Get Reports to Email
         $report_res = User::getReportsToUsersEmail($work_planning['added_by_id']);
 
-        if(isset($report_res->remail) && $report_res->remail!='') {
-            $reports_to_email = $report_res->remail;
-        }
-        else {
-            $reports_to_email = '';
-        }
-
         // get superadmin email id
         $superadmin = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($superadmin);
@@ -1743,11 +1658,13 @@ class WorkPlanningController extends Controller
         // Get Vibhuti gmail id
         $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
 
-        if($reports_to_email == '') {
-            $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
+        if(isset($report_res->remail) && $report_res->remail != '') {
+            
+            $reports_to_email = $report_res->remail;
+            $cc_users_array = array($reports_to_email,$superadminemail,$hremail,$vibhuti_gmail_id);
         }
         else {
-            $cc_users_array = array($reports_to_email,$superadminemail,$hremail,$vibhuti_gmail_id);
+            $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
         }
 
         $module = "Work Planning Remarks";
@@ -1766,39 +1683,6 @@ class WorkPlanningController extends Controller
         $data = 'success';
 
         return json_encode($data);
-    }
-
-    public function workPlanningApproval() {
-
-        $user_id = \Auth::user()->id;
-
-        $approval_reply = Input::get('approval_reply');
-        $wrok_planning_id = Input::get('wrok_planning_id');
-
-        $work_planning = WorkPlanning::find($wrok_planning_id);
-        $status = $work_planning->status;
-        $post_discuss_status = $work_planning->post_discuss_status;
-
-        if($post_discuss_status == 0 && $status == 2) {
-
-            $work_planning->post_discuss_status = 1;   
-        }
-
-        $work_planning->approval_reply = $approval_reply;
-        $work_planning->status = 1;
-        $work_planning->approved_by = $user_id;
-
-        if(isset($approval_reply) && $approval_reply == 'Half Day') {
-
-            $work_planning->attendance = 'HD';
-        }
-        else {
-            $work_planning->attendance = 'F';
-        }
-
-        $work_planning->save();
-
-        return redirect()->route('workplanning.show',[$wrok_planning_id])->with('success','Report Approved.');
     }
 
     public function workPlanningRejection() {
@@ -1837,24 +1721,19 @@ class WorkPlanningController extends Controller
         $hr = getenv('HRUSERID');
         $hremail = User::getUserEmailById($hr);
 
-        //Get Reports to Email
-        $report_res = User::getReportsToUsersEmail($work_planning_details['added_by_id']);
-
-        if(isset($report_res->remail) && $report_res->remail!='') {
-            $reports_to_email = $report_res->remail;
-        }
-        else {
-            $reports_to_email = '';
-        }
-        
         // Get Vibhuti gmail id
         $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
 
-        if($reports_to_email == '') {
-            $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
+        //Get Reports to Email
+        $report_res = User::getReportsToUsersEmail($work_planning_details['added_by_id']);
+
+        if(isset($report_res->remail) && $report_res->remail != '') {
+            
+            $reports_to_email = $report_res->remail;
+            $cc_users_array = array($reports_to_email,$superadminemail,$hremail,$vibhuti_gmail_id);
         }
         else {
-            $cc_users_array = array($reports_to_email,$superadminemail,$hremail,$vibhuti_gmail_id);
+            $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
         }
 
         $module = "Work Planning Rejection";
@@ -1882,51 +1761,30 @@ class WorkPlanningController extends Controller
         $super_admin_userid = getenv('SUPERADMINUSERID');
         $manager_user_id = env('MANAGERUSERID');
 
-        if($user_id == $super_admin_userid) {
-
-            if($id == 0) {
+        if($id == 0) {
             
-                $work_planning_res = array();
-                $count = 0;
-            }
-            else {
-
-                if($all_perm) {
-                    
-                    $work_planning_res = WorkPlanning::getPendingWorkPlanningDetails(0,$month,$year);
-                    $count = sizeof($work_planning_res);
-                }
-                else {
-                    return view('errors.403');
-                }
-            }
+            $work_planning_res = WorkPlanning::getPendingWorkPlanningDetails($user_id,$month,$year);
+            $count = sizeof($work_planning_res);
         }
         else {
 
-            if($id == 0) {
-            
-                $work_planning_res = WorkPlanning::getPendingWorkPlanningDetails($user_id,$month,$year);
+            if($all_perm) {
+
+                $work_planning_res = WorkPlanning::getPendingWorkPlanningDetails(0,$month,$year);
                 $count = sizeof($work_planning_res);
             }
             else {
-
-                if($all_perm) {
-
-                    $work_planning_res = WorkPlanning::getPendingWorkPlanningDetails(0,$month,$year);
-                    $count = sizeof($work_planning_res);
-                }
-                else {
-                    return view('errors.403');
-                }
+                return view('errors.403');
             }
         }
 
+        $all_work_planning_res = array();
+        $team_work_planning_res = array();
+        
         if($user_id == $super_admin_userid) {
 
             if(isset($work_planning_res) && sizeof($work_planning_res) > 0) {
 
-                $all_work_planning_res = array();
-                $team_work_planning_res = array();
                 $i = 0;
 
                 foreach ($work_planning_res as $key => $value) {
@@ -1934,27 +1792,14 @@ class WorkPlanningController extends Controller
                     $report_to_id = User::getReportsToById($value['added_by_id']);
 
                     if($report_to_id == $super_admin_userid) {
-
                         $team_work_planning_res[$i] = $value;
                     }
                     else {
-
                         $all_work_planning_res[$i] = $value;
                     }
-
                     $i++;
                 }
             }
-            else {
-
-                $all_work_planning_res = array();
-                $team_work_planning_res = array();
-            }
-        }
-        else {
-
-            $all_work_planning_res = array();
-            $team_work_planning_res = array();
         }
 
         return view('adminlte::workPlanning.pendingstatusindex',compact('work_planning_res','count','user_id','super_admin_userid','manager_user_id','all_work_planning_res','team_work_planning_res'));

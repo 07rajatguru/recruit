@@ -143,35 +143,34 @@
                     <table class="table table-bordered">
                         <thead>
                             <tr>
-                                <th style="border:1px solid black;text-align: center;">Sr No.</th>
+                                <th style="border:1px solid black;text-align: center;">Sr No.
+                                </th>
                                 <th style="border:1px solid black;">Task</th>
                                 <th style="border:1px solid black;text-align: center;">Projected <br/>Time</th>
-                                <th style="border:1px solid black;text-align: center;">Actual <br/>Time</th>
+                                <th style="border:1px solid black;text-align: center;">Actual
+                                <br/>Time</th>
                                 <th style="border:1px solid black;">Remarks</th>
                                 <th style="border:1px solid black;">Reporting Manager / HR Remarks</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php 
-
-                                $i=1;
-                                $wp_list_id = '';
+                                $i=1;$wp_list_id = '';
                             ?>
                             @foreach($work_planning_list as $key=>$value)
                                 <?php
 
                                     if($wp_list_id == '') {
-
                                         $wp_list_id = $value['work_planning_list_id'];
                                     }
                                     else {
-
                                         $wp_list_id = $wp_list_id . "," . $value['work_planning_list_id'];    
                                     }
                                 ?>
                                 <tr>
                                     <td style="border:1px solid black;text-align: center;width: 5%;">{{ $i++ }}</td>
-                                    <td style="border:1px solid black;width: 20%;">{!! $value['task'] !!}</td>
+                                    <td style="border:1px solid black;width: 20%;">
+                                    {!! $value['task'] !!}</td>
                                     <?php
                                         $projected_time = array();$actual_time = array();
 
@@ -218,7 +217,8 @@
                                     @else
 
                                         @if($loggedin_user_id != $added_by_id)
-                                            <td style="border:1px solid black;width: 30%;">{!! $value['rm_hr_remarks'] !!}
+                                            <td style="border:1px solid black;width: 30%;">
+                                            {!! $value['rm_hr_remarks'] !!}
                                                 <button type="button" data-toggle="modal" data-target="#modal-edit-remarks-{!! $value['work_planning_list_id']!!}">Edit</button>
                                             </td>
                                         @else
@@ -254,10 +254,8 @@
                                         </td>
                                     @endif
 
-                                    <td style="border:1px solid black;text-align: center;">
-                                    </td>
-                                    <td style="border:1px solid black;text-align: center;">
-                                    </td>
+                                    <td style="border:1px solid black;text-align:center;"></td>
+                                    <td style="border:1px solid black;text-align:center;"></td>
                                 </tr>
                             @endif
                         </tbody>
@@ -362,8 +360,7 @@
                             <table cellspacing="0" width="100%">
                                 <tr>
                                     <td colspan="7" style="text-align:left;">
-                                        <u><b><h4>No of Leads Added : {{$lead_count or '0'}}</h4></b>
-                                        </u>
+                                        <u><b><h4>No of Leads Added : {{$lead_count or '0'}}</h4></b></u>
                                     </td>
                                 </tr>
                             </table>
@@ -442,39 +439,6 @@
 @endforeach
 
 <!-- Modal Start -->
-<div class="modal text-left fade" id="approvalModal">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Select Option</h4>
-            </div>
-
-            {!! Form::open(['method' => 'POST', 'route' => 'workplanning.approval','id' => 'approval_form']) !!}
-                <div class="modal-body">
-                    <div class="form-group">
-
-                        {!! Form::radio('approval_reply','Half Day',false,['id' => 'approval_reply']) !!}
-                        {!! Form::label('For Half Day') !!} &nbsp;
-
-                        {!! Form::radio('approval_reply','Full Day',false,['id' => 'approval_reply']) !!}
-                        {!! Form::label('For Full Day') !!}
-
-                        <input type="hidden" name="wrok_planning_id" id="wrok_planning_id" value="{{ $wp_id }}">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel
-                    </button>
-                </div>
-            {!! Form::close() !!}
-        </div>
-    </div>
-</div>
-<!-- Modal End -->
-
-<!-- Modal Start -->
 <div class="modal text-left fade" id="rejectionModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -515,7 +479,8 @@
 @endsection
 
 @section('customscripts')
-<link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet"></link>
+<link href="http://code.jquery.com/ui/1.10.2/themes/smoothness/jquery-ui.css" rel="Stylesheet">
+</link>
 <script src="//code.jquery.com/ui/1.11.4/jquery-ui.js"></script>
 <script src="https://cdn.ckeditor.com/4.6.2/standard-all/ckeditor.js"></script>
 <script type="text/javascript">
@@ -564,34 +529,24 @@
 
         if ( ! table1.data().any() ) {
         }
-        else{
+        else {
             new jQuery.fn.dataTable.FixedHeader( table1 );
         }
 
         if ( ! table2.data().any() ) {
         }
-        else{
+        else {
             new jQuery.fn.dataTable.FixedHeader( table2 );
         }
 
         if ( ! table3.data().any() ) {
         }
-        else{
+        else {
             new jQuery.fn.dataTable.FixedHeader( table3 );
         }
     });
 
     function updateStatus(check) {
-
-        /*if(check == 'Approved') {
-
-            $("#approvalModal").modal('show');
-        }
-
-        if(check == 'Rejected') {
-
-            $("#rejectionModal").modal('show');
-        }*/
 
         var wp_id = $("#wp_id").val();
         var app_url = "{!! env('APP_URL') !!}";
