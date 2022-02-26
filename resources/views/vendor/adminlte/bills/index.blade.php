@@ -26,6 +26,11 @@
           <div class="row">
             <div class="col-xs-12 col-sm-12 col-md-12">
               <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
+                  <a id="no_action_href" href="" title="No Action Yet" style="text-decoration: none;color: black;">
+                      <div style="width:max-content;height:40px;background-color:white;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px;cursor: pointer;"><b><span id="no_action">({{ $no_action }})</span></b></div>
+                  </a>
+              </div>
+              <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
                   <a id="jc_sent_href" href="" title="Joining Confirmation Sent" style="text-decoration: none;color: black;">
                       <div style="width:max-content;height:40px;background-color:#00B0F0;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px;cursor: pointer;"><b><span id="jc_sent">({{ $jc_sent }})</span></b></div>
                   </a>
@@ -156,10 +161,18 @@
                     var count = json.recordsTotal;
                     $("#count").html("(" + count + ")");
 
+                    var no_action = json.bills['no_action'];
                     var jc_sent = json.bills['jc_sent'];
                     var got_con = json.bills['got_con'];
                     var invoice_gen = json.bills['invoice_gen'];
                     var pymnt_rcv = json.bills['pymnt_rcv'];
+
+                    if(typeof(no_action)!="undefined") {
+                      $("#no_action").html("(" + no_action + ")");
+                    }
+                    else {
+                      $("#no_action").html("(" + 0 + ")");
+                    }
 
                     if(typeof(jc_sent)!="undefined") {
                       $("#jc_sent").html("(" + jc_sent + ")");
@@ -189,6 +202,7 @@
                       $("#pymnt_rcv").html("(" + 0 + ")");
                     }
 
+                    $("#no_action_href").attr("href", '/recovery/0/'+year);
                     $("#jc_sent_href").attr("href", '/recovery/1/'+year);
                     $("#got_con_href").attr("href", '/recovery/2/'+year);
                     $("#invoice_gen_href").attr("href", '/recovery/3/'+year);
@@ -254,10 +268,18 @@
                     var count = json.recordsTotal;
                     $("#count").html("(" + count + ")");
 
+                    var no_action = json.bills['no_action'];
                     var jc_sent = json.bills['jc_sent'];
                     var got_con = json.bills['got_con'];
                     var invoice_gen = json.bills['invoice_gen'];
                     var pymnt_rcv = json.bills['pymnt_rcv'];
+
+                    if(typeof(no_action)!="undefined") {
+                      $("#no_action").html("(" + no_action + ")");
+                    }
+                    else {
+                      $("#no_action").html("(" + 0 + ")");
+                    }
 
                     if(typeof(jc_sent)!="undefined") {
                       $("#jc_sent").html("(" + jc_sent + ")");
@@ -287,6 +309,7 @@
                       $("#pymnt_rcv").html("(" + 0 + ")");
                     }
 
+                    $("#no_action_href").attr("href", '/recovery/cancel/0/'+year);
                     $("#jc_sent_href").attr("href", '/recovery/cancel/1/'+year);
                     $("#got_con_href").attr("href", '/recovery/cancel/2/'+year);
                     $("#invoice_gen_href").attr("href", '/recovery/cancel/3/'+year);
@@ -404,10 +427,18 @@
                 var count = json.recordsTotal;
                 $("#count").html("(" + count + ")");
 
+                var no_action = json.bills['no_action'];
                 var jc_sent = json.bills['jc_sent'];
                 var got_con = json.bills['got_con'];
                 var invoice_gen = json.bills['invoice_gen'];
                 var pymnt_rcv = json.bills['pymnt_rcv'];
+
+                if(typeof(no_action)!="undefined") {
+                  $("#no_action").html("(" + no_action + ")");
+                }
+                else {
+                  $("#no_action").html("(" + 0 + ")");
+                }
 
                 if(typeof(jc_sent)!="undefined") {
                   $("#jc_sent").html("(" + jc_sent + ")");
@@ -437,6 +468,7 @@
                   $("#pymnt_rcv").html("(" + 0 + ")");
                 }
 
+                $("#no_action_href").attr("href", '/recovery/0/'+year);
                 $("#jc_sent_href").attr("href", '/recovery/1/'+year);
                 $("#got_con_href").attr("href", '/recovery/2/'+year);
                 $("#invoice_gen_href").attr("href", '/recovery/3/'+year);
@@ -506,10 +538,18 @@
                   var count = json.recordsTotal;
                   $("#count").html("(" + count + ")");
 
+                  var no_action = json.bills['no_action'];
                   var jc_sent = json.bills['jc_sent'];
                   var got_con = json.bills['got_con'];
                   var invoice_gen = json.bills['invoice_gen'];
                   var pymnt_rcv = json.bills['pymnt_rcv'];
+
+                  if(typeof(no_action)!="undefined") {
+                    $("#no_action").html("(" + no_action + ")");
+                  }
+                  else {
+                    $("#no_action").html("(" + 0 + ")");
+                  }
 
                   if(typeof(jc_sent)!="undefined") {
                     $("#jc_sent").html("(" + jc_sent + ")");
@@ -539,11 +579,11 @@
                     $("#pymnt_rcv").html("(" + 0 + ")");
                   }
 
+                  $("#no_action_href").attr("href", '/recovery/0/'+year);
                   $("#jc_sent_href").attr("href", '/recovery/cancel/1/'+year);
                   $("#got_con_href").attr("href", '/recovery/cancel/2/'+year);
                   $("#invoice_gen_href").attr("href", '/recovery/cancel/3/'+year);
                   $("#pymnt_rcv_href").attr("href", '/recovery/cancel/4/'+year);
-
                 },
 
                 responsive: true,

@@ -354,6 +354,7 @@ class BillsController extends Controller
 
         if(isset($recovery_bills) && sizeof($recovery_bills) > 0) {
 
+            $no_action = 0;
             $jc_sent = 0;
             $got_con = 0;
             $invoice_gen = 0;
@@ -361,7 +362,10 @@ class BillsController extends Controller
 
             foreach($recovery_bills as $bills) {
 
-                if($bills['job_confirmation'] == '1') {
+                if($bills['job_confirmation'] == '0') {
+                    $no_action++;
+                }
+                else if($bills['job_confirmation'] == '1') {
                     $jc_sent++;
                 }
                 else if ($bills['job_confirmation'] == '2') {
@@ -375,6 +379,7 @@ class BillsController extends Controller
                 }
             }
             $bills = array();
+            $bills['no_action'] = $no_action;
             $bills['jc_sent'] = $jc_sent;
             $bills['got_con'] = $got_con;
             $bills['invoice_gen'] = $invoice_gen;
@@ -692,6 +697,7 @@ class BillsController extends Controller
 
         if(isset($cancel_recovery_bills) && sizeof($cancel_recovery_bills) > 0) {
 
+            $no_action = 0;
             $jc_sent = 0;
             $got_con = 0;
             $invoice_gen = 0;
@@ -699,7 +705,10 @@ class BillsController extends Controller
 
             foreach($cancel_recovery_bills as $bills) {
 
-                if($bills['job_confirmation'] == '1') {
+                if($bills['job_confirmation'] == '0') {
+                    $no_action++;
+                }
+                else if($bills['job_confirmation'] == '1') {
                     $jc_sent++;
                 }
                 else if ($bills['job_confirmation'] == '2') {
@@ -714,6 +723,7 @@ class BillsController extends Controller
             }
 
             $bills = array();
+            $bills['no_action'] = $no_action;
             $bills['jc_sent'] = $jc_sent;
             $bills['got_con'] = $got_con;
             $bills['invoice_gen'] = $invoice_gen;
@@ -789,6 +799,7 @@ class BillsController extends Controller
             $access = false;
         }
 
+        $no_action = 0;
         $jc_sent = 0;
         $got_con = 0;
         $invoice_gen = 0;
@@ -796,7 +807,10 @@ class BillsController extends Controller
 
         foreach($recovery_bills as $bills) {
 
-            if($bills['job_confirmation'] == '1') {
+            if($bills['job_confirmation'] == '0') {
+                $no_action++;
+            }
+            else if($bills['job_confirmation'] == '1') {
                 $jc_sent++;
             }
             else if ($bills['job_confirmation'] == '2') {
@@ -811,7 +825,7 @@ class BillsController extends Controller
         }
 
         $title = "Recovery";
-        return view('adminlte::bills.index', compact('access','user_id','title','count','cancel_bill','year_array','year','jc_sent','got_con','invoice_gen','pymnt_rcv'));
+        return view('adminlte::bills.index', compact('access','user_id','title','count','cancel_bill','year_array','year','no_action','jc_sent','got_con','invoice_gen','pymnt_rcv'));
     }
 
     public function cancelbm() {
@@ -872,6 +886,7 @@ class BillsController extends Controller
             $access = false;
         }
 
+        $no_action = 0;
         $jc_sent = 0;
         $got_con = 0;
         $invoice_gen = 0;
@@ -879,7 +894,10 @@ class BillsController extends Controller
 
         foreach($bnm as $bills) {
 
-            if($bills['job_confirmation'] == '1') {
+            if($bills['job_confirmation'] == '0') {
+                $no_action++;
+            }
+            else if($bills['job_confirmation'] == '1') {
                 $jc_sent++;
             }
             else if ($bills['job_confirmation'] == '2') {
@@ -893,7 +911,7 @@ class BillsController extends Controller
             }
         }
         $title = "Cancel Recovery";
-        return view('adminlte::bills.index', compact('access','user_id','title','count','cancel_bill','cancel_bnm','cancel_bn','jc_sent','got_con','invoice_gen','pymnt_rcv','year_array','year'));
+        return view('adminlte::bills.index', compact('access','user_id','title','count','cancel_bill','cancel_bnm','cancel_bn','no_action','jc_sent','got_con','invoice_gen','pymnt_rcv','year_array','year'));
     }
 
     public function create() {
