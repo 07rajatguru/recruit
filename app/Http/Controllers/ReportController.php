@@ -901,7 +901,7 @@ class ReportController extends Controller
 
     public function monthWiseReportExport() {
 
-        Excel::create('Month-wise Report',function($excel){
+        Excel::create('Monthwise_Report',function($excel) {
 
             $excel->sheet('sheet 1',function($sheet){
                 
