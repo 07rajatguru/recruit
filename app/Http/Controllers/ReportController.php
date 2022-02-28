@@ -703,13 +703,13 @@ class ReportController extends Controller
 
     public function personWiseReportExport() {
 
-        Excel::create('Personwise Report',function($excel){
-            $excel->sheet('sheet 1',function($sheet){
+        Excel::create('Personwise_Report',function($excel) {
+            $excel->sheet('sheet 1',function($sheet) {
                 
                 if (isset($_POST['year']) && $_POST['year'] != '') {
                     $year = $_POST['year'];
                 }
-                else{
+                else {
                     $y = date('Y');
                     $m = date('m');
                     if ($m > 3) {
@@ -743,11 +743,9 @@ class ReportController extends Controller
                 $manager_user_id = getenv('MANAGERUSERID');
 
                 if($user_id == $manager_user_id) {
-                    
                     $type_array = array($recruitment);
                 }
                 else {
-
                     $type_array = array($recruitment,$hr_advisory,$management);
                 }
 
@@ -792,16 +790,14 @@ class ReportController extends Controller
                 }
 
                 if(isset($personwise_data) && $personwise_data != '') {
-
                 }
                 else {
-
                     $personwise_data = array();
                 }
                 
                 $sheet->loadview('adminlte::reports.personwise-reportexport')->with('personwise_data',$personwise_data);
             });
-        })->export('xls');
+        })->export('xlsx');
     }
 
     public function monthwiseReprotIndex() {
@@ -889,6 +885,13 @@ class ReportController extends Controller
                     $monthwise_data[$value] = Bills::getMonthwiseReportData(NULL,$month_start,$month_last);
                 }
             }
+
+            if(isset($monthwise_data) && $monthwise_data != '') {
+            }
+            else {
+                $monthwise_data = array();
+            }
+
             return view('adminlte::reports.monthwise-report',compact('year_array','year','monthwise_data'));
         }
         else {
@@ -973,10 +976,16 @@ class ReportController extends Controller
                         $monthwise_data[$value] = Bills::getMonthwiseReportData(NULL,$month_start,$month_last);
                     }
                 }
+
+                if(isset($monthwise_data) && $monthwise_data != '') {
+                }
+                else {
+                    $monthwise_data = array();
+                }
                     
                 $sheet->loadview('adminlte::reports.monthwise-reportexport')->with('monthwise_data',$monthwise_data);
             });
-        })->export('xls');
+        })->export('xlsx');
     }
 
     public function clientWiseReportIndex() {
