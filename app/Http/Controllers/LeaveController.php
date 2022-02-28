@@ -824,27 +824,6 @@ class LeaveController extends Controller
                     \DB::statement("UPDATE `monthwise_leave_balance` SET `sl_taken` = '$new_leave_taken', `sl_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id' AND `month` = '$month' AND `year` = '$year'");
                 }
             }
-            else {
-
-            }
-
-            // Add Entry in work planning when any leave is approved
-            $selected_dates = explode(",", $leave_details['selected_dates']);
-
-            foreach ($selected_dates as $key => $value) {
-
-                $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($value,$user_id);
-
-                if(isset($get_work_planning_res) && $get_work_planning_res != '') {
-                }
-                else {
-
-                    $work_planning = new WorkPlanning();
-                    $work_planning->added_date = $value;
-                    $work_planning->added_by = $user_id;
-                    $work_planning->save();
-                }
-            }
         }
         elseif ($reply == 'Rejected') {
        
@@ -861,6 +840,24 @@ class LeaveController extends Controller
             event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
 
             \DB::statement("UPDATE user_leave SET status = '2',approved_by=$loggedin_user_id, reply_message = '$message' WHERE id = $leave_id");
+        }
+
+        // Add Entry in work planning when any leave is approve or reject
+        $selected_dates = explode(",", $leave_details['selected_dates']);
+
+        foreach ($selected_dates as $key => $value) {
+
+            $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($value,$user_id);
+
+            if(isset($get_work_planning_res) && $get_work_planning_res != '') {
+            }
+            else {
+
+                $work_planning = new WorkPlanning();
+                $work_planning->added_date = $value;
+                $work_planning->added_by = $user_id;
+                $work_planning->save();
+            }
         }
 
         $data = 'success';
@@ -902,7 +899,7 @@ class LeaveController extends Controller
             $year_array[$y] = $y;
         }
 
-        $user_leave_data_1 = MonthwiseLeaveBalance::getMonthWiseLeaveBalance($month,$year);
+        $user_leave_data_1 = MonthwiseLeaveBalance::getMonthWiseLeaveBalance($year);
 
         return view('adminlte::leave.userwiseleave',compact('month_array','month','year_array','year','user_leave_data_1'));
     }
@@ -1021,7 +1018,7 @@ class LeaveController extends Controller
 
         if($all_perm) {
 
-            $balance_array = MonthwiseLeaveBalance::getMonthWiseLeaveBalance($month,$year);
+            $balance_array = MonthwiseLeaveBalance::getMonthWiseLeaveBalance($year);
 
             if(isset($balance_array) && sizeof($balance_array) > 0) {
 
