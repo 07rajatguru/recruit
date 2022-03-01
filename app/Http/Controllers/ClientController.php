@@ -3727,15 +3727,15 @@ class ClientController extends Controller
 
             if($page_nm == 'AM') {
 
-                return redirect()->route('clientlist.amwise')->with('error','There is no active positions.');
+                return redirect()->route('clientlist.amwise')->with('error','There are no active positions.');
             }
             else if($page_nm == 'Type') {
 
-                return redirect('/client-list/'.$source)->with('error', 'There is no active positions.');
+                return redirect('/client-list/'.$source)->with('error', 'There are no active positions.');
             }
             else {
                 
-                return redirect()->route('client.index')->with('error','There is no active positions.');
+                return redirect()->route('client.index')->with('error','There are no active positions.');
             }
         }
     }
