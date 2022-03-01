@@ -11,11 +11,11 @@
         <tr>
             <td width="600" style="font-family:Cambria, serif;font-size: 11.0pt;">
 
-                <b><p style="text-align: left;">Dear {{ $user_name }},</p></b>
+                <b><p style="text-align: left;">Dear {{ $rm_name }},</p></b>
 
-                <p style="text-align: left;">Greetings from Easy2Hire!</p>
+                <p style="text-align: left;">This is to inform you that {{ $user_name }} is going on leave from {{ $from_date }} to {{ $to_date }}.</p>
 
-                <p style="text-align: left;">This is to remind you about your leave application.
+                <p style="text-align: left;">Request you to schedule a handover call and take a download on the positions as well as clients before he/she goes for the leave.
                 </p>
 
                 <p style="text-align: left;">Thanks.<br/>Easy2Hire Team</p>

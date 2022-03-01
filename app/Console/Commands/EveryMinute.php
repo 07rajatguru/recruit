@@ -2657,21 +2657,29 @@ class EveryMinute extends Command
 
                 $cc_array = explode(",",$input['cc']);
 
+                // Get Leave details
                 $leave_details = UserLeave::getLeaveDetails($value['module_id']);
 
-                // Get user name
+                $rm_name = User::getUserNameByEmail($input['to']);
                 $user_name = $leave_details['uname'];
+                $from_date = $leave_details['from_date'];
+                $to_date = $leave_details['to_date'];
+                $owner_email = 'trajinfotech15@gmail.com';
 
                 if(isset($leave_details) && $leave_details != '') {
 
                     $input['module_id'] = $value['module_id'];
                     $input['cc_array'] = $cc_array;
+                    $input['rm_name'] = $rm_name;
                     $input['user_name'] = $user_name;
+                    $input['from_date'] = $from_date;
+                    $input['to_date'] = $to_date;
+                    $input['owner_email'] = $owner_email;
 
                      \Mail::send('adminlte::emails.leaveapplicationreminder', $input, function ($message) use($input) {
                     
                         $message->from($input['from_address'], $input['from_name']);
-                        $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                        $message->to($input['to'])->cc($input['cc_array'])->bcc($input['owner_email'])->subject($input['subject']);
                     });
 
                     \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");

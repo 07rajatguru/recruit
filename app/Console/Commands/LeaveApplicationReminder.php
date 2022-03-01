@@ -68,24 +68,20 @@ class LeaveApplicationReminder extends Command
                     //Get Reports to Email
                     $report_res = User::getReportsToUsersEmail($key);
 
-                    if(isset($report_res->remail) && $report_res->remail!='') {
+                    if(isset($report_res->remail) && $report_res->remail != '') {
+
                         $report_email = $report_res->remail;
-                    }
-                    else {
-                        $report_email = '';
-                    }
-
-                    if($report_email == '') {
-
+                        $to = $report_email;
                         $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
                     }
                     else {
-                        $cc_users_array = array($superadminemail,$report_email,$hremail,$vibhuti_gmail_id);
+
+                        $to = $superadminemail;
+                        $cc_users_array = array($hremail,$vibhuti_gmail_id);
                     }
 
                     $module = "Leave Application Reminder";
                     $sender_name = $superadminuserid;
-                    $to = User::getUserEmailById($key);
                     $subject = "Leave Application Reminder";
                     $message = "";
                     $module_id = $leave->id;
