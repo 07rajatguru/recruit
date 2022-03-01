@@ -17,6 +17,23 @@
                 <h2>Edit Work Planning Sheet</h2>
             @else
                 <h2>Add Work Planning</h2>
+                <div role="tabpanel">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li role="presentation" class="pending">
+                            <a href="" role="tab" data-toggle="tab" style="font-size:15px;color: black;" title="Yesterday" onclick="setDateValue('Yesterday');">
+                            <b>Yesterday</b></a>
+                        </li>
+
+                        <li role="presentation" class="approved active">
+                            <a href="" role="tab" data-toggle="tab" style="font-size:15px;color: black;" title="Today" onclick="setDateValue('Today');"><b>Today
+                            </b></a>
+                        </li>
+
+                        <li role="presentation" class="rejected">
+                            <a href="" role="tab" data-toggle="tab" style="font-size:15px;color: black;" title="Tomorrow" onclick="setDateValue('Tomorrow');"><b>Tomorrow</b></a>
+                        </li>
+                    </ul>
+                </div>
             @endif
         </div>
         <div class="pull-right">
@@ -240,8 +257,8 @@
 </div>
 <!-- Modal End -->
 
-
 <input type="hidden" name="email_value" id="email_value" value="">
+<input type="hidden" name="date_value" id="date_value" value="">
 
 {!! Form::close() !!}
 
@@ -250,6 +267,8 @@
 <script type="text/javascript">
 
     $(document).ready(function() {
+
+        setDateValue('Today');
 
         $("#work_type").select2();
 
@@ -637,6 +656,28 @@
             $("#email_value").val(confirmvalue);
         }
         return true;
+    }
+
+    function setDateValue(day) {
+        
+        if(day == 'Yesterday') {
+
+            var a = new Date(new Date().setDate(new Date().getDate() - 1));
+            var utc_date = a.toJSON().slice(0,10).replace(/-/g,'/');
+
+            $("#date_value").val(utc_date);
+        }
+        if(day == 'Today') {
+            
+            var utc_date = new Date().toJSON().slice(0,10).replace(/-/g,'/');
+            $("#date_value").val(utc_date);
+        }
+        if(day == 'Tomorrow') {
+            
+            var a = new Date(new Date().setDate(new Date().getDate() + 1));
+            var utc_date = a.toJSON().slice(0,10).replace(/-/g,'/');
+            $("#date_value").val(utc_date);
+        }
     }
 </script>
 @endsection

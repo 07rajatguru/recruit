@@ -233,10 +233,10 @@
                                 <td style="border: 5px solid #000000;background-color:#ffc000;"  title="Sunday">H</td>
                             @elseif($attendance == 'P')
                             	<?php $present++; ?>
-                                <td style="border: 5px solid #000000;background-color:#d8d8d8;" title="Present">P</td>
+                                <td style="border: 5px solid #000000;background-color:limegreen;" title="Present">P</td>
                             @elseif($attendance == 'WFHP')
                                 <?php $present++; ?>
-                                <td style="border: 5px solid #000000;background-color:#d8d8d8;color: white;" title="Work From Home">P</td>
+                                <td style="border: 5px solid #000000;background-color:limegreen;color: white;" title="Work From Home">P</td>
                             @elseif($attendance == 'A')
                             	<?php $absent++; ?>
                                 <td style="border: 5px solid #000000;background-color:#ff0000;" title="Absent">A</td>
