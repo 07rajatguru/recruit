@@ -13,6 +13,7 @@ class HolidaysUsers extends Model
         $query = HolidaysUsers::query();
         $query = $query->where('holidays_users.user_id','=',$user_id);
         $query = $query->where('holidays_users.holiday_id','=',$holiday_id);
+        $query = $query->select('holidays_users.holiday_id');
         $response = $query->first();
 
         return $response;

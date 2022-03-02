@@ -15,16 +15,16 @@
                 <div class="col-xs-6 col-sm-6 col-md-6">
                     <table border="1" cellpadding="0" cellspacing="0" width="500" style="font-family:Helvetica,Arial,sans-serif;" align="center">
                         <tr>
-                            <td width="500" style="font-family:Cambria, serif;font-size: 15.0pt;">
+                            <td width="500" style="font-family:Cambria, serif;">
                                 <table width="500" cellpadding="3" cellspacing="0" border="1" border-color="#000000">
-                                    <tr style="background-color: #7598d9;font-family:Cambria, serif;font-size: 15.0pt;">
+                                    <tr style="background-color: #7598d9;font-family:Cambria, serif;font-size: 14.0pt;">
                                         <td align="center" style="border: 1px solid black;width: 80px;"><b>Sr. No.</b></td>
                                         <td align="center" style="border: 1px solid black;"><b>Fixed Holiday Leaves</b></td>
                                     </tr>
 
                                     <?php $i=0; ?>
                                     @foreach($fixed_holiday_list as $key => $value)
-                                        <tr style="font-family:Cambria, serif;font-size: 13.0pt;">
+                                        <tr style="font-family:Cambria, serif;font-size: 12.0pt;">
                                             <td align="center">{{ ++$i }}</td>
                                             <td align="left" style="padding-left:10px;">{{ $value['title'] }}</td>
                                         </tr>
@@ -37,11 +37,11 @@
                 <div class="col-xs-6 col-sm-6 col-md-6">
                     <table border="1" cellpadding="0" cellspacing="0" width="500" style="font-family:Helvetica,Arial,sans-serif;" align="center">
                         <tr>
-                            <td width="500" style="font-family:Cambria, serif;font-size: 15.0pt;">
+                            <td width="500" style="font-family:Cambria, serif;">
                                 <table width="500" cellpadding="3" cellspacing="0" border="1" border-color="#000000">
-                                    <tr style="background-color: #7598d9;font-family:Cambria, serif;font-size: 15.0pt;">
+                                    <tr style="background-color: #7598d9;font-family:Cambria, serif;font-size: 14.0pt;">
                                         <td align="center" style="border: 1px solid black;width: 80px;"><b>Sr. No.</b></td>
-                                        <td align="center" style="border: 1px solid black;"><b>Optional Holidays Leaves</b></td>
+                                        <td align="center" style="border: 1px solid black;"><b>Optional Holiday Leaves<br/>(please select any 3 holidays from the list)</b></td>
                                     </tr>
 
                                     <?php $i=0; ?>
@@ -51,23 +51,29 @@
                                             $data = App\HolidaysUsers::checkUserHoliday($uid,$value['id']);
                                         ?>
 
-                                        <tr style="font-family:Cambria, serif;font-size: 13.0pt;">
+                                        <tr style="font-family:Cambria, serif;font-size: 12.0pt;">
                                             <td align="center">{{ ++$i }}</td>
-                                            @if($value['title'] == 'Any other Religious Holiday for respective community - Please specify')
+
+                                            @if($value['title'] == 'Any other Religious Holiday for respective community - Please specify' && isset($data) && $data != '')
                                                 <td align="left" style="padding-left: 10px;">
-                                                    <input type = "checkbox" name=holiday value="{{ $value['id'] }}" class=others_holiday id="{{ $value['id'] }}"/>{{ $value['title'] }}
+                                                    <input type="checkbox" value="{{ $value['id'] }}" id="holiday_{{ $value['id'] }}" checked="" class="others_holiday" />{{ $value['title'] }}
                                                     <input type="text" name="religious_holiday" id="religious_holiday"><br/>
+                                                </td>
+                                            @elseif(isset($data) && $data != '')
+                                                <td align="left" style="padding-left: 10px;">
+                                                    <input type="checkbox" value="{{ $value['id'] }}" id="holiday_{{ $value['id'] }}" checked="" class="others_holiday"/>{{ $value['title'] }}
                                                 </td>
                                             @else
 
-                                                @if(isset($data) && $data != '')
+                                                @if($value['title'] == 'Any other Religious Holiday for respective community - Please specify')
                                                     <td align="left" style="padding-left: 10px;">
-                                                        <input type = "checkbox" name=holiday value="{{ $value['id'] }}" class=others_holiday id="{{ $value['id'] }}" checked=""/>{{ $value['title'] }}
-                                                    </td>
+                                                    <input type="checkbox" value="{{ $value['id'] }}" id="holiday_{{ $value['id'] }}" class="others_holiday">
+                                                    {{ $value['title'] }}
+                                                    <input type="text" name="religious_holiday" id="religious_holiday"><br/>
+                                                </td>
                                                 @else
-
                                                     <td align="left" style="padding-left: 10px;">
-                                                        <input type = "checkbox" name=holiday value="{{ $value['id'] }}" class=others_holiday id="{{ $value['id'] }}"/>{{ $value['title'] }}
+                                                        <input type="checkbox" value="{{ $value['id'] }}" id="holiday_{{ $value['id'] }}" class="others_holiday">{{ $value['title'] }}
                                                     </td>
                                                 @endif
                                             @endif
@@ -97,17 +103,11 @@
     <script type="text/javascript">
         jQuery(document).ready(function() {
 
-            var table = jQuery('#holidays_table').DataTable({
-                responsive: true,
-                stateSave : true,
-                "order" : [2, 'desc'],
-            } );
+            $('input[type=checkbox]:not(:checked)').each(function(){
 
-            if ( ! table.data().any() ) {
-            }
-            else{
-                new jQuery.fn.dataTable.FixedHeader( table );
-            }
+                var id = $(this).attr("value");
+                $("#holiday_"+id).attr("disabled", true);
+            });
 
             var $checkboxes = $('.others_holiday').change(function() {
 

@@ -11,10 +11,10 @@
         <tr>
             <td width="600" style="font-family:Cambria, serif;font-size: 11.0pt;">
 
-                <b><p style="text-align: left;">Dear Sir/Madam,</p></b>
-                <i><p style="text-align: left;">Greetings !</p></i>
+                <b><p style="text-align: left;">Dear {{ $user_name }},</p></b>
+                <p style="text-align: left;">Greetings from Easy2Hire!</p>
 
-                <p style="text-align: left;">Please note that i selected following optional holidays from the list.</p>
+                <u><p style="text-align: left;">This is to inform that you have opted for the following Optional Holidays :</p></u>
       
                 @if(isset($selected_holidays) && sizeof($selected_holidays) > 0)
                 <?php
@@ -36,16 +36,11 @@
                 
                 <p style="text-align: left;">{!! $names_string !!}</p>
                 
-                <p style="text-align: left;">Thanks.</p>
-            </td>
-        </tr>
-        <tr>
-            <td width="800">
-                <table width="100%" cellpadding="0" cellspacing="0" style="border:0;">
-                    <tr>
-                        <td>{!! $signature !!}</td>
-                    </tr>
-                </table>
+                <p style="text-align: left;">You are hereby requested to co-ordinate with your Reporting Manager and plan the delegation of ongoing tasks within the team to avoid any further delay or communication gap.</p>
+                
+                <p style="text-align: left;">Note: Optional Holidays are subject to approval. Reporting/HR/Director reserves the right to change the same based on business requirements.</p>
+
+                <p style="text-align: left;">Thanks.<br/>Easy2Hire Team.</p>
             </td>
         </tr>
     </table>

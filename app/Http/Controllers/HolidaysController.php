@@ -407,11 +407,9 @@ class HolidaysController extends Controller
         $user_id = $user->id;
 
         if (isset($_POST['religious_holiday']) && $_POST['religious_holiday'] != '') {
-            
             $religious_holiday = $_POST['religious_holiday'];
         }
         else {
-
             $religious_holiday = '';
         }
 
@@ -435,36 +433,32 @@ class HolidaysController extends Controller
                 $super_admin_userid = getenv('SUPERADMINUSERID');
                 $superadminemail = User::getUserEmailById($super_admin_userid);
 
-                //Get Reports to Email
-                $report_res = User::getReportsToUsersEmail($user_id);
-
-                if(isset($report_res->remail) && $report_res->remail!='') {
-                    $report_email = $report_res->remail;
-                }
-                else {
-                    $report_email = '';
-                }
-
                 // Get HR email id
                 $hr = getenv('HRUSERID');
                 $hremail = User::getUserEmailById($hr);
 
-                // Get Vibhuti gmail id
-                $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
+                // Get Admin Email
+                $admin_userid = getenv('ADMINUSERID');
+                $admin_email = User::getUserEmailById($admin_userid);
 
-                if($report_email == '') {
+                //Get Reports to Email
+                $report_res = User::getReportsToUsersEmail($user_id);
 
-                    $cc_users_array = array($hremail,$vibhuti_gmail_id);
+                if(isset($report_res->remail) && $report_res->remail != '') {
+                    
+                    $report_email = $report_res->remail;
+                    $cc_users_array = array($report_email,$hremail,$admin_email);
                 }
                 else {
-                    $cc_users_array = array($report_email,$hremail,$vibhuti_gmail_id);
+                    $cc_users_array = array($hremail,$admin_email);
                 }
 
                 $module = "Optional Holidays";
-                $sender_name = $user_id;
-                $to = $superadminemail;
-                $subject = "Selected Optional Holidays";
-                $message = "Selected Optional Holidays";
+                $sender_name = $super_admin_userid;
+                $to = User::getUserEmailById($user_id);
+                $cc = implode(",",$cc_users_array);
+                $subject = "Opted Optional Holidays";
+                $message = "Opted Optional Holidays";
 
                 if($religious_holiday == '') {
                     $module_id = $selected_leaves;
@@ -472,11 +466,8 @@ class HolidaysController extends Controller
                 else {
                     $module_id = $selected_leaves . "-" . $religious_holiday;
                 }
-
-                $cc = implode(",",$cc_users_array);
-
                 event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
-                    }
+            }
 
             $msg['success'] = 'Success';
         }

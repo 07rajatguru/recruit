@@ -2446,17 +2446,6 @@ class EveryMinute extends Command
                 $cc_array = explode(",",$input['cc']);
                 $input['cc_array'] = array_unique($cc_array);
 
-                // Get Sender name details
-                $user_details = User::getAllDetailsByUserID($value['sender_name']);
-                $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
-
-                $user_info = User::getProfileInfo($value['sender_name']);
-                $input['signature'] = $user_info['signature'];
-
-                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
-
-                $input['from_address'] = trim($user_email_details->email);
-
                 $module_ids_array = explode(",", $module_id);
 
                 $selected_holidays = array();
@@ -2470,41 +2459,26 @@ class EveryMinute extends Command
                             $values_array = explode("-",$value);
 
                             $holidays = Holidays::find($values_array[0]);
-                            $title = $values_array[1];
+                            $display_string = $values_array[1];
                         }
                         else {
 
                             $holidays = Holidays::find($value);
                             $title = $holidays->title;
+                            $from_date = date("d-m-Y",strtotime($holidays->from_date));
+                            $day = date("l",strtotime($from_date));
+
+                            $display_string = $title . " (" . $from_date . " - " . $day . ")";
                         }
-                        array_push($selected_holidays,$title);
+                        array_push($selected_holidays,$display_string);
                     }
                 }
 
                 $input['selected_holidays'] = $selected_holidays;
 
-                if(strpos($input['from_address'], '@gmail.com') !== false) {
-
-                    config([
-                        'mail.driver' => trim('mail'),
-                        'mail.host' => trim('smtp.gmail.com'),
-                        'mail.port' => trim('587'),
-                        'mail.username' => trim($user_email_details->email),
-                        'mail.password' => trim($user_email_details->password),
-                        'mail.encryption' => trim('tls'),
-                    ]);
-                }
-                else {
-
-                    config([
-                        'mail.driver' => trim('smtp'),
-                        'mail.host' => trim('smtp.zoho.com'),
-                        'mail.port' => trim('465'),
-                        'mail.username' => trim($user_email_details->email),
-                        'mail.password' => trim($user_email_details->password),
-                        'mail.encryption' => trim('ssl'),
-                    ]);
-                }
+                // Get Username
+                $user_name = User::getUserNameByEmail($input['to']);
+                $input['user_name'] = $user_name;
 
                 \Mail::send('adminlte::emails.selectedoptionalholidaysemail', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);

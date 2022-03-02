@@ -64,11 +64,11 @@ class ListofHolidaysReminder extends Command
                 if(isset($report_res->remail) && $report_res->remail!='') {
                     
                     $report_email = $report_res->remail;
-                    $cc_users_array = array($report_email,$hremail,$admin_email,$superadminemail);
+                    $cc_users_array = array($report_email,$superadminemail,$hremail,$admin_email);
                 }
                 else {
                     
-                    $cc_users_array = array($hremail,$admin_email,$superadminemail);
+                    $cc_users_array = array($superadminemail,$hremail,$admin_email);
                 }
 
                 $module = "List of Holidays";
