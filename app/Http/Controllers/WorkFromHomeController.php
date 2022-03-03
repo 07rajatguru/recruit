@@ -300,41 +300,42 @@ class WorkFromHomeController extends Controller
         $user_id = $_POST['user_id'];
         $from_date = $_POST['from_date'];
         $to_date = $_POST['to_date'];
+        $remarks = $_POST['remarks'];
 
-        // Email Notifications
+        if(isset($remarks) && $remarks != '') {
 
+            \DB::statement("UPDATE `work_from_home` SET `remarks` = '$remarks' WHERE `id` = $work_from_home_id");
+        }
+
+        // Get useremail who apply
         $user_email = User::getUserEmailById($user_id);
     
+        // Get Superadmin email
         $superadminuserid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($superadminuserid);
+
+        // Get HR email
+        $hr = getenv('HRUSERID');
+        $hremail = User::getUserEmailById($hr);
+
+        // Get Vibhuti gmail
+        $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
 
         //Get Reports to Email
         $report_res = User::getReportsToUsersEmail($user_id);
 
         if(isset($report_res->remail) && $report_res->remail!='') {
+            
             $report_email = $report_res->remail;
-        }
-        else {
-            $report_email = '';
-        }
-
-        // Get HR email id
-        $hr = getenv('HRUSERID');
-        $hremail = User::getUserEmailById($hr);
-
-        // Get Vibhuti gmail id
-        $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
-
-        if($report_email == '') {
-
-            $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
-        }
-        else {
             $cc_users_array = array($report_email,$superadminemail,$hremail,$vibhuti_gmail_id);
         }
+        else {
+            $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
+        }
 
+        // Send Email Notification
         $module = "Work From Home Request Reply";
-        $sender_name = $loggedin_user_id;
+        $sender_name = $superadminuserid;
         $to = $user_email;
         $cc = implode(",",$cc_users_array);
         $subject = "Work From Home Request - " . $from_date . " To " . $to_date;

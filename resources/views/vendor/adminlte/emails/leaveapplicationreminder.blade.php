@@ -18,7 +18,7 @@
                 <p style="text-align: left;">Request you to schedule a handover call and take a download on the positions as well as clients before he/she goes for the leave.
                 </p>
 
-                <p style="text-align: left;">Thanks.<br/>Easy2Hire Team</p>
+                <p style="text-align: left;">Thanks.<br/>Easy2Hire Team.</p>
             </td>
         </tr>
     </table>

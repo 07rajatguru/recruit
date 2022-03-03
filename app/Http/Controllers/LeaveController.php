@@ -743,16 +743,6 @@ class LeaveController extends Controller
         $superadminuserid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($superadminuserid);
 
-        //Get Reports to Email
-        $report_res = User::getReportsToUsersEmail($user_id);
-
-        if(isset($report_res->remail) && $report_res->remail!='') {
-            $report_email = $report_res->remail;
-        }
-        else {
-            $report_email = '';
-        }
-
         // Get HR email id
         $hr = getenv('HRUSERID');
         $hremail = User::getUserEmailById($hr);
@@ -760,14 +750,18 @@ class LeaveController extends Controller
         // Get Vibhuti gmail id
         $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
 
-        if($report_email == '') {
+        //Get Reports to Email
+        $report_res = User::getReportsToUsersEmail($user_id);
 
-            $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
+        if(isset($report_res->remail) && $report_res->remail!='') {
+            
+            $report_email = $report_res->remail;
+            $cc_users_array = array($report_email,$superadminemail,$hremail,$vibhuti_gmail_id);
         }
         else {
-            $cc_users_array = array($superadminemail,$hremail,$report_email,$vibhuti_gmail_id);
+            $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
         }
-
+        
         if ($reply == 'Approved') {
 
             $message = "<p><b>Hello " . $user_name . " ,</b></p><p><b>Your leave has been Approved.</b></p>";

@@ -7,17 +7,46 @@
     </head>
 
     <body style="margin: 0; padding-top: 30px;">
-        <table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif; border-collapse: collapse; color: #444444;">
+        <table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif;" align="left">
             <tr>
-                <td width="600">
-                    <table cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff;padding: 15px 15px;">
+                <td width="600" style="font-family:Cambria, serif;font-size: 11.0pt;">
 
-                        <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
-                            <td>{!! $reply_message !!}</td>
-                        </tr>
+                    <b><p style="text-align: left;">Dear {{ $user_name }},</p></b>
 
-                        <tr><td>{!! $signature !!}</td></tr>
-                    </table>
+                    <p style="text-align: left;">Greetings from Easy2Hire!</p>
+
+                    @if($status == '1')
+
+                        @if($from_date == $to_date)
+
+                            <p style="text-align: left;">This is to inform you that your Work from Home request has been approved for the date of {{ $from_date }}.</p>
+                        @else
+
+                            <p style="text-align: left;">This is to inform you that your Work from Home request has been approved for the date from {{ $from_date }} to {{ $to_date }}.</p>
+                        @endif
+
+                        <p style="text-align: left;">You are hereby requested to co-ordinate with your Reporting Manager and plan the delegation of ongoing tasks within the team to avoid any further delay or communication gap.</p>
+
+                        <p style="text-align: left;">Note: In case of unavailability during work from home or unplanned personal engagement without prior written communication to the Reporting Manager will lead to full-day rejection of Work Planning and absent for the day.</p>
+
+                        <p style="text-align: left;">In case of any changes, please connect with your Reporting Manager.</p>
+
+                    @elseif($status == '2')
+
+                        @if($from_date == $to_date)
+
+                            <p style="text-align: left;">This is to inform you that your Work from Home request has been rejected for the date of {{ $from_date }}.</p>
+                        @else
+
+                            <p style="text-align: left;">This is to inform you that your Work from Home request has been rejected for the date from {{ $from_date }} to {{ $to_date }}.</p>
+                        @endif
+
+                        <p style="text-align: left;">You are hereby requested to understand the reason of rejection as per the remarks mentioned in E2H.</p>
+
+                        <p style="text-align: left;">In case of any queries/discussion, feel free to connect with your Reporting Manager.</p>
+                    @endif
+
+                    <p style="text-align: left;">Thanks.<br/>Easy2Hire Team.</p>
                 </td>
             </tr>
         </table>

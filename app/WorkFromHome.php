@@ -107,6 +107,8 @@ class WorkFromHome extends Model
             else {
                 $work_from_home_res['to_date'] = '';
             }
+
+            $work_from_home_res['remarks'] = $response->remarks;
         }
         return $work_from_home_res;
     }

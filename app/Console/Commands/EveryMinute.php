@@ -2546,51 +2546,29 @@ class EveryMinute extends Command
                 $cc_array = array();
                 $cc_array = explode(",",$input['cc']); 
 
-                $input['cc_array'] = array_unique($cc_array);
+                // Get Work From Home Request
+                $work_from_home_res = WorkFromHome::getWorkFromHomeRequestDetailsById($module_id);
+                
+                $user_name = $work_from_home_res['added_by'];
+                $from_date = $work_from_home_res['from_date'];
+                $to_date = $work_from_home_res['to_date'];
+                $status = $work_from_home_res['status'];
 
-                // Get Sender name details
+                if(isset($work_from_home_res) && $work_from_home_res != '') {
 
-                $user_details = User::getAllDetailsByUserID($value['sender_name']);
-                $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
+                    $input['cc_array'] = array_unique($cc_array);
+                    $input['user_name'] = $user_name;
+                    $input['from_date'] = $from_date;
+                    $input['to_date'] = $to_date;
+                    $input['status'] = $status;
 
-                $user_info = User::getProfileInfo($value['sender_name']);
-                $input['signature'] = $user_info['signature'];
+                    \Mail::send('adminlte::emails.workfromhomerequestreplyemail', $input, function ($message) use ($input) {
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                    });
 
-                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
-                $input['from_address'] = trim($user_email_details->email);
-
-                if(strpos($input['from_address'], '@gmail.com') !== false) {
-
-                    config([
-                        'mail.driver' => trim('mail'),
-                        'mail.host' => trim('smtp.gmail.com'),
-                        'mail.port' => trim('587'),
-                        'mail.username' => trim($user_email_details->email),
-                        'mail.password' => trim($user_email_details->password),
-                        'mail.encryption' => trim('tls'),
-                    ]);
+                    \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
                 }
-                else {
-
-                    config([
-                        'mail.driver' => trim('smtp'),
-                        'mail.host' => trim('smtp.zoho.com'),
-                        'mail.port' => trim('465'),
-                        'mail.username' => trim($user_email_details->email),
-                        'mail.password' => trim($user_email_details->password),
-                        'mail.encryption' => trim('ssl'),
-                    ]);
-                }
-
-                $work_from_home_res = WorkFromHome::find($module_id);
-                $input['reply_message'] = $work_from_home_res->reply_message;
-
-                \Mail::send('adminlte::emails.workfromhomerequestreplyemail', $input, function ($message) use ($input) {
-                    $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
-                });
-
-                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'"); 
             }
 
             else if ($value['module'] == "Pending Work Planning Reminder") {

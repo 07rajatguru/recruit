@@ -161,7 +161,6 @@
 <input type="hidden" name="check" id="check" value="">
 
 <!-- Remarsk Modal Popup -->
-
 <div id="remarksmodal" class="modal text-left fade">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -181,8 +180,7 @@
 
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" onclick="hideModal();">Submit</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel
-                </button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
