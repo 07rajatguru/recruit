@@ -1480,10 +1480,8 @@ class BillsController extends Controller
             $status = 1;
 
             // Add Recovery Date
-
             $current_dt = date('Y-m-d');
-
-            \DB::statement("UPDATE `bills_date` SET `recovery_date` = '$current_dt' where bills_id = $id");
+            \DB::statement("UPDATE `bills_date` SET `recovery_date` = '$current_dt' WHERE `bills_id` = $id");
         }
 
         if(isset($input['percentage_charged']) && $input['percentage_charged']!='')
@@ -1583,16 +1581,16 @@ class BillsController extends Controller
 
         // for set again job confirmation icon if deatils are changed
         if($prev_percentage_charged != $bill->percentage_charged) {
-            \DB::statement("UPDATE bills SET joining_confirmation_mail = '0' where id=$id");
+            \DB::statement("UPDATE `bills` SET `joining_confirmation_mail` = '0' WHERE `id`=$id");
         }
         else if($prev_fixed_salary != $bill->fixed_salary) {
-            \DB::statement("UPDATE bills SET joining_confirmation_mail = '0' where id=$id");
+            \DB::statement("UPDATE `bills` SET `joining_confirmation_mail` = '0' WHERE `id`=$id");
         }
         else if($prev_date_of_joining != $bill->date_of_joining) {
-            \DB::statement("UPDATE bills SET joining_confirmation_mail = '0' where id=$id");
+            \DB::statement("UPDATE `bills` SET `joining_confirmation_mail` = '0' WHERE `id`=$id");
         }
         else if($prev_job_location != $bill->job_location) {
-            \DB::statement("UPDATE bills SET joining_confirmation_mail = '0' where id=$id");
+            \DB::statement("UPDATE `bills` SET `joining_confirmation_mail` = '0' WHERE `id`=$id");
         }
 
         $validator = \Validator::make(Input::all(),$bill::$rules);
@@ -1715,7 +1713,6 @@ class BillsController extends Controller
                 event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
                 $recovery_update_increment = 0;
-
                 \DB::statement("UPDATE `bills` SET `recovery_update_increment`= '$recovery_update_increment' WHERE `id` = '$id'");
             }
             else {
@@ -1882,7 +1879,7 @@ class BillsController extends Controller
         if ($bills['status'] == 1) {
 
             // Set Bill Forecating date to NULL
-            \DB::statement("UPDATE bills_date SET recovery_date = NULL where bills_id = $id");
+            \DB::statement("UPDATE `bills_date` SET `recovery_date` = NULL WHERE `bills_id` = $id");
 
             // For Cancel Recovery mail [email_notification table entry]
             $user_id = \Auth::user()->id;
@@ -1914,7 +1911,7 @@ class BillsController extends Controller
         else if ($bills['status'] == 0) {
 
             // Set Bill Forecating date to NULL
-            \DB::statement("UPDATE bills_date SET forecasting_date = NULL where bills_id = $id");
+            \DB::statement("UPDATE `bills_date` SET `forecasting_date` = NULL WHERE `bills_id` = $id");
 
             // For Cancel Forecasting mail [email_notification table entry]
             $user_id = \Auth::user()->id;
@@ -1977,7 +1974,7 @@ class BillsController extends Controller
 
             // Set Bill Recovery date to current date
             $current_dt = date('Y-m-d');
-            \DB::statement("UPDATE bills_date SET recovery_date = '$current_dt' where bills_id = $id");
+            \DB::statement("UPDATE `bills_date` SET `recovery_date` = '$current_dt' WHERE `bills_id` = $id");
 
             // For Relive Recovery mail [email_notification table entry]
             $user_id = \Auth::user()->id;
@@ -2010,7 +2007,7 @@ class BillsController extends Controller
 
             // Set Bill Forecasting date to current date
             $current_dt = date('Y-m-d');
-            \DB::statement("UPDATE bills_date SET forecasting_date = '$current_dt' where bills_id = $id");
+            \DB::statement("UPDATE `bills_date` SET `forecasting_date` = '$current_dt' WHERE `bills_id` = $id");
 
             // For Relive Forecasting mail [email_notification table entry]
             $user_id = \Auth::user()->id;
@@ -2235,6 +2232,9 @@ class BillsController extends Controller
 
         $lead_users = User::getAllUsers();
 
+        //Set joining_confirmation_mail=0
+        \DB::statement("UPDATE `bills` SET `joining_confirmation_mail` = '0' where `id`=$id");
+
         return view('adminlte::bills.edit', compact('bnm', 'action', 'employee_name', 'employee_percentage','generate_bm','jobopen','job_id','candidate_id','users','candidateSource','billsdetails','status','lead_name','lead_percentage','doj','upload_type','percentage_charged','lead_users'));
     }
 
@@ -2318,7 +2318,7 @@ class BillsController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-        \DB::statement("UPDATE bills SET joining_confirmation_mail = '1' where id=$id");
+        \DB::statement("UPDATE `bills` SET `joining_confirmation_mail` = '1' WHERE `id`=$id");
 
         // Get Selected Year
         $year = $_POST['year'];
@@ -2330,7 +2330,7 @@ class BillsController extends Controller
     // Got Confirmation Check
     public function getGotConfirmation($id) {
 
-        \DB::statement("UPDATE bills SET joining_confirmation_mail = '2' where id=$id");
+        \DB::statement("UPDATE `bills` SET `joining_confirmation_mail` = '2' WHERE `id`=$id");
 
         // Get Selected Year
         $year = $_POST['year'];
@@ -2439,7 +2439,7 @@ class BillsController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-        \DB::statement("UPDATE bills SET joining_confirmation_mail = '3' where id=$id");
+        \DB::statement("UPDATE `bills` SET `joining_confirmation_mail` = '3' WHERE `id`=$id");
 
         return redirect('/recovery')->with('success','Invoice Generated and Mailed Successfully.')
         ->with('selected_year',$year);
@@ -2448,11 +2448,11 @@ class BillsController extends Controller
     // Payment received or not
     public function getPaymentReceived($id) {
 
-        \DB::statement("UPDATE bills SET joining_confirmation_mail = '4' where id=$id");
+        \DB::statement("UPDATE `bills` SET `joining_confirmation_mail` = '4' WHERE `id`=$id");
 
         // Set Bill joining success date to current date
         $current_dt = date('Y-m-d');
-        \DB::statement("UPDATE bills_date SET joining_success_date = '$current_dt' where bills_id = $id");
+        \DB::statement("UPDATE `bills_date` SET `joining_success_date` = '$current_dt' WHERE `bills_id` = $id");
 
         // Get Selected Year
         $year = $_POST['year'];
@@ -2546,15 +2546,15 @@ class BillsController extends Controller
 
                     if (isset($percentage_charged) && $percentage_charged != '' && $percentage_charged != '0.00' && $percentage_charged != '0') {
 
-                        \DB::statement("UPDATE bills SET percentage_charged = '$percentage_charged' where id=$bill_id");
-                        \DB::statement("UPDATE bills SET per_chared_date = '$today_date' where id=$bill_id");
+                        \DB::statement("UPDATE `bills` SET `percentage_charged` = '$percentage_charged' WHERE `id`=$bill_id");
+                        \DB::statement("UPDATE `bills` SET `per_chared_date` = '$today_date' WHERE `id`=$bill_id");
 
                         echo $bill_id . "-> Success";
                     }
                     else {
-                        \DB::statement("UPDATE bills SET percentage_charged = '8.33' where id=$bill_id");
+                        \DB::statement("UPDATE `bills` SET `percentage_charged` = '8.33' WHERE `id`=$bill_id");
                         
-                        \DB::statement("UPDATE bills SET per_chared_date = '$today_date' where id=$bill_id");
+                        \DB::statement("UPDATE `bills` SET `per_chared_date` = '$today_date' WHERE `id`=$bill_id");
 
                         echo $bill_id . "-> Success";
                     }
