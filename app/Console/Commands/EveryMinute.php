@@ -2609,24 +2609,72 @@ class EveryMinute extends Command
 
                 $cc_array = explode(",",$input['cc']);
 
+                //Split module id
+                $split_module_id = explode("-",$value['module_id']);
+
+                $leave_id = $split_module_id[0];
+                $user_id = $split_module_id[1];
+
                 // Get Leave details
-                $leave_details = UserLeave::getLeaveDetails($value['module_id']);
+                $leave_details = UserLeave::getLeaveDetails($leave_id);
 
                 $rm_name = User::getUserNameByEmail($input['to']);
                 $user_name = $leave_details['uname'];
                 $from_date = $leave_details['from_date'];
                 $to_date = $leave_details['to_date'];
-                $owner_email = 'trajinfotech15@gmail.com';
+                $owner_email = User::getUserEmailById($user_id);
 
                 if(isset($leave_details) && $leave_details != '') {
 
-                    $input['module_id'] = $value['module_id'];
+                    $input['module'] = $value['module'];
                     $input['cc_array'] = $cc_array;
                     $input['rm_name'] = $rm_name;
                     $input['user_name'] = $user_name;
                     $input['from_date'] = $from_date;
                     $input['to_date'] = $to_date;
                     $input['owner_email'] = $owner_email;
+
+                     \Mail::send('adminlte::emails.leaveapplicationreminder', $input, function ($message) use($input) {
+                    
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to'])->cc($input['cc_array'])->bcc($input['owner_email'])->subject($input['subject']);
+                    });
+
+                    \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
+                }
+            }
+
+            else if ($value['module'] == 'Optional Holiday Reminder') {
+
+                $cc_array = explode(",",$input['cc']);
+
+                //Split module id
+                $split_module_id = explode("-",$value['module_id']);
+
+                $holiday_id = $split_module_id[0];
+                $user_id = $split_module_id[1];
+
+                //Get User info
+                $user_info = User::getProfileInfo($user_id);
+
+                // Get Holidays details
+                $holidays = Holidays::find($holiday_id);
+                $from_date = $holidays->from_date;
+                $holiday_name = $holidays->title;
+
+                $rm_name = User::getUserNameByEmail($input['to']);
+                $user_name = $user_info->first_name . " " . $user_info->last_name;
+                $owner_email = $user_info->email;
+
+                if(isset($holidays) && $holidays != '') {
+
+                    $input['module'] = $value['module'];
+                    $input['cc_array'] = $cc_array;
+                    $input['rm_name'] = $rm_name;
+                    $input['user_name'] = $user_name;
+                    $input['owner_email'] = $owner_email;
+                    $input['from_date'] = $from_date;
+                    $input['holiday_name'] = $holiday_name;
 
                      \Mail::send('adminlte::emails.leaveapplicationreminder', $input, function ($message) use($input) {
                     

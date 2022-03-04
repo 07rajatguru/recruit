@@ -101,7 +101,7 @@
                     $wfh_data = array();
 
                     $added_date = date('Y-m-d',strtotime($value['added_date']));
-                    $holiday_data = App\Holidays::getHolidayByDateAndID($added_date,$value['added_by_id']);
+                    $holiday_data = App\Holidays::getHolidayByDateAndID($added_date,$value['added_by_id'],'');
                     $leave_data = App\UserLeave::getLeaveByDateAndID($added_date,$value['added_by_id'],'1','Full Day');
                     $unapproved_leave_data = App\UserLeave::getLeaveByDateAndID($added_date,$value['added_by_id'],'2','Full Day');
                     $wfh_data = App\WorkFromHome::getWorkFromHomeRequestByDate($added_date,$value['added_by_id']);
@@ -232,7 +232,7 @@
                         <td style="background-color:#fac090;">{{ $value['added_date'] }}</td>
                         <td colspan="7"><center><b>{{ $unapproved_leave_data->category }} - Unapproved</b></center></td>
 
-                    @elseif(isset($holiday_data) && $holiday_data != '')
+                    @elseif(isset($holiday_data) && sizeof($holiday_data) > 0)
 
                         <td>{{ ++$i }}</td><td></td>
                         <td style="background-color:#76933C;">{{ $value['added_date'] }}</td>

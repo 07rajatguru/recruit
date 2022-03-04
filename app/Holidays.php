@@ -252,15 +252,29 @@ class Holidays extends Model
         return $holidays;
     }
 
-    public static function getHolidayByDateAndID($date,$user_id) {
+    public static function getHolidayByDateAndID($date,$user_id,$type) {
 
         $query = Holidays::query();
         $query = $query->join('holidays_users','holidays_users.holiday_id','=','holidays.id');
         $query = $query->where('holidays_users.user_id',$user_id);
-        $query = $query->select('holidays.title','holidays.type');
+
+        if(isset($type) && $type != '') {
+            $query = $query->where('holidays.type','=',$type);
+        }
+
         $query = $query->where('from_date','=',$date);
+        $query = $query->select('holidays.id','holidays.title','holidays.type');
+
         $response = $query->first();
 
-        return $response;
+        $holidays = array();
+
+        if(isset($response) && $response != '') {
+
+            $holidays['id'] = $response->id;
+            $holidays['title'] = $response->title;
+            $holidays['type'] = $response->type;
+        }
+        return $holidays;
     }
 }

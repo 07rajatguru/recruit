@@ -1277,10 +1277,10 @@ class WorkPlanningController extends Controller
                     $yesterday = date("l", strtotime("-1 days"));
                     $yesterday_date = date("Y-m-d", strtotime("-1 days"));
 
-                    $holidays = Holidays::getHolidayByDateAndID($yesterday_date,$added_by_id);
+                    $holidays = Holidays::getHolidayByDateAndID($yesterday_date,$added_by_id,'');
                     $leave_data = UserLeave::getLeaveByDateAndID($yesterday_date,$added_by_id,'','');
 
-                    if($yesterday == 'Sunday' || (isset($holidays) && $holidays != '') || (isset($leave_data) && $leave_data != '')) {
+                    if($yesterday == 'Sunday' || (isset($holidays) && sizeof($holidays) > 0) || (isset($leave_data) && $leave_data != '')) {
 
                     }
                     else {
@@ -1509,10 +1509,10 @@ class WorkPlanningController extends Controller
             $yesterday = date("l", strtotime("-1 days"));
             $yesterday_date = date("Y-m-d", strtotime("-1 days"));
 
-            $holidays = Holidays::getHolidayByDateAndID($yesterday_date,$added_by_id);
+            $holidays = Holidays::getHolidayByDateAndID($yesterday_date,$added_by_id,'');
             $leave_data = UserLeave::getLeaveByDateAndID($yesterday_date,$added_by_id,'','');
 
-            if($yesterday == 'Sunday' || (isset($holidays) && $holidays != '') || (isset($leave_data) && $leave_data != '')) {
+            if($yesterday == 'Sunday' || (isset($holidays) && sizeof($holidays) > 0) || (isset($leave_data) && $leave_data != '')) {
 
             }
             else {
