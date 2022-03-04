@@ -35,41 +35,36 @@
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="box-body col-xs-12 col-sm-12 col-md-12">
-                    <div class="">
-                        <div class="form-group {{ $errors->has('subject') ? 'has-error' : '' }}">
-                            <strong>Subject : <span class = "required_fields">*</span></strong>
-                            {!! Form::text('subject',null, array('id'=>'subject','placeholder' => 'Subject','class' => 'form-control', 'tabindex' => '1')) !!}
-                            @if ($errors->has('subject'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('subject') }}</strong>
-                                </span>
-                            @endif
-                        </div>
+                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                        <div class="">
+                            <div class="form-group {{ $errors->has('subject') ? 'has-error' : '' }}">
+                                <strong>Subject : <span class = "required_fields">*</span></strong>
+                                {!! Form::text('subject',null, array('id'=>'subject','placeholder' => 'Subject','class' => 'form-control', 'tabindex' => '1')) !!}
+                            </div>
 
-                        <div class="form-group {{ $errors->has('from_date') ? 'has-error' : '' }}">
-                            <strong>From Date : <span class = "required_fields">*</span></strong>
-                            <div class="input-group date">
-                                <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-                                {!! Form::text('from_date', isset($from_date) ? $from_date : null, array('id'=>'from_date','placeholder' => 'From Date','class' => 'form-control', 'tabindex' => '2')) !!}
+                            <div class="form-group {{ $errors->has('from_date') ? 'has-error' : '' }}">
+                                <strong>From Date : <span class = "required_fields">*</span></strong>
+                                <div class="input-group date">
+                                    <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                                    {!! Form::text('from_date', isset($from_date) ? $from_date : null, array('id'=>'from_date','placeholder' => 'From Date','class' => 'form-control', 'tabindex' => '2')) !!}
+                                </div>
+                            </div>
+
+                            <div class="form-group {{ $errors->has('from_date') ? 'has-error' : '' }}">
+                                <strong>To Date : <span class = "required_fields">*</span></strong>
+                                <div class="input-group date">
+                                    <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                                    {!! Form::text('to_date', isset($to_date) ? $to_date : null, array('id'=>'to_date','placeholder' => 'To Date','class' => 'form-control', 'tabindex' => '3')) !!}
+                                </div>
                             </div>
                         </div>
-
-                        <div class="form-group to_date {{ $errors->has('to_date') ? 'has-error' : '' }}">
-                            <strong>To Date : <span class = "required_fields">*</span></strong>
-                            <div class="input-group date">
-                                <div class="input-group-addon"><i class="fa fa-calendar"></i></div>
-                                {!! Form::text('to_date', isset($to_date) ? $to_date : null, array('id'=>'to_date','placeholder' => 'To Date','class' => 'form-control', 'tabindex' => '3')) !!}
+                    </div>
+                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                        <div class="">
+                            <div class="form-group {{ $errors->has('reason') ? 'has-error' : '' }}">
+                                <strong>Reason : <span class = "required_fields">*</span></strong>
+                                {!! Form::textarea('reason', null, array('id'=>'reason','placeholder' => 'Reason','class' => 'form-control', 'tabindex' => '4')) !!}
                             </div>
-                        </div>
-
-                        <div class="form-group {{ $errors->has('reason') ? 'has-error' : '' }}">
-                            <strong>Reason : <span class = "required_fields">*</span></strong>
-                            {!! Form::textarea('reason', null, array('id'=>'reason','placeholder' => 'Reason','class' => 'form-control', 'tabindex' => '4')) !!}
-                            @if ($errors->has('reason'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('reason') }}</strong>
-                                </span>
-                            @endif
                         </div>
                     </div>
                 </div>

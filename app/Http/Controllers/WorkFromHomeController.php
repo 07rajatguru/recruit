@@ -268,13 +268,21 @@ class WorkFromHomeController extends Controller
         $sender_name = $user_id;
         $to = $to_email;
         $cc = implode(",",$cc_users_array);
+        $module_id = $work_from_home_id;
 
         $from_date1 = date('d-m-Y',strtotime($from_date));
         $to_date1 = date('d-m-Y',strtotime($to_date));
 
-        $subject = "Work From Home Request - " . $from_date1 . " To " . $to_date1;
-        $message = "Work From Home Request - " . $from_date1 . " To " . $to_date1;
-        $module_id = $work_from_home_id;
+        if($from_date1 != $to_date1) {
+
+            $subject = "Work From Home Request - " . $from_date1 . " To " . $to_date1;
+            $message = "Work From Home Request - " . $from_date1 . " To " . $to_date1;
+        }
+        else {
+
+            $subject = "Work From Home Request - " . $from_date1;
+            $message = "Work From Home Request - " . $from_date1;
+        }
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
@@ -338,7 +346,14 @@ class WorkFromHomeController extends Controller
         $sender_name = $superadminuserid;
         $to = $user_email;
         $cc = implode(",",$cc_users_array);
-        $subject = "Work From Home Request - " . $from_date . " To " . $to_date;
+
+        if($from_date != $to_date) {
+            $subject = "Work From Home Request - " . $from_date . " To " . $to_date;
+        }
+        else {
+            $subject = "Work From Home Request - " . $from_date;
+        }
+
         $module_id = $work_from_home_id;
 
         if ($reply == 'Approved') {
