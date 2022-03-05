@@ -186,6 +186,9 @@
                                 else if(isset($value1['attendance']) && $value1['attendance'] == 'FR') {
                                     $attendance = 'FR';
                                 }
+                                else if(isset($value1['attendance']) && $value1['attendance'] == 'WFHR') {
+                                    $attendance = 'WFHR';
+                                }
                                 else {
                                     $attendance = 'N';
                                 }
@@ -206,19 +209,19 @@
                                     $half_day++; 
                                     $half_day_actual = $half_day / 2;
                                 ?>
-                                <td style="border: 5px solid #000000;background-color:#d99594;color: #FFFFFF;" title="Half Day Rejection">HD</td>
+                                <td style="border: 5px solid #000000;background-color:#d99594;color: #FFFF00;" title="Half Day Rejection">HD</td>
                             @elseif($attendance == 'WFHHD')
                                 <?php 
                                     $half_day++; 
                                     $half_day_actual = $half_day / 2;
                                 ?>
-                                <td style="border: 5px solid #000000;background-color:#d99594;color: #FFFFFF;" title="Half Day Work From Home">HD</td>
+                                <td style="border: 5px solid #000000;background-color:#d99594;color: #0000FF;" title="Half Day Work From Home">HD</td>
                             @elseif($attendance == 'PL')
                                 <?php $pl++; ?>
                                 <td style="border: 5px solid #000000;background-color:#8db3e2;" title="Privilege Leave">PL</td>
                             @elseif($attendance == 'SL')
                                 <?php $sl++; ?>
-                                <td style="border: 5px solid #000000;background-color:#7030a0;" title="Sick Leave">SL</td>
+                                <td style="border: 5px solid #000000;background-color:#c075f8;" title="Sick Leave">SL</td>
                             @elseif($attendance == 'UL')
                                 <?php $ul++; ?>
                                 <td style="border: 5px solid #000000;background-color:#fac090;" title="Unapproved Leave">UL</td>
@@ -233,16 +236,19 @@
                                 <td style="border: 5px solid #000000;background-color:#ffc000;"  title="Sunday">H</td>
                             @elseif($attendance == 'P')
                             	<?php $present++; ?>
-                                <td style="border: 5px solid #000000;background-color:#00CC00;" title="Present">P</td>
+                                <td style="border: 5px solid #000000;background-color:#d8d8d8;" title="Present">P</td>
                             @elseif($attendance == 'WFHP')
                                 <?php $present++; ?>
-                                <td style="border: 5px solid #000000;background-color:#00CC00;color: #FFFFFF;" title="Work From Home">P</td>
+                                <td style="border: 5px solid #000000;background-color:#d8d8d8;color: #0000FF;" title="Work From Home">P</td>
                             @elseif($attendance == 'A')
                             	<?php $absent++; ?>
                                 <td style="border: 5px solid #000000;background-color:#ff0000;" title="Absent">A</td>
                             @elseif($attendance == 'FR')
                                 <?php $absent++; ?>
-                                <td style="border: 5px solid #000000;background-color:#ff0000;color: #FFFFFF;" title="Full Day Rejection">A</td>
+                                <td style="border: 5px solid #000000;background-color:#ff0000;color: #FFFF00;" title="Full Day Rejection">A</td>
+                            @elseif($attendance == 'WFHR')
+                                <?php $present++; ?>
+                                <td style="border: 5px solid #000000;background-color:#ff0000;color: #0000FF;" title="Work From Home Request Reject">P</td>
                             @endif
                         @endforeach
 

@@ -104,7 +104,7 @@
                     $holiday_data = App\Holidays::getHolidayByDateAndID($added_date,$value['added_by_id'],'');
                     $leave_data = App\UserLeave::getLeaveByDateAndID($added_date,$value['added_by_id'],'1','Full Day');
                     $unapproved_leave_data = App\UserLeave::getLeaveByDateAndID($added_date,$value['added_by_id'],'2','Full Day');
-                    $wfh_data = App\WorkFromHome::getWorkFromHomeRequestByDate($added_date,$value['added_by_id']);
+                    $wfh_data = App\WorkFromHome::getWorkFromHomeRequestByDate($added_date,$value['added_by_id'],1);
                 ?>
                 <tr>
                     @if($value['loggedin_time'] != '')

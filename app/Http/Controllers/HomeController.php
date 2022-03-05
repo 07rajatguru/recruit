@@ -1462,7 +1462,9 @@ class HomeController extends Controller
                     $user_name = $value->first_name."-".$value->last_name;
                     $u_id = User::getUserIdByBothName($user_name);
 
-                    $wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id);
+                    $approved_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id,1);
+
+                    $rejected_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id,2);
 
                     if($value->status == NULL && $value->loggedin_time == NULL) {
 
@@ -1472,13 +1474,17 @@ class HomeController extends Controller
 
                         $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WPP';
                     }
-                    else if($value->status == 1 && $value->attendance == 'HD' && isset($wfh_data) && sizeof($wfh_data) > 0) {
+                    else if($value->status == 1 && $value->attendance == 'HD' && isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
 
                         $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WFHHD';
                     }
-                    else if($value->status == 1 && $value->attendance == 'F' && isset($wfh_data) && sizeof($wfh_data) > 0) {
+                    else if($value->status == 1 && $value->attendance == 'F' && isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
 
                         $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WFHP';
+                    }
+                    else if(isset($rejected_wfh_data) && sizeof($rejected_wfh_data) > 0) {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WFHR';
                     }
                     else if($value->status == 1 && $value->attendance == 'HD') {
 
@@ -1839,7 +1845,9 @@ class HomeController extends Controller
                     $user_name = $value->first_name."-".$value->last_name;
                     $u_id = User::getUserIdByBothName($user_name);
 
-                    $wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id);
+                    $approved_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id,1);
+
+                    $rejected_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id,2);
 
                     if($value->status == NULL && $value->loggedin_time == NULL) {
 
@@ -1849,13 +1857,17 @@ class HomeController extends Controller
 
                         $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WPP';
                     }
-                    else if($value->status == 1 && $value->attendance == 'HD' && isset($wfh_data) && sizeof($wfh_data) > 0) {
+                    else if($value->status == 1 && $value->attendance == 'HD' && isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
 
                         $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WFHHD';
                     }
-                    else if($value->status == 1 && $value->attendance == 'F' && isset($wfh_data) && sizeof($wfh_data) > 0) {
+                    else if($value->status == 1 && $value->attendance == 'F' && isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
 
                         $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WFHP';
+                    }
+                    else if(isset($rejected_wfh_data) && sizeof($rejected_wfh_data) > 0) {
+
+                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WFHR';
                     }
                     else if($value->status == 1 && $value->attendance == 'HD') {
 
@@ -2122,7 +2134,9 @@ class HomeController extends Controller
 
             foreach ($response as $key => $value) {
 
-                $wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$user_id);
+                $approved_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$user_id,1);
+
+                $rejected_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$user_id,2);
 
                 if($value->status == NULL && $value->loggedin_time == NULL) {
 
@@ -2132,13 +2146,17 @@ class HomeController extends Controller
 
                     $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'WPP';
                 }
-                else if($value->status == 1 && $value->attendance == 'HD' && isset($wfh_data) && sizeof($wfh_data) > 0) {
+                else if($value->status == 1 && $value->attendance == 'HD' && isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
 
                     $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'WFHHD';
                 }
-                else if($value->status == 1 && $value->attendance == 'F' && isset($wfh_data) && sizeof($wfh_data) > 0) {
+                else if($value->status == 1 && $value->attendance == 'F' && isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
 
                     $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'WFHP';
+                }
+                else if(isset($rejected_wfh_data) && sizeof($rejected_wfh_data) > 0) {
+
+                    $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'WFHR';
                 }
                 else if($value->status == 1 && $value->attendance == 'HD') {
 

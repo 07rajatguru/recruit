@@ -98,7 +98,7 @@
 
                     $added_date = date('Y-m-d',strtotime($value['added_date']));
                     $wfh_data = array();
-                    $wfh_data = App\WorkFromHome::getWorkFromHomeRequestByDate($added_date,$value['added_by_id']);
+                    $wfh_data = App\WorkFromHome::getWorkFromHomeRequestByDate($added_date,$value['added_by_id'],1);
                 ?>
                 <tr>
                     <td>{{ ++$i }}</td>

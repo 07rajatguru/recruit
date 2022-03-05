@@ -224,13 +224,17 @@
                                                 else if(isset($value1['attendance']) && $value1['attendance'] == 'FR') {
                                                     $attendance = 'FR';
                                                 }
+                                                else if(isset($value1['attendance']) && $value1['attendance'] == 'WFHR') {
+                                                    $attendance = 'WFHR';
+                                                }
                                                 else {
                                                     $attendance = 'N';
                                                 }
                                             ?>
                                             @if(isset($value1['remarks']) && $value1['remarks'] != '')
                                                 @if($attendance == 'N' || $attendance == 'O' || $attendance == 'WPP')
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added"></td>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">
+                                                    </td>
                                                 @elseif($attendance == 'HD')
                                                     <?php 
                                                         $half_day++; 
@@ -273,6 +277,9 @@
                                                 @elseif($attendance == 'FR')
                                                     <?php $absent++; ?>
                                                     <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;color: white;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">A</td>
+                                                @elseif($attendance == 'WFHR')
+                                                    <?php $present++; ?>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;color: #0000FF;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">P</td>
                                                 @endif
                                             @else
                                                 @if($attendance == 'N' || $attendance == 'O')
@@ -291,19 +298,20 @@
                                                         $half_day++;
                                                         $half_day_actual = $half_day / 2;
                                                     ?>
-                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;color: white;" title="Half Day Rejection">HD</td>
+                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;color: #FFFF00;" title="Half Day Rejection">HD
+                                                    </td>
                                                 @elseif($attendance == 'WFHHD')
                                                     <?php 
                                                         $half_day++;
                                                         $half_day_actual = $half_day / 2;
                                                     ?>
-                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;color: white;" title="Half Day Work From Home">HD</td>
+                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;color: blue;" title="Half Day Work From Home">HD</td>
                                                 @elseif($attendance == 'PL')
                                                     <?php $pl++; ?>
                                                     <td style="border: 1px solid black;background-color:#8db3e2;text-align: center;cursor: pointer;" title="Privilege Leave">PL</td>
                                                 @elseif($attendance == 'SL')
                                                     <?php $sl++; ?>
-                                                    <td style="border: 1px solid black;background-color:#7030a0;text-align: center;cursor: pointer;" title="Sick Leave">SL</td>
+                                                    <td style="border: 1px solid black;background-color:#c075f8;text-align: center;cursor: pointer;" title="Sick Leave">SL</td>
                                                 @elseif($attendance == 'UL')
                                                     <?php $ul++; ?>
                                                     <td style="border: 1px solid black;background-color:#fac090;text-align: center;cursor: pointer;" title="Unapproved Leave">UL</td>
@@ -318,17 +326,20 @@
                                                     <td style="border: 1px solid black;background-color:#ffc000;text-align: center;cursor: pointer;" title="Sunday">H</td>
                                                 @elseif($attendance == 'P')
                                                     <?php $present++; ?>
-                                                    <td style="border: 1px solid black;background-color:limegreen;text-align: center;cursor: pointer;" title="Present">
-                                                    P</td>
+                                                    <td style="border: 1px solid black;background-color:#d8d8d8;text-align: center;cursor: pointer;" title="Present">P</td>
                                                 @elseif($attendance == 'WFHP')
                                                     <?php $present++; ?>
-                                                    <td style="border: 1px solid black;background-color:limegreen;text-align: center;cursor: pointer;color: white;" title="Work From Home">P</td>
+                                                    <td style="border: 1px solid black;background-color:#d8d8d8;text-align: center;cursor: pointer;color: blue;" title="Work From Home">P</td>
                                                 @elseif($attendance == 'A')
                                                     <?php $absent++; ?>
                                                     <td style="border: 1px solid black;background-color:#ff0000;text-align: center;cursor: pointer;" title="Absent">A</td>
                                                 @elseif($attendance == 'FR')
                                                     <?php $absent++; ?>
-                                                    <td style="border: 1px solid black;background-color:#ff0000;text-align: center;cursor: pointer;color:white;" title="Full Day Rejection">A</td>
+                                                    <td style="border: 1px solid black;background-color:#ff0000;text-align: center;cursor: pointer;color:#FFFF00;" title="Full Day Rejection">A
+                                                    </td>
+                                                @elseif($attendance == 'WFHR')
+                                                    <?php $present++; ?>
+                                                    <td style="border: 1px solid black;background-color:#ff0000;text-align: center;cursor: pointer;color:#0000FF;" title="Work From Home Request Reject">P</td>
                                                 @endif
                                             @endif
                                         @endforeach
