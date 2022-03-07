@@ -2617,8 +2617,10 @@ class EveryMinute extends Command
 
                 // Get Leave details
                 $leave_details = UserLeave::getLeaveDetails($leave_id);
+                $rm_name_string = User::getUserNameByEmail($input['to']);
+                $rm_array = explode(" ", $rm_name_string);
+                $rm_name = $rm_array[0];
 
-                $rm_name = User::getUserNameByEmail($input['to']);
                 $user_name = $leave_details['uname'];
                 $from_date = $leave_details['from_date'];
                 $to_date = $leave_details['to_date'];
@@ -2662,7 +2664,10 @@ class EveryMinute extends Command
                 $from_date = $holidays->from_date;
                 $holiday_name = $holidays->title;
 
-                $rm_name = User::getUserNameByEmail($input['to']);
+                $rm_name_string = User::getUserNameByEmail($input['to']);
+                $rm_array = explode(" ", $rm_name_string);
+                $rm_name = $rm_array[0];
+                
                 $user_name = $user_info->first_name . " " . $user_info->last_name;
                 $owner_email = $user_info->email;
 
