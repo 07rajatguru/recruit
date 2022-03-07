@@ -651,71 +651,39 @@ class WorkPlanningController extends Controller
         // Get Today Day
         $day = date("l");
 
-        // Set Attendance for Farhin
-        $farhin_user_id = getenv('ALLCLIENTVISIBLEUSERID');
-
         // Set Attendance For Kazvin
         $manager_user_id = env('MANAGERUSERID');
 
-        if($user_id == $farhin_user_id) {
+        // Get Exist Records
+        $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($date,$user_id);
 
-            $attendance = 'F';
-        }
+        if($day == 'Saturday') {
+
+            if($total_projected_time < '04:30:00') {
+                $attendance = 'HD';
+            }
+            else {
+                $attendance = 'F';
+            }
+        }  
         else {
 
-            if($day == 'Saturday') {
+            if($user_id == $manager_user_id) {
 
-                if($total_projected_time < '04:30:00') {
+                if($total_projected_time < '06:00:00') {
                     $attendance = 'HD';
                 }
                 else {
                     $attendance = 'F';
                 }
             }
-            else if($day == 'Sunday') {
-
-                if($user_id == $manager_user_id) {
-
-                    if($total_projected_time < '06:00:00') {
-                        $attendance = 'HD';
-                    }
-                    else {
-                        $attendance = 'F';
-                    }
-
-                    $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($date,$user_id);
-                }
-                else {
-
-                    if($total_projected_time < '07:00:00') {
-                        $attendance = 'HD';
-                    }
-                    else {
-                        $attendance = 'F';
-                    }
-                    
-                    $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($date,$user_id);
-                }
-            }
             else {
 
-                if($user_id == $manager_user_id) {
-
-                    if($total_projected_time < '06:00:00') {
-                        $attendance = 'HD';
-                    }
-                    else {
-                        $attendance = 'F';
-                    }
+                if($total_projected_time < '07:00:00') {
+                    $attendance = 'HD';
                 }
                 else {
-
-                    if($total_projected_time < '07:00:00') {
-                        $attendance = 'HD';
-                    }
-                    else {
-                        $attendance = 'F';
-                    }
+                    $attendance = 'F';
                 }
             }
         }
@@ -751,43 +719,29 @@ class WorkPlanningController extends Controller
         if(isset($get_work_planning_res) && $get_work_planning_res != '') {
 
             $exist_wp_id = $get_work_planning_res->id;
-
             $work_planning = WorkPlanning::find($exist_wp_id);
-            $work_planning->attendance = $attendance;
-            $work_planning->status = '0';
-            $work_planning->work_type = $work_type;
-            $work_planning->loggedin_time = $get_time['login'];
-            $work_planning->loggedout_time = $get_time['logout'];
-            $work_planning->work_planning_time = date('H:i:s');
-            $work_planning->remaining_time = $remaining_time;
-            $work_planning->added_date = date('Y-m-d');
-            $work_planning->added_by = $user_id;
-            $work_planning->report_delay = $report_delay;
-            $work_planning->report_delay_content = $report_delay_content;
-            $work_planning->link = $link;
-            $work_planning->total_projected_time = $total_projected_time;
-            $work_planning->evening_status = 0;
-            $work_planning->save();
         }
         else {
-
             $work_planning = new WorkPlanning();
-            $work_planning->attendance = $attendance;
-            $work_planning->status = '0';
-            $work_planning->work_type = $work_type;
-            $work_planning->loggedin_time = $get_time['login'];
-            $work_planning->loggedout_time = $get_time['logout'];
-            $work_planning->work_planning_time = date('H:i:s');
-            $work_planning->remaining_time = $remaining_time;
-            $work_planning->added_date = date('Y-m-d');
-            $work_planning->added_by = $user_id;
-            $work_planning->report_delay = $report_delay;
-            $work_planning->report_delay_content = $report_delay_content;
-            $work_planning->link = $link;
-            $work_planning->total_projected_time = $total_projected_time;
-            $work_planning->evening_status = 0;
-            $work_planning->save();   
         }
+
+        // Update or Save Data
+
+        $work_planning->attendance = $attendance;
+        $work_planning->status = '0';
+        $work_planning->work_type = $work_type;
+        $work_planning->loggedin_time = $get_time['login'];
+        $work_planning->loggedout_time = $get_time['logout'];
+        $work_planning->work_planning_time = date('H:i:s');
+        $work_planning->remaining_time = $remaining_time;
+        $work_planning->added_date = date('Y-m-d');
+        $work_planning->added_by = $user_id;
+        $work_planning->report_delay = $report_delay;
+        $work_planning->report_delay_content = $report_delay_content;
+        $work_planning->link = $link;
+        $work_planning->total_projected_time = $total_projected_time;
+        $work_planning->evening_status = 0;
+        $work_planning->save();
 
         // Add Listing Rows
         $work_planning_id = $work_planning->id;
@@ -998,7 +952,6 @@ class WorkPlanningController extends Controller
             $loggedin_time = date("g:i A", strtotime($loggedin_time));
         }
         else {
-
             $loggedin_time = '';
         }
 
@@ -1014,7 +967,6 @@ class WorkPlanningController extends Controller
             $loggedout_time = date("g:i A", strtotime($loggedout_time));
         }
         else {
-
             $loggedout_time = '';
         }
         // Convert Work Planning Time
@@ -1029,7 +981,6 @@ class WorkPlanningController extends Controller
             $work_planning_time = $date . " - " . date("g:i A", strtotime($work_planning_time));
         }
         else {
-
             $work_planning_time = '';
         }
 
@@ -1048,18 +999,14 @@ class WorkPlanningController extends Controller
                 $work_planning_status_time = $status_date . " - " . date("g:i A", strtotime($work_planning_status_time));
             }
             else {
-
                 $work_planning_status_time = date("g:i A", strtotime($work_planning_status_time));
             }
         }
         else {
-
             $work_planning_status_time = '';
         }
         
-
         $minimum_working_hours = $work_planning_res->remaining_time;
-
         $loggedin_userid = \Auth::user()->id;
 
         return view('adminlte::workPlanning.edit',compact('id','action','work_planning_res','time_array','work_type','selected_work_type','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','minimum_working_hours','loggedin_userid'));
@@ -1077,9 +1024,6 @@ class WorkPlanningController extends Controller
         $work_type = $request->input('work_type');
         $link = Input::get('link');
 
-        // Set Attendance for Farhin
-        $farhin_user_id = getenv('ALLCLIENTVISIBLEUSERID');
-
         // Set Attendance For Kazvin
         $manager_user_id = env('MANAGERUSERID');
 
@@ -1087,17 +1031,23 @@ class WorkPlanningController extends Controller
         $work_planning = WorkPlanning::find($id);
         $added_by_id = $work_planning->added_by;
 
-        if($user_id == $farhin_user_id) {
-            $attendance = 'F';
+        // Get Today Day
+        $day = date("l");
+
+        if($day == 'Saturday') {
+
+            if($total_actual_time < '04:30:00') {
+                $attendance = 'HD';
+            }
+            else {
+                $attendance = 'F';
+            }
         }
         else {
 
-            // Get Today Day
-            $day = date("l");
+            if($user_id == $manager_user_id) {
 
-            if($day == 'Saturday') {
-
-                if($total_actual_time < '04:30:00') {
+                if($total_actual_time < '06:00:00') {
                     $attendance = 'HD';
                 }
                 else {
@@ -1106,23 +1056,11 @@ class WorkPlanningController extends Controller
             }
             else {
 
-                if($user_id == $manager_user_id) {
-
-                    if($total_actual_time < '06:00:00') {
-                        $attendance = 'HD';
-                    }
-                    else {
-                        $attendance = 'F';
-                    }
+                if($total_actual_time < '07:00:00') {
+                    $attendance = 'HD';
                 }
                 else {
-
-                    if($total_actual_time < '07:00:00') {
-                        $attendance = 'HD';
-                    }
-                    else {
-                        $attendance = 'F';
-                    }
+                    $attendance = 'F';
                 }
             }
         }
