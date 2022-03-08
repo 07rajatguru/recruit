@@ -2631,6 +2631,70 @@ class BillsController extends Controller
         return view('adminlte::bills.confirmationwiserecovery', $viewVariable);
     }
 
+    public function getConfirmationWiseRecoveryOrderColumnName($order,$admin) {
+
+        $order_column_name = '';
+
+        if($admin) {
+
+            if (isset($order) && $order >= 0) {
+
+                if ($order == 0) {
+                    $order_column_name = "bills.id";
+                }
+                else if ($order == 2) {
+                    $order_column_name = "users.name";
+                }
+                else if ($order == 3) {
+                    $order_column_name = "client_basicinfo.display_name";
+                }
+                else if ($order == 4) {
+                    $order_column_name = "candidate_basicinfo.full_name";
+                }
+                else if ($order == 5) {
+                    $order_column_name = "bills.date_of_joining";
+                }
+                else if ($order == 6) {
+                    $order_column_name = "bills.fixed_salary";
+                }
+                else if ($order == 7) {
+                    $order_column_name = "users.name";
+                }
+                else if ($order == 8) {
+                    $order_column_name = "candidate_basicinfo.mobile";
+                }
+            }
+        }
+        else {
+
+            if (isset($order) && $order >= 0) {
+
+                if ($order == 0) {
+                    $order_column_name = "bills.id";
+                }
+                else if ($order == 2) {
+                    $order_column_name = "client_basicinfo.display_name";
+                }
+                else if ($order == 3) {
+                    $order_column_name = "candidate_basicinfo.full_name";
+                }
+                else if ($order == 4) {
+                    $order_column_name = "bills.date_of_joining";
+                }
+                else if ($order == 5) {
+                    $order_column_name = "bills.fixed_salary";
+                }
+                else if ($order == 6) {
+                    $order_column_name = "users.name";
+                }
+                else if ($order == 7) {
+                    $order_column_name = "candidate_basicinfo.mobile";
+                }
+            }
+        }
+        return $order_column_name;
+    }
+
     public function getAllConfirmationWiseRecoveryListing() {
 
         $draw = $_GET['draw'];
@@ -2681,7 +2745,7 @@ class BillsController extends Controller
 
             if($all_recovery_perm && $cancel_bill_perm) {
 
-                $order_column_name = self::getForecastingOrderColumnName($order,1);
+                $order_column_name = self::getConfirmationWiseRecoveryOrderColumnName($order,1);
 
                 $bnm = Bills::getConfirmationWiseRecovery(1,0,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$confirmation,$cancel);
                 $count = Bills::getConfirmationWiseRecoveryCount(1,0,$search,$current_year,$next_year,$confirmation,$cancel);
@@ -2690,7 +2754,7 @@ class BillsController extends Controller
             }
             else if(($loggedin_recovery_perm && $cancel_bill_perm) || ($can_owner_recovery_perm && $cancel_bill_perm)) {
 
-                $order_column_name = self::getForecastingOrderColumnName($order,0);
+                $order_column_name = self::getConfirmationWiseRecoveryOrderColumnName($order,0);
 
                 $bnm = Bills::getConfirmationWiseRecovery(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$confirmation,$cancel);
                 $count = Bills::getConfirmationWiseRecoveryCount(0,$user_id,$search,$current_year,$next_year,$confirmation,$cancel);
@@ -2702,7 +2766,7 @@ class BillsController extends Controller
 
             if($all_recovery_perm) {
 
-                $order_column_name = self::getForecastingOrderColumnName($order,1);
+                $order_column_name = self::getConfirmationWiseRecoveryOrderColumnName($order,1);
 
                 $bnm = Bills::getConfirmationWiseRecovery(1,0,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$confirmation,$cancel);
                 $count = Bills::getConfirmationWiseRecoveryCount(1,0,$search,$current_year,$next_year,$confirmation,$cancel);
@@ -2711,7 +2775,7 @@ class BillsController extends Controller
             }
             else if($loggedin_recovery_perm || $can_owner_recovery_perm) {
 
-                $order_column_name = self::getForecastingOrderColumnName($order,0);
+                $order_column_name = self::getConfirmationWiseRecoveryOrderColumnName($order,0);
 
                 $bnm = Bills::getConfirmationWiseRecovery(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$confirmation,$cancel);
                 $count = Bills::getConfirmationWiseRecoveryCount(0,$user_id,$search,$current_year,$next_year,$confirmation,$cancel);

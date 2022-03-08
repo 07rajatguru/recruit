@@ -84,31 +84,31 @@
             var confirmation = $("#confirmation").val();
             var cancel = $("#cancel").val();
 
-            var table = jQuery('#bill_table').DataTable({
+            if(numCols == 16) {
 
-                'bProcessing' : true,
-                'serverSide' : true,
-                'order' : [5,'desc'],
-                'columnDefs': [ {orderable: false, targets: [1]}],
-                "ajax" : {
-                    'url' : '/recovery/all',
-                    'type' : 'get',
-                    "data": {'year':year,'confirmation':confirmation,'cancel':cancel},
-                    error: function() {
-                    }
-                },
-                initComplete:function( settings, json) {
+                var table = jQuery('#bill_table').DataTable({
 
-                    var count = json.recordsTotal;
-                    $("#count").html("(" + count + ")");
-                },
-                'responsive': true,
-                'pageLength': 25,
-                'pagingType': "full_numbers",
-                'stateSave' : true,
-                "fnRowCallback": function( Row, Data ) {
+                    'bProcessing' : true,
+                    'serverSide' : true,
+                    'order' : [5,'desc'],
+                    'columnDefs': [ {orderable: false, targets: [1]}],
+                    "ajax" : {
+                        'url' : '/recovery/all',
+                        'type' : 'get',
+                        "data": {'year':year,'confirmation':confirmation,'cancel':cancel},
+                        error: function() {
+                        }
+                    },
+                    initComplete:function( settings, json) {
 
-                    if(numCols == 16) {
+                        var count = json.recordsTotal;
+                        $("#count").html("(" + count + ")");
+                    },
+                    'responsive': true,
+                    'pageLength': 25,
+                    'pagingType': "full_numbers",
+                    'stateSave' : true,
+                    "fnRowCallback": function( Row, Data ) {
 
                         if ( Data[16] == "1" ) {
                             $('td:eq(4)', Row).css('background-color', '#00B0F0');
@@ -123,7 +123,33 @@
                             $('td:eq(4)', Row).css('background-color', '#32CD32');
                         }
                     }
-                    else {
+                });
+            }
+            else {
+
+                var table = jQuery('#bill_table').DataTable({
+
+                    'bProcessing' : true,
+                    'serverSide' : true,
+                    'order' : [4,'desc'],
+                    'columnDefs': [ {orderable: false, targets: [1]}],
+                    "ajax" : {
+                        'url' : '/recovery/all',
+                        'type' : 'get',
+                        "data": {'year':year,'confirmation':confirmation,'cancel':cancel},
+                        error: function() {
+                        }
+                    },
+                    initComplete:function( settings, json) {
+
+                        var count = json.recordsTotal;
+                        $("#count").html("(" + count + ")");
+                    },
+                    'responsive': true,
+                    'pageLength': 25,
+                    'pagingType': "full_numbers",
+                    'stateSave' : true,
+                    "fnRowCallback": function( Row, Data ) {
 
                         if ( Data[13] == "1" ) {
                             $('td:eq(3)', Row).css('background-color', '#00B0F0');
@@ -138,8 +164,8 @@
                             $('td:eq(3)', Row).css('background-color', '#32CD32');
                         }
                     }
-                }
-            });
+                });
+            }
         });
     </script>
 @endsection
