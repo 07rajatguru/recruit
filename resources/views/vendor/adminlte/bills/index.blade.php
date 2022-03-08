@@ -202,11 +202,11 @@
                       $("#pymnt_rcv").html("(" + 0 + ")");
                     }
 
-                    $("#no_action_href").attr("href", '/recovery/0/'+year);
-                    $("#jc_sent_href").attr("href", '/recovery/1/'+year);
-                    $("#got_con_href").attr("href", '/recovery/2/'+year);
-                    $("#invoice_gen_href").attr("href", '/recovery/3/'+year);
-                    $("#pymnt_rcv_href").attr("href", '/recovery/4/'+year);
+                    $("#no_action_href").attr("href", '/recovery/0/0/'+year);
+                    $("#jc_sent_href").attr("href", '/recovery/0/1/'+year);
+                    $("#got_con_href").attr("href", '/recovery/0/2/'+year);
+                    $("#invoice_gen_href").attr("href", '/recovery/0/3/'+year);
+                    $("#pymnt_rcv_href").attr("href", '/recovery/0/4/'+year);
                 },
                 responsive: true,
                 "pageLength": 25,
@@ -309,11 +309,11 @@
                       $("#pymnt_rcv").html("(" + 0 + ")");
                     }
 
-                    $("#no_action_href").attr("href", '/recovery/cancel/0/'+year);
-                    $("#jc_sent_href").attr("href", '/recovery/cancel/1/'+year);
-                    $("#got_con_href").attr("href", '/recovery/cancel/2/'+year);
-                    $("#invoice_gen_href").attr("href", '/recovery/cancel/3/'+year);
-                    $("#pymnt_rcv_href").attr("href", '/recovery/cancel/4/'+year);
+                    $("#no_action_href").attr("href", '/recovery/1/0/'+year);
+                    $("#jc_sent_href").attr("href", '/recovery/1/1/'+year);
+                    $("#got_con_href").attr("href", '/recovery/1/2/'+year);
+                    $("#invoice_gen_href").attr("href", '/recovery/1/3/'+year);
+                    $("#pymnt_rcv_href").attr("href", '/recovery/1/4/'+year);
                 },
                 responsive: true,
                 "pageLength": 100,
@@ -468,11 +468,11 @@
                   $("#pymnt_rcv").html("(" + 0 + ")");
                 }
 
-                $("#no_action_href").attr("href", '/recovery/0/'+year);
-                $("#jc_sent_href").attr("href", '/recovery/1/'+year);
-                $("#got_con_href").attr("href", '/recovery/2/'+year);
-                $("#invoice_gen_href").attr("href", '/recovery/3/'+year);
-                $("#pymnt_rcv_href").attr("href", '/recovery/4/'+year);
+                $("#no_action_href").attr("href", '/recovery/0/0/'+year);
+                $("#jc_sent_href").attr("href", '/recovery/0/1/'+year);
+                $("#got_con_href").attr("href", '/recovery/0/2/'+year);
+                $("#invoice_gen_href").attr("href", '/recovery/0/3/'+year);
+                $("#pymnt_rcv_href").attr("href", '/recovery/0/4/'+year);
 
               },
               responsive: true,
@@ -579,11 +579,11 @@
                     $("#pymnt_rcv").html("(" + 0 + ")");
                   }
 
-                  $("#no_action_href").attr("href", '/recovery/cancel/0/'+year);
-                  $("#jc_sent_href").attr("href", '/recovery/cancel/1/'+year);
-                  $("#got_con_href").attr("href", '/recovery/cancel/2/'+year);
-                  $("#invoice_gen_href").attr("href", '/recovery/cancel/3/'+year);
-                  $("#pymnt_rcv_href").attr("href", '/recovery/cancel/4/'+year);
+                  $("#no_action_href").attr("href", '/recovery/1/0/'+year);
+                  $("#jc_sent_href").attr("href", '/recovery/1/1/'+year);
+                  $("#got_con_href").attr("href", '/recovery/1/2/'+year);
+                  $("#invoice_gen_href").attr("href", '/recovery/1/3/'+year);
+                  $("#pymnt_rcv_href").attr("href", '/recovery/1/4/'+year);
                 },
 
                 responsive: true,

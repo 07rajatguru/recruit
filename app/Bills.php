@@ -1810,7 +1810,7 @@ class Bills extends Model
         return $person_data;
     }
 
-    public static function getConfirmationWiseRecovery($all=0,$user_id=0,$confirmation,$current_year=NULL,$next_year=NULL,$cancel_bill) {
+    public static function getConfirmationWiseRecovery($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=0,$type='asc',$current_year=NULL,$next_year=NULL,$confirmation,$cancel_bill) {
 
         $bills_query = Bills::query();
         $bills_query = $bills_query->join('job_openings','job_openings.id','=','bills.job_id');
@@ -1828,9 +1828,63 @@ class Bills extends Model
             });
         }
 
-        $bills_query = $bills_query->where('bills.status','=','1');
-        $bills_query = $bills_query->where('bills.joining_confirmation_mail','=',$confirmation);
-        $bills_query = $bills_query->where('cancel_bill','=',$cancel_bill);
+        if (isset($limit) && $limit > 0) {
+            $bills_query = $bills_query->limit($limit);
+        }
+        if (isset($offset) && $offset > 0) {
+            $bills_query = $bills_query->offset($offset);
+        }
+        if (isset($order) && $order !='') {
+            $bills_query = $bills_query->orderBy($order,$type);
+        }
+
+        if (isset($search) && $search != '') {
+
+            $bills_query = $bills_query->where(function($bills_query) use ($search) {
+
+                $date_search = false;
+                $date_array = explode("-",$search);
+
+                if(isset($date_array) && sizeof($date_array) > 0) {
+
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)) {
+
+                        $month = date( 'm', $stamp );
+                        $day   = date( 'd', $stamp );
+                        $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)) {
+                            $date_search = true;
+                        }
+                    }
+                }
+
+                $bills_query = $bills_query->where('users.name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('client_basicinfo.display_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
+                $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+                $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
+                $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
+                
+                if(($search == 'Remote') || ($search == 'remote')) {
+
+                    $bills_query = $bills_query->orwhere('job_openings.remote_working','=',"1");
+                }
+
+                if($date_search) {
+
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $bills_query = $bills_query->orwhere('bills.date_of_joining','>=',"$from_date");
+                    $bills_query = $bills_query->Where('bills.date_of_joining','<=',"$to_date");
+                }
+            });
+        }
 
         // Get data by financial year
         if (isset($current_year) && $current_year != NULL) {
@@ -1840,8 +1894,11 @@ class Bills extends Model
             $bills_query = $bills_query->where('bills.date_of_joining','<=',$next_year);
         }
 
-        $bills_query = $bills_query->groupBy('bills.id');
+        $bills_query = $bills_query->where('bills.status','=','1');
+        $bills_query = $bills_query->where('bills.joining_confirmation_mail','=',$confirmation);
+        $bills_query = $bills_query->where('cancel_bill','=',$cancel_bill);
 
+        $bills_query = $bills_query->groupBy('bills.id');
         $bills_res = $bills_query->get();
 
         $bills = array();
@@ -1955,5 +2012,90 @@ class Bills extends Model
             $i++;
         }
         return $bills;
+    }
+
+    public static function getConfirmationWiseRecoveryCount($all=0,$user_id,$search=0,$current_year=NULL,$next_year=NULL,$confirmation,$cancel_bill) {
+        
+        $bills_query = Bills::query();
+        $bills_query = $bills_query->join('job_openings','job_openings.id','=','bills.job_id');
+        $bills_query = $bills_query->leftjoin('bills_efforts','bills_efforts.bill_id','=','bills.id');
+        $bills_query = $bills_query->leftjoin('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $bills_query = $bills_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
+        $bills_query = $bills_query->join('users','users.id','bills.uploaded_by');
+        $bills_query = $bills_query->select('bills.*','users.name as name','job_openings.posting_title','client_basicinfo.display_name','job_openings.city','candidate_basicinfo.full_name','candidate_basicinfo.lname','client_basicinfo.id as client_id','job_openings.remote_working as remote_working','client_basicinfo.account_manager_id');
+
+        if($all == 0) {
+            $bills_query = $bills_query->where(function($bills_query) use ($user_id) {
+
+                $bills_query = $bills_query->where('bills_efforts.employee_name',$user_id);
+                $bills_query = $bills_query->orwhere('client_basicinfo.account_manager_id',$user_id);
+            });
+        }
+
+        if (isset($search) && $search != '') {
+
+            $bills_query = $bills_query->where(function($bills_query) use ($search) {
+
+                $date_search = false;
+                $date_array = explode("-",$search);
+
+                if(isset($date_array) && sizeof($date_array) > 0) {
+
+                    $stamp = strtotime($search);
+                    if (is_numeric($stamp)) {
+
+                        $month = date( 'm', $stamp );
+                        $day   = date( 'd', $stamp );
+                        $year  = date( 'Y', $stamp );
+
+                        if(checkdate($month, $day, $year)) {
+                            $date_search = true;
+                        }
+                    }
+                }
+
+                $bills_query = $bills_query->where('users.name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('client_basicinfo.display_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('candidate_basicinfo.full_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('bills.fixed_salary','like',"%$search%");
+                $bills_query = $bills_query->orwhere('candidate_basicinfo.mobile','like',"%$search%");
+                $bills_query = $bills_query->orwhere('bills.client_name','like',"%$search%");
+                $bills_query = $bills_query->orwhere('job_openings.posting_title','like',"%$search%");
+                $bills_query = $bills_query->orwhere('job_openings.city','like',"%$search%");
+                
+                if(($search == 'Remote') || ($search == 'remote')) {
+
+                    $bills_query = $bills_query->orwhere('job_openings.remote_working','=',"1");
+                }
+
+                if($date_search) {
+                    
+                    $dateClass = new Date();
+                    $search_string = $dateClass->changeDMYtoYMD($search);
+                    $from_date = date("Y-m-d 00:00:00",strtotime($search_string));
+                    $to_date = date("Y-m-d 23:59:59",strtotime($search_string));
+                    $bills_query = $bills_query->orwhere('bills.date_of_joining','>=',"$from_date");
+                    $bills_query = $bills_query->Where('bills.date_of_joining','<=',"$to_date");
+                }
+            });
+        }
+
+        // Get data by financial year
+        if (isset($current_year) && $current_year != NULL) {
+            $bills_query = $bills_query->where('bills.date_of_joining','>=',$current_year);
+        }
+        if (isset($next_year) && $next_year != NULL) {
+            $bills_query = $bills_query->where('bills.date_of_joining','<=',$next_year);
+        }
+
+        $bills_query = $bills_query->where('bills.status','=','1');
+        $bills_query = $bills_query->where('bills.joining_confirmation_mail','=',$confirmation);
+        $bills_query = $bills_query->where('cancel_bill','=',$cancel_bill);
+
+        $bills_query = $bills_query->groupBy('bills.id');
+        $bills_query = $bills_query->get();
+        $bills_count = $bills_query->count();
+
+        return $bills_count;
     }
 }

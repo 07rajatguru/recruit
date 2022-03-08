@@ -2101,16 +2101,16 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:forecasting-edit']
     ]);
 
-    Route::get('recovery/{confirmation}/{year}',[
+    Route::get('recovery/{cancel}/{confirmation}/{year}',[
         'as' => 'recovery.confirmation',
         'uses' => 'BillsController@confirmationWiseRecoveryListing',
-        'middleware' => ['permission:display-recovery|display-recovery-by-loggedin-user|display-recovery-by-candidate-owner']
+        'middleware' => ['permission:display-recovery|display-recovery-by-loggedin-user|display-recovery-by-candidate-owner|cancel-bill']
     ]);
 
-    Route::get('recovery/cancel/{confirmation}/{year}',[
-        'as' => 'cancelrecovery.confirmation',
-        'uses' => 'BillsController@confirmationWiseCancelRecoveryListing',
-        'middleware' => ['permission:cancel-bill']
+    Route::any('recovery/all', [
+        'as' => 'recovery.all',
+        'uses' => 'BillsController@getAllConfirmationWiseRecoveryListing',
+        'middleware' => ['permission:display-recovery|display-recovery-by-loggedin-user|display-recovery-by-candidate-owner|cancel-bill']
     ]);
 
     // for recovery joining confirmation mail route

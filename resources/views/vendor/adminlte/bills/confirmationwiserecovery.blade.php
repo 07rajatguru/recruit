@@ -66,129 +66,80 @@
                 @endpermission
             </tr>
         </thead>
-        <?php $i=0; ?>
-        <tbody>
-            @foreach($recovery_list as $key=>$value)
-                <tr>
-                    <td>{{ ++$i }}</td>
-                    <td>
-                        @if($access == 'true' || ($user_id == $value['uploaded_by']) || ($user_id == $value['account_manager_id']))
-                            
-                            <a class="fa fa-edit" title="Edit" href="{{route('forecasting.edit',$value['id']) }}"></a>
-
-                            @permission(('cancel-bill'))
-                                @if($value['cancel_bill'] == 0)
-                                    @include('adminlte::partials.cancelbill', ['data' => $value,'name' => 'forecasting','display_name'=>'Bill','year' => $year])
-                                @endif
-                            @endpermission
-
-                            @permission(('recovery-delete'))
-                                @include('adminlte::partials.deleteModalNew', ['data' => $value,'name' => 'forecasting','display_name'=>'Bill','year' => $year])
-                            @endpermission
-
-                            @permission(('send-joining-confirmation'))
-
-                                @if($value['job_confirmation'] == 0 && $value['cancel_bill'] == 0)
-
-                                    @include('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.sendconfirmationmail','class' => 'fa fa-send', 'title' => 'Send Confirmation Mail', 'model_title' => 'Send Confirmation Mail', 'model_body' => 'want to Send Confirmation Mail?','year' => $year])
-
-                                @endif
-
-                                @if($value['job_confirmation'] == 1 && $value['cancel_bill'] == 0)
-
-                                    @include('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.gotconfirmation','class' => 'fa fa-check-circle', 'title' => 'Got Confirmation', 'model_title' => 'Got Confirmation Mail', 'model_body' => 'you Got Confirmation Mail?','year' => $year])
-                                    
-                                @endif
-
-                                @if($value['job_confirmation'] == 2 && $value['cancel_bill'] == 0)
-
-                                    @include('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.invoicegenerate','class' => 'fa fa-file', 'title' => 'Generate Invoice', 'model_title' => 'Generate Invoice', 'model_body' => 'want to Generate Invoice?','year' => $year])
-                                    
-                                @endif
-
-                                @if($value['job_confirmation'] == 3 && $value['cancel_bill'] == 0)
-
-                                    @include('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.paymentreceived','class' => 'fa fa-money', 'title' => 'Payment Received', 'model_title' => 'Payment Received', 'model_body' => 'received Payment?','year' => $year])
-                                    
-                                @endif
-
-                                @if(isset($value['excel_invoice_url']) && $value['excel_invoice_url'] != NULL)
-                                    <a class="fa fa-download" title="Download Invoice" href="{{route('invoice.excel',$value['id']) }}"></a>
-                                @endif
-                            @endpermission
-
-                            @permission(('cancel-bill'))
-                                @if($value['cancel_bill'] == 1)
-                                    @include('adminlte::partials.relivebill', ['data' => $value,'name' => 'recovery','display_name'=>'Recovery'])
-                                @endif
-                            @endpermission
-                        @endif
-                    </td>
-
-                    @if($access == 'true')
-                        <td>{{ $value['user_name'] }}</td>
-                    @endif
-
-                    <td>{{ $value['company_name'] }},{{ $value['city'] }}</td>
-
-                    @if($value['job_confirmation'] == 0)
-                        <td style="background-color:white;">{{ $value['cname'] }}</td>
-
-                    @elseif($value['job_confirmation'] == 1)
-                        <td style="background-color:#00B0F0;">{{ $value['cname'] }}</td>
-
-                    @elseif($value['job_confirmation'] == 2)
-                        <td style="background-color:#FFA500;">{{ $value['cname'] }}</td>
-
-                    @elseif($value['job_confirmation'] == 3)
-                        <td style="background-color:#FFC0CB;">{{ $value['cname'] }}</td>
-
-                    @elseif($value['job_confirmation'] == 4)
-                        <td style="background-color:#32CD32;">{{ $value['cname'] }}</td>
-                    @endif
-
-                    <td>{{ $value['date_of_joining'] }}</td>
-                    <td>{{ $value['fixed_salary'] }}</td>
-                    <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['efforts'] }}</td>
-                    <td>{{ $value['candidate_contact_number'] }}</td>
-                    <td>{{ $value['job_location'] }}</td>
-
-                    @permission(('display-recovery'))
-                        <td>{{ $value['percentage_charged'] }}</td>
-                    @endpermission
-
-                    <td>{{ $value['source'] }}</td>
-                    <td>{{ $value['client_name'] }}</td>
-                    <td>{{ $value['client_contact_number'] }}</td>
-                    <td>{{ $value['client_email_id'] }}</td>
-
-                    @permission(('display-recovery'))
-                        <td>{{ $value['lead_efforts'] }}</td>
-                    @endpermission
-                </tr>
-            @endforeach
-        </tbody>
+        <tbody></tbody>
     </table>
+
+    <input type="hidden" name="year" id="year" value="{{ $year }}">
+    <input type="hidden" name="confirmation" id="confirmation" value="{{ $confirmation }}">
+    <input type="hidden" name="cancel" id="cancel" value="{{ $cancel }}">
 @stop
 
 @section('customscripts')
     <script type="text/javascript">
+
         $(document).ready(function() {
+
+            var numCols = $('#bill_table thead th').length;
+            var year = $("#year").val();
+            var confirmation = $("#confirmation").val();
+            var cancel = $("#cancel").val();
 
             var table = jQuery('#bill_table').DataTable({
 
-                responsive: true,
-                "order" : [5,'desc'],
-                "columnDefs": [ {orderable: false, targets: [1]}],
-                "pageLength": 25,
-                stateSave: true
-            });
+                'bProcessing' : true,
+                'serverSide' : true,
+                'order' : [5,'desc'],
+                'columnDefs': [ {orderable: false, targets: [1]}],
+                "ajax" : {
+                    'url' : '/recovery/all',
+                    'type' : 'get',
+                    "data": {'year':year,'confirmation':confirmation,'cancel':cancel},
+                    error: function() {
+                    }
+                },
+                initComplete:function( settings, json) {
 
-            if ( ! table.data().any() ) {
-            }
-            else {
-                new jQuery.fn.dataTable.FixedHeader( table );
-            }
+                    var count = json.recordsTotal;
+                    $("#count").html("(" + count + ")");
+                },
+                'responsive': true,
+                'pageLength': 25,
+                'pagingType': "full_numbers",
+                'stateSave' : true,
+                "fnRowCallback": function( Row, Data ) {
+
+                    if(numCols == 16) {
+
+                        if ( Data[16] == "1" ) {
+                            $('td:eq(4)', Row).css('background-color', '#00B0F0');
+                        }
+                        else if ( Data[16] == "2" ) {
+                            $('td:eq(4)', Row).css('background-color', '#FFA500');
+                        }
+                        else if ( Data[16] == "3" ) {
+                            $('td:eq(4)', Row).css('background-color', '#FFC0CB');
+                        }
+                        else if ( Data[16] == "4" ) {
+                            $('td:eq(4)', Row).css('background-color', '#32CD32');
+                        }
+                    }
+                    else {
+
+                        if ( Data[13] == "1" ) {
+                            $('td:eq(3)', Row).css('background-color', '#00B0F0');
+                        }
+                        else if ( Data[13] == "2" ) {
+                            $('td:eq(3)', Row).css('background-color', '#FFA500');
+                        }
+                        else if ( Data[13] == "3" ) {
+                            $('td:eq(3)', Row).css('background-color', '#FFC0CB');
+                        }
+                        else if ( Data[13] == "4" ) {
+                            $('td:eq(3)', Row).css('background-color', '#32CD32');
+                        }
+                    }
+                }
+            });
         });
     </script>
 @endsection

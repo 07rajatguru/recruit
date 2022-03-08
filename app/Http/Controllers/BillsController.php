@@ -2565,62 +2565,7 @@ class BillsController extends Controller
     }
 
     // Display Recovery listing by confirmation
-    public function confirmationWiseRecoveryListing($confirmation,$year) {
-
-        $user = \Auth::user();
-        $user_id = $user->id;
-
-        $all_recovery_perm = $user->can('display-recovery');
-        $loggedin_recovery_perm = $user->can('display-recovery-by-loggedin-user');
-        $can_owner_recovery_perm = $user->can('display-recovery-by-candidate-owner');
-
-        if (isset($year) && $year != 0) {
-
-            $year_data = explode(", ", $year);
-            $year1 = $year_data[0];
-            $year2 = $year_data[1];
-            $current_year = date('Y-m-d',strtotime("first day of $year1"));
-            $next_year = date('Y-m-d',strtotime("last day of $year2"));
-
-            $financial_year = date('F-Y',strtotime("$current_year")) . " to " . date('F-Y',strtotime("$next_year"));
-        }
-        else {
-
-            $year = NULL;
-            $current_year = NULL;
-            $next_year = NULL;
-
-            $financial_year = '';
-        }
-
-        $cancel = 0;
-
-        if($all_recovery_perm) {
-
-            $response = Bills::getConfirmationWiseRecovery(1,0,$confirmation,$current_year,$next_year,$cancel);
-            $access = true;
-        }
-        else if ($loggedin_recovery_perm || $can_owner_recovery_perm) {
-
-            $response = Bills::getConfirmationWiseRecovery(0,$user_id,$confirmation,$current_year,$next_year,$cancel);
-            $access = false;
-        }
-
-        $count = sizeof($response);
-
-        $viewVariable = array();
-        $viewVariable['recovery_list'] = $response;
-        $viewVariable['count'] = $count;
-        $viewVariable['access'] = $access;
-        $viewVariable['financial_year'] = $financial_year;
-        $viewVariable['year'] = $year;
-        $viewVariable['user_id'] = $user_id;
-
-        return view('adminlte::bills.confirmationwiserecovery', $viewVariable);
-    }
-
-    // Display Cancel Recovery listing by confirmation
-    public function confirmationWiseCancelRecoveryListing($confirmation,$year) {
+    public function confirmationWiseRecoveryListing($cancel,$confirmation,$year) {
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -2645,33 +2590,246 @@ class BillsController extends Controller
             $year = NULL;
             $current_year = NULL;
             $next_year = NULL;
-
             $financial_year = '';
         }
 
-        $cancel = 1;
+        if($cancel == 1) {
 
-        if($all_recovery_perm && $cancel_bill_perm) {
+            if($all_recovery_perm && $cancel_bill_perm) {
 
-            $response = Bills::getConfirmationWiseRecovery(1,0,$confirmation,$current_year,$next_year,$cancel);
-            $access = true;
+                $count = Bills::getConfirmationWiseRecoveryCount(1,0,'',$current_year,$next_year,$confirmation,$cancel);
+                $access = true;
+            }
+            else if(($loggedin_recovery_perm && $cancel_bill_perm) || ($can_owner_recovery_perm && $cancel_bill_perm)) {
+
+                $count = Bills::getConfirmationWiseRecoveryCount(0,$user_id,'',$current_year,$next_year,$confirmation,$cancel);
+                $access = false;
+            }
         }
-        else if(($loggedin_recovery_perm && $cancel_bill_perm) || ($can_owner_recovery_perm && $cancel_bill_perm)) {
+        else {
 
-            $response = Bills::getConfirmationWiseRecovery(0,$user_id,$confirmation,$current_year,$next_year,$cancel);
-            $access = false;
+            if($all_recovery_perm) {
+
+                $count = Bills::getConfirmationWiseRecoveryCount(1,0,'',$current_year,$next_year,$confirmation,$cancel);
+                $access = true;
+            }
+            else if ($loggedin_recovery_perm || $can_owner_recovery_perm) {
+
+                $count = Bills::getConfirmationWiseRecoveryCount(0,$user_id,'',$current_year,$next_year,$confirmation,$cancel);
+                $access = false;
+            }
         }
-
-        $count = sizeof($response);
 
         $viewVariable = array();
-        $viewVariable['recovery_list'] = $response;
         $viewVariable['count'] = $count;
         $viewVariable['access'] = $access;
         $viewVariable['financial_year'] = $financial_year;
         $viewVariable['year'] = $year;
-        $viewVariable['user_id'] = $user_id;
+        $viewVariable['confirmation'] = $confirmation;
+        $viewVariable['cancel'] = $cancel;
 
         return view('adminlte::bills.confirmationwiserecovery', $viewVariable);
+    }
+
+    public function getAllConfirmationWiseRecoveryListing() {
+
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+        $confirmation = $_GET['confirmation'];
+        $cancel = $_GET['cancel'];
+
+        // Year Data
+        if (isset($_GET['year']) && $_GET['year'] != '') {
+            
+            $year = $_GET['year'];
+
+            if (isset($year) && $year != 0) {
+
+                $year_data = explode(", ", $year);
+                $year1 = $year_data[0];
+                $year2 = $year_data[1];
+                $current_year = date('Y-m-d',strtotime("first day of $year1"));
+                $next_year = date('Y-m-d',strtotime("last day of $year2"));
+            }
+            else {
+                $year = NULL;
+                $current_year = NULL;
+                $next_year = NULL;    
+            }
+        }
+        else {
+            $year = NULL;
+            $current_year = NULL;
+            $next_year = NULL;
+        }
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        $all_recovery_perm = $user->can('display-recovery');
+        $loggedin_recovery_perm = $user->can('display-recovery-by-loggedin-user');
+        $can_owner_recovery_perm = $user->can('display-recovery-by-candidate-owner');
+        $recovery_delete_perm = $user->can('recovery-delete');
+        $cancel_bill_perm = $user->can('cancel-bill');
+        $joining_confirmation_perm = $user->can('send-joining-confirmation');
+
+        if($cancel == 1) {
+
+            if($all_recovery_perm && $cancel_bill_perm) {
+
+                $order_column_name = self::getForecastingOrderColumnName($order,1);
+
+                $bnm = Bills::getConfirmationWiseRecovery(1,0,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$confirmation,$cancel);
+                $count = Bills::getConfirmationWiseRecoveryCount(1,0,$search,$current_year,$next_year,$confirmation,$cancel);
+
+                $access = true;
+            }
+            else if(($loggedin_recovery_perm && $cancel_bill_perm) || ($can_owner_recovery_perm && $cancel_bill_perm)) {
+
+                $order_column_name = self::getForecastingOrderColumnName($order,0);
+
+                $bnm = Bills::getConfirmationWiseRecovery(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$confirmation,$cancel);
+                $count = Bills::getConfirmationWiseRecoveryCount(0,$user_id,$search,$current_year,$next_year,$confirmation,$cancel);
+
+                $access = false;
+            }
+        }
+        else {
+
+            if($all_recovery_perm) {
+
+                $order_column_name = self::getForecastingOrderColumnName($order,1);
+
+                $bnm = Bills::getConfirmationWiseRecovery(1,0,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$confirmation,$cancel);
+                $count = Bills::getConfirmationWiseRecoveryCount(1,0,$search,$current_year,$next_year,$confirmation,$cancel);
+
+                $access = true;
+            }
+            else if($loggedin_recovery_perm || $can_owner_recovery_perm) {
+
+                $order_column_name = self::getForecastingOrderColumnName($order,0);
+
+                $bnm = Bills::getConfirmationWiseRecovery(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$confirmation,$cancel);
+                $count = Bills::getConfirmationWiseRecoveryCount(0,$user_id,$search,$current_year,$next_year,$confirmation,$cancel);
+
+                $access = false;
+            }
+        }
+
+        $recovery = array();
+        $i = 0;$j = 0;
+
+        foreach ($bnm as $key => $value) {
+
+            $action = '';
+
+            if($access || ($user_id == $value['uploaded_by']) || ($user_id == $value['account_manager_id'])) {
+
+                $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
+
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
+
+                if($cancel_bill_perm) {
+
+                    if($value['cancel_bill'] == 0) {
+
+                        $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill','year' => $year]);
+                        $cancel = $cancel_view->render();
+                        $action .= $cancel;
+                    }
+                }
+
+                if($recovery_delete_perm) {
+
+                    $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'forecasting','display_name'=>'Bill','year' => $year]);
+                    $delete = $delete_view->render();
+                    $action .= $delete;
+                }
+                    
+                if($joining_confirmation_perm) {
+
+                    if($value['job_confirmation'] == 0 && $value['cancel_bill'] == 0) {
+                            
+                        $job_confirmation = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.sendconfirmationmail', 'class' => 'fa fa-send', 'title' => 'Send Confirmation Mail', 'model_title' => 'Send Confirmation Mail', 'model_body' => 'want to Send Confirmation Mail?','year' => $year]);
+                        $job_con = $job_confirmation->render();
+                        $action .= $job_con;
+                    }
+                    else if($value['job_confirmation'] == 1 && $value['cancel_bill'] == 0) {
+                            
+                        $got_confirmation = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.gotconfirmation', 'class' => 'fa fa-check-circle', 'title' => 'Got Confirmation', 'model_title' => 'Got Confirmation Mail', 'model_body' => 'you Got Confirmation Mail?','year' => $year]);
+                        $got_con = $got_confirmation->render();
+                        $action .= $got_con;
+                    }
+                    else if($value['job_confirmation'] == 2 && $value['cancel_bill'] == 0) {
+                            
+                        $invoice_generate = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.invoicegenerate', 'class' => 'fa fa-file', 'title' => 'Generate Invoice', 'model_title' => 'Generate Invoice', 'model_body' => 'want to Generate Invoice?','year' => $year]);
+                        $invoice = $invoice_generate->render();
+                        $action .= $invoice;
+                    }
+                    else if($value['job_confirmation'] == 3 && $value['cancel_bill'] == 0) {
+                        
+                        $payment_received = \View::make('adminlte::partials.sendmail', ['data' => $value, 'name' => 'recovery.paymentreceived', 'class' => 'fa fa-money', 'title' => 'Payment Received', 'model_title' => 'Payment Received', 'model_body' => 'received Payment?','year' => $year]);
+                        $payment = $payment_received->render();
+                        $action .= $payment;
+                    }
+
+                    if(isset($value['excel_invoice_url']) && $value['excel_invoice_url'] != NULL){
+
+                        $action .= '<a title="Download Invoice" href="'. route('invoice.excel',$value['id']) .'" style="margin:3px;"><i  class="fa fa-download"></i></a>';
+                    }
+                    /*if(isset($value['pdf_invoice_url']) && $value['pdf_invoice_url'] != NULL){
+
+                           $action .= '<a title="Download PDF" href="'. route('invoice.pdf',$value['id']) .'" style="margin:3px;"><i class="fa fa-file-pdf-o"></i></a>';
+                    }*/
+                }
+                
+                if($cancel_bill_perm) {
+
+                    if($value['cancel_bill'] == 1) {
+
+                        $relive_view = \View::make('adminlte::partials.relivebill', ['data' => $value, 'name' => 'recovery','display_name'=>'Recovery']);
+                        $relive = $relive_view->render();
+                        $action .= $relive;
+                    }
+                }
+            }
+
+            if($access == 'true') {
+                $user_name = '<a style="color:black; text-decoration:none;">'.$value['user_name'].'</a>';
+            }
+
+            $job_opening = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'-'.$value['posting_title'].','.$value['city'].'</a>';
+
+            $joining_date = '<a style="color:black; text-decoration:none; data-th=Lastrun data-order='.$value['date_of_joining_ts'].'">'.$value['date_of_joining'].'</a>';
+
+            if($all_recovery_perm) {
+
+                $percentage_charged = '<a style="color:black; text-decoration:none;">'.$value['percentage_charged'].'</a>';
+                $lead_efforts = '<a style="color:black; text-decoration:none;">'.$value['lead_efforts'].'</a>';
+
+                $data = array(++$j,$action,$user_name,$job_opening,$value['cname'],$joining_date,$value['fixed_salary'],$value['efforts'],$value['candidate_contact_number'],$value['job_location'],$percentage_charged,$value['source'],$value['client_name'],$value['client_contact_number'],$value['client_email_id'],$lead_efforts,$value['job_confirmation']);
+            }
+            else {
+
+                $data = array(++$j,$action,$job_opening,$value['cname'],$joining_date,$value['fixed_salary'],$value['efforts'],$value['candidate_contact_number'],$value['job_location'],$value['source'],$value['client_name'],$value['client_contact_number'],$value['client_email_id'],$value['job_confirmation']);
+            }
+
+            $recovery[$i] = $data;
+            $i++;
+        }
+        
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $recovery,
+        );
+
+        echo json_encode($json_data);exit;
     }
 }
