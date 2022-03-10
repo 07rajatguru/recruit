@@ -124,6 +124,7 @@
                                 <?php
 
                                     $holiday_data = array();
+                                    $half_day_leave_data = array();
                                     $leave_data = array();
                                     $unapproved_leave_data = array();
                                     $wfh_data = array();
@@ -131,8 +132,10 @@
                                     $added_date = date('Y-m-d',strtotime($v['added_date']));
                                     $holiday_data = App\Holidays::getHolidayByDateAndID($added_date,$v['added_by_id'],'');
 
+                                    $half_day_leave_data = App\UserLeave::getLeaveByDateAndID($added_date,$v['added_by_id'],'1','Half Day');
                                     $leave_data = App\UserLeave::getLeaveByDateAndID($added_date,$v['added_by_id'],'1','Full Day');
                                     $unapproved_leave_data = App\UserLeave::getLeaveByDateAndID($added_date,$v['added_by_id'],'2','Full Day');
+                                    
                                     $wfh_data = App\WorkFromHome::getWorkFromHomeRequestByDate($added_date,$v['added_by_id'],1);
                                 ?>
                                 <tr>
@@ -301,6 +304,8 @@
                                         <td style="background-color:#ffc000;">
                                         {{ $v['added_date'] }}</td>
                                         <td colspan="7"><center><b>Sunday</b></center></td>
+
+                                    @elseif(isset($half_day_leave_data) && $half_day_leave_data != '')
                                     @else
 
                                         <td>{{ ++$i }}</td><td></td>

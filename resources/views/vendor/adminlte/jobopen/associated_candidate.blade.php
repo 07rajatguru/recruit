@@ -204,7 +204,7 @@
                                 </div>
 
                                 <div class="form-group">
-                                    <strong>Interviewe Cordinator : </strong>
+                                    <strong>Interview Cordinator : </strong>
                                     {!! Form::select('interviewer_id', $users, $user_id, array('id'=>'interviewer_id','class' => 'form-control', 'tabindex' => '4' )) !!}
                                 </div>
 

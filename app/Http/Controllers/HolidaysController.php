@@ -11,6 +11,7 @@ use App\Date;
 use App\Department;
 use App\Events\NotificationMail;
 use App\WorkPlanning;
+use App\SpecifyHolidays;
 
 class HolidaysController extends Controller
 {
@@ -320,7 +321,7 @@ class HolidaysController extends Controller
         return view('adminlte::holidays.myholidays',compact('holiday_details','count','id'));
     }
 
-    public function selectHolidays($uid) {
+    public function getHolidays($uid) {
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -394,39 +395,67 @@ class HolidaysController extends Controller
                 }
             }
 
-            return view('adminlte::holidays.listofholidays',compact('fixed_holiday_list','optional_holiday_list','length','uid'));
+            return view('adminlte::holidays.listofholidays',compact('fixed_holiday_list','optional_holiday_list','length'));
         }
         else {
             return view('errors.403');
         }
     }
 
-    public function sentOptionalHolidayEmail() {
+    public function sentOptionalHolidayEmail(Request $request) {
 
         $user = \Auth::user();
         $user_id = $user->id;
 
-        if (isset($_POST['religious_holiday']) && $_POST['religious_holiday'] != '') {
-            $religious_holiday = $_POST['religious_holiday'];
-        }
-        else {
-            $religious_holiday = '';
+        // Get Exist optional selected holidays of current year
+        $holidays = Holidays::getUserOptionalHolidays($user_id);
+
+        if(isset($holidays) && sizeof($holidays) > 0) {
+
+            $year = date('Y');
+
+            foreach ($holidays as $key => $value) {
+                
+                HolidaysUsers::where('holiday_id',$key)->where('user_id',$user_id)->delete();
+                SpecifyHolidays::where('year',$year)->where('user_id',$user_id)->delete();
+            }
         }
 
-        $selected_leaves = $_POST['selected_leaves'];
+        $religious_holiday = $request->religious_holiday;
+        $holiday_date = $request->holiday_date;
+        $selected_leaves = $request->selected_leaves;
 
         if (isset($selected_leaves) && $selected_leaves != '') {
 
-            $leave_ids_array = explode(",", $selected_leaves);
+            $holidays_ids_array = explode(",", $selected_leaves);
 
-            if(isset($leave_ids_array) && sizeof($leave_ids_array) > 0) {
+            if(isset($holidays_ids_array) && sizeof($holidays_ids_array) > 0) {
 
-                foreach ($leave_ids_array as $key => $value) {
-                        
+                foreach ($holidays_ids_array as $key => $value) {
+
                     $holiday_user = new HolidaysUsers();
                     $holiday_user->holiday_id = $value;
                     $holiday_user->user_id = $user_id;
                     $holiday_user->save();
+                }
+
+                // Add specific holiday added by user
+                if($religious_holiday != '') {
+
+                    $dateClass = new Date();
+
+                    $specific_holiday = new SpecifyHolidays();
+                    $specific_holiday->user_id = $user_id;
+                    $specific_holiday->title = $religious_holiday;
+                    $specific_holiday->date = $dateClass->changeDMYtoYMD($holiday_date);
+                    $specific_holiday->year = date('Y',strtotime($holiday_date));
+                    $specific_holiday->save();
+
+                    $specific_holiday_id = $specific_holiday->id;
+                }
+                else {
+
+                    $specific_holiday_id = '';
                 }
 
                 // Get Superadmin email
@@ -460,21 +489,72 @@ class HolidaysController extends Controller
                 $subject = "Opted Optional Holidays";
                 $message = "Opted Optional Holidays";
 
-                if($religious_holiday == '') {
+                if(isset($specific_holiday_id) && $specific_holiday_id == '') {
                     $module_id = $selected_leaves;
                 }
                 else {
-                    $module_id = $selected_leaves . "-" . $religious_holiday;
+                    $module_id = $selected_leaves . "-" . $specific_holiday_id;
                 }
                 event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
             }
+        }
+        
+        return redirect('list-of-selected-holidays/'.$user_id)->with('success','Email Sent Successfully.');
+    }
 
-            $msg['success'] = 'Success';
+    public function selectedHolidays($uid) {
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        if($uid == $user_id) {
+
+            $holidays = Holidays::getAllholidaysList();
+
+            $fixed_holiday_list = array();
+            $optional_holiday_list = array();
+            $i=0;
+            $j=0;
+
+            if(isset($holidays) && sizeof($holidays) > 0) {
+
+                foreach($holidays as $key => $value) {
+
+                    if($value['type'] == 'Optional Leave') {
+
+                        $check = HolidaysUsers::checkUserHoliday($user_id,$value['id']);
+
+                        if(isset($check) && $check != '') {
+
+                            $optional_holiday_list[$j]['id'] = $value['id'];
+                            $optional_holiday_list[$j]['title'] = $value['title'];
+                        }
+
+                        $j++;
+                    }
+                    if($value['type'] == 'Fixed Leave') {
+
+                        $fixed_holiday_list[$i]['id'] = $value['id'];
+                        $fixed_holiday_list[$i]['title'] = $value['title'];
+                        $i++;
+                    }   
+                }
+            }
+
+            // Get Specify Holidays
+            $get_holidays = SpecifyHolidays::getUserHoliday($uid);
+
+            if(isset($get_holidays) && $get_holidays != '') {
+                $specific_day = $get_holidays->title;
+            }
+            else {
+                $specific_day = '';
+            }
+
+            return view('adminlte::holidays.selectedlistofholidays',compact('fixed_holiday_list','optional_holiday_list','uid','specific_day'));
         }
         else {
-            $msg['err'] = '<b>Please Select Leave.</b>';
-            $msg['msg'] = "Fail";
+            return view('errors.403');
         }
-        return $msg;
     }
 }

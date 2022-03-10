@@ -24,9 +24,11 @@
                     @foreach($selected_holidays as $key => $value)
                         <?php 
                             if($names_string == '') {
+
                                 $names_string = $incr . " . " . $value . " " . "<br/>";
                             }
                             else {
+
                                 $names_string .= $incr . " . " . $value . " " . "<br/>";
                             }
                             $incr++;

@@ -277,4 +277,36 @@ class Holidays extends Model
         }
         return $holidays;
     }
+
+    public static function getUserOptionalHolidays($user_id) {
+
+        $year = date('Y');
+
+        $query = Holidays::query();
+        $query = $query->leftjoin('holidays_users','holidays_users.holiday_id','=','holidays.id');
+        $query = $query->select('holidays.*');
+
+        if(isset($user_id) && $user_id != 0) {
+            $query = $query->where('holidays_users.user_id','=',$user_id);
+        }
+        if ($year != '') {
+            $query = $query->where(\DB::raw('year(holidays.from_date)'),'=',$year);
+        }
+
+        $query = $query->where('holidays.type','=','Optional Leave');
+        $query = $query->orderBy('from_date','ASC');
+        $query = $query->groupBy('holidays.id');
+        $response = $query->get();
+
+        $holidays = array();
+
+        if(isset($response) && $response != '') {
+
+            foreach ($response as $key => $value) {
+
+                $holidays[$value->id] = $value->title;
+            }
+        }
+        return $holidays;
+    }
 }

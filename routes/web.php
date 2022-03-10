@@ -209,12 +209,17 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::get('list-of-holidays/{uid}', [
         'as' => 'listof.holidays',
-        'uses' => 'HolidaysController@selectHolidays'
+        'uses' => 'HolidaysController@getHolidays'
     ]);
 
     Route::post('holidays/sentholidays',[
         'as' => 'holidays.sentholidays',
         'uses' => 'HolidaysController@sentOptionalHolidayEmail'
+    ]);
+
+    Route::get('list-of-selected-holidays/{uid}', [
+        'as' => 'listof.selectedholidays',
+        'uses' => 'HolidaysController@selectedHolidays'
     ]);
 
     Route::get('work-from-home-request/{id}/{month}/{year}', [
