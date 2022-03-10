@@ -30,9 +30,17 @@ class ReportController extends Controller
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $hr_user_id = getenv('HRUSERID');
-        $type_array = array($recruitment,$hr_advisory);
 
         if($all_perm) {
+
+            $manager_user_id = getenv('MANAGERUSERID');
+
+            if($user_id == $manager_user_id) {
+                $type_array = array($recruitment);
+            }
+            else {
+                $type_array = array($recruitment,$hr_advisory);
+            }
 
             $users_array = User::getAllUsersExpectSuperAdmin($type_array);
 
@@ -611,11 +619,9 @@ class ReportController extends Controller
             $manager_user_id = getenv('MANAGERUSERID');
 
             if($user_id == $manager_user_id) {
-
                 $type_array = array($recruitment);
             }
             else {
-               
                 $type_array = array($recruitment,$hr_advisory,$management);
             }
 
@@ -639,7 +645,6 @@ class ReportController extends Controller
                 }
 
                 if($user_id == $manager_user_id) {
-
                 }
                 else {
 
@@ -769,7 +774,6 @@ class ReportController extends Controller
                     }
 
                     if($user_id == $manager_user_id) {
-                    
                     }
                     else {
                         $get_hr_user_name = User::getUserNameById($hr_user_id);
@@ -1122,11 +1126,9 @@ class ReportController extends Controller
             $manager_user_id = getenv('MANAGERUSERID');
 
             if($user_id == $manager_user_id) {
-
                 $type_array = array($recruitment);
             }
             else {
-
                 $type_array = array($recruitment,$hr_advisory);
             }
 
@@ -1151,7 +1153,6 @@ class ReportController extends Controller
                 }
 
                 if($user_id == $manager_user_id) {
-
                 }
                 else {
 
@@ -1161,7 +1162,6 @@ class ReportController extends Controller
             }
         }
         else if($userwise_perm || $teamwise_perm) {
-
             $users = User::getAssignedUsers($user_id);
         }
 
@@ -1401,11 +1401,9 @@ class ReportController extends Controller
             $manager_user_id = getenv('MANAGERUSERID');
 
             if($user_id == $manager_user_id) {
-
                 $type_array = array($recruitment);
             }
             else {
-
                 $type_array = array($recruitment,$hr_advisory);
             }
 
@@ -1430,7 +1428,6 @@ class ReportController extends Controller
                 }
 
                 if($user_id == $manager_user_id) {
-
                 }
                 else {
                     $get_hr_user_name = User::getUserNameById($hr_user_id);

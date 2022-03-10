@@ -172,37 +172,40 @@ class Holidays extends Model
 
             foreach ($response as $key => $value) {
 
-                $holidays[$i]['id'] = $value->id;
-                $holidays[$i]['title'] = $value->title;
-                $holidays[$i]['type'] = $value->type;
+                if($value->title != 'Any other Religious Holiday for respective community - Please specify') {
 
-                if($value->from_date == '') {
-                    $holidays[$i]['from_date'] = '';
-                }
-                else {
-                   $holidays[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date)); 
-                }
+                    $holidays[$i]['id'] = $value->id;
+                    $holidays[$i]['title'] = $value->title;
+                    $holidays[$i]['type'] = $value->type;
 
-                if($value->to_date == '') {
-                    $holidays[$i]['to_date'] = '';
-                }
-                else {
-                   $holidays[$i]['to_date'] = date('d-m-Y',strtotime($value->to_date)); 
-                }
-
-                $name = Holidays::getUsersByHolidayId($value->id);
-                $user_name = '';
-                foreach ($name as $key => $value) {
-                    if ($user_name == '') {
-                        $user_name = $value;
+                    if($value->from_date == '') {
+                        $holidays[$i]['from_date'] = '';
                     }
-                    else{
-                        $user_name .= ','. $value;
+                    else {
+                       $holidays[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date)); 
                     }
-                }
 
-                $holidays[$i]['users'] = $user_name;
-                $i++;
+                    if($value->to_date == '') {
+                        $holidays[$i]['to_date'] = '';
+                    }
+                    else {
+                       $holidays[$i]['to_date'] = date('d-m-Y',strtotime($value->to_date)); 
+                    }
+
+                    $name = Holidays::getUsersByHolidayId($value->id);
+                    $user_name = '';
+                    foreach ($name as $key => $value) {
+                        if ($user_name == '') {
+                            $user_name = $value;
+                        }
+                        else{
+                            $user_name .= ','. $value;
+                        }
+                    }
+
+                    $holidays[$i]['users'] = $user_name;
+                    $i++;
+                }
             }
         }
         return $holidays;
