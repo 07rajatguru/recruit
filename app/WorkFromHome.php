@@ -113,7 +113,7 @@ class WorkFromHome extends Model
         return $work_from_home_res;
     }
 
-    public static function getBefore2daysWorkFromHomeRequests($user_id,$apply_date) {
+    public static function getUserWorkFromHomeRequests($user_id,$month,$year) {
 
         $yesterday_date = date('Y-m-d',strtotime("$apply_date -1days"));
         $before_yesterday_date = date('Y-m-d', strtotime("$apply_date -2days"));

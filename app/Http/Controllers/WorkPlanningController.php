@@ -1281,7 +1281,7 @@ class WorkPlanningController extends Controller
                 // Get last two days work planning result as WFH Policy
                 if($work_type == 'WFH') {
 
-                    $work_from_home_res = WorkFromHome::getBefore2daysWorkFromHomeRequests($user_id,$work_planning_date);
+                    $work_from_home_res = WorkFromHome::getUserWorkFromHomeRequests($user_id,$work_planning_date);
 
                     if(isset($work_from_home_res) && sizeof($work_from_home_res) > 0) {
 
@@ -1419,7 +1419,7 @@ class WorkPlanningController extends Controller
         
         if($work_type == 'WFH') {
             
-            $work_from_home_res = WorkFromHome::getBefore2daysWorkFromHomeRequests($user_id,$work_planning['added_date']);
+            $work_from_home_res = WorkFromHome::getUserWorkFromHomeRequests($user_id,$work_planning['added_date']);
 
             if(isset($work_from_home_res) && sizeof($work_from_home_res) > 0) {
 
