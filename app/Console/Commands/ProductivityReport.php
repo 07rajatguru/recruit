@@ -45,6 +45,15 @@ class ProductivityReport extends Command
         $recruitment = getenv('RECRUITMENT');
         $users = User::getAllUsersEmails($recruitment,'Yes','',0);
 
+        $superadminuserid = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($superadminuserid);
+
+        $hr = getenv('HRUSERID');
+        $hremail = User::getUserEmailById($hr);
+
+        $manager_user_id = getenv('MANAGERUSERID');
+        $manager_email = User::getUserEmailById($manager_user_id);
+
         foreach ($users as $key => $value) {
 
             $check_users_log_count = UsersLog::getUserLogsOfWeekById($key);
@@ -55,28 +64,21 @@ class ProductivityReport extends Command
 
                 if(isset($user_benchmark) && sizeof($user_benchmark) > 0) {
 
-                    $report_email = '';
+                    $cc_array = array();
                     $res = User::getReportsToUsersEmail($key);
 
                     if(isset($res->remail) && $res->remail!='') {
+
                         $report_email = $res->remail;
+                        $cc_array = array($report_email,$manager_email,$superadminemail,$hremail);
+
                     }
                     else {
-                        $report_email = '';
+                        $cc_array = array($manager_email,$superadminemail,$hremail);
                     }
                     
                     $to_array = array();
                     $to_array[] = $value;
-
-                    $cc_array = array();
-                    $manager_user_id = getenv('MANAGERUSERID');
-                    $manager_email = User::getUserEmailById($manager_user_id);
-
-                    $cc_array[] = $report_email;
-                    $cc_array[] = $manager_email;
-                    //$cc_array[] = 'rajlalwani@adlertalent.com';
-                    $cc_array[] = 'info@adlertalent.com';
-                    $cc_array[] = 'hr@adlertalent.com';
 
                     $user_name = User::getUserNameById($key);
 

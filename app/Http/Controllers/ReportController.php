@@ -1634,7 +1634,7 @@ class ReportController extends Controller
                     $user_bench_mark[$i]['no_of_resumes_monthly'] = $value['no_of_resumes'];
                     $user_bench_mark[$i]['no_of_resumes_weekly'] = number_format($value['no_of_resumes'] / $no_of_weeks);
 
-                    $user_bench_mark[$i]['shortlist_ratio_monthly'] = number_format($value['no_of_resumes'] * $value['shortlist_ratio']/100);
+                    /*$user_bench_mark[$i]['shortlist_ratio_monthly'] = number_format($value['no_of_resumes'] * $value['shortlist_ratio']/100);
                     $user_bench_mark[$i]['shortlist_ratio_weekly'] = number_format($user_bench_mark[$i]['shortlist_ratio_monthly'] / $no_of_weeks);
 
                     $user_bench_mark[$i]['interview_ratio_monthly'] = number_format($user_bench_mark[$i]['shortlist_ratio_monthly'] * $value['interview_ratio'] / 100);
@@ -1650,6 +1650,24 @@ class ReportController extends Controller
                     $user_bench_mark[$i]['joining_ratio_weekly'] = number_format($user_bench_mark[$i]['joining_ratio_monthly'] / $no_of_weeks);
 
                     $user_bench_mark[$i]['after_joining_success_ratio_monthly'] = number_format($user_bench_mark[$i]['joining_ratio_monthly'] * $value['after_joining_success_ratio'] / 100);
+                    $user_bench_mark[$i]['after_joining_success_ratio_weekly'] = number_format($user_bench_mark[$i]['after_joining_success_ratio_monthly'] / $no_of_weeks);*/
+
+                    $user_bench_mark[$i]['shortlist_ratio_monthly'] = number_format($value['no_of_resumes'] * 50/100);
+                    $user_bench_mark[$i]['shortlist_ratio_weekly'] = number_format($user_bench_mark[$i]['shortlist_ratio_monthly'] / $no_of_weeks);
+
+                    $user_bench_mark[$i]['interview_ratio_monthly'] = number_format($user_bench_mark[$i]['shortlist_ratio_monthly'] * 50 / 100);
+                    $user_bench_mark[$i]['interview_ratio_weekly'] = number_format($user_bench_mark[$i]['interview_ratio_monthly'] / $no_of_weeks);
+
+                    $user_bench_mark[$i]['selection_ratio_monthly'] = number_format($user_bench_mark[$i]['interview_ratio_monthly'] * 20 / 100);
+                    $user_bench_mark[$i]['selection_ratio_weekly'] = number_format($user_bench_mark[$i]['selection_ratio_monthly'] / $no_of_weeks);
+
+                    $user_bench_mark[$i]['offer_acceptance_ratio_monthly'] = number_format($user_bench_mark[$i]['selection_ratio_monthly'] * 70 / 100);
+                    $user_bench_mark[$i]['offer_acceptance_ratio_weekly'] = number_format($user_bench_mark[$i]['offer_acceptance_ratio_monthly'] / $no_of_weeks);
+
+                    $user_bench_mark[$i]['joining_ratio_monthly'] = number_format($user_bench_mark[$i]['offer_acceptance_ratio_monthly'] * 80 / 100);
+                    $user_bench_mark[$i]['joining_ratio_weekly'] = number_format($user_bench_mark[$i]['joining_ratio_monthly'] / $no_of_weeks);
+
+                    $user_bench_mark[$i]['after_joining_success_ratio_monthly'] = number_format($user_bench_mark[$i]['joining_ratio_monthly'] * 80 / 100);
                     $user_bench_mark[$i]['after_joining_success_ratio_weekly'] = number_format($user_bench_mark[$i]['after_joining_success_ratio_monthly'] / $no_of_weeks);
 
                     $i++;
@@ -1699,7 +1717,7 @@ class ReportController extends Controller
 
             foreach ($user_bench_mark as $key => $value) {
 
-                if($shortlist_ratio == '') {
+                /*if($shortlist_ratio == '') {
                     $shortlist_ratio = $value['shortlist_ratio'];
                 }
                 else {
@@ -1752,7 +1770,7 @@ class ReportController extends Controller
                 }
 
                 $bench_mark['after_joining_success_ratio'] = $after_joining_success_ratio;
-
+*/
                 if($no_of_resumes_monthly == '') {
                     $no_of_resumes_monthly = $value['no_of_resumes_monthly'];
                 }
