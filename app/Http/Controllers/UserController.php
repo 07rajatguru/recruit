@@ -245,16 +245,19 @@ class UserController extends Controller
 
             // Add new User to training & process manual if it is display to all users.
 
-            $training_ids = Training::getAlltrainingIds(1);
+            if($type == '1' || ($type == '2' && $hr_adv_recruitemnt == 'Yes')) {
 
-            if (isset($training_ids) && $training_ids != '') {
+                $training_ids = Training::getAlltrainingIds(1);
 
-                foreach ($training_ids as $key => $value) {
+                if (isset($training_ids) && $training_ids != '') {
 
-                    $training_visible_users = new TrainingVisibleUser;
-                    $training_visible_users->training_id = $value;
-                    $training_visible_users->user_id = $user_id;
-                    $training_visible_users->save();
+                    foreach ($training_ids as $key => $value) {
+
+                        $training_visible_users = new TrainingVisibleUser;
+                        $training_visible_users->training_id = $value;
+                        $training_visible_users->user_id = $user_id;
+                        $training_visible_users->save();
+                    }
                 }
             }
 
