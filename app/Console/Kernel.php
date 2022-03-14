@@ -58,6 +58,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\PendingWorkPlanningReminderScript',
         'App\Console\Commands\LeaveApplicationReminder',
         'App\Console\Commands\ListofHolidaysReminder',
+        'App\Console\Commands\NewJobOpentoall',
     ];
 
     /**

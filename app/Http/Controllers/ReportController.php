@@ -15,6 +15,7 @@ use App\Role;
 use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use App\Date;
+use App\Events\NotificationMail;
 
 class ReportController extends Controller
 {  
@@ -1110,8 +1111,6 @@ class ReportController extends Controller
         // get logged in user
         $user =  \Auth::user();
         $user_id = \Auth::user()->id;
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
         $all_perm = $user->can('display-productivity-report-of-all-users');
         $userwise_perm = $user->can('display-productivity-report-of-loggedin-user');
         $teamwise_perm = $user->can('display-productivity-report-of-loggedin-user-team');
@@ -1387,8 +1386,6 @@ class ReportController extends Controller
         // get logged in user
         $user =  \Auth::user();
         $user_id = $user->id;
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
         $all_perm = $user->can('display-productivity-report-of-all-users');
 
         $recruitment = getenv('RECRUITMENT');
@@ -1912,7 +1909,150 @@ class ReportController extends Controller
                 $i++;
             }
         }
-        return view('adminlte::reports.master-productivity-report',compact('users','bench_mark','month_array','year_array','month','year','no_of_weeks','frm_to_date_array'));
+
+        if (isset($_POST['mail']) && $_POST['mail'] != '') {
+
+            $user_email = $user->email;
+
+            $from_name = getenv('FROM_NAME');
+            $from_address = getenv('FROM_ADDRESS');
+            $app_url = getenv('APP_URL');
+
+            $input = array();
+            $input['from_name'] = $from_name;
+            $input['from_address'] = $from_address;
+            $input['app_url'] = $app_url;
+            $input['to'] = $user_email;
+
+            $input['bench_mark'] = $bench_mark;
+            $input['frm_to_date_array'] = $frm_to_date_array;
+            $input['year'] = $year;
+            $input['month'] = $month;
+
+            if(isset($frm_to_date_array) && $frm_to_date_array != '') {
+
+                $no_of_resumes_monthly = '';
+                $shortlist_ratio_monthly = '';
+                $interview_ratio_monthly = '';
+                $selection_ratio_monthly = '';
+                $offer_acceptance_ratio_monthly = '';
+                $joining_ratio_monthly = '';
+                $after_joining_success_ratio_monthly = '';
+
+                foreach ($frm_to_date_array as $key => $value) {
+
+                    if($no_of_resumes_monthly == '') {
+                        $no_of_resumes_monthly = $value['ass_cnt'];
+                    }
+                    else {
+                        $no_of_resumes_monthly = $no_of_resumes_monthly + $value['ass_cnt'];
+                    }
+
+                    if($shortlist_ratio_monthly == '') {
+                        $shortlist_ratio_monthly = $value['shortlisted_cnt'];
+                    }
+                    else {
+                        $shortlist_ratio_monthly = $shortlist_ratio_monthly + $value['shortlisted_cnt'];
+                    }
+
+                    if($interview_ratio_monthly == '') {
+                        $interview_ratio_monthly = $value['interview_cnt'];
+                    }
+                    else {
+                        $interview_ratio_monthly = $interview_ratio_monthly + $value['interview_cnt'];
+                    }
+
+                    if($selection_ratio_monthly == '') {
+                        $selection_ratio_monthly = $value['selected_cnt'];
+                    }
+                    else {
+                        $selection_ratio_monthly =  $selection_ratio_monthly + $value['selected_cnt'];
+                    }
+
+                    if($offer_acceptance_ratio_monthly == '') {
+                        $offer_acceptance_ratio_monthly = $value['offer_acceptance_ratio'];
+                    }
+                    else {
+                        $offer_acceptance_ratio_monthly = $offer_acceptance_ratio_monthly + $value['offer_acceptance_ratio'];
+                    }
+
+                    if($joining_ratio_monthly == '') {
+                        $joining_ratio_monthly = $value['joining_ratio'];
+                    }
+                    else {
+                        $joining_ratio_monthly = $joining_ratio_monthly + $value['joining_ratio'];
+                    }
+
+                    if($after_joining_success_ratio_monthly == '') {
+                        $after_joining_success_ratio_monthly = $value['joining_success_ratio'];
+                    }
+                    else {
+                        $after_joining_success_ratio_monthly = $after_joining_success_ratio_monthly + $value['joining_success_ratio'];
+                    }
+                }
+
+                // Set last column Monthly Achivment value
+                if(isset($no_of_resumes_monthly) && $no_of_resumes_monthly > 0) {
+                    $input['no_of_resumes_monthly'] = $no_of_resumes_monthly;
+                }
+                else {
+                    $input['no_of_resumes_monthly'] = '';
+                }
+
+                if(isset($shortlist_ratio_monthly) && $shortlist_ratio_monthly > 0) {
+                    $input['shortlist_ratio_monthly'] = $shortlist_ratio_monthly;
+                }
+                else {
+                    $input['shortlist_ratio_monthly'] = '';
+                }
+
+                if(isset($interview_ratio_monthly) && $interview_ratio_monthly > 0) {
+                    $input['interview_ratio_monthly'] = $interview_ratio_monthly;
+                }
+                else {
+                    $input['interview_ratio_monthly'] = '';
+                }
+
+                if(isset($selection_ratio_monthly) && $selection_ratio_monthly > 0) {
+                    $input['selection_ratio_monthly'] = $selection_ratio_monthly;
+                }
+                else {
+                    $input['selection_ratio_monthly'] = '';
+                }
+
+                if(isset($offer_acceptance_ratio_monthly) && $offer_acceptance_ratio_monthly > 0) {
+                    $input['offer_acceptance_ratio_monthly'] = $offer_acceptance_ratio_monthly;
+                }
+                else {
+                    $input['offer_acceptance_ratio_monthly'] = '';
+                }
+
+                if(isset($joining_ratio_monthly) && $joining_ratio_monthly > 0) {
+                    $input['joining_ratio_monthly'] = $joining_ratio_monthly;
+                }
+                else {
+                    $input['joining_ratio_monthly'] = '';
+                }
+
+                if(isset($after_joining_success_ratio_monthly) && $after_joining_success_ratio_monthly > 0) {
+                    $input['after_joining_success_ratio_monthly'] = $after_joining_success_ratio_monthly;
+                }
+                else {
+                    $input['after_joining_success_ratio_monthly'] = '';
+                }
+            }
+
+            \Mail::send('adminlte::emails.masterProductivityReport', $input, function ($message) use($input) {
+                $message->from($input['from_address'], $input['from_name']);
+                $message->to($input['to'])->subject('Master Productivity Report');
+            });
+
+            return redirect('master-productivity-report')->with('success','Email Sent Successfully.');
+        }
+        else {
+
+            return view('adminlte::reports.master-productivity-report',compact('bench_mark','month_array','year_array','month','year','no_of_weeks','frm_to_date_array'));
+        }
     }
 
     public function checkSendgrid() {
@@ -1927,6 +2067,6 @@ class ReportController extends Controller
         $sendgrid = new \SendGrid(getenv('SENDGRID_API_KEY'));
 
         $response = $sendgrid->send($email);
-        return redirect('dashboard')->with('success','Email Send Successfully.');
+        return redirect('dashboard')->with('success','Email Sent Successfully.');
     }
 }
