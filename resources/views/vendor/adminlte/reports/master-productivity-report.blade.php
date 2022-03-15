@@ -53,12 +53,11 @@
                 </div>
 
                 <div class="col-md-5"></div>
-
                 <div class="col-md-2">
-                    <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="sendMail()">Send Email</a>
+                    <!-- <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()">Download as Excel</a> -->
                 </div>
-                <div class="col-md-2">
-                    <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()">Download as Excel</a>
+                 <div class="col-md-2">
+                    <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="sendMail()">Send Email</a>
                 </div>
             </div>
         </div>
@@ -212,6 +211,7 @@
                                 <?php $from_date = date('Y-m-d',strtotime($value['from_date'])); ?>
 
                                 @if($from_date > $to_date_default)
+
                                     <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="no_of_resumes_weeks">
                                         <p align="center" style="text-align: center;"></p>
                                     </td>
@@ -286,6 +286,7 @@
                                 <?php $from_date = date('Y-m-d',strtotime($value['from_date'])); ?>
 
                                 @if($from_date > $to_date_default)
+                                
                                     <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="shortlist_ratio_weeks">
                                         <p align="center" style="text-align: center;"></p>
                                     </td>

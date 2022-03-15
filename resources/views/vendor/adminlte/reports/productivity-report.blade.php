@@ -64,6 +64,11 @@
                                 $full_year =  $year;
                                 $year_display = substr($full_year, -2);
                                 $month_display = date('F', mktime(0, 0, 0, $month, 10));
+
+                                // For Set Limegreen & Red Color
+                                $date = date('l');
+                                $from_date_default = date('Y-m-d',strtotime("$date monday this week"));
+                                $to_date_default = date('Y-m-d',strtotime("$from_date_default +6days"));
                             ?>
 
                             @if(isset($user_name) && $user_name != '')
@@ -198,18 +203,28 @@
 
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
                             @foreach($frm_to_date_array as $key => $value)
-                                @if($value['ass_cnt'] >= $user_bench_mark['no_of_resumes_weekly'])
-                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: limegreen;" class="no_of_resumes_weeks">
-                                        <p align="center" style="text-align: center;">
-                                            <span>{{ $value['ass_cnt'] }}</span>
-                                        </p>
+
+                                <?php $from_date = date('Y-m-d',strtotime($value['from_date'])); ?>
+
+                                @if($from_date > $to_date_default)
+
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="no_of_resumes_weeks">
+                                        <p align="center" style="text-align: center;"></p>
                                     </td>
                                 @else
-                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="no_of_resumes_weeks">
-                                        <p align="center" style="text-align: center;">
-                                            <span>{{ $value['ass_cnt'] }}</span>
-                                        </p>
-                                    </td>
+                                    @if($value['ass_cnt'] >= $user_bench_mark['no_of_resumes_weekly'])
+                                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: limegreen;" class="no_of_resumes_weeks">
+                                            <p align="center" style="text-align: center;">
+                                                <span>{{ $value['ass_cnt'] }}</span>
+                                            </p>
+                                        </td>
+                                    @else
+                                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="no_of_resumes_weeks">
+                                            <p align="center" style="text-align: center;">
+                                                <span>{{ $value['ass_cnt'] }}</span>
+                                            </p>
+                                        </td>
+                                    @endif
                                 @endif
                             @endforeach
                         @endif
@@ -264,18 +279,29 @@
                         
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
                             @foreach($frm_to_date_array as $key => $value)
-                                @if($value['shortlisted_cnt'] >= $user_bench_mark['shortlist_ratio_weekly'])
-                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: limegreen;" class="shortlist_ratio_weeks">
-                                        <p align="center" style="text-align: center;">
-                                            <span>{{ $value['shortlisted_cnt'] }}</span>
-                                        </p>
+
+                                <?php $from_date = date('Y-m-d',strtotime($value['from_date'])); ?>
+
+                                @if($from_date > $to_date_default)
+
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="shortlist_ratio_weeks">
+                                         <p align="center" style="text-align: center;"></p>
                                     </td>
                                 @else
-                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="shortlist_ratio_weeks">
-                                        <p align="center" style="text-align: center;">
-                                            <span>{{ $value['shortlisted_cnt'] }}</span>
-                                        </p>
-                                    </td>
+
+                                    @if($value['shortlisted_cnt'] >= $user_bench_mark['shortlist_ratio_weekly'])
+                                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: limegreen;" class="shortlist_ratio_weeks">
+                                            <p align="center" style="text-align: center;">
+                                                <span>{{ $value['shortlisted_cnt'] }}</span>
+                                            </p>
+                                        </td>
+                                    @else
+                                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="shortlist_ratio_weeks">
+                                            <p align="center" style="text-align: center;">
+                                                <span>{{ $value['shortlisted_cnt'] }}</span>
+                                            </p>
+                                        </td>
+                                    @endif
                                 @endif
                             @endforeach
                         @endif
@@ -330,18 +356,29 @@
                         
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
                             @foreach($frm_to_date_array as $key => $value)
-                                @if($value['interview_cnt'] >= $user_bench_mark['interview_ratio_weekly'])
-                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: limegreen;" class="interview_ratio_weeks">
-                                        <p align="center" style="text-align: center;">
-                                            <span>{{ $value['interview_cnt'] }}</span>
-                                        </p>
+
+                                <?php $from_date = date('Y-m-d',strtotime($value['from_date'])); ?>
+
+                                @if($from_date > $to_date_default)
+
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="interview_ratio_weeks">
+                                        <p align="center" style="text-align: center;"></p>
                                     </td>
                                 @else
-                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="interview_ratio_weeks">
-                                        <p align="center" style="text-align: center;">
-                                            <span>{{ $value['interview_cnt'] }}</span>
-                                        </p>
-                                    </td>
+
+                                    @if($value['interview_cnt'] >= $user_bench_mark['interview_ratio_weekly'])
+                                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: limegreen;" class="interview_ratio_weeks">
+                                            <p align="center" style="text-align: center;">
+                                                <span>{{ $value['interview_cnt'] }}</span>
+                                            </p>
+                                        </td>
+                                    @else
+                                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="interview_ratio_weeks">
+                                            <p align="center" style="text-align: center;">
+                                                <span>{{ $value['interview_cnt'] }}</span>
+                                            </p>
+                                        </td>
+                                    @endif
                                 @endif
                             @endforeach
                         @endif
@@ -396,18 +433,29 @@
                        
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
                             @foreach($frm_to_date_array as $key => $value)
-                                @if($value['selected_cnt'] >= $user_bench_mark['selection_ratio_weekly'])
-                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: limegreen;" class="selection_ratio_weeks">
-                                        <p align="center" style="text-align: center;">
-                                            <span>{{ $value['selected_cnt'] }}</span>
-                                        </p>
+
+                                <?php $from_date = date('Y-m-d',strtotime($value['from_date'])); ?>
+
+                                @if($from_date > $to_date_default)
+
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="selection_ratio_weeks">
+                                        <p align="center" style="text-align: center;"></p>
                                     </td>
                                 @else
-                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="selection_ratio_weeks">
-                                        <p align="center" style="text-align: center;">
-                                            <span>{{ $value['selected_cnt'] }}</span>
-                                        </p>
-                                    </td>
+
+                                    @if($value['selected_cnt'] >= $user_bench_mark['selection_ratio_weekly'])
+                                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: limegreen;" class="selection_ratio_weeks">
+                                            <p align="center" style="text-align: center;">
+                                                <span>{{ $value['selected_cnt'] }}</span>
+                                            </p>
+                                        </td>
+                                    @else
+                                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="selection_ratio_weeks">
+                                            <p align="center" style="text-align: center;">
+                                                <span>{{ $value['selected_cnt'] }}</span>
+                                            </p>
+                                        </td>
+                                    @endif
                                 @endif
                             @endforeach
                         @endif
@@ -463,18 +511,28 @@
 
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
                             @foreach($frm_to_date_array as $key => $value)
-                                @if($value['offer_acceptance_ratio'] >= $user_bench_mark['offer_acceptance_ratio_weekly'])
-                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: limegreen;" class="offer_acceptance_ratio_weeks">
-                                        <p align="center" style="text-align: center;">
-                                            <span>{{ $value['offer_acceptance_ratio'] }}</span>
-                                        </p>
+
+                                <?php $from_date = date('Y-m-d',strtotime($value['from_date'])); ?>
+
+                                @if($from_date > $to_date_default)
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="offer_acceptance_ratio_weeks">
+                                        <p align="center" style="text-align: center;"></p>
                                     </td>
                                 @else
-                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="offer_acceptance_ratio_weeks">
-                                        <p align="center" style="text-align: center;">
-                                            <span>{{ $value['offer_acceptance_ratio'] }}</span>
-                                        </p>
-                                    </td>
+
+                                    @if($value['offer_acceptance_ratio'] >= $user_bench_mark['offer_acceptance_ratio_weekly'])
+                                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: limegreen;" class="offer_acceptance_ratio_weeks">
+                                            <p align="center" style="text-align: center;">
+                                                <span>{{ $value['offer_acceptance_ratio'] }}</span>
+                                            </p>
+                                        </td>
+                                    @else
+                                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="offer_acceptance_ratio_weeks">
+                                            <p align="center" style="text-align: center;">
+                                                <span>{{ $value['offer_acceptance_ratio'] }}</span>
+                                            </p>
+                                        </td>
+                                    @endif
                                 @endif
                             @endforeach
                         @endif
@@ -529,18 +587,28 @@
 
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
                             @foreach($frm_to_date_array as $key => $value)
-                                @if($value['joining_ratio'] >= $user_bench_mark['joining_ratio_weekly'])
-                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: limegreen;" class="joining_ratio_weeks">
-                                        <p align="center" style="text-align: center;">
-                                            <span>{{ $value['joining_ratio'] }}</span>
-                                        </p>
+
+                                <?php $from_date = date('Y-m-d',strtotime($value['from_date'])); ?>
+
+                                @if($from_date > $to_date_default)
+
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="joining_ratio_weeks">
+                                        <p align="center" style="text-align: center;"></p>
                                     </td>
                                 @else
-                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="joining_ratio_weeks">
-                                        <p align="center" style="text-align: center;">
-                                            <span>{{ $value['joining_ratio'] }}</span>
-                                        </p>
-                                    </td>
+                                    @if($value['joining_ratio'] >= $user_bench_mark['joining_ratio_weekly'])
+                                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: limegreen;" class="joining_ratio_weeks">
+                                            <p align="center" style="text-align: center;">
+                                                <span>{{ $value['joining_ratio'] }}</span>
+                                            </p>
+                                        </td>
+                                    @else
+                                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="joining_ratio_weeks">
+                                            <p align="center" style="text-align: center;">
+                                                <span>{{ $value['joining_ratio'] }}</span>
+                                            </p>
+                                        </td>
+                                    @endif
                                 @endif
                             @endforeach
                         @endif
@@ -595,18 +663,29 @@
 
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
                             @foreach($frm_to_date_array as $key => $value)
-                                @if($value['joining_success_ratio'] >= $user_bench_mark['after_joining_success_ratio_weekly'])
-                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;border-bottom: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: limegreen;" class="after_joining_success_ratio_weeks">
-                                        <p align="center" style="text-align: center;">
-                                            <span>{{ $value['joining_success_ratio'] }}</span>
-                                        </p>
+
+                                <?php $from_date = date('Y-m-d',strtotime($value['from_date'])); ?>
+
+                                @if($from_date > $to_date_default)
+
+                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;border-bottom: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="after_joining_success_ratio_weeks">
+                                       <p align="center" style="text-align: center;"></p>
                                     </td>
                                 @else
-                                    <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;border-bottom: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="after_joining_success_ratio_weeks">
-                                        <p align="center" style="text-align: center;">
-                                            <span>{{ $value['joining_success_ratio'] }}</span>
-                                        </p>
-                                    </td>
+
+                                    @if($value['joining_success_ratio'] >= $user_bench_mark['after_joining_success_ratio_weekly'])
+                                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;border-bottom: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: limegreen;" class="after_joining_success_ratio_weeks">
+                                            <p align="center" style="text-align: center;">
+                                                <span>{{ $value['joining_success_ratio'] }}</span>
+                                            </p>
+                                        </td>
+                                    @else
+                                        <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;border-bottom: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="after_joining_success_ratio_weeks">
+                                            <p align="center" style="text-align: center;">
+                                                <span>{{ $value['joining_success_ratio'] }}</span>
+                                            </p>
+                                        </td>
+                                    @endif
                                 @endif
                             @endforeach
                         @endif
