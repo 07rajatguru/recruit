@@ -957,6 +957,26 @@ class Interview extends Model
 
         // job Details
         $job_details = JobOpen::getJobById($posting_title);
+        $attachments = JobOpenDoc::getJobDocByJobId($posting_title,'Job Description');
+
+        $file_path_array = array();
+        $j=0;
+
+        if (isset($attachments) && $attachments != '') {
+
+            foreach ($attachments as $key => $value) {
+
+                if (isset($value) && $value != '') {
+                    $file_path = public_path() . "/" . $value['file'];
+                }
+                else {
+                    $file_path = '';
+                }
+                
+                $file_path_array[$j] = $file_path;
+                $j++;
+            }
+        }
 
         // Get Interview Date & Time
         $interview = Interview::getInterviewById($interview_id);
@@ -981,9 +1001,23 @@ class Interview extends Model
         $input['interview_type'] = $interview_type;
         $input['city'] = $job_details['city'];
 
+        if (isset($file_path_array) && sizeof($file_path_array) > 0) {
+            $input['file_path'] = $file_path_array;
+        }
+
         \Mail::send('adminlte::emails.interviewcandidate', $input, function ($message) use($input) {
             $message->from($input['from_address'], $input['from_name']);
             $message->to($input['to'])->subject('Interview Details - '.$input['company_name'].' - '. $input['city']);
+
+            if (isset($input['file_path']) && sizeof($input['file_path']) > 0) {
+
+                foreach ($input['file_path'] as $k1 => $v1) {
+
+                    if(isset($v1) && $v1 != '') {
+                        $message->attach($v1);
+                    }
+                }
+            }
         });
     }
 
