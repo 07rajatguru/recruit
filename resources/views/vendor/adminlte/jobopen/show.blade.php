@@ -43,7 +43,7 @@
                         @endif
                     @endif
                         
-                    @include('adminlte::partials.MoreOptions', ['data' => $jobopen, 'name' => 'jobopen','display_name'=>'More Information'])
+                    {{-- @include('adminlte::partials.MoreOptions', ['data' => $jobopen, 'name' => 'jobopen','display_name'=>'More Information']) --}}
                 @endif
             </div>
         </div>

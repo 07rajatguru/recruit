@@ -301,7 +301,33 @@ return [
                     'icon' => 'list',
                 ]
             ]
-         ],
+        ],
+        [
+            'text'        => "To-Dos",
+            'icon'        => 'tasks',
+            'submenu' => [
+                [
+                    'text' => "Add To-Dos",
+                    'url'  => 'todos/create',
+                    'icon' => 'plus',
+                ],
+                [
+                    'text' => "List To-Dos",
+                    'url'  => 'todos',
+                    'icon' => 'list',
+                ],
+                [
+                    'text' => "List Completed To-Dos",
+                    'url'  => 'todos/complete',
+                    'icon' => 'list',
+                ],
+                [
+                    'text' => "My To-Dos",
+                    'url'  => 'todos/mytask',
+                    'icon' => 'list',
+                ]
+            ]
+        ],
         [
             'text'        => 'Bills',
             'icon'        => 'money',
@@ -333,33 +359,7 @@ return [
                 ],
             ],
         ],
-        [
-            'text'        => "To-Dos",
-            'icon'        => 'tasks',
-            'submenu' => [
-                [
-                    'text' => "Add To-Dos",
-                    'url'  => 'todos/create',
-                    'icon' => 'plus',
-                ],
-                [
-                    'text' => "List To-Dos",
-                    'url'  => 'todos',
-                    'icon' => 'list',
-                ],
-                [
-                    'text' => "List Completed To-Dos",
-                    'url'  => 'todos/complete',
-                    'icon' => 'list',
-                ],
-                [
-                    'text' => "My To-Dos",
-                    'url'  => 'todos/mytask',
-                    'icon' => 'list',
-                ]
-            ]
-        ],
-        [
+        /*[
             'text'        => 'Attendance',
             'url'         => '/userattendance',
             'icon'        => 'signal',
@@ -370,7 +370,7 @@ return [
                     'icon' => 'signal',
                 ],
             ],
-        ],
+        ],*/
         [
            'text'        => 'Report',
            'icon'        => 'file',

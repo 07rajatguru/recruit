@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'HRM')
+@section('title', 'Monthwise Dashboard')
 
 @section('content_header')
     @if ($message = Session::get('success'))
@@ -12,7 +12,7 @@
     <div class="row">
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
-            <h2>Dashboard Monthwise Data</h2>
+            <h2>Monthwise Dashboard</h2>
         </div>
     </div>
 </div>
