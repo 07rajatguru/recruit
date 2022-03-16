@@ -171,6 +171,11 @@ Route::get('check/sendgrid' ,[
     'uses' => 'ReportController@checkSendgrid'
 ]);
 
+Route::get('send/mail' ,[
+    'as' => 'send.mail',
+    'uses' => 'HomeController@sendEmailByURL'
+]);
+
 Route::group(['middleware' => ['auth']], function () {
 
     // ESS
@@ -2789,6 +2794,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::any('master-productivity-report',[
         'as' => 'master-productivity.report',
         'uses' => 'ReportController@masterProductivityReport',
+        'middleware' => ['permission:display-productivity-report-of-all-users']
+    ]);
+
+    Route::post('master-productivity-report/export',[
+        'as' => 'report.masterproductivity',
+        'uses' => 'ReportController@masterProductivityReportExport',
         'middleware' => ['permission:display-productivity-report-of-all-users']
     ]);
 

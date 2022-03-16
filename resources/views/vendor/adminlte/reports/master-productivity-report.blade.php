@@ -54,7 +54,7 @@
 
                 <div class="col-md-5"></div>
                 <div class="col-md-2">
-                    <!-- <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()">Download as Excel</a> -->
+                    <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()">Download as Excel</a>
                 </div>
                  <div class="col-md-2">
                     <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="sendMail()">Send Email</a>
@@ -817,6 +817,22 @@
                 '<input type="hidden" name="month" value="'+month+'" />' +
                 '<input type="hidden" name="year" value="'+year+'" />' +
                 '<input type="hidden" name="mail" value="send" />' +
+                '</form>');
+
+            $('body').append(form);
+            form.submit();
+        }
+
+        function export_data() {
+
+            var month = $("#month").val();
+            var year = $("#year").val();
+            var url = '/master-productivity-report/export';
+
+            var form = $('<form action="'+url+ '" method="post">' +
+                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                '<input type="hidden" name="month" value="'+month+'" />' +
+                '<input type="hidden" name="year" value="'+year+'" />' +
                 '</form>');
 
             $('body').append(form);
