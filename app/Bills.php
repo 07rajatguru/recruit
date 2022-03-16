@@ -1517,7 +1517,7 @@ class Bills extends Model
         return $person_data;
     }
 
-    public static function getClientwiseReportData($client_name,$current_year,$next_year) {
+    public static function getClientwiseReportData($client_id,$current_year,$next_year) {
 
         $clientwise_query = Bills::query();
         $clientwise_query = $clientwise_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
@@ -1525,7 +1525,8 @@ class Bills extends Model
         $clientwise_query = $clientwise_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
         $clientwise_query = $clientwise_query->join('users','users.id','=','client_basicinfo.account_manager_id');
         $clientwise_query = $clientwise_query->select('bills.*','candidate_basicinfo.full_name as candidate_name','users.name as owner_name','client_basicinfo.coordinator_name as coordinator_name','client_basicinfo.coordinator_prefix as coordinator_prefix');
-        $clientwise_query = $clientwise_query->where('bills.company_name','like',"%$client_name%");
+        //$clientwise_query = $clientwise_query->where('bills.company_name','like',"%$client_name%");
+        $clientwise_query = $clientwise_query->where('client_basicinfo.id','=',$client_id);
         $clientwise_query = $clientwise_query->where('bills.status','=','1');
         $clientwise_query = $clientwise_query->where('bills.cancel_bill','=','0');
         $clientwise_query = $clientwise_query->where('bills.date_of_joining','>=',$current_year);
