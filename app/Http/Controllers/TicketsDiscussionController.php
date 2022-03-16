@@ -95,7 +95,6 @@ class TicketsDiscussionController extends Controller
         return view('adminlte::ticketDiscussion.ticketstatusindex',compact('tickets_res','count','open','in_progress','closed','status','status_array'));
     }
 
-
     public function create() {
 
         $action = 'add';
@@ -189,23 +188,23 @@ class TicketsDiscussionController extends Controller
             }
         }
 
+        // Send email notification
+        $to1 = 'saloni@trajinfotech.com';
+        $to2 = 'dhara@trajinfotech.com';
+        $to_users_array = array($to1,$to2);
+
         // get loggedin_user_email_id
         $loggedin_useremail = User::getUserEmailById($user_id);
 
         // get superadmin email id
         $superadminuserid = getenv('SUPERADMINUSERID');
-
-        $cc1 = 'info@adlertalent.com';
-        $cc2 = 'saloni@trajinfotech.com';
-        $cc3 = 'dhara@trajinfotech.com';
-
         $superadminemail = User::getUserEmailById($superadminuserid);
 
-        $cc_users_array = array($superadminemail,$cc1,$cc2,$cc3);
+        $cc_users_array = array($superadminemail,$loggedin_useremail);
 
         $module = "Ticket Discussion";
         $sender_name = $user_id;
-        $to = $loggedin_useremail;
+        $to = implode(",",$to_users_array);
         $cc = implode(",",$cc_users_array);
 
         $subject = "Ticket Discussion - " . $ticket_no;
@@ -419,23 +418,23 @@ class TicketsDiscussionController extends Controller
 
         $ticket_res = TicketsDiscussion::getTicketDetailsById($tickets_discussion_id);
 
+        // Send email notification
+        $to1 = 'saloni@trajinfotech.com';
+        $to2 = 'dhara@trajinfotech.com';
+        $to_users_array = array($to1,$to2);
+
         // get loggedin_user_email_id
         $loggedin_useremail = User::getUserEmailById($user_id);
 
         // get superadmin email id
         $superadminuserid = getenv('SUPERADMINUSERID');
-
-        $cc1 = 'info@adlertalent.com';
-        $cc2 = 'saloni@trajinfotech.com';
-        $cc3 = 'dhara@trajinfotech.com';
-
         $superadminemail = User::getUserEmailById($superadminuserid);
 
-        $cc_users_array = array($superadminemail,$cc1,$cc2,$cc3);
+        $cc_users_array = array($superadminemail,$loggedin_useremail);
 
         $module = "Ticket Discussion Comment";
         $sender_name = $user_id;
-        $to = $loggedin_useremail;
+        $to = implode(",",$to_users_array);
         $cc = implode(",",$cc_users_array);
 
         $subject = "Ticket Discussion Comment - " . $ticket_res['ticket_no'];
