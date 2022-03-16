@@ -53,7 +53,7 @@
 
                 <td>{{ $candidate['candidate_name'] or '' }}</td>
 
-                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $candidate['coordinator_name'] or '' }}</td>
+                <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $candidate['company_name'] or '' }}</td>
 
                 <td style="white-space: pre-wrap; word-wrap: break-word;"><a target="_blank" title="Show Job Opening" href="{{ route('jobopen.show',$candidate['jid']) }}">{{ $candidate['position_name'] or '' }}</a></td>
 
