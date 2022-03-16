@@ -44,8 +44,7 @@
 				<th style="border: 2px solid black;text-align: center;">Candidate Name</th>
 				<th style="border: 2px solid black;text-align: center;">Client Owner</th>
 				<th style="border: 2px solid black;text-align: center;">Position / Dept</th>
-				<th style="border: 2px solid black;text-align: center;">Salary offered <br/> (fixed)
-				</th>
+				<th style="border: 2px solid black;text-align: center;">Salary offered <br/> (fixed)</th>
 				<th style="border: 2px solid black;text-align: center;">Billing</th>
 				<th style="border: 2px solid black;text-align: center;">GST <br/> @ 18%</th>
 				<th style="border: 2px solid black;text-align: center;">Invoice</th>
@@ -60,17 +59,16 @@
 			<?php $j = 0;?>
 			@foreach($clientwise_data as $key => $value)
 			<?php $i = 0;?>
-				<tbody>
-					<tr>
-						<td colspan="12" style="text-align: center;background-color: #F7D358;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{$key}}</b></td>
-					</tr>
-				</tbody>
-				<tbody id="data_{{$j}}" style="display: none;">
-					@if(isset($value) && sizeof($value) >0)
+				@if(isset($value) && sizeof($value) >0)
+					<tbody>
+						<tr>
+							<td colspan="12" style="text-align: center;background-color: #F7D358;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{$key}}</b></td>
+						</tr>
+					</tbody>
+					<tbody id="data_{{$j}}" style="display: none;">
 						@foreach($value as $k => $v)
 							<tr>
-								<td style="border: 1px solid black;text-align: center;">{{ ++$i }}
-								</td>
+								<td style="border: 1px solid black;text-align: center;">{{ ++$i }}</td>
 								<td style="border: 1px solid black;">{{ $v['candidate_name'] }}</td>
 								<td style="border: 1px solid black;">{{ $v['owner_name'] }}</td>
 								<td style="border: 1px solid black;">{{ $v['position'] }}</td>
@@ -84,17 +82,8 @@
 								<td style="border: 1px solid black;"></td>
 							</tr>
 						@endforeach
-					@else
-						<tr>
-							<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
-							<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
-							<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
-							<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
-							<td style="border: 1px solid black;"></td> <td style="border: 1px solid black;"></td>
-							<td style="border: 1px solid black;"></td>
-						</tr>
-					@endif
-				</tbody>
+					</tbody>
+				@endif
 				<?php $j++;?>
 			@endforeach
 		@else

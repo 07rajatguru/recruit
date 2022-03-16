@@ -519,6 +519,7 @@ class ClientBasicinfo extends Ardent
 
         $client_query = $client_query->select('client_basicinfo.*','client_address.client_id','client_address.billing_city');
 
+        $client_query = $client_query->orderBy('client_basicinfo.name','asc');
         $client_response = $client_query->get();
         return $client_response;
     }
