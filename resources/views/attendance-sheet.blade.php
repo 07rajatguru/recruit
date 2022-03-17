@@ -130,8 +130,12 @@
                           	<td style="border: 5px solid #000000;">{{ $joining_date }}</td>
                         @endif
 
+                        <?php $jj=0; $kk=0; ?>
+
                         @foreach($value as $key1=>$value1)
                         	<?php
+
+                                $kk++;
                             	$get_cur_dt = date('d');
                                 $get_cur_month = date('m');
                                 $get_cur_yr = date('Y');
@@ -169,13 +173,24 @@
                                     $attendance = 'OH';
                                 }
                                 else if(in_array($key1, $sundays)) {
-                                    $attendance = 'H';
+
+                                    $kk = $kk-1;
+                                    if($kk==$jj) {
+                                        $attendance = 'A';
+                                    }
+                                    else {
+                                        $attendance = 'H';
+                                        $jj=0;
+                                        $kk=0;
+                                    }
                                 }
                                 else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
                                     $attendance = 'N';
                                 }
                                 else if(isset($value1['attendance']) && $value1['attendance'] == '') {
+                                    
                                     $attendance = 'A';
+                                    $jj++;
                                 }
                                 else if(isset($value1['attendance']) && $value1['attendance'] == 'P') {
                                     $attendance = 'P';

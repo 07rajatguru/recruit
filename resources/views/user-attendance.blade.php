@@ -114,11 +114,12 @@
                             </thead>
                             <tbody>
                                 
-                                <?php $i=1; ?>
+                                <?php $i=1;?>
 
                                 @foreach($list as $key=>$value)
                                     <tr style="border: 1px solid black;">
                                         <?php
+
                                             $values_array = explode(",", $key);
 
                                             $user_name = $values_array[0];
@@ -163,9 +164,12 @@
                                             <center>{{ $joining_date }}</center></td>
                                         @endif
                                         
+                                        <?php $jj=0; $kk=0; ?>
+
                                         @foreach($value as $key1=>$value1)
                                             <?php
 
+                                                $kk++;
                                                 $get_cur_dt = date('d');
                                                 $get_cur_month = date('m');
                                                 $get_cur_yr = date('Y');
@@ -175,7 +179,7 @@
                                                 //$user_holidays = App\Holidays::getHolidaysByUserID($user_id,$month,$year);
 
                                                 $joining_date_array = explode('/', $joining_date);
-
+                                                
                                                 if($key1 < $joining_date_array[0] && $joining_date_array[1] == $month && $year <= $joining_date_array[2]) {
                                                     $attendance = 'O';
                                                 }
@@ -207,13 +211,24 @@
                                                     $attendance = 'OH';
                                                 }
                                                 else if(in_array($key1, $sundays)) {
-                                                    $attendance = 'H';
+
+                                                    $kk = $kk-1;
+                                                    if($kk==$jj){
+                                                        $attendance = 'A';
+                                                    }
+                                                    else{
+                                                        $attendance = 'H';
+                                                        $jj=0;
+                                                        $kk=0;
+                                                    }
                                                 }
                                                 else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
                                                     $attendance = 'N';
                                                 }
                                                 else if(isset($value1['attendance']) && $value1['attendance'] == '') {
+
                                                     $attendance = 'A';
+                                                    $jj++;
                                                 }
                                                 else if(isset($value1['attendance']) && $value1['attendance'] == 'P') {
                                                     $attendance = 'P';
