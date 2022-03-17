@@ -177,6 +177,7 @@
                                     $kk = $kk-1;
                                     if($kk==$jj) {
                                         $attendance = 'A';
+                                        $jj++;
                                     }
                                     else {
                                         $attendance = 'H';

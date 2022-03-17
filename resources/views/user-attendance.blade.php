@@ -215,6 +215,7 @@
                                                     $kk = $kk-1;
                                                     if($kk==$jj){
                                                         $attendance = 'A';
+                                                        $jj++;
                                                     }
                                                     else{
                                                         $attendance = 'H';
@@ -300,8 +301,7 @@
                                                 @if($attendance == 'N' || $attendance == 'O')
                                                     <td style="border: 1px solid black;text-align: center;"></td>
                                                 @elseif($attendance == 'WPP')
-                                                    <td style="border: 1px solid black;text-align: center;background-color: #8FB1D5;cursor: pointer;" title="Pending Work Planning">
-                                                    </td>
+                                                    <td style="border: 1px solid black;text-align: center;background-color: #8FB1D5;cursor: pointer;" title="Pending Work Planning"></td>
                                                 @elseif($attendance == 'HD')
                                                     <?php 
                                                         $half_day++;
@@ -313,8 +313,7 @@
                                                         $half_day++;
                                                         $half_day_actual = $half_day / 2;
                                                     ?>
-                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;color: #FFFF00;" title="Half Day Rejection">HD
-                                                    </td>
+                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;color: #FFFF00;" title="Half Day Rejection">HD</td>
                                                 @elseif($attendance == 'WFHHD')
                                                     <?php 
                                                         $half_day++;
@@ -389,7 +388,7 @@
                                         <td style="border: 1px solid black;text-align:center;">
                                         {{ $total_days }}</td>
                                     </tr>
-                                <?php $i++; ?>
+                                <?php $i++;?>
                                 @endforeach
                             </tbody>
                         </table>
