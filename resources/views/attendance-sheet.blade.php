@@ -175,9 +175,11 @@
                                 else if(in_array($key1, $sundays)) {
 
                                     $kk = $kk-1;
+
                                     if($kk==$jj) {
                                         $attendance = 'A';
                                         $jj++;
+                                        $kk++;
                                     }
                                     else {
                                         $attendance = 'H';
