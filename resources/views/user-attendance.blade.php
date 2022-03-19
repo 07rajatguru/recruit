@@ -210,7 +210,7 @@
                                                 else if(isset($value1['optional_holiday']) && $value1['optional_holiday'] == 'Y') {
                                                     $attendance = 'OH';
                                                 }
-                                                else if(in_array($key1, $sundays)) {
+                                                else if(isset($value1['attendance']) && $value1['attendance'] == 'H') {
 
                                                     $kk = $kk-1;
 
@@ -219,7 +219,8 @@
                                                         $jj++;
                                                         $kk++;
                                                     }
-                                                    else{
+                                                    else {
+
                                                         $attendance = 'H';
                                                         $jj=0;
                                                         $kk=0;

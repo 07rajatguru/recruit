@@ -1477,6 +1477,8 @@ class HomeController extends Controller
 
                 foreach ($response as $key => $value) {
 
+                    $get_dt = date("j",strtotime($value->added_date));
+
                     $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
                     $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
 
@@ -1488,41 +1490,45 @@ class HomeController extends Controller
 
                     $rejected_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id,2);
 
-                    if($value->status == NULL && $value->loggedin_time == NULL) {
+                    if(in_array($get_dt, $sundays)) {
 
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = '';
+                        $list[$combine_name][$get_dt]['attendance'] = 'H';
+                    }
+                    else if($value->status == NULL && $value->loggedin_time == NULL) {
+
+                        $list[$combine_name][$get_dt]['attendance'] = '';
                     }
                     else if($value->status == 0) {
 
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WPP';
+                        $list[$combine_name][$get_dt]['attendance'] = 'WPP';
                     }
                     else if($value->status == 1 && $value->attendance == 'HD' && isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
 
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WFHHD';
+                        $list[$combine_name][$get_dt]['attendance'] = 'WFHHD';
                     }
                     else if($value->status == 1 && $value->attendance == 'F' && isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
 
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WFHP';
+                        $list[$combine_name][$get_dt]['attendance'] = 'WFHP';
                     }
                     else if(isset($rejected_wfh_data) && sizeof($rejected_wfh_data) > 0) {
 
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WFHR';
+                        $list[$combine_name][$get_dt]['attendance'] = 'WFHR';
                     }
                     else if($value->status == 1 && $value->attendance == 'HD') {
 
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'HD';
+                        $list[$combine_name][$get_dt]['attendance'] = 'HD';
                     }
                     else if($value->status == 1 && $value->attendance == 'F') {
 
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'P';
+                        $list[$combine_name][$get_dt]['attendance'] = 'P';
                     }
                     else if($value->status == 2 && $value->attendance == 'HD') {
 
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'HDR';
+                        $list[$combine_name][$get_dt]['attendance'] = 'HDR';
                     }
                     else if($value->status == 2 && $value->attendance == 'A') {
 
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'FR';
+                        $list[$combine_name][$get_dt]['attendance'] = 'FR';
                     }
 
                     // Set holiday dates
@@ -1727,7 +1733,9 @@ class HomeController extends Controller
             return view('errors.403');
         }
 
-        return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark,"attendance_type" => $attendance_type,"selected_attendance_type" => $selected_attendance_type),compact('users_name','sundays','department_nm'));
+        //print_r($list);exit;
+
+        return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark,"attendance_type" => $attendance_type,"selected_attendance_type" => $selected_attendance_type),compact('users_name','department_nm'));
     }
 
     public function exportAttendance() {
@@ -1860,6 +1868,8 @@ class HomeController extends Controller
 
                 foreach ($response as $key => $value) {
 
+                    $get_dt = date("j",strtotime($value->added_date));
+
                     $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
                     $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
 
@@ -1871,41 +1881,45 @@ class HomeController extends Controller
 
                     $rejected_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id,2);
 
-                    if($value->status == NULL && $value->loggedin_time == NULL) {
+                    if(in_array($get_dt, $sundays)) {
 
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = '';
+                        $list[$combine_name][$get_dt]['attendance'] = 'H';
+                    }
+                    else if($value->status == NULL && $value->loggedin_time == NULL) {
+
+                        $list[$combine_name][$get_dt]['attendance'] = '';
                     }
                     else if($value->status == 0) {
 
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WPP';
+                        $list[$combine_name][$get_dt]['attendance'] = 'WPP';
                     }
                     else if($value->status == 1 && $value->attendance == 'HD' && isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
 
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WFHHD';
+                        $list[$combine_name][$get_dt]['attendance'] = 'WFHHD';
                     }
                     else if($value->status == 1 && $value->attendance == 'F' && isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
 
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WFHP';
+                        $list[$combine_name][$get_dt]['attendance'] = 'WFHP';
                     }
                     else if(isset($rejected_wfh_data) && sizeof($rejected_wfh_data) > 0) {
 
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'WFHR';
+                        $list[$combine_name][$get_dt]['attendance'] = 'WFHR';
                     }
                     else if($value->status == 1 && $value->attendance == 'HD') {
 
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'HD';
+                        $list[$combine_name][$get_dt]['attendance'] = 'HD';
                     }
                     else if($value->status == 1 && $value->attendance == 'F') {
 
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'P';
+                        $list[$combine_name][$get_dt]['attendance'] = 'P';
                     }
                     else if($value->status == 2 && $value->attendance == 'HD') {
 
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'HDR';
+                        $list[$combine_name][$get_dt]['attendance'] = 'HDR';
                     }
                     else if($value->status == 2 && $value->attendance == 'A') {
 
-                        $list[$combine_name][date("j",strtotime($value->added_date))]['attendance'] = 'FR';
+                        $list[$combine_name][$get_dt]['attendance'] = 'FR';
                     }
 
                     // Set holiday dates
@@ -2115,11 +2129,11 @@ class HomeController extends Controller
 
             if(isset($list) && sizeof($list) > 0) {
 
-                Excel::create($sheet_name,function($excel) use ($list,$list1,$sundays,$year,$month) {
+                Excel::create($sheet_name,function($excel) use ($list,$list1,$year,$month) {
 
-                    $excel->sheet('sheet 1',function($sheet) use ($list,$list1,$sundays,$year,$month) {
+                    $excel->sheet('sheet 1',function($sheet) use ($list,$list1,$year,$month) {
 
-                        $sheet->loadView('attendance-sheet', array('list' => $list,'list1' => $list1,'sundays' => $sundays,'year' => $year,'month' => $month));
+                        $sheet->loadView('attendance-sheet', array('list' => $list,'list1' => $list1,'year' => $year,'month' => $month));
                     });
                 })->export('xlsx');
             }
@@ -2156,45 +2170,47 @@ class HomeController extends Controller
 
             foreach ($response as $key => $value) {
 
+                $get_dt = date("j",strtotime($value->added_date));
+
                 $approved_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$user_id,1);
 
                 $rejected_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$user_id,2);
 
                 if($value->status == NULL && $value->loggedin_time == NULL) {
 
-                    $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = '';
+                    $list[$user_id][$get_dt]['attendance'] = '';
                 }
                 else if($value->status == 0) {
 
-                    $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'WPP';
+                    $list[$user_id][$get_dt]['attendance'] = 'WPP';
                 }
                 else if($value->status == 1 && $value->attendance == 'HD' && isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
 
-                    $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'WFHHD';
+                    $list[$user_id][$get_dt]['attendance'] = 'WFHHD';
                 }
                 else if($value->status == 1 && $value->attendance == 'F' && isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
 
-                    $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'WFHP';
+                    $list[$user_id][$get_dt]['attendance'] = 'WFHP';
                 }
                 else if(isset($rejected_wfh_data) && sizeof($rejected_wfh_data) > 0) {
 
-                    $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'WFHR';
+                    $list[$user_id][$get_dt]['attendance'] = 'WFHR';
                 }
                 else if($value->status == 1 && $value->attendance == 'HD') {
 
-                    $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'HD';
+                    $list[$user_id][$get_dt]['attendance'] = 'HD';
                 }
                 else if($value->status == 1 && $value->attendance == 'F') {
 
-                    $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'P';
+                    $list[$user_id][$get_dt]['attendance'] = 'P';
                 }
                 else if($value->status == 2 && $value->attendance == 'HD') {
 
-                    $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'HDR';
+                    $list[$user_id][$get_dt]['attendance'] = 'HDR';
                 }
                 else if($value->status == 2 && $value->attendance == 'A') {
 
-                    $list[$user_id][date("j",strtotime($value->added_date))]['attendance'] = 'FR';
+                    $list[$user_id][$get_dt]['attendance'] = 'FR';
                 }
 
                 // Set holiday dates

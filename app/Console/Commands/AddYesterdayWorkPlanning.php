@@ -45,6 +45,9 @@ class AddYesterdayWorkPlanning extends Command
         $hr_advisory = getenv('HRADVISORY');
         $operations = getenv('OPERATIONS');
         $type_array = array($recruitment,$hr_advisory,$operations);
+        
+        $payroll_user_id = getenv('PAYROLLUSERID');
+        $hr_user_id = getenv('HRUSERID');
 
         $users = User::getAllUsersExpectSuperAdmin($type_array);
 
@@ -52,16 +55,20 @@ class AddYesterdayWorkPlanning extends Command
 
             foreach ($users as $key => $value) {
                 
-                $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($yesterday_date,$key);
-
-                if(isset($get_work_planning_res) && $get_work_planning_res != '') {
+                if($key == $payroll_user_id || $key == $hr_user_id) {
                 }
                 else {
-
-                    $work_planning = new WorkPlanning();
-                    $work_planning->added_date = $yesterday_date;
-                    $work_planning->added_by = $key;
-                    $work_planning->save();
+                    $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($yesterday_date,$key);
+    
+                    if(isset($get_work_planning_res) && $get_work_planning_res != '') {
+                    }
+                    else {
+    
+                        $work_planning = new WorkPlanning();
+                        $work_planning->added_date = $yesterday_date;
+                        $work_planning->added_by = $key;
+                        $work_planning->save();
+                    }
                 }
             }
         } 
