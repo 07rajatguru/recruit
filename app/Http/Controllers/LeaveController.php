@@ -779,7 +779,6 @@ class LeaveController extends Controller
             \DB::statement("UPDATE user_leave SET status = '1',approved_by=$loggedin_user_id, reply_message = '$message' WHERE id = $leave_id");
 
             // Get Leave Type
-            $type_of_leave = $leave_details['type_of_leave'];
             $leave_category = $leave_details['category'];
 
             if($leave_category == 'Privilege Leave') {
@@ -836,21 +835,26 @@ class LeaveController extends Controller
             \DB::statement("UPDATE user_leave SET status = '2',approved_by=$loggedin_user_id, reply_message = '$message' WHERE id = $leave_id");
         }
 
-        // Add Entry in work planning when any leave is approve or reject
-        $selected_dates = explode(",", $leave_details['selected_dates']);
+        $type_of_leave = $leave_details['type_of_leave'];
 
-        foreach ($selected_dates as $key => $value) {
+        if($type_of_leave == 'Full Day') {
 
-            $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($value,$user_id);
+            // Add Entry in work planning when any leave is approve or reject
+            $selected_dates = explode(",", $leave_details['selected_dates']);
 
-            if(isset($get_work_planning_res) && $get_work_planning_res != '') {
-            }
-            else {
+            foreach ($selected_dates as $key => $value) {
 
-                $work_planning = new WorkPlanning();
-                $work_planning->added_date = $value;
-                $work_planning->added_by = $user_id;
-                $work_planning->save();
+                $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($value,$user_id);
+
+                if(isset($get_work_planning_res) && $get_work_planning_res != '') {
+                }
+                else {
+
+                    $work_planning = new WorkPlanning();
+                    $work_planning->added_date = $value;
+                    $work_planning->added_by = $user_id;
+                    $work_planning->save();
+                }
             }
         }
 
