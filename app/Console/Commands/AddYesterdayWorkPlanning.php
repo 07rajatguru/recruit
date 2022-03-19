@@ -46,7 +46,7 @@ class AddYesterdayWorkPlanning extends Command
         $operations = getenv('OPERATIONS');
         $type_array = array($recruitment,$hr_advisory,$operations);
 
-        $users = User::getAllUsers($type_array);
+        $users = User::getAllUsersExpectSuperAdmin($type_array);
 
         if(isset($users) && sizeof($users) > 0) {
 
@@ -54,7 +54,7 @@ class AddYesterdayWorkPlanning extends Command
                 
                 $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($yesterday_date,$key);
 
-                if(isset($get_work_planning_res) && sizeof($get_work_planning_res) > 0) {
+                if(isset($get_work_planning_res) && $get_work_planning_res != '') {
                 }
                 else {
 
