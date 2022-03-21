@@ -48,6 +48,8 @@ class AddYesterdayWorkPlanning extends Command
         
         $payroll_user_id = getenv('PAYROLLUSERID');
         $hr_user_id = getenv('HRUSERID');
+        $hiral_user_id = getenv('HIRALUSERID');
+        $jagriti_user_id = getenv('JAGRITIUSERID');
 
         $users = User::getAllUsersExpectSuperAdmin($type_array);
 
@@ -55,7 +57,7 @@ class AddYesterdayWorkPlanning extends Command
 
             foreach ($users as $key => $value) {
                 
-                if($key == $payroll_user_id || $key == $hr_user_id) {
+                if($key == $payroll_user_id || $key == $hr_user_id || $key == $hiral_user_id || $key == $jagriti_user_id) {
                 }
                 else {
                     $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($yesterday_date,$key);
