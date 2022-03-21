@@ -234,6 +234,11 @@
                                                     $attendance = 'A';
                                                     $jj++;
                                                 }
+                                                else if(isset($value1['attendance']) && $value1['attendance'] == '') {
+
+                                                    $attendance = 'A';
+                                                    $jj++;
+                                                }
                                                 else if(isset($value1['attendance']) && $value1['attendance'] == 'P') {
                                                     $attendance = 'P';
                                                 }

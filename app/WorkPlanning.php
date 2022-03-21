@@ -598,7 +598,7 @@ class WorkPlanning extends Model
         $query = WorkPlanning::query();
         $query = $query->where('work_planning.added_date','=',"$date");
         $query = $query->where('work_planning.added_by','=',$user_id);
-        $query = $query->select('work_planning.id');
+        $query = $query->select('work_planning.id','work_planning.attendance');
         $work_planning_res = $query->first();
 
         return $work_planning_res;

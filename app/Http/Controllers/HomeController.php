@@ -1494,6 +1494,10 @@ class HomeController extends Controller
 
                         $list[$combine_name][$get_dt]['attendance'] = 'H';
                     }
+                    else if($value->attendance == 'A') {
+
+                        $list[$combine_name][$get_dt]['attendance'] = 'A';
+                    }
                     else if($value->status == NULL && $value->loggedin_time == NULL) {
 
                         $list[$combine_name][$get_dt]['attendance'] = '';
@@ -1885,6 +1889,10 @@ class HomeController extends Controller
 
                         $list[$combine_name][$get_dt]['attendance'] = 'H';
                     }
+                    else if($value->attendance == 'A') {
+
+                        $list[$combine_name][$get_dt]['attendance'] = 'A';
+                    }
                     else if($value->status == NULL && $value->loggedin_time == NULL) {
 
                         $list[$combine_name][$get_dt]['attendance'] = '';
@@ -2176,7 +2184,11 @@ class HomeController extends Controller
 
                 $rejected_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$user_id,2);
 
-                if($value->status == NULL && $value->loggedin_time == NULL) {
+                if($value->attendance == 'A') {
+
+                    $list[$user_id][$get_dt]['attendance'] = 'A';
+                }
+                else if($value->status == NULL && $value->loggedin_time == NULL) {
 
                     $list[$user_id][$get_dt]['attendance'] = '';
                 }
