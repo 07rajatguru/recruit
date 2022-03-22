@@ -106,9 +106,9 @@
                                             <li>
                                                 <a href="/users-attendance/self/{{ $month }}/{{ $year }}" target="_blank">Attendance</a>
                                             </li>
-                                            <!-- <li>
-                                                <a href="{{getenv('APP_URL').'/ticket-discussion'}}">Ticket</a>
-                                            </li> -->
+                                            <li>
+                                                <a href="{{getenv('APP_URL').'/ticket-discussion/add'}}">Add Ticket</a>
+                                            </li>
                                         </ul>
                                         
                                         <div class="slimScrollBar" style="background-color: rgb(0, 0, 0); width: 3px; position: absolute; top: 0px; opacity: 0.4; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px;border-bottom-right-radius: 7px;border-bottom-left-radius: 7px; z-index: 99; right: 1px; height: 131.14754098360655px; background-position: initial initial; background-repeat: initial initial;">

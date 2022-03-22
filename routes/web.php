@@ -3426,13 +3426,13 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-ticket|display-user-wise-ticket|ticket-add|ticket-edit|ticket-delete']
     ]);
 
-    Route::get('ticket-discussion/create',[
+    Route::get('ticket-discussion/add',[
         'as' => 'ticket.create',
         'uses' => 'TicketsDiscussionController@create',
         'middleware' => ['permission:ticket-add']
     ]);
 
-    Route::post('ticket-discussion/create',[
+    Route::post('ticket-discussion/add',[
         'as' => 'ticket.store',
         'uses' => 'TicketsDiscussionController@store',
         'middleware' => ['permission:ticket-add']
