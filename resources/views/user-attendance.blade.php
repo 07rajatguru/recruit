@@ -193,6 +193,11 @@
 
                                                     $attendance = 'B';
                                                 }
+                                                else if(isset($value1['attendance']) && $value1['attendance'] == 'A') {
+
+                                                    $attendance = 'A';
+                                                    $jj++;
+                                                }
                                                 else if(isset($value1['attendance']) && $value1['attendance'] == 'WPP') {
                                                     $attendance = 'WPP';
                                                 }
@@ -238,11 +243,6 @@
                                                 }
                                                 else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
                                                     $attendance = 'N';
-                                                }
-                                                else if(isset($value1['attendance']) && $value1['attendance'] == 'A') {
-
-                                                    $attendance = 'A';
-                                                    $jj++;
                                                 }
                                                 else if(isset($value1['attendance']) && $value1['attendance'] == '') {
 
@@ -295,7 +295,7 @@
                                                     <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">PH</td>
                                                 @elseif($attendance == 'OH')
                                                     <?php $ph++; ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">OH</td>
+                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">PH</td>
                                                 @elseif($attendance == 'H')
                                                     <?php $week_off++; ?>
                                                     <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">H</td>
@@ -347,12 +347,21 @@
                                                 @elseif($attendance == 'UL')
                                                     <?php $ul++; ?>
                                                     <td style="border: 1px solid black;background-color:#fac090;text-align: center;cursor: pointer;" title="Unapproved Leave">UL</td>
+                                                @elseif($attendance == 'PH' && $working_hours[0] == '04')
+                                                    <?php $ph = $ph + 0.5; ?>
+                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;" title="Half Paid Holiday">PH</td>
                                                 @elseif($attendance == 'PH')
                                                     <?php $ph++; ?>
                                                     <td style="border: 1px solid black;background-color:#76933C;text-align: center;cursor: pointer;" title="Paid Holiday">PH</td>
+                                                @elseif($attendance == 'OH' && $working_hours[0] == '04')
+                                                    <?php $ph = $ph + 0.5; ?>
+                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;color:white;" title="Half Optional Holiday">PH</td>
                                                 @elseif($attendance == 'OH')
                                                     <?php $ph++; ?>
-                                                    <td style="border: 1px solid black;background-color:#76933C;text-align: center;cursor: pointer;" title="Optional Holiday">OH</td>
+                                                    <td style="border: 1px solid black;background-color:#76933C;text-align: center;cursor: pointer;color:white;" title="Optional Holiday">PH</td>
+                                                @elseif($attendance == 'H' && $working_hours[0] == '04')
+                                                    <?php $week_off = $week_off + 0.5; ?>
+                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;" title="Half Sunday">H</td>
                                                 @elseif($attendance == 'H')
                                                     <?php $week_off++; ?>
                                                     <td style="border: 1px solid black;background-color:#ffc000;text-align: center;cursor: pointer;" title="Sunday">H</td>

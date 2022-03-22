@@ -154,6 +154,11 @@
                                 else if($working_hours == '') {
                                     $attendance = 'B';
                                 }
+                                else if(isset($value1['attendance']) && $value1['attendance'] == 'A') {
+
+                                    $attendance = 'A';
+                                    $jj++;
+                                }
                                 else if(isset($value1['attendance']) && $value1['attendance'] == 'WPP') {
                                     $attendance = 'WPP';
                                 }
@@ -198,11 +203,6 @@
                                 }
                                 else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
                                     $attendance = 'N';
-                                }
-                                else if(isset($value1['attendance']) && $value1['attendance'] == 'A') {
-
-                                    $attendance = 'A';
-                                    $jj++;
                                 }
                                 else if(isset($value1['attendance']) && $value1['attendance'] == '') {
                                     
@@ -257,12 +257,21 @@
                             @elseif($attendance == 'UL')
                                 <?php $ul++; ?>
                                 <td style="border: 5px solid #000000;background-color:#fac090;" title="Unapproved Leave">UL</td>
+                            @elseif($attendance == 'PH' && $working_hours[0] == '04')
+                                <?php $ph = $ph + 0.5; ?>
+                                <td style="border: 5px solid #000000;background-color:#d99594;" title="Half Paid Holiday">PH</td>
                             @elseif($attendance == 'PH')
                                 <?php $ph++; ?>
                                 <td style="border: 5px solid #000000;background-color:#76933C;" title="Paid Holiday">PH</td>
+                            @elseif($attendance == 'OH' && $working_hours[0] == '04')
+                                <?php $ph = $ph + 0.5; ?>
+                                <td style="border: 5px solid #000000;background-color:#d99594;color:#0000FF;" title="Half Optional Holiday">PH</td>
                             @elseif($attendance == 'OH')
                                 <?php $ph++; ?>
-                                <td style="border: 5px solid #000000;background-color:#76933C;" title="Paid Holiday">OH</td>
+                                <td style="border: 5px solid #000000;background-color:#76933C;color:#0000FF;" title="Optional Holiday">PH</td>
+                            @elseif($attendance == 'H' && $working_hours[0] == '04')
+                                <?php $week_off = $week_off + 0.5; ?>
+                                <td style="border: 5px solid #000000;background-color:#d99594;" title="Half Sunday">H</td>
                             @elseif($attendance == 'H')
                                 <?php $week_off++; ?>
                                 <td style="border: 5px solid #000000;background-color:#ffc000;"  title="Sunday">H</td>

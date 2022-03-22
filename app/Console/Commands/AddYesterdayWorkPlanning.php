@@ -67,6 +67,7 @@ class AddYesterdayWorkPlanning extends Command
                     else {
     
                         $work_planning = new WorkPlanning();
+                        $work_planning->attendance = 'A';
                         $work_planning->added_date = $yesterday_date;
                         $work_planning->added_by = $key;
                         $work_planning->save();

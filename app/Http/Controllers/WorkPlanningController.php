@@ -668,21 +668,14 @@ class WorkPlanningController extends Controller
         $get_work_planning_res_2 = WorkPlanning::getWorkPlanningByAddedDateAndUserID($yesterday_1,$user_id);
         $get_work_planning_res_3 = WorkPlanning::getWorkPlanningByAddedDateAndUserID($yesterday_2,$user_id);
 
-        if($get_work_planning_res_1->attendance == 'A' && $get_work_planning_res_3->attendance == 'A') {
+        if(($get_work_planning_res_1->attendance == 'A' && $get_work_planning_res_3->attendance == 'A') || ($get_work_planning_res_1->attendance == '' && $get_work_planning_res_3->attendance == 'A') || ($get_work_planning_res_1->attendance == 'A' && $get_work_planning_res_3->attendance == '')) {
 
             $exist_wp_id = $get_work_planning_res_2->id;
             $work_planning_exist = WorkPlanning::find($exist_wp_id);
             $work_planning_exist->attendance = 'A';
             $work_planning_exist->save();
         }
-        else if($get_work_planning_res_1->attendance == '' && $get_work_planning_res_3->attendance == 'A') {
-
-            $exist_wp_id = $get_work_planning_res_2->id;
-            $work_planning_exist = WorkPlanning::find($exist_wp_id);
-            $work_planning_exist->attendance = 'A';
-            $work_planning_exist->save();
-        }
-
+        
         if($day == 'Saturday') {
 
             if($total_projected_time < '04:30:00') {
