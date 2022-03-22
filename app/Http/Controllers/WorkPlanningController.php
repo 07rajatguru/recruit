@@ -1162,6 +1162,36 @@ class WorkPlanningController extends Controller
             }
         }
 
+        // Get previous WFH requests for set attendance from 3rd date
+        if($work_type == 'WFH') {
+
+            $user_ids[] = $user_id;
+            $month = date('m');
+            $year = date('Y');
+
+            $work_from_home_res = WorkFromHome::getAllWorkFromHomeRequestsByUserId(0,$user_ids,$month,$year,'');
+
+            if(isset($work_from_home_res) && sizeof($work_from_home_res) > 0) {
+
+                $dates_string = '';
+                foreach ($work_from_home_res as $key => $value) {
+                    
+                    if($dates_string == '') {
+                        $dates_string = $value['selected_dates'];
+                    }
+                    else {
+                        $dates_string .= "," . $value['selected_dates'];
+                    }
+                }
+
+                $dates_array = explode(",", $dates_string);
+
+                if(isset($dates_array) && sizeof($dates_array) > 2) {
+                    \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $id");
+                }
+            }
+        }
+
         if(isset($email_value) && $email_value != '') {
 
             if($user_id == $added_by_id) {
@@ -1296,17 +1326,6 @@ class WorkPlanningController extends Controller
                         }
                     }
                 }
-
-                // Get last two days work planning result as WFH Policy
-                if($work_type == 'WFH') {
-
-                    $work_from_home_res = WorkFromHome::getUserWorkFromHomeRequests($user_id,$work_planning_date);
-
-                    if(isset($work_from_home_res) && sizeof($work_from_home_res) > 0) {
-
-                        \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $id");
-                    }
-                }
             }
             else {
 
@@ -1433,16 +1452,35 @@ class WorkPlanningController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-        // Get last two days work planning result as WFH Policy
+        // Get previous WFH requests for set attendance from 3rd date
         $work_type = $work_planning['work_type'];
         
         if($work_type == 'WFH') {
+
+            $user_ids[] = $user_id;
+            $month = date('m');
+            $year = date('Y');
             
-            $work_from_home_res = WorkFromHome::getUserWorkFromHomeRequests($user_id,$work_planning['added_date']);
+            $work_from_home_res = WorkFromHome::getAllWorkFromHomeRequestsByUserId(0,$user_ids,$month,$year,'');
 
             if(isset($work_from_home_res) && sizeof($work_from_home_res) > 0) {
 
-                \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $wp_id");
+                $dates_string = '';
+                foreach ($work_from_home_res as $key => $value) {
+                    
+                    if($dates_string == '') {
+                        $dates_string = $value['selected_dates'];
+                    }
+                    else {
+                        $dates_string .= "," . $value['selected_dates'];
+                    }
+                }
+
+                $dates_array = explode(",", $dates_string);
+
+                if(isset($dates_array) && sizeof($dates_array) > 2) {
+                    \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $wp_id");
+                }
             }
         }
 

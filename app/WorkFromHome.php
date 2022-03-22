@@ -60,6 +60,7 @@ class WorkFromHome extends Model
 
                 $work_from_home_res[$i]['status'] = $value->status;
                 $work_from_home_res[$i]['user_name'] = $value->user_name;
+                $work_from_home_res[$i]['selected_dates'] = $value->selected_dates;
 
                 $i++;
             }
@@ -111,23 +112,6 @@ class WorkFromHome extends Model
             $work_from_home_res['remarks'] = $response->remarks;
         }
         return $work_from_home_res;
-    }
-
-    public static function getUserWorkFromHomeRequests($user_id,$month,$year) {
-
-        $yesterday_date = date('Y-m-d',strtotime("$apply_date -1days"));
-        $before_yesterday_date = date('Y-m-d', strtotime("$apply_date -2days"));
-        $dates = $before_yesterday_date . "," . $yesterday_date;
-
-        $query = WorkFromHome::query();
-
-        $query = $query->where('selected_dates','like',"%$dates%");
-        $query = $query->where('user_id','=',$user_id);
-        $query = $query->where('status','=',1);
-        $query = $query->select('work_from_home.*');
-        $response = $query->get();
-
-        return $response;
     }
 
     public static function getWorkFromHomeRequestByDate($apply_date,$user_id,$status) {
