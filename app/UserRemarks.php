@@ -97,7 +97,7 @@ class UserRemarks extends Model
             }
         }
 
-        $query = $query->select('user_remarks.*','users.name as user_name','users.first_name as first_name','users.last_name as last_name','users_otherinfo.date_of_joining as joining_date','department.name as department_name','users.working_hours as working_hours');
+        $query = $query->select('user_remarks.*','users.name as user_name','users.first_name as first_name','users.last_name as last_name','users_otherinfo.date_of_joining as joining_date','department.name as department_name','users.working_hours as working_hours','users.employment_type as employment_type');
 
         $res = $query->get();
 
@@ -113,7 +113,7 @@ class UserRemarks extends Model
                 $remarks[$i]['user_name'] = $value->user_name;
 
                 $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
-                $full_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
+                $full_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$value->employment_type.",".$joining_date;
                 $remarks[$i]['full_name'] = $full_name;
                 
 
@@ -142,7 +142,7 @@ class UserRemarks extends Model
             $query = $query->where(\DB::raw('year(user_remarks.date)'),'=', $year);
         }
 
-        $query = $query->select('user_remarks.*','users.name as user_name','users.first_name as first_name','users.last_name as last_name','users_otherinfo.date_of_joining as joining_date','department.name as department_name','users.working_hours as working_hours');
+        $query = $query->select('user_remarks.*','users.name as user_name','users.first_name as first_name','users.last_name as last_name','users_otherinfo.date_of_joining as joining_date','department.name as department_name','users.working_hours as working_hours','users.employment_type as employment_type');
 
         $res = $query->get();
 
@@ -158,7 +158,7 @@ class UserRemarks extends Model
                 $remarks[$i]['user_name'] = $value->user_name;
 
                 $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
-                $full_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
+                $full_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->employment_type.",".$value->working_hours.",".$joining_date;
                 $remarks[$i]['full_name'] = $full_name;
                 
 

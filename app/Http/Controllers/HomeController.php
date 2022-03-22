@@ -1344,7 +1344,7 @@ class HomeController extends Controller
             if($user_details->joining_date <= $check_date) {
 
                 $joining_date = date('d/m/Y', strtotime("$user_details->joining_date"));
-                $full_name = $user_details->first_name."-".$user_details->last_name.",".$user_details->department_name.",".$user_details->working_hours.",".$joining_date;
+                $full_name = $user_details->first_name."-".$user_details->last_name.",".$user_details->department_name.",".$user_details->employment_type.",".$user_details->working_hours.",".$joining_date;
                 $users = array($full_name => "");
             }
             else {
@@ -1480,7 +1480,7 @@ class HomeController extends Controller
                     $get_dt = date("j",strtotime($value->added_date));
 
                     $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
-                    $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
+                    $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->employment_type.",".$value->working_hours.",".$joining_date;
 
                     // Get User id from both name 
                     $user_name = $value->first_name."-".$value->last_name;
@@ -1737,8 +1737,6 @@ class HomeController extends Controller
             return view('errors.403');
         }
 
-        //print_r($list);exit;
-
         return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark,"attendance_type" => $attendance_type,"selected_attendance_type" => $selected_attendance_type),compact('users_name','department_nm'));
     }
 
@@ -1781,7 +1779,7 @@ class HomeController extends Controller
                 if($user_details->joining_date <= $check_date) {
 
                     $joining_date = date('d/m/Y', strtotime("$user_details->joining_date"));
-                    $full_name = $user_details->first_name."-".$user_details->last_name.",".$user_details->department_name.",".$user_details->working_hours.",".$joining_date;
+                    $full_name = $user_details->first_name."-".$user_details->last_name.",".$user_details->department_name.",".$user_details->working_hours.",".$user_details->employment_type.",".$joining_date;
                     $users = array($full_name => "");
                 }
                 else {
@@ -1875,7 +1873,7 @@ class HomeController extends Controller
                     $get_dt = date("j",strtotime($value->added_date));
 
                     $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
-                    $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$joining_date;
+                    $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->employment_type.",".$value->working_hours.",".$joining_date;
 
                     // Get User id from both name
                     $user_name = $value->first_name."-".$value->last_name;

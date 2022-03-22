@@ -74,18 +74,20 @@
                         <table class="table table-striped table-bordered nowrap" cellspacing="0" id="attendance_table">
                             <thead>
                                 <tr>
-                                    <th style="border: 1px solid black;padding-left: 900px;"colspan="48">Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</th>
+                                    <th style="border: 1px solid black;padding-left: 900px;"colspan="49">Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</th>
                                 </tr>
                                 <tr>
-                                    <th style="border: 1px solid black;text-align: center;" rowspan="2"><br/><br/>Sr. No.</th>
+                                    <th style="border: 1px solid black;text-align: center;" rowspan="2">
+                                    <br/><br/>Sr. No.</th>
                                     <th style="border: 1px solid black;background-color:#d6e3bc;">ADLER EMPLOYEES</th>
-                                    <th colspan="46" style="border: 1px solid black;padding-left: 760px;">DATE</th>
+                                    <th colspan="47" style="border: 1px solid black;padding-left: 760px;">DATE</th>
                                 </tr>
 
                                 <th style="border: 1px solid black;background-color:#d6e3bc;">NAME OF PERSON</th>
 
                                 @if(isset($list) && sizeof($list)>0)
                                     <th style="border: 1px solid black;background-color:#d6e3bc;">Department</th>
+                                    <th style="border: 1px solid black;">Employment Type</th>
                                     <th style="border: 1px solid black;">Working Hours</th>
                                     <th style="border: 1px solid black;">Date of Joining</th>
                                     @foreach($list as $key => $value)
@@ -126,16 +128,23 @@
                                             $new_user_name = str_replace("-"," ", $user_name);
 
                                             $department = $values_array[1];
-                                            $joining_date = $values_array[3];
+                                            $joining_date = $values_array[4];
 
-                                            if($values_array[2] != '') {
+                                            if($values_array[3] != '') {
 
-                                                $working_hours = $values_array[2];
+                                                $working_hours = $values_array[3];
                                                 $working_hours = explode(':', $working_hours);
                                             }
                                             else {
                                                 $working_hours = '';
                                             }
+
+                                            if($values_array[2] != '') {
+                                                $employment_type = $values_array[2];
+                                            }
+                                            else {
+                                                $employment_type = '';
+                                            } 
 
                                             $present = 0;$week_off = 0;$ph = 0;
                                             $pl = 0;$sl = 0;$ul = 0;
@@ -143,7 +152,8 @@
                                             $days =0;$total_leaves =0;$total_days = 0;
                                         ?>
 
-                                        <td style="border: 1px solid black;;text-align: center;">{{ $i }}</td>
+                                        <td style="border: 1px solid black;;text-align: center;background-color: #fac090;">{{ $i }}</td>
+
                                         <td style="color: black; border: 1px solid black;;text-align: center;">{{ $new_user_name }}</td>
 
                                         @if($department == 'Recruitment')
@@ -155,6 +165,8 @@
                                         @else
                                             <td style="color: black; border: 1px solid black;background-color: #B1A0C7;"><center>{{ $department }}</center></td>
                                         @endif
+
+                                        <td style="color: black; border: 1px solid black;"><center>{{ $employment_type }}</center></td>
 
                                         @if($working_hours != '')
                                             <td style="color: black; border: 1px solid black;">

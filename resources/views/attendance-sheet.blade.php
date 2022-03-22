@@ -10,54 +10,56 @@
 		<body>
 			<table style="width: 100%;border: 5px solid #000000;">
 				@if($days == '31')
-					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
-		                <td colspan="48" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
+					<tr style="font-family:Calibri;font-size: 11;border: 5px solid #000000;">
+		                <th colspan="49" style="text-align:center;border: 5px solid #000000;">Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</th>
 					</tr>
-					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
-						<td rowspan="2" style="text-align:center;width:10;border: 5px solid #000000;">
-							<b>Sr.No</b></td>
-	                	<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">ADLER EMPLOYEES</td>
-	                	<td colspan="46" style="text-align:center;border: 5px solid #000000;"><b>DATE</b></td>
+					<tr style="font-family:Calibri;font-size: 11;border: 5px solid #000000;">
+						<th rowspan="2" style="text-align:center;width:7;border: 5px solid #000000;">
+						Sr. No.</th>
+	                	<th style="background-color:#d6e3bc;text-align:center;width:33;border: 5px solid #000000;">ADLER EMPLOYEES</th>
+	                	<th colspan="47" style="text-align:center;border: 5px solid #000000;">DATE</th>
 					</tr>
 				@elseif($days == '30')
-					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
-		                <td colspan="47" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
+					<tr style="font-family:Calibri;font-size: 11;border: 5px solid #000000;">
+		                <th colspan="48" style="text-align:center;border: 5px solid #000000;">Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</th>
 					</tr>
-					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
-						<td rowspan="2" style="text-align:center;width:10;border: 5px solid #000000;">
-							<b>Sr.No</b></td>
-	                	<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">ADLER EMPLOYEES</td>
-	                	<td colspan="45" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;"><b>DATE</b></td>
+					<tr style="font-family:Calibri;font-size: 11;border: 5px solid #000000;">
+						<th rowspan="2" style="text-align:center;width:7;border: 5px solid #000000;">
+						Sr.No</th>
+	                	<th style="background-color:#d6e3bc;text-align:center;width:33;border: 5px solid #000000;">ADLER EMPLOYEES</th>
+	                	<th colspan="46" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;">DATE</th>
 					</tr>
 				@elseif($days == '29')
-					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
-		                <td colspan="46" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
+					<tr style="font-family:Calibri;font-size: 11;border: 5px solid #000000;">
+		                <th colspan="47" style="text-align:center;border: 5px solid #000000;">Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</th>
 					</tr>
-					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
-						<td rowspan="2" style="text-align:center;width:10;border: 5px solid #000000;">
-							<b>Sr.No</b></td>
-	                	<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">ADLER EMPLOYEES</td>
-	                	<td colspan="42" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;"><b>DATE</b></td>
+					<tr style="font-family:Calibri;font-size: 11;border: 5px solid #000000;">
+						<th rowspan="2" style="text-align:center;width:7;border: 5px solid #000000;">
+						Sr.No</th>
+	                	<th style="background-color:#d6e3bc;text-align:center;width:33;border: 5px solid #000000;">ADLER EMPLOYEES</th>
+	                	<th colspan="45" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;">DATE</th>
 					</tr>
 				@else
-					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
-		                <td colspan="45" style="text-align:center;border: 5px solid #000000;"><b>Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</b></td>
+					<tr style="font-family:Calibri;font-size: 11;border: 5px solid #000000;">
+		                <th colspan="46" style="text-align:center;border: 5px solid #000000;">Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</th>
 					</tr>
-					<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
-						<td rowspan="2" style="text-align:center;width:10;border: 5px solid #000000;">
-							<b>Sr.No</b></td>
-	                	<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">ADLER EMPLOYEES</td>
-	                	<td colspan="42" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;"><b>DATE</b></td>
+					<tr style="font-family:Calibri;font-size: 11;border: 5px solid #000000;">
+						<th rowspan="2" style="text-align:center;width:7;border: 5px solid #000000;">
+						Sr.No</th>
+	                	<th style="background-color:#d6e3bc;text-align:center;width:33;border: 5px solid #000000;">ADLER EMPLOYEES</th>
+	                	<th colspan="44" style="text-align:center;border: 5px solid #000000;border: 5px solid #000000;">DATE</th>
 					</tr>
 				@endif
 
-				<tr style="font-family:Calibri;font-size: 12;border: 5px solid #000000;">
+				<tr style="font-family:Calibri;font-size: 11;border: 5px solid #000000;">
 
 					<td style="border: 5px solid #000000;"></td>
-					<th style="background-color:#d6e3bc;text-align:center;width:35;border: 5px solid #000000;">NAME OF PERSON</th>
-	            	<td style="width:17;text-align: center;border: 5px solid #000000;background-color:#d6e3bc;"><b>Department</b></td>
-	            	<td style="width:17;text-align: center;border: 5px solid #000000;"><b>Working Hours</b></td>
-	            	<td style="width:17;text-align: center;border: 5px solid #000000;"><b>Date of Joining</b></td>
+					<th style="background-color:#d6e3bc;text-align:center;width:33;border: 5px solid #000000;">NAME OF PERSON</th>
+	            	<th style="width:17;text-align: center;border: 5px solid #000000;background-color:#d6e3bc;">Department</th>
+                    <th style="width:20;text-align: center;border: 5px solid #000000;">Employment Type</th>
+	            	<th style="width:17;text-align: center;border: 5px solid #000000;">Working Hours</th>
+	            	<th style="width:17;text-align: center;border: 5px solid #000000;">Date of Joining
+                    </th>
 	            
 		            @foreach($list as $key => $value)
 		                @foreach($value as $key1=>$value1)
@@ -86,7 +88,7 @@
 				</tr>
 				<?php $i=1; ?>
                 @foreach($list as $key=>$value)
-                    <tr style="font-family:Calibri;font-size: 12;text-align: center;border: 5px solid #000000;">
+                    <tr style="font-family:Calibri;font-size: 11;text-align: center;border: 5px solid #000000;">
                        	<?php
                             $values_array = explode(",", $key);
 
@@ -94,15 +96,22 @@
                             $new_user_name = str_replace("-"," ", $user_name);
 
                             $department = $values_array[1];
-                            $joining_date = $values_array[3];
+                            $joining_date = $values_array[4];
 
-                            if($values_array[2] != '') {
+                            if($values_array[3] != '') {
 
-                                $working_hours = $values_array[2];
+                                $working_hours = $values_array[3];
                                 $working_hours = explode(':', $working_hours);
                             }
                             else {
                                 $working_hours = '';
+                            }
+
+                            if($values_array[2] != '') {
+                                $employment_type = $values_array[2];
+                            }
+                            else {
+                                $employment_type = '';
                             }
 
                             $present = 0;$week_off = 0;$ph = 0;
@@ -111,7 +120,7 @@
                             $days =0;$total_leaves =0;$total_days = 0;
                         ?>
 
-                        <td style="border: 5px solid #000000;">{{ $i }}</td>
+                        <td style="border: 5px solid #000000;background-color: #fac090;">{{ $i }}</td>
                         <td style="border: 5px solid #000000;">{{ $new_user_name }}</td>
 
                         @if($department == 'Recruitment')
@@ -123,6 +132,8 @@
                         @else
                             <td style="background-color: #B1A0C7;border: 5px solid #000000;">{{ $department }}</td>
                         @endif
+
+                        <td style="border: 5px solid #000000;">{{ $employment_type }}</td>
 
                         @if($working_hours != '')
                             <td style="border: 5px solid #000000;">{{ $working_hours[0] }} Hours</td>

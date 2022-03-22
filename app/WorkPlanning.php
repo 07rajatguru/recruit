@@ -409,7 +409,7 @@ class WorkPlanning extends Model
             }
         }
 
-        $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','users.working_hours as working_hours','work_planning.added_date','work_planning.attendance','users.joining_date','department.name as department_name','work_planning.status','work_planning.loggedin_time');
+        $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','users.working_hours as working_hours','work_planning.added_date','work_planning.attendance','users.joining_date','department.name as department_name','work_planning.status','work_planning.loggedin_time','users.employment_type as employment_type');
         
         $response = $query->get();
         return $response;
@@ -575,7 +575,7 @@ class WorkPlanning extends Model
             $query = $query->where(\DB::raw('year(work_planning.added_date)'),'=', $year);
         }
 
-        $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','users.working_hours as working_hours','work_planning.added_date','work_planning.attendance','users_otherinfo.date_of_joining as joining_date','department.name as department_name','work_planning.status','work_planning.loggedin_time');
+        $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','users.working_hours as working_hours','work_planning.added_date','work_planning.attendance','users_otherinfo.date_of_joining as joining_date','department.name as department_name','work_planning.status','work_planning.loggedin_time','users.employment_type as employment_type');
 
         $response = $query->get();
         return $response;
