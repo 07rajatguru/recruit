@@ -396,8 +396,7 @@ class User extends Authenticatable
 
         $superadmin_user_id = getenv('SUPERADMINUSERID');
         $saloni_user_id = getenv('SALONIUSERID');
-        $jasmine_user_id = getenv('JASMINEUSERID');
-        $super_array = array($superadmin_user_id,$saloni_user_id,$jasmine_user_id);
+        $super_array = array($superadmin_user_id,$saloni_user_id);
 
         $status = 'Inactive';
         $status_array = array($status);

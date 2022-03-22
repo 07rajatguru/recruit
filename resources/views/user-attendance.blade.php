@@ -128,8 +128,14 @@
                                             $department = $values_array[1];
                                             $joining_date = $values_array[3];
 
-                                            $working_hours = $values_array[2];
-                                            $working_hours = explode(':', $working_hours);
+                                            if($values_array[2] != '') {
+
+                                                $working_hours = $values_array[2];
+                                                $working_hours = explode(':', $working_hours);
+                                            }
+                                            else {
+                                                $working_hours = '';
+                                            }
 
                                             $present = 0;$week_off = 0;$ph = 0;
                                             $pl = 0;$sl = 0;$ul = 0;
@@ -150,7 +156,7 @@
                                             <td style="color: black; border: 1px solid black;background-color: #B1A0C7;"><center>{{ $department }}</center></td>
                                         @endif
 
-                                        @if($working_hours[0] != '')
+                                        @if($working_hours != '')
                                             <td style="color: black; border: 1px solid black;">
                                             <center>{{ $working_hours[0] }} Hours</center></td>
                                         @else
@@ -182,6 +188,10 @@
                                                 
                                                 if($key1 < $joining_date_array[0] && $joining_date_array[1] == $month && $year <= $joining_date_array[2]) {
                                                     $attendance = 'O';
+                                                }
+                                                else if($working_hours == '') {
+
+                                                    $attendance = 'B';
                                                 }
                                                 else if(isset($value1['attendance']) && $value1['attendance'] == 'WPP') {
                                                     $attendance = 'WPP';
@@ -357,44 +367,63 @@
                                                     <td style="border: 1px solid black;background-color:#ff0000;text-align: center;cursor: pointer;" title="Absent">A</td>
                                                 @elseif($attendance == 'FR')
                                                     <?php $absent++; ?>
-                                                    <td style="border: 1px solid black;background-color:#ff0000;text-align: center;cursor: pointer;color:#FFFF00;" title="Full Day Rejection">A
-                                                    </td>
+                                                    <td style="border: 1px solid black;background-color:#ff0000;text-align: center;cursor: pointer;color:#FFFF00;" title="Full Day Rejection">A</td>
                                                 @elseif($attendance == 'WFHR')
                                                     <?php $present++; ?>
-                                                    <td style="border: 1px solid black;background-color:#ff0000;text-align: center;cursor: pointer;color:#0000FF;" title="Work From Home Request Reject">P</td>
+                                                    <td style="border: 1px solid black;background-color:#ff0000;text-align: center;cursor: pointer;color:#0000FF;" title="Work From Home Request Reject">P
+                                                    </td>
+                                                @elseif($attendance == 'B')
+                                                    <td style="border: 1px solid black;"></td>
                                                 @endif
                                             @endif
                                         @endforeach
 
-                                        <?php
-                                            $days = $present + $week_off + $ph + $half_day_actual - $ul;
-                                            $total_leaves = $sl + $pl;
-                                            $total_days = $sl + $days + $total_leaves;
-                                        ?>
-                                        <td style="border: 1px solid black;text-align:center;">
-                                        {{ $present }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">
-                                        {{ $week_off }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">
-                                        {{ $ph }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">
-                                        {{ $sl }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">
-                                        {{ $pl }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">
-                                        {{ $half_day }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">
-                                        {{ $half_day_actual }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">
-                                        {{ $ul }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">
-                                        {{ $absent }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">
-                                        {{ $days }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">
-                                        {{ $total_leaves }}</td>
-                                        <td style="border: 1px solid black;text-align:center;">
-                                        {{ $total_days }}</td>
+                                        @if($attendance == 'B')
+
+                                            <td style="border: 1px solid black;text-align:center;"></td>
+                                            <td style="border: 1px solid black;text-align:center;"></td>
+                                            <td style="border: 1px solid black;text-align:center;"></td>
+                                            <td style="border: 1px solid black;text-align:center;"></td>
+                                            <td style="border: 1px solid black;text-align:center;"></td>
+                                            <td style="border: 1px solid black;text-align:center;"></td>
+                                            <td style="border: 1px solid black;text-align:center;"></td>
+                                            <td style="border: 1px solid black;text-align:center;"></td>
+                                            <td style="border: 1px solid black;text-align:center;"></td>
+                                            <td style="border: 1px solid black;text-align:center;"></td>
+                                            <td style="border: 1px solid black;text-align:center;"></td>
+                                            <td style="border: 1px solid black;text-align:center;"></td>
+                                        @else
+
+                                            <?php
+                                                $days = $present + $week_off + $ph + $half_day_actual - $ul;
+                                                $total_leaves = $sl + $pl;
+                                                $total_days = $sl + $days + $total_leaves;
+                                            ?>
+                                            <td style="border: 1px solid black;text-align:center;">
+                                            {{ $present }}</td>
+                                            <td style="border: 1px solid black;text-align:center;">
+                                            {{ $week_off }}</td>
+                                            <td style="border: 1px solid black;text-align:center;">
+                                            {{ $ph }}</td>
+                                            <td style="border: 1px solid black;text-align:center;">
+                                            {{ $sl }}</td>
+                                            <td style="border: 1px solid black;text-align:center;">
+                                            {{ $pl }}</td>
+                                            <td style="border: 1px solid black;text-align:center;">
+                                            {{ $half_day }}</td>
+                                            <td style="border: 1px solid black;text-align:center;">
+                                            {{ $half_day_actual }}</td>
+                                            <td style="border: 1px solid black;text-align:center;">
+                                            {{ $ul }}</td>
+                                            <td style="border: 1px solid black;text-align:center;">
+                                            {{ $absent }}</td>
+                                            <td style="border: 1px solid black;text-align:center;">
+                                            {{ $days }}</td>
+                                            <td style="border: 1px solid black;text-align:center;">
+                                            {{ $total_leaves }}</td>
+                                            <td style="border: 1px solid black;text-align:center;">
+                                            {{ $total_days }}</td>
+                                        @endif
                                     </tr>
                                 <?php $i++;?>
                                 @endforeach
