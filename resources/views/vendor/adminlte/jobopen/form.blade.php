@@ -284,22 +284,37 @@
                         <div class="">
                             <div class="form-group">
                                 <strong>If you don't want to open the job after 48 hours please check the checkbox :</strong>
-                                {!! Form::checkbox('job_open_checkbox','1', $job_open_checkbox, array('id' => 'job_open_checkbox','tabindex' => '13')) !!}
+                                @if($job_open_checkbox == '0')
+                                    {!! Form::checkbox('job_open_checkbox','0', $job_open_checkbox, array('id' => 'job_open_checkbox','tabindex' => '13')) !!}
+                                @else
+                                    {!! Form::checkbox('job_open_checkbox','1', $job_open_checkbox, array('id' => 'job_open_checkbox','tabindex' => '13')) !!}
+                                @endif
                             </div>
                         </div>
                     @endif
 
                     <div class="">
                         <div class="form-group">
-                            <strong>Do you wish to post this job on our Adler’s Current Openings Page? :</strong>
-                            {!! Form::checkbox('adler_career_checkbox','1', $adler_career_checkbox, array('id' => 'adler_career_checkbox','tabindex' => '14')) !!}
+                            <strong>Do you wish to post this job on our Adler’s Current Openings Page? :
+                            </strong>
+                            
+                            @if($adler_career_checkbox == '0')
+                                {!! Form::checkbox('adler_career_checkbox','0', $adler_career_checkbox, array('id' => 'adler_career_checkbox','tabindex' => '14')) !!}
+                            @else
+                                {!! Form::checkbox('adler_career_checkbox','1', $adler_career_checkbox, array('id' => 'adler_career_checkbox','tabindex' => '14')) !!}
+                            @endif
                         </div>
                     </div>
 
                     <div class="">
                         <div class="form-group">
                             <strong>If you wish to disclose the salary on Adler’s Current Openings Page, please uncheck the checkbox. :</strong>
-                            {!! Form::checkbox('adler_job_disclosed_checkbox','1', $adler_job_disclosed_checkbox, array('id' => 'adler_job_disclosed_checkbox','tabindex' => '15')) !!}
+
+                            @if($adler_job_disclosed_checkbox == '0')
+                                {!! Form::checkbox('adler_job_disclosed_checkbox','0', $adler_job_disclosed_checkbox, array('id' => 'adler_job_disclosed_checkbox','tabindex' => '15')) !!}
+                            @else
+                                {!! Form::checkbox('adler_job_disclosed_checkbox','1', $adler_job_disclosed_checkbox, array('id' => 'adler_job_disclosed_checkbox','tabindex' => '15')) !!}
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -483,7 +498,11 @@
                     <div class="">
                         <div class="form-group">
                             <strong>Is this job going to be Remote Working or Working from Home? :</strong>
-                            {!! Form::checkbox('remote_working','1', $remote_working, array('id' => 'remote_working','tabindex' => '23')) !!}
+                            @if($remote_working == '0')
+                                {!! Form::checkbox('remote_working','0', $remote_working, array('id' => 'remote_working','tabindex' => '23')) !!}
+                            @else
+                                {!! Form::checkbox('remote_working','1', $remote_working, array('id' => 'remote_working','tabindex' => '23')) !!}
+                            @endif
                         </div>
                     </div>
                 </div>
