@@ -9,6 +9,76 @@
 	<html>
 		<body>
 			<table style="width: 100%;border: 5px solid #000000;">
+                <tr style="font-family:Calibri;font-size: 11;border: 5px solid #000000;">
+                    <th style="border: 5px solid #000000;" colspan="6"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th colspan="4" style="text-align:center;border: 5px solid #000000;background-color:#d8d8d8;">"P" - Present</th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th colspan="4" style="text-align:center;border: 5px solid #000000;background-color:#ff0000;">"A" - Absent</th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th colspan="4" style="text-align:center;border: 5px solid #000000;background-color:#ffc000;">"H" - Holiday</th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th colspan="4" style="text-align:center;border: 5px solid #000000;background-color:#8db3e2;">"PL" - Paid Leave</th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th colspan="4" style="text-align:center;border: 5px solid #000000;background-color:#c075f8;">"SL" - Sick Leave</th>
+                    
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                </tr>
+
+                <tr style="font-family:Calibri;font-size: 11;border: 5px solid #000000;">
+                    <th style="border: 5px solid #000000;" colspan="6"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th colspan="4" style="text-align:center;border: 5px solid #000000;background-color:#d99594;">"HD" - Half Day</th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th colspan="4" style="text-align:center;border: 5px solid #000000;background-color:#76933C;">"PH" - Paid Holiday</th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th colspan="6" style="text-align:center;border: 5px solid #000000;background-color:#fac090;">"UL" - Unapproved Leave</th>
+                    
+
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                    <th style="border: 5px solid #000000;"></th>
+                </tr>
 				@if($days == '31')
 					<tr style="font-family:Calibri;font-size: 11;border: 5px solid #000000;">
 		                <th colspan="49" style="text-align:center;border: 5px solid #000000;">Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</th>
@@ -302,7 +372,7 @@
                                 <?php $present++; ?>
                                 <td style="border: 5px solid #000000;background-color:#ff0000;color: #0000FF;" title="Work From Home Request Reject">P</td>
                             @elseif($attendance == 'B')
-                                <td style="border: 1px solid black;"></td>
+                                <td style="border: 5px solid #000000;"></td>
                             @endif
                         @endforeach
 
@@ -335,7 +405,7 @@
                             <td style="border: 5px solid #000000;text-align:center;">{{ $sl }}</td>
                             <td style="border: 5px solid #000000;text-align:center;">{{ $pl }}</td>
                             <td style="border: 5px solid #000000;text-align:center;">{{ $half_day }}</td>
-                            <td style="border: 1px solid black;text-align:center;"> 
+                            <td style="border: 5px solid #000000;text-align:center;"> 
                             {{ $half_day_actual }}</td>
                             <td style="border: 5px solid #000000;text-align:center;"> {{ $ul }}</td>
                             <td style="border: 5px solid #000000;text-align:center;">{{ $absent }}</td>

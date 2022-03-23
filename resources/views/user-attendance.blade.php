@@ -71,7 +71,8 @@
                             $year_display = substr($full_year, -2);
                             $month_display = date('F', mktime(0, 0, 0, $month, 10));
                         ?>
-                        <table class="table table-striped table-bordered nowrap" cellspacing="0" id="attendance_table">
+                        
+                        <table class="table table-striped table-bordered nowrap" cellspacing="0" id="attendance_table" style="font-family:Calibri;font-size: 11;">
                             <thead>
                                 <tr>
                                     <th style="border: 1px solid black;padding-left: 900px;"colspan="49">Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</th>

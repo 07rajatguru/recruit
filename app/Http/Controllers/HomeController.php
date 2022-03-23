@@ -1779,7 +1779,7 @@ class HomeController extends Controller
                 if($user_details->joining_date <= $check_date) {
 
                     $joining_date = date('d/m/Y', strtotime("$user_details->joining_date"));
-                    $full_name = $user_details->first_name."-".$user_details->last_name.",".$user_details->department_name.",".$user_details->working_hours.",".$user_details->employment_type.",".$joining_date;
+                    $full_name = $user_details->first_name."-".$user_details->last_name.",".$user_details->department_name.",".$user_details->employment_type.",".$user_details->working_hours.",".$joining_date;
                     $users = array($full_name => "");
                 }
                 else {
