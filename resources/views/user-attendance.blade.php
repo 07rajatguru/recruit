@@ -61,413 +61,415 @@
         </div>
     @endif
 
-    <div class="row">
-        @if(isset($list) && sizeof($list)>0)
-            <div class="col-sm-12" style="margin-top:2%;">
+    @if(isset($new_list) && sizeof($new_list)>0)
+        <div class="row">
+            <div class="col-sm-12">
                 @section('cotable_panel_body')
                     <div style ="overflow-x:scroll;">
-                        <?php 
-                            $full_year =  $year;
-                            $year_display = substr($full_year, -2);
-                            $month_display = date('F', mktime(0, 0, 0, $month, 10));
-                        ?>
+                        @foreach($new_list as $key=>$value)
+                            <?php 
+                                $full_year =  $year;
+                                $year_display = substr($full_year, -2);
+                                $month_display = date('F', mktime(0, 0, 0, $month, 10));
+                            ?>
                         
-                        <table class="table table-striped table-bordered nowrap" cellspacing="0" id="attendance_table" style="font-family:Calibri;font-size: 11;">
-                            <thead>
-                                <tr>
-                                    <th style="border: 1px solid black;padding-left: 900px;"colspan="49">Adler - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</th>
-                                </tr>
-                                <tr>
-                                    <th style="border: 1px solid black;text-align: center;" rowspan="2">
-                                    <br/><br/>Sr. No.</th>
-                                    <th style="border: 1px solid black;background-color:#d6e3bc;">ADLER EMPLOYEES</th>
-                                    <th colspan="47" style="border: 1px solid black;padding-left: 760px;">DATE</th>
-                                </tr>
+                            <table class="table table-striped table-bordered nowrap" cellspacing="0" id="attendance_table_{{ $key }}" style="font-family:Calibri;font-size: 11;">
+                                <thead>
+                                    <tr>
+                                        <th style="border: 1px solid black;padding-left: 900px;"colspan="49">{{ $key }} - Attendance Sheet - {{ $month_display }}' {{ $year_display }}</th>
+                                    </tr>
+                                    <tr>
+                                        <th style="border: 1px solid black;text-align: center;" rowspan="2">
+                                        <br/><br/>Sr. No.</th>
+                                        <th style="border: 1px solid black;background-color:#d6e3bc;">ADLER EMPLOYEES</th>
+                                        <th colspan="47" style="border: 1px solid black;padding-left: 760px;">DATE</th>
+                                    </tr>
 
-                                <th style="border: 1px solid black;background-color:#d6e3bc;">NAME OF PERSON</th>
+                                    <th style="border: 1px solid black;background-color:#d6e3bc;">NAME OF PERSON</th>
 
-                                @if(isset($list) && sizeof($list)>0)
                                     <th style="border: 1px solid black;background-color:#d6e3bc;">Department</th>
                                     <th style="border: 1px solid black;">Employment Type</th>
                                     <th style="border: 1px solid black;">Working Hours</th>
                                     <th style="border: 1px solid black;">Date of Joining</th>
-                                    @foreach($list as $key => $value)
-                                        @foreach($value as $key1=>$value1)
-                                            <?php
-                                                $con_dt = date("j", mktime(0, 0, 0, 0, $key1, 0));
-                                            ?>
-                                            <th style="border: 1px solid black;width: 1px;">{{ $con_dt }}</th>
+
+                                    @if(isset($list) && sizeof($list)>0)
+                                        @foreach($list as $list_key => $list_value)
+                                            @foreach($list_value as $list_key1=>$list_value1)
+                                                <?php
+                                                    $con_dt = date("j", mktime(0, 0, 0, 0, $list_key1, 0));
+                                                ?>
+                                                <th style="border: 1px solid black;width: 1px;">{{ $con_dt }}</th>
+                                            @endforeach
+                                            @break
                                         @endforeach
-                                        @break
-                                    @endforeach
-                                @endif
+                                    @endif
 
-                                <th style="border: 1px solid black;">Present</th>
-                                <th style="border: 1px solid black;">H</th>
-                                <th style="border: 1px solid black;">PH</th>
-                                <th style="border: 1px solid black;">SL</th>
-                                <th style="border: 1px solid black;">PL</th>
-                                <th style="border: 1px solid black;">HD</th>
-                                <th style="border: 1px solid black;">HD</th>
-                                <th style="border: 1px solid black;">UL</th>
-                                <th style="border: 1px solid black;">AB</th>
-                                <th style="border: 1px solid black;">Days</th>
-                                <th style="border: 1px solid black;">Total Leave</th>
-                                <th style="border: 1px solid black;">Total Days</th>
-                            </thead>
-                            <tbody>
+                                    <th style="border: 1px solid black;">Present</th>
+                                    <th style="border: 1px solid black;">H</th>
+                                    <th style="border: 1px solid black;">PH</th>
+                                    <th style="border: 1px solid black;">SL</th>
+                                    <th style="border: 1px solid black;">PL</th>
+                                    <th style="border: 1px solid black;">HD</th>
+                                    <th style="border: 1px solid black;">HD</th>
+                                    <th style="border: 1px solid black;">UL</th>
+                                    <th style="border: 1px solid black;">AB</th>
+                                    <th style="border: 1px solid black;">Days</th>
+                                    <th style="border: 1px solid black;">Total Leave</th>
+                                    <th style="border: 1px solid black;">Total Days</th>
+                                </thead>
+                                <tbody>
                                 
-                                <?php $i=1;?>
-
-                                @foreach($list as $key=>$value)
-                                    <tr style="border: 1px solid black;">
-                                        <?php
-
-                                            $values_array = explode(",", $key);
-
-                                            $user_name = $values_array[0];
-                                            $new_user_name = str_replace("-"," ", $user_name);
-
-                                            $department = $values_array[1];
-                                            $joining_date = $values_array[4];
-
-                                            if($values_array[3] != '') {
-
-                                                $working_hours = $values_array[3];
-                                                $working_hours = explode(':', $working_hours);
-                                            }
-                                            else {
-                                                $working_hours = '';
-                                            }
-
-                                            if($values_array[2] != '') {
-                                                $employment_type = $values_array[2];
-                                            }
-                                            else {
-                                                $employment_type = '';
-                                            } 
-
-                                            $present = 0;$week_off = 0;$ph = 0;
-                                            $pl = 0;$sl = 0;$ul = 0;
-                                            $half_day = 0;$half_day_actual = 0;$absent = 0;
-                                            $days =0;$total_leaves =0;$total_days = 0;
-                                        ?>
-
-                                        <td style="border: 1px solid black;;text-align: center;background-color: #fac090;">{{ $i }}</td>
-
-                                        <td style="color: black; border: 1px solid black;;text-align: center;">{{ $new_user_name }}</td>
-
-                                        @if($department == 'Recruitment')
-                                            <td style="color: black; border: 1px solid black;background-color: #F2DBDB;"><center>{{ $department }}</center></td>
-                                        @elseif($department == 'HR Advisory')
-                                            <td style="color: black; border: 1px solid black;background-color: #DBE5F1;"><center>{{ $department }}</center></td>
-                                        @elseif($department == 'Operations')
-                                            <td style="color: black; border: 1px solid black;background-color: #EAF1DD;"><center>{{ $department }}</center></td>
-                                        @else
-                                            <td style="color: black; border: 1px solid black;background-color: #B1A0C7;"><center>{{ $department }}</center></td>
-                                        @endif
-
-                                        <td style="color: black; border: 1px solid black;"><center>{{ $employment_type }}</center></td>
-
-                                        @if($working_hours != '')
-                                            <td style="color: black; border: 1px solid black;">
-                                            <center>{{ $working_hours[0] }} Hours</center></td>
-                                        @else
-                                            <td style="color: black; border: 1px solid black;"></td>
-                                        @endif
-
-                                        @if(strpos($joining_date,'1970') !== false)
-                                            <td style="color: black; border: 1px solid black;"></td>
-                                        @else
-                                            <td style="color: black; border: 1px solid black;">
-                                            <center>{{ $joining_date }}</center></td>
-                                        @endif
-                                        
-                                        <?php $jj=0; $kk=0; ?>
-
-                                        @foreach($value as $key1=>$value1)
+                                    <?php $i=1;?>
+                                    @foreach($value as $key1=>$value1)
+                                        <tr style="border: 1px solid black;">
                                             <?php
 
-                                                $kk++;
-                                                $get_cur_dt = date('d');
-                                                $get_cur_month = date('m');
-                                                $get_cur_yr = date('Y');
+                                                $values_array = explode(",", $key1);
 
-                                                //$user_id = App\User::getUserIdByBothName($user_name);
+                                                $user_name = $values_array[0];
+                                                $new_user_name = str_replace("-"," ", $user_name);
 
-                                                //$user_holidays = App\Holidays::getHolidaysByUserID($user_id,$month,$year);
+                                                $department = $values_array[1];
+                                                $joining_date = $values_array[4];
 
-                                                $joining_date_array = explode('/', $joining_date);
-                                                
-                                                if($key1 < $joining_date_array[0] && $joining_date_array[1] == $month && $year <= $joining_date_array[2]) {
-                                                    $attendance = 'O';
-                                                }
-                                                else if($working_hours == '') {
+                                                if($values_array[3] != '') {
 
-                                                    $attendance = 'B';
-                                                }
-                                                else if(isset($value1['attendance']) && $value1['attendance'] == 'A') {
-
-                                                    $attendance = 'A';
-                                                    $jj++;
-                                                }
-                                                else if(isset($value1['attendance']) && $value1['attendance'] == 'WPP') {
-                                                    $attendance = 'WPP';
-                                                }
-                                                else if(isset($value1['attendance']) && $value1['attendance'] == 'HD') {
-                                                    $attendance = 'HD';
-                                                }
-                                                else if(isset($value1['attendance']) && $value1['attendance'] == 'WFHHD') {
-                                                    $attendance = 'WFHHD';
-                                                }
-                                                else if(isset($value1['attendance']) && $value1['attendance'] == 'HDR') {
-                                                    $attendance = 'HDR';
-                                                }
-                                                else if(isset($value1['privilege_leave']) && $value1['privilege_leave'] == 'Y') {
-                                                    $attendance = 'PL';
-                                                }
-                                                else if(isset($value1['sick_leave']) && $value1['sick_leave'] == 'Y') {
-                                                    $attendance = 'SL';
-                                                }
-                                                else if(isset($value1['unapproved_leave']) && $value1['unapproved_leave'] == 'Y') {
-                                                    $attendance = 'UL';
-                                                }
-                                                else if(isset($value1['fixed_holiday']) && $value1['fixed_holiday'] == 'Y') {
-                                                    $attendance = 'PH';
-                                                }
-                                                else if(isset($value1['optional_holiday']) && $value1['optional_holiday'] == 'Y') {
-                                                    $attendance = 'OH';
-                                                }
-                                                else if(isset($value1['attendance']) && $value1['attendance'] == 'H') {
-
-                                                    $kk = $kk-1;
-
-                                                    if($kk==$jj) {
-                                                        $attendance = 'A';
-                                                        $jj++;
-                                                        $kk++;
-                                                    }
-                                                    else {
-
-                                                        $attendance = 'H';
-                                                        $jj=0;
-                                                        $kk=0;
-                                                    }
-                                                }
-                                                else if(($key1 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
-                                                    $attendance = 'N';
-                                                }
-                                                else if(isset($value1['attendance']) && $value1['attendance'] == '') {
-
-                                                    $attendance = 'A';
-                                                    $jj++;
-                                                }
-                                                else if(isset($value1['attendance']) && $value1['attendance'] == 'P') {
-                                                    $attendance = 'P';
-                                                }
-                                                else if(isset($value1['attendance']) && $value1['attendance'] == 'WFHP') {
-                                                    $attendance = 'WFHP';
-                                                }
-                                                else if(isset($value1['attendance']) && $value1['attendance'] == 'FR') {
-                                                    $attendance = 'FR';
-                                                }
-                                                else if(isset($value1['attendance']) && $value1['attendance'] == 'WFHR') {
-                                                    $attendance = 'WFHR';
+                                                    $working_hours = $values_array[3];
+                                                    $working_hours = explode(':', $working_hours);
                                                 }
                                                 else {
-                                                    $attendance = 'N';
+                                                    $working_hours = '';
                                                 }
+
+                                                if($values_array[2] != '') {
+                                                    $employment_type = $values_array[2];
+                                                }
+                                                else {
+                                                    $employment_type = '';
+                                                } 
+
+                                                $present = 0;$week_off = 0;$ph = 0;
+                                                $pl = 0;$sl = 0;$ul = 0;
+                                                $half_day = 0;$half_day_actual = 0;$absent = 0;
+                                                $days =0;$total_leaves =0;$total_days = 0;
                                             ?>
-                                            @if(isset($value1['remarks']) && $value1['remarks'] != '')
-                                                @if($attendance == 'N' || $attendance == 'O' || $attendance == 'WPP')
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">
-                                                    </td>
-                                                @elseif($attendance == 'HD')
-                                                    <?php 
-                                                        $half_day++; 
-                                                        $half_day_actual = $half_day / 2;
-                                                    ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">HD</td>
-                                                @elseif($attendance == 'HDR' || $attendance == 'WFHHD')
-                                                    <?php 
-                                                        $half_day++; 
-                                                        $half_day_actual = $half_day / 2;
-                                                    ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;color:white;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">HD</td>
-                                                @elseif($attendance == 'PL')
-                                                    <?php $pl++; ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">PL</td>
-                                                @elseif($attendance == 'SL')
-                                                    <?php $sl++; ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">SL</td>
-                                                @elseif($attendance == 'UL')
-                                                    <?php $ul++; ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">UL</td>
-                                                @elseif($attendance == 'PH')
-                                                    <?php $ph++; ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">PH</td>
-                                                @elseif($attendance == 'OH')
-                                                    <?php $ph++; ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">PH</td>
-                                                @elseif($attendance == 'H')
-                                                    <?php $week_off++; ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">H</td>
-                                                @elseif($attendance == 'P')
-                                                    <?php $present++; ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">P</td>
-                                                @elseif($attendance == 'WFHP')
-                                                    <?php $present++; ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;color: white;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">P</td>
-                                                @elseif($attendance == 'A')
-                                                    <?php $absent++; ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">A</td>
-                                                @elseif($attendance == 'FR')
-                                                    <?php $absent++; ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;color: white;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">A</td>
-                                                @elseif($attendance == 'WFHR')
-                                                    <?php $present++; ?>
-                                                    <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;color: #0000FF;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key1 }}" title="Remarks Added">P</td>
-                                                @endif
+
+                                            <td style="border: 1px solid black;;text-align: center;background-color: #fac090;">{{ $i }}</td>
+
+                                            <td style="color: black; border: 1px solid black;;text-align: center;">{{ $new_user_name }}</td>
+
+                                            @if($department == 'Recruitment')
+                                                <td style="color: black; border: 1px solid black;background-color: #F2DBDB;"><center>{{ $department }}</center></td>
+                                            @elseif($department == 'HR Advisory')
+                                                <td style="color: black; border: 1px solid black;background-color: #DBE5F1;"><center>{{ $department }}</center></td>
+                                            @elseif($department == 'Operations')
+                                                <td style="color: black; border: 1px solid black;background-color: #EAF1DD;"><center>{{ $department }}</center></td>
                                             @else
-                                                @if($attendance == 'N' || $attendance == 'O')
-                                                    <td style="border: 1px solid black;text-align: center;"></td>
-                                                @elseif($attendance == 'WPP')
-                                                    <td style="border: 1px solid black;text-align: center;background-color: #8FB1D5;cursor: pointer;" title="Pending Work Planning"></td>
-                                                @elseif($attendance == 'HD')
-                                                    <?php 
-                                                        $half_day++;
-                                                        $half_day_actual = $half_day / 2;
-                                                    ?>
-                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;" title="Half Day">HD</td>
-                                                @elseif($attendance == 'HDR')
-                                                    <?php 
-                                                        $half_day++;
-                                                        $half_day_actual = $half_day / 2;
-                                                    ?>
-                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;color: #FFFF00;" title="Half Day Rejection">HD</td>
-                                                @elseif($attendance == 'WFHHD')
-                                                    <?php 
-                                                        $half_day++;
-                                                        $half_day_actual = $half_day / 2;
-                                                    ?>
-                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;color: blue;" title="Half Day Work From Home">HD</td>
-                                                @elseif($attendance == 'PL')
-                                                    <?php $pl++; ?>
-                                                    <td style="border: 1px solid black;background-color:#8db3e2;text-align: center;cursor: pointer;" title="Privilege Leave">PL</td>
-                                                @elseif($attendance == 'SL')
-                                                    <?php $sl++; ?>
-                                                    <td style="border: 1px solid black;background-color:#c075f8;text-align: center;cursor: pointer;" title="Sick Leave">SL</td>
-                                                @elseif($attendance == 'UL')
-                                                    <?php $ul++; ?>
-                                                    <td style="border: 1px solid black;background-color:#fac090;text-align: center;cursor: pointer;" title="Unapproved Leave">UL</td>
-                                                @elseif($attendance == 'PH' && $working_hours[0] == '04')
-                                                    <?php $ph = $ph + 0.5; ?>
-                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;" title="Half Paid Holiday">PH</td>
-                                                @elseif($attendance == 'PH')
-                                                    <?php $ph++; ?>
-                                                    <td style="border: 1px solid black;background-color:#76933C;text-align: center;cursor: pointer;" title="Paid Holiday">PH</td>
-                                                @elseif($attendance == 'OH' && $working_hours[0] == '04')
-                                                    <?php $ph = $ph + 0.5; ?>
-                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;color:white;" title="Half Optional Holiday">PH</td>
-                                                @elseif($attendance == 'OH')
-                                                    <?php $ph++; ?>
-                                                    <td style="border: 1px solid black;background-color:#76933C;text-align: center;cursor: pointer;color:white;" title="Optional Holiday">PH</td>
-                                                @elseif($attendance == 'H' && $working_hours[0] == '04')
-                                                    <?php $week_off = $week_off + 0.5; ?>
-                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;" title="Half Sunday">H</td>
-                                                @elseif($attendance == 'H')
-                                                    <?php $week_off++; ?>
-                                                    <td style="border: 1px solid black;background-color:#ffc000;text-align: center;cursor: pointer;" title="Sunday">H</td>
-                                                @elseif($attendance == 'P')
-                                                    <?php $present++; ?>
-                                                    <td style="border: 1px solid black;background-color:#d8d8d8;text-align: center;cursor: pointer;" title="Present">P</td>
-                                                @elseif($attendance == 'WFHP')
-                                                    <?php $present++; ?>
-                                                    <td style="border: 1px solid black;background-color:#d8d8d8;text-align: center;cursor: pointer;color: blue;" title="Work From Home">P</td>
-                                                @elseif($attendance == 'A')
-                                                    <?php $absent++; ?>
-                                                    <td style="border: 1px solid black;background-color:#ff0000;text-align: center;cursor: pointer;" title="Absent">A</td>
-                                                @elseif($attendance == 'FR')
-                                                    <?php $absent++; ?>
-                                                    <td style="border: 1px solid black;background-color:#ff0000;text-align: center;cursor: pointer;color:#FFFF00;" title="Full Day Rejection">A</td>
-                                                @elseif($attendance == 'WFHR')
-                                                    <?php $present++; ?>
-                                                    <td style="border: 1px solid black;background-color:#ff0000;text-align: center;cursor: pointer;color:#0000FF;" title="Work From Home Request Reject">P
-                                                    </td>
-                                                @elseif($attendance == 'B')
-                                                    <td style="border: 1px solid black;"></td>
-                                                @endif
+                                                <td style="color: black; border: 1px solid black;background-color: #B1A0C7;"><center>{{ $department }}</center></td>
                                             @endif
-                                        @endforeach
 
-                                        @if($attendance == 'B')
+                                            <td style="color: black; border: 1px solid black;"><center>{{ $employment_type }}</center></td>
 
-                                            <td style="border: 1px solid black;text-align:center;"></td>
-                                            <td style="border: 1px solid black;text-align:center;"></td>
-                                            <td style="border: 1px solid black;text-align:center;"></td>
-                                            <td style="border: 1px solid black;text-align:center;"></td>
-                                            <td style="border: 1px solid black;text-align:center;"></td>
-                                            <td style="border: 1px solid black;text-align:center;"></td>
-                                            <td style="border: 1px solid black;text-align:center;"></td>
-                                            <td style="border: 1px solid black;text-align:center;"></td>
-                                            <td style="border: 1px solid black;text-align:center;"></td>
-                                            <td style="border: 1px solid black;text-align:center;"></td>
-                                            <td style="border: 1px solid black;text-align:center;"></td>
-                                            <td style="border: 1px solid black;text-align:center;"></td>
-                                        @else
+                                            @if($working_hours != '')
+                                                <td style="color: black; border: 1px solid black;">
+                                                <center>{{ $working_hours[0] }} Hours</center></td>
+                                            @else
+                                                <td style="color: black; border: 1px solid black;"></td>
+                                            @endif
 
-                                            <?php
-                                                $days = $present + $week_off + $ph + $half_day_actual - $ul;
-                                                $total_leaves = $sl + $pl;
-                                                $total_days = $sl + $days + $total_leaves;
-                                            ?>
-                                            <td style="border: 1px solid black;text-align:center;">
-                                            {{ $present }}</td>
-                                            <td style="border: 1px solid black;text-align:center;">
-                                            {{ $week_off }}</td>
-                                            <td style="border: 1px solid black;text-align:center;">
-                                            {{ $ph }}</td>
-                                            <td style="border: 1px solid black;text-align:center;">
-                                            {{ $sl }}</td>
-                                            <td style="border: 1px solid black;text-align:center;">
-                                            {{ $pl }}</td>
-                                            <td style="border: 1px solid black;text-align:center;">
-                                            {{ $half_day }}</td>
-                                            <td style="border: 1px solid black;text-align:center;">
-                                            {{ $half_day_actual }}</td>
-                                            <td style="border: 1px solid black;text-align:center;">
-                                            {{ $ul }}</td>
-                                            <td style="border: 1px solid black;text-align:center;">
-                                            {{ $absent }}</td>
-                                            <td style="border: 1px solid black;text-align:center;">
-                                            {{ $days }}</td>
-                                            <td style="border: 1px solid black;text-align:center;">
-                                            {{ $total_leaves }}</td>
-                                            <td style="border: 1px solid black;text-align:center;">
-                                            {{ $total_days }}</td>
-                                        @endif
-                                    </tr>
-                                <?php $i++;?>
-                                @endforeach
-                            </tbody>
-                        </table>
+                                            @if(strpos($joining_date,'1970') !== false)
+                                                <td style="color: black; border: 1px solid black;"></td>
+                                            @else
+                                                <td style="color: black; border: 1px solid black;">
+                                                <center>{{ $joining_date }}</center></td>
+                                            @endif
+                                        
+                                            <?php $jj=0; $kk=0; ?>
+
+                                            @foreach($value1 as $key2=>$value2)
+                                                <?php
+
+                                                    $kk++;
+                                                    $get_cur_dt = date('d');
+                                                    $get_cur_month = date('m');
+                                                    $get_cur_yr = date('Y');
+
+                                                    //$user_id = App\User::getUserIdByBothName($user_name);
+
+                                                    //$user_holidays = App\Holidays::getHolidaysByUserID($user_id,$month,$year);
+
+                                                    $joining_date_array = explode('/', $joining_date);
+                                                    
+                                                    if($key2 < $joining_date_array[0] && $joining_date_array[1] == $month && $year <= $joining_date_array[2]) {
+                                                        $attendance = 'O';
+                                                    }
+                                                    else if($working_hours == '') {
+
+                                                        $attendance = 'B';
+                                                    }
+                                                    else if(isset($value2['attendance']) && $value2['attendance'] == 'A') {
+
+                                                        $attendance = 'A';
+                                                        $jj++;
+                                                    }
+                                                    else if(isset($value2['attendance']) && $value2['attendance'] == 'WPP') {
+                                                        $attendance = 'WPP';
+                                                    }
+                                                    else if(isset($value2['attendance']) && $value2['attendance'] == 'HD') {
+                                                        $attendance = 'HD';
+                                                    }
+                                                    else if(isset($value2['attendance']) && $value2['attendance'] == 'WFHHD') {
+                                                        $attendance = 'WFHHD';
+                                                    }
+                                                    else if(isset($value2['attendance']) && $value2['attendance'] == 'HDR') {
+                                                        $attendance = 'HDR';
+                                                    }
+                                                    else if(isset($value2['privilege_leave']) && $value2['privilege_leave'] == 'Y') {
+                                                        $attendance = 'PL';
+                                                    }
+                                                    else if(isset($value2['sick_leave']) && $value2['sick_leave'] == 'Y') {
+                                                        $attendance = 'SL';
+                                                    }
+                                                    else if(isset($value2['unapproved_leave']) && $value2['unapproved_leave'] == 'Y') {
+                                                        $attendance = 'UL';
+                                                    }
+                                                    else if(isset($value2['fixed_holiday']) && $value2['fixed_holiday'] == 'Y') {
+                                                        $attendance = 'PH';
+                                                    }
+                                                    else if(isset($value2['optional_holiday']) && $value2['optional_holiday'] == 'Y') {
+                                                        $attendance = 'OH';
+                                                    }
+                                                    else if(isset($value2['attendance']) && $value2['attendance'] == 'H') {
+
+                                                        $kk = $kk-1;
+
+                                                        if($kk==$jj) {
+                                                            $attendance = 'A';
+                                                            $jj++;
+                                                            $kk++;
+                                                        }
+                                                        else {
+
+                                                            $attendance = 'H';
+                                                            $jj=0;
+                                                            $kk=0;
+                                                        }
+                                                    }
+                                                    else if(($key2 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
+                                                        $attendance = 'N';
+                                                    }
+                                                    else if(isset($value2['attendance']) && $value2['attendance'] == '') {
+
+                                                        $attendance = 'A';
+                                                        $jj++;
+                                                    }
+                                                    else if(isset($value2['attendance']) && $value2['attendance'] == 'P') {
+                                                        $attendance = 'P';
+                                                    }
+                                                    else if(isset($value2['attendance']) && $value2['attendance'] == 'WFHP') {
+                                                        $attendance = 'WFHP';
+                                                    }
+                                                    else if(isset($value2['attendance']) && $value2['attendance'] == 'FR') {
+                                                        $attendance = 'FR';
+                                                    }
+                                                    else if(isset($value2['attendance']) && $value2['attendance'] == 'WFHR') {
+                                                        $attendance = 'WFHR';
+                                                    }
+                                                    else {
+                                                        $attendance = 'N';
+                                                    }
+                                                ?>
+                                                @if(isset($value2['remarks']) && $value2['remarks'] != '')
+                                                    @if($attendance == 'N' || $attendance == 'O' || $attendance == 'WPP')
+                                                        <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key2 }}" title="Remarks Added">
+                                                        </td>
+                                                    @elseif($attendance == 'HD')
+                                                        <?php 
+                                                            $half_day++; 
+                                                            $half_day_actual = $half_day / 2;
+                                                        ?>
+                                                        <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key2 }}" title="Remarks Added">HD</td>
+                                                    @elseif($attendance == 'HDR' || $attendance == 'WFHHD')
+                                                        <?php 
+                                                            $half_day++; 
+                                                            $half_day_actual = $half_day / 2;
+                                                        ?>
+                                                        <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;color:white;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key2 }}" title="Remarks Added">HD</td>
+                                                    @elseif($attendance == 'PL')
+                                                        <?php $pl++; ?>
+                                                        <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key2 }}" title="Remarks Added">PL</td>
+                                                    @elseif($attendance == 'SL')
+                                                        <?php $sl++; ?>
+                                                        <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key2 }}" title="Remarks Added">SL</td>
+                                                    @elseif($attendance == 'UL')
+                                                        <?php $ul++; ?>
+                                                        <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key2 }}" title="Remarks Added">UL</td>
+                                                    @elseif($attendance == 'PH')
+                                                        <?php $ph++; ?>
+                                                        <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key2 }}" title="Remarks Added">PH</td>
+                                                    @elseif($attendance == 'OH')
+                                                        <?php $ph++; ?>
+                                                        <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key2 }}" title="Remarks Added">PH</td>
+                                                    @elseif($attendance == 'H')
+                                                        <?php $week_off++; ?>
+                                                        <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key2 }}" title="Remarks Added">H</td>
+                                                    @elseif($attendance == 'P')
+                                                        <?php $present++; ?>
+                                                        <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key2 }}" title="Remarks Added">P</td>
+                                                    @elseif($attendance == 'WFHP')
+                                                        <?php $present++; ?>
+                                                        <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;color: white;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key2 }}" title="Remarks Added">P</td>
+                                                    @elseif($attendance == 'A')
+                                                        <?php $absent++; ?>
+                                                        <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key2 }}" title="Remarks Added">A</td>
+                                                    @elseif($attendance == 'FR')
+                                                        <?php $absent++; ?>
+                                                        <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;color: white;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key2 }}" title="Remarks Added">A</td>
+                                                    @elseif($attendance == 'WFHR')
+                                                        <?php $present++; ?>
+                                                        <td style="border: 1px solid black;background-color:#92D050;cursor: pointer;text-align: center;color: #0000FF;" data-toggle="modal" data-target="#remarksModel-{{ $user_name }}-{{ $key2 }}" title="Remarks Added">P</td>
+                                                    @endif
+                                                @else
+                                                    @if($attendance == 'N' || $attendance == 'O')
+                                                        <td style="border: 1px solid black;text-align: center;"></td>
+                                                    @elseif($attendance == 'WPP')
+                                                        <td style="border: 1px solid black;text-align: center;background-color: #8FB1D5;cursor: pointer;" title="Pending Work Planning"></td>
+                                                    @elseif($attendance == 'HD')
+                                                        <?php 
+                                                            $half_day++;
+                                                            $half_day_actual = $half_day / 2;
+                                                        ?>
+                                                        <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;" title="Half Day">HD</td>
+                                                    @elseif($attendance == 'HDR')
+                                                        <?php 
+                                                            $half_day++;
+                                                            $half_day_actual = $half_day / 2;
+                                                        ?>
+                                                        <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;color: #FFFF00;" title="Half Day Rejection">HD</td>
+                                                    @elseif($attendance == 'WFHHD')
+                                                        <?php 
+                                                            $half_day++;
+                                                            $half_day_actual = $half_day / 2;
+                                                        ?>
+                                                        <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;color: blue;" title="Half Day Work From Home">HD</td>
+                                                    @elseif($attendance == 'PL')
+                                                        <?php $pl++; ?>
+                                                        <td style="border: 1px solid black;background-color:#8db3e2;text-align: center;cursor: pointer;" title="Privilege Leave">PL</td>
+                                                    @elseif($attendance == 'SL')
+                                                        <?php $sl++; ?>
+                                                        <td style="border: 1px solid black;background-color:#c075f8;text-align: center;cursor: pointer;" title="Sick Leave">SL</td>
+                                                    @elseif($attendance == 'UL')
+                                                        <?php $ul++; ?>
+                                                        <td style="border: 1px solid black;background-color:#fac090;text-align: center;cursor: pointer;" title="Unapproved Leave">UL</td>
+                                                    @elseif($attendance == 'PH' && $working_hours[0] == '04')
+                                                        <?php $ph = $ph + 0.5; ?>
+                                                        <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;" title="Half Paid Holiday">PH</td>
+                                                    @elseif($attendance == 'PH')
+                                                        <?php $ph++; ?>
+                                                        <td style="border: 1px solid black;background-color:#76933C;text-align: center;cursor: pointer;" title="Paid Holiday">PH</td>
+                                                    @elseif($attendance == 'OH' && $working_hours[0] == '04')
+                                                        <?php $ph = $ph + 0.5; ?>
+                                                        <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;color:white;" title="Half Optional Holiday">PH</td>
+                                                    @elseif($attendance == 'OH')
+                                                        <?php $ph++; ?>
+                                                        <td style="border: 1px solid black;background-color:#76933C;text-align: center;cursor: pointer;color:white;" title="Optional Holiday">PH</td>
+                                                    @elseif($attendance == 'H' && $working_hours[0] == '04')
+                                                        <?php $week_off = $week_off + 0.5; ?>
+                                                        <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;" title="Half Sunday">H</td>
+                                                    @elseif($attendance == 'H')
+                                                        <?php $week_off++; ?>
+                                                        <td style="border: 1px solid black;background-color:#ffc000;text-align: center;cursor: pointer;" title="Sunday">H</td>
+                                                    @elseif($attendance == 'P')
+                                                        <?php $present++; ?>
+                                                        <td style="border: 1px solid black;background-color:#d8d8d8;text-align: center;cursor: pointer;" title="Present">P</td>
+                                                    @elseif($attendance == 'WFHP')
+                                                        <?php $present++; ?>
+                                                        <td style="border: 1px solid black;background-color:#d8d8d8;text-align: center;cursor: pointer;color: blue;" title="Work From Home">P</td>
+                                                    @elseif($attendance == 'A')
+                                                        <?php $absent++; ?>
+                                                        <td style="border: 1px solid black;background-color:#ff0000;text-align: center;cursor: pointer;" title="Absent">A</td>
+                                                    @elseif($attendance == 'FR')
+                                                        <?php $absent++; ?>
+                                                        <td style="border: 1px solid black;background-color:#ff0000;text-align: center;cursor: pointer;color:#FFFF00;" title="Full Day Rejection">A</td>
+                                                    @elseif($attendance == 'WFHR')
+                                                        <?php $present++; ?>
+                                                        <td style="border: 1px solid black;background-color:#ff0000;text-align: center;cursor: pointer;color:#0000FF;" title="Work From Home Request Reject">P
+                                                        </td>
+                                                    @elseif($attendance == 'B')
+                                                        <td style="border: 1px solid black;"></td>
+                                                    @endif
+                                                @endif
+                                            @endforeach
+
+                                            @if($attendance == 'B')
+
+                                                <td style="border: 1px solid black;text-align:center;"></td>
+                                                <td style="border: 1px solid black;text-align:center;"></td>
+                                                <td style="border: 1px solid black;text-align:center;"></td>
+                                                <td style="border: 1px solid black;text-align:center;"></td>
+                                                <td style="border: 1px solid black;text-align:center;"></td>
+                                                <td style="border: 1px solid black;text-align:center;"></td>
+                                                <td style="border: 1px solid black;text-align:center;"></td>
+                                                <td style="border: 1px solid black;text-align:center;"></td>
+                                                <td style="border: 1px solid black;text-align:center;"></td>
+                                                <td style="border: 1px solid black;text-align:center;"></td>
+                                                <td style="border: 1px solid black;text-align:center;"></td>
+                                                <td style="border: 1px solid black;text-align:center;"></td>
+                                            @else
+
+                                                <?php
+                                                    $days = $present + $week_off + $ph + $half_day_actual - $ul;
+                                                    $total_leaves = $sl + $pl;
+                                                    $total_days = $sl + $days + $total_leaves;
+                                                ?>
+                                                <td style="border: 1px solid black;text-align:center;">
+                                                {{ $present }}</td>
+                                                <td style="border: 1px solid black;text-align:center;">
+                                                {{ $week_off }}</td>
+                                                <td style="border: 1px solid black;text-align:center;">
+                                                {{ $ph }}</td>
+                                                <td style="border: 1px solid black;text-align:center;">
+                                                {{ $sl }}</td>
+                                                <td style="border: 1px solid black;text-align:center;">
+                                                {{ $pl }}</td>
+                                                <td style="border: 1px solid black;text-align:center;">
+                                                {{ $half_day }}</td>
+                                                <td style="border: 1px solid black;text-align:center;">
+                                                {{ $half_day_actual }}</td>
+                                                <td style="border: 1px solid black;text-align:center;">
+                                                {{ $ul }}</td>
+                                                <td style="border: 1px solid black;text-align:center;">
+                                                {{ $absent }}</td>
+                                                <td style="border: 1px solid black;text-align:center;">
+                                                {{ $days }}</td>
+                                                <td style="border: 1px solid black;text-align:center;">
+                                                {{ $total_leaves }}</td>
+                                                <td style="border: 1px solid black;text-align:center;">
+                                                {{ $total_days }}</td>
+                                            @endif
+                                        </tr>
+                                    <?php $i++;?>
+                                    @endforeach
+                                </tbody>
+                            </table><br/>
+                        @endforeach
                     </div>
                 @endsection
                 @include('widgets.panel', array('header'=>true, 'as'=>'cotable'))
             </div>
-        @else
-            <div class="col-sm-12" style="margin-top:2%;">
-                <table class="table table-striped table-bordered nowrap" cellspacing="0" id="attendance_table">
-                    <thead></thead>
-                    <tbody>
-                        <tr>
-                            <td style="text-align: center;border: 2px solid black;" class="button">No Data Found.</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-        @endif
-    </div>
+        </div>
+    @else
+        <div class="col-sm-12" style="margin-top:2%;">
+            <table class="table table-striped table-bordered nowrap" cellspacing="0" id="attendance_table">
+                <thead></thead>
+                <tbody>
+                    <tr>
+                        <td style="text-align: center;border: 2px solid black;" class="button">No Data Found.</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    @endif
     @foreach($list1 as $key=>$value)
 
         <?php
@@ -525,6 +527,46 @@
             $("#user_id").select2({width : '570px'});
 
             var table = $('#attendance_table').DataTable({
+                paging: false,
+                searching: false,
+                info: false,
+                sort: false,
+                fixedColumns: {
+                    leftColumns: 2
+                }
+            });
+
+            var table = $('#attendance_table_Employee').DataTable({
+                paging: false,
+                searching: false,
+                info: false,
+                sort: false,
+                fixedColumns: {
+                    leftColumns: 2
+                }
+            });
+
+            var table = $('#attendance_table_Professional').DataTable({
+                paging: false,
+                searching: false,
+                info: false,
+                sort: false,
+                fixedColumns: {
+                    leftColumns: 2
+                }
+            });
+
+            var table = $('#attendance_table_Trainee').DataTable({
+                paging: false,
+                searching: false,
+                info: false,
+                sort: false,
+                fixedColumns: {
+                    leftColumns: 2
+                }
+            });
+
+            var table = $('#attendance_table_Intern').DataTable({
                 paging: false,
                 searching: false,
                 info: false,

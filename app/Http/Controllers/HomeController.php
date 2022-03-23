@@ -1283,9 +1283,6 @@ class HomeController extends Controller
         $user = \Auth::user();
         $user_id = $user->id;
 
-        // Get Attendance Type
-        $attendance_type = User::getAttendanceType();
-
         if(isset($month) && $month !='') {
         }
         else {
@@ -1737,7 +1734,24 @@ class HomeController extends Controller
             return view('errors.403');
         }
 
-        return view('user-attendance',array("list"=>$list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark,"attendance_type" => $attendance_type,"selected_attendance_type" => $selected_attendance_type),compact('users_name','department_nm'));
+        // Get Attendance Type
+        $attendance_type = User::getAttendanceType();
+
+        // Get Employment Type
+        $employment_type = User::getEmploymentType();
+
+        $new_list = array();
+        foreach ($employment_type as $key => $value) {
+                
+            foreach ($list as $key1 => $value1) {
+
+                if(strpos($key1, $value) !== false) {
+                    $new_list[$key][$key1] = $value1;
+                }
+            }
+        }
+
+        return view('user-attendance',array("list"=>$list,"new_list"=>$new_list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark,"attendance_type" => $attendance_type,"selected_attendance_type" => $selected_attendance_type),compact('users_name','department_nm'));
     }
 
     public function exportAttendance() {
@@ -2027,119 +2041,27 @@ class HomeController extends Controller
                 }
             }
 
-            // Set new List1
-            $list1 = array();
-            for($d1=1; $d1<=31; $d1++) {
+            if(isset($list) && sizeof($list) > 0) {
 
-                $time1 = mktime(12, 0, 0, $month, $d1, $year);
-                foreach ($users as $key => $value) {
+                // Get Employment Type
+                $employment_type = User::getEmploymentType();
 
-                    if (date('n', $time1) == $month) {
-                        $list1[$key][date('j S', $time1)]='';
-                    }
-                }
-            }
+                $new_list = array();
+                foreach ($employment_type as $key => $value) {
+                        
+                    foreach ($list as $key1 => $value1) {
 
-            // If list has values
-            if(sizeof($list)>0) {
-
-                foreach ($list as $key => $value) {
-
-                    if(sizeof($value)>0) {
-
-                        $i=0;
-                        foreach ($value as $key1 => $value1) {
-
-                            $split_unm = explode(",",$key);
-
-                            // Get User id from both name
-                            $u_id = User::getUserIdByBothName($split_unm[0]);
-
-                            // Set holiday dates
-                            $fixed_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Fixed Leave');
-
-                            if (isset($fixed_holidays) && sizeof($fixed_holidays)>0) {
-
-                                foreach ($fixed_holidays as $f_h_k => $f_h_v) {
-
-                                    $list[$key][$f_h_v]['fixed_holiday'] = 'Y';
-                                }
-                            }
-
-                            $optional_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Optional Leave');
-
-                            if (isset($optional_holidays) && sizeof($optional_holidays)>0) {
-
-                                foreach ($optional_holidays as $o_h_k => $o_h_v) {
-
-                                    $list[$key][$o_h_v]['optional_holiday'] = 'Y';
-                                }
-                            }
-
-                            // Set Leave dates
-                            $pl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Privilege Leave',1);
-                            $sl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Sick Leave',1);
-                            $ul_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',2);
-
-                            if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
-
-                                foreach ($pl_leave_data as $pl_k => $pl_v) {
-
-                                    for ($pl_i=$pl_v['from_date']; $pl_i <= $pl_v['to_date']; $pl_i++) {
-
-                                        $list[$key][$pl_i]['privilege_leave'] = 'Y';
-                                    }
-                                }
-                            }
-
-                            if (isset($sl_leave_data) && sizeof($sl_leave_data)>0) {
-
-                                foreach ($sl_leave_data as $sl_k => $sl_v) {
-
-                                    for ($sl_i=$sl_v['from_date']; $sl_i <= $sl_v['to_date']; $sl_i++) { 
-                                        
-                                        $list[$key][$sl_i]['sick_leave'] = 'Y';
-                                    }
-                                }
-                            }
-
-                            if (isset($ul_leave_data) && sizeof($ul_leave_data)>0) {
-
-                                foreach ($ul_leave_data as $ul_k => $ul_v) {
-
-                                    for ($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) { 
-                                        
-                                        $list[$key][$ul_i]['unapproved_leave'] = 'Y';
-                                    }
-                                }
-                            }
-
-                            if (isset($user_remark) && sizeof($user_remark)>0) {
-
-                                foreach ($user_remark as $u_k1 => $u_v1) {
-
-                                    $split_month = date('n',strtotime($u_v1['remark_date']));
-                                    $split_year = date('Y',strtotime($u_v1['remark_date']));
-
-                                    if (($u_v1['full_name'] == $key) && ($u_v1['converted_date'] == $key1) && ($month == $split_month) && ($year == $split_year)) {
-                                        
-                                        $list1[$u_v1['full_name']][$u_v1['converted_date']][$u_v1['remark_date']][$i] = $u_v1['remarks'];
-                                    }
-                                    $i++;
-                                }
-                            }
+                        if(strpos($key1, $value) !== false) {
+                            $new_list[$key][$key1] = $value1;
                         }
                     }
                 }
-            }
 
-            if(isset($list) && sizeof($list) > 0) {
+                Excel::create($sheet_name,function($excel) use ($list,$new_list,$year,$month) {
 
-                Excel::create($sheet_name,function($excel) use ($list,$list1,$year,$month) {
+                    $excel->sheet('sheet 1',function($sheet) use ($list,$new_list,$year,$month) {
 
-                    $excel->sheet('sheet 1',function($sheet) use ($list,$list1,$year,$month) {
-
-                        $sheet->loadView('attendance-sheet', array('list' => $list,'list1' => $list1,'year' => $year,'month' => $month));
+                        $sheet->loadView('attendance-sheet', array('list' => $list,'new_list' => $new_list,'year' => $year,'month' => $month));
                     });
                 })->export('xlsx');
             }

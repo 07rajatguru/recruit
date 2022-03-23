@@ -113,7 +113,7 @@ class UserRemarks extends Model
                 $remarks[$i]['user_name'] = $value->user_name;
 
                 $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
-                $full_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->working_hours.",".$value->employment_type.",".$joining_date;
+                $full_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->employment_type.",".$value->working_hours.",".$joining_date;
                 $remarks[$i]['full_name'] = $full_name;
                 
 
