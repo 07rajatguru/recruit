@@ -271,7 +271,7 @@
                                             {{ $v['added_date'] }}</td>
                                             <td colspan="7"><center><b>{{ $leave_data->category }}</b></center></td>
                                         @elseif($leave_data->category == 'Sick Leave')
-                                            <td style="background-color:#7030a0;">
+                                            <td style="background-color:#c075f8;">
                                             {{ $v['added_date'] }}</td>
                                             <td colspan="7"><center><b>{{ $leave_data->category }}</b></center></td>
                                         @elseif($leave_data->category == 'LWP')

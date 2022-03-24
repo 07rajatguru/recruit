@@ -217,7 +217,7 @@
                             <td colspan="7"><center><b>{{ $leave_data->category }}</b></center>
                             </td>
                         @elseif($leave_data->category == 'Sick Leave')
-                            <td style="background-color:#7030a0;">{{ $value['added_date'] }}</td>
+                            <td style="background-color:#c075f8;">{{ $value['added_date'] }}</td>
                             <td colspan="7"><center><b>{{ $leave_data->category }}</b></center>
                             </td>
                         @elseif($leave_data->category == 'LWP')

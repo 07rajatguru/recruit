@@ -1574,17 +1574,55 @@ class WorkPlanningController extends Controller
         $reply = $_POST['check'];
         $user_id = \Auth::user()->id;
 
+        // Get Today Day
+        $day = date("l");
+
+        $manager_user_id = env('MANAGERUSERID');
+
         if ($reply == 'Approved') {
 
             $work_planning = WorkPlanning::find($wp_id);
             $status = $work_planning->status;
             $post_discuss_status = $work_planning->post_discuss_status;
+            $total_actual_time = $work_planning->total_actual_time;
+
+            if($day == 'Saturday') {
+
+                if($total_actual_time < '04:30:00') {
+                    $attendance = 'HD';
+                }
+                else {
+                    $attendance = 'F';
+                }
+            }  
+            else {
+
+                if($user_id == $manager_user_id) {
+
+                    if($total_actual_time < '06:00:00') {
+                        $attendance = 'HD';
+                    }
+                    else {
+                        $attendance = 'F';
+                    }
+                }
+                else {
+
+                    if($total_actual_time < '07:00:00') {
+                        $attendance = 'HD';
+                    }
+                    else {
+                        $attendance = 'F';
+                    }
+                }
+            }
 
             if($post_discuss_status == 0 && $status == 2) {
 
                 $work_planning->post_discuss_status = 1;
             }
 
+            $work_planning->attendance = $attendance;
             $work_planning->status = 1;
             $work_planning->approved_by = $user_id;
             $work_planning->save();
