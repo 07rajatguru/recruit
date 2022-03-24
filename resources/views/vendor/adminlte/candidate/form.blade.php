@@ -84,7 +84,8 @@
                             </div>
 
                             <div class="form-group {{ $errors->has('job') ? 'has-error' : '' }}">
-                             <strong>Associated to Company : </strong>
+                             <strong>Associated to Company : <span class = "required_fields">*</span>
+                             </strong>
                                 {!! Form::select('jobopen', $jobopen,$job_id, array('id'=>'jobopen','class' => 'form-control', 'tabindex' => '7' )) !!}
                                 @if($errors->has('job'))
                                     <span class="help-block">
@@ -487,6 +488,9 @@
                     "email": {
                         required: true
                     },
+                    "jobopen": {
+                        required: true
+                    },
                 },
                 
                 messages: {
@@ -498,6 +502,9 @@
                     },
                     "email": {
                         required: "Email is Required."
+                    },
+                    "jobopen": {
+                        required: "Please Select Job."
                     },
                 }
             });
