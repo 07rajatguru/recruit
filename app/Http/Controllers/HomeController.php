@@ -1487,7 +1487,11 @@ class HomeController extends Controller
 
                     $rejected_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id,2);
 
-                    if($value->attendance == 'A') {
+                    if($value->status == 2 && $value->attendance == 'A') {
+
+                        $list[$combine_name][$get_dt]['attendance'] = 'FR';
+                    }
+                    else if($value->attendance == 'A') {
 
                         $list[$combine_name][$get_dt]['attendance'] = 'A';
                     }
@@ -1527,10 +1531,7 @@ class HomeController extends Controller
 
                         $list[$combine_name][$get_dt]['attendance'] = 'HDR';
                     }
-                    else if($value->status == 2 && $value->attendance == 'A') {
-
-                        $list[$combine_name][$get_dt]['attendance'] = 'FR';
-                    }
+                    
 
                     // Set holiday dates
                     $fixed_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Fixed Leave');
@@ -1627,6 +1628,8 @@ class HomeController extends Controller
                     }
                 }
             }
+
+            //print_r($list);exit;
 
             // New List1
             $list1 = array();
@@ -1897,7 +1900,11 @@ class HomeController extends Controller
 
                     $rejected_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id,2);
 
-                    if($value->attendance == 'A') {
+                    if($value->status == 2 && $value->attendance == 'A') {
+
+                        $list[$combine_name][$get_dt]['attendance'] = 'FR';
+                    }
+                    else if($value->attendance == 'A') {
 
                         $list[$combine_name][$get_dt]['attendance'] = 'A';
                     }
@@ -1936,10 +1943,6 @@ class HomeController extends Controller
                     else if($value->status == 2 && $value->attendance == 'HD') {
 
                         $list[$combine_name][$get_dt]['attendance'] = 'HDR';
-                    }
-                    else if($value->status == 2 && $value->attendance == 'A') {
-
-                        $list[$combine_name][$get_dt]['attendance'] = 'FR';
                     }
 
                     // Set holiday dates
@@ -2104,7 +2107,11 @@ class HomeController extends Controller
 
                 $rejected_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$user_id,2);
 
-                if($value->attendance == 'A') {
+                if($value->status == 2 && $value->attendance == 'A') {
+
+                    $list[$user_id][$get_dt]['attendance'] = 'FR';
+                }
+                else if($value->attendance == 'A') {
 
                     $list[$user_id][$get_dt]['attendance'] = 'A';
                 }
@@ -2139,10 +2146,6 @@ class HomeController extends Controller
                 else if($value->status == 2 && $value->attendance == 'HD') {
 
                     $list[$user_id][$get_dt]['attendance'] = 'HDR';
-                }
-                else if($value->status == 2 && $value->attendance == 'A') {
-
-                    $list[$user_id][$get_dt]['attendance'] = 'FR';
                 }
 
                 // Set holiday dates
