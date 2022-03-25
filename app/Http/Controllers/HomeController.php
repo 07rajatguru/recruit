@@ -759,55 +759,6 @@ class HomeController extends Controller
         }
     }
 
-    public function export() {
-
-        Excel::create('Attendance', function($excel) {
-
-            $excel->sheet('Sheet 1', function($sheet) {
-
-                if(isset($_POST['month']) && $_POST['month']!='') {
-                    $month = $_POST['month'];
-                }
-                else{
-                    $month = date("n");
-                }
-                if(isset($_POST['year']) && $_POST['year']!='') {
-                    $year = $_POST['year'];
-                }
-                else{
-                    $year = date("Y");
-                }
-
-                $response = UsersLog::getUsersAttendanceList(0,$month,$year);
-
-                for($d=1; $d<=31; $d++) {
-
-                    $time = mktime(12, 0, 0, $month, $d, $year);
-                    $dt = date('j S', $time);
-                    $dt_header = array($dt);
-                    $sheet->fromArray($dt_header, null, 'B1', false, false);   
-                }
-
-                foreach($response as $key=>$value) {
-
-                    $heading1 = array($key);
-                    $sheet->prependRow(2, $heading1);
-
-                    $heading2 = array('Login');
-                    $sheet->prependRow(3, $heading2);
-
-                    $heading3 = array('Logout');
-                    $sheet->prependRow(4, $heading3);
-
-                    $heading4 = array('Total');
-                    $sheet->prependRow(5, $heading4);
-                }
-            });
-        })->export('xls');
-
-        return view('home');
-    }
-
     public function calenderevent() {
 
         $data[] = array(
@@ -2318,7 +2269,7 @@ class HomeController extends Controller
 
         $mail_res = \DB::table('emails_notification')
         ->select('emails_notification.*', 'emails_notification.id as id')
-        ->where('status','=',0)->limit(1)->get();
+        ->where('status','=',0)->orderBy('emails_notification.id','ASC')->limit(1)->get();
 
         $mail = array();
         $i = 0;

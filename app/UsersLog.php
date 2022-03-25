@@ -44,51 +44,6 @@ class UsersLog extends Model
         return $response;
     }
 
-    public static function getUsersAttendanceList($user_id=0,$month,$year) {
-
-        $superadmin_role_id =  getenv('SUPERADMIN');
-        $client_role_id =  getenv('CLIENT');
-        $superadmin = array($superadmin_role_id,$client_role_id);
-        $status = 'Inactive';
-        $status_array = array($status);
-
-        $query = UsersLog::query();
-        $query = $query->join('users','users.id','=','users_log.user_id');
-        $query = $query->join('role_user','role_user.user_id','=','users.id');
-        $query = $query->where(\DB::raw('MONTH(date)'),'=', $month);
-        $query = $query->where(\DB::raw('year(date)'),'=', $year);
-
-        if($user_id>0) {
-            $query = $query->where('users.id','=',$user_id);
-        }
-        
-        $query = $query->select('users_log.date as date','users.id' ,'role_user.role_id' ,'users.name as name' ,'date',\DB::raw('min(time) as login'),\DB::raw('max(time) as logout'));
-        $query = $query->whereNotIn('status',$status_array);
-        $query = $query->groupBy('users_log.date','users.id');
-        $query = $query->whereNotIn('role_id',$superadmin);
-        $response = $query->get();
-
-        $list = array();
-
-        $list_date = array();
-            $date = new Date();
-            if(sizeof($response)>0) {
-                foreach ($response as $key => $value) {
-
-                    $login_time = $date->converttime($value->login);
-                    $logout_time = $date->converttime($value->logout);
-                    $total = ($logout_time - $login_time) / 60;
-
-                    $data[] = array(
-                        $list[$value->name] = $value->name,
-                    );
-                        
-                    $data2 = array_unique($list);
-                }
-            }      
-        return $data2;
-    }
-
     public static function getattendancetype() {
 
         $type = array('' => 'Select Type');
@@ -165,16 +120,15 @@ class UsersLog extends Model
         $query = $query->select('users_log.*',\DB::raw('min(time) as login'),\DB::raw('max(time) as logout'));
         $query = $query->where('user_id',$user_id);
         $query = $query->where('date','=',$date);
-        $res = $query->get();
+        $query = $query->where('time','>=','04:00:00');
+        $query = $query->where('time','<=','15:00:00');
+        $response = $query->first();
 
         $user_attendance = array();
 
-        foreach ($res as $key => $value) {
-
-            $user_attendance['user_id'] = $value->user_id;
-            $user_attendance['login'] = $value->login;
-            $user_attendance['logout'] = $value->logout;
-        }
+        $user_attendance['user_id'] = $response->user_id;
+        $user_attendance['login'] = $response->login;
+        $user_attendance['logout'] = $response->logout;
 
         return $user_attendance;
     }

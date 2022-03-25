@@ -335,11 +335,6 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HomeController@calenderevent'
     ]);
 
-    Route::post('home/export',[
-        'as'=>'home.export',
-        'uses'=>'HomeController@export'
-    ]);
-
     Route::any('/users-attendance/{department_nm}/{month}/{year}', array (
         'uses' => 'HomeController@usersAttendance'
     ));

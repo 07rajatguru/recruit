@@ -35,10 +35,6 @@
                 <div class="attendance_submit col-md-1 col-sm-4">
                     <input class="btn btn-primary btn-block" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" style="width:100px;" />
                 </div>
-                
-                {{--<div class="filter-ex-btn col-md-1 col-sm-4">
-                    <a class="btn btn-success btn-block" href="javascript:void(0);" onClick="export_data()" style="width:100px;">Export</a>
-                </div>--}}
 
                 <div class="attendance_submit col-md-1 col-sm-4">
                     @include('adminlte::partials.userRemarks', ['name' => 'HomeAttendance','users' => $users_name])
@@ -238,22 +234,6 @@
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
                 '<input type="text" name="month" value="'+month+'" />' +
                 '<input type="text" name="year" value="'+year+'" />' +
-                '</form>');
-
-            $('body').append(form);
-            form.submit();
-        }
-
-        function export_data() {
-            var month = $("#month :selected").val();
-            var year = $("#year :selected").val();
-
-            var url = '/home/export';
-
-            var form = $('<form action="' + url + '" method="post">' +
-                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                '<input type="hidden" name="month" value="'+month+'" />' +
-                '<input type="hidden" name="year" value="'+year+'" />' +
                 '</form>');
 
             $('body').append(form);

@@ -623,28 +623,37 @@ class WorkPlanningController extends Controller
 
     public function store(Request $request) {
 
+        // Get Current Time
+        $current_date = date('Y-m-d') . " " . date('H:i:s');
+
+        $utc_current_date = $current_date;
+        $dt_current_date = new \DateTime($utc_current_date);
+        $tz_current_date = new \DateTimeZone('Asia/Kolkata');
+
+        $dt_current_date->setTimezone($tz_current_date);
+        $current_time = strtotime($dt_current_date->format('H:i:s'));
+
+        // Get User Loggedin Time
         $user_id = \Auth::user()->id;
         $date = date('Y-m-d');
+        $get_time = UsersLog::getUserTimeByID($user_id,$date);
+
+        $login_date = date('Y-m-d') . " " . $get_time['login'];
+        $login_utc = $login_date;
+        $login_dt = new \DateTime($login_utc);
+        $login_tz = new \DateTimeZone('Asia/Kolkata');
+
+        $login_dt->setTimezone($login_tz);
+        $loginTime = strtotime($login_dt->format('H:i:s'));
+
+        // Get Difference between login time & report submit time
+        $diff = $current_time - $loginTime;
+        $time_diff = date("H:i", $diff);
 
         $work_type = $request->input('work_type');
         $remaining_time = $request->input('remaining_time');
         $total_projected_time = $request->input('total_projected_time');
         $link = $request->input('link');
-
-        // Get User Loggedin Time
-        $get_time = UsersLog::getUserTimeByID($user_id,$date);
-
-        // Get Current Time
-        $current_time = date('h:i:s', time());
-        $checkTime = strtotime($current_time);
-
-        // Get Login Time
-        $loginTime = strtotime($get_time['login']);
-
-        // Get Difference between login time & report submit time
-        $diff = $checkTime - $loginTime;
-        $time_diff = date("H:i", $diff);
-
         $report_delay = Input::get('report_delay');
         $report_delay_content = Input::get('report_delay_content');
 
@@ -922,9 +931,6 @@ class WorkPlanningController extends Controller
         $work_planning_post = WorkPlanningPost::orderBy('created_at','desc')
         ->where('work_planning_post.wp_id','=',$wp_id)->select('work_planning_post.*')->get();
 
-        // Get Yesterday Date
-        $yesterday_date = date("Y-m-d", strtotime("-1 days"));
-
         // Get All daily report activity
         $associate_res = JobAssociateCandidates::getDailyReportAssociate($added_by_id,$added_date);
         $associate_daily = $associate_res['associate_data'];
@@ -941,7 +947,7 @@ class WorkPlanningController extends Controller
         // Get users reports
         $user_details = User::getAllDetailsByUserID($added_by_id);
 
-        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','wp_id','loggedin_user_id','added_by_id','appr_rejct_by','work_planning_post','added_date','yesterday_date','associate_daily','associate_count','leads_daily','lead_count','interview_daily','interview_count','user_details','added_day'));
+        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','wp_id','loggedin_user_id','added_by_id','appr_rejct_by','work_planning_post','added_date','associate_daily','associate_count','leads_daily','lead_count','interview_daily','interview_count','user_details','added_day'));
     }
 
     public function edit($id) {
@@ -988,8 +994,9 @@ class WorkPlanningController extends Controller
         else {
             $loggedout_time = '';
         }
+
         // Convert Work Planning Time
-        if($work_planning_res->loggedout_time != '') {
+        if($work_planning_res->work_planning_time != '') {
 
             $utc = $work_planning_res->work_planning_time;
             $dt = new \DateTime($utc);
@@ -1034,10 +1041,6 @@ class WorkPlanningController extends Controller
     public function update(Request $request,$id) {
 
         $email_value = $request->input('email_value');
-        
-        $user_id = \Auth::user()->id;
-        $date = date('Y-m-d');
-
         $total_projected_time = $request->input('total_projected_time');
         $total_actual_time = $request->input('total_actual_time');
         $work_type = $request->input('work_type');
@@ -1046,9 +1049,7 @@ class WorkPlanningController extends Controller
         // Set Attendance For Kazvin
         $manager_user_id = env('MANAGERUSERID');
 
-        // Get Work Planning Details
-        $work_planning = WorkPlanning::find($id);
-        $added_by_id = $work_planning->added_by;
+        $user_id = \Auth::user()->id;
 
         // Get Today Day
         $day = date("l");
@@ -1083,6 +1084,10 @@ class WorkPlanningController extends Controller
                 }
             }
         }
+
+        // Get Work Planning Details
+        $work_planning = WorkPlanning::find($id);
+        $added_by_id = $work_planning->added_by;
 
         $work_planning->attendance = $attendance;
         $work_planning->work_type = $work_type;
@@ -1162,42 +1167,12 @@ class WorkPlanningController extends Controller
             }
         }
 
-        // Get previous WFH requests for set attendance from 3rd date
-        if($work_type == 'WFH') {
-
-            $user_ids[] = $user_id;
-            $month = date('m');
-            $year = date('Y');
-
-            $work_from_home_res = WorkFromHome::getAllWorkFromHomeRequestsByUserId(0,$user_ids,$month,$year,'');
-
-            if(isset($work_from_home_res) && sizeof($work_from_home_res) > 0) {
-
-                $dates_string = '';
-                foreach ($work_from_home_res as $key => $value) {
-                    
-                    if($dates_string == '') {
-                        $dates_string = $value['selected_dates'];
-                    }
-                    else {
-                        $dates_string .= "," . $value['selected_dates'];
-                    }
-                }
-
-                $dates_array = explode(",", $dates_string);
-
-                if(isset($dates_array) && sizeof($dates_array) > 2) {
-                    \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $id");
-                }
-            }
-        }
-
         if(isset($email_value) && $email_value != '') {
 
             if($user_id == $added_by_id) {
 
-                $work_planning_status_time = date('H:i:s');
                 $work_planning_status_date = date('Y-m-d');
+                $work_planning_status_time = date('H:i:s');
 
                 $work_planning = WorkPlanning::getWorkPlanningDetailsById($id);
 
@@ -1401,8 +1376,8 @@ class WorkPlanningController extends Controller
 
         $wp_id = $_POST['wp_id'];
 
-        $work_planning_status_time = date('H:i:s');
         $work_planning_status_date = date('Y-m-d');
+        $work_planning_status_time = date('H:i:s');
 
         $user_id = \Auth::user()->id;
 
@@ -1451,38 +1426,6 @@ class WorkPlanningController extends Controller
         $module_id = $wp_id;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
-
-        // Get previous WFH requests for set attendance from 3rd date
-        $work_type = $work_planning['work_type'];
-        
-        if($work_type == 'WFH') {
-
-            $user_ids[] = $user_id;
-            $month = date('m');
-            $year = date('Y');
-            
-            $work_from_home_res = WorkFromHome::getAllWorkFromHomeRequestsByUserId(0,$user_ids,$month,$year,'');
-
-            if(isset($work_from_home_res) && sizeof($work_from_home_res) > 0) {
-
-                $dates_string = '';
-                foreach ($work_from_home_res as $key => $value) {
-                    
-                    if($dates_string == '') {
-                        $dates_string = $value['selected_dates'];
-                    }
-                    else {
-                        $dates_string .= "," . $value['selected_dates'];
-                    }
-                }
-
-                $dates_array = explode(",", $dates_string);
-
-                if(isset($dates_array) && sizeof($dates_array) > 2) {
-                    \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $wp_id");
-                }
-            }
-        }
 
         // If Status not add tomorrow before 11:00 AM then send email notifications
         $today_date = date("d-m-Y");
