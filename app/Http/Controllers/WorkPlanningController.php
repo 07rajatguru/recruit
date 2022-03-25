@@ -1517,9 +1517,6 @@ class WorkPlanningController extends Controller
         $reply = $_POST['check'];
         $user_id = \Auth::user()->id;
 
-        // Get Today Day
-        $day = date("l");
-
         $manager_user_id = env('MANAGERUSERID');
 
         if ($reply == 'Approved') {
@@ -1528,8 +1525,11 @@ class WorkPlanningController extends Controller
             $status = $work_planning->status;
             $post_discuss_status = $work_planning->post_discuss_status;
             $total_actual_time = $work_planning->total_actual_time;
+            $work_type = $work_planning->work_type;
+            $added_by_id = $work_planning->added_by;
+            $added_day = date("l",strtotime($work_planning->added_date));
 
-            if($day == 'Saturday') {
+            if($added_day == 'Saturday') {
 
                 if($total_actual_time < '04:30:00') {
                     $attendance = 'HD';
@@ -1540,7 +1540,7 @@ class WorkPlanningController extends Controller
             }  
             else {
 
-                if($user_id == $manager_user_id) {
+                if($added_by_id == $manager_user_id) {
 
                     if($total_actual_time < '06:00:00') {
                         $attendance = 'HD';
@@ -1569,6 +1569,88 @@ class WorkPlanningController extends Controller
             $work_planning->status = 1;
             $work_planning->approved_by = $user_id;
             $work_planning->save();
+        }
+
+        // Get previous WFH requests for set attendance from 3rd date
+        if($work_type == 'WFH') {
+
+            $month = date('m');
+            $year = date('Y');
+
+            $work_from_home_res = WorkFromHome::getCurrentMonthWFHRequests($added_by_id,$month,$year);
+
+            if(isset($work_from_home_res) && sizeof($work_from_home_res) > 0) {
+
+                $dates_string = '';
+                foreach ($work_from_home_res as $key => $value) {
+                        
+                    if($dates_string == '') {
+                        $dates_string = $value['selected_dates'];
+                    }
+                    else {
+                        $dates_string .= "," . $value['selected_dates'];
+                    }
+                }
+
+                $dates_array = explode(",", $dates_string);
+                $dates_array = array_unique($dates_array);
+
+                if(isset($dates_array) && sizeof($dates_array) > 2) {
+
+                    $i = 0;
+                    foreach ($dates_array as $key1 => $value1) {
+
+                        $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($value1,$added_by_id);
+
+                        if(isset($get_work_planning_res) && $get_work_planning_res != '') {
+
+                            $get_total_Actual_time = $get_work_planning_res->total_actual_time;
+                            $day = date("l",strtotime($get_work_planning_res->added_date));
+                            
+                            if($i <= 1) {
+
+                                if($day == 'Saturday') {
+
+                                    if($get_total_Actual_time < '04:30:00') {
+                                        $attendance = 'HD';
+                                    }
+                                    else {
+                                        $attendance = 'F';
+                                    }
+                                }  
+                                else {
+
+                                    if($added_by_id == $manager_user_id) {
+
+                                        if($get_total_Actual_time < '06:00:00') {
+                                            $attendance = 'HD';
+                                        }
+                                        else {
+                                            $attendance = 'F';
+                                        }
+                                    }
+                                    else {
+
+                                        if($get_total_Actual_time < '07:00:00') {
+                                            $attendance = 'HD';
+                                        }
+                                        else {
+                                            $attendance = 'F';
+                                        }
+                                    }
+                                }
+
+                                \DB::statement("UPDATE `work_planning` SET `attendance` = '$attendance' WHERE `added_date` = '$value1';");
+                            }
+                            else {
+
+                                \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `added_date` = '$value1';");
+                            }
+                        }
+                        $i++;
+                    }
+                }
+            }
         }
 
         $data = 'success';

@@ -130,4 +130,21 @@ class WorkFromHome extends Model
 
         return $response;
     }
+
+    public static function getCurrentMonthWFHRequests($user_id,$month,$year) {
+
+        $query = WorkFromHome::query();
+        $query = $query->select('work_from_home.*');
+        $query = $query->where('work_from_home.user_id','=',$user_id);
+
+        if ($month != '' && $year != '') {
+            $query = $query->where(\DB::raw('month(work_from_home.from_date)'),'=',$month);
+            $query = $query->where(\DB::raw('year(work_from_home.from_date)'),'=',$year);
+        }
+
+        $query = $query->orderBy('work_from_home.id','asc');
+        $response = $query->get();
+
+        return $response;
+    }
 }
