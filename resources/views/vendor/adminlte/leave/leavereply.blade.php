@@ -79,112 +79,111 @@
         </div>
     </div>
 
-@if($leave_details['category'] == 'Sick Leave')
-    <div class="row">    
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <div class="box-header with-border col-md-6 ">
-                    <h3 class="box-title">Medical Documents</h3>
-                </div>
+    @if($leave_details['category'] == 'Sick Leave')
+        @if(isset($leave_doc) && sizeof($leave_doc) > 0)
+            <div class="row">    
                 <div class="col-xs-12 col-sm-12 col-md-12">
-                    <table class="table table-bordered">
-                        <tr>
-                            <th></th>
-                            <th>File Name</th>
-                            <th>Size</th>      
-                        </tr>
-                        @if(isset($leave_doc) && sizeof($leave_doc) > 0)
-                            @foreach($leave_doc as $key => $value)
+                    <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                        <div class="box-header with-border col-md-6 ">
+                            <h3 class="box-title">Medical Documents</h3>
+                        </div>
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <table class="table table-bordered">
                                 <tr>
-                                    <td>
-                                        <a download href="{{ $value['url'] }}">
-                                        <i class="fa fa-fw fa-download"></i></a>
-                                    </td>
-                                    <td><a target="_blank" href="{{ $value['url'] }}">
-                                    {{ $value['name'] }}</a></td>
-                                    <td>{{ $value['size'] }}</td>
+                                    <th></th>
+                                    <th>File Name</th>
+                                    <th>Size</th>      
                                 </tr>
-                            @endforeach
-                        @endif
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
-@endif
-
-@if($loggedin_user_id == $leave_details['user_id'])
-
-    @if($leave_details['status'] == 1)
-        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            <button type="button" class="btn btn-success" disabled="disabled">Approved by {{ $leave_details['approved_by'] }}</button>
-        </div>
-    @elseif($leave_details['status'] == 2)
-        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            <button type="button" class="btn btn-danger" disabled="disabled">Rejected by {{ $leave_details['approved_by'] }}</button>
-        </div>
-    @endif
-@else
-    @if($leave_details['status'] == 0)
-        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            <button type="submit" class="btn btn-success" onclick="permission('Approved')" title="Approve">Approve</button> &nbsp;&nbsp;&nbsp;&nbsp;
-            <button type="submit" class="btn btn-danger" onclick="permission('Rejected')" title="Reject">Reject</button>
-        </div>
-    @elseif($leave_details['status'] == 1)
-        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            <button type="button" class="btn btn-success" disabled="disabled">Approved by {{ $leave_details['approved_by'] }}</button>&nbsp;&nbsp;&nbsp;&nbsp;
-            <button type="submit" class="btn btn-danger" onclick="permission('Rejected')" title="Reject">Reject</button>
-        </div>
-    @elseif($leave_details['status'] == 2)
-        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            <button type="submit" class="btn btn-success" onclick="permission('Approved')" title="Approve">Approve</button> &nbsp;&nbsp;&nbsp;&nbsp;
-            <button type="button" class="btn btn-danger" disabled="disabled">Rejected by {{ $leave_details['approved_by'] }}</button>
-        </div>
-    @endif
-@endif
-
-<input type="hidden" name="leave_id" id="leave_id" value="{{ $leave_id }}">
-<input type="hidden" name="msg" id="msg" value="{{ $leave_details['message'] }}">
-<input type="hidden" name="user_name" id="user_name" value="{{ $leave_details['uname'] }}">
-<input type="hidden" name="loggedin_user_id" id="loggedin_user_id" value="{{ $loggedin_user_id }}">
-<input type="hidden" name="user_id" id="user_id" value="{{ $leave_details['user_id'] }}">
-<input type="hidden" name="subject" id="subject" value="{{ $leave_details['subject'] }}">
-<input type="hidden" name="approved_by" id="approved_by" value="{{ $leave_details['approved_by'] }}">
-<input type="hidden" name="type_of_leave" id="type_of_leave" value="{{ $leave_details['type_of_leave'] }}">
-
-<input type="hidden" name="created_at" id="created_at" value="{{ $leave_details['created_at'] }}">
-<input type="hidden" name="from_date" id="from_date" value="{{ $leave_details['from_date'] }}">
-<input type="hidden" name="from_tommorrow_date_1" id="from_tommorrow_date_1" value="{{ $leave_details['from_tommorrow_date_1'] }}">
-<input type="hidden" name="from_tommorrow_date_2" id="from_tommorrow_date_2" value="{{ $leave_details['from_tommorrow_date_2'] }}">
-
-
-<input type="hidden" name="check" id="check" value="">
-
-<!-- Remarsk Modal Popup -->
-<div id="remarksmodal" class="modal text-left fade">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h4 class="modal-title">Add Remarks</h4>
-            </div>
-
-            <div class="modal-body">
-                <div class="ac_mngr_cls">
-                    <div class="form-group">
-                        <strong>Remarks: <span class = "required_fields">*</span></strong>
-                        {!! Form::textarea('remarks', null, array('id'=>'remarks','placeholder' => 'Remarks','class' => 'form-control','rows' => '5')) !!}
+                                @foreach($leave_doc as $key => $value)
+                                    <tr>
+                                        <td>
+                                            <a download href="{{ $value['url'] }}">
+                                            <i class="fa fa-fw fa-download"></i></a>
+                                        </td>
+                                        <td><a target="_blank" href="{{ $value['url'] }}">
+                                        {{ $value['name'] }}</a></td>
+                                        <td>{{ $value['size'] }}</td>
+                                    </tr>
+                                @endforeach
+                            </table>
+                        </div>
                     </div>
                 </div>
             </div>
+        @endif
+    @endif
 
-            <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="hideModal();">Submit</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+    @if($loggedin_user_id == $leave_details['user_id'])
+
+        @if($leave_details['status'] == 1)
+            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                <button type="button" class="btn btn-success" disabled="disabled">Approved by {{ $leave_details['approved_by'] }}</button>
+            </div>
+        @elseif($leave_details['status'] == 2)
+            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                <button type="button" class="btn btn-danger" disabled="disabled">Rejected by {{ $leave_details['approved_by'] }}</button>
+            </div>
+        @endif
+    @else
+        @if($leave_details['status'] == 0)
+            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                <button type="submit" class="btn btn-success" onclick="permission('Approved')" title="Approve">Approve</button> &nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="submit" class="btn btn-danger" onclick="permission('Rejected')" title="Reject">Reject</button>
+            </div>
+        @elseif($leave_details['status'] == 1)
+            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                <button type="button" class="btn btn-success" disabled="disabled">Approved by {{ $leave_details['approved_by'] }}</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="submit" class="btn btn-danger" onclick="permission('Rejected')" title="Reject">Reject</button>
+            </div>
+        @elseif($leave_details['status'] == 2)
+            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                <button type="submit" class="btn btn-success" onclick="permission('Approved')" title="Approve">Approve</button> &nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="button" class="btn btn-danger" disabled="disabled">Rejected by {{ $leave_details['approved_by'] }}</button>
+            </div>
+        @endif
+    @endif
+
+    <input type="hidden" name="leave_id" id="leave_id" value="{{ $leave_id }}">
+    <input type="hidden" name="msg" id="msg" value="{{ $leave_details['message'] }}">
+    <input type="hidden" name="user_name" id="user_name" value="{{ $leave_details['uname'] }}">
+    <input type="hidden" name="loggedin_user_id" id="loggedin_user_id" value="{{ $loggedin_user_id }}">
+    <input type="hidden" name="user_id" id="user_id" value="{{ $leave_details['user_id'] }}">
+    <input type="hidden" name="subject" id="subject" value="{{ $leave_details['subject'] }}">
+    <input type="hidden" name="approved_by" id="approved_by" value="{{ $leave_details['approved_by'] }}">
+    <input type="hidden" name="type_of_leave" id="type_of_leave" value="{{ $leave_details['type_of_leave'] }}">
+
+    <input type="hidden" name="created_at" id="created_at" value="{{ $leave_details['created_at'] }}">
+    <input type="hidden" name="from_date" id="from_date" value="{{ $leave_details['from_date'] }}">
+    <input type="hidden" name="from_tommorrow_date_1" id="from_tommorrow_date_1" value="{{ $leave_details['from_tommorrow_date_1'] }}">
+    <input type="hidden" name="from_tommorrow_date_2" id="from_tommorrow_date_2" value="{{ $leave_details['from_tommorrow_date_2'] }}">
+
+    <input type="hidden" name="check" id="check" value="">
+
+    <!-- Remarsk Modal Popup -->
+    <div id="remarksmodal" class="modal text-left fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h4 class="modal-title">Add Remarks</h4>
+                </div>
+
+                <div class="modal-body">
+                    <div class="ac_mngr_cls">
+                        <div class="form-group">
+                            <strong>Remarks: <span class = "required_fields">*</span></strong>
+                            {!! Form::textarea('remarks', null, array('id'=>'remarks','placeholder' => 'Remarks','class' => 'form-control','rows' => '5')) !!}
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" onclick="hideModal();">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
 @stop
 

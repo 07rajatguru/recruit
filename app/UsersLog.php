@@ -114,14 +114,12 @@ class UsersLog extends Model
 
     public static function getUserTimeByID($user_id,$date) {
 
-        $date_class = new Date();
-
         $query = UsersLog::query();
-        $query = $query->select('users_log.*',\DB::raw('min(time) as login'),\DB::raw('max(time) as logout'));
         $query = $query->where('user_id',$user_id);
         $query = $query->where('date','=',$date);
-        $query = $query->where('time','>=','04:00:00');
-        $query = $query->where('time','<=','15:00:00');
+        $query = $query->where('time','>=','03:30:00');
+        $query = $query->where('time','<=','15:30:00');
+        $query = $query->select('users_log.user_id',\DB::raw('min(time) as login'),\DB::raw('max(time) as logout'));
         $response = $query->first();
 
         $user_attendance = array();
