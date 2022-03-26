@@ -638,17 +638,35 @@ class WorkPlanningController extends Controller
         $date = date('Y-m-d');
         $get_time = UsersLog::getUserTimeByID($user_id,$date);
 
-        $login_date = date('Y-m-d') . " " . $get_time['login'];
-        $login_utc = $login_date;
-        $login_dt = new \DateTime($login_utc);
-        $login_tz = new \DateTimeZone('Asia/Kolkata');
+        if($get_time['login'] != '') {
 
-        $login_dt->setTimezone($login_tz);
-        $loginTime = strtotime($login_dt->format('H:i:s'));
+            $login_date = date('Y-m-d') . " " . $get_time['login'];
+            $login_utc = $login_date;
+            $login_dt = new \DateTime($login_utc);
+            $login_tz = new \DateTimeZone('Asia/Kolkata');
 
-        // Get Difference between login time & report submit time
-        $diff = $current_time - $loginTime;
-        $time_diff = date("H:i", $diff);
+            $login_dt->setTimezone($login_tz);
+            $loginTime = strtotime($login_dt->format('H:i:s'));
+
+            // Get Difference between login time & report submit time
+            $diff = $current_time - $loginTime;
+            $time_diff = date("H:i", $diff);
+        }
+        else {
+
+            $time = date('H:i:s');
+            $login_date = date('Y-m-d') . " " . $time;
+            $login_utc = $login_date;
+            $login_dt = new \DateTime($login_utc);
+            $login_tz = new \DateTimeZone('Asia/Kolkata');
+
+            $login_dt->setTimezone($login_tz);
+            $loginTime = strtotime($login_dt->format('H:i:s'));
+
+            // Get Difference between login time & report submit time
+            $diff = $current_time - $loginTime;
+            $time_diff = date("H:i", $diff);
+        }
 
         $work_type = $request->input('work_type');
         $remaining_time = $request->input('remaining_time');
@@ -761,8 +779,18 @@ class WorkPlanningController extends Controller
         $work_planning->attendance = $attendance;
         $work_planning->status = '0';
         $work_planning->work_type = $work_type;
-        $work_planning->loggedin_time = $get_time['login'];
-        $work_planning->loggedout_time = $get_time['logout'];
+
+        if(isset($get_time['login']) && $get_time['login']  != '') {
+
+            $work_planning->loggedin_time = $get_time['login'];
+            $work_planning->loggedout_time = $get_time['logout'];
+        }
+        else {
+
+            $work_planning->loggedin_time = $time;
+            $work_planning->loggedout_time = $time;
+        }
+
         $work_planning->work_planning_time = date('H:i:s');
         $work_planning->remaining_time = $remaining_time;
         $work_planning->added_date = date('Y-m-d');
