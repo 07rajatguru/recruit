@@ -70,12 +70,16 @@
                 </div>
 
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                    <div class="form-group {{ $errors->has('leave_type') ? 'has-error' : '' }}">
-                        <strong>Leave Type: <span class = "required_fields">*</span></strong>
-                        {!! Form::select('leave_type', $leave_type,$selected_leave_type, array('id' => 'leave_type','class' => 'form-control','tabindex' => '2')) !!}
-                        @if ($errors->has('leave_type'))
+                    
+                    <div class="form-group {{ $errors->has('leave_category') ? 'has-error' : '' }}">
+                        <strong>Leave Category: <span class = "required_fields">*</span></strong>
+                        {{-- {!! Form::select('leave_category', $leave_category, $selected_leave_category, array('id' => 'leave_category', 'class' => 'form-control','tabindex' => '2', 'onchange' => 'category();' )) !!} --}}
+
+                        {!! Form::select('leave_category', $leave_category, $selected_leave_category, array('id' => 'leave_category', 'class' => 'form-control','tabindex' => '2')) !!}
+
+                        @if ($errors->has('leave_category'))
                             <span class="help-block">
-                                <strong>{{ $errors->first('leave_type') }}</strong>
+                                <strong>{{ $errors->first('leave_category') }}</strong>
                             </span>
                         @endif
                     </div>
@@ -91,15 +95,22 @@
                         </div>
                     </div>
 
-                    <div class="form-group {{ $errors->has('leave_category') ? 'has-error' : '' }}">
-                        <strong>Leave Category: <span class = "required_fields">*</span></strong>
-                        {{-- {!! Form::select('leave_category', $leave_category, $selected_leave_category, array('id' => 'leave_category', 'class' => 'form-control','tabindex' => '5', 'onchange' => 'category();' )) !!} --}}
-
-                        {!! Form::select('leave_category', $leave_category, $selected_leave_category, array('id' => 'leave_category', 'class' => 'form-control','tabindex' => '5')) !!}
-
-                        @if ($errors->has('leave_category'))
+                    <div class="form-group {{ $errors->has('leave_type') ? 'has-error' : '' }}">
+                        <strong>Leave Type: <span class = "required_fields">*</span></strong>
+                        {!! Form::select('leave_type', $leave_type,$selected_leave_type, array('id' => 'leave_type','class' => 'form-control','tabindex' => '5', 'onchange' => 'displayHalfDayOptions();')) !!}
+                        @if ($errors->has('leave_type'))
                             <span class="help-block">
-                                <strong>{{ $errors->first('leave_category') }}</strong>
+                                <strong>{{ $errors->first('leave_type') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+
+                    <div class="form-group half_options {{ $errors->has('half_leave_type') ? 'has-error' : '' }}" style="display: none;">
+                        <strong>Select Type: <span class = "required_fields">*</span></strong>
+                        {!! Form::select('half_leave_type', $half_leave_type,$selected_half_leave_type, array('id' => 'half_leave_type','class' => 'form-control','tabindex' => '6')) !!}
+                        @if ($errors->has('half_leave_type'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('half_leave_type') }}</strong>
                             </span>
                         @endif
                     </div>
@@ -130,6 +141,8 @@
     <script type="text/javascript">
         jQuery(document).ready(function () {
 
+            displayHalfDayOptions();
+
             $("#from_date").datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
@@ -159,6 +172,9 @@
                     "leave_category": {
                         required: true
                     },
+                    "half_leave_type": {
+                        required: true
+                    },
                 },
                 messages: {
                     "subject": {
@@ -175,6 +191,9 @@
                     },
                     "leave_category": {
                         required: "Leave Category is Required Field."
+                    },
+                    "half_leave_type": {
+                        required: "Please Select Option."
                     },
                 }
             });
@@ -274,6 +293,18 @@
                         }
                     });
                 }
+            }
+        }
+
+        function displayHalfDayOptions() {
+
+            var leave_type = $("#leave_type").val();
+
+            if (leave_type == 'Half Day') {
+                $(".half_options").show();
+            }
+            else {
+                $(".half_options").hide();
             }
         }
 

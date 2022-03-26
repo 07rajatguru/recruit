@@ -255,8 +255,13 @@ class LeaveController extends Controller
 
             $leave_category = UserLeave::getLeaveCategory();
         }
+
+        // Get Half day options
+        $half_leave_type = UserLeave::getHalfDayOptions();
+
+        $selected_half_leave_type = '';
         
-        return view('adminlte::leave.create',compact('action','leave_type','leave_category','selected_leave_type','selected_leave_category','loggedin_user_id'));
+        return view('adminlte::leave.create',compact('action','leave_type','leave_category','selected_leave_type','selected_leave_category','loggedin_user_id','half_leave_type','selected_half_leave_type'));
     }
 
     public function leaveStore(Request $request) {
@@ -284,6 +289,7 @@ class LeaveController extends Controller
         $leave_type = Input::get('leave_type');
         $leave_category = Input::get('leave_category');
         $message = Input::get('message');
+        $half_leave_type = Input::get('half_leave_type');
 
         // Calculate Difference Between Two Dates
 
@@ -373,6 +379,7 @@ class LeaveController extends Controller
         $user_leave->from_tommorrow_date_2 = $from_tommorrow_date_2;
         $user_leave->days = $days;
         $user_leave->selected_dates = implode(",", $dates);
+        $user_leave->half_leave_type = $half_leave_type;
         $user_leave->save();
 
         $leave_id = $user_leave->id;
@@ -483,7 +490,12 @@ class LeaveController extends Controller
             $leave_category = UserLeave::getLeaveCategory();
         }
         
-        return view('adminlte::leave.edit',compact('action','leave_type','leave_category','leave','selected_leave_type','selected_leave_category','from_date','to_date','loggedin_user_id'));
+        // Get Half day options
+        $half_leave_type = UserLeave::getHalfDayOptions();
+
+        $selected_half_leave_type = $leave->half_leave_type;
+
+        return view('adminlte::leave.edit',compact('action','leave_type','leave_category','leave','selected_leave_type','selected_leave_category','from_date','to_date','loggedin_user_id','half_leave_type','selected_half_leave_type'));
     }
 
     public function update(Request $request,$id) {
@@ -513,6 +525,7 @@ class LeaveController extends Controller
         $leave_type = Input::get('leave_type');
         $leave_category = Input::get('leave_category');
         $message = Input::get('message');
+        $half_leave_type = Input::get('half_leave_type');
 
         // Calculate Difference Between Two Dates
 
@@ -594,6 +607,7 @@ class LeaveController extends Controller
         $user_leave->status = '0';
         $user_leave->days = $days;
         $user_leave->selected_dates = implode(",", $dates);
+        $user_leave->half_leave_type = $half_leave_type;
         $user_leave->save();
 
         if(isset($email_value) && $email_value != '') {

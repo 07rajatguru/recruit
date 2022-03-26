@@ -29,6 +29,16 @@ class UserLeave extends Model
         return $type;
     }
 
+    public static function getHalfDayOptions() {
+
+        $type = array();
+        $type[''] = 'Select';
+        $type['First Half'] = 'First Half';
+        $type['Second Half'] = 'Second Half';
+        
+        return $type;
+    }
+
     public static function getAllLeavedataByUserId($all=0,$user_ids,$month,$year,$status='') {
 
         $query = UserLeave::query();
