@@ -8,10 +8,10 @@ class MonthwiseLeaveBalance extends Model
 {
     public $table = "monthwise_leave_balance";
 
-    public static function getMonthWiseLeaveBalance($year) {
+    public static function getMonthWiseLeaveBalance($year,$month) {
 
         $query = MonthwiseLeaveBalance::query();
-        //$query = $query->where('month','<=',$month);
+        $query = $query->where('month','<=',$month);
         $query = $query->where('year','<=',$year);
         $query = $query->select('monthwise_leave_balance.*',\DB::raw("SUM(monthwise_leave_balance.pl_total) as pl_total"),\DB::raw("SUM(monthwise_leave_balance.pl_taken) as pl_taken"),\DB::raw("SUM(monthwise_leave_balance.pl_remaining) as pl_remaining"),\DB::raw("SUM(monthwise_leave_balance.sl_total) as sl_total"),\DB::raw("SUM(monthwise_leave_balance.sl_taken) as sl_taken"),\DB::raw("SUM(monthwise_leave_balance.sl_remaining) as sl_remaining"));
         $query = $query->orderBy('monthwise_leave_balance.user_id','desc');

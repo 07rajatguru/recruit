@@ -34,11 +34,28 @@
 	            <div class="box-header with-border col-md-6"></div>
 
 	            <div class="col-xs-12 col-sm-12 col-md-12">
-	            	<div class="form-group">
-	                    <strong>Select User : <span class = "required_fields">*</span> </strong>
-	                    {!! Form::select('user_id',$users, null, array('id'=>'user_id','class' => 'form-control', 'tabindex' => '1' )) !!}
-	                </div>
-	            </div>
+
+	            	<div class="col-xs-4 col-sm-4 col-md-4">
+		            	<div class="form-group">
+		                    <strong>Select User : <span class = "required_fields">*</span> </strong>
+		                    {!! Form::select('user_id',$users, null, array('id'=>'user_id','class' => 'form-control', 'tabindex' => '1')) !!}
+		                </div>
+		            </div>
+
+		            <div class="col-xs-4 col-sm-4 col-md-4">
+			            <div class="form-group">
+			            	<strong>Select Month : <span class = "required_fields">*</span> </strong>
+			                {{Form::select('month',$month_array, $month, array('id'=>'month','class'=>'form-control', 'tabindex' => '2')) }}
+			            </div>
+			        </div>
+		      
+		      		<div class="col-xs-4 col-sm-4 col-md-4">
+			            <div class="form-group">
+			            	<strong>Select Year : <span class = "required_fields">*</span> </strong>
+			                {{Form::select('year',$year_array, $year, array('id'=>'year','class'=>'form-control', 'tabindex' => '3')) }}
+			            </div>
+			        </div>
+		          </div>
 
 	            <div class="col-xs-12 col-sm-12 col-md-12">
 	            	<div class="col-xs-4 col-sm-4 col-md-4">
@@ -144,7 +161,10 @@
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function () {
+            
             $("#user_id").select2();
+            $("#month").select2();
+            $("#year").select2();
 
             $("#user_leave_data").validate({
                 rules: {
