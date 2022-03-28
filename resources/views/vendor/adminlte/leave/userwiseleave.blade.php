@@ -53,7 +53,7 @@
         </div>
     </div>
 
-    <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%"" id="user_leave_table">
+    <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="user_leave_table">
     	<thead>
     		<tr>
 	    		<th>No</th>

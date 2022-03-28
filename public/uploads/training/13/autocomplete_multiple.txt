@@ -1,0 +1,45 @@
+$(function () {
+    $("#lok").autocomplete({
+        minLength: 1,
+        source: function (request, response) {
+            $.ajax({
+                url: "http://gd.geobytes.com/AutoCompleteCity",
+                dataType: "jsonp",
+                data: {
+                    q: request.term
+                },
+                success: function (data) {
+
+                    response(data);
+                }
+            });
+        },
+    })
+        ._renderItem = function (ul, item) {
+        return $("<li></li>")
+            .data("item.autocomplete", item);
+    };
+});
+
+$(function () {
+    $("#img").autocomplete({
+        minLength: 1,
+        source: function (request, response) {
+            $.ajax({
+                url: "http://gd.geobytes.com/AutoCompleteCity",
+                dataType: "jsonp",
+                data: {
+                    q: request.term
+                },
+                success: function (data) {
+
+                    response(data);
+                }
+            });
+        },
+    })
+        ._renderItem = function (ul, item) {
+        return $("<li></li>")
+            .data("item.autocomplete", item);
+    };
+});
