@@ -90,6 +90,7 @@ class HomeController extends Controller
         return redirect()->route('dashboard')->with('success', 'Logout Successfully.');
     }
 
+    // Dashboard
     public function dashboard() {
 
         $user = \Auth::user();
