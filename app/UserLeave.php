@@ -58,10 +58,18 @@ class UserLeave extends Model
 
         if ($month != '' && $year != '') {
 
-            $query = $query->where(\DB::raw('month(user_leave.from_date)'),'>=',$month);
-            $query = $query->where(\DB::raw('year(user_leave.from_date)'),'>=',$year);
-            $query = $query->where(\DB::raw('month(user_leave.to_date)'),'<=',$month);
-            $query = $query->where(\DB::raw('year(user_leave.to_date)'),'<=',$year);
+            $current_month = date('m');
+
+            if($month == $current_month) {
+
+                $query = $query->where(\DB::raw('month(user_leave.from_date)'),'=',$month);
+                $query = $query->where(\DB::raw('year(user_leave.from_date)'),'=',$year);
+            }
+            else {
+
+                $query = $query->where(\DB::raw('month(user_leave.to_date)'),'=',$month);
+                $query = $query->where(\DB::raw('year(user_leave.to_date)'),'=',$year);
+            }
         }
 
         $query = $query->orderBy('user_leave.id','desc');
@@ -93,6 +101,7 @@ class UserLeave extends Model
                 $leave[$i]['leave_category'] = $value->category;
                 $leave[$i]['status'] = $value->status;
                 $leave[$i]['user_name'] = $value->user_name;
+                $leave[$i]['half_leave_type'] = $value->half_leave_type;
                 $i++;
             }
         }
@@ -141,6 +150,7 @@ class UserLeave extends Model
             $leave_data['days'] = $res->days;
             $leave_data['remarks'] = $res->remarks;
             $leave_data['selected_dates'] = $res->selected_dates;
+            $leave_data['half_leave_type'] = $res->half_leave_type;
         }
 
         return $leave_data;
@@ -181,10 +191,19 @@ class UserLeave extends Model
         }
 
         if ($month != '' && $year != '') {
-            $query = $query->where(\DB::raw('month(user_leave.from_date)'),'>=',$month);
-            $query = $query->where(\DB::raw('year(user_leave.from_date)'),'>=',$year);
-            $query = $query->where(\DB::raw('month(user_leave.to_date)'),'<=',$month);
-            $query = $query->where(\DB::raw('year(user_leave.to_date)'),'<=',$year);
+
+            $current_month = date('m');
+
+            if($month == $current_month) {
+
+                $query = $query->where(\DB::raw('month(user_leave.from_date)'),'=',$month);
+                $query = $query->where(\DB::raw('year(user_leave.from_date)'),'=',$year);
+            }
+            else {
+
+                $query = $query->where(\DB::raw('month(user_leave.to_date)'),'=',$month);
+                $query = $query->where(\DB::raw('year(user_leave.to_date)'),'=',$year);
+            }
         }
 
         if ($category != '') {

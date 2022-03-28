@@ -35,7 +35,13 @@
 
                         <tr>
                             <th>Leave Type</th>
-                            <td>{{ $leave_details['type_of_leave'] }}</td>
+
+                            @if(isset($leave_details['half_leave_type']) && $leave_details['half_leave_type'] != '')
+                                <td>{{ $leave_details['type_of_leave'] }} - {{ $leave_details['half_leave_type'] }}</td>
+                            @else
+                                <td>{{ $leave_details['type_of_leave'] }}</td>
+                            @endif
+                            
                             <th>Leave Category</th>
                             <td>{{ $leave_details['category'] }}</td>
                             <th>Status</th>

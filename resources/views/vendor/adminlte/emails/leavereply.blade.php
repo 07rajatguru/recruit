@@ -77,7 +77,11 @@
 
                         @elseif($days == '0.5' && $status == '1' && $type_of_leave == 'Half Day')
 
-                            <p style="text-align: left;">This is to inform you that your leave has been approved for the (First half/Second half) of {{ $from_date }}.</p>
+                            @if(isset($half_leave_type) && $half_leave_type != '') 
+                                <p style="text-align: left;">This is to inform you that your leave has been approved for the {{ $half_leave_type }} of {{ $from_date }}.</p>
+                            @else
+                                <p style="text-align: left;">This is to inform you that your leave has been approved for the (First half/Second half) of {{ $from_date }}.</p>
+                            @endif
 
                             <p style="text-align: left;">You are hereby requested to co-ordinate with your Reporting Manager and plan the delegation of ongoing tasks within the team to avoid any further delay or communication gap.</p>
 
@@ -85,7 +89,11 @@
 
                         @elseif($days >= '1' && $status == '1' && $type_of_leave == 'Half Day')
 
-                            <p style="text-align: left;">This is to inform you that your leave has been approved for the (First half/Second half) from {{ $from_date }} to {{ $to_date }}.</p>
+                            @if(isset($half_leave_type) && $half_leave_type != '') 
+                                <p style="text-align: left;">This is to inform you that your leave has been approved for the {{ $half_leave_type }} from {{ $from_date }} to {{ $to_date }}.</p>
+                            @else
+                                <p style="text-align: left;">This is to inform you that your leave has been approved for the (First half/Second half) from {{ $from_date }} to {{ $to_date }}.</p>
+                            @endif
 
                             <p style="text-align: left;">You are hereby requested to co-ordinate with your Reporting Manager and plan the delegation of ongoing tasks within the team to avoid any further delay or communication gap.</p>
 
@@ -93,7 +101,11 @@
 
                         @elseif($days == '0.5' && $status == '2' && $type_of_leave == 'Half Day')
 
-                            <p style="text-align: left;">This is to inform you that your leave has been rejected for the (First half/Second half) of {{ $from_date }}.</p>
+                            @if(isset($half_leave_type) && $half_leave_type != '')
+                                <p style="text-align: left;">This is to inform you that your leave has been rejected for the {{ $half_leave_type }} of {{ $from_date }}.</p>
+                            @else 
+                                <p style="text-align: left;">This is to inform you that your leave has been rejected for the (First half/Second half) of {{ $from_date }}.</p>
+                            @endif
 
                             <p style="text-align: left;">You are hereby requested to understand the reason of rejection as per the remarks mentioned in E2H.</p>
 
@@ -101,7 +113,11 @@
 
                         @elseif($days >= '1' && $status == '2' && $type_of_leave == 'Half Day')
 
-                            <p style="text-align: left;">This is to inform you that your leave has been rejected for the (First half/Second half) from {{ $from_date }} to {{ $to_date }}.</p>
+                            @if(isset($half_leave_type) && $half_leave_type != '')
+                                <p style="text-align: left;">This is to inform you that your leave has been rejected for the {{ $half_leave_type }} from {{ $from_date }} to {{ $to_date }}.</p>
+                            @else
+                                <p style="text-align: left;">This is to inform you that your leave has been rejected for the (First half/Second half) from {{ $from_date }} to {{ $to_date }}.</p>
+                            @endif
 
                             <p style="text-align: left;">You are hereby requested to understand the reason of rejection as per the remarks mentioned in E2H.</p>
 

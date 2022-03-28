@@ -147,7 +147,13 @@
                     <td>{{ $value['subject'] }}</td>
                     <td>{{ $value['from_date'] }}</td>
                     <td>{{ $value['to_date'] }}</td>
-                    <td>{{ $value['leave_type'] }}</td>
+
+                    @if(isset($value['half_leave_type']) && $value['half_leave_type'] != '')
+                        <td>{{ $value['leave_type'] }} - {{ $value['half_leave_type'] }}</td>
+                    @else
+                        <td>{{ $value['leave_type'] }}</td>
+                    @endif
+
                     <td>{{ $value['leave_category'] }}</td>
 
                     @if($value['status'] == 0)

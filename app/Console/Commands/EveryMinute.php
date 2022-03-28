@@ -532,6 +532,7 @@ class EveryMinute extends Command
                 $input['type_of_leave'] = $leave->type_of_leave;
                 $input['from_date'] = date('d-m-Y',strtotime($leave->from_date));
                 $input['to_date'] = date('d-m-Y',strtotime($leave->to_date));
+                $input['half_leave_type'] = $leave->half_leave_type;
 
                 $user_name = User::getUserNameByEmail($input['to']);
                 $input['user_name'] = $user_name;
