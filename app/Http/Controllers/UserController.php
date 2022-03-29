@@ -1027,7 +1027,55 @@ class UserController extends Controller
 
         if (isset($status) && $status == 'Active') {
 
-            return redirect()->route('users.index')->with('success','User Updated Successfully, please add this user manually in training and process module.');
+            // Add active User to training & process manual if it is display to all users.
+
+            if($department_id == '1' || ($department_id == '2' && $hr_adv_recruitemnt == 'Yes')) {
+
+                $training_ids = Training::getAlltrainingIds(1);
+
+                if (isset($training_ids) && $training_ids != '') {
+
+                    foreach ($training_ids as $key => $value) {
+
+                        $training_visible_users = new TrainingVisibleUser;
+                        $training_visible_users->training_id = $value;
+                        $training_visible_users->user_id = $id;
+                        $training_visible_users->save();
+                    }
+                }
+            }
+
+            $process_ids = ProcessManual::getAllprocessmanualIds(1);
+
+            if (isset($process_ids) && $process_ids != '') {
+
+                foreach ($process_ids as $key1 => $value1) {
+
+                    $process_visible_users = new ProcessVisibleUser();
+                    $process_visible_users->process_id = $value1;
+                    $process_visible_users->user_id = $id;
+                    $process_visible_users->save();
+                }
+            }
+            
+            // If job_open_to_all = 1 then active user visible that all jobs
+
+            $job_ids = JobOpen::getAllJobsId(1);
+
+            if (isset($job_ids) && $job_ids != '') {
+
+                foreach ($job_ids as $key2 => $value2) {
+                    
+                    $job_visible_users = new JobVisibleUsers();
+                    $job_visible_users->job_id = $value2;
+                    $job_visible_users->user_id = $id;
+                    $job_visible_users->save();
+                }
+            }
+
+            //return redirect()->route('users.index')->with('success','User Updated Successfully, please add this user manually in training and process module.');
+
+            return redirect()->route('users.index')->with('success','User Updated Successfully.');
         }
 
         // If status is inactive then delete this user process and training
@@ -1036,6 +1084,7 @@ class UserController extends Controller
             ProcessVisibleUser::where('user_id',$id)->delete();
             TrainingVisibleUser::where('user_id',$id)->delete();
             JobVisibleUsers::where('user_id',$id)->delete();
+            HolidaysUsers::where('user_id',$id)->delete();
         }
 
         return redirect()->route('users.index')->with('success','User Updated Successfully.');
