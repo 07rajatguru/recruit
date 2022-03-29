@@ -57,7 +57,7 @@
     	<thead>
     		<tr>
 	    		<th>No</th>
-                <!-- <th>Action</th> -->
+                <th>Action</th>
                 <th width="15%">User Name</th>
                 <th>Total PL</th>
                 <th>Opted PL</th>
@@ -70,13 +70,12 @@
 
     	<?php $i=0; ?>
     	<tbody>
-    		@foreach($user_leave_data_1 as $key => $value)
+    		@foreach($user_leave_data as $key => $value)
 	    		<tr>
 		    		<td>{{ ++$i }}</td>
-                    {{-- <td>
+                    <td>
                         <a class="fa fa-edit" href="{{ route('leave.userwiseedit',$value['id']) }}" title="Edit"></a>
-                        @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'leaveuserwise','display_name'=>'User Leave Balance'])
-                    </td> --}}
+                    </td>
 		    		<td>{{ $value['user_name'] }}</td>
 		    		<td>{{ $value['pl_total'] }}</td>
 		    		<td>{{ $value['pl_taken'] }}</td>

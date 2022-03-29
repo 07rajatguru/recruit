@@ -27,6 +27,7 @@ class MonthwiseLeaveBalance extends Model
                 $user_id = $value->user_id;
                 $user_name = User::getUserNameById($user_id);
 
+                $leave_balance_data[$user_id]['id'] = $value->id;
                 $leave_balance_data[$user_id]['user_name'] = $user_name;
                 $leave_balance_data[$user_id]['pl_total'] = $value->pl_total;
                 $leave_balance_data[$user_id]['pl_taken'] = $value->pl_taken;

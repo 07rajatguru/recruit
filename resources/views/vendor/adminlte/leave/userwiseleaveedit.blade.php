@@ -34,51 +34,53 @@
 	            <div class="box-header with-border col-md-6"></div>
 
 	            <div class="col-xs-12 col-sm-12 col-md-12">
-	            	<div class="form-group">
-	                    <strong>Select User : <span class = "required_fields">*</span> </strong>
-	                    {!! Form::select('user_id',$users, $user_id, array('id'=>'user_id','class' => 'form-control', 'tabindex' => '1' )) !!}
-	                </div>
-	            </div>
+
+	            	<div class="col-xs-4 col-sm-4 col-md-4">
+		            	<div class="form-group">
+		                    <strong>Select User : <span class = "required_fields">*</span> </strong>
+		                    {!! Form::select('user_id',$users, $user_id, array('id'=>'user_id','class' => 'form-control', 'tabindex' => '1')) !!}
+		                </div>
+		            </div>
+
+		            <div class="col-xs-4 col-sm-4 col-md-4">
+			            <div class="form-group">
+			            	<strong>Select Month : <span class = "required_fields">*</span> </strong>
+			                {{Form::select('month',$month_array, $month, array('id'=>'month','class'=>'form-control', 'tabindex' => '2')) }}
+			            </div>
+			        </div>
+		      
+		      		<div class="col-xs-4 col-sm-4 col-md-4">
+			            <div class="form-group">
+			            	<strong>Select Year : <span class = "required_fields">*</span> </strong>
+			                {{Form::select('year',$year_array, $year, array('id'=>'year','class'=>'form-control', 'tabindex' => '3')) }}
+			            </div>
+			        </div>
+			    </div>
 
 	            <div class="col-xs-12 col-sm-12 col-md-12">
 	            	<div class="col-xs-4 col-sm-4 col-md-4">
 	            		<div class="">
-	            			<div class="form-group {{ $errors->has('leave_total') ? 'has-error' : '' }}">
+	            			<div class="form-group">
 	                            <strong>Total PL : <span class = "required_fields">*</span> </strong>
-	                            {!! Form::text('leave_total',null, array('id'=>'leave_total','placeholder' => 'Total PL','class' => 'form-control','tabindex' => '2', 'onchange' => 'setPrivilegeLeaveBalance()')) !!}
-	                            @if ($errors->has('leave_total'))
-	                                <span class="help-block">
-		                            	<strong>{{ $errors->first('leave_total') }}</strong>
-		                            </span>
-	                            @endif
+	                            {!! Form::text('leave_total',null, array('id'=>'leave_total','placeholder' => 'Total PL','class' => 'form-control','tabindex' => '4', 'onchange' => 'setPrivilegeLeaveBalance()')) !!}
 	                        </div>
 	                	</div>
 	                </div>
 
 	                <div class="col-xs-4 col-sm-4 col-md-4">
 	                	<div class="">
-	            			<div class="form-group {{ $errors->has('leave_taken') ? 'has-error' : '' }}">
+	            			<div class="form-group">
 	                            <strong>Opted PL : <span class = "required_fields">*</span> </strong>
-	                            {!! Form::text('leave_taken',null, array('id'=>'leave_taken','placeholder' => 'Opted PL','class' => 'form-control','tabindex' => '3', 'onchange' => 'setPrivilegeLeaveBalance()')) !!}
-	                            @if ($errors->has('leave_taken'))
-	                                <span class="help-block">
-		                            	<strong>{{ $errors->first('leave_taken') }}</strong>
-		                            </span>
-	                            @endif
+	                            {!! Form::text('leave_taken',null, array('id'=>'leave_taken','placeholder' => 'Opted PL','class' => 'form-control','tabindex' => '5', 'onchange' => 'setPrivilegeLeaveBalance()')) !!}
 	                        </div>
 	            		</div>
 	            	</div>
 
 	            	<div class="col-xs-4 col-sm-4 col-md-4">
 	            		<div class="">
-	            			<div class="form-group {{ $errors->has('leave_remaining') ? 'has-error' : '' }}">
+	            			<div class="form-group">
 	                            <strong>PL Balance : <span class = "required_fields">*</span> </strong>
-	                            {!! Form::text('leave_remaining',null, array('id'=>'leave_remaining','placeholder' => 'PL Balance','class' => 'form-control','tabindex' => '4')) !!}
-	                            @if ($errors->has('leave_remaining'))
-	                                <span class="help-block">
-		                            	<strong>{{ $errors->first('leave_remaining') }}</strong>
-		                            </span>
-	                            @endif
+	                            {!! Form::text('leave_remaining',null, array('id'=>'leave_remaining','placeholder' => 'PL Balance','class' => 'form-control','tabindex' => '6')) !!}
 	                        </div>
 	                    </div>
 	            	</div>
@@ -87,45 +89,27 @@
 	            <div class="col-xs-12 col-sm-12 col-md-12">
 	            	<div class="col-xs-4 col-sm-4 col-md-4">
 	            		<div class="">
-	                        <div class="form-group {{ $errors->has('seek_leave_total') ? 'has-error' : '' }}">
+	                        <div class="form-group">
 	                            <strong>Total SL : <span class = "required_fields">*</span> </strong>
-	                            {!! Form::text('seek_leave_total',null, array('id'=>'seek_leave_total','placeholder' => 'Total SL','class' => 'form-control','tabindex' => '5', 'onchange' => 'setSickLeaveBalance()')) !!}
-	                            @if ($errors->has('seek_leave_total'))
-	                                <span class="help-block">
-		                            	<strong>{{ $errors->first('seek_leave_total') }}
-		                            	</strong>
-		                            </span>
-	                            @endif
+	                            {!! Form::text('seek_leave_total',null, array('id'=>'seek_leave_total','placeholder' => 'Total SL','class' => 'form-control','tabindex' => '7', 'onchange' => 'setSickLeaveBalance()')) !!}
 	                        </div>
 	                    </div>
 	                </div>
 
 	                <div class="col-xs-4 col-sm-4 col-md-4">
 	            		<div class="">
-	            			<div class="form-group {{ $errors->has('seek_leave_taken') ? 'has-error' : '' }}">
+	            			<div class="form-group">
 	                            <strong>Opted SL : <span class = "required_fields">*</span> </strong>
-	                            {!! Form::text('seek_leave_taken',null, array('id'=>'seek_leave_taken','placeholder' => 'Opted SL','class' => 'form-control','tabindex' => '6', 'onchange' => 'setSickLeaveBalance()')) !!}
-	                            @if ($errors->has('seek_leave_taken'))
-	                                <span class="help-block">
-		                            	<strong>{{ $errors->first('seek_leave_taken') }}
-		                            	</strong>
-		                            </span>
-	                            @endif
+	                            {!! Form::text('seek_leave_taken',null, array('id'=>'seek_leave_taken','placeholder' => 'Opted SL','class' => 'form-control','tabindex' => '8', 'onchange' => 'setSickLeaveBalance()')) !!}
 	                        </div>
 	            		</div>
 	            	</div>
 
 	                <div class="col-xs-4 col-sm-4 col-md-4">
 	            		<div class="">
-	                        <div class="form-group {{ $errors->has('seek_leave_remaining') ? 'has-error' : '' }}">
+	                        <div class="form-group">
 	                            <strong>SL Balance : <span class = "required_fields">*</span> </strong>
-	                            {!! Form::text('seek_leave_remaining',null, array('id'=>'seek_leave_remaining','placeholder' => 'SL Balance','class' => 'form-control','tabindex' => '7')) !!}
-	                            @if ($errors->has('seek_leave_remaining'))
-	                                <span class="help-block">
-		                            	<strong>{{ $errors->first('seek_leave_remaining') }}
-		                            	</strong>
-		                            </span>
-	                            @endif
+	                            {!! Form::text('seek_leave_remaining',null, array('id'=>'seek_leave_remaining','placeholder' => 'SL Balance','class' => 'form-control','tabindex' => '9')) !!}
 	                        </div>
 	                    </div>
 	                </div>  
@@ -143,13 +127,20 @@
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function () {
+            
             $("#user_id").select2();
+            $("#month").select2();
+            $("#year").select2();
+
+            jQuery(document).on('focus', '.select2', function() {
+				
+				jQuery(this).siblings('select').select2('open');
+
+			});
 
             $("#user_leave_data").validate({
                 rules: {
-                    "user_id": {
-                        required: true
-                    },
+
                     "leave_total": {
                         required: true
                     },
@@ -170,9 +161,7 @@
                     }
                 },
                 messages: {
-                    "user_id": {
-                        required: "User is Required field."
-                    },
+                	
                     "leave_total": {
                         required: "Total Privilege Leave is Required field."
                     },

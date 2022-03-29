@@ -903,7 +903,7 @@ class LeaveController extends Controller
         }
 
         // Get Selected Year
-        $starting_year = '2021';
+        $starting_year = '2022';
         $ending_year = date('Y',strtotime('+2 year'));
 
         $year_array = array();
@@ -911,9 +911,9 @@ class LeaveController extends Controller
             $year_array[$y] = $y;
         }
 
-        $user_leave_data_1 = MonthwiseLeaveBalance::getMonthWiseLeaveBalance($year,$month);
+        $user_leave_data = MonthwiseLeaveBalance::getMonthWiseLeaveBalance($year,$month);
 
-        return view('adminlte::leave.userwiseleave',compact('month_array','month','year_array','year','user_leave_data_1'));
+        return view('adminlte::leave.userwiseleave',compact('month_array','month','year_array','year','user_leave_data'));
     }
 
     public function userWiseLeavaAdd() {
@@ -941,7 +941,7 @@ class LeaveController extends Controller
         }
 
         // Get Selected Year
-        $starting_year = '2021';
+        $starting_year = '2022';
         $ending_year = date('Y',strtotime('+2 year'));
 
         $year_array = array();
@@ -995,12 +995,29 @@ class LeaveController extends Controller
 
     public function userWiseLeaveEdit($id) {
 
-        $users = User::getAllUsers();
-
-        $leave_data = LeaveBalance::find($id);
+        $leave_data = MonthwiseLeaveBalance::find($id);
         $user_id = $leave_data->user_id;
+        $month = $leave_data->month;
+        $year = $leave_data->year;
 
-        return view('adminlte::leave.userwiseleaveedit',compact('users','leave_data','user_id'));
+        $users = User::getAllUsersExpectSuperAdmin();
+
+        // Get Selected Month
+        $month_array = array();
+        for ($i = 1; $i <= 12 ; $i++) {
+            $month_array[$i] = date('M',mktime(0,0,0,$i,1,$year));
+        }
+
+        // Get Selected Year
+        $starting_year = '2022';
+        $ending_year = date('Y',strtotime('+2 year'));
+
+        $year_array = array();
+        for ($y = $starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
+        }
+
+        return view('adminlte::leave.userwiseleaveedit',compact('users','leave_data','user_id','month','month_array','year','year_array'));
     }
 
     public function userWiseLeaveUpdate(Request $request,$id) {

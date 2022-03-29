@@ -40,7 +40,7 @@ class AddLeaveBalance extends Command
      */
     public function handle()
     {
-        $users = User::getAllUsers();
+        $users = User::getAllUsersExpectSuperAdmin();
 
         foreach ($users as $key => $value) {
 
