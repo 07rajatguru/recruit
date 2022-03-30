@@ -1887,18 +1887,11 @@ class JobOpen extends Model
             if($v->remote_working == '1') {
 
                 $response['job_location'] = "Remote";
-            }
-            else {
-
-                $response['job_location'] = $location;
-            }
-
-            if($v->remote_working == '1') {
-
                 $response['city'] = "Remote";
             }
             else {
 
+                $response['job_location'] = $location;
                 $response['city'] = $v->city;
             }
 
@@ -4579,18 +4572,11 @@ class JobOpen extends Model
             if($value->remote_working == '1') {
 
                 $jobs_list[$i]['location'] = "Remote";
-            }
-            else {
-
-                $jobs_list[$i]['location'] = $location;
-            }
-
-            if($value->remote_working == '1') {
-
                 $jobs_list[$i]['city'] = "Remote";
             }
             else {
 
+                $jobs_list[$i]['location'] = $location;
                 $jobs_list[$i]['city'] = $value->city;
             }
 

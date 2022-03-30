@@ -1116,17 +1116,13 @@ class Interview extends Model
 
         $input['job_designation'] = $interview->posting_title;
 
-        if(isset($interview->remote_working) && $interview->remote_working != '') {
+        if(isset($interview->remote_working) && $interview->remote_working == '1') {
+            
             $input['job_location'] = "Remote";
-        }
-        else {
-            $input['job_location'] = $location;
-        }
-
-        if(isset($interview->remote_working) && $interview->remote_working != '') {
             $input['city'] = "Remote";
         }
         else {
+            $input['job_location'] = $location;
             $input['city'] = $interview->job_city;
         }
 
@@ -1240,7 +1236,7 @@ class Interview extends Model
         $interview_details['job_designation'] = $interview->posting_title;
         $interview_details['client_name'] = $interview->client_name;
 
-        if(isset($interview->remote_working) && $interview->remote_working != '') {
+        if(isset($interview->remote_working) && $interview->remote_working == '1') {
             $interview_details['job_location'] = "Remote";
         }
         else {
