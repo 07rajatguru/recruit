@@ -420,7 +420,7 @@ class UserController extends Controller
         // Assign Fixed Holidays to new user
 
         $year = date('Y');
-        $fixed_holidays = Holidays::getUserHolidays(0,'',$year);
+        $fixed_holidays = Holidays::getFinancialYearHolidaysList();
 
         if(isset($fixed_holidays) && sizeof($fixed_holidays) > 0){
 

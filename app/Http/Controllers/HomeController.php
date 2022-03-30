@@ -994,7 +994,7 @@ class HomeController extends Controller
         $birthday_dates = User::getUserBirthDatesByMonth($month);
 
         // Get Holiday of Current Year
-        $holidays = Holidays::getUserHolidays(0,'',$year);
+        $holidays = Holidays::getFinancialYearHolidaysList();
 
         // Get Assigners users
         $assigned_users = User::getAssignedUsers($user_id);
@@ -1197,7 +1197,7 @@ class HomeController extends Controller
         $birthday_dates = User::getUserBirthDatesByMonth($month);
 
         // Get Holiday of Current Year
-        $holidays = Holidays::getUserHolidays(0,'',$year);
+        $holidays = Holidays::getFinancialYearHolidaysList();
 
         $viewVariable = array();
         $viewVariable['pending_work_planning_count'] = $pending_work_planning_count;
