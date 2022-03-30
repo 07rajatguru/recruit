@@ -133,15 +133,14 @@
                             </tr>
                             </thead>
                             @if(isset($work_anniversary_dates) && sizeof($work_anniversary_dates) > 0)
-                            <?php $i = 0; ?>
+                            <?php $work_anniversary_i = 0; ?>
                                 <tbody>
                                     @foreach($work_anniversary_dates as $key => $value)
                                         <tr>
-                                            <td style="border: 1px solid #00c0ef;text-align: center;">{{ ++$i }}</td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $key }}
-                                            </td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $value }}
-                                            </td>
+                                            <td style="border: 1px solid #00c0ef;text-align: center;">
+                                            {{ ++$work_anniversary_i }}</td>
+                                            <td style="border: 1px solid #00c0ef;">{{ $key }}</td>
+                                            <td style="border: 1px solid #00c0ef;">{{ $value }}</td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -181,13 +180,14 @@
                                 <th width="100px" style="border: 1px solid #00c0ef;">View Details</th>
                             </tr>
                             </thead>
+
+                            <?php $latein_earlygo_i = 0; ?>
                             @if(isset($latein_earlygo_data) && sizeof($latein_earlygo_data) > 0)
-                            <?php $i = 0; ?>
                                 <tbody>
                                     @foreach($latein_earlygo_data as $key => $value)
                                         <tr>
-                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}
-                                            </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ ++$latein_earlygo_i }}</td>
                                             <td style="border: 1px solid #00c0ef;">
                                             {{ $value['user_name'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">
@@ -205,12 +205,11 @@
                             @endif
 
                             @if(isset($team_latein_earlygo_details) && sizeof($team_latein_earlygo_details) > 0)
-                            <?php $i = 0; ?>
                                 <tbody>
                                     @foreach($team_latein_earlygo_details as $key => $value)
                                         <tr>
-                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}
-                                            </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ ++$latein_earlygo_i }}</td>
                                             <td style="border: 1px solid #00c0ef;background-color:#C4D79B;">{{ $value['user_name'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">
                                             {{ $value['subject'] }} </td>
@@ -227,12 +226,11 @@
                             @endif
 
                             @if(isset($all_latein_earlygo_details) && sizeof($all_latein_earlygo_details) > 0)
-                            <?php $i = 0; ?>
                                 <tbody>
                                     @foreach($all_latein_earlygo_details as $key => $value)
                                         <tr>
-                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}
-                                            </td>
+                                            <td style="border: 1px solid #00c0ef;">
+                                            {{ ++$latein_earlygo_i }}</td>
                                             <td style="border: 1px solid #00c0ef;">
                                             {{ $value['user_name'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">
@@ -250,12 +248,28 @@
                             @endif
 
                             @if((isset($team_latein_earlygo_details) && sizeof($team_latein_earlygo_details) > 0) || (isset($all_latein_earlygo_details) && sizeof($all_latein_earlygo_details) > 0) || (isset($latein_earlygo_data) && sizeof($latein_earlygo_data) > 0))
+
+                                <?php
+
+                                    $latein_earlygo_count = sizeof($latein_earlygo_data);
+                                    $team_latein_earlygo_count = sizeof($team_latein_earlygo_details);
+                                    $all_latein_earlygo_count = sizeof($all_latein_earlygo_details);
+
+                                    $all_le_count = $latein_earlygo_count + $team_latein_earlygo_count + $all_latein_earlygo_count;
+                                ?>
                             @else
                                 <tbody><tr><td colspan="6">No Data Found.</td></tr></tbody>
                             @endif
                         </table>
                     </div>
-                    <div class="box-footer clearfix"></div>
+
+                    @if(isset($all_le_count) && $all_le_count > 5)
+                        <div class="box-footer text-center">
+                            <a href="/late-in-early-go-request/1/{{ $month }}/{{ $year }}" target="_blank">View All Requests</a>
+                        </div>
+                    @else
+                        <div class="box-footer clearfix"></div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -282,13 +296,13 @@
                             </tr>
                             </thead>
                             @if(isset($birthday_dates) && sizeof($birthday_dates) > 0)
-                            <?php $i = 0; ?>
+                            <?php $birthday_dates_i = 0; ?>
                                 <tbody>
                                     @foreach($birthday_dates as $key1 => $value1)
                                         <tr>
-                                            <td style="border: 1px solid #00c0ef;text-align: center;">{{ ++$i }}</td>
-                                            <td style="border: 1px solid #00c0ef;">{{ $key1 }}
-                                            </td>
+                                            <td style="border: 1px solid #00c0ef;text-align: center;">
+                                            {{ ++$birthday_dates_i }}</td>
+                                            <td style="border: 1px solid #00c0ef;">{{ $key1 }}</td>
                                             <td style="border: 1px solid #00c0ef;">{{ $value1 }}</td>
                                         </tr>
                                     @endforeach
@@ -328,13 +342,12 @@
                             </tr>
                             </thead>
 
+                            <?php $leave_i = 0; ?>
                             @if(isset($leave_data) && sizeof($leave_data) > 0)
-                            <?php $i = 0; ?>
                                 <tbody>
                                     @foreach($leave_data as $key => $value)
                                         <tr>
-                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}
-                                            </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ ++$leave_i }}</td>
                                             <td style="border: 1px solid #00c0ef;">
                                             {{ $value['user_name'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">
@@ -352,12 +365,10 @@
                             @endif
 
                             @if(isset($team_leave_details) && sizeof($team_leave_details) > 0)
-                            <?php $i = 0; ?>
                                 <tbody>
                                     @foreach($team_leave_details as $key => $value)
                                         <tr>
-                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}
-                                            </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ ++$leave_i }}</td>
                                             <td style="border: 1px solid #00c0ef;background-color:#C4D79B;">{{ $value['user_name'] }}</td>
                                             <td style="border: 1px solid #00c0ef;">
                                             {{ $value['subject'] }} </td>
@@ -374,12 +385,10 @@
                             @endif
 
                             @if(isset($all_leave_details) && sizeof($all_leave_details) > 0)
-                            <?php $i = 0; ?>
                                 <tbody>
                                     @foreach($all_leave_details as $key => $value)
                                         <tr>
-                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}
-                                            </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ ++$leave_i }}</td>
                                             <td style="border: 1px solid #00c0ef;">
                                             {{ $value['user_name'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">
@@ -397,12 +406,28 @@
                             @endif
 
                             @if((isset($team_leave_details) && sizeof($team_leave_details) > 0) || (isset($all_leave_details) && sizeof($all_leave_details) > 0) || (isset($leave_data) && sizeof($leave_data) > 0))
+
+                                <?php
+
+                                    $leave_data_count = sizeof($leave_data);
+                                    $team_leave_count = sizeof($team_leave_details);
+                                    $all_leave_count = sizeof($all_leave_details);
+
+                                    $all_lv_count = $leave_data_count + $team_leave_count + $all_leave_count;
+                                ?>
                             @else
                                 <tbody><tr><td colspan="6">No Data Found.</td></tr></tbody>
                             @endif
                         </table>
                     </div>
-                    <div class="box-footer clearfix"></div>
+
+                    @if(isset($all_lv_count) && $all_lv_count > 5)
+                        <div class="box-footer text-center">
+                            <a href="/applied-leave/1/{{ $month }}/{{ $year }}" target="_blank">View All Requests</a>
+                        </div>
+                    @else
+                        <div class="box-footer clearfix"></div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -431,18 +456,15 @@
                             </tr>
                             </thead>
                             @if(isset($holidays) && sizeof($holidays) > 0)
-                            <?php $i = 0; ?>
+                            <?php $holidays_i = 0; ?>
                                 <tbody>
                                     @foreach($holidays as $key => $value)
                                         <tr>
-                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}
+                                            <td style="border: 1px solid #00c0ef;">{{ ++$holidays_i }}
                                             </td>
-                                            <td style="border: 1px solid #00c0ef;">
-                                            {{ $value['type'] }} </td>
-                                            <td style="border: 1px solid #00c0ef;">
-                                            {{ $value['title'] }} </td>
-                                            <td style="border: 1px solid #00c0ef;">
-                                            {{ $value['from_date'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ $value['type'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ $value['title'] }} </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ $value['from_date'] }} </td>
                                         </tr>
                                     @endforeach
                                 </tbody>
@@ -481,13 +503,12 @@
                                 <th width="100px" style="border: 1px solid #00c0ef;">View Details</th>
                             </tr>
                             </thead>
+                            <?php $wfh_i = 0; ?>
                             @if(isset($wfh_data) && sizeof($wfh_data) > 0)
-                            <?php $i = 0; ?>
                                 <tbody>
                                     @foreach($wfh_data as $key => $value)
                                         <tr>
-                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}
-                                            </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ ++$wfh_i }}</td>
                                             <td style="border: 1px solid #00c0ef;">
                                             {{ $value['user_name'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">
@@ -505,12 +526,10 @@
                             @endif
 
                             @if(isset($team_wfh_details) && sizeof($team_wfh_details) > 0)
-                            <?php $i = 0; ?>
                                 <tbody>
                                     @foreach($team_wfh_details as $key => $value)
                                         <tr>
-                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}
-                                            </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ ++$wfh_i }}</td>
                                             <td style="border: 1px solid #00c0ef;background-color:#C4D79B;">{{ $value['user_name'] }}</td>
                                             <td style="border: 1px solid #00c0ef;">
                                             {{ $value['subject'] }} </td>
@@ -527,12 +546,10 @@
                             @endif
 
                             @if(isset($all_wfh_details) && sizeof($all_wfh_details) > 0)
-                            <?php $i = 0; ?>
                                 <tbody>
                                     @foreach($all_wfh_details as $key => $value)
                                         <tr>
-                                            <td style="border: 1px solid #00c0ef;">{{ ++$i }}
-                                            </td>
+                                            <td style="border: 1px solid #00c0ef;">{{ ++$wfh_i }}</td>
                                             <td style="border: 1px solid #00c0ef;">
                                             {{ $value['user_name'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">
@@ -550,12 +567,28 @@
                             @endif
 
                             @if((isset($team_wfh_details) && sizeof($team_wfh_details) > 0) || (isset($all_wfh_details) && sizeof($all_wfh_details) > 0) || (isset($wfh_data) && sizeof($wfh_data) > 0))
+
+                                 <?php
+
+                                    $wfh_data_count = sizeof($wfh_data);
+                                    $team_wfh_count = sizeof($team_wfh_details);
+                                    $all_wfh_count = sizeof($all_wfh_details);
+
+                                    $all_count = $wfh_data_count + $team_wfh_count + $all_wfh_count;
+                                ?>
                             @else
                                 <tbody><tr><td colspan="6">No Data Found.</td></tr></tbody>
                             @endif
                         </table>
                     </div>
-                    <div class="box-footer clearfix"></div>
+
+                    @if(isset($all_count) && $all_count > 5)
+                        <div class="box-footer text-center">
+                            <a href="/work-from-home-request/1/{{ $month }}/{{ $year }}" target="_blank">View All Requests</a>
+                        </div>
+                    @else
+                        <div class="box-footer clearfix"></div>
+                    @endif
                 </div>
             </div>
         </div>

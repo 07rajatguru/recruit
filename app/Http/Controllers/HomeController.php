@@ -955,7 +955,7 @@ class HomeController extends Controller
             $month_array[$m] = date('M', mktime(0,0,0,$m,1,$year));
         }
 
-        $starting_year = '2021';
+        $starting_year = '2022';
         $ending_year = date('Y',strtotime('+2 year'));
         $year_array = array();
         for ($y=$starting_year; $y < $ending_year ; $y++) {
@@ -1071,7 +1071,7 @@ class HomeController extends Controller
             $month_array[$m] = date('M', mktime(0,0,0,$m,1,$year));
         }
 
-        $starting_year = '2021';
+        $starting_year = '2022';
         $ending_year = date('Y',strtotime('+2 year'));
         $year_array = array();
         for ($y=$starting_year; $y < $ending_year ; $y++) {
