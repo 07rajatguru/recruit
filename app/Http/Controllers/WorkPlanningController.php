@@ -685,7 +685,7 @@ class WorkPlanningController extends Controller
         $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($date,$user_id);
 
         // Set Absent for Sandwich Work Planning
-        /*$yesterday = date('Y-m-d',strtotime("-1 days"));
+        $yesterday = date('Y-m-d',strtotime("-1 days"));
         $yesterday_1 = date('Y-m-d',strtotime("-2 days"));
         $yesterday_2 = date('Y-m-d',strtotime("-3 days"));
 
@@ -695,14 +695,14 @@ class WorkPlanningController extends Controller
 
         if(isset($get_work_planning_res_1) && $get_work_planning_res_1 != '' && isset($get_work_planning_res_3) && $get_work_planning_res_3 != '') {
 
-            if(($get_work_planning_res_1->attendance == 'A' && $get_work_planning_res_3->attendance == 'A') || ($get_work_planning_res_1->attendance == '' && $get_work_planning_res_3->attendance == 'A') || ($get_work_planning_res_1->attendance == 'A' && $get_work_planning_res_3->attendance == '')) {
+            if(($get_work_planning_res_1->attendance == 'A' && $get_work_planning_res_3->attendance == 'A')) {
 
                 $exist_wp_id = $get_work_planning_res_2->id;
                 $work_planning_exist = WorkPlanning::find($exist_wp_id);
                 $work_planning_exist->attendance = 'A';
                 $work_planning_exist->save();
             }
-        }*/
+        }
         
         if($day == 'Saturday') {
 

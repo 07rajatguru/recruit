@@ -283,6 +283,10 @@
                                     else if($working_hours == '') {
                                         $attendance = 'B';
                                     }
+                                    else if($key2 == $get_cur_dt) {
+
+                                        $attendance = 'WPP';
+                                    }
                                     else if(isset($value2['attendance']) && $value2['attendance'] == 'A') {
 
                                         $attendance = 'A';
