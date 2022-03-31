@@ -717,6 +717,13 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     // All Users Leave Balance Routes
+
+    Route::any('monthwise-leave-balance',[
+        'as' => 'monthwise.leavebalance',
+        'uses' => 'LeaveController@viewMonthwiseLeaveBalance',
+        'middleware' => ['permission:display-leave']
+    ]);
+
     Route::any('userwiseleave',[
         'as' => 'leave.userwise',
         'uses' => 'LeaveController@userWiseLeave',

@@ -24,7 +24,7 @@
 @if( $action == 'edit')
     {!! Form::model($leave, ['method' => 'PATCH','files' => true,'route' => ['leave.update', $leave->id], 'id' => 'leave_form', 'autocomplete' => 'off','onsubmit' => "return sendEmail()"]) !!}
 @else
-    {!! Form::open(array('route' => 'leave.store','method'=>'POST','files' => true, 'id' => 'leave_form', 'autocomplete' => 'off')) !!}
+    {!! Form::open(array('route' => 'leave.store','method'=>'POST','files' => true, 'id' => 'leave_form', 'autocomplete' => 'off','onsubmit' => "return checkLeaveBalance()")) !!}
 @endif
 
 <div class="row">
@@ -73,9 +73,8 @@
                     
                     <div class="form-group {{ $errors->has('leave_category') ? 'has-error' : '' }}">
                         <strong>Leave Category: <span class = "required_fields">*</span></strong>
-                        {{-- {!! Form::select('leave_category', $leave_category, $selected_leave_category, array('id' => 'leave_category', 'class' => 'form-control','tabindex' => '2', 'onchange' => 'category();' )) !!} --}}
-
-                        {!! Form::select('leave_category', $leave_category, $selected_leave_category, array('id' => 'leave_category', 'class' => 'form-control','tabindex' => '2')) !!}
+                        
+                        {!! Form::select('leave_category', $leave_category, $selected_leave_category, array('id' => 'leave_category', 'class' => 'form-control','tabindex' => '2', 'onchange' => 'category();')) !!}
 
                         @if ($errors->has('leave_category'))
                             <span class="help-block">
@@ -209,9 +208,12 @@
             else {
                 $(".document").hide();
             }
+        }
 
-             // For calculate leaves added by user
+        function checkLeaveBalance() {
 
+            // For calculate leaves added by user
+            var leave_cat = $("#leave_category").val();
             var leave_type = $("#leave_type").val();
 
             var from_date = $("#from_date").val();
@@ -222,7 +224,7 @@
             var temp_to_date = to_date.split('-');
             var new_to_date = temp_to_date[2]+"-"+temp_to_date[1]+"-"+temp_to_date[0];
 
-            const diffInMs   = new Date(new_to_date) - new Date(new_from_date);
+            const diffInMs = new Date(new_to_date) - new Date(new_from_date);
             const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
             var days = diffInDays + 1;
 
@@ -235,64 +237,37 @@
                 if(leave_type == 'Half Day') {
 
                     var total_days = days/2;
-
-                    $.ajax({
-
-                        type: 'GET',
-                        url:app_url+'/leave/balance',
-                        data: {'_token':token, loggedin_user_id:loggedin_user_id,leave_cat:leave_cat},
-                        dataType:'json',
-                        success: function(leave_count) {
-
-                            if (leave_count < total_days) {
-
-                                var rest = total_days - leave_count;
-                                
-                                if(leave_cat == 'Privilege Leave') {
-
-                                    alert('You have only '+leave_count+' PL Balance, rest '+rest+' leaves will fall into LWP, do you still want to apply?');
-                                }
-
-                                if(leave_cat == 'Sick Leave') {
-
-                                    alert('You have only '+leave_count+' SL Balance, rest '+rest+' leaves will fall into LWP, do you still want to apply?');
-                                }
-                                return false;
-                            }
-                        }
-                    });
                 }
                 if(leave_type == 'Full Day') {
 
                     var total_days = days;
-
-                    $.ajax({
-
-                        type: 'GET',
-                        url:app_url+'/leave/balance',
-                        data: {'_token':token, loggedin_user_id:loggedin_user_id,leave_cat:leave_cat},
-                        dataType:'json',
-                        success: function(leave_count) {
-
-                            if (leave_count < total_days) {
-
-                                var rest = total_days - leave_count;
-                                    
-                                if(leave_cat == 'Privilege Leave') {
-
-                                    alert('You have only '+leave_count+' PL Balance, rest '+rest+' leaves will fall into LWP, do you still want to apply?');
-                                }
-
-                                if(leave_cat == 'Sick Leave') {
-
-                                    alert('You have only '+leave_count+' SL Balance, rest '+rest+' leaves will fall into LWP, do you still want to apply?');
-                                }
-
-                                return false;
-                            }
-                        }
-                    });
                 }
+                
+                $.ajax({
+
+                    type: 'GET',
+                    url:app_url+'/leave/balance',
+                    data: {'_token':token, loggedin_user_id:loggedin_user_id,leave_cat:leave_cat},
+                    dataType:'json',
+                    success: function(leave_count) {
+
+                        if (leave_count < total_days) {
+
+                            var rest = total_days - leave_count;
+                                    
+                            if(leave_cat == 'Privilege Leave') {
+
+                                alert('You have only '+leave_count+' PL Balance, rest '+rest+' leaves will fall into LWP, do you still want to apply?');
+                            }
+
+                            if(leave_cat == 'Sick Leave') {
+
+                                alert('You have only '+leave_count+' SL Balance, rest '+rest+' leaves will fall into LWP, do you still want to apply?');
+                            }
+                            return false;
+                        }
+                    }
+                });
             }
         }
 
@@ -309,6 +284,8 @@
         }
 
         function sendEmail() {
+
+            checkLeaveBalance();
 
             var msg = "Send an email with updated details?";
             var confirmvalue = confirm(msg);

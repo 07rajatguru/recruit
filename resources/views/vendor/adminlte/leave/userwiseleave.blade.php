@@ -26,29 +26,9 @@
                 <h2>User Wise Leave Balance</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('leave.userwisecreate') }}">Add Leave Balance</a>
-
-                <a class="btn btn-primary" href="javascript:void(0);" onClick="export_data()">Download Excel</a>
-            </div>
-        </div>
-    </div>
-
-    <div class="col-xs-12 col-sm-12 col-md-12">
-        <div class="box-body col-xs-2 col-sm-2 col-md-2">
-            <div class="form-group">
-                {{Form::select('month',$month_array, $month, array('id'=>'month','class'=>'form-control'))}}
-            </div>
-        </div>
-
-        <div class="box-body col-xs-2 col-sm-2 col-md-2">
-            <div class="form-group">
-                {{Form::select('year',$year_array, $year, array('id'=>'year','class'=>'form-control'))}}
-            </div>
-        </div>
-
-        <div class="box-body col-xs-1 col-sm-1 col-md-1">
-            <div class="form-group">
-                {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
+                <a class="btn btn-success" href="{{ route('leave.userwisecreate') }}">Add Leave Balance
+                </a>
+                <a class="btn btn-primary" href="/monthwise-leave-balance" target="_blank">View Monthwise Balance</a>
             </div>
         </div>
     </div>
@@ -57,7 +37,7 @@
     	<thead>
     		<tr>
 	    		<th>No</th>
-                <th>Action</th>
+                <!-- <th>Action</th> -->
                 <th width="15%">User Name</th>
                 <th>Total PL</th>
                 <th>Opted PL</th>
@@ -70,12 +50,12 @@
 
     	<?php $i=0; ?>
     	<tbody>
-    		@foreach($user_leave_data as $key => $value)
+    		@foreach($leave_balance_data as $key => $value)
 	    		<tr>
 		    		<td>{{ ++$i }}</td>
-                    <td>
+                    <!-- <td>
                         <a class="fa fa-edit" href="{{ route('leave.userwiseedit',$value['id']) }}" title="Edit"></a>
-                    </td>
+                    </td> -->
 		    		<td>{{ $value['user_name'] }}</td>
 		    		<td>{{ $value['pl_total'] }}</td>
 		    		<td>{{ $value['pl_taken'] }}</td>
@@ -108,40 +88,5 @@
             $("#month").select2();
             $("#year").select2();
         });
-
-        function select_data() {
-
-            var app_url = "{!! env('APP_URL'); !!}";
-            var month = $("#month").val();
-            var year = $("#year").val();
-
-            var url = app_url+'/userwiseleave';
-
-            var form = $('<form action="' + url + '" method="post">' +
-                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                '<input type="hidden" name="month" value="'+month+'" />' +
-                '<input type="hidden" name="year" value="'+year+'" />' +
-                '</form>');
-
-            $('body').append(form);
-            form.submit();
-        }
-
-        function export_data() {
-
-            var month = $("#month").val();
-            var year = $("#year").val();
-
-            var url = '/userwiseleave/export';
-
-            var form = $('<form action="'+url+ '" method="post">' +
-            '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-            '<input type="hidden" name="month" value="'+month+'" />' +
-            '<input type="hidden" name="year" value="'+year+'" />' +
-            '</form>');
-
-            $('body').append(form);
-            form.submit();
-        }
     </script>
 @endsection

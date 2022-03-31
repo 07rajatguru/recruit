@@ -790,7 +790,7 @@ class LeaveController extends Controller
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
 
-            \DB::statement("UPDATE user_leave SET status = '1',approved_by=$loggedin_user_id, reply_message = '$message' WHERE id = $leave_id");
+            \DB::statement("UPDATE `user_leave` SET `status` = '1', `approved_by`=$loggedin_user_id, `reply_message` = '$message' WHERE `id` = $leave_id");
 
             // Get Leave Type
             $leave_category = $leave_details['category'];
@@ -799,9 +799,11 @@ class LeaveController extends Controller
 
                 // Update Leave Balance
                 $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
+                $monthwise_leave_balance_details = MonthwiseLeaveBalance::getMonthwiseLeaveBalanceByUserId($user_id,$month,$year);
 
                 if(isset($leave_balance_details) && $leave_balance_details != '') {
 
+                    // Update in main leave balance table
                     $leave_taken = $leave_balance_details['leave_taken'];
                     $leave_remaining = $leave_balance_details['leave_remaining'];
 
@@ -810,16 +812,25 @@ class LeaveController extends Controller
 
                     \DB::statement("UPDATE `leave_balance` SET `leave_taken` = '$new_leave_taken', `leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
 
-                    \DB::statement("UPDATE `monthwise_leave_balance` SET `pl_taken` = '$new_leave_taken', `pl_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id' AND `month` = '$month' AND `year` = '$year'");
+                    // Update in monthwise leave balance table
+                    $pl_taken = $monthwise_leave_balance_details['pl_taken'];
+                    $pl_remaining = $monthwise_leave_balance_details['pl_remaining'];
+
+                    $new_pl_taken = $pl_taken + $days;
+                    $new_pl_remaining = $pl_remaining - $days;
+
+                    \DB::statement("UPDATE `monthwise_leave_balance` SET `pl_taken` = '$new_pl_taken', `pl_remaining` = '$new_pl_remaining' WHERE `user_id` = '$user_id' AND `month` = '$month' AND `year` = '$year'");
                 }
             }
             else if($leave_category == 'Sick Leave') {
 
                 // Update Leave Balance
                 $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
+                $monthwise_leave_balance_details = MonthwiseLeaveBalance::getMonthwiseLeaveBalanceByUserId($user_id,$month,$year);
 
                 if(isset($leave_balance_details) && $leave_balance_details != '') {
 
+                    // Update in main leave balance table
                     $seek_leave_taken = $leave_balance_details['seek_leave_taken'];
                     $seek_leave_remaining = $leave_balance_details['seek_leave_remaining'];
 
@@ -828,7 +839,14 @@ class LeaveController extends Controller
 
                     \DB::statement("UPDATE `leave_balance` SET `seek_leave_taken` = '$new_leave_taken', `seek_leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
 
-                    \DB::statement("UPDATE `monthwise_leave_balance` SET `sl_taken` = '$new_leave_taken', `sl_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id' AND `month` = '$month' AND `year` = '$year'");
+                    // Update in monthwise leave balance table
+                    $sl_taken = $monthwise_leave_balance_details['sl_taken'];
+                    $sl_remaining = $monthwise_leave_balance_details['sl_remaining'];
+
+                    $new_sl_taken = $sl_taken + $days;
+                    $new_sl_remaining = $sl_remaining - $days;
+
+                    \DB::statement("UPDATE `monthwise_leave_balance` SET `sl_taken` = '$new_sl_taken', `sl_remaining` = '$new_sl_remaining' WHERE `user_id` = '$user_id' AND `month` = '$month' AND `year` = '$year'");
                 }
             }
         }
@@ -846,7 +864,7 @@ class LeaveController extends Controller
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
 
-            \DB::statement("UPDATE user_leave SET status = '2',approved_by=$loggedin_user_id, reply_message = '$message' WHERE id = $leave_id");
+            \DB::statement("UPDATE `user_leave` SET `status` = '2', `approved_by`=$loggedin_user_id, `reply_message` = '$message' WHERE `id` = $leave_id");
         }
 
         $type_of_leave = $leave_details['type_of_leave'];
@@ -880,7 +898,7 @@ class LeaveController extends Controller
     // End function for single user apply for leave & leave data
 
     // Starts All User Leave Balance Module function
-    public function userWiseLeave() {
+    public function viewMonthwiseLeaveBalance() {
 
         if (isset($_POST['month']) && $_POST['month'] != 0) {
             $month = $_POST['month'];
@@ -913,7 +931,14 @@ class LeaveController extends Controller
 
         $user_leave_data = MonthwiseLeaveBalance::getMonthWiseLeaveBalance($year,$month);
 
-        return view('adminlte::leave.userwiseleave',compact('month_array','month','year_array','year','user_leave_data'));
+        return view('adminlte::leave.monthwiseleavebalance',compact('month_array','month','year_array','year','user_leave_data'));
+    }
+
+    public function userWiseLeave() {
+
+        $leave_balance_data = LeaveBalance::getUserLeaveBalance();
+
+        return view('adminlte::leave.userwiseleave',compact('leave_balance_data'));
     }
 
     public function userWiseLeavaAdd() {
@@ -967,38 +992,72 @@ class LeaveController extends Controller
         $seek_leave_taken = $request->get('seek_leave_taken');
         $seek_leave_remaining = $request->get('seek_leave_remaining');
 
-        $leave_balance = new LeaveBalance();
-        $leave_balance->user_id = $user_id;
-        $leave_balance->leave_total = $leave_total;
-        $leave_balance->leave_taken = $leave_taken;
-        $leave_balance->leave_remaining = $leave_remaining;
-        $leave_balance->seek_leave_total = $seek_leave_total;
-        $leave_balance->seek_leave_taken = $seek_leave_taken;
-        $leave_balance->seek_leave_remaining = $seek_leave_remaining;
-        $leave_balance->save();
+        // Check for exist data
+        $leave_data = LeaveBalance::getLeaveBalanceByUserId($user_id);
 
-        //Add User Leave Balance data Monthwise
-        $monthwise_leave_balance = new MonthwiseLeaveBalance();
-        $monthwise_leave_balance->user_id = $user_id;
-        $monthwise_leave_balance->pl_total = $leave_total;
-        $monthwise_leave_balance->pl_taken = $leave_taken;
-        $monthwise_leave_balance->pl_remaining = $leave_remaining;
-        $monthwise_leave_balance->sl_total = $seek_leave_total;
-        $monthwise_leave_balance->sl_taken = $seek_leave_taken;
-        $monthwise_leave_balance->sl_remaining = $seek_leave_remaining;
-        $monthwise_leave_balance->month = date('m');
-        $monthwise_leave_balance->year = date('Y');
-        $monthwise_leave_balance->save();
+        if(isset($leave_data) && $leave_data != '') {
 
-        return redirect()->route('leave.userwise')->with('success','User Leave Balance Added Successfully');
+            $leave_balance = LeaveBalance::find($leave_data->id);
+            $leave_balance->leave_total = $leave_data->leave_total + $leave_total;
+            $leave_balance->leave_taken = $leave_data->leave_taken + $leave_taken;
+            $leave_balance->leave_remaining = $leave_data->leave_remaining + $leave_remaining;
+            $leave_balance->seek_leave_total = $leave_data->seek_leave_total + $seek_leave_total;
+            $leave_balance->seek_leave_taken = $leave_data->seek_leave_taken + $seek_leave_taken;
+            $leave_balance->seek_leave_remaining = $leave_data->seek_leave_remaining + $seek_leave_remaining;
+            $leave_balance->save();
+        }
+        else {
+
+            $leave_balance = new LeaveBalance();
+            $leave_balance->user_id = $user_id;
+            $leave_balance->leave_total = $leave_total;
+            $leave_balance->leave_taken = $leave_taken;
+            $leave_balance->leave_remaining = $leave_remaining;
+            $leave_balance->seek_leave_total = $seek_leave_total;
+            $leave_balance->seek_leave_taken = $seek_leave_taken;
+            $leave_balance->seek_leave_remaining = $seek_leave_remaining;
+            $leave_balance->save();
+        }
+
+        // Check for exist monthwise leave balance
+        $month_leave_data = MonthwiseLeaveBalance::getMonthwiseLeaveBalanceByUserId($user_id,$month,$year);
+
+        if (isset($month_leave_data) && $month_leave_data != '') {
+
+            $monthwise_leave_balance = MonthwiseLeaveBalance::find($month_leave_data->id);
+            $monthwise_leave_balance->pl_total = $leave_total;
+            $monthwise_leave_balance->pl_taken = $leave_taken;
+            $monthwise_leave_balance->pl_remaining = $leave_remaining;
+            $monthwise_leave_balance->sl_total = $seek_leave_total;
+            $monthwise_leave_balance->sl_taken = $seek_leave_taken;
+            $monthwise_leave_balance->sl_remaining = $seek_leave_remaining;
+            $monthwise_leave_balance->save();
+        }
+        else {
+
+            //Add User Leave Balance data Monthwise
+            $monthwise_leave_balance = new MonthwiseLeaveBalance();
+            $monthwise_leave_balance->user_id = $user_id;
+            $monthwise_leave_balance->pl_total = $leave_total;
+            $monthwise_leave_balance->pl_taken = $leave_taken;
+            $monthwise_leave_balance->pl_remaining = $leave_remaining;
+            $monthwise_leave_balance->sl_total = $seek_leave_total;
+            $monthwise_leave_balance->sl_taken = $seek_leave_taken;
+            $monthwise_leave_balance->sl_remaining = $seek_leave_remaining;
+            $monthwise_leave_balance->month = $month;
+            $monthwise_leave_balance->year = $year;
+            $monthwise_leave_balance->save();
+        }
+
+        return redirect()->route('leave.userwise')->with('success','User Leave Balance Added Successfully.');
     }
 
     public function userWiseLeaveEdit($id) {
 
-        $leave_data = MonthwiseLeaveBalance::find($id);
+        $leave_data = LeaveBalance::find($id);
         $user_id = $leave_data->user_id;
-        $month = $leave_data->month;
-        $year = $leave_data->year;
+        $month = date('m');
+        $year = date('Y');
 
         $users = User::getAllUsersExpectSuperAdmin();
 
@@ -1023,6 +1082,8 @@ class LeaveController extends Controller
     public function userWiseLeaveUpdate(Request $request,$id) {
 
         $user_id = $request->get('user_id');
+        $month = $request->get('month');
+        $year = $request->get('year');
 
         $leave_total = $request->get('leave_total');
         $leave_taken = $request->get('leave_taken');
@@ -1041,6 +1102,21 @@ class LeaveController extends Controller
         $leave_balance->seek_leave_taken = $seek_leave_taken;
         $leave_balance->seek_leave_remaining = $seek_leave_remaining;
         $leave_balance->save();
+
+        // Change in monthwise leave balance table
+        $month_leave_data = MonthwiseLeaveBalance::getMonthwiseLeaveBalanceByUserId($user_id,$month,$year);
+
+        if (isset($month_leave_data) && $month_leave_data != '') {
+
+            $monthwise_leave_balance = MonthwiseLeaveBalance::find($month_leave_data->id);
+            $monthwise_leave_balance->pl_total = $leave_total;
+            $monthwise_leave_balance->pl_taken = $leave_taken;
+            $monthwise_leave_balance->pl_remaining = $leave_remaining;
+            $monthwise_leave_balance->sl_total = $seek_leave_total;
+            $monthwise_leave_balance->sl_taken = $seek_leave_taken;
+            $monthwise_leave_balance->sl_remaining = $seek_leave_remaining;
+            $monthwise_leave_balance->save();
+        }
 
         return redirect()->route('leave.userwise')->with('success','User Leave Balance Updated Successfully');
     }
@@ -1090,13 +1166,18 @@ class LeaveController extends Controller
         $month = $_POST['month'];
         $year = $_POST['year'];
 
+        $year_display = substr($year, -2);
+        $month_display = date('F', mktime(0, 0, 0, $month, 10));
+
+        $sheet_nm = "Leav Balance Record-" . $month_display . "'" . $year_display;
+
         if($all_perm) {
 
             $balance_array = MonthwiseLeaveBalance::getMonthWiseLeaveBalance($year,$month);
 
             if(isset($balance_array) && sizeof($balance_array) > 0) {
 
-                Excel::create('LeaveBalance',function($excel) use ($balance_array) {
+                Excel::create($sheet_nm, function($excel) use ($balance_array) {
 
                     $excel->sheet('sheet 1',function($sheet) use ($balance_array) {
 

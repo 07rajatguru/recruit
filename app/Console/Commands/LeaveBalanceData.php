@@ -56,7 +56,7 @@ class LeaveBalanceData extends Command
 
                     $leave_data = LeaveBalance::getLeaveBalanceByUserId($key);
 
-                    if(isset($leave_balance) && $leave_balance != '') {
+                    if(isset($leave_data) && $leave_data != '') {
 
                         $leave_balance = LeaveBalance::find($leave_data->id);
                         $leave_balance->user_id = $key;

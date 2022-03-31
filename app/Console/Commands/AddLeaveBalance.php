@@ -44,7 +44,7 @@ class AddLeaveBalance extends Command
 
         foreach ($users as $key => $value) {
 
-            $leave_data = MonthwiseLeaveBalance::getMonthwiseLeaveBalanceByUserId($key);
+            $leave_data = MonthwiseLeaveBalance::getMonthwiseLeaveBalanceByUserId($key,'','');
 
             if (isset($leave_data) && $leave_data != '') {
             }

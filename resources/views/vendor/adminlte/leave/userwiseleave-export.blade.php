@@ -2,7 +2,7 @@
 	<thead>
 		<tr style="background-color: #7598d9">
 			<th style="border: 2px solid #000000;text-align: center;width: 10;">Sr.No</th>
-			<th style="border: 2px solid #000000;text-align: center;width: 20;">User Name</th>
+			<th style="border: 2px solid #000000;text-align: center;width: 30;">User Name</th>
 			<th style="border: 2px solid #000000;text-align: center;width: 12;">Total PL</th>
 			<th style="border: 2px solid #000000;text-align: center;width: 12;">Opted PL</th>
 			<th style="border: 2px solid #000000;text-align: center;width: 11;">PL Balance</th>
