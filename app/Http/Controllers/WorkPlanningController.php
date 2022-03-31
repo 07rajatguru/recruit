@@ -684,12 +684,10 @@ class WorkPlanningController extends Controller
         // Get Exist Records
         $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($date,$user_id);
 
-        // Set Absent for Sandwich wp
-        $yesterday = date('Y-m-d',strtotime("-1 days"));
+        // Set Absent for Sandwich Work Planning
+        /*$yesterday = date('Y-m-d',strtotime("-1 days"));
         $yesterday_1 = date('Y-m-d',strtotime("-2 days"));
         $yesterday_2 = date('Y-m-d',strtotime("-3 days"));
-
-        // Get Previous Work Planning
 
         $get_work_planning_res_1 = WorkPlanning::getWorkPlanningByAddedDateAndUserID($yesterday,$user_id);
         $get_work_planning_res_2 = WorkPlanning::getWorkPlanningByAddedDateAndUserID($yesterday_1,$user_id);
@@ -704,7 +702,7 @@ class WorkPlanningController extends Controller
                 $work_planning_exist->attendance = 'A';
                 $work_planning_exist->save();
             }
-        }
+        }*/
         
         if($day == 'Saturday') {
 

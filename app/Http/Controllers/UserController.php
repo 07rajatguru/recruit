@@ -334,7 +334,6 @@ class UserController extends Controller
         $users_email_pwd->save();
 
         // Add entry in user otherinfo table
- 
         $users_otherinfo = new UserOthersInfo();
         $users_otherinfo->user_id = $user_id;
 
@@ -975,7 +974,7 @@ class UserController extends Controller
             $input['new_value_array'] = $new_value_array;
             $input['old_value_array'] = $old_value_array;
 
-            \Mail::send('adminlte::emails.userupdatemail', $input, function ($message) use($input){
+            \Mail::send('adminlte::emails.userupdatemail', $input, function ($message) use($input) {
                     
                 $message->from($input['from_address'], $input['from_name']);
                 $message->to($input['to'])->cc($input['cc'])->subject($input['subject']);
@@ -985,6 +984,11 @@ class UserController extends Controller
         }
 
         if($joining_date != $old_joining_date) {
+
+            $u_joining_date = $dateClass->changeDMYtoYMD($joining_date);
+
+            // Update joining date in users otherinfo table
+            DB::statement("UPDATE `users_otherinfo` SET `date_of_joining` = '$u_joining_date' where `user_id` = $id");
 
             // Set variables for email notifications
 
