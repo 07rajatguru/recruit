@@ -1600,11 +1600,11 @@ class WorkPlanningController extends Controller
             $work_planning->save();
         }
 
+        $month = date('m');
+        $year = date('Y');
+        
         // Get previous WFH requests for set attendance from 3rd date
         if($work_type == 'WFH') {
-
-            $month = date('m');
-            $year = date('Y');
 
             $work_from_home_res = WorkFromHome::getCurrentMonthWFHRequests($added_by_id,$month,$year);
 
@@ -1680,6 +1680,28 @@ class WorkPlanningController extends Controller
                     }
                 }
             }
+        }
+
+        // Set Delay Counter
+        $work_planning = WorkPlanning::getWorkPlanningDetails($added_by_id,$month,$year,'','');
+        $delay_counter = '';
+
+        if(isset($work_planning) && sizeof($work_planning) > 0) {
+
+            foreach ($work_planning as $key => $value) {
+                    
+                if($delay_counter == '') {
+                    $delay_counter = $value['delay_counter'];
+                }
+                else {
+                    $delay_counter = $delay_counter + $value['delay_counter'];
+                }
+            }
+        }
+
+        if($delay_counter > 3) {
+
+            \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $wp_id");
         }
 
         $data = 'success';
