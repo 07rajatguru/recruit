@@ -314,7 +314,7 @@ class LeaveController extends Controller
         }
 
         // Get All Holidays Dates
-        $holidays_dates = Holidays::getUsersHolidays($user_id);
+        $holidays_dates = Holidays::checkUsersHolidays($user_id);
         
         if(isset($dates) && sizeof($dates) > 0) {
 
@@ -550,7 +550,7 @@ class LeaveController extends Controller
         }
 
         // Get All Holidays Dates
-        $holidays_dates = Holidays::getUsersHolidays($user_id);
+        $holidays_dates = Holidays::checkUsersHolidays($user_id);
         
         if(isset($dates) && sizeof($dates) > 0) {
 

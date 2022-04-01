@@ -116,7 +116,7 @@ class Holidays extends Model
         return $fixed_date;
     }
 
-    public static function getUsersHolidays($user_id) {
+    public static function checkUsersHolidays($user_id) {
 
         $query = Holidays::query();
         $query = $query->join('holidays_users','holidays_users.holiday_id','=','holidays.id');
@@ -283,8 +283,6 @@ class Holidays extends Model
 
     public static function getUserOptionalHolidays($user_id) {
 
-        $year = date('Y');
-
         $query = Holidays::query();
         $query = $query->leftjoin('holidays_users','holidays_users.holiday_id','=','holidays.id');
         $query = $query->select('holidays.*');
@@ -292,33 +290,8 @@ class Holidays extends Model
         if(isset($user_id) && $user_id != 0) {
             $query = $query->where('holidays_users.user_id','=',$user_id);
         }
-        if ($year != '') {
-            $query = $query->where(\DB::raw('year(holidays.from_date)'),'=',$year);
-        }
 
-        $query = $query->where('holidays.type','=','Optional Leave');
-        $query = $query->orderBy('from_date','ASC');
-        $query = $query->groupBy('holidays.id');
-        $response = $query->get();
-
-        $holidays = array();
-
-        if(isset($response) && $response != '') {
-
-            foreach ($response as $key => $value) {
-
-                $holidays[$value->id] = $value->title;
-            }
-        }
-        return $holidays;
-    }
-
-    public static function getFinancialYearHolidaysList() {
-
-        $query = Holidays::query();
-        $query = $query->leftjoin('holidays_users','holidays_users.holiday_id','=','holidays.id');
-        $query = $query->select('holidays.*');
-
+        // Set Financial Year
         $y = date('Y');
         $m = date('m');
 
@@ -339,9 +312,50 @@ class Holidays extends Model
 
         $query = $query->where('holidays.from_date','>=',$current_year);
         $query = $query->where('holidays.from_date','<=',$next_year);
-        //$query = $query->where(\DB::raw('month(holidays.from_date)'),'>=',$m);
+        $query = $query->where('holidays.type','=','Optional Leave');
+        $query = $query->orderBy('from_date','ASC');
+        $query = $query->groupBy('holidays.id');
+        $response = $query->get();
+
+        $holidays = array();
+
+        if(isset($response) && $response != '') {
+
+            foreach ($response as $key => $value) {
+
+                $holidays[$value->id] = $value->title;
+            }
+        }
+        return $holidays;
+    }
+
+    public static function getFinancialYearHolidaysList() {
+
+        // Set Financial Year
+        $y = date('Y');
+        $m = date('m');
+
+        if ($m > 3) {
+            $n = $y + 1;
+            $year = $y.'-4, '.$n.'-3';
+        }
+        else{
+            $n = $y-1;
+            $year = $n.'-4, '.$y.'-3';
+        }
+
+        $year_data = explode(", ", $year);
+        $year1 = $year_data[0];
+        $year2 = $year_data[1];
+        $current_year = date('Y-m-d',strtotime("first day of $year1"));
+        $next_year = date('Y-m-d',strtotime("last day of $year2"));
+
+        $query = Holidays::query();
+        $query = $query->where('holidays.from_date','>=',$current_year);
+        $query = $query->where('holidays.from_date','<=',$next_year);
         $query = $query->orderBy('from_date','asc');
         $query = $query->groupBy('holidays.id');
+        $query = $query->select('holidays.*');
         $response = $query->get();
 
         $holidays = array();
@@ -356,38 +370,58 @@ class Holidays extends Model
                     $holidays[$i]['id'] = $value->id;
                     $holidays[$i]['title'] = $value->title;
                     $holidays[$i]['type'] = $value->type;
+                    $holidays[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date)); 
 
-                    if($value->from_date == '') {
-                        $holidays[$i]['from_date'] = '';
-                    }
-                    else {
-                       $holidays[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date)); 
-                    }
-
-                    if($value->to_date == '') {
-                        $holidays[$i]['to_date'] = '';
-                    }
-                    else {
-                       $holidays[$i]['to_date'] = date('d-m-Y',strtotime($value->to_date)); 
-                    }
-
-                    $name = Holidays::getUsersByHolidayId($value->id);
-                    $user_name = '';
-                    foreach ($name as $key => $value) {
-                        if ($user_name == '') {
-                            $user_name = $value;
-                        }
-                        else{
-                            $user_name .= ','. $value;
-                        }
-                    }
-
-                    $holidays[$i]['users'] = $user_name;
                     $i++;
                 }
             }
         }
+        return $holidays;
+    }
 
+    public static function getAllFinancialYearHolidaysList() {
+
+        // Set Financial Year
+        $y = date('Y');
+        $m = date('m');
+
+        if ($m > 3) {
+            $n = $y + 1;
+            $year = $y.'-4, '.$n.'-3';
+        }
+        else{
+            $n = $y-1;
+            $year = $n.'-4, '.$y.'-3';
+        }
+
+        $year_data = explode(", ", $year);
+        $year1 = $year_data[0];
+        $year2 = $year_data[1];
+        $current_year = date('Y-m-d',strtotime("first day of $year1"));
+        $next_year = date('Y-m-d',strtotime("last day of $year2"));
+
+        $query = Holidays::query();
+        $query = $query->select('holidays.*');
+        $query = $query->where('holidays.from_date','>=',$current_year);
+        $query = $query->where('holidays.from_date','<=',$next_year);
+        $query = $query->orderBy('from_date','asc');
+        $query = $query->groupBy('holidays.id');
+        $response = $query->get();
+
+        $holidays = array();
+        $i = 0;
+
+        if(isset($response) && $response != '') {
+
+            foreach ($response as $key => $value) {
+
+                $holidays[$i]['id'] = $value->id;
+                $holidays[$i]['title'] = $value->title;
+                $holidays[$i]['type'] = $value->type;
+                $holidays[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date)); 
+                $i++;
+            }
+        }
         return $holidays;
     }
 }

@@ -206,7 +206,7 @@
 
                                                         $attendance = 'B';
                                                     }
-                                                    else if($key2 == $get_cur_dt) {
+                                                    else if($key2 == $get_cur_dt && $month == $get_cur_month) {
 
                                                         $attendance = 'WPP';
                                                     }
