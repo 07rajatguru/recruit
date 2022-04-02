@@ -50,7 +50,7 @@ class LeaveController extends Controller
         }
 
         // Get Selected Year
-        $starting_year = '2021';
+        $starting_year = '2022';
         $ending_year = date('Y',strtotime('+2 year'));
 
         $year_array = array();
@@ -148,7 +148,7 @@ class LeaveController extends Controller
         }
 
         // Get Selected Year
-        $starting_year = '2021';
+        $starting_year = '2022';
         $ending_year = date('Y',strtotime('+2 year'));
 
         $year_array = array();
@@ -1025,12 +1025,12 @@ class LeaveController extends Controller
         if (isset($month_leave_data) && $month_leave_data != '') {
 
             $monthwise_leave_balance = MonthwiseLeaveBalance::find($month_leave_data->id);
-            $monthwise_leave_balance->pl_total = $leave_total;
-            $monthwise_leave_balance->pl_taken = $leave_taken;
-            $monthwise_leave_balance->pl_remaining = $leave_remaining;
-            $monthwise_leave_balance->sl_total = $seek_leave_total;
-            $monthwise_leave_balance->sl_taken = $seek_leave_taken;
-            $monthwise_leave_balance->sl_remaining = $seek_leave_remaining;
+            $monthwise_leave_balance->pl_total = $month_leave_data->pl_total + $leave_total;
+            $monthwise_leave_balance->pl_taken = $month_leave_data->pl_taken + $leave_taken;
+            $monthwise_leave_balance->pl_remaining = $month_leave_data->pl_remaining + $leave_remaining;
+            $monthwise_leave_balance->sl_total = $month_leave_data->sl_total + $seek_leave_total;
+            $monthwise_leave_balance->sl_taken = $month_leave_data->sl_taken + $seek_leave_taken;
+            $monthwise_leave_balance->sl_remaining = $month_leave_data->sl_remaining + $seek_leave_remaining;
             $monthwise_leave_balance->save();
         }
         else {
@@ -1109,12 +1109,12 @@ class LeaveController extends Controller
         if (isset($month_leave_data) && $month_leave_data != '') {
 
             $monthwise_leave_balance = MonthwiseLeaveBalance::find($month_leave_data->id);
-            $monthwise_leave_balance->pl_total = $leave_total;
-            $monthwise_leave_balance->pl_taken = $leave_taken;
-            $monthwise_leave_balance->pl_remaining = $leave_remaining;
-            $monthwise_leave_balance->sl_total = $seek_leave_total;
-            $monthwise_leave_balance->sl_taken = $seek_leave_taken;
-            $monthwise_leave_balance->sl_remaining = $seek_leave_remaining;
+            $monthwise_leave_balance->pl_total = $month_leave_data->pl_total + $leave_total;
+            $monthwise_leave_balance->pl_taken = $month_leave_data->pl_taken + $leave_taken;
+            $monthwise_leave_balance->pl_remaining = $month_leave_data->pl_remaining + $leave_remaining;
+            $monthwise_leave_balance->sl_total = $month_leave_data->sl_total + $seek_leave_total;
+            $monthwise_leave_balance->sl_taken = $month_leave_data->sl_taken + $seek_leave_taken;
+            $monthwise_leave_balance->sl_remaining = $month_leave_data->sl_remaining + $seek_leave_remaining;
             $monthwise_leave_balance->save();
         }
 

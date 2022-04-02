@@ -235,11 +235,9 @@
                 var token = $("input[name=_token]").val();
 
                 if(leave_type == 'Half Day') {
-
                     var total_days = days/2;
                 }
                 if(leave_type == 'Full Day') {
-
                     var total_days = days;
                 }
                 
@@ -254,17 +252,22 @@
                         if (leave_count < total_days) {
 
                             var rest = total_days - leave_count;
+
+                            if(leave_count == '') {
+                                leave_count = 0;
+                            }
                                     
                             if(leave_cat == 'Privilege Leave') {
 
-                                alert('You have only '+leave_count+' PL Balance, rest '+rest+' leaves will fall into LWP, do you still want to apply?');
+                                var msg = 'You have only '+leave_count+' PL Balance, rest '+rest+' leaves will fall into LWP, do you still want to apply?';
+                                alert(msg);
                             }
 
                             if(leave_cat == 'Sick Leave') {
 
-                                alert('You have only '+leave_count+' SL Balance, rest '+rest+' leaves will fall into LWP, do you still want to apply?');
+                                var msg = 'You have only '+leave_count+' SL Balance, rest '+rest+' leaves will fall into LWP, do you still want to apply?';
+                                alert(msg);
                             }
-                            return false;
                         }
                     }
                 });
