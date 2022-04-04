@@ -452,7 +452,12 @@
                 <td>{{ $candidate->owner or '' }}</td>
                 <td>{{ $candidate->mobile or '' }}</td>
                 <td>{{ $candidate->email or '' }}</td>
-                <td>{{ $shortlist_type[$candidate->shortlisted] or '-' }}</td>
+
+                @if($candidate->status_id == '3')
+                    <td>Selected</td>
+                @else
+                    <td>{{ $shortlist_type[$candidate->shortlisted] or '-' }}</td>
+                @endif
 
                 @if($month == '1')
                     <td style="background:#40E0D0;">{{ date('d-m-Y h:i A' , strtotime($associated_date)) }}</td>
