@@ -8,7 +8,7 @@ class WorkFromHome extends Model
 {
     public $table = "work_from_home";
 
-    public static function getAllWorkFromHomeRequestsByUserId($all=0,$user_id,$month,$year,$status='') {
+    public static function getAllWorkFromHomeRequestsByUserId($all=0,$user_id,$month,$year,$status='',$limit=0) {
 
         $query = WorkFromHome::query();
         $query = $query->join('users','users.id','=','work_from_home.user_id');
@@ -28,6 +28,10 @@ class WorkFromHome extends Model
         if ($month != '' && $year != '') {
             $query = $query->where(\DB::raw('month(work_from_home.from_date)'),'=',$month);
             $query = $query->where(\DB::raw('year(work_from_home.from_date)'),'=',$year);
+        }
+
+        if (isset($limit) && $limit > 0) {
+            $query = $query->limit($limit);
         }
 
         $query = $query->orderBy('work_from_home.id','desc');

@@ -53,20 +53,25 @@
                     {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div class="col-xs-2 col-sm-2 col-md-2">
-                <a href="{{ route('late-early.status',array('pending',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#8FB1D5;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;width:130px;" title="Pending">Pending ({{ $pending }})</div></a>
+    <div class="row">
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="col-xs-1 col-sm-1 col-md-1">
+                <a href="{{ route('late-early.status',array('pending',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#8FB1D5;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;width:120px;margin-left: -5px;" title="Pending">Pending ({{ $pending }})</div></a>
             </div>
 
-            <div class="col-xs-2 col-sm-2 col-md-2">
-                <a href="{{ route('late-early.status',array('approved',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#32CD32;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;width:130px;" title="Approved">Approved ({{ $approved }})</div></a>
+            <div class="col-xs-1 col-sm-1 col-md-1">
+                <a href="{{ route('late-early.status',array('approved',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#32CD32;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;width:120px;margin-left: 25px;" title="Approved">Approved ({{ $approved }})</div></a>
             </div>
 
-            <div class="col-xs-2 col-sm-2 col-md-2">
-                <a href="{{ route('late-early.status',array('rejected',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="margin:5px;height:35px;background-color:#F08080;font-weight: 600;border-radius: 22px;padding:9px 0px 0px 9px;text-align: center;width:130px;" title="Rejected">Rejected ({{ $rejected }})</div></a>
+            <div class="col-xs-1 col-sm-1 col-md-1">
+                <a href="{{ route('late-early.status',array('rejected',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#F08080;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;width:120px;margin-left: 55px;" title="Rejected">Rejected ({{ $rejected }})</div></a>
             </div>
         </div>
-    </div><br/>
+    </div>
+    <br/><br/>
     
     <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="leave_table">
         <thead>

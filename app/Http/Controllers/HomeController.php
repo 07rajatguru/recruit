@@ -1120,6 +1120,12 @@ class HomeController extends Controller
                     else {
                         $all_leave_details[$i] = $value;
                     }
+
+                    // For display just 5 records
+                    if($i == 4) {
+                        break;
+                    }
+
                     $i++;
                 }
                 $leave_count = sizeof($team_leave_details) + sizeof($all_leave_details);
@@ -1142,6 +1148,11 @@ class HomeController extends Controller
                     }
                     else {
                         $all_latein_earlygo_details[$i] = $value;
+                    }
+
+                    // For display just 5 records
+                    if($i == 4) {
+                        break;
                     }
                     $i++;
                 }
@@ -1166,6 +1177,11 @@ class HomeController extends Controller
                     else {
                         $all_wfh_details[$i] = $value;
                     }
+
+                    // For display just 5 records
+                    if($i == 4) {
+                        break;
+                    }
                     $i++;
                 }
                 $work_from_count = sizeof($team_wfh_details) + sizeof($all_wfh_details);
@@ -1174,15 +1190,15 @@ class HomeController extends Controller
         else {
 
             // Get List of applied leaves
-            $leave_data = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,'');
+            $leave_data = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,'',5);
             $leave_count = sizeof($leave_data);
 
             // Get List of applied late in early go requests
-            $latein_earlygo_data = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(1,0,$month,$year,'');
+            $latein_earlygo_data = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(1,0,$month,$year,'',5);
             $earlygo_latein_count = sizeof($latein_earlygo_data);
 
             // Get List of applied work from home requests
-            $wfh_data = WorkFromHome::getAllWorkFromHomeRequestsByUserId(1,0,$month,$year,'');
+            $wfh_data = WorkFromHome::getAllWorkFromHomeRequestsByUserId(1,0,$month,$year,'',5);
             $work_from_count = sizeof($wfh_data);
         }
 

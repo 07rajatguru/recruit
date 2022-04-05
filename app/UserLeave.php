@@ -39,7 +39,7 @@ class UserLeave extends Model
         return $type;
     }
 
-    public static function getAllLeavedataByUserId($all=0,$user_ids,$month,$year,$status='') {
+    public static function getAllLeavedataByUserId($all=0,$user_ids,$month,$year,$status='',$limit=0) {
 
         $query = UserLeave::query();
         $query = $query->join('users','users.id','=','user_leave.user_id');
@@ -70,6 +70,10 @@ class UserLeave extends Model
                 $query = $query->where(\DB::raw('month(user_leave.to_date)'),'=',$month);
                 $query = $query->where(\DB::raw('year(user_leave.to_date)'),'=',$year);
             }
+        }
+
+        if (isset($limit) && $limit > 0) {
+            $query = $query->limit($limit);
         }
 
         $query = $query->orderBy('user_leave.id','desc');

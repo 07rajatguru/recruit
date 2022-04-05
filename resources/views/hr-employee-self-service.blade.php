@@ -249,21 +249,13 @@
 
                             @if((isset($team_latein_earlygo_details) && sizeof($team_latein_earlygo_details) > 0) || (isset($all_latein_earlygo_details) && sizeof($all_latein_earlygo_details) > 0) || (isset($latein_earlygo_data) && sizeof($latein_earlygo_data) > 0))
 
-                                <?php
-
-                                    $latein_earlygo_count = sizeof($latein_earlygo_data);
-                                    $team_latein_earlygo_count = sizeof($team_latein_earlygo_details);
-                                    $all_latein_earlygo_count = sizeof($all_latein_earlygo_details);
-
-                                    $all_le_count = $latein_earlygo_count + $team_latein_earlygo_count + $all_latein_earlygo_count;
-                                ?>
                             @else
                                 <tbody><tr><td colspan="6">No Data Found.</td></tr></tbody>
                             @endif
                         </table>
                     </div>
 
-                    @if(isset($all_le_count) && $all_le_count > 5)
+                    @if(isset($earlygo_latein_count) && $earlygo_latein_count > 5)
                         <div class="box-footer text-center">
                             <a href="/late-in-early-go-request/1/{{ $month }}/{{ $year }}" target="_blank">View All Requests</a>
                         </div>
@@ -407,21 +399,13 @@
 
                             @if((isset($team_leave_details) && sizeof($team_leave_details) > 0) || (isset($all_leave_details) && sizeof($all_leave_details) > 0) || (isset($leave_data) && sizeof($leave_data) > 0))
 
-                                <?php
-
-                                    $leave_data_count = sizeof($leave_data);
-                                    $team_leave_count = sizeof($team_leave_details);
-                                    $all_leave_count = sizeof($all_leave_details);
-
-                                    $all_lv_count = $leave_data_count + $team_leave_count + $all_leave_count;
-                                ?>
                             @else
                                 <tbody><tr><td colspan="6">No Data Found.</td></tr></tbody>
                             @endif
                         </table>
                     </div>
 
-                    @if(isset($all_lv_count) && $all_lv_count > 5)
+                    @if(isset($leave_count) && $leave_count > 5)
                         <div class="box-footer text-center">
                             <a href="/applied-leave/1/{{ $month }}/{{ $year }}" target="_blank">View All Requests</a>
                         </div>
@@ -568,21 +552,13 @@
 
                             @if((isset($team_wfh_details) && sizeof($team_wfh_details) > 0) || (isset($all_wfh_details) && sizeof($all_wfh_details) > 0) || (isset($wfh_data) && sizeof($wfh_data) > 0))
 
-                                 <?php
-
-                                    $wfh_data_count = sizeof($wfh_data);
-                                    $team_wfh_count = sizeof($team_wfh_details);
-                                    $all_wfh_count = sizeof($all_wfh_details);
-
-                                    $all_count = $wfh_data_count + $team_wfh_count + $all_wfh_count;
-                                ?>
                             @else
                                 <tbody><tr><td colspan="6">No Data Found.</td></tr></tbody>
                             @endif
                         </table>
                     </div>
 
-                    @if(isset($all_count) && $all_count > 5)
+                    @if(isset($work_from_count) && $work_from_count > 5)
                         <div class="box-footer text-center">
                             <a href="/work-from-home-request/1/{{ $month }}/{{ $year }}" target="_blank">View All Requests</a>
                         </div>
