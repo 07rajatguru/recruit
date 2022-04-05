@@ -325,11 +325,9 @@ class LeaveController extends Controller
             foreach ($dates as $key => $value) {
                         
                 if (in_array($value,$holidays_dates)) {
-
                     $selected_holiday_dates[$i] = $value;
                 }
                 else {
-
                     $selected_other_dates[$i] = $value;
                 }
                 $i++;
@@ -352,13 +350,11 @@ class LeaveController extends Controller
         else {
 
             if($leave_type == 'Half Day') {
-
                 $days = $diff_in_days/2;
             }
             else {
                 $days = $diff_in_days;
             }
-            
         }
 
         // Set Two Dates

@@ -453,7 +453,7 @@
                 <td>{{ $candidate->mobile or '' }}</td>
                 <td>{{ $candidate->email or '' }}</td>
 
-                @if($candidate->status_id == '3')
+                @if($candidate->status_id == '3' && $candidate->selected_date != '')
                     <td>Selected</td>
                 @else
                     <td>{{ $shortlist_type[$candidate->shortlisted] or '-' }}</td>
