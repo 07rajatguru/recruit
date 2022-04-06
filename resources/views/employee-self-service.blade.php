@@ -214,7 +214,13 @@
                             @endif
                         </table>
                     </div>
-                    <div class="box-footer clearfix"></div>
+                    @if(isset($latein_earlygo_data) && sizeof($latein_earlygo_data) > 5)
+                        <div class="box-footer text-center">
+                            <a href="/applied-leave/1/{{ $month }}/{{ $year }}" target="_blank">View All Leaves</a>
+                        </div>
+                    @else
+                        <div class="box-footer clearfix"></div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -306,7 +312,13 @@
                             @endif
                         </table>
                     </div>
-                    <div class="box-footer clearfix"></div>
+                    @if(isset($leave_data) && sizeof($leave_data) > 5)
+                        <div class="box-footer text-center">
+                            <a href="/applied-leave/1/{{ $month }}/{{ $year }}" target="_blank">View All Leaves</a>
+                        </div>
+                    @else
+                        <div class="box-footer clearfix"></div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -401,7 +413,13 @@
                             @endif
                         </table>
                     </div>
-                    <div class="box-footer clearfix"></div>
+                    @if(isset($wfh_data) && sizeof($wfh_data) > 5)
+                        <div class="box-footer text-center">
+                            <a href="/applied-leave/1/{{ $month }}/{{ $year }}" target="_blank">View All Leaves</a>
+                        </div>
+                    @else
+                        <div class="box-footer clearfix"></div>
+                    @endif
                 </div>
             </div>
         </div>

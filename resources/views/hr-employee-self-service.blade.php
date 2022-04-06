@@ -407,7 +407,7 @@
 
                     @if(isset($leave_count) && $leave_count > 5)
                         <div class="box-footer text-center">
-                            <a href="/applied-leave/1/{{ $month }}/{{ $year }}" target="_blank">View All Requests</a>
+                            <a href="/applied-leave/1/{{ $month }}/{{ $year }}" target="_blank">View All Leaves</a>
                         </div>
                     @else
                         <div class="box-footer clearfix"></div>
