@@ -40,6 +40,10 @@
                         <th>Email Body</th>
                         <td>{!! $email_template['email_body'] !!}</td>
                     </tr>
+                    <tr>
+                        <th>Who can see this Template</th>
+                        <td>{{ implode(", ",$email_template['user_names']) }}</td>
+                    </tr>
                 </table>
             </div>
         </div>

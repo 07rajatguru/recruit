@@ -1354,4 +1354,24 @@ class User extends Authenticatable
         }
         return $userArr;
     }
+
+    public static function getAllUserEmailsByID($user_ids) {
+
+        if(isset($user_ids) && $user_ids != '') {
+
+            $user_query = $user_query->whereIn('id',$user_ids);
+        }
+
+        $user_query = $user_query->orderBy('name');
+
+        $users = $user_query->get();
+
+        $userArr = array();
+        if(isset($users) && sizeof($users)) {
+            foreach ($users as $user) {
+                $userArr[$user->id] = $user->email;
+            }
+        }
+        return $userArr;
+    }
 }
