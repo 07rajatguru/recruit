@@ -216,7 +216,7 @@
                     </div>
                     @if(isset($latein_earlygo_data) && sizeof($latein_earlygo_data) > 5)
                         <div class="box-footer text-center">
-                            <a href="/applied-leave/1/{{ $month }}/{{ $year }}" target="_blank">View All Leaves</a>
+                            <a href="/late-in-early-go-request/1/{{ $month }}/{{ $year }}" target="_blank">View All Requests</a>
                         </div>
                     @else
                         <div class="box-footer clearfix"></div>
@@ -415,7 +415,7 @@
                     </div>
                     @if(isset($wfh_data) && sizeof($wfh_data) > 5)
                         <div class="box-footer text-center">
-                            <a href="/applied-leave/1/{{ $month }}/{{ $year }}" target="_blank">View All Leaves</a>
+                            <a href="/work-from-home-request/1/{{ $month }}/{{ $year }}" target="_blank">View All Requests</a>
                         </div>
                     @else
                         <div class="box-footer clearfix"></div>

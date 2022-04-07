@@ -63,7 +63,7 @@
                     <h5><center>Applied Leave</center></h5>
                 </div>
                 <div class="icon"><i class="fa fa-leanpub"></i></div>
-                <a href="applied-leave/1/{{ $month }}/{{ $year }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="applied-leave/2/{{ $month }}/{{ $year }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -85,7 +85,7 @@
                     <h5><center>Late In / Early Go Request in this month</center></h5>
                 </div>
                 <div class="icon"><i class="fa fa-file-text-o"></i></div>
-                <a href="late-in-early-go-request/1/{{ $month }}/{{ $year }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="late-in-early-go-request/2/{{ $month }}/{{ $year }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -96,7 +96,7 @@
                     <h5><center>Work From Home Request in this month</center></h5>
                 </div>
                 <div class="icon"><i class="fa fa-list-alt"></i></div>
-                <a href="work-from-home-request/1/{{ $month }}/{{ $year }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
+                <a href="work-from-home-request/2/{{ $month }}/{{ $year }}" class="small-box-footer" target="_blank">More info <i class="fa fa-arrow-circle-right"></i></a>
             </div>
         </div>
 
@@ -257,7 +257,7 @@
 
                     @if(isset($earlygo_latein_count) && $earlygo_latein_count > 5)
                         <div class="box-footer text-center">
-                            <a href="/late-in-early-go-request/1/{{ $month }}/{{ $year }}" target="_blank">View All Requests</a>
+                            <a href="/late-in-early-go-request/2/{{ $month }}/{{ $year }}" target="_blank">View All Requests</a>
                         </div>
                     @else
                         <div class="box-footer clearfix"></div>
@@ -407,7 +407,7 @@
 
                     @if(isset($leave_count) && $leave_count > 5)
                         <div class="box-footer text-center">
-                            <a href="/applied-leave/1/{{ $month }}/{{ $year }}" target="_blank">View All Leaves</a>
+                            <a href="/applied-leave/2/{{ $month }}/{{ $year }}" target="_blank">View All Leaves</a>
                         </div>
                     @else
                         <div class="box-footer clearfix"></div>
@@ -560,7 +560,7 @@
 
                     @if(isset($work_from_count) && $work_from_count > 5)
                         <div class="box-footer text-center">
-                            <a href="/work-from-home-request/1/{{ $month }}/{{ $year }}" target="_blank">View All Requests</a>
+                            <a href="/work-from-home-request/2/{{ $month }}/{{ $year }}" target="_blank">View All Requests</a>
                         </div>
                     @else
                         <div class="box-footer clearfix"></div>

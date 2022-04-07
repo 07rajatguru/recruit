@@ -449,10 +449,8 @@ class LateInEarlyGoController extends Controller
         $super_admin_userid = getenv('SUPERADMINUSERID');
 
         $user_id = $user->id;
-        $user_ids[] = $user_id;
 
         // Set Blank Array
-
         $all_pending_leave_details = array();
         $team_pending_leave_details = array();
 
@@ -467,29 +465,56 @@ class LateInEarlyGoController extends Controller
         $rejected_count = 0;
 
         if($id == 0) {
+
+            $user_ids[] = $user_id;
                     
             $pending_leave_details = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(0,$user_ids,$month,$year,0);
+            $pending_count = sizeof($pending_leave_details);
 
             $approved_leave_details = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(0,$user_ids,$month,$year,1);
+            $approved_count = sizeof($approved_leave_details);
 
             $rejected_leave_details = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(0,$user_ids,$month,$year,2);
-
-            $pending_count = sizeof($pending_leave_details);
-            $approved_count = sizeof($approved_leave_details);
             $rejected_count = sizeof($rejected_leave_details); 
+        }
+        else if($id == 1) {
+
+            // Get Assigners users
+            $assigned_users = User::getAssignedUsers($user_id);
+
+            if(isset($assigned_users) && sizeof($assigned_users) > 0) {
+                foreach ($assigned_users as $key => $value) {
+                    $user_ids[] = $key;
+                }
+            }
+            else {
+                $user_ids = array();
+            }
+
+            if (in_array($user_id, $user_ids)) {
+                unset($user_ids[array_search($user_id,$user_ids)]);
+            }
+
+            $pending_leave_details = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(0,$user_ids,$month,$year,0);
+            $pending_count = sizeof($pending_leave_details);
+
+            $approved_leave_details = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(0,$user_ids,$month,$year,1);
+            $approved_count = sizeof($approved_leave_details);
+
+            $rejected_leave_details = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(0,$user_ids,$month,$year,2);
+            $rejected_count = sizeof($rejected_leave_details);
         }
         else {
 
             if($all_perm) {
                     
                 $pending_leave_details = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(1,0,$month,$year,0);
+                $pending_count = sizeof($pending_leave_details);
 
                 $approved_leave_details = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(1,0,$month,$year,1);
+                $approved_count = sizeof($approved_leave_details);
 
                 $rejected_leave_details = LateInEarlyGo::getLateInEarlyGoDetailsByUserId(1,0,$month,$year,2);
-
-                $pending_count = sizeof($pending_leave_details);
-                $approved_count = sizeof($approved_leave_details);
                 $rejected_count = sizeof($rejected_leave_details);
             }
             else {
