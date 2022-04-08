@@ -40,10 +40,12 @@
                         <th>Email Body</th>
                         <td>{!! $email_template['email_body'] !!}</td>
                     </tr>
-                    <tr>
-                        <th style="width:230px;">Who can see this Template</th>
-                        <td>{{ implode(", ",$email_template_users_list['user_names']) }}</td>
-                    </tr>
+                    @if(isset($email_template_users_list) && sizeof($email_template_users_list) > 0)
+                        <tr>
+                            <th style="width:230px;">Who can see this Template</th>
+                            <td>{{ implode(", ",$email_template_users_list) }}</td>
+                        </tr>
+                    @endif
                 </table>
             </div>
         </div>

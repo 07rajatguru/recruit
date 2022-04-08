@@ -118,9 +118,9 @@ class EmailTemplateController extends Controller
         }
 
         // Send email notification
-        $superadminemail = User::getUserEmailById($super_admin_userid);
+        $superadminemail = User::getUserEmailById($superadminuserid);
 
-        $to_users_array = User::getAllUserEmailsByID();
+        $to_users_array = User::getAllUserEmailsByID($users);
 
         $module = "Email Template";
         $sender_name = $user_id;
@@ -142,10 +142,16 @@ class EmailTemplateController extends Controller
         $email_template_users = \DB::table('email_template_visible_users')
         ->join('users','users.id','=','email_template_visible_users.user_id')->select('users.id', 'users.name as name')->where('email_template_visible_users.email_template_id',$id)->get();
 
-        $c = 0;
-        foreach ($email_template_users as $key => $value) {
-            $email_template_users_list['user_names'][$c] = $value->name;
-            $c++;
+        if(isset($email_template_users) && sizeof($email_template_users) > 0) {
+
+            $c = 0;
+            foreach ($email_template_users as $key => $value) {
+                $email_template_users_list[$c] = $value->name;
+                $c++;
+            }
+        }
+        else {
+            $email_template_users_list = array();
         }
 
     	return view('adminlte::emailtemplate.show',compact('email_template','email_template_users_list'));

@@ -1357,8 +1357,9 @@ class User extends Authenticatable
 
     public static function getAllUserEmailsByID($user_ids) {
 
+        $user_query = User::query();
+        
         if(isset($user_ids) && $user_ids != '') {
-
             $user_query = $user_query->whereIn('id',$user_ids);
         }
 
