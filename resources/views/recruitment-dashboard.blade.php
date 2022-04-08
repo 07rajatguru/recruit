@@ -150,11 +150,14 @@
                         <table class="table no-margin" style="border: 1px solid #00c0ef;">
                             <thead>
                             <tr>
-                                <th width="150px" style="border: 1px solid #00c0ef;">Posting Title</th>
-                                <th width="150px" style="border: 1px solid #00c0ef;">Candidate Name</th>
+                                <th width="150px" style="border: 1px solid #00c0ef;">Posting Title
+                                </th>
+                                <th width="150px" style="border: 1px solid #00c0ef;">Candidate Name
+                                </th>
                                 <th width="150px" style="border: 1px solid #00c0ef;">Contact No.</th>
                                 <th width="700px" style="border: 1px solid #00c0ef;">Time</th>
-                                <th width="150px" style="border: 1px solid #00c0ef;">Candidate Owner</th>
+                                <th width="150px" style="border: 1px solid #00c0ef;">Candidate Owner
+                                </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -164,7 +167,6 @@
                                         $link = 'interview/' . $interview->id . "/show";
                                     ?>
                                     <tr>
-
                                         @if(isset($interview->remote_working) && $interview->remote_working != '')
                                             <td style="border: 1px solid #00c0ef;">
                                                 <a href="{{ $link }}" target="_blank">
@@ -178,7 +180,7 @@
                                                 </a>
                                             </td>
                                         @endif
-                                        <td style="border: 1px solid #00c0ef;">{{ $interview->candidate_fname}} </td>
+                                        <td style="border: 1px solid #00c0ef;">{{ $interview->candidate_fname}}</td>
                                         <td style="border: 1px solid #00c0ef;">{{ $interview->contact }}</td>
                                         <td style="border: 1px solid #00c0ef;">{{ date('d-m-Y h:i A',strtotime($interview->interview_date)) }}</td>
                                         <td style="border: 1px solid #00c0ef;">{{ $interview->candidate_owner_name}} </td>
@@ -186,7 +188,7 @@
                                 @endforeach
                             @else
                                 <tr>
-                                    <td colspan="5">No Interviews for Today</td>
+                                    <td colspan="5">No Interviews.</td>
                                 </tr>
                             @endif
                             </tbody>
@@ -217,7 +219,6 @@
                                 <th style="border: 1px solid #00c0ef;">Sr No.</th>
                                 <th width="180px" style="border: 1px solid #00c0ef;">Subject</th>
                                 <th style="border: 1px solid #00c0ef;">Assigned By</th>
-                                <!-- <th>Assigned To</th> -->
                                 <th style="border: 1px solid #00c0ef;">Due Date</th>
                             </tr>
                             </thead>
@@ -231,11 +232,8 @@
                                     <tr>
                                         <td style="border: 1px solid #00c0ef;">{{ $i }}</td>
                                         <td style="border: 1px solid #00c0ef;">
-                                            <a href="{{ $todo_link }}" target="_blank">
-                                                {{ $toDo['subject'] }}</a>
-                                        </td>
+                                            <a href="{{ $todo_link }}" target="_blank"> {{ $toDo['subject'] }}</a></td>
                                         <td style="border: 1px solid #00c0ef;">{{ $toDo['am_name'] }}</td>
-                                        <!-- <td>{{ $toDo['assigned_to'] }}</td> -->
                                         <td style="font-size:13px;border: 1px solid #00c0ef;">{{ date('d-m-Y h:i A',strtotime($toDo['due_date'] ))}}</td>
                                     </tr>
                                     <?php $i++; ?>

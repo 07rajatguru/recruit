@@ -1985,7 +1985,7 @@ class JobOpen extends Model
         $job_open_query = $job_open_query->groupBy('job_openings.id');
         $job_open_query = $job_open_query->where('open_to_all','=','1');
         $job_open_query = $job_open_query->having('count','<','5');
-        $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
+        $job_open_query = $job_open_query->orderBy('job_openings.id','desc');
 
         if (isset($limit) && $limit > 0) {
             $job_open_query = $job_open_query->limit($limit);

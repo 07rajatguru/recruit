@@ -668,6 +668,12 @@ class Interview extends Model
         $from_date = date("Y-m-d H:i:s");
         $to_date = date("Y-m-d 23:59:59", time() + 86400);
 
+        // Get Current Date & Time with different zone
+        $dt = new \DateTime($from_date);
+        $tz = new \DateTimeZone('Asia/Kolkata'); // or whatever zone you're after
+        $dt->setTimezone($tz);
+        $get_current_time = $dt->format('Y-m-d H:i:s');
+
         $query = Interview::query();
 
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
@@ -695,8 +701,8 @@ class Interview extends Model
             $query = $query->where('client_basicinfo.department_id','=',$department_id);
         }
 
-        $query = $query->where('interview_date','>',"$from_date");
-        $query = $query->where('interview_date','<',"$to_date");
+        $query = $query->where('interview_date','>=',"$get_current_time");
+        $query = $query->where('interview_date','<=',"$to_date");
         $query = $query->orderby('interview.interview_date','asc');
 
         $response = $query->get();

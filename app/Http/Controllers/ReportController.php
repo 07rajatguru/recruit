@@ -255,7 +255,7 @@ class ReportController extends Controller
 
         // Year Data
         $starting_year = '2017';
-        $ending_year = date('Y',strtotime('+5 year'));
+        $ending_year = date('Y',strtotime('+2 year'));
 
         $year_array = array();
         for ($y = $starting_year; $y < $ending_year ; $y++) {
@@ -441,7 +441,7 @@ class ReportController extends Controller
 
         // Year Data
         $starting_year = '2017';
-        $ending_year = date('Y',strtotime('+5 year'));
+        $ending_year = date('Y',strtotime('+2 year'));
 
         $year_array = array();
         for ($y=$starting_year; $y < $ending_year ; $y++) { 
@@ -577,7 +577,7 @@ class ReportController extends Controller
 
         // Year Data
         $starting_year = '2017';
-        $ending_year = date('Y',strtotime('+1 year'));
+        $ending_year = date('Y',strtotime('+2 year'));
         $year_array = array();
 
         for ($y = $starting_year; $y < $ending_year ; $y++) {
@@ -816,7 +816,7 @@ class ReportController extends Controller
 
             // Year Data
             $starting_year = '2017';
-            $ending_year = date('Y',strtotime('+1 year'));
+            $ending_year = date('Y',strtotime('+2 year'));
             $year_array = array();
             for ($y=$starting_year; $y < $ending_year ; $y++) {
                 $next = $y+1;
@@ -1003,7 +1003,7 @@ class ReportController extends Controller
         if ($all_perm) {
             // Year Data
             $starting_year = '2017';
-            $ending_year = date('Y',strtotime('+1 year'));
+            $ending_year = date('Y',strtotime('+2 year'));
             $year_array = array();
             for ($y=$starting_year; $y < $ending_year ; $y++) {
                 $next = $y+1;
@@ -1196,7 +1196,7 @@ class ReportController extends Controller
 
         // Get Selected Year
         $starting_year = '2020';
-        $ending_year = date('Y',strtotime('+5 year'));
+        $ending_year = date('Y',strtotime('+2 year'));
 
         $year_array = array();
         for ($y = $starting_year; $y < $ending_year ; $y++) {
@@ -1451,7 +1451,7 @@ class ReportController extends Controller
 
         // Get Selected Year
         $starting_year = '2020';
-        $ending_year = date('Y',strtotime('+5 year'));
+        $ending_year = date('Y',strtotime('+2 year'));
 
         $year_array = array();
         for ($y = $starting_year; $y < $ending_year ; $y++) {

@@ -119,7 +119,7 @@ class BillsController extends Controller
 
         // Year Data
         $starting_year = '2017';
-        $ending_year = date('Y',strtotime('+1 year'));
+        $ending_year = date('Y',strtotime('+2 year'));
         $year_array = array();
         $year_array[0] = "Select Year";
 
@@ -409,7 +409,7 @@ class BillsController extends Controller
 
         // Year Data
         $starting_year = '2017';
-        $ending_year = date('Y',strtotime('+1 year'));
+        $ending_year = date('Y',strtotime('+2 year'));
         $year_array = array();
         for ($y=$starting_year; $y < $ending_year ; $y++) {
             $next = $y+1;
@@ -471,7 +471,7 @@ class BillsController extends Controller
 
         // Year Data
         $starting_year = '2017';
-        $ending_year = date('Y',strtotime('+1 year'));
+        $ending_year = date('Y',strtotime('+2 year'));
         $year_array = array();
         $year_array[0] = "Select Year";
 
@@ -750,7 +750,7 @@ class BillsController extends Controller
         
         // Year Data
         $starting_year = '2017';
-        $ending_year = date('Y',strtotime('+1 year'));
+        $ending_year = date('Y',strtotime('+2 year'));
         $year_array = array();
         for ($y=$starting_year; $y < $ending_year ; $y++) {
             $next = $y+1;
@@ -838,7 +838,7 @@ class BillsController extends Controller
 
         // Year Data
         $starting_year = '2017';
-        $ending_year = date('Y',strtotime('+1 year'));
+        $ending_year = date('Y',strtotime('+2 year'));
         $year_array = array();
         for ($y=$starting_year; $y < $ending_year ; $y++) {
             $next = $y+1;
