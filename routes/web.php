@@ -3295,6 +3295,13 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:email-template-delete']
     ]);
 
+    Route::get('getUsersByEmailTemplateID', [
+        'as' => 'getusers.byemailtemplateid',
+        'uses' => 'EmailTemplateController@getUsersByEmailTemplateID',
+    ]);
+
+    // Get single page for give permissions to users
+
     Route::get('rolewise-permissions', [
         'as' => 'rolewise.permissions',
         'uses' => 'NewRoleController@rolewisePermissions'

@@ -33,8 +33,8 @@ class EmailTemplateController extends Controller
         $type_array = array($recruitment,$hr_advisory,$operations,$strategy);
 
         $department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
+        
         $departments = array();
-
         if(sizeof($department_res) > 0) {
             foreach($department_res as $r) {
                 $departments[$r->id] = $r->name;
@@ -144,11 +144,11 @@ class EmailTemplateController extends Controller
 
         $c = 0;
         foreach ($email_template_users as $key => $value) {
-            $email_template['user_names'][$c] = $value->name;
+            $email_template_users_list['user_names'][$c] = $value->name;
             $c++;
         }
 
-    	return view('adminlte::emailtemplate.show',compact('email_template'));
+    	return view('adminlte::emailtemplate.show',compact('email_template','email_template_users_list'));
     }
 
     public function edit($id) {
@@ -156,29 +156,84 @@ class EmailTemplateController extends Controller
     	$email_template = EmailTemplate::find($id);
     	$action = 'edit';
 
-    	return view('adminlte::emailtemplate.edit',compact('email_template','action'));
+        $email_template_users = EmailTemplateVisibleUser::where('email_template_id',$id)->get();
+       
+        $selected_users = array();
+        if(isset($email_template_users) && sizeof($email_template_users)>0)  {
+            foreach($email_template_users as $row){
+                $selected_users[] = $row->user_id;
+            }
+        }
+
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $operations = getenv('OPERATIONS');
+        $strategy = getenv('STRATEGY_DEPT');
+        $type_array = array($recruitment,$hr_advisory,$operations,$strategy);
+
+        $department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
+
+        $departments = array();
+        if(sizeof($department_res) > 0) {
+            foreach($department_res as $r) {
+                $departments[$r->id] = $r->name;
+            }
+        }
+
+        $selected_departments = explode(",",$email_template->department_ids);
+        $users = User::getAllUsers($selected_departments);
+        $email_template_id = $id;
+
+    	return view('adminlte::emailtemplate.edit',compact('email_template','action','users','selected_users','selected_departments','departments','email_template_id'));
     }
 
     public function update($id,Request $request) {
     	
         $user_id = \Auth::user()->id;
 
+        // Get superadmin user id
+        $superadminuserid = getenv('SUPERADMINUSERID');
+
     	$name = $request->get('name');
     	$subject = $request->get('subject');
     	$email_body = $request->get('email_body');
+        $department_ids = $request->input('department_ids');
+        $users = $request->input('user_ids');
 
     	$email_template = EmailTemplate::find($id);
         $email_template->user_id = $user_id;
     	$email_template->name = $name;
     	$email_template->subject = $subject;
     	$email_template->email_body = $email_body;
+        $email_template->department_ids = implode(",", $department_ids);
     	$email_template->save();
+
+        if (isset($users) && sizeof($users) > 0) {
+
+            // Delete Previous Users
+            EmailTemplateVisibleUser::where('email_template_id',$id)->delete();
+
+            foreach ($users as $key => $value) {
+
+                $email_template_visible_users = new EmailTemplateVisibleUser();
+                $email_template_visible_users->email_template_id = $id;
+                $email_template_visible_users->user_id = $value;
+                $email_template_visible_users->save();
+            }
+
+            // Add superadmin user id by default
+            $email_template_visible_users = new EmailTemplateVisibleUser();
+            $email_template_visible_users->email_template_id = $id;
+            $email_template_visible_users->user_id = $superadminuserid;
+            $email_template_visible_users->save();
+        }
 
     	return redirect()->route('emailtemplate.index')->with('success','Email Template Updated Successfully.');
     }
 
     public function destroy($id) {
 
+        EmailTemplateVisibleUser::where('email_template_id',$id)->delete();
     	EmailTemplate::where('id',$id)->delete();
 
     	return redirect()->route('emailtemplate.index')->with('success','Email Template Deleted Successfully.');
@@ -235,5 +290,46 @@ class EmailTemplateController extends Controller
 
         $data = "Success";
         return json_encode($data);
+    }
+
+    public function getUsersByEmailTemplateID() {
+
+        $department_ids = $_GET['department_selected_items'];
+        $email_template_id = $_GET['email_template_id'];
+
+        $users = User::getUsersByDepartmentIDArray($department_ids);
+
+        $email_template_users = \DB::table('email_template_visible_users')
+        ->join('users','users.id','=','email_template_visible_users.user_id')
+        ->select('users.id as user_id', 'users.name as name')
+        ->where('email_template_visible_users.email_template_id',$email_template_id)->get();
+
+        $selected_users = array();
+        $i=0;
+
+        foreach ($email_template_users as $key => $value) {
+            $selected_users[$i] = $value->user_id;
+            $i++;       
+        }
+
+        $data = array();
+        $j=0;
+
+        foreach ($users as $key => $value) {
+
+            if(in_array($value['id'], $selected_users)) {
+                $data[$j]['checked'] = '1';
+            }
+            else {
+                $data[$j]['checked'] = '0';
+            }
+            
+            $data[$j]['id'] = $value['id'];
+            $data[$j]['type'] = $value['type'];
+            $data[$j]['name'] = $value['name'];
+
+            $j++;
+        }
+        return $data;exit;
     }
 }

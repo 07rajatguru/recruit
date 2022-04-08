@@ -29,7 +29,7 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <table class="table table-bordered">
                     <tr>
-                        <th scope="row">Name</th>
+                        <th>Name</th>
                         <td>{{ $email_template['name'] }}</td>
                     </tr>
                     <tr>
@@ -41,8 +41,8 @@
                         <td>{!! $email_template['email_body'] !!}</td>
                     </tr>
                     <tr>
-                        <th>Who can see this Template</th>
-                        <td>{{ implode(", ",$email_template['user_names']) }}</td>
+                        <th style="width:230px;">Who can see this Template</th>
+                        <td>{{ implode(", ",$email_template_users_list['user_names']) }}</td>
                     </tr>
                 </table>
             </div>
