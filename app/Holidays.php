@@ -161,7 +161,7 @@ class Holidays extends Model
             $query = $query->where(\DB::raw('year(holidays.from_date)'),'=',$year);
         }
 
-        $query = $query->orderBy('from_date','ASC');
+        $query = $query->orderBy('holidays.from_date','DESC');
         $query = $query->groupBy('holidays.id');
         $response = $query->get();
 
@@ -353,7 +353,7 @@ class Holidays extends Model
         $query = Holidays::query();
         $query = $query->where('holidays.from_date','>=',$current_year);
         $query = $query->where('holidays.from_date','<=',$next_year);
-        $query = $query->orderBy('from_date','asc');
+        $query = $query->orderBy('holidays.from_date','asc');
         $query = $query->groupBy('holidays.id');
         $query = $query->select('holidays.*');
         $response = $query->get();

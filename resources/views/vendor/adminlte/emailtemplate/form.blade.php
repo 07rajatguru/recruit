@@ -35,7 +35,7 @@
                 <div class="col-xs-8 col-sm-8 col-md-8">
                     <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
                         <strong>Template Name: <span class = "required_fields">*</span> </strong>
-                        {!! Form::text('name', null, array('id'=>'name','class' => 'form-control','placeholder' => 'Template Name','tabindex' => '1' )) !!}
+                        {!! Form::text('name', null, array('id'=>'name','class' => 'form-control','placeholder' => 'Template Name','tabindex' => '1', 'style' => 'widht:780px;')) !!}
                         @if ($errors->has('name'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('name') }}</strong>
@@ -45,7 +45,7 @@
 
                     <div class="form-group {{ $errors->has('subject') ? 'has-error' : '' }}">
                         <strong>Subject: <span class = "required_fields">*</span> </strong>
-                        {!! Form::text('subject', null, array('id'=>'subject','class' => 'form-control','placeholder' => 'Subject','tabindex' => '2' )) !!}
+                        {!! Form::text('subject', null, array('id'=>'subject','class' => 'form-control','placeholder' => 'Subject','tabindex' => '2', 'style' => 'widht:780px;')) !!}
                         @if ($errors->has('subject'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('subject') }}</strong>
@@ -114,6 +114,8 @@
             CKEDITOR.replace( 'email_body', {
                 filebrowserUploadUrl: '{{ route('emailbody.image',['_token' => csrf_token() ]) }}',
                 customConfig: '/js/email_template_ckeditor.js',
+                extraPlugins: 'colorbutton,colordialog',
+                width:"780px",
             });
 
             CKEDITOR.on('dialogDefinition', function( ev ) {
