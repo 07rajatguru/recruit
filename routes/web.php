@@ -639,6 +639,17 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'UserController@Upload'
     ]);
 
+    Route::get('users/myprofile/signature/{id}',[
+        'as' => 'users.signature',
+        'uses' => 'UserController@addSignature',
+        'middleware' => ['permission:user-profile']
+    ]);
+
+    Route::post('users/signature/{id}',[
+        'as' => 'users.signaturestore',
+        'uses' => 'UserController@saveSignature'
+    ]);
+
     Route::post('/upload-signature',[
         'as' => 'upload.signature',
         'uses' => 'UserController@uploadSignatureImage'

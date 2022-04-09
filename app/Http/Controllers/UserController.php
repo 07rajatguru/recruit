@@ -2661,4 +2661,39 @@ class UserController extends Controller
         }
         return $user_array;
     }
+
+    public function addSignature($user_id) {
+
+        $user = \Auth::user();
+        $loggedin_user_id =  \Auth::user()->id;
+
+        if ($loggedin_user_id == $user_id) {
+
+            $user_info = User::getProfileInfo($user_id);
+
+            if(isset($user_info) && $user_info != '') {
+
+                // Get Signature
+                $signature = $user_info->signature;
+            }
+
+            return view('adminlte::users.mysignature',compact('user_id','signature'));
+        }
+    }
+
+    public function saveSignature($user_id) {
+
+        // Get user info
+        $user_other_info = UserOthersInfo::getUserOtherInfo($user_id);
+
+        // Get Signature value
+        $signature = Input::get('signature');
+
+        // Update Signature in table
+        $users_otherinfo_update = UserOthersInfo::find($user_other_info->id);   
+        $users_otherinfo_update->signature = $signature;
+        $users_otherinfo_update->save();
+
+        return redirect()->route('users.myprofile',$user_id)->with('success','Signature Updated Successfully.'); 
+    }
 }

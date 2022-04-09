@@ -28,6 +28,11 @@
             @permission(('edit-profile-of-loggedin-user'))
                 <div class="pull-right">
                     <a class="btn btn-primary" href="{{ route('users.editprofile',$user_id) }}">Edit Profile</a>
+                    <a class="btn btn-primary" href="{{ route('users.signature',$user_id) }}">Update Signature</a>
+                </div>
+            @else
+                <div class="pull-right">
+                    <a class="btn btn-primary" href="{{ route('users.signature',$user_id) }}">Update Signature</a>
                 </div>
             @endpermission
         </div>
@@ -123,6 +128,17 @@
                             </tr>
                         </table>
                     </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                <div class="box-header with-border col-md-6">
+                    <h3 class="box-title">Signature</h3>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    {!! $user['signature'] !!}
                 </div>
             </div>
         </div>
