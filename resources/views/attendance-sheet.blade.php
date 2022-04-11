@@ -283,10 +283,6 @@
                                     else if($working_hours == '') {
                                         $attendance = 'B';
                                     }
-                                    else if($key2 == $get_cur_dt && $month == $get_cur_month) {
-
-                                        $attendance = 'WPP';
-                                    }
                                     else if(isset($value2['attendance']) && $value2['attendance'] == 'A') {
 
                                         $attendance = 'A';
@@ -345,6 +341,10 @@
                                             $jj=0;
                                             $kk=0;
                                         }
+                                    }
+                                    else if($key2 == $get_cur_dt && $month == $get_cur_month) {
+
+                                        $attendance = 'WPP';
                                     }
                                     else if(($key2 > $get_cur_dt && $get_cur_month == $month && $get_cur_yr == $year) || ($year > $get_cur_yr) || ($month > $get_cur_month && $get_cur_yr == $year)) {
                                         $attendance = 'N';
