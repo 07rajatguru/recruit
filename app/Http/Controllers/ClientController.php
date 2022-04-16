@@ -2887,15 +2887,20 @@ class ClientController extends Controller
         $post = $client->post()->orderBy('created_at', 'desc')->get();
 
         $days_array = ClientTimeline::getTimelineDetailsByClientId($id);
+
+        /*Remove Remarks List
+
         $client_remarks = ClientRemarks::getAllClientRemarksData();
         $client_remarks['other'] = 'Others';
-
-        /*if($user_id == $super_admin_userid || $user_id == $manager_user_id) {
+        if($user_id == $super_admin_userid || $user_id == $manager_user_id) {
 
             $client_remarks['other'] = 'Others';
-        }*/
+        }
         
-        $client_remarks_edit = ClientRemarks::getAllClientRemarksData();
+        $client_remarks_edit = ClientRemarks::getAllClientRemarksData();*/
+
+        $client_remarks = array();
+        $client_remarks_edit = array();
 
         return view('adminlte::client.remarks',compact('user_id','client_id','post','client','client_location','super_admin_userid','manager_user_id','days_array','client_remarks','client_remarks_edit'));
     }

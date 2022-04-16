@@ -8,7 +8,9 @@
             <img src="https://lh6.googleusercontent.com/-o-JGTaPiZfM/AAAAAAAAAAI/AAAAAAAAATA/hxzINDVAveQ/photo.jpg" alt="Avatar" class="avatar">
         </div>  -->
         <div class="comment-area">
-           {!! Form::select('content', $client_remarks, null, ['id' => 'content','class' => 'form-control','required' => true, 'onchange' => 'AddnewRemarkspopup()']) !!}
+           {{-- {!! Form::select('content', $client_remarks, null, ['id' => 'content','class' => 'form-control','required' => true, 'onchange' => 'AddnewRemarkspopup()']) !!} --}}
+
+           {!! Form::text('content', null, ['id' => 'content','class' => 'form-control','required' => true,'style' => 'width:510px;','placeholder' => 'Add Remarks']) !!}
         </div>
 
         <div class="button-area">

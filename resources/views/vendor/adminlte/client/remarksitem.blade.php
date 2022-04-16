@@ -75,7 +75,9 @@
             {!! Form::hidden('client_id', $client_id) !!}
             {!! Form::hidden('user_id', auth()->id()) !!}
             {!! Form::hidden('super_admin_userid', $super_admin_userid) !!}
-            {!! Form::select('content', $client_remarks_edit, $per_post->content, ['id'=>'update-review-textarea-'.$per_post->id, 'class' => 'form-control update-review-textarea', 'placeholder' => 'Select Remark', 'required' => true]) !!}
+            {{-- {!! Form::select('content', $client_remarks_edit, $per_post->content, ['id'=>'update-review-textarea-'.$per_post->id, 'class' => 'form-control update-review-textarea', 'placeholder' => 'Select Remark', 'required' => true]) !!} --}}
+
+            {!! Form::text('content', $per_post->content, ['id'=>'update-review-textarea-'.$per_post->id, 'class' => 'form-control update-review-textarea', 'placeholder' => 'Add Remark', 'required' => true]) !!}
 
             <div class="form-group is-empty update-preview-image-container"></div>
             

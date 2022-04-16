@@ -93,8 +93,8 @@
 
     jQuery(document).ready(function(){
 
-        $("#content").select2({'placeholder': 'Select Remark'});
-        $(".update-review-textarea").select2({'placeholder': 'Select Remark','width': '100%'});
+        //$("#content").select2({'placeholder': 'Select Remark'});
+        //$(".update-review-textarea").select2({'placeholder': 'Select Remark','width': '100%'});
     });
 
     function emptyTextValidation(id) {
@@ -207,7 +207,7 @@
 
     function showcommentbox(post_id) {
 
-        $("#comment_"+post_id).select2({'placeholder' : 'Select Remark','width':'100%'});
+        //$("#comment_"+post_id).select2({'placeholder' : 'Select Remark','width':'100%'});
 
         if($(".comment-"+post_id).is(':hidden')) {
             $(".comment-"+post_id).show();

@@ -34,16 +34,16 @@
 
                     @permission(('display-client'))
                         <li>
-                            <a href="#" title="Edit Post" data-toggle="modal" data-target="#update-comment-{{$comment->id }}"><i class="fa fa-pencil" aria-hidden="true"></i>
+                            <a href="#" title="Edit Comment" data-toggle="modal" data-target="#update-comment-{{$comment->id }}"><i class="fa fa-pencil" aria-hidden="true"></i>
                             </a>
                         </li>
                         <li>
-                            <a href="javascript:void(0);" title="Delete Post" onclick="deleteComment({{ $comment->id }})"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                            <a href="javascript:void(0);" title="Delete Comment" onclick="deleteComment({{ $comment->id }})"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
                         </li>
                     @else
                         @if(isset(Auth::user()->id) && $comment->creator()->id == \Auth::user()->id)
                             <li>
-                                <a href="#" title="Edit Post" data-toggle="modal" data-target="#update-comment-{{$comment->id }}"><i class="fa fa-pencil" aria-hidden="true">
+                                <a href="#" title="Edit Comment" data-toggle="modal" data-target="#update-comment-{{$comment->id }}"><i class="fa fa-pencil" aria-hidden="true">
                                 </i></a>
                             </li>
                         @endif
@@ -66,11 +66,12 @@
                 <h6 class="title">Update Comment</h6>
             </div>
             <div class="ui-block-content">
-                {!! Form::select('content',$client_remarks_edit, $comment->body, ['id'=>'update-comment-textarea-'.$comment->id, 'class' => 'form-control update-review-textarea', "required" => true]) !!}
+                {{-- {!! Form::select('content',$client_remarks_edit, $comment->body, ['id'=>'update-comment-textarea-'.$comment->id, 'class' => 'form-control update-review-textarea', "required" => true]) !!} --}}
+
+                {!! Form::text('content', $comment->body, ['id'=>'update-comment-textarea-'.$comment->id, 'class' => 'form-control update-review-textarea', 'required' => true, 'placeholder' => 'Add Comment']) !!}
                 <input type="hidden" id="review_id" name="review_id" value="{{$comment->id }}"><br/>
-                <div class="update-button" style="margin: 1% 0 0 0;"><a href="javascript:void(0);" class="btn btn-primary btn-lg full-width" onclick="updateCommentReply({{$comment->id }})">Update</a></div>
+                <div class="update-button" style="margin: 1% 0 0 0;"><a href="javascript:void(0);" class="btn btn-primary btn-md-2" onclick="updateCommentReply({{$comment->id }})">Update</a></div>
             </div>
         </div>
     </div>
-    <!-- ... end Window-popup Update Review -->
 </div>
