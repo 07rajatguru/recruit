@@ -2666,8 +2666,10 @@ class UserController extends Controller
 
         $user = \Auth::user();
         $loggedin_user_id =  \Auth::user()->id;
+        $superadmin_user_id = getenv('SUPERADMINUSERID');
+        $saloni_user_id = getenv('SALONIUSERID');
 
-        if ($loggedin_user_id == $user_id) {
+        if ($loggedin_user_id == $user_id || $superadmin_user_id == $loggedin_user_id || $saloni_user_id == $loggedin_user_id) {
 
             $user_info = User::getProfileInfo($user_id);
 
@@ -2678,6 +2680,9 @@ class UserController extends Controller
             }
 
             return view('adminlte::users.mysignature',compact('user_id','signature'));
+        }
+        else {
+            return view('errors.403');
         }
     }
 
