@@ -21,7 +21,7 @@
 	            <h2>Edit User Leave Balance</h2>  
 	        </div>
 	        <div class="pull-right">
-	            <a class="btn btn-primary" href="{{ route('leave.userwise') }}">Back</a>
+	            <a class="btn btn-primary" href="{{ route('monthwise.leavebalance') }}">Back</a>
 	        </div>
 	    </div>
 	</div>

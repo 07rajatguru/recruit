@@ -1048,12 +1048,10 @@ class LeaveController extends Controller
         return redirect()->route('leave.userwise')->with('success','User Leave Balance Added Successfully.');
     }
 
-    public function userWiseLeaveEdit($id) {
+    public function userWiseLeaveEdit($id,$month,$year) {
 
         $leave_data = LeaveBalance::find($id);
         $user_id = $leave_data->user_id;
-        $month = date('m');
-        $year = date('Y');
 
         $users = User::getAllUsersExpectSuperAdmin();
 

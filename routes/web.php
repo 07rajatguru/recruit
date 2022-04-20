@@ -751,7 +751,7 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'LeaveController@userWiseLeaveStore'
     ]);
 
-    Route::get('userwiseleave/{id}/edit',[
+    Route::get('userwiseleave/{id}/{month}/{year}/edit',[
         'as' => 'leave.userwiseedit',
         'uses' => 'LeaveController@userWiseLeaveEdit'
     ]);

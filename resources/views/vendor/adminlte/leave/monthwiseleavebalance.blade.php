@@ -43,6 +43,7 @@
     	<thead>
     		<tr>
 	    		<th>No</th>
+                <th>Action</th>
                 <th width="15%">User Name</th>
                 <th>Total PL</th>
                 <th>Opted PL</th>
@@ -58,6 +59,9 @@
     		@foreach($user_leave_data as $key => $value)
 	    		<tr>
 		    		<td>{{ ++$i }}</td>
+                    <td>
+                        <a class="fa fa-edit" href="{{ route('leave.userwiseedit',['id' => $value['id'],'month' => $month,'year' => $year]) }}" title="Edit"></a>
+                    </td>
 		    		<td>{{ $value['user_name'] }}</td>
 		    		<td>{{ $value['pl_total'] }}</td>
 		    		<td>{{ $value['pl_taken'] }}</td>
