@@ -300,7 +300,7 @@
                             <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="daily_report_cv_table">
                                 <thead>
                                     <tr style="background-color: #f39c12;">
-                                        <th width="5%">No</th>
+                                        <th width="5%">View</th>
                                         <th width="30%">Position Name</th>
                                         <th width="30%">Company Name</th>
                                         <th width="20%">Location</th>
@@ -310,7 +310,13 @@
                                 <?php $i = 0;?>
                                 @foreach($associate_daily as $key => $value)
                                     <tr>
-                                        <td>{{++$i}}</td>
+                                        <td>
+                                            @if(isset($associate_count) && $associate_count == 1)
+                                                <a href="/{{ $candidate_resume }}" target="_blank">CV</a>
+                                            @else
+                                                <a href="/candidate-list/{{ $added_by_id }}/{{ $value['job_id'] }}/{{ $added_date }}" target="_blank">Candidate List</a>
+                                            @endif
+                                        </td>
                                         <td>{{ $value['posting_title'] }}</td>
                                         <td>{{ $value['company'] }}</td>
                                         <td>{{ $value['location'] }}</td>
@@ -513,18 +519,16 @@
 
         var table1 = jQuery("#daily_report_cv_table").DataTable({
             responsive: true,
-            "pageLength": 100,
-            stateSave: true
+            "pageLength": 10,
+            "columnDefs": [ {orderable: false, targets: [0]} ]
         });
         var table2 = jQuery("#daily_report_interview_table").DataTable({
             responsive: true,
-            "pageLength": 100,
-            stateSave: true
+            "pageLength": 10,
         });
         var table3 = jQuery("#daily_report_leads_table").DataTable({
             responsive: true,
-            "pageLength": 100,
-            stateSave: true
+            "pageLength": 10,
         });
 
         if ( ! table1.data().any() ) {

@@ -3331,7 +3331,7 @@ class JobOpenController extends Controller
         $client_id = $jobopen_response->client_id;
         $posting_title = $jobopen_response->posting_title;
 
-        $candidateDetails = JobAssociateCandidates::getAssociatedCandidatesByJobId($id);
+        $candidateDetails = JobAssociateCandidates::getAssociatedCandidatesByJobId(0,$id,NULL,NULL);
 
         $candidateStatus = CandidateStatus::getCandidateStatus();
 
@@ -4394,7 +4394,7 @@ class JobOpenController extends Controller
     public function getAssociatedcandidates() {
 
         $job_id = $_GET['job_id'];
-        $associated_candidates = JobAssociateCandidates::getAssociatedCandidatesByJobId($job_id);
+        $associated_candidates = JobAssociateCandidates::getAssociatedCandidatesByJobId(0,$job_id,NULL,NULL);
 
         $response = array();
         $response['returnvalue'] = 'invalid';
@@ -4664,7 +4664,7 @@ class JobOpenController extends Controller
 
     public function getAllJobsAssociatedCandidates($id) {
 
-        $candidateDetails = JobAssociateCandidates::getAssociatedCandidatesByJobId($id);
+        $candidateDetails = JobAssociateCandidates::getAssociatedCandidatesByJobId(0,$id,NULL,NULL);
         $count = sizeof($candidateDetails);
 
         $job_details = JobOpen::getJobById($id);

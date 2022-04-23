@@ -22,7 +22,7 @@ class JobAssociateCandidates extends Model
         return $job_id;
     }
 
-    public static function getAssociatedCandidatesByJobId($job_id) {
+    public static function getAssociatedCandidatesByJobId($user_id,$job_id,$from_date=NULL,$to_date=NULL) {
 
         $query = new JobAssociateCandidates();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','job_associate_candidates.candidate_id');
@@ -30,7 +30,20 @@ class JobAssociateCandidates extends Model
         $query = $query->leftjoin('candidate_status','candidate_status.id', '=' , 'candidate_otherinfo.status_id');
         $query = $query->join('users', 'users.id', '=', 'candidate_otherinfo.owner_id');
         $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname', 'candidate_basicinfo.email as email', 'users.name as owner','job_associate_candidates.shortlisted','candidate_status.name as status', 'job_associate_candidates.shortlisted as shortlisted', 'candidate_basicinfo.id as cid','job_associate_candidates.created_at as job_associate_candidates_date','candidate_basicinfo.mobile as mobile','candidate_basicinfo.created_at as created_at','job_associate_candidates.selected_date as selected_date','job_associate_candidates.status_id as status_id');
+
+        if(isset($from_date) && $from_date != NULL) {
+
+            $query = $query->where('job_associate_candidates.created_at','>=',$from_date);
+
+            $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
+            $query = $query->where('job_associate_candidates.created_at','<=',$to_date);
+        }
+        
         $query = $query->where('job_associate_candidates.job_id','=',$job_id);
+
+        if($user_id > 0) {
+            $query = $query->where('job_associate_candidates.associate_by',$user_id);
+        }
 
         $query = $query->orderBy('job_associate_candidates.shortlisted','3');
         $query = $query->orderBy('job_associate_candidates.shortlisted','2');
@@ -59,7 +72,7 @@ class JobAssociateCandidates extends Model
         $query = JobAssociateCandidates::query();
         $query = $query->join('job_openings','job_openings.id','=','job_associate_candidates.job_id');
         $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
-        $query = $query->select('job_openings.posting_title','client_basicinfo.name as cname',\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.city','job_openings.state','job_openings.country','job_associate_candidates.date as date','job_openings.remote_working as remote_working');
+        $query = $query->select('job_openings.posting_title','client_basicinfo.name as cname',\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.city','job_openings.state','job_openings.country','job_associate_candidates.date as date','job_openings.remote_working as remote_working','job_associate_candidates.candidate_id as cid','job_openings.id as job_id');
         $query = $query->where('job_associate_candidates.associate_by',$user_id);
 
         if ($date == NULL) {
@@ -84,16 +97,19 @@ class JobAssociateCandidates extends Model
             $response['associate_data'][$i]['posting_title'] = $value1->posting_title;
             $response['associate_data'][$i]['company'] = $value1->cname;
 
-            $location ='';
-            if($value1->city!=''){
+            $location = '';
+
+            if($value1->city!='') {
                 $location .= $value1->city;
             }
+
             if($value1->state!='') {
                 if($location=='')
                     $location .= $value1->state;
                 else
                     $location .= ", ".$value1->state;
             }
+
             if($value1->country!='') {
                 if($location=='')
                     $location .= $value1->country;
@@ -102,20 +118,32 @@ class JobAssociateCandidates extends Model
             }
 
             if($value1->remote_working == '1') {
-
                 $city = "Remote";
             }
             else {
-
                 $city = $location;
             }
 
             $response['associate_data'][$i]['location'] = $city;
             $response['associate_data'][$i]['associate_candidate_count'] = $value1->count;
             $response['associate_data'][$i]['status'] = 'CVs sent';
+            $response['associate_data'][$i]['cid'] = $value1->cid;
+            $response['associate_data'][$i]['job_id'] = $value1->job_id;
             $i++;
         }
         $response['cvs_cnt'] = $cnt;
+
+        if($cnt == 1) {
+            
+            $candidate_resume = CandidateUploadedResume::getCandidateFormattedResume($value1->cid);
+
+            if($candidate_resume != '') {
+                $response['candidate_resume'] = $candidate_resume;
+            }
+        }
+        else {
+            $response['candidate_resume'] = '';
+        }
         return $response;   
     }
 

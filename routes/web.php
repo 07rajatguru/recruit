@@ -3646,6 +3646,17 @@ Route::group(['middleware' => ['auth']], function () {
 
     // Work Planning Comment Section End
 
+    // Work Planning Daily Activity Start
+
+    Route::get('candidate-list/{uid}/{job_id}/{date}', [
+        'as' => 'workplanning.candidatelist',
+        'uses' => 'WorkPlanningController@candidateList',
+        'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
+    ]);
+
+    // Work Planning Daily Activity End
+
+
     // Work From Home Routes Start
 
     Route::any('work-from-home',[

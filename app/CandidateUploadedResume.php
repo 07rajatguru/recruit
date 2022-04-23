@@ -21,4 +21,21 @@ class CandidateUploadedResume extends Model
 
       return $candidate_attach_res;
    }
+
+   public static function getCandidateFormattedResume($candidate_id) {
+
+      $query = CandidateUploadedResume::query();
+      $query = $query->select('candidate_uploaded_resume.file');
+      $query = $query->where('candidate_id','=',$candidate_id);
+      $query = $query->where('file_type','=','Candidate Formatted Resume');
+      $response = $query->first();
+
+      if(isset($response) && $response != '') {
+         $candidate_resume = $response->file;
+      }
+      else {
+         $candidate_resume = '';
+      }
+      return $candidate_resume;
+   }
 }
