@@ -220,7 +220,7 @@ class JobOpenController extends Controller
         $year1 = $year_data[0]; // [result : 2019-4]
         $year2 = $year_data[1]; // [result : 2020-3]
         $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
-        $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+        $next_year = date('Y-m-d 23:59:59',strtotime("last day of $year2"));
 
         // Get Client Heirarchy
         if (isset($_POST['client_heirarchy']) && $_POST['client_heirarchy'] != '') {
@@ -485,7 +485,7 @@ class JobOpenController extends Controller
             $year1 = $year_data[0]; // [result : 2019-4]
             $year2 = $year_data[1]; // [result : 2020-3]
             $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
-            $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+            $next_year = date('Y-m-d 23:59:59',strtotime("last day of $year2"));
 
             $financial_year = date('F-Y',strtotime("$current_year")) . " to " . date('F-Y',strtotime("$next_year"));
         }
@@ -550,7 +550,7 @@ class JobOpenController extends Controller
             $year1 = $year_data[0]; // [result : 2019-4]
             $year2 = $year_data[1]; // [result : 2020-3]
             $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
-            $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+            $next_year = date('Y-m-d 23:59:59',strtotime("last day of $year2"));
 
             $financial_year = date('F-Y',strtotime("$current_year")) . " to " . date('F-Y',strtotime("$next_year"));
         }
@@ -615,7 +615,7 @@ class JobOpenController extends Controller
             $year1 = $year_data[0];
             $year2 = $year_data[1];
             $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
-            $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+            $next_year = date('Y-m-d 23:59:59',strtotime("last day of $year2"));
 
             $financial_year = date('F-Y',strtotime("$current_year")) . " to " . date('F-Y',strtotime("$next_year"));
         }
@@ -681,7 +681,7 @@ class JobOpenController extends Controller
             $year1 = $year_data[0];
             $year2 = $year_data[1];
             $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
-            $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+            $next_year = date('Y-m-d 23:59:59',strtotime("last day of $year2"));
 
             $financial_year = date('F-Y',strtotime("$current_year")) . " to " . date('F-Y',strtotime("$next_year"));
         }
@@ -982,7 +982,7 @@ class JobOpenController extends Controller
                 $year1 = $year_data[0];
                 $year2 = $year_data[1];
                 $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
-                $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+                $next_year = date('Y-m-d 23:59:59',strtotime("last day of $year2"));
             }
             else {
                 $year = NULL;
@@ -3935,7 +3935,7 @@ class JobOpenController extends Controller
         $year1 = $year_data[0];
         $year2 = $year_data[1]; 
         $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
-        $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+        $next_year = date('Y-m-d 23:59:59',strtotime("last day of $year2"));
 
         // For salary wise count
 
@@ -4096,7 +4096,7 @@ class JobOpenController extends Controller
         $year1 = $year_data[0];
         $year2 = $year_data[1];
         $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
-        $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+        $next_year = date('Y-m-d 23:59:59',strtotime("last day of $year2"));
         
         $order_column_name = self::getJobOrderColumnName($order);
 
@@ -5687,7 +5687,7 @@ class JobOpenController extends Controller
         $year1 = $year_data[0];
         $year2 = $year_data[1];
         $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
-        $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+        $next_year = date('Y-m-d 23:59:59',strtotime("last day of $year2"));
 
         // Get Client Heirarchy
         if (isset($_POST['client_heirarchy']) && $_POST['client_heirarchy'] != '') {
@@ -5906,7 +5906,7 @@ class JobOpenController extends Controller
         $year1 = $year_data[0];
         $year2 = $year_data[1]; 
         $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
-        $next_year = date('Y-m-d h:i:s',strtotime("last day of $year2"));
+        $next_year = date('Y-m-d 23:59:59',strtotime("last day of $year2"));
 
         // For salary wise count
 
