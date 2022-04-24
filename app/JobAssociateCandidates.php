@@ -129,21 +129,19 @@ class JobAssociateCandidates extends Model
             $response['associate_data'][$i]['status'] = 'CVs sent';
             $response['associate_data'][$i]['cid'] = $value1->cid;
             $response['associate_data'][$i]['job_id'] = $value1->job_id;
+
+            // Get Candidate Resume
+            $candidate_resume = CandidateUploadedResume::getCandidateFormattedResume($value1->cid);
+            if($candidate_resume != '') {
+                $response['associate_data'][$i]['candidate_resume'] = $candidate_resume;
+            }
+            else {
+                $response['associate_data'][$i]['candidate_resume'] = '';
+            }
             $i++;
         }
+        
         $response['cvs_cnt'] = $cnt;
-
-        if($cnt == 1) {
-            
-            $candidate_resume = CandidateUploadedResume::getCandidateFormattedResume($value1->cid);
-
-            if($candidate_resume != '') {
-                $response['candidate_resume'] = $candidate_resume;
-            }
-        }
-        else {
-            $response['candidate_resume'] = '';
-        }
         return $response;   
     }
 

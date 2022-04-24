@@ -311,8 +311,8 @@
                                 @foreach($associate_daily as $key => $value)
                                     <tr>
                                         <td>
-                                            @if(isset($associate_count) && $associate_count == 1)
-                                                <a href="/{{ $candidate_resume }}" target="_blank">CV</a>
+                                            @if(isset($value['associate_candidate_count']) && $value['associate_candidate_count'] == 1)
+                                                <a href="/{{ $value['candidate_resume'] }}" target="_blank">CV</a>
                                             @else
                                                 <a href="/candidate-list/{{ $added_by_id }}/{{ $value['job_id'] }}/{{ $added_date }}" target="_blank">Candidate List</a>
                                             @endif

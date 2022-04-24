@@ -965,7 +965,6 @@ class WorkPlanningController extends Controller
         $associate_res = JobAssociateCandidates::getDailyReportAssociate($added_by_id,$added_date);
         $associate_daily = $associate_res['associate_data'];
         $associate_count = $associate_res['cvs_cnt'];
-        $candidate_resume = $associate_res['candidate_resume'];
 
         // Get Leads with count
         $leads = Lead::getDailyReportLeads($added_by_id,$added_date);
@@ -978,7 +977,7 @@ class WorkPlanningController extends Controller
         // Get users reports
         $user_details = User::getAllDetailsByUserID($added_by_id);
 
-        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','wp_id','loggedin_user_id','added_by_id','appr_rejct_by','work_planning_post','added_date','associate_daily','associate_count','candidate_resume','leads_daily','lead_count','interview_daily','interview_count','user_details','added_day'));
+        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','wp_id','loggedin_user_id','added_by_id','appr_rejct_by','work_planning_post','added_date','associate_daily','associate_count','leads_daily','lead_count','interview_daily','interview_count','user_details','added_day'));
     }
 
     public function candidateList($uid,$job_id,$date) {
