@@ -2028,12 +2028,29 @@ class EveryMinute extends Command
                 $work_planning_list = WorkPlanningList::getWorkPlanningList($value['module_id']);
                 $work_planning_post = WorkPlanningPost::getWorkPlanningPostList($value['module_id']);
 
+                $loggedin_time = $work_planning['loggedin_time'];
+                $loggedout_time = $work_planning['loggedout_time'];
+                $work_planning_time = $work_planning['work_planning_time'];
+                $work_planning_status_time = $work_planning['work_planning_status_time'];
+
                 $today_date = $work_planning['added_date'];
                 $report_delay = $work_planning['report_delay'];
                 $report_delay_content = $work_planning['report_delay_content'];
                 $link = $work_planning['link'];
                 $total_projected_time = $work_planning['total_projected_time'];
                 $total_actual_time = $work_planning['total_actual_time'];
+
+                $input['loggedin_time'] = $loggedin_time;
+                $input['loggedout_time'] = $loggedout_time;
+                $input['work_planning_time'] = $work_planning_time;
+                $input['work_planning_status_time'] = $work_planning_status_time;
+
+                if($work_planning_status_time == '') {
+                    $input['work_planning_status_time'] = "-";
+                }
+                else {
+                    $input['work_planning_status_time'] = $work_planning_status_time;
+                }
 
                 $input['today_date'] = $today_date;
                 $input['report_delay'] = $report_delay;

@@ -13,6 +13,10 @@
                 <b><p style="text-align: left;">Dear Sir/Madam,</p></b>
                 <i><p style="text-align: left;">Greetings !</p></i>
 
+                @if(isset($module) && $module == 'Work Planning')
+                    <p>Login time: {{ $loggedin_time }}  | WP time: {{ $work_planning_time }}  | Logout Time: {{ $loggedout_time }}  | WP Status Time : {{ $work_planning_status_time }}  |  <a style="color: blue;" formtarget="_blank" href="{{getenv('APP_URL').'/work-planning/'.$module_id.'/show'}}">Approve / Reject</a></p>
+                @endif
+
                 @if(isset($report_delay) && $report_delay != '')
                     <p style="text-align: left;">
                         @if(isset($report_delay_content) && $report_delay_content != '')
@@ -163,20 +167,6 @@
                 <p style="font-family:Cambria, serif;font-size: 11.0pt;text-align: left;">Thanks.</p>
             </td>
         </tr>
-        @if(isset($module) && $module == 'Work Planning')
-            <tr>
-                <td width="800">
-                    <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 0px 50px 54px;">
-                        <tr>
-                            <td align="center" style="padding: 0px;">
-                                <a style="border: black; background-color: skyblue;color: white;padding: 10px 20px 10px 20px; border-radius: 50px;font-size: 15px;width: 59%;text-decoration: none;" class="btn btn-primary" formtarget="_blank" href="{{getenv('APP_URL').'/work-planning/'.$module_id.'/show'}}">Approve / Reject
-                                </a>
-                            </td>
-                        </tr>
-                    </table>
-                </td>
-            </tr>
-        @endif
         <tr>
             <td width="800">
                 <table width="100%" cellpadding="0" cellspacing="0" style="border:0;">
