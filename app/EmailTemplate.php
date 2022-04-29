@@ -27,10 +27,16 @@ class EmailTemplate extends Model
     	return $email_template;
     }
 
-    public static function getAllEmailTemplateNames() {
+    public static function getAllEmailTemplateNames($user_id) {
 
         $query = EmailTemplate::query();
+        $query = $query->leftjoin('email_template_visible_users','email_template_visible_users.email_template_id','=','email_template.id');
         $query = $query->select('email_template.*');
+
+        if(isset($user_id) && $user_id != 0) {
+            $query = $query->where('email_template_visible_users.user_id','=',$user_id);
+        }
+
         $query = $query->orderBy('id','desc');
         $response = $query->get();
 

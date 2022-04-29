@@ -111,7 +111,7 @@ class ClientController extends Controller
 
         $all_account_manager[0] = 'Yet to Assign';
 
-        $email_template_names = EmailTemplate::getAllEmailTemplateNames();
+        $email_template_names = EmailTemplate::getAllEmailTemplateNames($user_id);
 
         // Get clients for popup of add information
         $client_name_string = ClientBasicinfo::getBefore7daysClientDetails($user_id);
@@ -436,7 +436,7 @@ class ClientController extends Controller
             }
         }
 
-        $email_template_names = EmailTemplate::getAllEmailTemplateNames();
+        $email_template_names = EmailTemplate::getAllEmailTemplateNames($user->id);
 
         $users_array = User::getAllUsers(NULL,'Yes');
         $all_account_manager = array();
@@ -3219,7 +3219,7 @@ class ClientController extends Controller
 
         $all_account_manager[0] = 'Yet to Assign';
 
-        $email_template_names = EmailTemplate::getAllEmailTemplateNames();
+        $email_template_names = EmailTemplate::getAllEmailTemplateNames($user_id);
 
         // Get clients for popup of add information
         $client_name_string = ClientBasicinfo::getBefore7daysClientDetails($user_id);
@@ -3544,7 +3544,7 @@ class ClientController extends Controller
             }
         }
 
-        $email_template_names = EmailTemplate::getAllEmailTemplateNames();
+        $email_template_names = EmailTemplate::getAllEmailTemplateNames($user->id);
 
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
