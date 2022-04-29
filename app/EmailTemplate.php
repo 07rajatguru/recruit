@@ -30,14 +30,13 @@ class EmailTemplate extends Model
     public static function getAllEmailTemplateNames($user_id) {
 
         $saloni_user_id = getenv('SALONIUSERID');
-        $ids_array = array($user_id,$saloni_user_id);
 
         $query = EmailTemplate::query();
         $query = $query->leftjoin('email_template_visible_users','email_template_visible_users.email_template_id','=','email_template.id');
         $query = $query->select('email_template.*');
 
-        if(isset($user_id) && $user_id != 0) {
-            $query = $query->whereIn('email_template_visible_users.user_id',$ids_array);
+        if(isset($user_id) && $user_id != 0 && $user_id != $saloni_user_id) {
+            $query = $query->where('email_template_visible_users.user_id','=',$user_id);
         }
 
         $query = $query->orderBy('id','desc');
