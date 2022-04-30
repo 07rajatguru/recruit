@@ -198,6 +198,9 @@ class ContactsphereController extends Controller
         $allclientvisibleuserid = getenv('ALLCLIENTVISIBLEUSERID');
         $allclientvisibleuseremail = User::getUserEmailById($allclientvisibleuserid);
 
+        $jenny_user_id = getenv('JENNYUSERID');
+        $allclientvisibleuseremail = User::getUserEmailById($jenny_user_id);
+
         $referred_by_email = User::getUserEmailById($referred_by_id);
 
         $cc_users_array = array($superadminemail,$allclientvisibleuseremail,$referred_by_email);
@@ -344,6 +347,9 @@ class ContactsphereController extends Controller
         $allclientvisibleuserid = getenv('ALLCLIENTVISIBLEUSERID');
         $allclientvisibleuseremail = User::getUserEmailById($allclientvisibleuserid);
 
+        $jenny_user_id = getenv('JENNYUSERID');
+        $allclientvisibleuseremail = User::getUserEmailById($jenny_user_id);
+
         $referred_by_email = User::getUserEmailById($referred_by_id);
 
         $cc_users_array = array($superadminemail,$allclientvisibleuseremail,$referred_by_email);
@@ -392,6 +398,9 @@ class ContactsphereController extends Controller
 
         $allclientvisibleuserid = getenv('ALLCLIENTVISIBLEUSERID');
         $allclientvisibleuseremail = User::getUserEmailById($allclientvisibleuserid);
+
+        $jenny_user_id = getenv('JENNYUSERID');
+        $allclientvisibleuseremail = User::getUserEmailById($jenny_user_id);
 
         $referred_by_email = User::getUserEmailById($referred_by_id);
 
@@ -538,6 +547,9 @@ class ContactsphereController extends Controller
         $allclientvisibleuserid = getenv('ALLCLIENTVISIBLEUSERID');
         $allclientvisibleuseremail = User::getUserEmailById($allclientvisibleuserid);
 
+        $jenny_user_id = getenv('JENNYUSERID');
+        $allclientvisibleuseremail = User::getUserEmailById($jenny_user_id);
+
         $referred_by_email = User::getUserEmailById($referred_by_id);
 
         $cc_users_array = array($superadminemail,$allclientvisibleuseremail,$referred_by_email);
@@ -631,6 +643,10 @@ class ContactsphereController extends Controller
 
         $superadminemail = User::getUserEmailById($superadminuserid);
         $allclientvisibleuseremail = User::getUserEmailById($allclientvisibleuserid);
+
+        $jenny_user_id = getenv('JENNYUSERID');
+        $allclientvisibleuseremail = User::getUserEmailById($jenny_user_id);
+
         $referred_by_email = User::getUserEmailById($referred_by);
 
         $cc_users_array = array($superadminemail,$allclientvisibleuseremail,$referred_by_email);
@@ -833,6 +849,10 @@ class ContactsphereController extends Controller
 
         $superadminemail = User::getUserEmailById($superadminuserid);
         $allclientvisibleuseremail = User::getUserEmailById($allclientvisibleuserid);
+
+        $jenny_user_id = getenv('JENNYUSERID');
+        $allclientvisibleuseremail = User::getUserEmailById($jenny_user_id);
+        
         $referredby_email = User::getUserEmailById($referredby_id);
 
         $cc_users_array = array($superadminemail,$allclientvisibleuseremail,$referredby_email);

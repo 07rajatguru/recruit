@@ -1664,8 +1664,11 @@ class ClientController extends Controller
             $super_admin_userid = getenv('SUPERADMINUSERID');
             $superadminemail = User::getUserEmailById($super_admin_userid);
 
-            $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
-            $all_client_user_email = User::getUserEmailById($all_client_user_id);
+            /*$all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+            $all_client_user_email = User::getUserEmailById($all_client_user_id);*/
+
+            $jenny_user_id = getenv('JENNYUSERID');
+            $all_client_user_email = User::getUserEmailById($jenny_user_id);
 
             $user_id = \Auth::user()->id;
             $user_name = \Auth::user()->name;
@@ -1732,6 +1735,10 @@ class ClientController extends Controller
         $old_secondline_account_manager = $client_basicinfo->second_line_am;
         $new_secondline_account_manager = $input->second_line_am;
 
+        // Check Status is changed or not
+        $old_status = $client_basicinfo->status;
+        $new_status = $input->status;
+
         $client_basicinfo->name = trim($input->name);
         $client_basicinfo->display_name = trim($input->display_name);
         $client_basicinfo->mobile = $input->mobile;
@@ -1761,11 +1768,10 @@ class ClientController extends Controller
         }
 
         $client_basicinfo->industry_id = $input->industry_id;
-        $status = $input->status;
-        $client_basicinfo->status = $status;
+        $client_basicinfo->status = $new_status;
 
         // save passive date for passive client
-        if($status == '0') {
+        if($new_status == '0') {
             $today_date = date('Y-m-d'); 
             $client_basicinfo->passive_date = $today_date;
         }
@@ -1906,8 +1912,11 @@ class ClientController extends Controller
                 $super_admin_userid = getenv('SUPERADMINUSERID');
                 $superadminemail = User::getUserEmailById($super_admin_userid);
 
-                $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
-                $all_client_user_email = User::getUserEmailById($all_client_user_id);
+                /*$all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+                $all_client_user_email = User::getUserEmailById($all_client_user_id);*/
+
+                $jenny_user_id = getenv('JENNYUSERID');
+                $all_client_user_email = User::getUserEmailById($jenny_user_id);
 
                 if ($input->account_manager != '0') {
 
@@ -1942,8 +1951,11 @@ class ClientController extends Controller
                 $super_admin_userid = getenv('SUPERADMINUSERID');
                 $superadminemail = User::getUserEmailById($super_admin_userid);
 
-                $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
-                $all_client_user_email = User::getUserEmailById($all_client_user_id);
+                /*$all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+                $all_client_user_email = User::getUserEmailById($all_client_user_id);*/
+
+                $jenny_user_id = getenv('JENNYUSERID');
+                $all_client_user_email = User::getUserEmailById($jenny_user_id);
 
                 // Get Account Manager Id
 
@@ -1994,40 +2006,49 @@ class ClientController extends Controller
                 $client_timeline->save();
             }
 
-            if($status == '3') {
+            if($old_status == $new_status) {
 
-                // Forbid Client Email Notifications : On change status of client as forbid
-                $module_id = $id;
-                $module = 'Forbid Client';
-                $link = route('client.show',$id);
-                $subject = "Forbid Client - " . $input->name . " - " . $input->billing_city;
-                $message = "<tr><td>" . $input->name . " Convert as forbid Client </td></tr>";
-                $sender_name = $user_id;
+            }
+            else {
 
-                $super_admin_userid = getenv('SUPERADMINUSERID');
-                $superadminemail = User::getUserEmailById($super_admin_userid);
+                if($new_status == '3') {
 
-                $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
-                $all_client_user_email = User::getUserEmailById($all_client_user_id);
+                    // Forbid Client Email Notifications : On change status of client as forbid
+                    $module_id = $id;
+                    $module = 'Forbid Client';
+                    $link = route('client.show',$id);
+                    $subject = "Forbid Client - " . $input->name . " - " . $input->billing_city;
+                    $message = "<tr><td>" . $input->name . " Convert as forbid Client </td></tr>";
+                    $sender_name = $user_id;
 
-                $account_manager_id = $input->account_manager;
+                    $super_admin_userid = getenv('SUPERADMINUSERID');
+                    $superadminemail = User::getUserEmailById($super_admin_userid);
 
-                if ($account_manager_id != '0') {
+                    /*$all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+                    $all_client_user_email = User::getUserEmailById($all_client_user_id);*/
 
-                    $to = $superadminemail;
-                    $account_manager_email = User::getUserEmailById($account_manager_id);
-                    $cc_users_array = array($all_client_user_email,$account_manager_email);
-                    $cc = implode(",",$cc_users_array);
+                    $jenny_user_id = getenv('JENNYUSERID');
+                    $all_client_user_email = User::getUserEmailById($jenny_user_id);
+
+                    $account_manager_id = $input->account_manager;
+
+                    if ($account_manager_id != '0') {
+
+                        $to = $superadminemail;
+                        $account_manager_email = User::getUserEmailById($account_manager_id);
+                        $cc_users_array = array($all_client_user_email,$account_manager_email);
+                        $cc = implode(",",$cc_users_array);
+                    }
+                    else {
+
+                        $to = $superadminemail;
+                        $cc = $all_client_user_email;
+                    }
+
+                    \DB::statement("UPDATE job_openings SET priority = '4' where client_id = $id");
+
+                    event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
                 }
-                else {
-
-                    $to = $superadminemail;
-                    $cc = $all_client_user_email;
-                }
-
-                \DB::statement("UPDATE job_openings SET priority = '4' where client_id = $id");
-
-                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
             }
 
             // Upload attchments
@@ -2249,8 +2270,11 @@ class ClientController extends Controller
         $super_admin_userid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($super_admin_userid);
 
-        $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
-        $all_client_user_email = User::getUserEmailById($all_client_user_id);
+        /*$all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+        $all_client_user_email = User::getUserEmailById($all_client_user_id);*/
+
+        $jenny_user_id = getenv('JENNYUSERID');
+        $all_client_user_email = User::getUserEmailById($jenny_user_id);
 
         if ($account_manager_id != '0') {
 
@@ -2333,8 +2357,11 @@ class ClientController extends Controller
         $super_admin_userid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($super_admin_userid);
 
-        $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
-        $all_client_user_email = User::getUserEmailById($all_client_user_id);
+        /*$all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+        $all_client_user_email = User::getUserEmailById($all_client_user_id);*/
+
+        $jenny_user_id = getenv('JENNYUSERID');
+        $all_client_user_email = User::getUserEmailById($jenny_user_id);
 
         // Get Account Manager Id
 
@@ -2480,8 +2507,11 @@ class ClientController extends Controller
         $super_admin_userid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($super_admin_userid);
 
-        $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
-        $all_client_user_email = User::getUserEmailById($all_client_user_id);
+        /*$all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+        $all_client_user_email = User::getUserEmailById($all_client_user_id);*/
+
+        $jenny_user_id = getenv('JENNYUSERID');
+        $all_client_user_email = User::getUserEmailById($jenny_user_id);
 
         if ($account_manager != '0') {
 
@@ -2553,8 +2583,11 @@ class ClientController extends Controller
         $super_admin_userid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($super_admin_userid);
 
-        $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
-        $all_client_user_email = User::getUserEmailById($all_client_user_id);
+        /*$all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+        $all_client_user_email = User::getUserEmailById($all_client_user_id);*/
+
+        $jenny_user_id = getenv('JENNYUSERID');
+        $all_client_user_email = User::getUserEmailById($jenny_user_id);
 
         // Get Account Manager Id
 

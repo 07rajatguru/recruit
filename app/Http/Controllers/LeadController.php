@@ -496,7 +496,8 @@ class LeadController extends Controller
         $superadminemail = User::getUserEmailById($superadminuserid);
 
         //$strategyuserid = getenv('STRATEGYUSERID');
-        $strategyuserid = getenv('ALLCLIENTVISIBLEUSERID');
+        //$strategyuserid = getenv('ALLCLIENTVISIBLEUSERID');
+        $strategyuserid = getenv('JENNYUSERID');
         
         $strategyemail = User::getUserEmailById($strategyuserid);
         $referredby_email = User::getUserEmailById($referredby_id);
@@ -599,8 +600,10 @@ class LeadController extends Controller
         $user_id = $user->id;
         $user_email = $user->email;
         $superadminuserid = getenv('SUPERADMINUSERID');
+
         //$strategyuserid = getenv('STRATEGYUSERID');
-        $strategyuserid = getenv('ALLCLIENTVISIBLEUSERID');
+        //$strategyuserid = getenv('ALLCLIENTVISIBLEUSERID');
+        $strategyuserid = getenv('JENNYUSERID');
 
         $superadminemail = User::getUserEmailById($superadminuserid);
         $strategyemail = User::getUserEmailById($strategyuserid);
@@ -1108,10 +1111,11 @@ class LeadController extends Controller
 
             // Email Notification : data store in datebase
             //$strategyuserid = getenv('STRATEGYUSERID');
-            $all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+            //$all_client_user_id = getenv('ALLCLIENTVISIBLEUSERID');
+            $jenny_user_id = getenv('JENNYUSERID');
             
             $superadminemail = User::getUserEmailById($super_admin_userid);
-            $all_client_user_email = User::getUserEmailById($all_client_user_id);
+            $all_client_user_email = User::getUserEmailById($jenny_user_id);
             //$referredby_email = User::getUserEmailById($referredby_id);
             $account_manager_email = User::getUserEmailById($account_manager_id);
 
