@@ -2814,21 +2814,21 @@ class HomeController extends Controller
             else if ($value['module'] == 'Passive Client List') {
 
                 $to_array = explode(",",$input['to']);
-                $cc_array = explode(",",$input['cc']);
+                //$cc_array = explode(",",$input['cc']);
 
-                $user_id = $value['module_id'];
+                //$user_id = $value['module_id'];
 
-                $client_res = ClientBasicinfo::getPassiveClients($user_id);
+                $client_res = ClientBasicinfo::getPassiveClients();
                 $clients_count = sizeof($client_res);
                 
                 $input['client_res'] = $client_res;
                 $input['clients_count'] = $clients_count;
                 $input['to_array'] = array_unique($to_array);
-                $input['cc_array'] = array_unique($cc_array);
+                //$input['cc_array'] = array_unique($cc_array);
 
                 \Mail::send('adminlte::emails.PassiveClients', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
+                    $message->to($input['to_array'])->subject($input['subject']);
                 });
 
                 \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");

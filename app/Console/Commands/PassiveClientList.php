@@ -40,7 +40,7 @@ class PassiveClientList extends Command
      */
     public function handle()
     {
-        $recruitment = getenv('RECRUITMENT');
+        /*$recruitment = getenv('RECRUITMENT');
         $users = User::getAllUsersEmails($recruitment);
     
         foreach ($users as $k1 => $v1) {
@@ -72,6 +72,31 @@ class PassiveClientList extends Command
 
                 event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
             }
+        }*/
+
+        // Get Passive clients of last week
+
+        $client_res = ClientBasicinfo::getPassiveClients();
+
+        if (isset($client_res) && sizeof($client_res)>0) {
+
+            $superadminuserid = getenv('SUPERADMINUSERID');
+            $super_admin_email = 'rajlalwani@adlertalent.com';
+
+            $jenny_user_id = getenv('JENNYUSERID');
+            $all_client_user_email = User::getUserEmailById($jenny_user_id);
+
+            $to_array = array($super_admin_email,$all_client_user_email);
+
+            $module = "Passive Client List";
+            $sender_name = $superadminuserid;
+            $subject = 'List of Passive Clients';
+            $message = "";
+            $to = implode(",",$to_array);
+            $cc = "";
+            $module_id = "";
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         }
     }
 }
