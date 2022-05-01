@@ -37,6 +37,7 @@ use App\LateInEarlyGo;
 use App\Holidays;
 use App\WorkFromHome;
 use App\SpecifyHolidays;
+use App\MonthwiseLeaveBalance;
 
 class EveryMinute extends Command
 {
@@ -2713,6 +2714,27 @@ class EveryMinute extends Command
                     
                         $message->from($input['from_address'], $input['from_name']);
                         $message->to($input['to'])->cc($input['cc_array'])->bcc($input['owner_email'])->subject($input['subject']);
+                    });
+
+                    \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
+                }
+            }
+
+            else if ($value['module'] == 'Leave Balance') {
+
+                $month = date('m');
+                $year = date('Y'); 
+
+                $balance_array = MonthwiseLeaveBalance::getMonthWiseLeaveBalance($year,$month);
+
+                if(isset($balance_array) && $balance_array != '') {
+
+                    $input['balance_array'] = $balance_array;
+
+                     \Mail::send('adminlte::emails.leavebalance', $input, function ($message) use($input) {
+                    
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to'])->subject($input['subject']);
                     });
 
                     \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
