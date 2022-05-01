@@ -193,6 +193,9 @@
                                                     $get_cur_month = date('m');
                                                     $get_cur_yr = date('Y');
 
+                                                    $today_date = date('Y-m-d');   
+                                                    $today_day = date('l',strtotime($today_date));
+
                                                     //$user_id = App\User::getUserIdByBothName($user_name);
 
                                                     //$user_holidays = App\Holidays::getHolidaysByUserID($user_id,$month,$year);
@@ -255,12 +258,19 @@
                                                         $kk = $kk-1;
 
                                                         if($kk==$jj) {
-                                                            $attendance = 'A';
-                                                            $jj++;
-                                                            $kk++;
+
+                                                            if($today_day == 'Sunday') {
+                                                                $attendance = 'H';
+                                                                $jj=0;
+                                                                $kk=0;
+                                                            }
+                                                            else {
+                                                                $attendance = 'A';
+                                                                $jj++;
+                                                                $kk++;
+                                                            }
                                                         }
                                                         else {
-
                                                             $attendance = 'H';
                                                             $jj=0;
                                                             $kk=0;

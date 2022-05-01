@@ -25,10 +25,10 @@ class MonthwiseLeaveBalance extends Model
             foreach ($response as $key => $value) {
 
                 $user_id = $value->user_id;
-                $useer_info = User::getProfileInfo($user_id);
+                $user_info = User::getProfileInfo($user_id);
 
                 $leave_balance_data[$user_id]['id'] = $value->id;
-                $leave_balance_data[$user_id]['user_name'] = $useer_info->first_name . " " . $useer_info->last_name;
+                $leave_balance_data[$user_id]['user_name'] = $user_info->first_name . " " . $user_info->last_name;
                 
                 $leave_balance_data[$user_id]['pl_total'] = $value->pl_total;
                 $leave_balance_data[$user_id]['pl_taken'] = $value->pl_taken;
@@ -59,5 +59,37 @@ class MonthwiseLeaveBalance extends Model
         $response = $query->first();
 
         return $response;
+    }
+
+    public static function getAllMonthLeaveBalanceByUserId($user_id) {
+
+        $query = MonthwiseLeaveBalance::query();
+        $query = $query->where('monthwise_leave_balance.user_id','=',$user_id);
+        $query = $query->select('monthwise_leave_balance.*',\DB::raw("SUM(monthwise_leave_balance.pl_total) as pl_total"),\DB::raw("SUM(monthwise_leave_balance.pl_taken) as pl_taken"),\DB::raw("SUM(monthwise_leave_balance.pl_remaining) as pl_remaining"),\DB::raw("SUM(monthwise_leave_balance.sl_total) as sl_total"),\DB::raw("SUM(monthwise_leave_balance.sl_taken) as sl_taken"),\DB::raw("SUM(monthwise_leave_balance.sl_remaining) as sl_remaining"));
+        $query = $query->orderBy('monthwise_leave_balance.user_id','desc');
+        $query = $query->groupBy('monthwise_leave_balance.user_id');
+        $response = $query->get();
+
+        $leave_balance_data = array();
+
+        if(isset($response) && sizeof($response) > 0) {
+
+            foreach ($response as $key => $value) {
+
+                $user_info = User::getProfileInfo($user_id);
+
+                $leave_balance_data['id'] = $value->id;
+                $leave_balance_data['user_name'] = $user_info->first_name . " " . $user_info->last_name;
+                
+                $leave_balance_data['pl_total'] = $value->pl_total;
+                $leave_balance_data['pl_taken'] = $value->pl_taken;
+                $leave_balance_data['pl_remaining'] = $value->pl_remaining;
+
+                $leave_balance_data['sl_total'] = $value->sl_total;
+                $leave_balance_data['sl_taken'] = $value->sl_taken;
+                $leave_balance_data['sl_remaining'] = $value->sl_remaining;
+            }
+        }
+        return $leave_balance_data;
     }
 }

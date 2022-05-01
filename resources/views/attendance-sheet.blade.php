@@ -274,6 +274,9 @@
                                 	$get_cur_dt = date('d');
                                     $get_cur_month = date('m');
                                     $get_cur_yr = date('Y');
+                                    
+                                    $today_date = date('Y-m-d');   
+                                    $today_day = date('l',strtotime($today_date));
 
                                     $joining_date_array = explode('/', $joining_date);
 
@@ -331,10 +334,18 @@
 
                                         $kk = $kk-1;
 
-                                        if($kk==$jj) {
-                                            $attendance = 'A';
-                                            $jj++;
-                                            $kk++;
+                                        if($kk == $jj) {
+
+                                            if($today_day == 'Sunday') {
+                                                $attendance = 'H';
+                                                $jj=0;
+                                                $kk=0;
+                                            }
+                                            else {
+                                                $attendance = 'A';
+                                                $jj++;
+                                                $kk++;
+                                            }
                                         }
                                         else {
                                             $attendance = 'H';

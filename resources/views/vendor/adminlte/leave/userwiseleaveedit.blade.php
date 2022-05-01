@@ -132,11 +132,9 @@
             $("#month").select2();
             $("#year").select2();
 
-            jQuery(document).on('focus', '.select2', function() {
-				
-				jQuery(this).siblings('select').select2('open');
-
-			});
+            $('#user_id option:not(:selected)').prop('disabled', true);
+            $('#month option:not(:selected)').prop('disabled', true);
+            $('#year option:not(:selected)').prop('disabled', true);
 
             $("#user_leave_data").validate({
                 rules: {
