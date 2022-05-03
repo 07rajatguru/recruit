@@ -275,8 +275,8 @@
                                     $get_cur_month = date('m');
                                     $get_cur_yr = date('Y');
                                     
-                                    $today_date = date('Y-m-d');   
-                                    $today_day = date('l',strtotime($today_date));
+                                    $sunday_date = $key2."-0".$month."-".$year;   
+                                    $today_day = date('l',strtotime($sunday_date));
 
                                     $joining_date_array = explode('/', $joining_date);
 
@@ -297,7 +297,13 @@
                                     else if(isset($value2['attendance']) && $value2['attendance'] == 'HD' && isset($value2['privilege_leave']) && $value2['privilege_leave'] == 'Y') {
                                         $attendance = 'HDPL';
                                     }
+                                    else if(isset($value2['attendance']) && $value2['attendance'] == 'P' && isset($value2['privilege_leave']) && $value2['privilege_leave'] == 'Y') {
+                                        $attendance = 'HDPL';
+                                    }
                                     else if(isset($value2['attendance']) && $value2['attendance'] == 'HD' && isset($value2['sick_leave']) && $value2['sick_leave'] == 'Y') {
+                                        $attendance = 'HDSL';
+                                    }
+                                    else if(isset($value2['attendance']) && $value2['attendance'] == 'P' && isset($value2['sick_leave']) && $value2['sick_leave'] == 'Y') {
                                         $attendance = 'HDSL';
                                     }
                                     else if(isset($value2['attendance']) && $value2['attendance'] == 'HD') {
