@@ -193,7 +193,7 @@
                                                     $get_cur_month = date('m');
                                                     $get_cur_yr = date('Y');
 
-                                                    $sunday_date = $key2."-0".$month."-".$year;   
+                                                    $sunday_date = $key2."-".$month."-".$year;   
                                                     $today_day = date('l',strtotime($sunday_date));
 
                                                     //$user_id = App\User::getUserIdByBothName($user_name);
