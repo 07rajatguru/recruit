@@ -881,6 +881,10 @@ class LeaveController extends Controller
                     $work_planning = new WorkPlanning();
                     $work_planning->added_date = $value;
                     $work_planning->added_by = $user_id;
+
+                    if($leave_category == 'LWP') {
+                        $work_planning->attendance = 'A';
+                    }
                     $work_planning->save();
                 }
             }
