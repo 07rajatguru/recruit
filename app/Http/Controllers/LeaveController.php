@@ -76,6 +76,7 @@ class LeaveController extends Controller
             foreach ($floor_reports_id as $key => $value) {
                 $user_ids[] = $key;
             }
+
             $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'');
         }
 

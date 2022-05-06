@@ -58,18 +58,13 @@ class UserLeave extends Model
 
         if ($month != '' && $year != '') {
 
-            $current_month = date('m');
+            $date = $year.'-'.$month.'-01';
 
-            if($month == $current_month) {
+            $first_date = strtotime(date("Y-m-d", strtotime($date)) . ", first day of this month");
+            $last_date = strtotime(date("Y-m-d", strtotime($date)) . ", last day of this month");
 
-                $query = $query->where(\DB::raw('month(user_leave.from_date)'),'=',$month);
-                $query = $query->where(\DB::raw('year(user_leave.from_date)'),'=',$year);
-            }
-            else {
-
-                $query = $query->where(\DB::raw('month(user_leave.to_date)'),'=',$month);
-                $query = $query->where(\DB::raw('year(user_leave.to_date)'),'=',$year);
-            }
+            $query = $query->whereBetween('user_leave.from_date',[$first_date,$last_date]);
+            $query = $query->orwhereBetween('user_leave.to_date',[$first_date,$last_date]);
         }
 
         if (isset($limit) && $limit > 0) {
