@@ -33,6 +33,7 @@ use App\UserBenchMark;
 use App\RolewiseUserBenchmark;
 use App\Holidays;
 use App\HolidaysUsers;
+use App\WorkPlanning;
 
 class UserController extends Controller
 {
@@ -435,6 +436,41 @@ class UserController extends Controller
             }
         }
 
+        // Get All Sunday dates of current month and add in work planning
+
+        $month = date('m');
+        $year = date('Y');
+        $date = "$year-$month-01";
+        $first_day = date('N',strtotime($date));
+        $first_day = 7 - $first_day + 1;
+        $last_day =  date('t',strtotime($date));
+        $sundays = array();
+
+        for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+
+            if($i < 10) {
+                $i = "0$i";
+            }
+            $sundays[] = $i;
+        }
+
+        if(isset($sundays) && sizeof($sundays) > 0) {
+
+            $joining_dt = $dateClass->changeDMYtoYMD($joining_date);
+
+            foreach ($sundays as $k => $v) {
+
+                $sunday_date = "$year-$month-$v";
+
+                if($sunday_date >= $joining_dt) {
+
+                    $work_planning = new WorkPlanning();
+                    $work_planning->added_date = $sunday_date;
+                    $work_planning->added_by = $user_id;
+                    $work_planning->save();
+                }
+            }
+        }
         return redirect()->route('users.index')->with('success','User Added Successfully.');
     }
 

@@ -65,8 +65,8 @@
                 $isClient = $user_obj::isClient($role_id);
                 $superadmin_userid = getenv('SUPERADMINUSERID');
                 $hr_userid = getenv('HRUSERID');
-                $month = date("m");
-                $year = date("Y");
+                $month = date('n');
+                $year = date('Y');
             ?>
                     
             <div class="navbar-custom-menu">
