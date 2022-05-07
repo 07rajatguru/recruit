@@ -876,6 +876,8 @@ class LeaveController extends Controller
                 $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($value,$user_id);
 
                 if(isset($get_work_planning_res) && $get_work_planning_res != '') {
+
+                    \DB::statement("UPDATE `work_planning` SET `attendance` = NULL WHERE `added_date` = '$value' AND `added_by` = $user_id");
                 }
                 else {
 
@@ -885,6 +887,9 @@ class LeaveController extends Controller
 
                     if($leave_category == 'LWP') {
                         $work_planning->attendance = 'A';
+                    }
+                    else {
+                        $work_planning->attendance = NULL;
                     }
                     $work_planning->save();
                 }
