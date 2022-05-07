@@ -1753,6 +1753,17 @@ class JobOpenController extends Controller
                 event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
             }
         }
+
+        // If Client Status is Passive then set it to Active
+        $client = ClientBasicinfo::getClientDetailsById($client_id);
+
+        if(isset($client) && $client != '') {
+
+            if($client['status'] == 'Passive') {
+
+                DB::statement("UPDATE `client_basicinfo` SET `status`='1',`passive_date` = NULL WHERE `id`='$client_id'");
+            }
+        }
         return redirect()->route('jobopen.index')->with('success', 'Job Opening Created Successfully');
     }
 
@@ -2598,6 +2609,17 @@ class JobOpenController extends Controller
             return redirect('jobs/'.$id.'/edit')->with('success','Attachment Uploaded Successfully.');
         }
 
+        // If Client Status is Passive then set it to Active
+        $client = ClientBasicinfo::getClientDetailsById($client_id);
+
+        if(isset($client) && $client != '') {
+
+            if($client['status'] == 'Passive' && $job_priority == '5') {
+
+                DB::statement("UPDATE `client_basicinfo` SET `status`='1',`passive_date` = NULL WHERE `id`='$client_id'");
+            }
+        }
+
         if(isset($year) && $year != '') {
             return redirect()->route('jobopen.close')->with('success', 'Job Opening Updated Successfully.')->with('selected_year',$year);
         }
@@ -3091,6 +3113,17 @@ class JobOpenController extends Controller
                 event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
             }
         }
+
+        // If Client Status is Passive then set it to Active
+        $client = ClientBasicinfo::getClientDetailsById($client_id);
+
+        if(isset($client) && $client != '') {
+
+            if($client['status'] == 'Passive') {
+
+                DB::statement("UPDATE `client_basicinfo` SET `status`='1',`passive_date` = NULL WHERE `id`='$client_id'");
+            }
+        }
         return redirect()->route('jobopen.index')->with('success', 'Job Opening Created Successfully.');
     }
 
@@ -3284,6 +3317,19 @@ class JobOpenController extends Controller
 
             // Candidate Vacancy Details email
             $candidate_vacancy_details = CandidateBasicInfo::candidateAssociatedEmail($value,$user_id,$job_id);
+        }
+
+        // If Client Status is Passive then set it to Active
+        $client = ClientBasicinfo::getClientInfoByJobId($job_id);
+
+        if(isset($client) && $client != '') {
+
+            $client_id = $client['client_id'];
+
+            if($client['status'] == '0') {
+
+                DB::statement("UPDATE `client_basicinfo` SET `status`='1',`passive_date` = NULL WHERE `id`='$client_id'");
+            }
         }
 
         if($title == 'Applicant') {
