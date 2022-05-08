@@ -35,7 +35,7 @@
         <thead>
         <tr>
             <th width="5%">No</th>
-            <th width="10%"><center>Department Name</center></th>
+            <th width="10%"><center>Department <br/> Name</center></th>
             <th width="10%"><center>Role Name</center></th>
             <th><center>No Of <br/> Resumes</center></th>
             <th><center>Shortlist <br/> Ratio</center></th>
@@ -56,7 +56,7 @@
                     
                     <td>{{ ++$i }}</td>
                     <td><center>{{ $value['department_name'] }}</center></td>
-                    <td><center>{{ $value['role_name'] }}</center></td>
+                    <td style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;"><center>{{ $value['role_name'] }}</center></td>
                     <td><center>{{ $value['no_of_resumes'] }}</center></td>
                     <td><center>{{ $value['shortlist_ratio'] }}</center></td>
                     <td><center>{{ $value['interview_ratio'] }}</center></td>
