@@ -12,7 +12,8 @@ class UserBenchMark extends Model
 
     	$query = UserBenchMark::query();
         $query = $query->leftjoin('users','users.id','=','user_bench_mark.user_id');
-        $query = $query->select('user_bench_mark.*','users.name as user_name');
+        $query = $query->leftjoin('department','department.id','=','users.type');
+        $query = $query->select('user_bench_mark.*','users.name as user_name','department.name as department_name');
         $query = $query->orderBy('user_bench_mark.id','desc');
         $response = $query->get();
 
@@ -24,7 +25,8 @@ class UserBenchMark extends Model
         	foreach ($response as $key => $value) {
 
         		$user_bench_mark_array[$i]['id'] = $value->id;
-        		$user_bench_mark_array[$i]['user_name'] = $value->user_name;
+        		$user_bench_mark_array[$i]['department_name'] = $value->department_name;
+                $user_bench_mark_array[$i]['user_name'] = $value->user_name;
         		$user_bench_mark_array[$i]['no_of_resumes'] = $value->no_of_resumes;
         		$user_bench_mark_array[$i]['shortlist_ratio'] = $value->shortlist_ratio;
         		$user_bench_mark_array[$i]['interview_ratio'] = $value->interview_ratio;

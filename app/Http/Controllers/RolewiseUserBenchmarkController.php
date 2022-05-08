@@ -63,7 +63,6 @@ class RolewiseUserBenchmarkController extends Controller
 
     public function edit($id) {
 
-        $bench_mark = RolewiseUserBenchmark::find($id);
         $action = 'edit';
 
         $recruitment = getenv('RECRUITMENT');
@@ -73,6 +72,7 @@ class RolewiseUserBenchmarkController extends Controller
         $type_array = array($recruitment,$hr_advisory,$operations);
         $all_roles = Role::getRolesByDepartment($type_array);
 
+        $bench_mark = RolewiseUserBenchmark::find($id);
         $select_role_id = $bench_mark->role_id;
 
         return view('adminlte::rolewisebenchmark.edit',compact('bench_mark','action','all_roles','select_role_id'));
@@ -107,18 +107,15 @@ class RolewiseUserBenchmarkController extends Controller
 
             foreach ($user_ids_array as $key => $value) {
 
-                DB::statement("UPDATE user_bench_mark SET no_of_resumes = '$no_of_resumes',shortlist_ratio = '$shortlist_ratio',interview_ratio = '$interview_ratio',selection_ratio = '$selection_ratio',offer_acceptance_ratio = '$offer_acceptance_ratio',joining_ratio = '$joining_ratio',after_joining_success_ratio = '$after_joining_success_ratio' WHERE user_id = '$value'");
+                DB::statement("UPDATE `user_bench_mark` SET `no_of_resumes` = '$no_of_resumes',`shortlist_ratio` = '$shortlist_ratio',`interview_ratio` = '$interview_ratio',`selection_ratio` = '$selection_ratio',`offer_acceptance_ratio` = '$offer_acceptance_ratio',`joining_ratio` = '$joining_ratio',`after_joining_success_ratio` = '$after_joining_success_ratio' WHERE `user_id` = '$value'");
             }
         }
-
-
         return redirect()->route('rolewisebenchmark.index')->with('success','Bench Mark Updated Successfully.');
     }
 
     public function destroy($id) {
 
         RolewiseUserBenchmark::where('id',$id)->delete();
-
         return redirect()->route('rolewisebenchmark.index')->with('success','Bench Mark Deleted Successfully.');
     }
 }

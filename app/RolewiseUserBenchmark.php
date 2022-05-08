@@ -12,7 +12,8 @@ class RolewiseUserBenchmark extends Model
 
         $query = RolewiseUserBenchmark::query();
         $query = $query->leftjoin('roles','roles.id','=','rolewise_user_bench_mark.role_id');
-        $query = $query->select('rolewise_user_bench_mark.*','roles.display_name as role_name');
+        $query = $query->leftjoin('department','department.id','=','roles.department');
+        $query = $query->select('rolewise_user_bench_mark.*','roles.display_name as role_name','department.name as department_name');
         $query = $query->orderBy('rolewise_user_bench_mark.id','desc');
         $response = $query->get();
 
@@ -24,6 +25,7 @@ class RolewiseUserBenchmark extends Model
             foreach ($response as $key => $value) {
 
                 $bench_mark_array[$i]['id'] = $value->id;
+                $bench_mark_array[$i]['department_name'] = $value->department_name;
                 $bench_mark_array[$i]['role_name'] = $value->role_name;
                 $bench_mark_array[$i]['no_of_resumes'] = $value->no_of_resumes;
                 $bench_mark_array[$i]['shortlist_ratio'] = $value->shortlist_ratio;

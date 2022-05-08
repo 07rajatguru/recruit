@@ -64,7 +64,6 @@ class UserBenchMarkController extends Controller
 
     public function edit($id) {
 
-    	$user_bench_mark = UserBenchMark::find($id);
     	$action = 'edit';
 
         $recruitment = getenv('RECRUITMENT');
@@ -77,6 +76,7 @@ class UserBenchMarkController extends Controller
         $get_hr_user_name = User::getUserNameById($hr_user_id);
         $all_users[$hr_user_id] = $get_hr_user_name;
 
+        $user_bench_mark = UserBenchMark::find($id);
     	$select_user_id = $user_bench_mark->user_id;
 
     	return view('adminlte::userbenchmark.edit',compact('user_bench_mark','action','all_users','select_user_id'));

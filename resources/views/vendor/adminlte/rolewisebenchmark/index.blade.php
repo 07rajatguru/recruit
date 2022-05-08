@@ -35,6 +35,7 @@
         <thead>
         <tr>
             <th width="5%">No</th>
+            <th width="10%"><center>Department Name</center></th>
             <th width="10%"><center>Role Name</center></th>
             <th><center>No Of <br/> Resumes</center></th>
             <th><center>Shortlist <br/> Ratio</center></th>
@@ -52,7 +53,9 @@
         @if(isset($bench_mark) && sizeof($bench_mark) > 0)
             @foreach ($bench_mark as $key => $value)
                 <tr>
+                    
                     <td>{{ ++$i }}</td>
+                    <td><center>{{ $value['department_name'] }}</center></td>
                     <td><center>{{ $value['role_name'] }}</center></td>
                     <td><center>{{ $value['no_of_resumes'] }}</center></td>
                     <td><center>{{ $value['shortlist_ratio'] }}</center></td>
@@ -83,6 +86,7 @@
             var table = jQuery('#bench_mark_table').DataTable( {
                 responsive: true,
                 stateSave : true,
+                "columnDefs": [ {orderable: false, targets: [10]}],
             } );
 
             if ( ! table.data().any() ) {
