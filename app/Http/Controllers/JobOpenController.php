@@ -5406,36 +5406,25 @@ class JobOpenController extends Controller
 
         $all_jobs_perm = $user->can('display-jobs');
         $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
+        $dept_perm = $user->can('display-recruitment-dashboard');
 
         $department_id = getenv('RECRUITMENT');
 
         $count = JobOpen::getAllJobsCountByDepartment(1,$user_id,'',$department_id);
 
         // For salary wise count
-
         $under_ten_lacs = 0;
         $between_ten_to_twenty_lacs = 0;
         $above_twenty_lacs = 0;
 
-        if($all_jobs_perm) {
+        if(($all_jobs_perm && $dept_perm) || ($user_jobs_perm && $dept_perm)) {
 
             $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,'','',0,$department_id);
 
             // For salary wise count
-
             $under_ten_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'10','','',1,0,$department_id);
             $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'10-20','','',1,0,$department_id);
             $above_twenty_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'20','','',1,0,$department_id);
-        }
-        else if ($user_jobs_perm) {
-
-            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,'','',0,$department_id);
-
-            // For salary wise count
-
-            $under_ten_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'10','','',1,0,$department_id);
-            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'10-20','','',1,0,$department_id);
-            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'20','','',1,0,$department_id);
         }
 
         $priority_0 = 0;
@@ -5550,36 +5539,25 @@ class JobOpenController extends Controller
 
         $all_jobs_perm = $user->can('display-jobs');
         $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
+        $dept_perm = $user->can('display-hr-advisory-dashboard');
 
         $department_id = getenv('HRADVISORY');
 
         $count = JobOpen::getAllJobsCountByDepartment(1,$user_id,'',$department_id);
 
         // For salary wise count
-
         $under_ten_lacs = 0;
         $between_ten_to_twenty_lacs = 0;
         $above_twenty_lacs = 0;
 
-        if($all_jobs_perm) {
+        if(($all_jobs_perm && $dept_perm) || ($user_jobs_perm && $dept_perm)) {
 
             $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,'','',0,$department_id);
 
             // For salary wise count
-
             $under_ten_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'10','','',1,0,$department_id);
             $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'10-20','','',1,0,$department_id);
             $above_twenty_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'20','','',1,0,$department_id);
-        }
-        else if ($user_jobs_perm) {
-
-            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,'','',0,$department_id);
-
-            // For salary wise count
-
-            $under_ten_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'10','','',1,0,$department_id);
-            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'10-20','','',1,0,$department_id);
-            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'20','','',1,0,$department_id);
         }
 
         $priority_0 = 0;
@@ -5619,7 +5597,6 @@ class JobOpenController extends Controller
             }
         }
 
-        
         $viewVariable = array();
        
         $viewVariable['count'] = $count;
