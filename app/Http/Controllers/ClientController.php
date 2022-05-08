@@ -1563,8 +1563,18 @@ class ClientController extends Controller
         }
 
         $client_upload_type['Others'] = 'Others';
-    
-        return view('adminlte::client.show',compact('client','client_upload_type','user_id'));
+
+        // For Display Last Five Comments
+        $client_id = $id;
+        $super_admin_userid = getenv('SUPERADMINUSERID');
+
+        $client = ClientBasicinfo::find($client_id);
+        $post = $client->post()->orderBy('created_at', 'desc')->limit(5)->get();
+
+        $client_remarks = array();
+        $client_remarks_edit = array();
+
+        return view('adminlte::client.show',compact('client','client_upload_type','user_id','post','super_admin_userid','client_remarks','client_remarks_edit','client_id'));
     }
 
     public function attachmentsDestroy(Request $request,$docid) {

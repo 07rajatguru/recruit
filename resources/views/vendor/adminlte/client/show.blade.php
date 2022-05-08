@@ -193,7 +193,7 @@
                             <th>Size</th>
                             <th>Category</th>
                         </tr>
-                            @if(sizeof($client['doc'])>0)
+                            @if($client['doc'] != '')
                                 @foreach($client['doc'] as $key=>$value)
                                     <tr>
                                         <td>
@@ -213,5 +213,16 @@
                 </div>
             </div>
         @endpermission
-    </div>
+
+        <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                <div class="box-header  col-md-6 ">
+                    <h3 class="box-title">Comments</h3>&nbsp;&nbsp;
+                </div>
+
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    @include('adminlte::client.showremarkslist',array('post' => $post,'super_admin_userid' => $super_admin_userid, 'client_remarks'=>$client_remarks, 'client_remarks_edit' => $client_remarks_edit))
+                </div>
+            </div>
+        </div>
 @endsection
