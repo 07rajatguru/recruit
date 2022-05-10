@@ -467,15 +467,6 @@ class CandidateBasicInfo extends Model
         $candidate_details = self::getCandidateDetailsById($candidate_id);
         $candidate_owner_email = User::getUserEmailById($candidate_details['candidate_owner_id']);
         $input['candidate_name'] = CandidateBasicInfo::getCandidateNameById($candidate_id);
-
-        // Get Candidate Resume
-        $candidate_resume = CandidateUploadedResume::getCandidateFormattedResume($candidate_id);
-        if($candidate_resume != '') {
-            $input['candidate_resume'] = public_path() . "/" . $candidate_resume;
-        }
-        else {
-            $input['candidate_resume'] = '';
-        }
         
         // Client Account Manager email
         $client_info = ClientBasicinfo::getClientInfoByJobId($job_id);
@@ -537,11 +528,6 @@ class CandidateBasicInfo extends Model
                         $message->attach($v1);
                     }
                 }
-            }
-
-            // Attach Candidate Fromatted Resume
-            if (isset($input['candidate_resume']) && $input['candidate_resume'] != '') {
-                $message->attach($input['candidate_resume']);
             }
         });
     }

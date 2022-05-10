@@ -4627,9 +4627,20 @@ class JobOpenController extends Controller
         \Mail::send('adminlte::emails.associatedcandidatemail', $input, function ($message) use($input) {
             $message->from($input['from_address'], $input['from_name']);
             $message->to($input['to_address'])->subject($input['subject']);
+
+            if (isset($input['candidate']) && sizeof($input['candidate']) > 0) {
+
+                foreach ($input['candidate'] as $key => $value) {
+
+                    //Attach Candidate Fromatted Resume
+                    if (isset($value['candidate_resume']) && $value['candidate_resume'] != '') {
+                        $message->attach($value['candidate_resume']);
+                    }
+                }
+            }
         });
 
-        return redirect('/jobs/'.$job_id.'/associated_candidates')->with('success', 'Email send Successfully.');
+        return redirect('/jobs/'.$job_id.'/associated_candidates')->with('success', 'Email Sent Successfully.');
     }
 
     // Function for associated candidates details by job for clinet login show page 

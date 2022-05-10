@@ -351,12 +351,22 @@ class JobAssociateCandidates extends Model
 
         $candidate = array();
         if (isset($response) && $response != '') {
+
             $candidate['fname'] = $response->fname;
             $candidate['email'] = $response->email;
             $candidate['owner'] = $response->owner;
             $candidate['shortlisted'] = $response->shortlisted;
             $candidate['status'] = $response->status;
             $candidate['mobile'] = $response->mobile;
+
+            // Get Candidate Resume
+            $candidate_resume = CandidateUploadedResume::getCandidateFormattedResume($candidate_id);
+            if($candidate_resume != '') {
+                $candidate['candidate_resume'] = public_path() . "/" . $candidate_resume;
+            }
+            else {
+                $candidate['candidate_resume'] = '';
+            }
         }
         return $candidate;
     }
