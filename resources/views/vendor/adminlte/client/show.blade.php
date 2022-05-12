@@ -45,11 +45,11 @@
                                 <th>Contact Number</th>
                                 <td>{{ $client['mobile'] }}</td>
                             @else
-                                @if($client['client_owner'])
+                                @permission(('display-account-manager-wise-client'))
                                     <th scope="row">Contact Point</th>
                                     <td>{{ $client['coordinator_name'] }}</td>
                                     <th>Contact Number</th>
-                                    <td colspan="3">{{ $client['mobile'] }}</td>
+                                    <td>{{ $client['mobile'] }}</td>
                                 @else
                                     <th scope="row">Contact Point</th>
                                     <td colspan="3">{{ $client['coordinator_name'] }}</td>
@@ -214,15 +214,17 @@
             </div>
         @endpermission
 
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <div class="box-header  col-md-6 ">
-                    <h3 class="box-title">Comments</h3>&nbsp;&nbsp;
-                </div>
+        @if(isset($post) && sizeof($post) > 0)
+            <div class="col-xs-12 col-sm-12 col-md-12">
+                <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
+                    <div class="box-header  col-md-6 ">
+                        <h3 class="box-title">Comments</h3>&nbsp;&nbsp;
+                    </div>
 
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    @include('adminlte::client.showremarkslist',array('post' => $post,'super_admin_userid' => $super_admin_userid, 'client_remarks'=>$client_remarks, 'client_remarks_edit' => $client_remarks_edit))
+                    <div class="col-xs-12 col-sm-12 col-md-12">
+                        @include('adminlte::client.showremarkslist',array('post' => $post,'super_admin_userid' => $super_admin_userid, 'client_remarks'=>$client_remarks, 'client_remarks_edit' => $client_remarks_edit))
+                    </div>
                 </div>
             </div>
-        </div>
+        @endif
 @endsection

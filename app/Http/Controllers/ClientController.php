@@ -1468,7 +1468,7 @@ class ClientController extends Controller
    
         if(isset($client_basicinfo) && $client_basicinfo != '') {
 
-            if($all_perm || $userwise_perm ) {   
+            if($all_perm || $userwise_perm ) {
 
                 $client['name'] = $client_basicinfo->name;
                 $client['source'] = $client_basicinfo->source;
@@ -1568,8 +1568,8 @@ class ClientController extends Controller
         $client_id = $id;
         $super_admin_userid = getenv('SUPERADMINUSERID');
 
-        $client = ClientBasicinfo::find($client_id);
-        $post = $client->post()->orderBy('created_at', 'desc')->limit(5)->get();
+        $client_get = ClientBasicinfo::find($client_id);
+        $post = $client_get->post()->orderBy('created_at', 'desc')->limit(5)->get();
 
         $client_remarks = array();
         $client_remarks_edit = array();
