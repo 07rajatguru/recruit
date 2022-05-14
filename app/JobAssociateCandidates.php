@@ -717,4 +717,42 @@ class JobAssociateCandidates extends Model
         }
         return $list;
     }
+
+    public static function getProductivityReportSelectedCandidate($user_id=0,$from_date=NULL,$to_date=NULL) {
+
+        $query = JobAssociateCandidates::query();
+        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','job_associate_candidates.candidate_id');
+        $query = $query->select('candidate_otherinfo.candidate_id as candidate_id');
+
+        if(isset($user_id) && $user_id > 0) {
+            $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        }
+
+        $query = $query->where('job_associate_candidates.selected_date','>=',$from_date);
+
+        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
+        $query = $query->where('job_associate_candidates.selected_date','<=',$to_date);
+     
+        $query = $query->where('job_associate_candidates.shortlisted','=','3');
+        $query = $query->where('job_associate_candidates.status_id','=','3');
+        $response = $query->get();
+
+        $candidate_names = '';
+
+        iF(isset($response) && $response != '') {
+
+            foreach ($response as $key => $value) {
+
+                if($candidate_names == '') {
+
+                    $candidate_names = CandidateBasicInfo::getCandidateNameById($value->candidate_id);
+                }
+                else {
+
+                    $candidate_names = $candidate_names . "," . CandidateBasicInfo::getCandidateNameById($value->candidate_id);
+                }
+            }
+        }
+        return $candidate_names; 
+    }
 }

@@ -2099,4 +2099,76 @@ class Bills extends Model
 
         return $bills_count;
     }
+
+    public static function getProductivityReportOfferAcceptanceCandidate($user_id=0,$from_date=NULL,$to_date=NULL) {
+
+        $query = Bills::query();
+        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','bills.candidate_id');
+        $query = $query->leftjoin('bills_date','bills_date.bills_id','=','bills.id');
+        $query = $query->select('candidate_otherinfo.candidate_id as candidate_id');
+
+        if(isset($user_id) && $user_id > 0) {
+            $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        }
+
+        $query = $query->where('bills_date.forecasting_date','>=',$from_date);
+
+        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
+        $query = $query->where('bills_date.forecasting_date','<=',$to_date);
+        $response = $query->get();
+
+        $candidate_names = '';
+
+        iF(isset($response) && $response != '') {
+
+            foreach ($response as $key => $value) {
+
+                if($candidate_names == '') {
+
+                    $candidate_names = CandidateBasicInfo::getCandidateNameById($value->candidate_id);
+                }
+                else {
+
+                    $candidate_names = $candidate_names . "," . CandidateBasicInfo::getCandidateNameById($value->candidate_id);
+                }
+            }
+        }
+        return $candidate_names;  
+    }
+
+    public static function getProductivityReportJoiningCandidate($user_id=0,$from_date=NULL,$to_date=NULL) {
+
+        $query = Bills::query();
+        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','bills.candidate_id');
+        $query = $query->leftjoin('bills_date','bills_date.bills_id','=','bills.id');
+        $query = $query->select('candidate_otherinfo.candidate_id as candidate_id');
+
+        if(isset($user_id) && $user_id > 0) {
+            $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        }
+
+        $query = $query->where('bills_date.recovery_date','>=',$from_date);
+
+        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
+        $query = $query->where('bills_date.recovery_date','<=',$to_date);
+        $response = $query->get();
+
+        $candidate_names = '';
+
+        iF(isset($response) && $response != '') {
+
+            foreach ($response as $key => $value) {
+
+                if($candidate_names == '') {
+
+                    $candidate_names = CandidateBasicInfo::getCandidateNameById($value->candidate_id);
+                }
+                else {
+
+                    $candidate_names = $candidate_names . "," . CandidateBasicInfo::getCandidateNameById($value->candidate_id);
+                }
+            }
+        }
+        return $candidate_names;  
+    }
 }

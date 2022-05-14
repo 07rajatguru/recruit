@@ -1326,13 +1326,18 @@ class ReportController extends Controller
 
                 $frm_to_date_array[$i]['selected_cnt'] = JobAssociateCandidates::getProductivityReportSelectedCount($user_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
 
+                $frm_to_date_array[$i]['selected_candidate'] = JobAssociateCandidates::getProductivityReportSelectedCandidate($user_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
                 // Get no of offer acceptance count in this week
 
                 $frm_to_date_array[$i]['offer_acceptance_ratio'] = Bills::getProductivityReportOfferAcceptanceRatio($user_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
 
+                $frm_to_date_array[$i]['offer_acceptance_candidate'] = Bills::getProductivityReportOfferAcceptanceCandidate($user_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
                 // Get no of joining count in this week
 
                 $frm_to_date_array[$i]['joining_ratio'] = Bills::getProductivityReportJoiningRatio($user_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+                $frm_to_date_array[$i]['joining_candidate'] = Bills::getProductivityReportJoiningCandidate($user_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
 
                 // Get no of after joining success count in this week
 
@@ -1593,13 +1598,19 @@ class ReportController extends Controller
 
                 $frm_to_date_array[$i]['selected_cnt'] = JobAssociateCandidates::getProductivityReportSelectedCount(0,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
 
+                $frm_to_date_array[$i]['selected_candidate'] = JobAssociateCandidates::getProductivityReportSelectedCandidate(0,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
                 // Get no of offer acceptance count in this week
 
                 $frm_to_date_array[$i]['offer_acceptance_ratio'] = Bills::getProductivityReportOfferAcceptanceRatio(0,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
 
+                $frm_to_date_array[$i]['offer_acceptance_candidate'] = Bills::getProductivityReportOfferAcceptanceCandidate(0,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
                 // Get no of joining count in this week
 
                 $frm_to_date_array[$i]['joining_ratio'] = Bills::getProductivityReportJoiningRatio(0,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                $frm_to_date_array[$i]['joining_candidate'] = Bills::getProductivityReportJoiningCandidate(0,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
 
                 // Get no of after joining success count in this week
 
