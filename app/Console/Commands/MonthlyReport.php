@@ -92,10 +92,19 @@ class MonthlyReport extends Command
 
                     foreach ($users as $key => $value) {
 
-                        $work_planning = new WorkPlanning();
-                        $work_planning->added_date = "$year-$month-$v";
-                        $work_planning->added_by = $key;
-                        $work_planning->save();
+                        $sunday_date = $year."-".$month."-".$v;
+
+                        //If Sunday Entry already exists then not add
+                        $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($sunday_date,$key);
+
+                        if(isset($get_work_planning_res) && $get_work_planning_res != '') {
+                        }
+                        else {
+                            $work_planning = new WorkPlanning();
+                            $work_planning->added_date = $sunday_date;
+                            $work_planning->added_by = $key;
+                            $work_planning->save();
+                        }
                     }
                 }
             }

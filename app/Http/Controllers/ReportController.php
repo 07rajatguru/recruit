@@ -575,6 +575,13 @@ class ReportController extends Controller
         $all_perm = $user->can('display-person-wise-report-of-all-users');
         $teamwise_perm = $user->can('display-person-wise-report-of-loggedin-user-team');
 
+        $recruitment_perm = $user->can('display-recruitment-dashboard');
+        $hr_advisory_perm = $user->can('display-hr-advisory-dashboard');
+
+        $superadmin = getenv('SUPERADMINUSERID');
+        $manager_user_id = getenv('MANAGERUSERID');
+        $hr_advisory_user_id = getenv('STRATEGYUSERID');
+
         // Year Data
         $starting_year = '2017';
         $ending_year = date('Y',strtotime('+2 year'));
@@ -614,97 +621,86 @@ class ReportController extends Controller
         $management = getenv('MANAGEMENT');
         $hr_user_id = getenv('HRUSERID');
 
-        if ($all_perm) {
+        // Get Team Type
+        $team_type = User::getTeamType();
 
-            // Set all recruitment reports for Manager Role
-            $manager_user_id = getenv('MANAGERUSERID');
+        if (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin) {
+            
+            $selected_team_type = $_POST['team_type'];
 
-            if($user_id == $manager_user_id) {
-                $type_array = array($recruitment);
-            }
-            else {
+            if($selected_team_type == 'adler') {
                 $type_array = array($recruitment,$hr_advisory,$management);
             }
-
-            $users_array = User::getAllUsers($type_array);
-            $users = array();
-
-            if(isset($users_array) && sizeof($users_array) > 0) {
-
-                foreach ($users_array as $k1 => $v1) {
-                               
-                    $user_details = User::getAllDetailsByUserID($k1);
-
-                    if($user_details->type == '2') {
-                        if($user_details->hr_adv_recruitemnt == 'Yes') {
-                            $users[$k1] = $v1;
-                        }
-                    }
-                    else {
-                        $users[$k1] = $v1;
-                    }    
-                }
-
-                if($user_id == $manager_user_id) {
-                }
-                else {
-
-                    $get_hr_user_name = User::getUserNameById($hr_user_id);
-                    $users[$hr_user_id] = $get_hr_user_name;
-                }
+            else if($selected_team_type == 'recruitment') {
+                $type_array = array($recruitment);
             }
-
-            foreach ($users as $key => $value) {
-
-                $user_details = User::getAllDetailsByUserID($key);
-
-                $user_created_at = date('Y-m-d',strtotime($user_details->created_at));
-
-                if($user_created_at <= $next_year) {
-
-                    $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
-                }
+            else if($selected_team_type == 'hr-advisory') {
+                $type_array = array($hr_advisory);
             }
-
-            if(isset($personwise_data) && $personwise_data != '') {
-
-            }
-            else {
-
-                $personwise_data = array();
-            }
-
-            return view('adminlte::reports.personwise-report',compact('personwise_data','year_array','year'));
-        }
-        else if($teamwise_perm) {
-
-            $users = User::getAssignedUsers($user_id);
-
-            foreach ($users as $key => $value) {
-
-                $user_details = User::getAllDetailsByUserID($key);
-                
-                $user_created_at = date('Y-m-d',strtotime($user_details->created_at));
-
-                if($user_created_at <= $next_year) {
-
-                    $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
-                }
-            }
-
-            if(isset($personwise_data) && $personwise_data != '') {
-
-            }
-            else {
-
-                $personwise_data = array();
-            }
-            
-            return view('adminlte::reports.personwise-report',compact('personwise_data','year_array','year'));
         }
         else {
-            return view('errors.403');
+
+            if($user_id == $superadmin) {
+                $selected_team_type = 'adler';
+                $type_array = array($recruitment,$hr_advisory,$management);
+            }
+            else if($user_id == $manager_user_id && $recruitment_perm) {
+                $selected_team_type = 'recruitment';
+                $type_array = array($recruitment);
+            }
+            else if($user_id == $hr_advisory_user_id && $hr_advisory_perm) {
+                $selected_team_type = 'hr-advisory';
+                $type_array = array($hr_advisory);
+            }
+            else {
+                return view('errors.403');
+            }
         }
+
+        $users_array = User::getAllUsers($type_array);
+        $users = array();
+
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users[$k1] = $v1;
+                }    
+            }
+
+            if ($all_perm && $selected_team_type == 'adler') {
+
+                $get_hr_user_name = User::getUserNameById($hr_user_id);
+                $users[$hr_user_id] = $get_hr_user_name;
+            }
+        }
+
+        foreach ($users as $key => $value) {
+
+            $user_details = User::getAllDetailsByUserID($key);
+
+            $user_created_at = date('Y-m-d',strtotime($user_details->created_at));
+
+            if($user_created_at <= $next_year) {
+
+                $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
+            }
+        }
+        if(isset($personwise_data) && $personwise_data != '') {
+        }
+        else {
+            $personwise_data = array();
+        }
+
+        return view('adminlte::reports.personwise-report',compact('personwise_data','year_array','year','team_type','selected_team_type'));
     }
 
     public function personWiseReportExport() {

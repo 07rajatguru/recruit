@@ -24,6 +24,17 @@
         </div>
 
         <div class="box-body col-xs-2 col-sm-2 col-md-2">
+        	<div class="form-group">
+        		<strong>Select Team:</strong>
+	            <select class="form-control" name="team_type" id="team_type">
+	                @foreach($team_type as $key=>$value)
+	                    <option value={{ $key }} @if($key==$selected_team_type) selected="selected" @endif>{{ $value}}</option>
+	                @endforeach
+	            </select>
+	        </div>
+        </div>
+
+        <div class="box-body col-xs-2 col-sm-2 col-md-2">
             <div class="form-group" style="margin-top: 19px;">
                 {!! Form::submit('Select', ['class' => 'btn btn-primary', 'onclick' => 'select_data()']) !!}
             </div>
@@ -113,8 +124,9 @@
 @section('customscripts')
 <script type="text/javascript">
 	
-	$(document).ready(function(){
-		$(".button").click(function(){
+	$(document).ready(function() {
+		
+		$(".button").click(function() {
 
 			var $toggle = $(this);
 			var id = "#data_" + $toggle.data('id');
@@ -122,28 +134,32 @@
 		});
 	});
 
-	function select_data(){
+	function select_data() {
+        
         var year = $("#year").val();
-
+        var team_type = $("#team_type :selected").val();
         var url = '/personwise-report';
 
         var form = $('<form action="'+url+ '" method="post">' +
             '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
             '<input type="hidden" name="year" value="'+year+'" />' +
+            '<input type="hidden" name="team_type" value="'+team_type+'" />' +
             '</form>');
 
         $('body').append(form);
         form.submit();
     }
 
-    function export_data(){
+    function export_data() {
+        
         var year = $("#year").val();
-
+        var team_type = $("#team_type :selected").val();
         var url = '/personwise-report/export';
 
         var form = $('<form action="'+url+ '" method="post">' +
             '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
             '<input type="hidden" name="year" value="'+year+'" />' +
+            '<input type="hidden" name="team_type" value="'+team_type+'" />' +
             '</form>');
 
         $('body').append(form);

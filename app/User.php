@@ -125,6 +125,17 @@ class User extends Authenticatable
         return $attendance_type;
     }
 
+    public static function getTeamType() {
+
+        $team_type = array();
+
+        $team_type['recruitment'] = 'Recruitment';
+        $team_type['hr-advisory'] = 'HR Advisory';
+        $team_type['adler'] = 'Adler';
+
+        return $team_type;
+    }
+
     public static function getEmploymentType() {
 
         $employment_type = array();
