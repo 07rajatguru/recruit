@@ -579,6 +579,7 @@ class ReportController extends Controller
         $hr_advisory_perm = $user->can('display-hr-advisory-dashboard');
 
         $superadmin = getenv('SUPERADMINUSERID');
+        $saloni_user_id = getenv('SALONIUSERID');
         $manager_user_id = getenv('MANAGERUSERID');
         $hr_advisory_user_id = getenv('STRATEGYUSERID');
 
@@ -624,7 +625,7 @@ class ReportController extends Controller
         // Get Team Type
         $team_type = User::getTeamType();
 
-        if (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin) {
+        if ((isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $saloni_user_id)) {
             
             $selected_team_type = $_POST['team_type'];
 
@@ -640,7 +641,7 @@ class ReportController extends Controller
         }
         else {
 
-            if($user_id == $superadmin) {
+            if($user_id == $superadmin || $user_id == $saloni_user_id) {
                 $selected_team_type = 'adler';
                 $type_array = array($recruitment,$hr_advisory,$management);
             }
@@ -706,12 +707,14 @@ class ReportController extends Controller
     public function personWiseReportExport() {
 
         Excel::create('Personwise_Report',function($excel) {
+
             $excel->sheet('sheet 1',function($sheet) {
                 
                 if (isset($_POST['year']) && $_POST['year'] != '') {
                     $year = $_POST['year'];
                 }
                 else {
+
                     $y = date('Y');
                     $m = date('m');
                     if ($m > 3) {
@@ -736,19 +739,53 @@ class ReportController extends Controller
                 $all_perm = $user->can('display-person-wise-report-of-all-users');
                 $teamwise_perm = $user->can('display-person-wise-report-of-loggedin-user-team');
 
+                $recruitment_perm = $user->can('display-recruitment-dashboard');
+                $hr_advisory_perm = $user->can('display-hr-advisory-dashboard');
+
+                $superadmin = getenv('SUPERADMINUSERID');
+                $saloni_user_id = getenv('SALONIUSERID');
+                $manager_user_id = getenv('MANAGERUSERID');
+                $hr_advisory_user_id = getenv('STRATEGYUSERID');
+
                 $recruitment = getenv('RECRUITMENT');
                 $hr_advisory = getenv('HRADVISORY');
                 $management = getenv('MANAGEMENT');
                 $hr_user_id = getenv('HRUSERID');
 
-                // Set all recruitment reports for Manager Role
-                $manager_user_id = getenv('MANAGERUSERID');
+                // Get Team Type
+                $team_type = User::getTeamType();
 
-                if($user_id == $manager_user_id) {
-                    $type_array = array($recruitment);
+                if ((isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $saloni_user_id)) {
+            
+                    $selected_team_type = $_POST['team_type'];
+
+                    if($selected_team_type == 'adler') {
+                        $type_array = array($recruitment,$hr_advisory,$management);
+                    }
+                    else if($selected_team_type == 'recruitment') {
+                        $type_array = array($recruitment);
+                    }
+                    else if($selected_team_type == 'hr-advisory') {
+                        $type_array = array($hr_advisory);
+                    }
                 }
                 else {
-                    $type_array = array($recruitment,$hr_advisory,$management);
+
+                    if($user_id == $superadmin || $user_id == $saloni_user_id) {
+                        $selected_team_type = 'adler';
+                        $type_array = array($recruitment,$hr_advisory,$management);
+                    }
+                    else if($user_id == $manager_user_id && $recruitment_perm) {
+                        $selected_team_type = 'recruitment';
+                        $type_array = array($recruitment);
+                    }
+                    else if($user_id == $hr_advisory_user_id && $hr_advisory_perm) {
+                        $selected_team_type = 'hr-advisory';
+                        $type_array = array($hr_advisory);
+                    }
+                    else {
+                        return view('errors.403');
+                    }
                 }
 
                 $users_array = User::getAllUsers($type_array);
@@ -770,9 +807,8 @@ class ReportController extends Controller
                         }    
                     }
 
-                    if($user_id == $manager_user_id) {
-                    }
-                    else {
+                    if ($all_perm && $selected_team_type == 'adler') {
+                        
                         $get_hr_user_name = User::getUserNameById($hr_user_id);
                         $users[$hr_user_id] = $get_hr_user_name;
                     }
