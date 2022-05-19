@@ -841,8 +841,16 @@ class ReportController extends Controller
 
         // get logged in user
         $user =  \Auth::user();
-        $user_id = \Auth::user()->id;
+        $user_id = $user->id;
         $all_perm = $user->can('display-month-wise-report-of-all-users');
+        
+        $recruitment_perm = $user->can('display-recruitment-dashboard');
+        $hr_advisory_perm = $user->can('display-hr-advisory-dashboard');
+
+        $superadmin = getenv('SUPERADMINUSERID');
+        $saloni_user_id = getenv('SALONIUSERID');
+        $manager_user_id = getenv('MANAGERUSERID');
+        $hr_advisory_user_id = getenv('STRATEGYUSERID');
 
         if ($all_perm) {
 
@@ -906,8 +914,46 @@ class ReportController extends Controller
                 }
             }
 
-            // Set all recruitment reports for Manager Role
-            $manager_user_id = getenv('MANAGERUSERID');
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $management = getenv('MANAGEMENT');
+            $hr_user_id = getenv('HRUSERID');
+
+            // Get Team Type
+            $team_type = User::getTeamType();
+
+            if ((isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $saloni_user_id)) {
+            
+                $selected_team_type = $_POST['team_type'];
+
+                if($selected_team_type == 'adler') {
+                    $type_array = array($recruitment,$hr_advisory,$management);
+                }
+                else if($selected_team_type == 'recruitment') {
+                    $type_array = array($recruitment);
+                }
+                else if($selected_team_type == 'hr-advisory') {
+                    $type_array = array($hr_advisory);
+                }
+            }
+            else {
+
+                if($user_id == $superadmin || $user_id == $saloni_user_id) {
+                    $selected_team_type = 'adler';
+                    $type_array = array($recruitment,$hr_advisory,$management);
+                }
+                else if($user_id == $manager_user_id && $recruitment_perm) {
+                    $selected_team_type = 'recruitment';
+                    $type_array = array($recruitment);
+                }
+                else if($user_id == $hr_advisory_user_id && $hr_advisory_perm) {
+                    $selected_team_type = 'hr-advisory';
+                    $type_array = array($hr_advisory);
+                }
+                else {
+                    return view('errors.403');
+                }
+            }
 
             foreach ($month as $key => $value) {
 
