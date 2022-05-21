@@ -701,7 +701,7 @@ class ReportController extends Controller
             $personwise_data = array();
         }
 
-        return view('adminlte::reports.personwise-report',compact('personwise_data','year_array','year','team_type','selected_team_type'));
+        return view('adminlte::reports.personwise-report',compact('personwise_data','year_array','year','team_type','selected_team_type','superadmin','user_id'));
     }
 
     public function personWiseReportExport() {
@@ -945,7 +945,7 @@ class ReportController extends Controller
                 $monthwise_data[$value] = Bills::getMonthwiseReportData($user_id,$month_start,$month_last,$selected_team_type);
             }
 
-            return view('adminlte::reports.monthwise-report',compact('year_array','year','monthwise_data','team_type','selected_team_type'));
+            return view('adminlte::reports.monthwise-report',compact('year_array','year','monthwise_data','team_type','selected_team_type','superadmin_user_id','user_id'));
         }
         else {
             return view('errors.403');

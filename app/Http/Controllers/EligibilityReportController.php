@@ -13,9 +13,18 @@ class EligibilityReportController extends Controller
 {
     public function index() {
 
-        // get logged in user
+        //Get Logged in user
         $user =  \Auth::user();
+        $user_id = $user->id;
         $all_perm = $user->can('display-eligibility-report-of-all-users');
+
+        $recruitment_perm = $user->can('display-recruitment-dashboard');
+        $hr_advisory_perm = $user->can('display-hr-advisory-dashboard');
+
+        $superadmin = getenv('SUPERADMINUSERID');
+        $saloni_user_id = getenv('SALONIUSERID');
+        $manager_user_id = getenv('MANAGERUSERID');
+        $hr_advisory_user_id = getenv('STRATEGYUSERID');
 
         if ($all_perm) {
 
@@ -23,45 +32,90 @@ class EligibilityReportController extends Controller
             $starting_year = '2021';
             $ending_year = date('Y',strtotime('+2 year'));
             $year_array = array();
-            for ($y=$starting_year; $y < $ending_year ; $y++) {
+
+            for ($y = $starting_year; $y < $ending_year ; $y++) {
                 $next = $y+1;
                 $year_array[$y.'-4-'.$next.'-3'] = 'April-' .$y.' to March-'.$next;
             }
 
-            if(isset($_POST['year']) && $_POST['year'] != ''){
+            if(isset($_POST['year']) && $_POST['year'] != '') {
             	$year = $_POST['year'];
             }
-            else{
+            else {
+
                 $y = date('Y');
                 $m = date('m');
+
                 if ($m > 3) {
                     $n = $y + 1;
                     $year = $y.'-4-'.$n.'-3';
                 }
-                else{
+                else {
                     $n = $y-1;
                     $year = $n.'-4-'.$y.'-3';
                 }
             }
 
-            $year_data = explode('-', $year); // [result : Array ( [0] => 2018 [1] => 4 [2] => 2019 [3] => 3 )] by default
-            $current_year = $year_data[0]; // [result : 2018]
-            $current_month = $year_data[1]; // [result : 4]
-            $next_year = $year_data[2]; // [result : 2019]
-            $next_month = $year_data[3]; // [result : 3]
+            $year_data = explode('-', $year);
+            $current_year = $year_data[0];
+            $current_month = $year_data[1];
+            $next_year = $year_data[2];
+            $next_month = $year_data[3];
 
             $combine_next_year = $next_year."-".$next_month;
             $new_next_year = date('Y-m-d',strtotime("last day of $combine_next_year"));
 
-            $users = User::getAllUsersForEligibilityReport($new_next_year);
+            $recruitment = getenv('RECRUITMENT');
+            $hr_advisory = getenv('HRADVISORY');
+            $management = getenv('MANAGEMENT');
+            $hr_user_id = getenv('HRUSERID');
+
+            // Get Team Type
+            $team_type = User::getTeamType();
+
+            if ((isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $saloni_user_id)) {
+                
+                $selected_team_type = $_POST['team_type'];
+
+                if($selected_team_type == 'adler') {
+                    $type_array = array($recruitment,$hr_advisory,$management);
+                }
+                else if($selected_team_type == 'recruitment') {
+                    $type_array = array($recruitment);
+                }
+                else if($selected_team_type == 'hr-advisory') {
+                    $type_array = array($hr_advisory);
+                }
+            }
+            else {
+
+                if($user_id == $superadmin || $user_id == $saloni_user_id) {
+                    $selected_team_type = 'adler';
+                    $type_array = array($recruitment,$hr_advisory,$management);
+                }
+                else if($user_id == $manager_user_id && $recruitment_perm) {
+                    $selected_team_type = 'recruitment';
+                    $type_array = array($recruitment);
+                }
+                else if($user_id == $hr_advisory_user_id && $hr_advisory_perm) {
+                    $selected_team_type = 'hr-advisory';
+                    $type_array = array($hr_advisory);
+                }
+                else {
+                    return view('errors.403');
+                }
+            }
+
+            // Get users according to selected type
+            $users = User::getAllUsersForEligibilityReport($new_next_year,$type_array);
 
             // For Quater wise[Q1, Q2, Q3, Q4]
-            for ($m=$current_month; $m <= 15 ; $m=$m+3) {
+            for ($m = $current_month; $m <= 15 ; $m=$m+3) {
 
                 // For Quater 4 
-                if ($m==13) {
+                if ($m == 13) {
+                    
                     $m = 1;
-
                     $next_month_three = $m+2;
                     $month_name = date("M", mktime(0, 0, 0, $m, 1));
                     $next_month_name = date("M", mktime(0, 0, 0, $next_month_three, 1));
@@ -80,7 +134,7 @@ class EligibilityReportController extends Controller
                     $m = 13;
                 }
                 // For Quater 1, 2, 3
-                else{
+                else {
 
                     $next_month_three = $m+2;
                     $month_name = date("M", mktime(0, 0, 0, $m, 1));
@@ -101,7 +155,7 @@ class EligibilityReportController extends Controller
             }
 
             // For 6 months[April to Sept]
-            for ($i=$current_month; $i < 10 ; $i=$i+6) { 
+            for ($i = $current_month; $i < 10 ; $i=$i+6) { 
                 
                 $next_month_six = $i+5;
                 $month_name = date("M", mktime(0, 0, 0, $i, 1));
@@ -120,7 +174,7 @@ class EligibilityReportController extends Controller
             }
 
             // For 9 months[April to Dec]
-            for ($i=$current_month; $i < 12 ; $i=$i+9) { 
+            for ($i = $current_month; $i < 12 ; $i=$i+9) { 
                 
                 $next_month_nine = $i+8;
                 $month_name = date("M", mktime(0, 0, 0, $i, 1));
@@ -155,20 +209,18 @@ class EligibilityReportController extends Controller
             }
 
             if(isset($eligible_data) && $eligible_data != '') {
-
             }
             else {
                 $eligible_data = array();
             }
 
             if(isset($eligible_detail) && $eligible_detail != '') {
-
             }
             else {
                 $eligible_detail = array();
             }
 
-        	return view('adminlte::reports.eligibilityreport',compact('year_array','year','eligible_data','eligible_detail'));
+        	return view('adminlte::reports.eligibilityreport',compact('year_array','year','eligible_data','eligible_detail','team_type','selected_team_type','user_id','superadmin'));
         }
         else {
             return view('errors.403');
@@ -207,14 +259,66 @@ class EligibilityReportController extends Controller
                 $combine_next_year = $next_year."-".$next_month;
                 $new_next_year = date('Y-m-d',strtotime("last day of $combine_next_year"));
 
-                $users = User::getAllUsersForEligibilityReport($new_next_year);
+                //Get Logged in user
+                $user =  \Auth::user();
+                $user_id = $user->id;
+
+                $recruitment_perm = $user->can('display-recruitment-dashboard');
+                $hr_advisory_perm = $user->can('display-hr-advisory-dashboard');
+
+                $superadmin = getenv('SUPERADMINUSERID');
+                $saloni_user_id = getenv('SALONIUSERID');
+                $manager_user_id = getenv('MANAGERUSERID');
+                $hr_advisory_user_id = getenv('STRATEGYUSERID');
+                
+                $recruitment = getenv('RECRUITMENT');
+                $hr_advisory = getenv('HRADVISORY');
+                $management = getenv('MANAGEMENT');
+                $hr_user_id = getenv('HRUSERID');
+
+                if ((isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $saloni_user_id)) {
+                    
+                    $selected_team_type = $_POST['team_type'];
+
+                    if($selected_team_type == 'adler') {
+                        $type_array = array($recruitment,$hr_advisory,$management);
+                    }
+                    else if($selected_team_type == 'recruitment') {
+                        $type_array = array($recruitment);
+                    }
+                    else if($selected_team_type == 'hr-advisory') {
+                        $type_array = array($hr_advisory);
+                    }
+                }
+                else {
+
+                    if($user_id == $superadmin || $user_id == $saloni_user_id) {
+                        $selected_team_type = 'adler';
+                        $type_array = array($recruitment,$hr_advisory,$management);
+                    }
+                    else if($user_id == $manager_user_id && $recruitment_perm) {
+                        $selected_team_type = 'recruitment';
+                        $type_array = array($recruitment);
+                    }
+                    else if($user_id == $hr_advisory_user_id && $hr_advisory_perm) {
+                        $selected_team_type = 'hr-advisory';
+                        $type_array = array($hr_advisory);
+                    }
+                    else {
+                        return view('errors.403');
+                    }
+                }
+
+            // Get users according to selected type
+            $users = User::getAllUsersForEligibilityReport($new_next_year,$type_array);
 
                 // For Quater wise[Q1, Q2, Q3, Q4]
-                for ($m=$current_month; $m <= 15 ; $m=$m+3) {
+                for ($m = $current_month; $m <= 15 ; $m=$m+3) {
+                    
                     // For Quater 4 
                     if ($m==13) {
-                        $m = 1;
 
+                        $m = 1;
                         $next_month_three = $m+2;
                         $month_name = date("M", mktime(0, 0, 0, $m, 1));
                         $next_month_name = date("M", mktime(0, 0, 0, $next_month_three, 1));
@@ -230,7 +334,8 @@ class EligibilityReportController extends Controller
                         $m = 13;
                     }
                     // For Quater 1, 2, 3
-                    else{
+                    else {
+
                         $next_month_three = $m+2;
                         $month_name = date("M", mktime(0, 0, 0, $m, 1));
                         $next_month_name = date("M", mktime(0, 0, 0, $next_month_three, 1));
@@ -247,7 +352,7 @@ class EligibilityReportController extends Controller
                 }
 
                 // For 6 months[April to Sept]
-                for ($i=$current_month; $i < 10 ; $i=$i+6) { 
+                for ($i = $current_month; $i < 10 ; $i=$i+6) { 
                     
                     $next_month_six = $i+5;
                     $month_name = date("M", mktime(0, 0, 0, $i, 1));
@@ -264,7 +369,7 @@ class EligibilityReportController extends Controller
                 }
 
                 // For 9 months[April to Dec]
-                for ($i=$current_month; $i < 12 ; $i=$i+9) { 
+                for ($i = $current_month; $i < 12 ; $i=$i+9) { 
                     
                     $next_month_nine = $i+8;
                     $month_name = date("M", mktime(0, 0, 0, $i, 1));

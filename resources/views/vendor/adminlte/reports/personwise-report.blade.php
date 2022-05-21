@@ -23,16 +23,18 @@
             </div>
         </div>
 
-        <div class="box-body col-xs-2 col-sm-2 col-md-2">
-        	<div class="form-group">
-        		<strong>Select Team:</strong>
-	            <select class="form-control" name="team_type" id="team_type">
-	                @foreach($team_type as $key=>$value)
-	                    <option value={{ $key }} @if($key==$selected_team_type) selected="selected" @endif>{{ $value}}</option>
-	                @endforeach
-	            </select>
+        @if($user_id == $superadmin)
+	        <div class="box-body col-xs-2 col-sm-2 col-md-2">
+	        	<div class="form-group">
+	        		<strong>Select Team:</strong>
+		            <select class="form-control" name="team_type" id="team_type">
+		                @foreach($team_type as $key=>$value)
+		                    <option value={{ $key }} @if($key==$selected_team_type) selected="selected" @endif>{{ $value}}</option>
+		                @endforeach
+		            </select>
+		        </div>
 	        </div>
-        </div>
+	    @endif
 
         <div class="box-body col-xs-2 col-sm-2 col-md-2">
             <div class="form-group" style="margin-top: 19px;">

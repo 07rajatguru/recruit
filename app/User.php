@@ -737,14 +737,16 @@ class User extends Authenticatable
         return $userArr;
     }
 
-    public static function getAllUsersForEligibilityReport($next_year=NULL) {
+    public static function getAllUsersForEligibilityReport($next_year=NULL,$type_array=NULL) {
 
         $status = 'Inactive';
         $status_array = array($status);
 
-        $recruitment = getenv('RECRUITMENT');
-        $hr_advisory = getenv('HRADVISORY');
-        $type_array = array($recruitment,$hr_advisory);
+        $superadmin = getenv('SUPERADMINUSERID');
+        $saloni_user_id = getenv('SALONIUSERID');
+        $jasmine = getenv('JASMINEUSERID');
+        $farhin = getenv('ALLCLIENTVISIBLEUSERID');
+        $super_array = array($superadmin,$saloni_user_id,$jasmine,$farhin);
         
         $user_query = User::query();
 
@@ -753,6 +755,7 @@ class User extends Authenticatable
         }
 
         $user_query = $user_query->whereNotIn('status',$status_array);
+        $user_query = $user_query->whereNotIn('id',$super_array);
         $user_query = $user_query->whereIn('type',$type_array);
         $user_query = $user_query->orderBy('name');
 
