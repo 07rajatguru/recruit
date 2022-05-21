@@ -1670,8 +1670,13 @@ class Bills extends Model
         return $cnt;
     }
 
-    public static function getMonthwiseReportData($user_id=NULL,$current_year,$next_year) {
+    public static function getMonthwiseReportData($user_id=NULL,$current_year,$next_year,$type) {
         
+        $superadmin_user_id = getenv('SUPERADMINUSERID');
+        $saloni_user_id = getenv('SALONIUSERID');
+        $manager_user_id = getenv('MANAGERUSERID');
+        $hr_advisory_user_id = getenv('STRATEGYUSERID');
+
         $personwise_query = Bills::query();
         $personwise_query = $personwise_query->join('candidate_basicinfo','candidate_basicinfo.id','=','bills.candidate_id');
         $personwise_query = $personwise_query->join('job_openings','job_openings.id','=','bills.job_id');
@@ -1679,13 +1684,30 @@ class Bills extends Model
         $personwise_query = $personwise_query->select('bills.*','candidate_basicinfo.full_name as candidate_name','client_basicinfo.coordinator_prefix as coordinator_prefix');
 
         if ($user_id != NULL) {
+
             $personwise_query = $personwise_query->join('bills_efforts','bills_efforts.bill_id','=','bills.id');
             $personwise_query = $personwise_query->join('users','users.id','=','bills_efforts.employee_name');
-            $personwise_query = $personwise_query->where('users.type','=','1');
+
+            if($user_id == $superadmin_user_id || $user_id == $saloni_user_id) {
+
+                if($type == 'adler') {
+                }
+                else if($type == 'recruitment') {
+                    $personwise_query = $personwise_query->where('users.type','=','1');
+                }
+                else if($type == 'hr-advisory') {
+                    $personwise_query = $personwise_query->where('users.type','=','2');
+                }
+            }
+            else if($user_id == $manager_user_id) {
+                $personwise_query = $personwise_query->where('users.type','=','1');
+            }
+            else if($user_id == $hr_advisory_user_id) {
+                $personwise_query = $personwise_query->where('users.type','=','2');
+            }
             $personwise_query = $personwise_query->groupBy('candidate_basicinfo.id');
         }
-
-        //$personwise_query = $personwise_query->where('bills.status','=','1');
+        
         $personwise_query = $personwise_query->where('bills.cancel_bill','=','0');
         $personwise_query = $personwise_query->where('bills.date_of_joining','>=',$current_year);
         $personwise_query = $personwise_query->where('bills.date_of_joining','<=',$next_year);

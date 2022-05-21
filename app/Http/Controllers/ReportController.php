@@ -737,7 +737,6 @@ class ReportController extends Controller
                 $user =  \Auth::user();
                 $user_id = \Auth::user()->id;
                 $all_perm = $user->can('display-person-wise-report-of-all-users');
-                $teamwise_perm = $user->can('display-person-wise-report-of-loggedin-user-team');
 
                 $recruitment_perm = $user->can('display-recruitment-dashboard');
                 $hr_advisory_perm = $user->can('display-hr-advisory-dashboard');
@@ -751,9 +750,6 @@ class ReportController extends Controller
                 $hr_advisory = getenv('HRADVISORY');
                 $management = getenv('MANAGEMENT');
                 $hr_user_id = getenv('HRUSERID');
-
-                // Get Team Type
-                $team_type = User::getTeamType();
 
                 if ((isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $saloni_user_id)) {
             
@@ -839,7 +835,7 @@ class ReportController extends Controller
 
     public function monthwiseReprotIndex() {
 
-        // get logged in user
+        //Get Logged in user
         $user =  \Auth::user();
         $user_id = $user->id;
         $all_perm = $user->can('display-month-wise-report-of-all-users');
@@ -847,18 +843,15 @@ class ReportController extends Controller
         $recruitment_perm = $user->can('display-recruitment-dashboard');
         $hr_advisory_perm = $user->can('display-hr-advisory-dashboard');
 
-        $superadmin = getenv('SUPERADMINUSERID');
-        $saloni_user_id = getenv('SALONIUSERID');
-        $manager_user_id = getenv('MANAGERUSERID');
-        $hr_advisory_user_id = getenv('STRATEGYUSERID');
-
         if ($all_perm) {
 
             // Year Data
             $starting_year = '2017';
             $ending_year = date('Y',strtotime('+2 year'));
             $year_array = array();
-            for ($y=$starting_year; $y < $ending_year ; $y++) {
+            
+            for ($y = $starting_year; $y < $ending_year ; $y++) {
+
                 $next = $y+1;
                 $year_array[$y.'-4-'.$next.'-3'] = 'April-' .$y.' to March-'.$next;
             }
@@ -866,14 +859,15 @@ class ReportController extends Controller
             if (isset($_POST['year']) && $_POST['year'] != '') {
                 $year = $_POST['year'];
             }
-            else{
+            else {
+
                 $y = date('Y');
                 $m = date('m');
                 if ($m > 3) {
                     $n = $y + 1;
                     $year = $y.'-4-'.$n.'-3';
                 }
-                else{
+                else {
                     $n = $y-1;
                     $year = $n.'-4-'.$y.'-3';
                 }
@@ -885,25 +879,26 @@ class ReportController extends Controller
             $next_year = $year_data[2];
             $next_month = $year_data[3];
 
-            for ($m=$current_month; $m <= 15 ; $m++) { 
-                if ($m == 13) {
-                    $m = 1;
+            for ($m = $current_month; $m <= 15 ; $m++) {
 
+                if ($m == 13) {
+                    
+                    $m = 1;
                     $month_name = date("M", mktime(0, 0, 0, $m, 1));
                     $month[$next_year.'-'.$m] = $month_name.'-'.$next_year;
                     $m = 13;
                 }
                 else if ($m == 14) {
+                    
                     $m = 2;
-
                     $month_name = date("M", mktime(0, 0, 0, $m, 1));
                     $month[$next_year.'-'.$m] = $month_name.'-'.$next_year;
                     $m = 14;
                 }
 
                 else if ($m == 15) {
+                    
                     $m = 3;
-
                     $month_name = date("M", mktime(0, 0, 0, $m, 1));
                     $month[$next_year.'-'.$m] = $month_name.'-'.$next_year;
                     $m = 15;
@@ -914,41 +909,28 @@ class ReportController extends Controller
                 }
             }
 
-            $recruitment = getenv('RECRUITMENT');
-            $hr_advisory = getenv('HRADVISORY');
-            $management = getenv('MANAGEMENT');
-            $hr_user_id = getenv('HRUSERID');
-
             // Get Team Type
             $team_type = User::getTeamType();
 
-            if ((isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $saloni_user_id)) {
+            $superadmin_user_id = getenv('SUPERADMINUSERID');
+            $saloni_user_id = getenv('SALONIUSERID');
+            $manager_user_id = getenv('MANAGERUSERID');
+            $hr_advisory_user_id = getenv('STRATEGYUSERID');
+
+            if ((isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin_user_id) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $saloni_user_id)) {
             
                 $selected_team_type = $_POST['team_type'];
-
-                if($selected_team_type == 'adler') {
-                    $type_array = array($recruitment,$hr_advisory,$management);
-                }
-                else if($selected_team_type == 'recruitment') {
-                    $type_array = array($recruitment);
-                }
-                else if($selected_team_type == 'hr-advisory') {
-                    $type_array = array($hr_advisory);
-                }
             }
             else {
 
-                if($user_id == $superadmin || $user_id == $saloni_user_id) {
+                if($user_id == $superadmin_user_id || $user_id == $saloni_user_id) {
                     $selected_team_type = 'adler';
-                    $type_array = array($recruitment,$hr_advisory,$management);
                 }
                 else if($user_id == $manager_user_id && $recruitment_perm) {
                     $selected_team_type = 'recruitment';
-                    $type_array = array($recruitment);
                 }
                 else if($user_id == $hr_advisory_user_id && $hr_advisory_perm) {
                     $selected_team_type = 'hr-advisory';
-                    $type_array = array($hr_advisory);
                 }
                 else {
                     return view('errors.403');
@@ -960,22 +942,10 @@ class ReportController extends Controller
                 $month_start = date('Y-m-d',strtotime("first day of $key"));
                 $month_last = date('Y-m-d',strtotime("last day of $key"));
 
-                if($user_id == $manager_user_id) {
-
-                    $monthwise_data[$value] = Bills::getMonthwiseReportData($user_id,$month_start,$month_last);
-                }
-                else {
-                    $monthwise_data[$value] = Bills::getMonthwiseReportData(NULL,$month_start,$month_last);
-                }
+                $monthwise_data[$value] = Bills::getMonthwiseReportData($user_id,$month_start,$month_last,$selected_team_type);
             }
 
-            if(isset($monthwise_data) && $monthwise_data != '') {
-            }
-            else {
-                $monthwise_data = array();
-            }
-
-            return view('adminlte::reports.monthwise-report',compact('year_array','year','monthwise_data'));
+            return view('adminlte::reports.monthwise-report',compact('year_array','year','monthwise_data','team_type','selected_team_type'));
         }
         else {
             return view('errors.403');
@@ -986,19 +956,20 @@ class ReportController extends Controller
 
         Excel::create('Monthwise_Report',function($excel) {
 
-            $excel->sheet('sheet 1',function($sheet){
+            $excel->sheet('sheet 1',function($sheet) {
                 
                 if (isset($_POST['year']) && $_POST['year'] != '') {
                     $year = $_POST['year'];
                 }
-                else{
+                else {
+
                     $y = date('Y');
                     $m = date('m');
                     if ($m > 3) {
                         $n = $y + 1;
                         $year = $y.'-4-'.$n.'-3';
                     }
-                    else{
+                    else {
                         $n = $y-1;
                         $year = $n.'-4-'.$y.'-3';
                     }
@@ -1010,62 +981,76 @@ class ReportController extends Controller
                 $next_year = $year_data[2];
                 $next_month = $year_data[3];
 
-                for ($m=$current_month; $m <= 15 ; $m++) { 
-                    if ($m == 13) {
-                        $m = 1;
+                for ($m = $current_month; $m <= 15 ; $m++) { 
 
+                    if ($m == 13) {
+                        
+                        $m = 1;
                         $month_name = date("M", mktime(0, 0, 0, $m, 1));
                         $month[$next_year.'-'.$m] = $month_name.'-'.$next_year;
                         $m = 13;
                     }
                     else if ($m == 14) {
+                        
                         $m = 2;
-
                         $month_name = date("M", mktime(0, 0, 0, $m, 1));
                         $month[$next_year.'-'.$m] = $month_name.'-'.$next_year;
                         $m = 14;
                     }
-
                     else if ($m == 15) {
-                        $m = 3;
 
+                        $m = 3;
                         $month_name = date("M", mktime(0, 0, 0, $m, 1));
                         $month[$next_year.'-'.$m] = $month_name.'-'.$next_year;
                         $m = 15;
                     }
                     else {
+                        
                         $month_name = date("M", mktime(0, 0, 0, $m, 1));
                         $month[$current_year.'-'.$m] = $month_name.'-'.$current_year;
                     }
                 }
 
-                // Set all recruitment reports for Manager Role
-                $manager_user_id = getenv('MANAGERUSERID');
-
-                // get logged in user
+                //Get Logged in user
                 $user =  \Auth::user();
-                $user_id = \Auth::user()->id;
+                $user_id = $user->id;
+                
+                $recruitment_perm = $user->can('display-recruitment-dashboard');
+                $hr_advisory_perm = $user->can('display-hr-advisory-dashboard');
+
+                $superadmin_user_id = getenv('SUPERADMINUSERID');
+                $saloni_user_id = getenv('SALONIUSERID');
+                $manager_user_id = getenv('MANAGERUSERID');
+                $hr_advisory_user_id = getenv('STRATEGYUSERID');
+
+                if ((isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin_user_id) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $saloni_user_id)) {
+            
+                    $selected_team_type = $_POST['team_type'];
+                }
+                else {
+
+                    if($user_id == $superadmin_user_id || $user_id == $saloni_user_id) {
+                        $selected_team_type = 'adler';
+                    }
+                    else if($user_id == $manager_user_id && $recruitment_perm) {
+                        $selected_team_type = 'recruitment';
+                    }
+                    else if($user_id == $hr_advisory_user_id && $hr_advisory_perm) {
+                        $selected_team_type = 'hr-advisory';
+                    }
+                    else {
+                        return view('errors.403');
+                    }
+                }
         
                 foreach ($month as $key => $value) {
 
                     $month_start = date('Y-m-d',strtotime("first day of $key"));
                     $month_last = date('Y-m-d',strtotime("last day of $key"));
 
-                    if($user_id == $manager_user_id) {
-
-                        $monthwise_data[$value] = Bills::getMonthwiseReportData($user_id,$month_start,$month_last);
-                    }
-                    else {
-                        $monthwise_data[$value] = Bills::getMonthwiseReportData(NULL,$month_start,$month_last);
-                    }
+                    $monthwise_data[$value] = Bills::getMonthwiseReportData($user_id,$month_start,$month_last,$selected_team_type);
                 }
 
-                if(isset($monthwise_data) && $monthwise_data != '') {
-                }
-                else {
-                    $monthwise_data = array();
-                }
-                    
                 $sheet->loadview('adminlte::reports.monthwise-reportexport')->with('monthwise_data',$monthwise_data);
             });
         })->export('xlsx');

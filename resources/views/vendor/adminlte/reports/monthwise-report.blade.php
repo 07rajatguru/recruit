@@ -10,7 +10,7 @@
 
 @section('customs_css')
     <style>
-        /*.button{
+       /* .button{
 		    left: 4px;
 		    height: 14px;
 		    width: 10px;
@@ -43,6 +43,17 @@
             	<strong>Select Financial Year:</strong>
                 {{Form::select('year',$year_array, $year, array('id'=>'year','class'=>'form-control'))}}
             </div>
+        </div>
+
+        <div class="box-body col-xs-2 col-sm-2 col-md-2">
+        	<div class="form-group">
+        		<strong>Select Team:</strong>
+	            <select class="form-control" name="team_type" id="team_type">
+	                @foreach($team_type as $key=>$value)
+	                    <option value={{ $key }} @if($key==$selected_team_type) selected="selected" @endif>{{ $value}}</option>
+	                @endforeach
+	            </select>
+	        </div>
         </div>
 
         <div class="box-body col-xs-2 col-sm-2 col-md-2">
@@ -162,28 +173,32 @@
 			});
 		});
 
-		function select_data(){
+		function select_data() {
+	        
 	        var year = $("#year").val();
-
+	        var team_type = $("#team_type :selected").val();
 	        var url = '/monthwise-report';
 
 	        var form = $('<form action="'+url+ '" method="post">' +
 	            '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
 	            '<input type="hidden" name="year" value="'+year+'" />' +
+	            '<input type="hidden" name="team_type" value="'+team_type+'" />' +
 	            '</form>');
 
 	        $('body').append(form);
 	        form.submit();
 	    }
 
-	    function export_data(){
-	        var year = $("#year").val();
+	    function export_data() {
 
+	        var year = $("#year").val();
+	        var team_type = $("#team_type :selected").val();
 	        var url = '/monthwise-report/export';
 
 	        var form = $('<form action="'+url+ '" method="post">' +
 	            '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
 	            '<input type="hidden" name="year" value="'+year+'" />' +
+	            '<input type="hidden" name="team_type" value="'+team_type+'" />' +
 	            '</form>');
 
 	        $('body').append(form);
