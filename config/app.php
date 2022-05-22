@@ -190,8 +190,6 @@ return [
         MaddHatter\LaravelFullcalendar\ServiceProvider::class,
 
         BrianFaust\Commentable\CommentableServiceProvider::class,
-
-        ConsoleTVs\Charts\ChartsServiceProvider::class,
     ],
 
     /*
@@ -246,6 +244,6 @@ return [
         'Excel' => Maatwebsite\Excel\Facades\Excel::class,
         'Debugbar' => 'Barryvdh\Debugbar\Facade',
         'Calendar' => MaddHatter\LaravelFullcalendar\Facades\Calendar::class,
-        'Charts' => ConsoleTVs\Charts\Facades\Charts::class,
     ],
+
 ];
