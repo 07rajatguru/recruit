@@ -223,7 +223,7 @@ class EveryMinute extends Command
                 else {
 
                     config([
-                        'mail.driver' => trim('smtp'),
+                        'mail.driver' => trim('sendmail'),
                         'mail.host' => trim('smtp.zoho.com'),
                         'mail.port' => trim('465'),
                         'mail.username' => trim($user_email_details->email),
@@ -552,7 +552,7 @@ class EveryMinute extends Command
                 else {
 
                     config([
-                        'mail.driver' => trim('smtp'),
+                        'mail.driver' => trim('sendmail'),
                         'mail.host' => trim('smtp.zoho.com'),
                         'mail.port' => trim('465'),
                         'mail.username' => trim($user_email_details->email),
@@ -679,7 +679,7 @@ class EveryMinute extends Command
                 else {
 
                     config([
-                        'mail.driver' => trim('smtp'),
+                        'mail.driver' => trim('sendmail'),
                         'mail.host' => trim('smtp.zoho.com'),
                         'mail.port' => trim('465'),
                         'mail.username' => trim($user_email_details->email),
@@ -1292,7 +1292,7 @@ class EveryMinute extends Command
                 else {
 
                     config([
-                        'mail.driver' => trim('smtp'),
+                        'mail.driver' => trim('sendmail'),
                         'mail.host' => trim('smtp.zoho.com'),
                         'mail.port' => trim('465'),
                         'mail.username' => trim($user_email_details->email),
@@ -1726,7 +1726,7 @@ class EveryMinute extends Command
                 else {
 
                     config([
-                        'mail.driver' => trim('smtp'),
+                        'mail.driver' => trim('sendmail'),
                         'mail.host' => trim('smtp.zoho.com'),
                         'mail.port' => trim('465'),
                         'mail.username' => trim($user_email_details->email),
@@ -1775,7 +1775,7 @@ class EveryMinute extends Command
                 else {
 
                     config([
-                        'mail.driver' => trim('smtp'),
+                        'mail.driver' => trim('sendmail'),
                         'mail.host' => trim('smtp.zoho.com'),
                         'mail.port' => trim('465'),
                         'mail.username' => trim($user_email_details->email),
@@ -2016,7 +2016,7 @@ class EveryMinute extends Command
                 else {
 
                     config([
-                        'mail.driver' => trim('smtp'),
+                        'mail.driver' => trim('sendmail'),
                         'mail.host' => trim('smtp.zoho.com'),
                         'mail.port' => trim('465'),
                         'mail.username' => trim($user_email_details->email),
@@ -2102,7 +2102,7 @@ class EveryMinute extends Command
                 else {
 
                     config([
-                        'mail.driver' => trim('smtp'),
+                        'mail.driver' => trim('sendmail'),
                         'mail.host' => trim('smtp.zoho.com'),
                         'mail.port' => trim('465'),
                         'mail.username' => trim($user_email_details->email),
@@ -2377,7 +2377,7 @@ class EveryMinute extends Command
                 else {
 
                     config([
-                        'mail.driver' => trim('smtp'),
+                        'mail.driver' => trim('sendmail'),
                         'mail.host' => trim('smtp.zoho.com'),
                         'mail.port' => trim('465'),
                         'mail.username' => trim($user_email_details->email),
@@ -2442,7 +2442,7 @@ class EveryMinute extends Command
                 else {
 
                     config([
-                        'mail.driver' => trim('smtp'),
+                        'mail.driver' => trim('sendmail'),
                         'mail.host' => trim('smtp.zoho.com'),
                         'mail.port' => trim('465'),
                         'mail.username' => trim($user_email_details->email),
@@ -2552,7 +2552,7 @@ class EveryMinute extends Command
                 else {
 
                     config([
-                        'mail.driver' => trim('smtp'),
+                        'mail.driver' => trim('sendmail'),
                         'mail.host' => trim('smtp.zoho.com'),
                         'mail.port' => trim('465'),
                         'mail.username' => trim($user_email_details->email),
