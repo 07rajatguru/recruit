@@ -653,34 +653,44 @@ class ReportController extends Controller
                 $selected_team_type = 'hr-advisory';
                 $type_array = array($hr_advisory);
             }
+            else if($teamwise_perm) {
+                $selected_team_type = '';
+                $users = User::getAssignedUsers($user_id);
+            }
             else {
                 return view('errors.403');
             }
         }
 
-        $users_array = User::getAllUsers($type_array);
-        $users = array();
+        if(isset($users) && $users != '') {
 
-        if(isset($users_array) && sizeof($users_array) > 0) {
+        }
+        else {
 
-            foreach ($users_array as $k1 => $v1) {
-                               
-                $user_details = User::getAllDetailsByUserID($k1);
+            $users_array = User::getAllUsers($type_array);
+            $users = array();
 
-                if($user_details->type == '2') {
-                    if($user_details->hr_adv_recruitemnt == 'Yes') {
-                        $users[$k1] = $v1;
+            if(isset($users_array) && sizeof($users_array) > 0) {
+
+                foreach ($users_array as $k1 => $v1) {
+                                   
+                    $user_details = User::getAllDetailsByUserID($k1);
+
+                    if($user_details->type == '2') {
+                        if($user_details->hr_adv_recruitemnt == 'Yes') {
+                            $users[$k1] = $v1;
+                        }
                     }
+                    else {
+                        $users[$k1] = $v1;
+                    }    
                 }
-                else {
-                    $users[$k1] = $v1;
-                }    
-            }
 
-            if ($all_perm && $selected_team_type == 'adler') {
+                if ($all_perm && $selected_team_type == 'adler') {
 
-                $get_hr_user_name = User::getUserNameById($hr_user_id);
-                $users[$hr_user_id] = $get_hr_user_name;
+                    $get_hr_user_name = User::getUserNameById($hr_user_id);
+                    $users[$hr_user_id] = $get_hr_user_name;
+                }
             }
         }
 
@@ -701,7 +711,7 @@ class ReportController extends Controller
             $personwise_data = array();
         }
 
-        return view('adminlte::reports.personwise-report',compact('personwise_data','year_array','year','team_type','selected_team_type','superadmin','user_id'));
+        return view('adminlte::reports.personwise-report',compact('personwise_data','year_array','year','team_type','selected_team_type','superadmin','saloni_user_id','user_id'));
     }
 
     public function personWiseReportExport() {
@@ -945,7 +955,7 @@ class ReportController extends Controller
                 $monthwise_data[$value] = Bills::getMonthwiseReportData($user_id,$month_start,$month_last,$selected_team_type);
             }
 
-            return view('adminlte::reports.monthwise-report',compact('year_array','year','monthwise_data','team_type','selected_team_type','superadmin_user_id','user_id'));
+            return view('adminlte::reports.monthwise-report',compact('year_array','year','monthwise_data','team_type','selected_team_type','superadmin_user_id','saloni_user_id','user_id'));
         }
         else {
             return view('errors.403');

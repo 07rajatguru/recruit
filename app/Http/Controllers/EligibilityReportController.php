@@ -220,7 +220,7 @@ class EligibilityReportController extends Controller
                 $eligible_detail = array();
             }
 
-        	return view('adminlte::reports.eligibilityreport',compact('year_array','year','eligible_data','eligible_detail','team_type','selected_team_type','user_id','superadmin'));
+        	return view('adminlte::reports.eligibilityreport',compact('year_array','year','eligible_data','eligible_detail','team_type','selected_team_type','user_id','superadmin','saloni_user_id'));
         }
         else {
             return view('errors.403');
@@ -456,7 +456,7 @@ class EligibilityReportController extends Controller
         $month = $request->get('month');
         $year = $request->get('year');
 
-        $users = User::getAllUsersForEligibilityReport();
+        $users = User::getAllUsersForEligibilityReport(NULL,NULL);
         
         foreach ($users as $key => $value) {
 
@@ -464,11 +464,9 @@ class EligibilityReportController extends Controller
             $user_salary = $user_data['fixed_salary'];
 
             if(isset($user_salary) && $user_salary > 0) {
-
                 $target = $user_salary * 3.5;
             }
             else {
-
                 $target = 0;
             }
             

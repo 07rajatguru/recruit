@@ -754,11 +754,13 @@ class User extends Authenticatable
             $user_query = $user_query->where('created_at','<=',$next_year);
         }
 
+        if(isset($type_array) && $type_array != NULL) {
+            $user_query = $user_query->whereIn('type',$type_array);
+        }
+
         $user_query = $user_query->whereNotIn('status',$status_array);
         $user_query = $user_query->whereNotIn('id',$super_array);
-        $user_query = $user_query->whereIn('type',$type_array);
         $user_query = $user_query->orderBy('name');
-
         $users = $user_query->get();
 
         $userArr = array();

@@ -45,7 +45,7 @@
             </div>
         </div>
 
-        @if($user_id == $superadmin_user_id)
+        @if($user_id == $superadmin_user_id || $user_id == $saloni_user_id)
 	        <div class="box-body col-xs-2 col-sm-2 col-md-2">
 	        	<div class="form-group">
 	        		<strong>Select Team:</strong>
