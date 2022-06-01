@@ -1611,7 +1611,8 @@ class WorkPlanningController extends Controller
             $work_planning->approved_by = $user_id;
             $work_planning->save();
         }
-
+/*
+        // For Work From Home
         $month = date('m');
         $year = date('Y');
         
@@ -1692,10 +1693,10 @@ class WorkPlanningController extends Controller
                     }
                 }
             }
-        }
+        }*/
 
         // Set Delay Counter
-        $work_planning = WorkPlanning::getWorkPlanningDetails($added_by_id,$month,$year,'','');
+        /*$work_planning = WorkPlanning::getWorkPlanningDetails($added_by_id,$month,$year,'','');
         $delay_counter = '';
 
         if(isset($work_planning) && sizeof($work_planning) > 0) {
@@ -1714,7 +1715,7 @@ class WorkPlanningController extends Controller
         if($delay_counter > 3) {
 
             \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $wp_id");
-        }
+        }*/
 
         $data = 'success';
 
