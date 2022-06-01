@@ -29,7 +29,12 @@
                                             <td align="center">{{ ++$i }}</td>
                                             <td align="center">{{ $value['name'] }}</td>
                                             <td align="center">{{ $value['coordinator'] }}</td>
-                                            <td align="center">{{ $value['account_manager'] }}</td>
+
+                                            @if($value['account_manager'] != '')
+                                                <td align="center">{{ $value['account_manager'] }}</td>
+                                            @else
+                                                <td align="center">Yet to Assign</td>
+                                            @endif
                                             <!-- <td align="center">{{ $value['category'] }}</td>
                                             <td align="center">{{ $value['address'] }}</td> -->
                                         </tr>
