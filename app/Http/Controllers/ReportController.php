@@ -580,6 +580,7 @@ class ReportController extends Controller
 
         $superadmin = getenv('SUPERADMINUSERID');
         $saloni_user_id = getenv('SALONIUSERID');
+        $accountant_user_id = getenv('ACCOUNTANTUSERID');
         $manager_user_id = getenv('MANAGERUSERID');
         $hr_advisory_user_id = getenv('STRATEGYUSERID');
 
@@ -625,7 +626,7 @@ class ReportController extends Controller
         // Get Team Type
         $team_type = User::getTeamType();
 
-        if ((isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $saloni_user_id)) {
+        if ((isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $saloni_user_id) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $accountant_user_id)) {
             
             $selected_team_type = $_POST['team_type'];
 
@@ -641,7 +642,7 @@ class ReportController extends Controller
         }
         else {
 
-            if($user_id == $superadmin || $user_id == $saloni_user_id) {
+            if($user_id == $superadmin || $user_id == $saloni_user_id || $user_id == $accountant_user_id) {
                 $selected_team_type = 'adler';
                 $type_array = array($recruitment,$hr_advisory,$management);
             }
@@ -753,6 +754,7 @@ class ReportController extends Controller
 
                 $superadmin = getenv('SUPERADMINUSERID');
                 $saloni_user_id = getenv('SALONIUSERID');
+                $accountant_user_id = getenv('ACCOUNTANTUSERID');
                 $manager_user_id = getenv('MANAGERUSERID');
                 $hr_advisory_user_id = getenv('STRATEGYUSERID');
 
@@ -761,7 +763,7 @@ class ReportController extends Controller
                 $management = getenv('MANAGEMENT');
                 $hr_user_id = getenv('HRUSERID');
 
-                if ((isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $saloni_user_id)) {
+                if ((isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $saloni_user_id) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $accountant_user_id)) {
             
                     $selected_team_type = $_POST['team_type'];
 
@@ -777,7 +779,7 @@ class ReportController extends Controller
                 }
                 else {
 
-                    if($user_id == $superadmin || $user_id == $saloni_user_id) {
+                    if($user_id == $superadmin || $user_id == $saloni_user_id || $user_id == $accountant_user_id) {
                         $selected_team_type = 'adler';
                         $type_array = array($recruitment,$hr_advisory,$management);
                     }
@@ -924,16 +926,17 @@ class ReportController extends Controller
 
             $superadmin_user_id = getenv('SUPERADMINUSERID');
             $saloni_user_id = getenv('SALONIUSERID');
+            $accountant_user_id = getenv('ACCOUNTANTUSERID');
             $manager_user_id = getenv('MANAGERUSERID');
             $hr_advisory_user_id = getenv('STRATEGYUSERID');
 
-            if ((isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin_user_id) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $saloni_user_id)) {
+            if ((isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin_user_id) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $saloni_user_id) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $accountant_user_id)) {
             
                 $selected_team_type = $_POST['team_type'];
             }
             else {
 
-                if($user_id == $superadmin_user_id || $user_id == $saloni_user_id) {
+                if($user_id == $superadmin_user_id || $user_id == $saloni_user_id || $user_id == $accountant_user_id) {
                     $selected_team_type = 'adler';
                 }
                 else if($user_id == $manager_user_id && $recruitment_perm) {
@@ -1030,16 +1033,17 @@ class ReportController extends Controller
 
                 $superadmin_user_id = getenv('SUPERADMINUSERID');
                 $saloni_user_id = getenv('SALONIUSERID');
+                $accountant_user_id = getenv('ACCOUNTANTUSERID');
                 $manager_user_id = getenv('MANAGERUSERID');
                 $hr_advisory_user_id = getenv('STRATEGYUSERID');
 
-                if ((isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin_user_id) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $saloni_user_id)) {
+                if ((isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin_user_id) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $saloni_user_id) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $accountant_user_id)) {
             
                     $selected_team_type = $_POST['team_type'];
                 }
                 else {
 
-                    if($user_id == $superadmin_user_id || $user_id == $saloni_user_id) {
+                    if($user_id == $superadmin_user_id || $user_id == $saloni_user_id || $user_id == $accountant_user_id) {
                         $selected_team_type = 'adler';
                     }
                     else if($user_id == $manager_user_id && $recruitment_perm) {
