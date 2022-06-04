@@ -107,4 +107,16 @@ class LateInEarlyGo extends Model
 
         return $leave_data;
     }
+
+    public static function getApprovedRequests($user_id,$added_date) {
+
+        $query = LateInEarlyGo::query();
+        $query = $query->select('late_in_early_go.*');
+        $query = $query->where('late_in_early_go.user_id','=',$user_id);
+        $query = $query->where('late_in_early_go.date','=',$added_date);
+        $query = $query->where('late_in_early_go.status','=','1');
+        $response = $query->first();
+
+        return $response;
+    }
 }

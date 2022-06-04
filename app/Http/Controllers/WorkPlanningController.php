@@ -19,6 +19,7 @@ use App\WorkFromHome;
 use App\Holidays;
 use App\UserLeave;
 use App\JobOpen;
+use App\LateInEarlyGo;
 
 class WorkPlanningController extends Controller
 {
@@ -641,7 +642,7 @@ class WorkPlanningController extends Controller
 
         if($get_time['login'] != '') {
 
-            $login_date = date('Y-m-d') . " " . $get_time['login'];
+            $login_date = $date . " " . $get_time['login'];
             $login_utc = $login_date;
             $login_dt = new \DateTime($login_utc);
             $login_tz = new \DateTimeZone('Asia/Kolkata');
@@ -656,7 +657,7 @@ class WorkPlanningController extends Controller
         else {
 
             $time = date('H:i:s');
-            $login_date = date('Y-m-d') . " " . $time;
+            $login_date = $date . " " . $time;
             $login_utc = $login_date;
             $login_dt = new \DateTime($login_utc);
             $login_tz = new \DateTimeZone('Asia/Kolkata');
@@ -669,72 +670,15 @@ class WorkPlanningController extends Controller
             $time_diff = date("H:i", $diff);
         }
 
+        //Set for popup
+        $actual_loggedin_time = date("H:i", $loginTime);
+
         $work_type = $request->input('work_type');
         $remaining_time = $request->input('remaining_time');
         $total_projected_time = $request->input('total_projected_time');
         $link = $request->input('link');
-        $report_delay = Input::get('report_delay');
-        $report_delay_content = Input::get('report_delay_content');
-
-        // Get Today Day
-        $day = date("l");
-
-        // Set Attendance For Kazvin
-        $manager_user_id = env('MANAGERUSERID');
-
-        // Get Exist Records
-        $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($date,$user_id);
-
-        // Set Absent for Sandwich Work Planning
-        $yesterday = date('Y-m-d',strtotime("-1 days"));
-        $yesterday_1 = date('Y-m-d',strtotime("-2 days"));
-        $yesterday_2 = date('Y-m-d',strtotime("-3 days"));
-
-        $get_work_planning_res_1 = WorkPlanning::getWorkPlanningByAddedDateAndUserID($yesterday,$user_id);
-        $get_work_planning_res_2 = WorkPlanning::getWorkPlanningByAddedDateAndUserID($yesterday_1,$user_id);
-        $get_work_planning_res_3 = WorkPlanning::getWorkPlanningByAddedDateAndUserID($yesterday_2,$user_id);
-
-        if(isset($get_work_planning_res_1) && $get_work_planning_res_1 != '' && isset($get_work_planning_res_3) && $get_work_planning_res_3 != '') {
-
-            if(($get_work_planning_res_1->attendance == 'A' && $get_work_planning_res_3->attendance == 'A')) {
-
-                $exist_wp_id = $get_work_planning_res_2->id;
-                $work_planning_exist = WorkPlanning::find($exist_wp_id);
-                $work_planning_exist->attendance = 'A';
-                $work_planning_exist->save();
-            }
-        }
-        
-        if($day == 'Saturday') {
-
-            if($total_projected_time < '04:30:00') {
-                $attendance = 'HD';
-            }
-            else {
-                $attendance = 'F';
-            }
-        }  
-        else {
-
-            if($user_id == $manager_user_id) {
-
-                if($total_projected_time < '06:00:00') {
-                    $attendance = 'HD';
-                }
-                else {
-                    $attendance = 'F';
-                }
-            }
-            else {
-
-                if($total_projected_time < '07:00:00') {
-                    $attendance = 'HD';
-                }
-                else {
-                    $attendance = 'F';
-                }
-            }
-        }
+        $report_delay = $request->input('report_delay');
+        $report_delay_content = $request->input('report_delay_content');
 
         // If report delay
         if(isset($report_delay) && $report_delay != '') {
@@ -747,22 +691,29 @@ class WorkPlanningController extends Controller
             }
         }
         else {
-            $report_delay = '';
+            $report_delay = NULL;
+            $attendance = NULL;
         }
 
         // If report delay
         if(isset($report_delay_content) && $report_delay_content != '') {
         }
         else {
-            $report_delay_content = '';
+            $report_delay_content = NULL;
         }
 
-        if($time_diff > '01:00') {
+        if($time_diff > '01:00' || $actual_loggedin_time > '10:30') {
 
             if(isset($report_delay) && $report_delay == '') {
                 $attendance = 'A';
             }
         }
+        else {
+            $attendance = NULL;
+        }
+
+        // Get Exist Records
+        $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($date,$user_id);
 
         if(isset($get_work_planning_res) && $get_work_planning_res != '') {
 
@@ -882,15 +833,8 @@ class WorkPlanningController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-        // If Report Delay & current time is grater than 10:30 then send email notification
-        $current_date = date('Y-m-d H:i:s');
-        $utc = $current_date;
-        $dt = new \DateTime($utc);
-        $tz = new \DateTimeZone('Asia/Kolkata'); // or whatever zone you're after
-        $dt->setTimezone($tz);
-        $cur_time = $dt->format('H:i');
-
-        if($cur_time > '10:30' && $time_diff > '01:00') {
+        // If Report Delay OR loggedin time is grater than 10:30 then send email notification
+        if($time_diff > '01:00' || $actual_loggedin_time > '10:30') {
 
             if($report_email == '') {
                 $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
@@ -912,34 +856,8 @@ class WorkPlanningController extends Controller
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-            // Set Delay Counter
-            $month = date('m');
-            $year = date('Y');
-
-            $work_planning = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
-            $delay_counter = '';
-
-            if(isset($work_planning) && sizeof($work_planning) > 0) {
-
-                foreach ($work_planning as $key => $value) {
-                    
-                    if($delay_counter == '') {
-                        $delay_counter = $value['delay_counter'];
-                    }
-                    else {
-                        $delay_counter = $delay_counter + $value['delay_counter'];
-                    }
-                }
-            }
-
-            if($delay_counter > 3) {
-
-                \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1', `attendance` = 'HD' WHERE `id` = $work_planning_id");
-            }
-            else {
-
-                \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1' WHERE `id` = $work_planning_id");
-            }
+            // Update Delay Counter
+            \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1' WHERE `id` = $work_planning_id");
         }
 
         return redirect()->route('workplanning.index')->with('success','Work Planning Added Successfully.');
@@ -1082,55 +1000,15 @@ class WorkPlanningController extends Controller
     public function update(Request $request,$id) {
 
         $email_value = $request->input('email_value');
+        $work_type = $request->input('work_type');
+        $link = $request->input('link');
         $total_projected_time = $request->input('total_projected_time');
         $total_actual_time = $request->input('total_actual_time');
-        $work_type = $request->input('work_type');
-        $link = Input::get('link');
-
-        // Set Attendance For Kazvin
-        $manager_user_id = env('MANAGERUSERID');
 
         $user_id = \Auth::user()->id;
 
-        // Get Today Day
-        $day = date("l");
-
-        if($day == 'Saturday') {
-
-            if($total_actual_time < '04:30:00') {
-                $attendance = 'HD';
-            }
-            else {
-                $attendance = 'F';
-            }
-        }
-        else {
-
-            if($user_id == $manager_user_id) {
-
-                if($total_actual_time < '06:00:00') {
-                    $attendance = 'HD';
-                }
-                else {
-                    $attendance = 'F';
-                }
-            }
-            else {
-
-                if($total_actual_time < '07:00:00') {
-                    $attendance = 'HD';
-                }
-                else {
-                    $attendance = 'F';
-                }
-            }
-        }
-
-        // Get Work Planning Details
+        // Update Work Planning Details
         $work_planning = WorkPlanning::find($id);
-        $added_by_id = $work_planning->added_by;
-
-        $work_planning->attendance = $attendance;
         $work_planning->work_type = $work_type;
         $work_planning->link = $link;
 
@@ -1151,9 +1029,6 @@ class WorkPlanningController extends Controller
         $work_planning->updated_at = time();
         $work_planning->save();
 
-        // Delete old  llist
-        WorkPlanningList::where('work_planning_id','=',$id)->delete();
-
         // Add Listing Rows
         $task = array();
         $task = Input::get('task');
@@ -1172,9 +1047,15 @@ class WorkPlanningController extends Controller
 
         $row_cnt = Input::get('row_cnt');
 
+        // Get Added By ID
+        $added_by_id = $work_planning->added_by;
+
+        // Delete old  llist of tasks
+        WorkPlanningList::where('work_planning_id','=',$id)->delete();
+
         for($j = 0; $j < $row_cnt; $j++) {
 
-            if(isset($task[$j]) && $task[$j]!='') {
+            if(isset($task[$j]) && $task[$j] != '') {
 
                 $work_planning_list = new WorkPlanningList();
                 $work_planning_list->work_planning_id = $id;
@@ -1269,7 +1150,7 @@ class WorkPlanningController extends Controller
 
                     $utc = date('d-m-Y H:i:s');
                     $dt = new \DateTime($utc);
-                    $tz = new \DateTimeZone('Asia/Kolkata'); // or whatever zone you're after
+                    $tz = new \DateTimeZone('Asia/Kolkata');
                     $dt->setTimezone($tz);
                     $current_date_time = $dt->format('d-m-Y H:i:s');
 
@@ -1277,14 +1158,19 @@ class WorkPlanningController extends Controller
                     $eleven = date('d-m-Y 11:00:00');
 
                     // If yesterday is sunday,holiday or leave then email is not sent
+                    $today = date("l");
                     $yesterday = date("l", strtotime("-1 days"));
                     $yesterday_date = date("Y-m-d", strtotime("-1 days"));
+                    $yesterday_before_date = date("Y-m-d", strtotime("-2 days"));
 
                     $holidays = Holidays::getHolidayByDateAndID($yesterday_date,$added_by_id,'');
                     $leave_data = UserLeave::getLeaveByDateAndID($yesterday_date,$added_by_id,'','');
 
-                    if($yesterday == 'Sunday' || (isset($holidays) && sizeof($holidays) > 0) || (isset($leave_data) && $leave_data != '')) {
-
+                    if((isset($holidays) && sizeof($holidays) > 0) || (isset($leave_data) && $leave_data != '')) {
+                    }
+                    else if($today == 'Sunday' && $work_planning_date == $yesterday_date) {
+                    }
+                    else if($yesterday == 'Sunday' && $work_planning_date == $yesterday_before_date) {
                     }
                     else {
 
@@ -1310,42 +1196,15 @@ class WorkPlanningController extends Controller
 
                             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-                            // Set Delay Counter
-
-                            $month = date('m');
-                            $year = date('Y');
-
-                            $work_planning = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
-                            $delay_counter = '';
-
-                            if(isset($work_planning) && sizeof($work_planning) > 0) {
-
-                                foreach ($work_planning as $key => $value) {
-                                    
-                                    if($delay_counter == '') {
-                                        $delay_counter = $value['delay_counter'];
-                                    }
-                                    else {
-                                        $delay_counter = $delay_counter + $value['delay_counter'];
-                                    }
-                                }
-                            }
-
-                            if($delay_counter > 3) {
-
-                                \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1', `attendance` = 'HD' WHERE `id` = $id");
-                            }
-                            else {
-
-                                \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1' WHERE `id` = $id");
-                            }
+                            // Update Delay Counter
+                            \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1' WHERE `id` = $id");
                         }
                     }
                 }
             }
             else {
 
-                // Send Email Notification
+                // Send Email Notification of Remarks
 
                 // Get Work Planning Details
                 $work_planning = WorkPlanning::getWorkPlanningDetailsById($id);
@@ -1477,7 +1336,7 @@ class WorkPlanningController extends Controller
 
             $utc = date('d-m-Y H:i:s');
             $dt = new \DateTime($utc);
-            $tz = new \DateTimeZone('Asia/Kolkata'); // or whatever zone you're after
+            $tz = new \DateTimeZone('Asia/Kolkata');
             $dt->setTimezone($tz);
             $current_date_time = $dt->format('d-m-Y H:i:s');
 
@@ -1485,14 +1344,19 @@ class WorkPlanningController extends Controller
             $eleven = date('d-m-Y 11:00:00');
 
             // If yesterday is sunday,holiday or leave then email is not sent
+            $today = date("l");
             $yesterday = date("l", strtotime("-1 days"));
             $yesterday_date = date("Y-m-d", strtotime("-1 days"));
+            $yesterday_before_date = date("Y-m-d", strtotime("-2 days"));
 
             $holidays = Holidays::getHolidayByDateAndID($yesterday_date,$added_by_id,'');
             $leave_data = UserLeave::getLeaveByDateAndID($yesterday_date,$added_by_id,'','');
 
-            if($yesterday == 'Sunday' || (isset($holidays) && sizeof($holidays) > 0) || (isset($leave_data) && $leave_data != '')) {
-
+            if((isset($holidays) && sizeof($holidays) > 0) || (isset($leave_data) && $leave_data != '')) {
+            }
+            else if($today == 'Sunday' && $work_planning_date == $yesterday_date) {
+            }
+            else if($yesterday == 'Sunday' && $work_planning_date == $yesterday_before_date) {
             }
             else {
 
@@ -1518,34 +1382,8 @@ class WorkPlanningController extends Controller
 
                     event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-                    // Set Delay Counter
-                    $month = date('m');
-                    $year = date('Y');
-                    
-                    $work_planning = WorkPlanning::getWorkPlanningDetails($user_id,$month,$year,'','');
-                    $delay_counter = '';
-
-                    if(isset($work_planning) && sizeof($work_planning) > 0) {
-
-                        foreach ($work_planning as $key => $value) {
-                                    
-                            if($delay_counter == '') {
-                                $delay_counter = $value['delay_counter'];
-                            }
-                            else {
-                                $delay_counter = $delay_counter + $value['delay_counter'];
-                            }
-                        }
-                    }
-
-                    if($delay_counter > 3) {
-
-                        \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1', `attendance` = 'HD' WHERE `id` = $wp_id");
-                    }
-                    else {
-
-                        \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1' WHERE `id` = $wp_id");
-                    }
+                    // Update Delay Counter
+                    \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1' WHERE `id` = $wp_id");
                 }
             }
         }
@@ -1556,166 +1394,157 @@ class WorkPlanningController extends Controller
 
         $wp_id = $_POST['wp_id'];
         $reply = $_POST['check'];
-        $user_id = \Auth::user()->id;
 
+        $user_id = \Auth::user()->id;
         $manager_user_id = env('MANAGERUSERID');
 
-        if ($reply == 'Approved') {
+        // First Get all basic required fields from table
+        $work_planning = WorkPlanning::find($wp_id);
+        $status = $work_planning->status;
+        $post_discuss_status = $work_planning->post_discuss_status;
+        $total_actual_time = $work_planning->total_actual_time;
+        $work_type = $work_planning->work_type;
+        $added_by_id = $work_planning->added_by;
 
-            $work_planning = WorkPlanning::find($wp_id);
-            $status = $work_planning->status;
-            $post_discuss_status = $work_planning->post_discuss_status;
-            $total_actual_time = $work_planning->total_actual_time;
-            $work_type = $work_planning->work_type;
-            $added_by_id = $work_planning->added_by;
-            $added_day = date("l",strtotime($work_planning->added_date));
+        $added_date = $work_planning->added_date;
+        $added_day = date("l",strtotime($added_date));
+        $month = date("m",strtotime($added_date));
+        $year = date("Y",strtotime($added_date));
 
-            if($added_day == 'Saturday') {
+        //1st Condition Check Working Hours
+        if($added_day == 'Saturday') {
 
-                if($total_actual_time < '04:30:00') {
+            if($total_actual_time < '05:30:00') {
+                $attendance = 'HD';
+            }
+            else {
+                $attendance = 'F';
+            }
+        }  
+        else {
+
+            if($added_by_id == $manager_user_id) {
+
+                if($total_actual_time < '07:00:00') {
                     $attendance = 'HD';
                 }
                 else {
                     $attendance = 'F';
                 }
-            }  
+            }
             else {
 
-                if($added_by_id == $manager_user_id) {
-
-                    if($total_actual_time < '06:00:00') {
-                        $attendance = 'HD';
-                    }
-                    else {
-                        $attendance = 'F';
-                    }
+                if($total_actual_time < '08:00:00') {
+                    $attendance = 'HD';
                 }
                 else {
-
-                    if($total_actual_time < '07:00:00') {
-                        $attendance = 'HD';
-                    }
-                    else {
-                        $attendance = 'F';
-                    }
+                    $attendance = 'F';
                 }
             }
-
-            if($post_discuss_status == 0 && $status == 2) {
-
-                $work_planning->post_discuss_status = 1;
-            }
-
-            $work_planning->attendance = $attendance;
-            $work_planning->status = 1;
-            $work_planning->approved_by = $user_id;
-            $work_planning->save();
         }
-/*
-        // For Work From Home
-        $month = date('m');
-        $year = date('Y');
-        
+
+        if($post_discuss_status == 0 && $status == 2) {
+            $work_planning->post_discuss_status = 1;
+        }
+
+        $work_planning->attendance = $attendance;
+        $work_planning->status = 1;
+        $work_planning->approved_by = $user_id;
+        $work_planning->save();
+
+        //2nd Condition Check Late in early go Requests
+        $late_in_early_go_res = LateInEarlyGo::getApprovedRequests($added_by_id,$added_date);
+
+        if(isset($late_in_early_go_res) && $late_in_early_go_res != '') {
+
+            \DB::statement("UPDATE `work_planning` SET `attendance` = 'F' WHERE `id` = $wp_id;");
+        }
+
+        //3rd Condition Check Work From Home
         // Get previous WFH requests for set attendance from 3rd date
-        if($work_type == 'WFH') {
+        $work_from_home_res = WorkFromHome::getApprovedWFHRequests($added_by_id,$month,$year);
 
-            $work_from_home_res = WorkFromHome::getCurrentMonthWFHRequests($added_by_id,$month,$year);
+        if(isset($work_from_home_res) && sizeof($work_from_home_res) > 0 && $work_type == 'WFH') {
 
-            if(isset($work_from_home_res) && sizeof($work_from_home_res) > 0) {
-
-                $dates_string = '';
-                foreach ($work_from_home_res as $key => $value) {
+            $dates_string = '';
+            foreach ($work_from_home_res as $key => $value) {
                         
-                    if($dates_string == '') {
-                        $dates_string = $value['selected_dates'];
-                    }
-                    else {
-                        $dates_string .= "," . $value['selected_dates'];
-                    }
+                if($dates_string == '') {
+                    $dates_string = $value['selected_dates'];
                 }
+                else {
+                    $dates_string .= "," . $value['selected_dates'];
+                }
+            }
 
-                $dates_array = explode(",", $dates_string);
-                $dates_array = array_unique($dates_array);
+            $dates_array = explode(",", $dates_string);
+            $dates_array = array_unique($dates_array);
 
-                if(isset($dates_array) && sizeof($dates_array) > 2) {
+            if(isset($dates_array) && sizeof($dates_array) > 2) {
 
-                    $i = 0;
-                    foreach ($dates_array as $key1 => $value1) {
+                $i = 0;
+                foreach ($dates_array as $key1 => $value1) {
 
-                        $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($value1,$added_by_id);
+                    $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($value1,$added_by_id);
 
-                        if(isset($get_work_planning_res) && $get_work_planning_res != '') {
+                    if(isset($get_work_planning_res) && $get_work_planning_res != '') {
 
-                            $get_total_Actual_time = $get_work_planning_res->total_actual_time;
-                            $day = date("l",strtotime($get_work_planning_res->added_date));
+                        $get_wp_id = $get_work_planning_res->id;
+                        $get_total_Actual_time = $get_work_planning_res->total_actual_time;
+                        $day = date("l",strtotime($get_work_planning_res->added_date));
                             
-                            if($i <= 1) {
+                        if($i <= 1) {
 
-                                if($day == 'Saturday') {
+                            if($day == 'Saturday') {
 
-                                    if($get_total_Actual_time < '04:30:00') {
+                                if($get_total_Actual_time < '05:30:00') {
+                                    $attendance = 'HD';
+                                }
+                                else {
+                                    $attendance = 'F';
+                                }
+                            }  
+                            else {
+
+                                if($added_by_id == $manager_user_id) {
+
+                                    if($get_total_Actual_time < '07:00:00') {
                                         $attendance = 'HD';
                                     }
                                     else {
                                         $attendance = 'F';
                                     }
-                                }  
+                                }
                                 else {
 
-                                    if($added_by_id == $manager_user_id) {
-
-                                        if($get_total_Actual_time < '06:00:00') {
-                                            $attendance = 'HD';
-                                        }
-                                        else {
-                                            $attendance = 'F';
-                                        }
+                                    if($get_total_Actual_time < '08:00:00') {
+                                        $attendance = 'HD';
                                     }
                                     else {
-
-                                        if($get_total_Actual_time < '07:00:00') {
-                                            $attendance = 'HD';
-                                        }
-                                        else {
-                                            $attendance = 'F';
-                                        }
+                                        $attendance = 'F';
                                     }
                                 }
-
-                                \DB::statement("UPDATE `work_planning` SET `attendance` = '$attendance' WHERE `added_date` = '$value1';");
                             }
-                            else {
 
-                                \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `added_date` = '$value1';");
-                            }
+                            \DB::statement("UPDATE `work_planning` SET `attendance` = '$attendance' WHERE `id` = $get_wp_id;");
                         }
-                        $i++;
+                        else {
+
+                            \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $get_wp_id;");
+                        }
                     }
-                }
-            }
-        }*/
-
-        // Set Delay Counter
-        /*$work_planning = WorkPlanning::getWorkPlanningDetails($added_by_id,$month,$year,'','');
-        $delay_counter = '';
-
-        if(isset($work_planning) && sizeof($work_planning) > 0) {
-
-            foreach ($work_planning as $key => $value) {
-                    
-                if($delay_counter == '') {
-                    $delay_counter = $value['delay_counter'];
-                }
-                else {
-                    $delay_counter = $delay_counter + $value['delay_counter'];
+                    $i++;
                 }
             }
         }
 
-        if($delay_counter > 3) {
+        //4th Condition Check Delay Report
+        $delay_work_planning = WorkPlanning::getDelayWorkPlanningDetails($added_by_id,$month,$year);
 
-            \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $wp_id");
-        }*/
+        if(isset($delay_work_planning) && sizeof($delay_work_planning) > 3) {
+
+           \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $wp_id");
+        }
 
         $data = 'success';
 

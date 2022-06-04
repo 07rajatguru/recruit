@@ -135,11 +135,12 @@ class WorkFromHome extends Model
         return $response;
     }
 
-    public static function getCurrentMonthWFHRequests($user_id,$month,$year) {
+    public static function getApprovedWFHRequests($user_id,$month,$year) {
 
         $query = WorkFromHome::query();
         $query = $query->select('work_from_home.*');
         $query = $query->where('work_from_home.user_id','=',$user_id);
+        $query = $query->where('work_from_home.status','=','1');
 
         if ($month != '' && $year != '') {
             $query = $query->where(\DB::raw('month(work_from_home.from_date)'),'=',$month);

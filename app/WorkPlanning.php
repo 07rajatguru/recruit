@@ -717,7 +717,36 @@ class WorkPlanning extends Model
                 $i++;
             }
         }
-
         return $work_planning_res;
+    }
+
+    public static function getDelayWorkPlanningDetails($user_id,$month,$year) {
+
+        $query = WorkPlanning::query();
+        $query = $query->where('work_planning.delay_counter','=',1);
+        $query = $query->where('work_planning.added_by','=',$user_id);
+        
+        if ($month != '' && $year != '') {
+            $query = $query->where(\DB::raw('month(work_planning.added_date)'),'=',$month);
+            $query = $query->where(\DB::raw('year(work_planning.added_date)'),'=',$year);
+        }
+
+        $query = $query->select('work_planning.*');
+        $response = $query->get();
+
+        $i=0;
+        $delay_work_planning = array();
+
+        if(isset($response) && sizeof($response) > 0) {
+
+            foreach ($response as $key => $value) {
+
+                $delay_work_planning[$i]['id'] = $value->id;
+                $delay_work_planning[$i]['delay_counter'] = $value->delay_counter;
+                
+                $i++;
+            }
+        }
+        return $delay_work_planning;
     }
 }

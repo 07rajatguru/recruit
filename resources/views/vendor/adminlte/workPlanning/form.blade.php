@@ -203,6 +203,12 @@
     @if( $action == 'add')
         <input type="hidden" id="row_cnt" name="row_cnt" value="6">
         <input type="hidden" id="plus_one_hour_time" name="plus_one_hour_time" value="{{ $plus_one_hour_time }}">
+
+        <!-- Calculate Actual Login Time -->
+        <?php
+            $actual_loggedin_time = date("H:i",strtotime($loggedin_time));
+        ?>
+        <input type="hidden" id="actual_loggedin_time" name="actual_loggedin_time" value="{{ $actual_loggedin_time }}">
     @endif
 
     @if($action == 'edit')
@@ -614,7 +620,9 @@
         var dd1 = d1.valueOf();
         var dd2 = d2.valueOf();
 
-        if(dd2 > dd1) {
+        var actual_loggedin_time = $("#actual_loggedin_time").val();
+
+        if(dd2 > dd1 || actual_loggedin_time > '10:30') {
 
             $("#alertModal").modal('show');
             return false;
