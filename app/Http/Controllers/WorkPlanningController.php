@@ -620,7 +620,9 @@ class WorkPlanningController extends Controller
         $timestamp = strtotime($org_loggedin_time) + $one_hour;
         $plus_one_hour_time = date('H:i:s', $timestamp);
 
-        return view('adminlte::workPlanning.create',compact('action','work_type','selected_work_type','time_array','selected_projected_time','selected_actual_time','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','minimum_working_hours','plus_one_hour_time'));
+        $actual_loggedin_time = date("H:i",strtotime($loggedin_time));
+
+        return view('adminlte::workPlanning.create',compact('action','work_type','selected_work_type','time_array','selected_projected_time','selected_actual_time','loggedin_time','loggedout_time','work_planning_time','work_planning_status_time','minimum_working_hours','plus_one_hour_time','actual_loggedin_time'));
     }
 
     public function store(Request $request) {
@@ -1406,7 +1408,6 @@ class WorkPlanningController extends Controller
         $work_type = $work_planning->work_type;
         $added_by_id = $work_planning->added_by;
         $loggedin_time = $work_planning->loggedin_time;
-        $loggedout_time = $work_planning->loggedout_time;
 
         $added_date = $work_planning->added_date;
         $added_day = date("l",strtotime($added_date));
@@ -1552,7 +1553,7 @@ class WorkPlanningController extends Controller
 
         // Get Actual Logged in Log out Time
 
-        if($loggedin_time > '05:00:00' || $loggedout_time < '13:00:00') {
+        if($loggedin_time > '05:00:00') {
 
             $time_delay_work_planning = WorkPlanning::getUserTimeByWorkPlanning($added_by_id,$month,$year);
 

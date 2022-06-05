@@ -204,10 +204,6 @@
         <input type="hidden" id="row_cnt" name="row_cnt" value="6">
         <input type="hidden" id="plus_one_hour_time" name="plus_one_hour_time" value="{{ $plus_one_hour_time }}">
 
-        <!-- Calculate Actual Login Time -->
-        <?php
-            $actual_loggedin_time = date("H:i",strtotime($loggedin_time));
-        ?>
         <input type="hidden" id="actual_loggedin_time" name="actual_loggedin_time" value="{{ $actual_loggedin_time }}">
     @endif
 
