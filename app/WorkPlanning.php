@@ -749,4 +749,28 @@ class WorkPlanning extends Model
         }
         return $delay_work_planning;
     }
+
+    public static function getUserTimeByWorkPlanning($user_id,$month,$year) {
+
+        $query = WorkPlanning::query();
+        $query = $query->where('work_planning.added_by','=',$user_id);
+        $query = $query->where('work_planning.status','=',1);
+
+        if ($month != '' && $year != '') {
+
+            $query = $query->where(\DB::raw('month(work_planning.added_date)'),'=',$month);
+            $query = $query->where(\DB::raw('year(work_planning.added_date)'),'=',$year);
+        }
+
+        $query = $query->where(function($query) {
+
+            $query = $query->where('work_planning.loggedin_time','>','05:00:00');
+            $query = $query->orwhere('work_planning.loggedout_time','<','13:00:00');
+        });
+
+        $query = $query->select('work_planning.added_date','work_planning.attendance','work_planning.status','work_planning.loggedin_time','work_planning.loggedout_time');
+        
+        $response = $query->get();
+        return $response;
+    }
 }

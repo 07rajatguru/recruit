@@ -1405,6 +1405,8 @@ class WorkPlanningController extends Controller
         $total_actual_time = $work_planning->total_actual_time;
         $work_type = $work_planning->work_type;
         $added_by_id = $work_planning->added_by;
+        $loggedin_time = $work_planning->loggedin_time;
+        $loggedout_time = $work_planning->loggedout_time;
 
         $added_date = $work_planning->added_date;
         $added_day = date("l",strtotime($added_date));
@@ -1461,7 +1463,7 @@ class WorkPlanningController extends Controller
         }
 
         //3rd Condition Check Work From Home
-        // Get previous WFH requests for set attendance from 3rd date
+        //Get previous WFH requests for set attendance from 3rd date
         $work_from_home_res = WorkFromHome::getApprovedWFHRequests($added_by_id,$month,$year);
 
         if(isset($work_from_home_res) && sizeof($work_from_home_res) > 0 && $work_type == 'WFH') {
@@ -1544,6 +1546,20 @@ class WorkPlanningController extends Controller
         if(isset($delay_work_planning) && sizeof($delay_work_planning) > 3) {
 
            \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $wp_id");
+        }
+
+        //5th Condition Check Loggedin Logout Time
+
+        // Get Actual Logged in Log out Time
+
+        if($loggedin_time > '05:00:00' || $loggedout_time < '13:00:00') {
+
+            $time_delay_work_planning = WorkPlanning::getUserTimeByWorkPlanning($added_by_id,$month,$year);
+
+            if(isset($time_delay_work_planning) && sizeof($time_delay_work_planning) > 3) {
+
+               \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $wp_id");
+            }
         }
 
         $data = 'success';
