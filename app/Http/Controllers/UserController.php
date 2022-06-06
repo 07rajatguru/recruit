@@ -392,7 +392,7 @@ class UserController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-        // Send email notification to user for select optional leaves
+        // Send Welcome email notification to user
 
         //Get Reports to Email
         $report_res = User::getReportsToUsersEmail($user_id);
@@ -415,7 +415,7 @@ class UserController extends Controller
         $module_id = $user_id;
         $cc = implode(",",$cc_users_array);
 
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        //event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
         // Assign Fixed Holidays to new user
 
