@@ -1062,7 +1062,7 @@ class UserController extends Controller
             $module_id = $id;
             $cc = implode(",",$cc_users_array);
 
-            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+            //event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         }
 
         if (isset($status) && $status == 'Active') {
