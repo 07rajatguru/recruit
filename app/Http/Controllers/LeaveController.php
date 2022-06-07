@@ -877,7 +877,9 @@ class LeaveController extends Controller
 
                 if(isset($get_work_planning_res) && $get_work_planning_res != '') {
 
-                    \DB::statement("UPDATE `work_planning` SET `attendance` = NULL WHERE `added_date` = '$value' AND `added_by` = $user_id");
+                    $wp_id = $get_work_planning_res->id;
+
+                    \DB::statement("UPDATE `work_planning` SET `attendance` = NULL WHERE `id` = $wp_id");
                 }
                 else {
 
