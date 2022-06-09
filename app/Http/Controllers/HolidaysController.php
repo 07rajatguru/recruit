@@ -335,7 +335,7 @@ class HolidaysController extends Controller
             $month = date('m',strtotime($joining_date));
             $year = date('Y',strtotime($joining_date));
             $current_year = date('Y');
-            $last_year = $current_year - 1;
+            $current_month = date('m');
 
             if($user_details->employment_type == 'Intern') {
 
@@ -348,20 +348,20 @@ class HolidaysController extends Controller
             }
             else {
 
-                if($year < $current_year && $year != $last_year) {
+                if($year < $current_year) {
                     $length = 3;
                 }
-                elseif(($month >= 4 && $month <= 7 && $year == $current_year) || ($month >= 4 && $month <= 7 && $year == $last_year)) {
+                elseif($month >= 12 && $month <= 03 && $year == $current_year && $month < $current_month) {
                     $length = 3;
                 }
-                elseif(($month >= 8 && $month <= 11 && $year == $current_year) || ($month >= 8 && $month <= 11 && $year == $last_year)) {
+                elseif($month >= 4 && $month <= 7 && $year == $current_year) {
+                    $length = 3;
+                }
+                elseif($month >= 8 && $month <= 11 && $year == $current_year) {
                     $length = 2;
                 }
-                elseif(($month >= 12 && $month <= 03 && $year == $current_year) || ($month >= 12 && $month <= 03 && $year == $last_year)) {
+                elseif($month >= 12 && $month <= 03 && $year == $current_year) {
                     $length = 1;
-                }
-                elseif($year == $last_year) {
-                    $length = 3;
                 }
                 else {
                     $length = 1;
