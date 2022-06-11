@@ -4900,4 +4900,33 @@ class JobOpen extends Model
         }
         return $jobs_list;
     }
+
+    public static function getJobsByClientStatus() {
+
+        //Get Only Active & Passive Clients
+        $status_array = array(0,1);
+
+        $query = JobOpen::query();
+        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $query = $query->select('job_openings.id','job_openings.client_id',\DB::raw("MAX(job_openings.created_at) as created_at"),'client_basicinfo.status as client_status','client_basicinfo.created_at as client_created_at');
+        $query = $query->whereIn('client_basicinfo.status',$status_array);
+        $query = $query->where('client_basicinfo.delete_client','=',0);
+        $query = $query->groupBy('job_openings.client_id');
+        $response = $query->get();
+
+        $jobs = array();
+        $i = 0;
+
+        foreach ($response as $key => $value) {
+
+            $jobs[$i]['job_id'] = $value->id;
+            $jobs[$i]['client_id'] = $value->client_id;
+            $jobs[$i]['created_at'] = $value->created_at;
+            $jobs[$i]['client_status'] = $value->client_status;
+            $jobs[$i]['client_created_at'] = $value->client_created_at;
+
+            $i++;
+        }
+        return $jobs;
+    }
 }

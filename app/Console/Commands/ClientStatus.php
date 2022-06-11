@@ -44,79 +44,59 @@ class ClientStatus extends Command
     {
         $active_clients = array();
 
-        $job_data = \DB::select(\DB::raw('SELECT `id`,`job_id`,`client_id`,`created_at` FROM `job_openings` WHERE `created_at` IN (SELECT MAX(`created_at`) FROM `job_openings` GROUP BY `client_id`)'));
+        //$job_data = \DB::select(\DB::raw('SELECT `id`,`job_id`,`client_id`,`created_at` FROM `job_openings` WHERE `created_at` IN (SELECT MAX(`created_at`) FROM `job_openings` GROUP BY `client_id`)'));
 
-        //print_r($job_data);exit;
+        // Checked All Active Passive Clients Jobs Created Date
+        $job_data = JobOpen::getJobsByClientStatus();
 
-        $client = ClientBasicinfo::query();
-        $client = $client->select('client_basicinfo.id');
-        $client_res = $client->get();
-
-        $j = 0;
-        foreach ($client_res as $key => $value) {
-            $clientids[$j] = $value->id;
-            $j++;
-        }
-        //print_r($clientids);exit;
-        
         if(isset($job_data) && $job_data != '') {
             
             $i = 0;
             foreach($job_data as $key1 => $value1) {
 
-                $client_id = $value1->client_id;
-                $job_created_at = $value1->created_at;
-
-                $client_status_query = ClientBasicinfo::query();
-                $client_status_query = $client_status_query->where('id',$client_id);
-                $client_res = $client_status_query->first();
-                $client_status = $client_res->status;
-
-                // if client status is 2,3,4 then ignore that clients
-                if($client_status==2 or $client_status==3 or $client_status==4)
-                     continue;
+                $client_id = $value1['client_id'];
+                $job_created_at = $value1['created_at'];
+                $client_status = $value1['client_status'];
 
                 $date1 = date('Y-m-d',strtotime("-30 days"));
 
-                if(isset($job_created_at)) {
+                if(($job_created_at) < $date1) {
 
-                   if(($job_created_at) < $date1) {
-
-                        // set passive date for passive clients
-                        if ($client_status == 0) {
-                            continue;
-                        }
-                        else {
-                            $today_date = date('Y-m-d');
-                            DB::statement("UPDATE `client_basicinfo` SET `status`='0',`passive_date` = '$today_date' WHERE `id`='$client_id'");
-                            echo " status - 0 :".$client_id;
-                        }
-                   }
-                   else {
-                        DB::statement("UPDATE `client_basicinfo` SET `status`='1',`passive_date` = NULL WHERE `id`='$client_id'");
-                        $active_clients[] = $client_id;
-                        echo " status - 1 :".$client_id;
-                   }
-                }
-                else {
-
-                    // set passive date for passive clients
                     if ($client_status == 0) {
-                        continue;
+                            continue;
                     }
                     else {
+                        
                         $today_date = date('Y-m-d');
                         DB::statement("UPDATE `client_basicinfo` SET `status`='0',`passive_date` = '$today_date' WHERE `id`='$client_id'");
 
                         echo " status - 0 :".$client_id;
                     }
                 }
-             
-                if (array_search($value1->client_id,$clientids)) {
-                    unset($clientids[array_search($value1->client_id,$clientids)]);
+                else {
+                    
+                    DB::statement("UPDATE `client_basicinfo` SET `status`='1',`passive_date` = NULL WHERE `id`='$client_id'");
+                    $active_clients[] = $client_id;
+
+                    echo " status - 1 :".$client_id;
                 }
                 $i++;
             }
+        }
+        
+        // Checked All Active Passive Clients Created Date
+        $status_array = array(0,1);
+
+        $client = ClientBasicinfo::query();
+        $client = $client->select('client_basicinfo.id');
+        $client = $client->whereIn('client_basicinfo.status',$status_array);
+        $client = $client->where('client_basicinfo.delete_client','=',0);
+        $client_res = $client->get();
+        
+        $j = 0;
+        foreach ($client_res as $key => $value) {
+            $clientids[$j] = $value->id;
+            $j++;
         }
 
         foreach ($clientids as $key => $value) {
@@ -125,10 +105,6 @@ class ClientStatus extends Command
             $client_status_query = $client_status_query->where('id',$value);
             $client_res = $client_status_query->first();
             $client_status = $client_res->status;
-
-            // if client status is 2,3,4 then ignore that clients
-            if($client_status==2 or $client_status==3 or $client_status==4)
-                continue;
 
             // Set Passive date for Passive Clients
 
@@ -145,8 +121,10 @@ class ClientStatus extends Command
                         continue;
                     }
                     else {
+
                         $today_date = date('Y-m-d');
                         DB::statement("UPDATE `client_basicinfo` SET `status`='0',`passive_date` = '$today_date' WHERE `id`='$value'");
+
                         echo " status - 0 :".$value;
                     }
                 }
@@ -154,11 +132,12 @@ class ClientStatus extends Command
             else {
                 
                 DB::statement("UPDATE `client_basicinfo` SET `status`='1',`passive_date` = NULL WHERE `id`='$value'");
+
                 echo " status - 1 :".$value;
             }
         }
 
-        // get all jobs which are created before 1 month
+        // Get all jobs which are created before 1 month
         $date1 = date('Y-m-d 00:00:00',strtotime("-30 days"));
         $jo_query = JobOpen::query();
         $jo_query = $jo_query->where('created_at','<',"$date1");
@@ -171,9 +150,8 @@ class ClientStatus extends Command
             $all_jobs[$i]['client_id'] = $v->client_id;
             $i++;
         }
-        //print_r($all_jobs);exit;
 
-        // in that jobs find in which jobs no cvs are associated within 1 month and get their client ids
+        // In all jobs find which jobs no cvs are associated within 1 month and get their client ids
         $j = 0;
         foreach ($all_jobs as $k=>$v) {
 
@@ -187,7 +165,7 @@ class ClientStatus extends Command
             
             if(isset($job_res->job_id)) {
 
-                // get client id from job id
+                // Get client id from job id
                 $jo_query2 = JobOpen::query();
                 $jo_query2 = $jo_query2->where('id',$job_res->job_id);
                 $client_res2 = $jo_query2->first();
@@ -198,7 +176,7 @@ class ClientStatus extends Command
                 $client_res = $client_status_query->first();
                 $client_status = $client_res['status'];
 
-                // if client status is 2,3,4 then ignore that clients
+                // If client status is 2,3,4 then ignore that clients
                 if($client_status==2 or $client_status==3 or $client_status==4)
                     continue;
 
@@ -211,13 +189,13 @@ class ClientStatus extends Command
                 $client_res = $client_status_query->first();
                 $client_status = $client_res['status'];
 
-                // if client status is 2,3,4 then ignore that clients
+                // If client status is 2,3,4 then ignore that clients
                 if($client_status==2 or $client_status==3 or $client_status==4)
                     continue;
 
                 if(!in_array($c_id[$j],$active_clients)) {
 
-                    // set passive date for passive clients
+                    // Set passive date for passive clients
                     if ($client_status == 0) {
                         continue;
                     }

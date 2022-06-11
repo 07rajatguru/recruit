@@ -2005,12 +2005,12 @@ class EveryMinute extends Command
 
                     config([
 
-                        'mail.driver' => trim('mail'),
+                        'mail.driver' => trim('sendmail'),
                         'mail.host' => trim('smtp.gmail.com'),
-                        'mail.port' => trim('587'),
+                        'mail.port' => trim('465'),
                         'mail.username' => trim($user_email_details->email),
                         'mail.password' => trim($user_email_details->password),
-                        'mail.encryption' => trim('tls'),
+                        'mail.encryption' => trim('ssl'),
                     ]);
                 }
                 else {
@@ -2596,7 +2596,7 @@ class EveryMinute extends Command
                         $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
                     });
 
-                    \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
+                    \DB::statement("UPDATE `emails_notification` SET `status`='1' where `id` = '$email_notification_id'");
                 }
             }
 
