@@ -351,17 +351,14 @@ class HolidaysController extends Controller
                 if($year < $current_year) {
                     $length = 3;
                 }
-                elseif($month >= 12 && $month <= 03 && $year == $current_year && $month < $current_month) {
+                elseif($year == $current_year && $current_month >= 4 && $current_month <= 7) {
                     $length = 3;
                 }
-                elseif($month >= 4 && $month <= 7 && $year == $current_year) {
+                elseif($year == $current_year && $month >= 4 && $month <= 7) {
                     $length = 3;
                 }
-                elseif($month >= 8 && $month <= 11 && $year == $current_year) {
+                elseif($year == $current_year && $month >= 8 && $month <= 11) {
                     $length = 2;
-                }
-                elseif($month >= 12 && $month <= 03 && $year == $current_year) {
-                    $length = 1;
                 }
                 else {
                     $length = 1;
