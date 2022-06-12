@@ -639,7 +639,7 @@ class WorkPlanningController extends Controller
 
         // Get User Loggedin Time
         $user_id = \Auth::user()->id;
-        $date = date('Y-m-d');
+        $date = $request->input('date_value');
         $get_time = UsersLog::getUserTimeByID($user_id,$date);
 
         if($get_time['login'] != '') {
@@ -745,7 +745,7 @@ class WorkPlanningController extends Controller
 
         $work_planning->work_planning_time = date('H:i:s');
         $work_planning->remaining_time = $remaining_time;
-        $work_planning->added_date = date('Y-m-d');
+        $work_planning->added_date = $date;
         $work_planning->added_by = $user_id;
         $work_planning->report_delay = $report_delay;
         $work_planning->report_delay_content = $report_delay_content;

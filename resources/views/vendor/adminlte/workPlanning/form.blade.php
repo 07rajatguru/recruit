@@ -17,23 +17,31 @@
                 <h2>Edit Work Planning Sheet</h2>
             @else
                 <h2>Add Work Planning</h2>
-                <div role="tabpanel">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li role="presentation" class="pending">
-                            <a href="" role="tab" data-toggle="tab" style="font-size:15px;color: black;" title="Yesterday" onclick="setDateValue('Yesterday');">
-                            <b>Yesterday</b></a>
-                        </li>
 
-                        <li role="presentation" class="approved active">
-                            <a href="" role="tab" data-toggle="tab" style="font-size:15px;color: black;" title="Today" onclick="setDateValue('Today');"><b>Today
-                            </b></a>
-                        </li>
+                <?php
 
-                        <li role="presentation" class="rejected">
-                            <a href="" role="tab" data-toggle="tab" style="font-size:15px;color: black;" title="Tomorrow" onclick="setDateValue('Tomorrow');"><b>Tomorrow</b></a>
-                        </li>
-                    </ul>
-                </div>
+                    $utc_current_date = date('Y-m-d') . " " . date('H:i:s');
+                    $dt_current_date = new \DateTime($utc_current_date);
+                    $tz_current_date = new \DateTimeZone('Asia/Kolkata');
+
+                    $dt_current_date->setTimezone($tz_current_date);
+                    $time = strtotime($dt_current_date->format('H:i:s'));
+                    $current_time = date("H:i", $time);
+                ?>
+
+                @if($current_time >= '16:00')
+                    <div role="tabpanel">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="today active">
+                                <a href="" role="tab" data-toggle="tab" style="font-size:15px;color: black;" title="Today" onclick="setDateValue('Today');"><b>Today</b></a>
+                            </li>
+
+                            <li role="presentation" class="tomorrow">
+                                <a href="" role="tab" data-toggle="tab" style="font-size:15px;color: black;" title="Tomorrow" onclick="setDateValue('Tomorrow');"><b>Tomorrow</b></a>
+                            </li>
+                        </ul>
+                    </div>
+                @endif
             @endif
         </div>
         <div class="pull-right">
@@ -664,22 +672,15 @@
 
     function setDateValue(day) {
         
-        if(day == 'Yesterday') {
-
-            var a = new Date(new Date().setDate(new Date().getDate() - 1));
-            var utc_date = a.toJSON().slice(0,10).replace(/-/g,'/');
-
-            $("#date_value").val(utc_date);
-        }
         if(day == 'Today') {
             
-            var utc_date = new Date().toJSON().slice(0,10).replace(/-/g,'/');
+            var utc_date = new Date().toJSON().slice(0,10).replace(/-/g,'-');
             $("#date_value").val(utc_date);
         }
         if(day == 'Tomorrow') {
             
             var a = new Date(new Date().setDate(new Date().getDate() + 1));
-            var utc_date = a.toJSON().slice(0,10).replace(/-/g,'/');
+            var utc_date = a.toJSON().slice(0,10).replace(/-/g,'-');
             $("#date_value").val(utc_date);
         }
     }
