@@ -213,7 +213,7 @@
                                     @endif
 
                                     <td>{{ $v['loggedout_time'] }}</td>
-                                    <td>{{ $v['added_date'] }} - {{ $v['work_planning_time'] }}
+                                    <td>{{ $v['created_at'] }} - {{ $v['work_planning_time'] }}
                                     </td>
 
                                     @if(isset($v['status_date']) && $v['status_date'] != '')

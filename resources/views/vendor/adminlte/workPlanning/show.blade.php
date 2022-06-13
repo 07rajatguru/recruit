@@ -87,7 +87,7 @@
                         </tr>
                         <tr>
                             <th>Work Planning Time :</th>
-                            <td>{{ $work_planning['added_date'] }} - {{ $work_planning['work_planning_time'] }}</td>
+                            <td>{{ $work_planning['created_at'] }} - {{ $work_planning['work_planning_time'] }}</td>
                             <th>Status Time :</th>
 
                             @if(isset($work_planning['status_date']) && $work_planning['status_date'] != '')

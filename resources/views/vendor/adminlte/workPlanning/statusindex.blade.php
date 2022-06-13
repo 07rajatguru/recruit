@@ -186,7 +186,7 @@
                     @endif
 
                     <td>{{ $value['loggedout_time'] }}</td>
-                    <td>{{ $value['added_date'] }} - {{ $value['work_planning_time'] }}</td>
+                    <td>{{ $value['created_at'] }} - {{ $value['work_planning_time'] }}</td>
 
                     @if(isset($value['status_date']) && $value['status_date'] != '')
                         <td>{{ $value['status_date'] }} - {{ $value['work_planning_status_time'] }}</td>

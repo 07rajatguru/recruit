@@ -29,7 +29,7 @@
                     $current_time = date("H:i", $time);
                 ?>
 
-                @if($current_time >= '16:00')
+                @if($current_time >= '18:00')
                     <div role="tabpanel">
                         <ul class="nav nav-tabs" role="tablist">
                             <li role="presentation" class="today active">

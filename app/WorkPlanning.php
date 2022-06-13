@@ -140,6 +140,7 @@ class WorkPlanning extends Model
                     $work_planning_res[$i]['added_by'] = $value->fnm . " " . $value->lnm;
                     $work_planning_res[$i]['work_type'] = $value->work_type;
                     $work_planning_res[$i]['added_date'] = date('d-m-Y', strtotime("$value->added_date"));
+                    $work_planning_res[$i]['created_at'] = date('d-m-Y', strtotime("$value->created_at"));
 
                     // Convert Logged in time
                     if($value->loggedin_time != '') {
@@ -270,6 +271,7 @@ class WorkPlanning extends Model
             $work_planning_res['added_by'] = $response->fnm . " " . $response->lnm;
             $work_planning_res['work_type'] = $response->work_type;
             $work_planning_res['added_date'] = date('d-m-Y', strtotime("$response->added_date"));
+            $work_planning_res['created_at'] = date('d-m-Y', strtotime("$response->created_at"));
 
             // Convert Logged in time
             if($response->loggedin_time != '') {
