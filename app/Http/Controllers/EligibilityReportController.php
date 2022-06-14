@@ -73,27 +73,23 @@ class EligibilityReportController extends Controller
             // Get Team Type
             $team_type = User::getTeamType();
 
-            if ((isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $saloni_user_id)) {
+            if (isset($_POST['team_type']) && $_POST['team_type'] != '') {
                 
                 $selected_team_type = $_POST['team_type'];
 
-                if($selected_team_type == 'adler') {
-                    $type_array = array($recruitment,$hr_advisory,$management);
-                }
-                else if($selected_team_type == 'recruitment') {
+                if($selected_team_type == 'recruitment') {
                     $type_array = array($recruitment);
                 }
                 else if($selected_team_type == 'hr-advisory') {
                     $type_array = array($hr_advisory);
                 }
+                else {
+                    $type_array = array($recruitment,$hr_advisory,$management);
+                }
             }
             else {
 
-                if($user_id == $superadmin || $user_id == $saloni_user_id) {
-                    $selected_team_type = 'adler';
-                    $type_array = array($recruitment,$hr_advisory,$management);
-                }
-                else if($user_id == $manager_user_id && $recruitment_perm) {
+                if($user_id == $manager_user_id && $recruitment_perm) {
                     $selected_team_type = 'recruitment';
                     $type_array = array($recruitment);
                 }
@@ -102,7 +98,8 @@ class EligibilityReportController extends Controller
                     $type_array = array($hr_advisory);
                 }
                 else {
-                    return view('errors.403');
+                    $selected_team_type = 'adler';
+                    $type_array = array($recruitment,$hr_advisory,$management);
                 }
             }
 
@@ -264,11 +261,9 @@ class EligibilityReportController extends Controller
                 $user_id = $user->id;
 
                 $recruitment_perm = $user->can('display-recruitment-dashboard');
-                $hr_advisory_perm = $user->can('display-hr-advisory-dashboard');
-
-                $superadmin = getenv('SUPERADMINUSERID');
-                $saloni_user_id = getenv('SALONIUSERID');
                 $manager_user_id = getenv('MANAGERUSERID');
+
+                $hr_advisory_perm = $user->can('display-hr-advisory-dashboard');
                 $hr_advisory_user_id = getenv('STRATEGYUSERID');
                 
                 $recruitment = getenv('RECRUITMENT');
@@ -276,27 +271,23 @@ class EligibilityReportController extends Controller
                 $management = getenv('MANAGEMENT');
                 $hr_user_id = getenv('HRUSERID');
 
-                if ((isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $superadmin) || (isset($_POST['team_type']) && $_POST['team_type'] != '' && $user_id == $saloni_user_id)) {
+                if (isset($_POST['team_type']) && $_POST['team_type'] != '') {
                     
                     $selected_team_type = $_POST['team_type'];
 
-                    if($selected_team_type == 'adler') {
-                        $type_array = array($recruitment,$hr_advisory,$management);
-                    }
-                    else if($selected_team_type == 'recruitment') {
+                    if($selected_team_type == 'recruitment') {
                         $type_array = array($recruitment);
                     }
                     else if($selected_team_type == 'hr-advisory') {
                         $type_array = array($hr_advisory);
                     }
+                    else {
+                        $type_array = array($recruitment,$hr_advisory,$management);
+                    }
                 }
                 else {
 
-                    if($user_id == $superadmin || $user_id == $saloni_user_id) {
-                        $selected_team_type = 'adler';
-                        $type_array = array($recruitment,$hr_advisory,$management);
-                    }
-                    else if($user_id == $manager_user_id && $recruitment_perm) {
+                    if($user_id == $manager_user_id && $recruitment_perm) {
                         $selected_team_type = 'recruitment';
                         $type_array = array($recruitment);
                     }
@@ -305,7 +296,8 @@ class EligibilityReportController extends Controller
                         $type_array = array($hr_advisory);
                     }
                     else {
-                        return view('errors.403');
+                        $selected_team_type = 'adler';
+                        $type_array = array($recruitment,$hr_advisory,$management);
                     }
                 }
 
