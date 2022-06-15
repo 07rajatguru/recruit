@@ -838,28 +838,31 @@ class WorkPlanningController extends Controller
         // If Report Delay OR loggedin time is grater than 10:30 then send email notification
         if($time_diff > '01:00' || $actual_loggedin_time > '10:30') {
 
-            if($report_email == '') {
-                $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
+            if($report_delay == 'There is delay of Sending Report' || $report_delay == 'Others') {
+
+                if($report_email == '') {
+                    $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
+                }
+                else {
+                    $cc_users_array = array($report_email,$superadminemail,$hremail,$vibhuti_gmail_id);
+                }
+
+                $module = "Work Planning Delay";
+                $sender_name = $superadminuserid;
+                $to = User::getUserEmailById($work_planning->added_by);
+                $cc = implode(",",$cc_users_array);
+
+                $date = date('d/m/Y');
+
+                $subject = "Work Planning Delay - " . $date;
+                $message = "Work Planning Delay - " . $date;
+                $module_id = $work_planning_id;
+
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+                // Update Delay Counter
+                \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1' WHERE `id` = $work_planning_id");
             }
-            else {
-                $cc_users_array = array($report_email,$superadminemail,$hremail,$vibhuti_gmail_id);
-            }
-
-            $module = "Work Planning Delay";
-            $sender_name = $superadminuserid;
-            $to = User::getUserEmailById($work_planning->added_by);
-            $cc = implode(",",$cc_users_array);
-
-            $date = date('d/m/Y');
-
-            $subject = "Work Planning Delay - " . $date;
-            $message = "Work Planning Delay - " . $date;
-            $module_id = $work_planning_id;
-
-            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
-
-            // Update Delay Counter
-            \DB::statement("UPDATE `work_planning` SET `delay_counter` = '1' WHERE `id` = $work_planning_id");
         }
 
         return redirect()->route('workplanning.index')->with('success','Work Planning Added Successfully.');
