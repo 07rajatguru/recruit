@@ -407,15 +407,15 @@ class UserController extends Controller
             $cc_users_array = array($admin_email,$superadminemail,$hr_email);
         }
 
-        $module = "List of Holidays";
-        $sender_name = $logged_in_user_id;
+        $module = "Welcome Email";
+        $sender_name = $super_admin_userid;
         $to = $user_email;
-        $subject = "List of Holidays";
-        $message = "List of Holidays";
+        $subject = "Welcome Email";
+        $message = "Welcome Email";
         $module_id = $user_id;
-        $cc = implode(",",$cc_users_array);
+        $cc = '';
 
-        //event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
         // Assign Fixed Holidays to new user
 

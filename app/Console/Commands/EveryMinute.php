@@ -2740,6 +2740,32 @@ class EveryMinute extends Command
                     \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
                 }
             }
+
+            else if ($value['module'] == 'Welcome Email') {
+
+                //$cc_array = explode(",",$input['cc']);
+
+                // Get users for popup of add information
+                $users_details = User::getProfileInfo($value['module_id']);
+                $user_name = $users_details->first_name." ".$users_details->last_name;
+                $reporting_manager_name = $users_details->report_first_name." ".$users_details->report_last_name;
+
+                if(isset($users_details) && $users_details != '') {
+
+                    $input['user_name'] = $user_name;
+                    $input['reporting_manager_name'] = $reporting_manager_name;
+                    //$input['cc_array'] = $cc_array;
+                    $input['module_id'] = $value['module_id'];
+
+                     \Mail::send('adminlte::emails.welcomeEmail', $input, function ($message) use($input) {
+                    
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to'])/*->cc($input['cc_array'])*/->subject($input['subject']);
+                    });
+
+                    \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
+                }
+            }
         }
     }
 }
