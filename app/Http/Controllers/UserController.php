@@ -410,8 +410,8 @@ class UserController extends Controller
         $module = "Welcome Email";
         $sender_name = $super_admin_userid;
         $to = $user_email;
-        $subject = "Welcome Email";
-        $message = "Welcome Email";
+        $subject = "Welcome aboard the Adler Team!";
+        $message = "Welcome aboard the Adler Team!";
         $module_id = $user_id;
         $cc = '';
 
