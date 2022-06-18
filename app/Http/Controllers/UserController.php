@@ -390,7 +390,7 @@ class UserController extends Controller
         $module_id = $user_id;
         $cc = implode(",",$cc_users_array);
 
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        //event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
         // Send Welcome email notification to user
 
@@ -400,11 +400,11 @@ class UserController extends Controller
         if(isset($report_res->remail) && $report_res->remail != '') {
 
             $report_email = $report_res->remail;
-            $cc_users_array = array($report_email,$admin_email,$superadminemail,$hr_email);
+            $cc_users_array = array($report_email,$hr_email);
         }
         else {
 
-            $cc_users_array = array($admin_email,$superadminemail,$hr_email);
+            $cc_users_array = array($hr_email);
         }
 
         $module = "Welcome Email";
@@ -413,7 +413,7 @@ class UserController extends Controller
         $subject = "Welcome aboard the Adler Team!";
         $message = "Welcome aboard the Adler Team!";
         $module_id = $user_id;
-        $cc = '';
+        $cc = $cc_users_array;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
