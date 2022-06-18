@@ -97,9 +97,33 @@
 
                     <p style="text-align: justify;">While we have tried our best to make your initial agendas very crisp and clear, in case of further doubts</p>
 
+                    <p style="text-align: justify;">
+                        <ul style="list-style-type:none;">
+                            <b><li>a. Admin</li></b>
+                        </ul>
+                        <p style="text-align: justify;">
+                            <ul style="list-style-type:none;margin-left: 15px;">
+                                <li>i. Contact Details - 7048543688</li>
+                                <li>ii. Email ID - ops1@adlertalent.com</li>
+                            </ul>
+                        </p>
+                    </p>
+
+                    <p style="text-align: justify;">
+                        <ul style="list-style-type:none;">
+                            <b><li>b. Accounts</li></b>
+                        </ul>
+                        <p style="text-align: justify;">
+                            <ul style="list-style-type:none;margin-left: 15px;">
+                                <li>i. Contact Details - 9104300496</li>
+                                <li>ii. Email ID - accounts@adlertalent.com</li>
+                            </ul>
+                        </p>
+                    </p>
+
                     <p style="text-align: justify;">Our team is excited to meet you and looks forward to introducing themselves during lunchtime!</p>
 
-                    <b><i><p style="text-align: justify;color:#c024e4;">Welcome aboard the Adler Team!</p></i></b>
+                    <i><p style="text-align: justify;color:#a726c5;font-weight:bold;"><b>Welcome aboard the Adler Team!</b></p></i>
 
                     <p style="text-align: justify;">Thanks.<br/>Easy2Hire Team</p>
                 </td>

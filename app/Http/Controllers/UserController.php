@@ -390,7 +390,7 @@ class UserController extends Controller
         $module_id = $user_id;
         $cc = implode(",",$cc_users_array);
 
-        //event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
         // Send Welcome email notification to user
 
@@ -413,7 +413,7 @@ class UserController extends Controller
         $subject = "Welcome aboard the Adler Team!";
         $message = "Welcome aboard the Adler Team!";
         $module_id = $user_id;
-        $cc = $cc_users_array;
+        $cc = implode(",",$cc_users_array);
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
