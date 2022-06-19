@@ -47,6 +47,12 @@
                 </div>
             @endpermission
         @endif
+
+        @permission('edit-user-attendance')
+            <div class="col-md-1">
+                @include('adminlte::partials.editUserAttendance', ['name' => $department_nm,'users' => $users_name])
+            </div>
+        @endpermission
     </div><br/>
 
     @if($message = Session::get('success'))
@@ -822,7 +828,13 @@
                 autoclose: true,
             });
 
+            $("#attendance_date").datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+            });
+
             $("#user_id").select2({width : '570px'});
+            $("#attendance_user_id").select2({width : '570px'});
 
             var table = $('#attendance_table').DataTable({
                 paging: false,
