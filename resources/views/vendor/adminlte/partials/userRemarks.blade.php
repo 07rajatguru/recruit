@@ -7,12 +7,15 @@
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
                 <h2 id="modalTitle" class="modal-title">Add Remark</h2>
             </div>
-            {!! Form::open(['method' => 'POST','autocomplete' => 'off','route' => 'userremarks.store']) !!}
+            {!! Form::open(['method' => 'POST','autocomplete' => 'off','route' => 'userremarks.store','id' => 'remarks_form']) !!}
             <div id="modalBody" class="modal-body"> 
 
                 @if(isset($name) && $name != '')
                     <input type="hidden" name="name" id="name" value="{{ $name }}">
                 @endif
+
+                <input type="hidden" name="month" id="month" value="{{ $month }}">
+                <input type="hidden" name="year" id="year" value="{{ $year }}">
 
                 @if(isset($users) && sizeof($users) > 0)
                     @permission(('add-remarks-of-all-users-in-admin-panel'))
@@ -28,7 +31,7 @@
                 {!! Form::textarea('remarks',null,array('id' => 'remarks', 'placeholder' => 'Remarks', 'class' => 'form-control', 'rows' => '2'))!!}
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-primary">Submit</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>

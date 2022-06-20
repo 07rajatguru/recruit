@@ -728,6 +728,8 @@ class HomeController extends Controller
     public function storeUserRemarks(Request $request) {
 
         $name = $_POST['name'];
+        $month = $_POST['month'];
+        $year = $_POST['year'];
 
         $user = \Auth::user();
         $dateClass = new Date();
@@ -755,7 +757,7 @@ class HomeController extends Controller
             return redirect('/home')->with('success', 'Remarks Added Successfully.');
         }
         else {
-            return redirect('/users-attendance/'.$name)->with('success', 'Remarks Added Successfully.');
+            return redirect('/users-attendance/'.$name.'/'.$month.'/'.$year)->with('success', 'Remarks Added Successfully.');
         }
     }
 

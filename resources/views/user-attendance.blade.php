@@ -1,3 +1,11 @@
+@section('customs_css')
+    <style>
+        .error{
+            color:#f56954 !important;
+        }
+    </style>
+@endsection
+
 @extends('adminlte::page')
 
 @section('title', 'Attendance Sheet')
@@ -37,7 +45,7 @@
         </div>
 
         <div class="col-md-1">
-            @include('adminlte::partials.userRemarks', ['name' => $department_nm,'users' => $users_name])
+            @include('adminlte::partials.userRemarks', ['name' => $department_nm,'users' => $users_name,'month' => $month,'year' => $year])
         </div>
 
         @if(isset($list) && sizeof($list)>0)
@@ -49,8 +57,8 @@
         @endif
 
         @permission('edit-user-attendance')
-            <div class="col-md-1">
-                @include('adminlte::partials.editUserAttendance', ['name' => $department_nm,'users' => $users_name])
+            <div class="col-md-1" style="margin-left: -40px;">
+                @include('adminlte::partials.editUserAttendance', ['users' => $users_name])
             </div>
         @endpermission
     </div><br/>
@@ -883,6 +891,58 @@
                 sort: false,
                 fixedColumns: {
                     leftColumns: 2
+                }
+            });
+
+            $("#remarks_form").validate({
+
+                rules: {
+                    "user_id": {
+                        required: true
+                    },
+                    "date": {
+                        required: true
+                    },
+                    "remarks": {
+                        required: true
+                    },
+                },
+                messages: {
+                    "user_id": {
+                        required: "Please Select User."
+                    },
+                    "date": {
+                        required: "Please Select Date."
+                    },
+                    "remarks": {
+                        required: "Please Add Remarks."
+                    },
+                }
+            });
+
+            $("#attendance_form").validate({
+
+                rules: {
+                    "attendance_user_id": {
+                        required: true
+                    },
+                    "attendance_date": {
+                        required: true
+                    },
+                    "new_attendance": {
+                        required: true
+                    },
+                },
+                messages: {
+                    "attendance_user_id": {
+                        required: "Please Select User."
+                    },
+                    "attendance_date": {
+                        required: "Please Select Date."
+                    },
+                    "new_attendance": {
+                        required: "Please Add Attendance."
+                    },
                 }
             });
         });

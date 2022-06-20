@@ -5,30 +5,27 @@
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-                <h2 id="modalTitle" class="modal-title">Edit Users Attendance</h2>
+                <h2 id="modalTitle" class="modal-title">Edit User Attendance</h2>
             </div>
-            {!! Form::open(['method' => 'POST','autocomplete' => 'off','route' => 'userattendance.store']) !!}
-            <div id="modalBody" class="modal-body"> 
+            {!! Form::open(['method' => 'POST','autocomplete' => 'off','route' => 'userattendance.store','id' => 'attendance_form']) !!}
 
-                @if(isset($name) && $name != '')
-                    <input type="hidden" name="name" id="name" value="{{ $name }}">
-                @endif
+            <div id="modalBody" class="modal-body"> 
 
                 @if(isset($users) && sizeof($users) > 0)
                     @permission(('add-remarks-of-all-users-in-admin-panel'))
                         <strong>Select User :</strong><br/>
-                        {!! Form::select('attendance_user_id', $users,null, array('id'=>'attendance_user_id','class' => 'form-control')) !!}<br/><br/>
+                        {!! Form::select('attendance_user_id', $users,null, array('id'=>'attendance_user_id','class' => 'form-control','required' => true)) !!}<br/><br/>
                     @endpermission
                 @endif
                 
-                <strong>Select Date: </strong>
-                {!! Form::text('attendance_date',null,array('id' => 'attendance_date', 'placeholder' => 'Select Date', 'class' => 'form-control'))!!}
+                <strong>Select Date : </strong>
+                {!! Form::text('attendance_date',null,array('id' => 'attendance_date', 'placeholder' => 'Select Date', 'class' => 'form-control','required' => true))!!}
                 <br/>
-                <strong>Remark: </strong>
-                {!! Form::textarea('attendance_remarks',null,array('id' => 'attendance_remarks', 'placeholder' => 'Remarks', 'class' => 'form-control', 'rows' => '2'))!!}
+                <strong>Attedance : </strong>
+                {!! Form::text('new_attendance',null,array('id' => 'new_attendance', 'placeholder' => 'Attedance', 'class' => 'form-control','required' => true))!!}
             </div>
             <div class="modal-footer">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="button" class="btn btn-primary">Submit</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
