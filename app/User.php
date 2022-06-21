@@ -125,6 +125,23 @@ class User extends Authenticatable
         return $attendance_type;
     }
 
+    public static function getAttendanceValue() {
+
+        $attendance_value = array();
+
+        $attendance_value[''] = 'Select Attendance';
+        $attendance_value['HD'] = 'HD - Half Day';
+        $attendance_value['F'] = 'P - Present';
+        $attendance_value['A'] = 'A - Absent';
+        $attendance_value['PL'] = 'PL - Paid Leave';
+        $attendance_value['SL'] = 'SL - Sick Leave';
+        $attendance_value['UL'] = 'UL - Unapproved Leave';
+        $attendance_value['PH'] = 'PH - Paid Holiday';
+        $attendance_value['H'] = 'H - Holiday';
+
+        return $attendance_value;
+    }
+
     public static function getTeamType() {
 
         $team_type = array();

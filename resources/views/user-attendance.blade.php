@@ -44,9 +44,9 @@
             <input class="btn btn-primary" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" style="width:100px;"/>
         </div>
 
-        <div class="col-md-1">
+        {{-- <div class="col-md-1">
             @include('adminlte::partials.userRemarks', ['name' => $department_nm,'users' => $users_name,'month' => $month,'year' => $year])
-        </div>
+        </div> --}}
 
         @if(isset($list) && sizeof($list)>0)
             @permission(('display-attendance-of-all-users-in-admin-panel'))
@@ -58,7 +58,7 @@
 
         @permission('edit-user-attendance')
             <div class="col-md-1" style="margin-left: -40px;">
-                @include('adminlte::partials.editUserAttendance', ['users' => $users_name])
+                @include('adminlte::partials.editUserAttendance', ['users' => $users_name,'attendance_value' => $attendance_value,'name' => $department_nm,'month' => $month,'year' => $year])
             </div>
         @endpermission
     </div><br/>
@@ -843,6 +843,7 @@
 
             $("#user_id").select2({width : '570px'});
             $("#attendance_user_id").select2({width : '570px'});
+            $("#new_attendance").select2({width : '570px'});
 
             var table = $('#attendance_table').DataTable({
                 paging: false,

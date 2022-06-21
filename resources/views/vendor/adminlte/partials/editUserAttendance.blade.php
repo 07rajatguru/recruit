@@ -9,23 +9,29 @@
             </div>
             {!! Form::open(['method' => 'POST','autocomplete' => 'off','route' => 'userattendance.store','id' => 'attendance_form']) !!}
 
-            <div id="modalBody" class="modal-body"> 
+            <div id="modalBody" class="modal-body">
+
+                <input type="hidden" name="name" id="name" value="{{ $name }}">
+                <input type="hidden" name="month" id="month" value="{{ $month }}">
+                <input type="hidden" name="year" id="year" value="{{ $year }}">
 
                 @if(isset($users) && sizeof($users) > 0)
                     @permission(('add-remarks-of-all-users-in-admin-panel'))
                         <strong>Select User :</strong><br/>
-                        {!! Form::select('attendance_user_id', $users,null, array('id'=>'attendance_user_id','class' => 'form-control','required' => true)) !!}<br/><br/>
+                        {!! Form::select('attendance_user_id', $users,null, array('id'=>'attendance_user_id','class' => 'form-control')) !!}<br/><br/>
                     @endpermission
                 @endif
                 
-                <strong>Select Date : </strong>
-                {!! Form::text('attendance_date',null,array('id' => 'attendance_date', 'placeholder' => 'Select Date', 'class' => 'form-control','required' => true))!!}
+                <strong>Select Date : </strong><br/>
+                {!! Form::text('attendance_date',null,array('id' => 'attendance_date', 'placeholder' => 'Select Date', 'class' => 'form-control')) !!}
+                
                 <br/>
-                <strong>Attedance : </strong>
-                {!! Form::text('new_attendance',null,array('id' => 'new_attendance', 'placeholder' => 'Attedance', 'class' => 'form-control','required' => true))!!}
+
+                <strong>Attedance : </strong><br/>
+                {!! Form::select('new_attendance', $attendance_value,null, array('id'=>'new_attendance','class' => 'form-control')) !!}<br/><br/>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>

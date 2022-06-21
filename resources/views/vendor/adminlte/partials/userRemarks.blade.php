@@ -31,7 +31,7 @@
                 {!! Form::textarea('remarks',null,array('id' => 'remarks', 'placeholder' => 'Remarks', 'class' => 'form-control', 'rows' => '2'))!!}
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary">Submit</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>

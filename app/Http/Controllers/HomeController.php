@@ -761,6 +761,48 @@ class HomeController extends Controller
         }
     }
 
+    // Save User remarks in calendar
+    public function storeUserAttedance(Request $request) {
+
+        $user_id = $request->get('attendance_user_id');
+        $attendance = $request->get('new_attendance');
+        
+        $date = $request->get('attendance_date');
+        $added_date = date('Y-m-d',strtotime($date));
+
+        $get_work_planning = WorkPlanning::getWorkPlanningByAddedDateAndUserID($added_date,$user_id);
+
+        if(isset($get_work_planning) && $get_work_planning != '') {
+
+            $wp_id = $get_work_planning->id;
+
+            if($attendance == 'HD' || $attendance == 'F' || $attendance == 'A') {
+                \DB::statement("UPDATE `work_planning` SET `attendance` = '$attendance' WHERE `id` = $wp_id");
+            }
+            else {
+                \DB::statement("UPDATE `work_planning` SET `attendance` = NULL WHERE `id` = $wp_id");
+            }
+        }
+        else {
+
+            $work_planning = new WorkPlanning();
+            $work_planning->added_date = $added_date;
+            $work_planning->added_by = $user_id;
+
+            if($attendance == 'HD' || $attendance == 'F' || $attendance == 'A') {
+                
+                $work_planning->attendance = $attendance;
+            }
+            $work_planning->save();
+        }
+
+        $name = $_POST['name'];
+        $month = $_POST['month'];
+        $year = $_POST['year'];
+
+        return redirect('/users-attendance/'.$name.'/'.$month.'/'.$year)->with('success', 'Attendance Updated Successfully.');
+    }
+
     public function calenderevent() {
 
         $data[] = array(
@@ -1691,6 +1733,9 @@ class HomeController extends Controller
         // Get Attendance Type
         $attendance_type = User::getAttendanceType();
 
+        // Get Attendance Value
+        $attendance_value = User::getAttendanceValue();
+
         // Get Employment Type
         $employment_type = User::getEmploymentType();
 
@@ -1705,7 +1750,7 @@ class HomeController extends Controller
             }
         }
 
-        return view('user-attendance',array("list"=>$list,"new_list"=>$new_list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark,"attendance_type" => $attendance_type,"selected_attendance_type" => $selected_attendance_type),compact('users_name','department_nm'));
+        return view('user-attendance',array("list"=>$list,"new_list"=>$new_list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark,"attendance_type" => $attendance_type,"selected_attendance_type" => $selected_attendance_type,"attendance_value" => $attendance_value),compact('users_name','department_nm'));
     }
 
     public function exportAttendance() {
