@@ -3598,6 +3598,9 @@ class JobOpenController extends Controller
                 $cc = '';
 
                 event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+
+                // Shifted Position to Green Color (Identified Candidates)
+                DB::statement("UPDATE `job_openings` SET `priority` = '8' WHERE `id` = $job_id");
             }
         }
 
