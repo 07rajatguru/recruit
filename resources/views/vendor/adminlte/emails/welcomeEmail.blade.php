@@ -54,7 +54,7 @@
                         <p style="text-align: justify;">
                             <ul style="list-style-type:none;margin-left: 15px;">
                                 <li>a. Google Form - <a href="https://docs.google.com/forms/d/e/1FAIpQLSfUGT1-Z9ex5tzACTppPBs813GoosM0gxko19q8bMYuy_hhbw/viewform?usp=sf_link - Google Form link">https://docs.google.com/forms/d/e/1FAIpQLSfUGT1-Z9ex5tzACTppPBs813GoosM0gxko19q8bMYuy_hhbw/viewform?usp=sf_link - Google Form link</a></li>
-                                <li>b. E2H - <a href="https://adler.easy2hire.in/">https://adler.easy2hire.in/</a></li>
+                                <li>b. E2H - <a href="{{getenv('APP_URL').'/users/myprofile/'.$module_id }}">{{getenv('APP_URL').'/users/myprofile/'.$module_id }}</a></li>
                             </ul>
                         </p>
                     </p>
