@@ -6,6 +6,8 @@ use Illuminate\Console\Command;
 use App\User;
 use App\Interview;
 use App\Events\NotificationMail;
+use App\JobOpen;
+use DB;
 
 class AfterIntrviewReminder extends Command
 {
@@ -68,6 +70,42 @@ class AfterIntrviewReminder extends Command
                     $cc = "";
 
                     event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+                }
+            }
+        }
+
+        // Change Job Priority From New Positions To Urgent Positions After 7 Days Of Added Date
+        $job_response = JobOpen::getPriorityWiseJobs(1,0,'New Positions');
+        $prior_date = date("Y-m-d", strtotime("-7 days"));
+
+        if(isset($job_response) && sizeof($job_response) > 0) {
+
+            foreach ($job_response as $key => $value) {
+
+                $added_date = date("Y-m-d", strtotime($value['created_date']));
+                $job_id = $value['id'];
+
+                if($added_date <= $prior_date) {
+
+                    DB::statement("UPDATE `job_openings` SET `priority` = '1' WHERE `id` = $job_id");
+                }
+            }
+        }
+
+        // Change Job Priority From Grey To On Hold After 1 Month Of Added Date
+        $jobs = JobOpen::getPriorityWiseJobs(1,0,'No Deliveries Needed');
+        $one_month_prior_date = date("Y-m-d", strtotime("-1 month"));
+
+        if(isset($jobs) && sizeof($jobs) > 0) {
+
+            foreach ($jobs as $key1 => $value1) {
+
+                $job_added_date = date("Y-m-d", strtotime($value1['created_date']));
+                $jobid = $value1['id'];
+
+                if($job_added_date <= $one_month_prior_date) {
+
+                    DB::statement("UPDATE `job_openings` SET `priority` = '4' WHERE `id` = $jobid");
                 }
             }
         }
