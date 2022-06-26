@@ -170,4 +170,22 @@ class EmailsNotifications extends Model
         }
         return $job_open; 
     }
+
+    public static function getAllEmailNotifications($module,$from_date,$to_date) {
+
+        $query = EmailsNotifications::query();
+
+        if(isset($from_date) && $from_date != NULL && isset($to_date) && $to_date != NULL) {
+
+            $query = $query->where('sent_date','>=',$from_date);
+            $query = $query->where('sent_date','<=',$to_date);
+        }
+
+        $query = $query->where('module','=',$module);
+        $query = $query->where('status','=',1);
+        $query = $query->select('emails_notification.*');
+        $response = $query->get();
+
+        return $response;
+    }
 }

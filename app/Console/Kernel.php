@@ -60,6 +60,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\ListofHolidaysReminder',
         'App\Console\Commands\NewJobOpentoall',
         'App\Console\Commands\AddYesterdayWorkPlanning',
+        'App\Console\Commands\HiringAndOPLSummaryReport',
     ];
 
     /**

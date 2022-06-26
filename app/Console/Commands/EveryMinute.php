@@ -2770,6 +2770,74 @@ class EveryMinute extends Command
                     \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
                 }
             }
+
+            else if ($value['module'] == 'Client OPL Summary') {
+
+                $from_date = date('Y-m-d',strtotime("monday last week"));
+                $to_date = date('Y-m-d',strtotime("$from_date +6days"));
+
+                $module_name = 'Client Bulk Email';
+                $get_client_opl_data = EmailsNotifications::getAllEmailNotifications($module_name,$from_date,$to_date);
+
+                if(isset($get_client_opl_data) && sizeof($get_client_opl_data) > 0){
+
+                    $client_details = array();
+                    $i=0;
+
+                    foreach ($get_client_opl_data as $key => $value) {
+
+                        $client_details[$i] = ClientBasicinfo::getClientDetailsById($value['module_id']);
+                        $i++;
+                    }
+                }
+
+                if(isset($client_details) && $client_details != '') {
+
+                    $input['client_details'] = $client_details;
+
+                     \Mail::send('adminlte::emails.clientSummaryEmail', $input, function ($message) use($input) {
+                    
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to'])->cc($input['cc'])->subject($input['subject']);
+                    });
+
+                    \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
+                }
+            }
+
+            else if ($value['module'] == 'Client Hiring Report Summary') {
+
+                $from_date = date('Y-m-d',strtotime("monday last week"));
+                $to_date = date('Y-m-d',strtotime("$from_date +6days"));
+
+                $module_name = 'Hiring Report';
+                $get_client_hiring_report_data = EmailsNotifications::getAllEmailNotifications($module_name,$from_date,$to_date);
+
+                if(isset($get_client_hiring_report_data) && sizeof($get_client_hiring_report_data) > 0) {
+
+                    $job_details = array();
+                    $i=0;
+
+                    foreach ($get_client_hiring_report_data as $key => $value) {
+
+                        $job_details[$i] = JobOpen::getJobById($value['module_id']);
+                        $i++;
+                    }
+                }
+
+                if(isset($job_details) && $job_details != '') {
+
+                    $input['job_details'] = $job_details;
+
+                     \Mail::send('adminlte::emails.clientSummaryEmail', $input, function ($message) use($input) {
+                    
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to'])->cc($input['cc'])->subject($input['subject']);
+                    });
+
+                    \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
+                }
+            }
         }
     }
 }
