@@ -1598,7 +1598,6 @@ class JobOpenController extends Controller
                 }
 
                 // Add superadmin user id of management department
- 
                 $superadminuserid = getenv('SUPERADMINUSERID');
 
                 $job_visible_users = new JobVisibleUsers();
@@ -2565,7 +2564,6 @@ class JobOpenController extends Controller
             }
 
             // Add superadmin user id of management department
- 
             $superadminuserid = getenv('SUPERADMINUSERID');
 
             $job_visible_users = new JobVisibleUsers();
@@ -3029,7 +3027,6 @@ class JobOpenController extends Controller
                 }
 
                 // Add superadmin user id of management department
- 
                 $superadminuserid = getenv('SUPERADMINUSERID');
 
                 $job_visible_users = new JobVisibleUsers();

@@ -502,16 +502,24 @@ class ClientBasicinfo extends Ardent
 
     public static function getLoggedInUserClients($user_id,$next_year=NULL) {
 
+        $hr_user_id = getenv('HRUSERID');
+
         $client_query = ClientBasicinfo::query();
         $client_query = $client_query->join('client_address','client_address.client_id','=','client_basicinfo.id');
 
         // Not Display Delete Client Status '1' Entry
         $client_query = $client_query->where('client_basicinfo.delete_client','=','0');
 
-        if($user_id > 0) {
+        if($user_id == $hr_user_id) {
+
+            $client_query = $client_query->where('name','like','%Adler%');
+            $client_query = $client_query->orwhere('name','like','%Traj Infotech%');
+        }
+        else {
+
             $client_query = $client_query->where('client_basicinfo.account_manager_id','=',$user_id);
             $client_query = $client_query->orwhere('client_basicinfo.second_line_am','=',$user_id);
-        }        
+        }      
 
         if(isset($next_year) && $next_year != NULL) {
             $client_query = $client_query->where('client_basicinfo.created_at','<=',$next_year);
