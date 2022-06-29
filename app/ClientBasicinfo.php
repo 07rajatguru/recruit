@@ -512,8 +512,8 @@ class ClientBasicinfo extends Ardent
 
         if($user_id == $hr_user_id) {
 
-            $client_query = $client_query->where('name','like','%Adler%');
-            $client_query = $client_query->orwhere('name','like','%Traj Infotech%');
+            $client_query = $client_query->where('name','=','Adler Talent Solution Pvt Ltd.');
+            $client_query = $client_query->orwhere('name','=','Traj Infotech Pvt. Ltd.');
         }
         else {
 
