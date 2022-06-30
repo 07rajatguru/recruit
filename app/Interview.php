@@ -628,6 +628,7 @@ class Interview extends Model
     public static function getAttendedInterviews($all=0,$user_id,$month=NULL,$year=NULL,$department_id=0) {
 
         $tanisha_user_id = getenv('TANISHAUSERID');
+        $hr_user_id = getenv('HRUSERID');
 
         $query = Interview::query();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
@@ -638,6 +639,24 @@ class Interview extends Model
 
         $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','interview.status','client_basicinfo.name as client_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title', 'job_openings.city as city','candidate_basicinfo.mobile as contact','job_openings.remote_working as remote_working','candidate_basicinfo.email as candidate_email');
 
+        if($all == 0) {
+
+            if($user_id == $tanisha_user_id) {
+                $query = $query->where('job_openings.hiring_manager_id',$user_id);
+            }
+            else if($user_id == $hr_user_id) {
+                
+                $query = $query->where(function($query) {
+
+                    $query = $query->where('client_basicinfo.name','=','Adler Talent Solution Pvt Ltd.');
+                    $query = $query->orwhere('client_basicinfo.name','=','Traj Infotech Pvt. Ltd.');
+                });
+            }
+            else {
+                $query = $query->where('candidate_otherinfo.owner_id',$user_id);
+            }
+        }
+
         // For Department
         if (isset($department_id) && $department_id > 0) {
             $query = $query->where('client_basicinfo.department_id','=',$department_id);
@@ -647,16 +666,6 @@ class Interview extends Model
         $query = $query->where(\DB::raw('MONTH(interview_date)'),'=',$month);
         $query = $query->where(\DB::raw('YEAR(interview_date)'),'=',$year);
         $query = $query->orderby('interview.interview_date','desc');
-
-        if($all == 0) {
-
-            if($user_id == $tanisha_user_id) {
-                $query = $query->where('job_openings.hiring_manager_id',$user_id);
-            }
-            else {
-                $query = $query->where('candidate_otherinfo.owner_id',$user_id);
-            }
-        }
         
         $response = $query->get();
 
@@ -667,6 +676,7 @@ class Interview extends Model
 
         $from_date = date("Y-m-d H:i:s");
         $to_date = date("Y-m-d 23:59:59", time() + 86400);
+        $hr_user_id = getenv('HRUSERID');
 
         // Get Current Date & Time with different zone
         $dt = new \DateTime($from_date);
@@ -684,6 +694,15 @@ class Interview extends Model
         $query = $query->leftJoin('users as u2','u2.id','=','candidate_otherinfo.owner_id');
 
         $query = $query->select('interview.id as id','interview.location', 'interview.interview_name as interview_name','interview.interview_date','client_basicinfo.name as client_name','client_basicinfo.display_name as display_name','interview.candidate_id as candidate_id', 'candidate_basicinfo.full_name as candidate_fname','candidate_basicinfo.lname as candidate_lname', 'interview.posting_title as posting_title_id','job_openings.posting_title as posting_title','job_openings.city','candidate_basicinfo.mobile as contact','u2.name as candidate_owner_name','job_openings.remote_working as remote_working');
+
+        if($user_id == $hr_user_id) {
+                
+            $query = $query->where(function($query) {
+
+                $query = $query->where('client_basicinfo.name','=','Adler Talent Solution Pvt Ltd.');
+                $query = $query->orwhere('client_basicinfo.name','=','Traj Infotech Pvt. Ltd.');
+            });
+        }
 
         if($all==0) {
             

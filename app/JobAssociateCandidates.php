@@ -205,6 +205,7 @@ class JobAssociateCandidates extends Model
     public static function getMonthlyReprtAssociate($user_id,$month=NULL,$year=NULL,$department_id=0) {
 
         $tanisha_user_id = getenv('TANISHAUSERID');
+        $hr_user_id = getenv('HRUSERID');
         
         $query = JobAssociateCandidates::query();
         $query = $query->leftjoin('job_openings','job_openings.id','=','job_associate_candidates.job_id');
@@ -216,14 +217,22 @@ class JobAssociateCandidates extends Model
             if($user_id == $tanisha_user_id) {
                 $query = $query->where('job_openings.hiring_manager_id',$user_id);
             }
+            else if($user_id == $hr_user_id) {
+                
+                $query = $query->where(function($query) {
+
+                    $query = $query->where('client_basicinfo.name','=','Adler Talent Solution Pvt Ltd.');
+                    $query = $query->orwhere('client_basicinfo.name','=','Traj Infotech Pvt. Ltd.');
+                });
+            }
             else {
                 $query = $query->where('job_associate_candidates.associate_by',$user_id);
             }
         }
 
         if ($month != '' && $year != '') {
-            $query =$query->where(\DB::raw('month(job_associate_candidates.created_at)'),'=',$month);
-            $query =$query->where(\DB::raw('year(job_associate_candidates.created_at)'),'=',$year);
+            $query = $query->where(\DB::raw('month(job_associate_candidates.created_at)'),'=',$month);
+            $query = $query->where(\DB::raw('year(job_associate_candidates.created_at)'),'=',$year);
         }
 
         // For Department
@@ -250,6 +259,7 @@ class JobAssociateCandidates extends Model
     public static function getAssociatedCvsByUseridMonthWise($user_id,$month=NULL,$year=NULL,$department_id=0) {
 
         $tanisha_user_id = getenv('TANISHAUSERID');
+        $hr_user_id = getenv('HRUSERID');
 
         $query = JobAssociateCandidates::query();
         $query = $query->select('job_openings.posting_title','u1.name as hm_name','client_basicinfo.name as company_name','job_openings.city','job_openings.state','job_openings.country','candidate_basicinfo.full_name','u2.name as candidate_owner_name','candidate_basicinfo.email as candidate_email','job_openings.remote_working as remote_working');
@@ -264,6 +274,14 @@ class JobAssociateCandidates extends Model
 
             if($user_id == $tanisha_user_id) {
                 $query = $query->where('job_openings.hiring_manager_id',$user_id);
+            }
+            else if($user_id == $hr_user_id) {
+                
+                $query = $query->where(function($query) {
+
+                    $query = $query->where('client_basicinfo.name','=','Adler Talent Solution Pvt Ltd.');
+                    $query = $query->orwhere('client_basicinfo.name','=','Traj Infotech Pvt. Ltd.');
+                });
             }
             else {
                 $query = $query->where('job_associate_candidates.associate_by',$user_id);
@@ -454,6 +472,7 @@ class JobAssociateCandidates extends Model
     public static function getMonthlyReprtShortlisted($user_id,$month=NULL,$year=NULL,$department_id=0) {
 
         $tanisha_user_id = getenv('TANISHAUSERID');
+        $hr_user_id = getenv('HRUSERID');
 
         $query = JobAssociateCandidates::query(); 
         $query = $query->leftjoin('job_openings','job_openings.id','=','job_associate_candidates.job_id');
@@ -464,6 +483,14 @@ class JobAssociateCandidates extends Model
 
             if($user_id == $tanisha_user_id) {
                 $query = $query->where('job_openings.hiring_manager_id',$user_id);
+            }
+            else if($user_id == $hr_user_id) {
+                
+                $query = $query->where(function($query) {
+
+                    $query = $query->where('client_basicinfo.name','=','Adler Talent Solution Pvt Ltd.');
+                    $query = $query->orwhere('client_basicinfo.name','=','Traj Infotech Pvt. Ltd.');
+                });
             }
             else {
                 $query = $query->where('job_associate_candidates.associate_by',$user_id);
@@ -495,6 +522,7 @@ class JobAssociateCandidates extends Model
     public static function getShortlistedCvsByUseridMonthWise($user_id,$month=NULL,$year=NULL,$department_id=0) {
 
         $tanisha_user_id = getenv('TANISHAUSERID');
+        $hr_user_id = getenv('HRUSERID');
 
         $query = JobAssociateCandidates::query();
         $query = $query->leftjoin('job_openings','job_openings.id','=','job_associate_candidates.job_id');
@@ -510,6 +538,14 @@ class JobAssociateCandidates extends Model
 
             if($user_id == $tanisha_user_id) {
                 $query = $query->where('job_openings.hiring_manager_id',$user_id);
+            }
+            else if($user_id == $hr_user_id) {
+                
+                $query = $query->where(function($query) {
+
+                    $query = $query->where('client_basicinfo.name','=','Adler Talent Solution Pvt Ltd.');
+                    $query = $query->orwhere('client_basicinfo.name','=','Traj Infotech Pvt. Ltd.');
+                });
             }
             else {
                 $query = $query->where('job_associate_candidates.associate_by',$user_id);
