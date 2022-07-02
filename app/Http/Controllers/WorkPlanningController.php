@@ -1547,10 +1547,10 @@ class WorkPlanningController extends Controller
         //4th Condition Check Delay Report
         $delay_work_planning = WorkPlanning::getDelayWorkPlanningDetails($added_by_id,$month,$year);
 
-        if(isset($delay_work_planning) && sizeof($delay_work_planning) > 3) {
+        /*if(isset($delay_work_planning) && sizeof($delay_work_planning) > 3) {
 
            \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $wp_id");
-        }
+        }*/
 
         //5th Condition Check Loggedin Logout Time
 

@@ -621,22 +621,18 @@ class EveryMinute extends Command
             // Mail for Passive Client Listing
             else if ($value['module'] == 'Passive Client List') {
 
-                $to_array = explode(",",$input['to']);
-                //$cc_array = explode(",",$input['cc']);
-
-                //$user_id = $value['module_id'];
+                $cc_array = explode(",",$input['cc']);
 
                 $client_res = ClientBasicinfo::getPassiveClients();
                 $clients_count = sizeof($client_res);
                 
                 $input['client_res'] = $client_res;
                 $input['clients_count'] = $clients_count;
-                $input['to_array'] = array_unique($to_array);
-                //$input['cc_array'] = array_unique($cc_array);
+                $input['cc_array'] = $cc_array;
 
                 \Mail::send('adminlte::emails.PassiveClients', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to_array'])->subject($input['subject']);
+                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
                 });
 
                 \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
@@ -2773,6 +2769,8 @@ class EveryMinute extends Command
 
             else if ($value['module'] == 'Client OPL Summary') {
 
+                $cc_array = explode(",",$input['cc']);
+
                 $from_date = date('Y-m-d',strtotime("monday last week"));
                 $to_date = date('Y-m-d',strtotime("$from_date +6days"));
 
@@ -2794,11 +2792,12 @@ class EveryMinute extends Command
                 if(isset($client_details) && $client_details != '') {
 
                     $input['client_details'] = $client_details;
+                    $input['cc_array'] = $cc_array;
 
                      \Mail::send('adminlte::emails.clientSummaryEmail', $input, function ($message) use($input) {
                     
                         $message->from($input['from_address'], $input['from_name']);
-                        $message->to($input['to'])->cc($input['cc'])->subject($input['subject']);
+                        $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
                     });
 
                     \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
@@ -2806,6 +2805,8 @@ class EveryMinute extends Command
             }
 
             else if ($value['module'] == 'Client Hiring Report Summary') {
+
+                $cc_array = explode(",",$input['cc']);
 
                 $from_date = date('Y-m-d',strtotime("monday last week"));
                 $to_date = date('Y-m-d',strtotime("$from_date +6days"));
@@ -2816,23 +2817,40 @@ class EveryMinute extends Command
                 if(isset($get_client_hiring_report_data) && sizeof($get_client_hiring_report_data) > 0) {
 
                     $job_details = array();
-                    $i=0;
 
                     foreach ($get_client_hiring_report_data as $key => $value) {
 
-                        $job_details[$i] = JobOpen::getJobById($value['module_id']);
-                        $i++;
+                        $job_ids_array = explode(",", $value['module_id']);
+                        $data = JobOpen::getJobDetailsById($job_ids_array);
+                        $title_string = '';
+
+                        foreach ($data as $k1 => $v1) {
+
+                            if($title_string == '') {
+                                $title_string .= $v1['posting_title'] . " - "  .$v1['city'];
+                            }
+                            else {
+                                $title_string .= ", ".$v1['posting_title'] . " - " . $v1['city'];
+                            }
+                            
+                            $job_details[$key]['client_id'] = $v1['client_id'];
+                            $job_details[$key]['company_name'] = $v1['company_name'];
+                            $job_details[$key]['contact_person'] = $v1['contact_person'];
+                            $job_details[$key]['posting_title'] = $title_string;
+                            $job_details[$key]['user_name'] = $v1['user_name'];
+                        }
                     }
                 }
 
                 if(isset($job_details) && $job_details != '') {
 
                     $input['job_details'] = $job_details;
+                    $input['cc_array'] = $cc_array;
 
                      \Mail::send('adminlte::emails.clientSummaryEmail', $input, function ($message) use($input) {
                     
                         $message->from($input['from_address'], $input['from_name']);
-                        $message->to($input['to'])->cc($input['cc'])->subject($input['subject']);
+                        $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
                     });
 
                     \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");

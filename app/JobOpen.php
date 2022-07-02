@@ -4929,4 +4929,41 @@ class JobOpen extends Model
         }
         return $jobs;
     }
+
+    public static function getJobDetailsById($job_ids) {
+
+        $job_query = JobOpen::query();
+
+        $job_query = $job_query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $job_query = $job_query->leftjoin('users','users.id','=','job_openings.hiring_manager_id');
+        $job_query = $job_query->select('job_openings.posting_title as posting_title','job_openings.client_id as client_id','job_openings.remote_working as remote_working','job_openings.city as city','client_basicinfo.name as client_name','client_basicinfo.coordinator_name as contact_person','users.name as user_name');
+
+        $job_query = $job_query->whereIn('job_openings.id',$job_ids);
+        $job_response = $job_query->get();
+
+        $job_details = array();
+        $i=0;
+
+        if(isset($job_response) && $job_response != '') {
+
+            foreach ($job_response as $key => $value) {
+                
+                $job_details[$i]['client_id'] = $value->client_id;
+                $job_details[$i]['company_name'] = $value->client_name;
+                $job_details[$i]['contact_person'] = $value->contact_person;
+                $job_details[$i]['posting_title'] = $value->posting_title;
+                $job_details[$i]['user_name'] = $value->user_name;
+
+                if($value->remote_working == '1') {
+                    $job_details[$i]['city'] = "Remote";
+                }
+                else {
+                    $job_details[$i]['city'] = $value->city;
+                }
+
+                $i++;
+            }
+        }
+        return $job_details;
+    }
 }

@@ -108,7 +108,7 @@ class LeaveBalanceData extends Command
                         $monthwise_leave_balance->year = $year;
                         $monthwise_leave_balance->save();
                     }
-                    else {
+                    /*else {
 
                         //Add User Leave Balance data
                         $leave_balance = new LeaveBalance();
@@ -116,7 +116,7 @@ class LeaveBalanceData extends Command
                         $leave_balance->leave_total = 0.0;
                         $leave_balance->leave_taken = 0.0;
                         $leave_balance->leave_remaining = 0.0;
-                        $leave_balance->seek_leave_total = 0.5;
+                        $leave_balance->seek_leave_total = 0.0;
                         $leave_balance->seek_leave_taken = 0.0;
                         $leave_balance->seek_leave_remaining = 0.0;
                         $leave_balance->save();
@@ -133,7 +133,7 @@ class LeaveBalanceData extends Command
                         $monthwise_leave_balance->month = $month;
                         $monthwise_leave_balance->year = $year;
                         $monthwise_leave_balance->save();
-                    }
+                    }*/
                 }
             }
         }

@@ -1197,17 +1197,8 @@ class ClientController extends Controller
         else {
             $client_basic_info->percentage_charged_above = '8.33';
         }
-        
-        $status = $input['status'];
-        $client_basic_info->status = $status;
 
-        // save passive date for passive client
-        if($status == '0') {
-
-            $today_date = date('Y-m-d'); 
-            $client_basic_info->passive_date = $today_date;
-        }
-
+        $client_basic_info->status = $input['status'];
         $client_basic_info->account_manager_id = $input['account_manager'];
         $client_basic_info->industry_id = $input['industry_id'];
         $client_basic_info->about = $input['description'];
@@ -1780,8 +1771,9 @@ class ClientController extends Controller
         $client_basicinfo->industry_id = $input->industry_id;
         $client_basicinfo->status = $new_status;
 
-        // save passive date for passive client
+        //Add Passive date if client goes to passive
         if($new_status == '0') {
+
             $today_date = date('Y-m-d'); 
             $client_basicinfo->passive_date = $today_date;
         }

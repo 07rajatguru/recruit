@@ -174,16 +174,17 @@ class EmailsNotifications extends Model
     public static function getAllEmailNotifications($module,$from_date,$to_date) {
 
         $query = EmailsNotifications::query();
+        $query = $query->where('module','=',$module);
+        $query = $query->where('status','=',1);
 
-        if(isset($from_date) && $from_date != NULL && isset($to_date) && $to_date != NULL) {
+        $query = $query->where(function($query) use ($from_date,$to_date) {
 
             $query = $query->where('sent_date','>=',$from_date);
             $query = $query->where('sent_date','<=',$to_date);
-        }
 
-        $query = $query->where('module','=',$module);
-        $query = $query->where('status','=',1);
-        $query = $query->select('emails_notification.*');
+        });
+        
+        $query = $query->select('emails_notification.module_id');
         $response = $query->get();
 
         return $response;

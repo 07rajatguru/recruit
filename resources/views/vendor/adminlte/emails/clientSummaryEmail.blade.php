@@ -46,7 +46,6 @@
                                             <td align="center"><b>Company Name</b></td>
                                             <td align="center"><b>Contact Point</b></td>
                                             <td align="center"><b>Posting Title</b></td>
-                                            <td align="center"><b>Location</b></td>
                                             <td align="center"><b>Hiring Manager</b></td>
                                         </tr>
                                         <?php $i=0; ?>
@@ -56,7 +55,6 @@
                                                 <td align="center">{{ $value['company_name'] }}</td>
                                                 <td align="center">{{ $value['contact_person'] }}</td>
                                                 <td align="center">{{ $value['posting_title'] }}</td>
-                                                <td align="center">{{ $value['city'] }}</td>
                                                 <td align="center">{{ $value['user_name'] }}</td>
                                             </tr>
                                         @endforeach
