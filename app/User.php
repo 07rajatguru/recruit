@@ -203,9 +203,8 @@ class User extends Authenticatable
 
         $superadmin = getenv('SUPERADMINUSERID');
         $saloni_user_id = getenv('SALONIUSERID');
-        $jasmine = getenv('JASMINEUSERID');
-        $farhin = getenv('ALLCLIENTVISIBLEUSERID');
-        $super_array = array($superadmin,$saloni_user_id,$jasmine,$farhin);
+        $bizpos_user_id = getenv('BIZPOSUSERID');
+        $super_array = array($superadmin,$saloni_user_id,$bizpos_user_id);
 
         $status = 'Inactive';
         $status_array = array($status);
@@ -424,7 +423,9 @@ class User extends Authenticatable
 
         $superadmin_user_id = getenv('SUPERADMINUSERID');
         $saloni_user_id = getenv('SALONIUSERID');
-        $super_array = array($superadmin_user_id,$saloni_user_id);
+        $bizpos_user_id = getenv('BIZPOSUSERID');
+
+        $super_array = array($superadmin_user_id,$saloni_user_id,$bizpos_user_id);
 
         $status = 'Inactive';
         $status_array = array($status);
@@ -594,9 +595,11 @@ class User extends Authenticatable
     // function for user remarks dropdown
     public static function getAllUsersForRemarks($user_id,$department_id) {
 
-        $superadmin = getenv('SUPERADMINUSERID');
+        $superadmin_user_id = getenv('SUPERADMINUSERID');
         $saloni_user_id = getenv('SALONIUSERID');
-        $super_array = array($superadmin,$saloni_user_id);
+        $bizpos_user_id = getenv('BIZPOSUSERID');
+        
+        $super_array = array($superadmin_user_id,$saloni_user_id,$bizpos_user_id);
 
         $status = 'Inactive';
         $status_array = array($status);
