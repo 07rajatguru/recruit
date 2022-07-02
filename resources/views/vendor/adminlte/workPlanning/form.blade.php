@@ -18,30 +18,33 @@
             @else
                 <h2>Add Work Planning</h2>
 
-                <?php
+                @permission('tomorrow-work-planning-add')
 
-                    $utc_current_date = date('Y-m-d') . " " . date('H:i:s');
-                    $dt_current_date = new \DateTime($utc_current_date);
-                    $tz_current_date = new \DateTimeZone('Asia/Kolkata');
+                    <?php
 
-                    $dt_current_date->setTimezone($tz_current_date);
-                    $time = strtotime($dt_current_date->format('H:i:s'));
-                    $current_time = date("H:i", $time);
-                ?>
+                        $utc_current_date = date('Y-m-d') . " " . date('H:i:s');
+                        $dt_current_date = new \DateTime($utc_current_date);
+                        $tz_current_date = new \DateTimeZone('Asia/Kolkata');
 
-                @if($current_time >= '18:00')
-                    <div role="tabpanel">
-                        <ul class="nav nav-tabs" role="tablist">
-                            <li role="presentation" class="today active">
-                                <a href="" role="tab" data-toggle="tab" style="font-size:15px;color: black;" title="Today" onclick="setDateValue('Today');"><b>Today</b></a>
-                            </li>
+                        $dt_current_date->setTimezone($tz_current_date);
+                        $time = strtotime($dt_current_date->format('H:i:s'));
+                        $current_time = date("H:i", $time);
+                    ?>
 
-                            <li role="presentation" class="tomorrow">
-                                <a href="" role="tab" data-toggle="tab" style="font-size:15px;color: black;" title="Tomorrow" onclick="setDateValue('Tomorrow');"><b>Tomorrow</b></a>
-                            </li>
-                        </ul>
-                    </div>
-                @endif
+                    @if($current_time >= '18:00')
+                        <div role="tabpanel">
+                            <ul class="nav nav-tabs" role="tablist">
+                                <li role="presentation" class="today active">
+                                    <a href="" role="tab" data-toggle="tab" style="font-size:15px;color: black;" title="Today" onclick="setDateValue('Today');"><b>Today</b></a>
+                                </li>
+
+                                <li role="presentation" class="tomorrow">
+                                    <a href="" role="tab" data-toggle="tab" style="font-size:15px;color: black;" title="Tomorrow" onclick="setDateValue('Tomorrow');"><b>Tomorrow</b></a>
+                                </li>
+                            </ul>
+                        </div>
+                    @endif
+                @endpermission
             @endif
         </div>
         <div class="pull-right">
