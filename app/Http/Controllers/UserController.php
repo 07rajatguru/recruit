@@ -66,10 +66,14 @@ class UserController extends Controller
         $superadmin = getenv('SUPERADMINUSERID');
         $saloni_user_id = getenv('SALONIUSERID');
 
+        $operations = getenv('OPERATIONS');
+        $bizpos_user_id = getenv('BIZPOSUSERID');
+
         $roles = array();
         $roles_id = '';
 
         $reports_to = User::getUserArray($user_id);
+        $reports_to = array_fill_keys(array($bizpos_user_id),'Adler B.')+$reports_to;
         $reports_to = array_fill_keys(array(0),'Select Reports to')+$reports_to;
 
         $floor_incharge = User::getAllFloorInchargeUsers();
@@ -120,7 +124,7 @@ class UserController extends Controller
         $employment_type  = User::getEmploymentType();
         $employment_type = array_fill_keys(array(''),'Select Employment Type')+$employment_type;
 
-        return view('adminlte::users.create',compact('roles','roles_id','reports_to','companies','company_id','type','floor_incharge','departments','department_id','hours_array','selected_working_hours','selected_half_day_working_hours','employment_type'));
+        return view('adminlte::users.create',compact('roles','roles_id','reports_to','companies','company_id','type','floor_incharge','departments','department_id','hours_array','selected_working_hours','selected_half_day_working_hours','employment_type','operations','bizpos_user_id'));
     }
 
     /**
@@ -505,10 +509,14 @@ class UserController extends Controller
         $superadmin = getenv('SUPERADMINUSERID');
         $saloni_user_id = getenv('SALONIUSERID');
 
+        $operations = getenv('OPERATIONS');
+        $bizpos_user_id = getenv('BIZPOSUSERID');
+
         $user = User::find($id);
         $roles = Role::orderBy('display_name','ASC')->pluck('display_name','id');
 
         $reports_to = User::getUserArray($id);
+        $reports_to = array_fill_keys(array($bizpos_user_id),'Adler B.')+$reports_to;
         $reports_to = array_fill_keys(array(0),'Select Reports to')+$reports_to;
 
         //$floor_incharge = User::getAllUsers();
@@ -595,7 +603,7 @@ class UserController extends Controller
         $employment_type = array_fill_keys(array(''),'Select Employment Type')+$employment_type;
         $intern_month = $user->intern_month;
 
-        return view('adminlte::users.edit',compact('id','user','roles','roles_id', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge','semail','departments','department_id','hr_adv_recruitemnt','cv_report','interview_report','lead_report','hours_array','selected_working_hours','selected_half_day_working_hours','joining_date','employment_type','intern_month'));
+        return view('adminlte::users.edit',compact('id','user','roles','roles_id', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge','semail','departments','department_id','hr_adv_recruitemnt','cv_report','interview_report','lead_report','hours_array','selected_working_hours','selected_half_day_working_hours','joining_date','employment_type','intern_month','operations','bizpos_user_id'));
     }
 
     /**

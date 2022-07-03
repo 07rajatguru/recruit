@@ -289,6 +289,8 @@
         </div>
 
         <input type="hidden" id="user_id" name="user_id" value="0">
+        <input type="hidden" id="operations" name="operations" value="{{ $operations }}">
+        <input type="hidden" id="bizpos_user_id" name="bizpos_user_id" value="{{ $bizpos_user_id }}">
     </div>
 
     {!! Form::close() !!}
@@ -431,8 +433,18 @@
                             }); 
                             $("#roles").select2();
                         }
-                        else{
+                        else {
                             $("#roles").empty();
+                        }
+
+                        // Set By Default Bizpos user Id for Operations Department
+                        var operations = $("#operations").val();
+                        var bizpos_user_id = $("#bizpos_user_id").val();
+                        
+                        if(department_id == operations) {
+
+                            $('#reports_to').val(bizpos_user_id);
+                            $("#reports_to").select2();
                         }
                     }
                 });

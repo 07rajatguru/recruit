@@ -300,6 +300,9 @@
 
         <input type="hidden" id="user_id" name="user_id" value="{{ $id }}">
         <input type="hidden" name="get_joining_date" id="get_joining_date" value="{{ $joining_date }}">
+        <input type="hidden" id="operations" name="operations" value="{{ $operations }}">
+        <input type="hidden" id="bizpos_user_id" name="bizpos_user_id" value="{{ $bizpos_user_id }}">
+        <input type="hidden" id="userReportsTo" name="userReportsTo" value="{{ $userReportsTo }}">
     </div>
 
     {!! Form::close() !!}
@@ -437,8 +440,19 @@
                             }); 
                             $("#roles").select2();
                         }
-                        else{
+                        else {
                             $("#roles").empty();
+                        }
+
+                        // Set By Default Bizpos user Id for Operations Department
+                        var userReportsTo = $("#userReportsTo").val();
+                        var operations = $("#operations").val();
+                        var bizpos_user_id = $("#bizpos_user_id").val();
+                        
+                        if(department_id == operations && userReportsTo != $bizpos_user_id) {
+
+                            $('#reports_to').val(bizpos_user_id);
+                            $("#reports_to").select2();
                         }
                     }
                 });
