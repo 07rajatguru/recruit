@@ -757,7 +757,7 @@ class WorkPlanning extends Model
         $query = WorkPlanning::query();
         $query = $query->where('work_planning.added_by','=',$user_id);
         $query = $query->where('work_planning.status','=',1);
-        $query = $query->where('work_planning.loggedin_time','>','05:00:00');
+        $query = $query->where('work_planning.loggedin_time','>','05:01:00');
 
         if ($month != '' && $year != '') {
 
@@ -765,7 +765,7 @@ class WorkPlanning extends Model
             $query = $query->where(\DB::raw('year(work_planning.added_date)'),'=',$year);
         }
         
-        $query = $query->select('work_planning.added_date','work_planning.attendance','work_planning.status','work_planning.loggedin_time','work_planning.loggedout_time');
+        $query = $query->select('work_planning.id','work_planning.added_date','work_planning.attendance','work_planning.status','work_planning.loggedin_time','work_planning.loggedout_time');
         
         $response = $query->get();
         return $response;

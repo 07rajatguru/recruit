@@ -1409,6 +1409,7 @@ class WorkPlanningController extends Controller
         $post_discuss_status = $work_planning->post_discuss_status;
         $total_actual_time = $work_planning->total_actual_time;
         $work_type = $work_planning->work_type;
+        $report_delay = $work_planning->report_delay;
         $added_by_id = $work_planning->added_by;
         $loggedin_time = $work_planning->loggedin_time;
 
@@ -1462,6 +1463,10 @@ class WorkPlanningController extends Controller
         $late_in_early_go_res = LateInEarlyGo::getApprovedRequests($added_by_id,$added_date);
 
         if(isset($late_in_early_go_res) && $late_in_early_go_res != '') {
+
+            \DB::statement("UPDATE `work_planning` SET `attendance` = 'F' WHERE `id` = $wp_id;");
+        }
+        else if ($report_delay == 'Late in / Early Go') {
 
             \DB::statement("UPDATE `work_planning` SET `attendance` = 'F' WHERE `id` = $wp_id;");
         }
@@ -1547,22 +1552,40 @@ class WorkPlanningController extends Controller
         //4th Condition Check Delay Report
         $delay_work_planning = WorkPlanning::getDelayWorkPlanningDetails($added_by_id,$month,$year);
 
-        /*if(isset($delay_work_planning) && sizeof($delay_work_planning) > 3) {
+        if(isset($delay_work_planning) && sizeof($delay_work_planning) > 3) {
 
-           \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $wp_id");
-        }*/
+            $i=0;
+            foreach ($delay_work_planning as $key => $value) {
+                
+                $user_wp_id = $value['id'];
+                if($i >= 3) {
+
+                    \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $user_wp_id");
+                }
+                $i++;
+            }
+        }
 
         //5th Condition Check Loggedin Logout Time
 
         // Get Actual Logged in Log out Time
 
-        if($loggedin_time > '05:00:00') {
+        if($loggedin_time > '05:01:00') {
 
             $time_delay_work_planning = WorkPlanning::getUserTimeByWorkPlanning($added_by_id,$month,$year);
 
             if(isset($time_delay_work_planning) && sizeof($time_delay_work_planning) > 3) {
 
-               \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $wp_id");
+                $i=0;
+                foreach ($time_delay_work_planning as $key => $value) {
+                
+                    $user_wp_id = $value->id;
+                    if($i >= 3) {
+
+                        \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $user_wp_id");
+                    }
+                    $i++;
+                }
             }
         }
 
