@@ -1467,140 +1467,147 @@ class HomeController extends Controller
 
                 foreach ($response as $key => $value) {
 
-                    $get_dt = date("j",strtotime($value->added_date));
+                    // Check Date
+                    $new1 = date('Y-m-d', strtotime("$value->added_date"));
+                    $new2 = date('Y-m-d', strtotime("$value->joining_date"));
 
-                    $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
-                    $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->employment_type.",".$value->working_hours.",".$joining_date;
+                    if($new2 <= $new1) {
 
-                    // Get User id from both name 
-                    $user_name = $value->first_name."-".$value->last_name;
-                    $u_id = User::getUserIdByBothName($user_name);
+                        $get_dt = date("j",strtotime($value->added_date));
 
-                    $approved_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id,1);
+                        $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
+                        $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->employment_type.",".$value->working_hours.",".$joining_date;
 
-                    $rejected_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id,2);
+                        // Get User id from both name 
+                        $user_name = $value->first_name."-".$value->last_name;
+                        $u_id = User::getUserIdByBothName($user_name);
 
-                    if($value->status == 2 && $value->attendance == "A") {
+                        $approved_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id,1);
 
-                        $list[$combine_name][$get_dt]['attendance'] = 'FR';
-                    }
-                    else if($value->attendance == "A") {
+                        $rejected_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id,2);
 
-                        $list[$combine_name][$get_dt]['attendance'] = 'A';
-                    }
-                    else if(in_array($get_dt, $sundays)) {
+                        if($value->status == 2 && $value->attendance == "A") {
 
-                        $list[$combine_name][$get_dt]['attendance'] = 'H';
-                    }
-                    else if($value->status == NULL && $value->loggedin_time == NULL) {
-
-                        $list[$combine_name][$get_dt]['attendance'] = '';
-                    }
-                    else if($value->status == 0) {
-
-                        $list[$combine_name][$get_dt]['attendance'] = 'WPP';
-                    }
-                    else if($value->status == 1 && $value->attendance == "HD" && isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
-
-                        $list[$combine_name][$get_dt]['attendance'] = 'WFHHD';
-                    }
-                    else if($value->status == 1 && $value->attendance == "F" && isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
-
-                        $list[$combine_name][$get_dt]['attendance'] = 'WFHP';
-                    }
-                    else if(isset($rejected_wfh_data) && sizeof($rejected_wfh_data) > 0) {
-
-                        $list[$combine_name][$get_dt]['attendance'] = 'WFHR';
-                    }
-                    else if($value->status == 1 && $value->attendance == "HD") {
-
-                        $list[$combine_name][$get_dt]['attendance'] = 'HD';
-                    }
-                    else if($value->status == 1 && $value->attendance == "F") {
-
-                        $list[$combine_name][$get_dt]['attendance'] = 'P';
-                    }
-                    else if($value->status == 2 && $value->attendance == "HD") {
-
-                        $list[$combine_name][$get_dt]['attendance'] = 'HDR';
-                    }
-                    
-
-                    // Set holiday dates
-                    $fixed_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Fixed Leave');
-
-                    if (isset($fixed_holidays) && sizeof($fixed_holidays)>0) {
-
-                        foreach ($fixed_holidays as $f_h_k => $f_h_v) {
-
-                            $list[$combine_name][$f_h_v]['fixed_holiday'] = 'Y';
+                            $list[$combine_name][$get_dt]['attendance'] = 'FR';
                         }
-                    }
+                        else if($value->attendance == "A") {
 
-                    $optional_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Optional Leave');
-
-                    if (isset($optional_holidays) && sizeof($optional_holidays)>0) {
-
-                        foreach ($optional_holidays as $o_h_k => $o_h_v) {
-
-                            $list[$combine_name][$o_h_v]['optional_holiday'] = 'Y';
+                            $list[$combine_name][$get_dt]['attendance'] = 'A';
                         }
-                    }
+                        else if(in_array($get_dt, $sundays)) {
 
-                    // Set Leave dates
-                    $pl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Privilege Leave',1);
-                    $sl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Sick Leave',1);
-                    $ul_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',2);
+                            $list[$combine_name][$get_dt]['attendance'] = 'H';
+                        }
+                        else if($value->status == NULL && $value->loggedin_time == NULL) {
 
-                    if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
+                            $list[$combine_name][$get_dt]['attendance'] = '';
+                        }
+                        else if($value->status == 0) {
 
-                        foreach ($pl_leave_data as $pl_k => $pl_v) {
+                            $list[$combine_name][$get_dt]['attendance'] = 'WPP';
+                        }
+                        else if($value->status == 1 && $value->attendance == "HD" && isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
 
-                            for($pl_i=$pl_v['from_date']; $pl_i <= $pl_v['to_date']; $pl_i++) {
-                                $list[$combine_name][$pl_i]['privilege_leave'] = 'Y';
+                            $list[$combine_name][$get_dt]['attendance'] = 'WFHHD';
+                        }
+                        else if($value->status == 1 && $value->attendance == "F" && isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
+
+                            $list[$combine_name][$get_dt]['attendance'] = 'WFHP';
+                        }
+                        else if(isset($rejected_wfh_data) && sizeof($rejected_wfh_data) > 0) {
+
+                            $list[$combine_name][$get_dt]['attendance'] = 'WFHR';
+                        }
+                        else if($value->status == 1 && $value->attendance == "HD") {
+
+                            $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                        }
+                        else if($value->status == 1 && $value->attendance == "F") {
+
+                            $list[$combine_name][$get_dt]['attendance'] = 'P';
+                        }
+                        else if($value->status == 2 && $value->attendance == "HD") {
+
+                            $list[$combine_name][$get_dt]['attendance'] = 'HDR';
+                        }
+                        
+
+                        // Set holiday dates
+                        $fixed_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Fixed Leave');
+
+                        if (isset($fixed_holidays) && sizeof($fixed_holidays)>0) {
+
+                            foreach ($fixed_holidays as $f_h_k => $f_h_v) {
+
+                                $list[$combine_name][$f_h_v]['fixed_holiday'] = 'Y';
                             }
                         }
-                    }
 
-                    if (isset($sl_leave_data) && sizeof($sl_leave_data)>0) {
+                        $optional_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Optional Leave');
 
-                        foreach ($sl_leave_data as $sl_k => $sl_v) {
+                        if (isset($optional_holidays) && sizeof($optional_holidays)>0) {
 
-                            for($sl_i=$sl_v['from_date']; $sl_i <= $sl_v['to_date']; $sl_i++) {
-                                $list[$combine_name][$sl_i]['sick_leave'] = 'Y';
+                            foreach ($optional_holidays as $o_h_k => $o_h_v) {
+
+                                $list[$combine_name][$o_h_v]['optional_holiday'] = 'Y';
                             }
                         }
-                    }
 
-                    if (isset($ul_leave_data) && sizeof($ul_leave_data)>0) {
+                        // Set Leave dates
+                        $pl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Privilege Leave',1);
+                        $sl_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'Sick Leave',1);
+                        $ul_leave_data = UserLeave::getUserLeavesById($u_id,$month,$year,'',2);
 
-                        foreach ($ul_leave_data as $ul_k => $ul_v) {
+                        if (isset($pl_leave_data) && sizeof($pl_leave_data)>0) {
 
-                            for($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) { 
-                                $list[$combine_name][$ul_i]['unapproved_leave'] = 'Y';
+                            foreach ($pl_leave_data as $pl_k => $pl_v) {
+
+                                for($pl_i=$pl_v['from_date']; $pl_i <= $pl_v['to_date']; $pl_i++) {
+                                    $list[$combine_name][$pl_i]['privilege_leave'] = 'Y';
+                                }
                             }
                         }
-                    }
 
-                    if (isset($user_remark) && sizeof($user_remark)>0) {
+                        if (isset($sl_leave_data) && sizeof($sl_leave_data)>0) {
 
-                        foreach ($user_remark as $k => $v) {
+                            foreach ($sl_leave_data as $sl_k => $sl_v) {
 
-                            $split_month = date('n',strtotime($v['remark_date']));
-                            $split_year = date('Y',strtotime($v['remark_date']));
-
-                            if (($v['full_name'] == $combine_name) && ($v['remark_date'] == $value->added_date) && ($month == $split_month) && ($year == $split_year)) {
-                                $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
+                                for($sl_i=$sl_v['from_date']; $sl_i <= $sl_v['to_date']; $sl_i++) {
+                                    $list[$combine_name][$sl_i]['sick_leave'] = 'Y';
+                                }
                             }
-                            else {
+                        }
 
-                                if (($v['full_name'] == $combine_name) && ($month == $split_month) && ($year == $split_year)) {
+                        if (isset($ul_leave_data) && sizeof($ul_leave_data)>0) {
 
+                            foreach ($ul_leave_data as $ul_k => $ul_v) {
+
+                                for($ul_i=$ul_v['from_date']; $ul_i <= $ul_v['to_date']; $ul_i++) { 
+                                    $list[$combine_name][$ul_i]['unapproved_leave'] = 'Y';
+                                }
+                            }
+                        }
+
+                        if (isset($user_remark) && sizeof($user_remark)>0) {
+
+                            foreach ($user_remark as $k => $v) {
+
+                                $split_month = date('n',strtotime($v['remark_date']));
+                                $split_year = date('Y',strtotime($v['remark_date']));
+
+                                if (($v['full_name'] == $combine_name) && ($v['remark_date'] == $value->added_date) && ($month == $split_month) && ($year == $split_year)) {
                                     $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
                                 }
                                 else {
 
-                                    $list[$v['full_name']][$v['converted_date']]['remarks'] = $v['remarks'];
+                                    if (($v['full_name'] == $combine_name) && ($month == $split_month) && ($year == $split_year)) {
+
+                                        $list[$combine_name][$v['converted_date']]['remarks'] = $v['remarks'];
+                                    }
+                                    else {
+
+                                        $list[$v['full_name']][$v['converted_date']]['remarks'] = $v['remarks'];
+                                    }
                                 }
                             }
                         }

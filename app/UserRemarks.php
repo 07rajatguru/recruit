@@ -142,6 +142,10 @@ class UserRemarks extends Model
             $query = $query->where(\DB::raw('year(user_remarks.date)'),'=', $year);
         }
 
+        // Get Previous data from joining date
+        $check_date = $year."-".$month."-31";
+        $query = $query->where('users.joining_date','<=',$check_date);
+
         $query = $query->select('user_remarks.*','users.name as user_name','users.first_name as first_name','users.last_name as last_name','users_otherinfo.date_of_joining as joining_date','department.name as department_name','users.working_hours as working_hours','users.employment_type as employment_type');
 
         $res = $query->get();
