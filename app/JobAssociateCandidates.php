@@ -696,10 +696,11 @@ class JobAssociateCandidates extends Model
 
         $query = $query->where('job_associate_candidates.shortlisted','>=','1');
         
-        $query = $query->orderBy('job_associate_candidates.shortlisted','3');
+       /* $query = $query->orderBy('job_associate_candidates.shortlisted','3');
         $query = $query->orderBy('job_associate_candidates.shortlisted','2');
         $query = $query->orderBy('job_associate_candidates.shortlisted','1');
-        $query = $query->orderBy('job_associate_candidates.date','desc');
+        $query = $query->orderBy('job_associate_candidates.date','desc');*/
+        $query = $query->orderBy('job_associate_candidates.date','asc');
 
         $response = $query->get();
 
@@ -733,10 +734,11 @@ class JobAssociateCandidates extends Model
             $query = $query->where('job_associate_candidates.created_at','<=',$to_date);
         }
 
-        $query = $query->orderBy('job_associate_candidates.shortlisted','3');
+        /*$query = $query->orderBy('job_associate_candidates.shortlisted','3');
         $query = $query->orderBy('job_associate_candidates.shortlisted','2');
         $query = $query->orderBy('job_associate_candidates.shortlisted','1');
-        $query = $query->orderBy('job_associate_candidates.date','desc');
+        $query = $query->orderBy('job_associate_candidates.date','desc');*/
+        $query = $query->orderBy('job_associate_candidates.date','asc');
 
         $response = $query->get();
 
