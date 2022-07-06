@@ -78,8 +78,8 @@ class WorkPlanning extends Model
 
         $work_type = array();
         
-        $work_type['WFH'] = 'WFH';
         $work_type['WFO'] = 'WFO';
+        $work_type['WFH'] = 'WFH';
 
         return $work_type;
     }

@@ -1038,16 +1038,10 @@ class UserController extends Controller
 
             $logged_in_user_id = \Auth::user()->id;
 
-            $admin_userid = getenv('ADMINUSERID');
-            $admin_email = User::getUserEmailById($admin_userid);
-
-            $super_admin_userid = getenv('SUPERADMINUSERID');
-            $superadminemail = User::getUserEmailById($super_admin_userid);
-
             $hr_userid = getenv('HRUSERID');
             $hr_email = User::getUserEmailById($hr_userid);
 
-            // Send email notification to user for select optional leaves
+            // Send Welcome email notification to user
 
             //Get Reports to Email
             $report_res = User::getReportsToUsersEmail($id);
@@ -1055,22 +1049,22 @@ class UserController extends Controller
             if(isset($report_res->remail) && $report_res->remail != '') {
 
                 $report_email = $report_res->remail;
-                $cc_users_array = array($report_email,$admin_email,$superadminemail,$hr_email);
+                $cc_users_array = array($report_email,$hr_email);
             }
             else {
 
-                $cc_users_array = array($admin_email,$superadminemail,$hr_email);
+                $cc_users_array = array($hr_email);
             }
 
-            $module = "List of Holidays";
+            $module = "Welcome Email";
             $sender_name = $logged_in_user_id;
             $to = $email;
-            $subject = "List of Holidays";
-            $message = "List of Holidays";
+            $subject = "Welcome aboard the Adler Team!";
+            $message = "Welcome aboard the Adler Team!";
             $module_id = $id;
             $cc = implode(",",$cc_users_array);
 
-            //event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         }
 
         if (isset($status) && $status == 'Active') {
@@ -1120,15 +1114,10 @@ class UserController extends Controller
                     $job_visible_users->save();
                 }
             }
-
-            //return redirect()->route('users.index')->with('success','User Updated Successfully, please add this user manually in training and process module.');
-
-            return redirect()->route('users.index')->with('success','User Updated Successfully.');
         }
+        else if (isset($status) && $status == 'Inactive') {
 
-        // If status is inactive then delete this user process and training
-        if (isset($status) && $status == 'Inactive') {
-
+            // If status is inactive then delete this user process and training
             ProcessVisibleUser::where('user_id',$id)->delete();
             TrainingVisibleUser::where('user_id',$id)->delete();
             JobVisibleUsers::where('user_id',$id)->delete();
