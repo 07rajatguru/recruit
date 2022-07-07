@@ -700,7 +700,7 @@ class JobAssociateCandidates extends Model
         $query = $query->orderBy('job_associate_candidates.shortlisted','2');
         $query = $query->orderBy('job_associate_candidates.shortlisted','1');
         $query = $query->orderBy('job_associate_candidates.date','desc');*/
-        $query = $query->orderBy('job_associate_candidates.date','asc');
+        $query = $query->orderBy('job_associate_candidates.date','desc');
 
         $response = $query->get();
 
@@ -738,7 +738,7 @@ class JobAssociateCandidates extends Model
         $query = $query->orderBy('job_associate_candidates.shortlisted','2');
         $query = $query->orderBy('job_associate_candidates.shortlisted','1');
         $query = $query->orderBy('job_associate_candidates.date','desc');*/
-        $query = $query->orderBy('job_associate_candidates.date','asc');
+        $query = $query->orderBy('job_associate_candidates.date','desc');
 
         $response = $query->get();
 

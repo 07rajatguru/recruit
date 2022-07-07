@@ -1440,8 +1440,7 @@ class Interview extends Model
         
         $query = $query->where('interview.status','=','Attended');
         $query = $query->where('interview.posting_title','=',$job_id);
-        //$query = $query->orderBy('interview.interview_date','desc');
-        $query = $query->orderBy('interview.interview_date','asc');
+        $query = $query->orderBy('interview.interview_date','desc');
         $response = $query->get();
        
         $list = array();
