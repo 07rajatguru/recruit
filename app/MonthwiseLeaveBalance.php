@@ -13,7 +13,7 @@ class MonthwiseLeaveBalance extends Model
         $query = MonthwiseLeaveBalance::query();
         $query = $query->where('month','<=',$month);
         $query = $query->where('year','<=',$year);
-        $query = $query->select('monthwise_leave_balance.*',\DB::raw("SUM(monthwise_leave_balance.pl_total) as pl_total"),\DB::raw("SUM(monthwise_leave_balance.pl_taken) as pl_taken"),\DB::raw("SUM(monthwise_leave_balance.pl_remaining) as pl_remaining"),\DB::raw("SUM(monthwise_leave_balance.sl_total) as sl_total"),\DB::raw("SUM(monthwise_leave_balance.sl_taken) as sl_taken"),\DB::raw("SUM(monthwise_leave_balance.sl_remaining) as sl_remaining"));
+        $query = $query->select('monthwise_leave_balance.*',\DB::raw("SUM(monthwise_leave_balance.pl_total) as pl_total"),\DB::raw("SUM(monthwise_leave_balance.pl_taken) as pl_taken"),\DB::raw("SUM(monthwise_leave_balance.sl_total) as sl_total"),\DB::raw("SUM(monthwise_leave_balance.sl_taken) as sl_taken"));
         $query = $query->orderBy('monthwise_leave_balance.user_id','desc');
         $query = $query->groupBy('monthwise_leave_balance.user_id');
         $response = $query->get();
@@ -32,12 +32,11 @@ class MonthwiseLeaveBalance extends Model
                 
                 $leave_balance_data[$user_id]['pl_total'] = $value->pl_total;
                 $leave_balance_data[$user_id]['pl_taken'] = $value->pl_taken;
-                $leave_balance_data[$user_id]['pl_remaining'] = $value->pl_remaining;
+                $leave_balance_data[$user_id]['pl_remaining'] = $value->pl_total - $value->pl_taken;
 
                 $leave_balance_data[$user_id]['sl_total'] = $value->sl_total;
                 $leave_balance_data[$user_id]['sl_taken'] = $value->sl_taken;
-                $leave_balance_data[$user_id]['sl_remaining'] = $value->sl_remaining;
-
+                $leave_balance_data[$user_id]['sl_remaining'] = $value->sl_total - $value->sl_taken;
             }
         }
         return $leave_balance_data;
@@ -65,7 +64,7 @@ class MonthwiseLeaveBalance extends Model
 
         $query = MonthwiseLeaveBalance::query();
         $query = $query->where('monthwise_leave_balance.user_id','=',$user_id);
-        $query = $query->select('monthwise_leave_balance.*',\DB::raw("SUM(monthwise_leave_balance.pl_total) as pl_total"),\DB::raw("SUM(monthwise_leave_balance.pl_taken) as pl_taken"),\DB::raw("SUM(monthwise_leave_balance.pl_remaining) as pl_remaining"),\DB::raw("SUM(monthwise_leave_balance.sl_total) as sl_total"),\DB::raw("SUM(monthwise_leave_balance.sl_taken) as sl_taken"),\DB::raw("SUM(monthwise_leave_balance.sl_remaining) as sl_remaining"));
+        $query = $query->select('monthwise_leave_balance.*',\DB::raw("SUM(monthwise_leave_balance.pl_total) as pl_total"),\DB::raw("SUM(monthwise_leave_balance.pl_taken) as pl_taken"),\DB::raw("SUM(monthwise_leave_balance.sl_total) as sl_total"),\DB::raw("SUM(monthwise_leave_balance.sl_taken) as sl_taken"));
         $query = $query->orderBy('monthwise_leave_balance.user_id','desc');
         $query = $query->groupBy('monthwise_leave_balance.user_id');
         $response = $query->get();
@@ -83,11 +82,11 @@ class MonthwiseLeaveBalance extends Model
                 
                 $leave_balance_data['pl_total'] = $value->pl_total;
                 $leave_balance_data['pl_taken'] = $value->pl_taken;
-                $leave_balance_data['pl_remaining'] = $value->pl_remaining;
+                $leave_balance_data['pl_remaining'] = $value->pl_total - $value->pl_taken;
 
                 $leave_balance_data['sl_total'] = $value->sl_total;
                 $leave_balance_data['sl_taken'] = $value->sl_taken;
-                $leave_balance_data['sl_remaining'] = $value->sl_remaining;
+                $leave_balance_data['sl_remaining'] = $value->sl_total - $value->sl_taken;
             }
         }
         return $leave_balance_data;
