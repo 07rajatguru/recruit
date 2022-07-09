@@ -378,15 +378,31 @@ class HolidaysController extends Controller
 
                     if($value['type'] == 'Optional Leave') {
 
+                        $check = HolidaysUsers::checkUserHoliday($uid,$value['id']);
+
+                        if(isset($check) && $check != '') {
+
+                            $optional_holiday_list[$j]['check'] = 1;
+                        }
+                        else {
+
+                            $optional_holiday_list[$j]['check'] = 0;
+                        }
+
                         $optional_holiday_list[$j]['id'] = $value['id'];
                         $optional_holiday_list[$j]['title'] = $value['title'];
+                        $optional_holiday_list[$j]['date'] = $value['from_date'];
+                        $optional_holiday_list[$j]['day'] = date("l",strtotime($value['from_date']));
 
                         $j++;
                     }
-                    if($value['type'] == 'Fixed Leave') {
+                    else if($value['type'] == 'Fixed Leave') {
 
                         $fixed_holiday_list[$i]['id'] = $value['id'];
                         $fixed_holiday_list[$i]['title'] = $value['title'];
+                        $fixed_holiday_list[$i]['date'] = $value['from_date'];
+                        $fixed_holiday_list[$i]['day'] = date("l",strtotime($value['from_date']));
+
                         $i++;
                     }   
                 }
@@ -525,14 +541,19 @@ class HolidaysController extends Controller
 
                             $optional_holiday_list[$j]['id'] = $value['id'];
                             $optional_holiday_list[$j]['title'] = $value['title'];
+                            $optional_holiday_list[$j]['date'] = $value['from_date'];
+                            $optional_holiday_list[$j]['day'] = date("l",strtotime($value['from_date']));
                         }
 
                         $j++;
                     }
-                    if($value['type'] == 'Fixed Leave') {
+                    else if($value['type'] == 'Fixed Leave') {
 
                         $fixed_holiday_list[$i]['id'] = $value['id'];
                         $fixed_holiday_list[$i]['title'] = $value['title'];
+                        $fixed_holiday_list[$i]['date'] = $value['from_date'];
+                        $fixed_holiday_list[$i]['day'] = date("l",strtotime($value['from_date']));
+
                         $i++;
                     }   
                 }

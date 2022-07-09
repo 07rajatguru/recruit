@@ -328,7 +328,8 @@
         <div class="col-lg-6 col-xs-6">
             <div class="box box-info">
                 <div class="box-header with-border">
-                    <h3 class="box-title">List of Holidays in This Year</h3>
+                    <h3 class="box-title">List of Holidays in This Year - <a href="list-of-selected-holidays/{{ $user_id }}" target="_blank"><span style="font-size:15px;">My Selected Holidays</span></a>
+                    </h3>
 
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>

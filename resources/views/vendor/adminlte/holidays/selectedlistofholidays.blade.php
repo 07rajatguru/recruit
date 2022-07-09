@@ -50,7 +50,7 @@
                                         <tr style="font-family:Cambria, serif;font-size: 12.0pt;">
                                             <td align="center">{{ ++$i }}</td>
                                             <td align="left" style="padding-left:10px;">
-                                            {{ $value['title'] }}</td>
+                                            {{ $value['title'] }} ( {{ $value['date'] }} - {{ $value['day'] }} )</td>
                                         </tr>
                                     @endforeach
                                 </table>
@@ -75,7 +75,7 @@
                                             <tr style="font-family:Cambria, serif;font-size: 12.0pt;">
                                                 <td align="center">{{ ++$i }}</td>
                                                 <td align="left" style="padding-left: 10px;">
-                                                {{ $value['title'] }}</td>
+                                                {{ $value['title'] }} ( {{ $value['date'] }} - {{ $value['day'] }} )</td>
                                             </tr>
                                         @endif
                                     @endforeach
@@ -101,10 +101,3 @@
         </div>
     </div>
 @stop
-
-@section('customscripts')
-    <script type="text/javascript">
-        jQuery(document).ready(function() { 
-        });
-    </script>
-@endsection

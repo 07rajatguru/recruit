@@ -1086,6 +1086,8 @@ class HomeController extends Controller
         $viewVariable['month'] = $month;
         $viewVariable['year'] = $year;
 
+        $viewVariable['user_id'] = $user_id;
+
         return view('employee-self-service',$viewVariable);
     }
 

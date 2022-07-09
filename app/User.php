@@ -1280,19 +1280,18 @@ class User extends Authenticatable
         $super_array = array($saloni_user_id);
 
         $query = User::query();
-        $query = $query->leftjoin('users_otherinfo','users_otherinfo.user_id','=','users.id');
         $query = $query->whereNotIn('users.status',$status_array);
         $query = $query->whereNotIn('users.type',$client_type);
         $query = $query->whereNotIn('users.id',$super_array);
 
         if ($month != '') {
 
-            $query = $query->where(\DB::raw('month(users_otherinfo.date_of_joining)'),'=',$month);
-            $query = $query->where(\DB::raw('year(users_otherinfo.date_of_joining)'),'!=',$year);
+            $query = $query->where(\DB::raw('month(users.joining_date)'),'=',$month);
+            $query = $query->where(\DB::raw('year(users.joining_date)'),'!=',$year);
         }
 
-        $query = $query->select('users.first_name','users.last_name','users_otherinfo.date_of_joining');
-        $query = $query->orderBy('users_otherinfo.date_of_joining','DESC');
+        $query = $query->select('users.first_name','users.last_name','users.joining_date');
+        $query = $query->orderBy('users.joining_date','ASC');
         $response = $query->get();
 
         $users_array = array();
@@ -1302,12 +1301,12 @@ class User extends Authenticatable
             foreach ($response as $key => $value) {
 
                 $date1 = date('Y');
-                $date2 = date('Y',strtotime($value->date_of_joining));
+                $date2 = date('Y',strtotime($value->joining_date));
                 $year_diff = $date1 - $date2;
                 $convert = date("S", mktime(0, 0, 0, 0, $year_diff, 0));
                 $number = $year_diff.$convert;
 
-                $joining_date = date('jS F',strtotime($value->date_of_joining));
+                $joining_date = date('jS F',strtotime($value->joining_date));
                 $users_array[$value->first_name . " " . $value->last_name] = $joining_date;
             }
         }
@@ -1337,7 +1336,7 @@ class User extends Authenticatable
         }
 
         $query = $query->select('users.first_name','users.last_name','users_otherinfo.date_of_birth');
-        $query = $query->orderBy('users_otherinfo.date_of_birth','DESC');
+        $query = $query->orderBy('users_otherinfo.date_of_birth','ASC');
         $response = $query->get();
 
         $users_array = array();

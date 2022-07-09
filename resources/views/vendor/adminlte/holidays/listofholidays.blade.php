@@ -36,7 +36,7 @@
                                         @foreach($fixed_holiday_list as $key => $value)
                                             <tr style="font-family:Cambria, serif;font-size: 12.0pt;">
                                                 <td align="center">{{ ++$i }}</td>
-                                                <td align="left" style="padding-left:10px;">{{ $value['title'] }}</td>
+                                                <td align="left" style="padding-left:10px;">{{ $value['title'] }} ( {{ $value['date'] }} - {{ $value['day'] }} )</td>
                                             </tr>
                                         @endforeach
                                     </table>
@@ -74,9 +74,16 @@
                                                         </div>
                                                     </td>
                                                 @else
-                                                    <td align="left" style="padding-left: 10px;">
-                                                        <input type="checkbox" value="{{ $value['id'] }}" id="holiday_{{ $value['id'] }}" class="others_holiday"> &nbsp; {{ $value['title'] }}
-                                                    </td>
+
+                                                    @if($value['check'] == 1)
+                                                        <td align="left" style="padding-left: 10px;">
+                                                            <input type="checkbox" value="{{ $value['id'] }}" id="holiday_{{ $value['id'] }}" class="others_holiday" checked> &nbsp; {{ $value['title'] }} ( {{ $value['date'] }} - {{ $value['day'] }} )
+                                                        </td>
+                                                    @else
+                                                        <td align="left" style="padding-left: 10px;">
+                                                            <input type="checkbox" value="{{ $value['id'] }}" id="holiday_{{ $value['id'] }}" class="others_holiday"> &nbsp; {{ $value['title'] }} ( {{ $value['date'] }} - {{ $value['day'] }} )
+                                                        </td>
+                                                    @endif
                                                 @endif
                                             </tr>
                                         @endforeach
@@ -109,33 +116,41 @@
                 autoclose: true,
             });
 
+            // On Page Load check length
+            selectionOfHolidays();
+            
+
             var $checkboxes = $('.others_holiday').change(function() {
 
-                var selected_length = $('.others_holiday:checked').length;
-                var actual_length = $("#length").val();
-
-                if(selected_length == actual_length) {
-
-                    $checkboxes.filter(':not(:checked)').prop('disabled', true);
-                }
-                else {
-
-                    $checkboxes.filter(':not(:checked)').prop('disabled', false);
-                }
-
-                if ($(this).prop('checked')) {
-
-                    var array = [];
-                    var checkboxes = document.querySelectorAll('input[type=checkbox]:checked')
-
-                    for (var i = 0; i < checkboxes.length; i++) {
-                        array.push(checkboxes[i].value);
-                    }
-
-                    $("#selected_leaves").val(array);
-                }
+                selectionOfHolidays();
             });
         });
+
+        function selectionOfHolidays() {
+
+            var $checkboxes = $('.others_holiday');
+            var selected_length = $('.others_holiday:checked').length;
+            var actual_length = $("#length").val();
+
+            if(selected_length == actual_length) {
+                $checkboxes.filter(':not(:checked)').prop('disabled', true);
+            }
+            else {
+                $checkboxes.filter(':not(:checked)').prop('disabled', false);
+            }
+
+            if ($(this).prop('checked')) {
+
+                var array = [];
+                var checkboxes = document.querySelectorAll('input[type=checkbox]:checked')
+
+                for (var i = 0; i < checkboxes.length; i++) {
+                    array.push(checkboxes[i].value);
+                }
+
+                $("#selected_leaves").val(array);
+            }
+        }
 
         function submitForm() {
 
