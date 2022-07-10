@@ -90,6 +90,7 @@
             <thead>
             <tr>
                 <th>No</th>
+                <th>Action</th>
                 <th>MB</th>
                 <th>Company Name</th>
                 <th>Position Title</th>
@@ -119,19 +120,19 @@
 
                 'bProcessing' : true,
                 'serverSide' : true,
-                "order" : [8,'desc'],
+                "order" : [9,'desc'],
                 "columnDefs": [ 
 
                     { "width": "10px", "targets": 0},
-                    { "width": "10px", "targets": 1},
-                    { "width": "10px", "targets": 2},
-                    { "width": "150px", "targets": 3},
-                    { "width": "10px", "targets": 4},
+                    { "width": "5px", "targets": 1, "searchable": false, "orderable": false},
+                    { "width": "15px", "targets": 2},
+                    { "width": "10px", "targets": 3},
+                    { "width": "150px", "targets": 4},
                     { "width": "10px", "targets": 5},
                     { "width": "10px", "targets": 6},
                     { "width": "10px", "targets": 7},
                     { "width": "5px", "targets": 8,},
-                    { "visible": false,  "targets": 9},
+                    { "visible": false,  "targets": 10},
                 ],
                 "ajax" : {
                     'url' : 'recruitment-jobs/all',
@@ -148,44 +149,43 @@
                 "pagingType": "full_numbers",
                 "fnRowCallback": function( Row, Data ) {
 
-                    if ( Data[14] == "0" ) {
-                        $('td:eq(2)', Row).css('background-color', '');
+                    if ( Data[15] == "0" ) {
+                        $('td:eq(3)', Row).css('background-color', '');
                     }
-                    else if ( Data[14] == "1" ) {
-                        $('td:eq(2)', Row).css('background-color', '#FF0000');
+                    else if ( Data[15] == "1" ) {
+                        $('td:eq(3)', Row).css('background-color', '#FF0000');
                     }
-                    else if ( Data[14] == "2" ) {
-                        $('td:eq(2)', Row).css('background-color', '#00B0F0');
+                    else if ( Data[15] == "2" ) {
+                        $('td:eq(3)', Row).css('background-color', '#00B0F0');
                     }
-                    else if ( Data[14] == "3" ) {
-                        $('td:eq(2)', Row).css('background-color', '#FABF8F');
+                    else if ( Data[15] == "3" ) {
+                        $('td:eq(3)', Row).css('background-color', '#FABF8F');
                     }
-                    else if ( Data[14] == "4" ) {
-                        $('td:eq(2)', Row).css('background-color', '#B1A0C7');
+                    else if ( Data[15] == "4" ) {
+                        $('td:eq(3)', Row).css('background-color', '#B1A0C7');
                     }
-                    else if ( Data[14] == "5" ) {
-                        $('td:eq(2)', Row).css('background-color', 'yellow');
+                    else if ( Data[15] == "5" ) {
+                        $('td:eq(3)', Row).css('background-color', 'yellow');
                     }
-                    else if ( Data[14] == "6" ) {
-                        $('td:eq(2)', Row).css('background-color', '');
+                    else if ( Data[15] == "6" ) {
+                        $('td:eq(3)', Row).css('background-color', '');
                     }
-                    else if ( Data[14] == "7" ) {
-                        $('td:eq(2)', Row).css('background-color', '#808080');
+                    else if ( Data[15] == "7" ) {
+                        $('td:eq(3)', Row).css('background-color', '#808080');
                     }
-                    else if ( Data[14] == "8" ) {
-                        $('td:eq(2)', Row).css('background-color', '#92D050');
+                    else if ( Data[15] == "8" ) {
+                        $('td:eq(3)', Row).css('background-color', '#92D050');
                     }
-                    else if ( Data[14] == "9" ) {
-                        $('td:eq(2)', Row).css('background-color', '#92D050');
+                    else if ( Data[15] == "9" ) {
+                        $('td:eq(3)', Row).css('background-color', '#92D050');
                     }
-                    else if ( Data[14] == "10" ) {
-                        $('td:eq(2)', Row).css('background-color', '#FFFFFF');
+                    else if ( Data[15] == "10" ) {
+                        $('td:eq(3)', Row).css('background-color', '#FFFFFF');
                     }
                     else {
-                        $('td:eq(2)', Row).css('background-color', '');
+                        $('td:eq(3)', Row).css('background-color', '');
                     }
                 },
-                stateSave : true,
             });
         });
     </script>
