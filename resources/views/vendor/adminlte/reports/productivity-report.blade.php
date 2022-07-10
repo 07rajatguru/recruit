@@ -675,13 +675,13 @@
 
                                     @if($value['joining_success_ratio'] >= $user_bench_mark['after_joining_success_ratio_weekly'])
                                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;border-bottom: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: limegreen;" class="after_joining_success_ratio_weeks">
-                                            <p align="center" style="text-align: center;">
+                                            <p align="center" style="text-align: center;cursor: pointer;" title="{{ $value['joining_success_candidate'] }}">
                                                 <span>{{ $value['joining_success_ratio'] }}</span>
                                             </p>
                                         </td>
                                     @else
                                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;border-bottom: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="after_joining_success_ratio_weeks">
-                                            <p align="center" style="text-align: center;">
+                                            <p align="center" style="text-align: center;cursor: pointer;" title="{{ $value['joining_success_candidate'] }}">
                                                 <span>{{ $value['joining_success_ratio'] }}</span>
                                             </p>
                                         </td>

@@ -2193,4 +2193,38 @@ class Bills extends Model
         }
         return $candidate_names;  
     }
+
+    public static function getProductivityReportJoiningSuccessCandidate($user_id=0,$from_date=NULL,$to_date=NULL) {
+
+        $query = Bills::query();
+        $query = $query->leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','bills.candidate_id');
+        $query = $query->leftjoin('bills_date','bills_date.bills_id','=','bills.id');
+        $query = $query->select('candidate_otherinfo.candidate_id as candidate_id');
+
+        if(isset($user_id) && $user_id > 0) {
+            $query = $query->where('candidate_otherinfo.owner_id','=',$user_id);
+        }
+
+        $query = $query->where('bills_date.joining_success_date','>=',$from_date);
+        $to_date = date("Y-m-d 23:59:59",strtotime($to_date));
+        $query = $query->where('bills_date.joining_success_date','<=',$to_date);
+        $response = $query->get();
+
+        $success_candidate_names = '';
+
+        if(isset($response) && $response != '') {
+
+            foreach ($response as $key => $value) {
+
+                if($success_candidate_names == '') {
+
+                    $success_candidate_names = CandidateBasicInfo::getCandidateNameById($value->candidate_id);
+                }
+                else {
+                    $success_candidate_names = $success_candidate_names . "," . CandidateBasicInfo::getCandidateNameById($value->candidate_id);
+                }
+            }
+        }
+        return $success_candidate_names;
+    }
 }

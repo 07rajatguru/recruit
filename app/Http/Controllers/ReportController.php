@@ -1415,6 +1415,7 @@ class ReportController extends Controller
                 // Get no of after joining success count in this week
 
                 $frm_to_date_array[$i]['joining_success_ratio'] = Bills::getProductivityReportJoiningSuccessRatio($user_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+                $frm_to_date_array[$i]['joining_success_candidate'] = Bills::getProductivityReportJoiningSuccessCandidate($user_id,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
 
                 $i++;
             }
@@ -1688,6 +1689,9 @@ class ReportController extends Controller
                 // Get no of after joining success count in this week
 
                 $frm_to_date_array[$i]['joining_success_ratio'] = Bills::getProductivityReportJoiningSuccessRatio(0,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
+
+                // Get joining success candidate name in this week
+                $frm_to_date_array[$i]['joining_success_candidate'] = Bills::getProductivityReportJoiningSuccessCandidate(0,$frm_to_date_array[$i]['from_date'],$frm_to_date_array[$i]['to_date']);
 
                 $i++;
             }
