@@ -11,10 +11,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h3>Holidays List</h3>
-            </div>
-            <div class="pull-right">
-                <a class="btn btn-primary" href="{{ route('listof.holidays',$uid) }}">Back</a>
+                <h3>List of Selected Holidays</h3>
             </div>
         </div>
     </div>

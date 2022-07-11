@@ -107,6 +107,9 @@
                                                 <a href="/users-attendance/self/{{ $month }}/{{ $year }}" target="_blank">Attendance</a>
                                             </li>
                                             <li>
+                                                <a href="/list-of-selected-holidays/{{ $user_id }}" target="_blank">My Holidays</a>
+                                            </li>
+                                            <li>
                                                 <a href="{{getenv('APP_URL').'/ticket-discussion/add'}}">Add Ticket</a>
                                             </li>
                                         </ul>

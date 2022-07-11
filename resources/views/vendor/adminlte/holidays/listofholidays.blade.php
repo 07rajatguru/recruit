@@ -118,7 +118,6 @@
 
             // On Page Load check length
             selectionOfHolidays();
-            
 
             var $checkboxes = $('.others_holiday').change(function() {
 
@@ -128,28 +127,25 @@
 
         function selectionOfHolidays() {
 
-            var $checkboxes = $('.others_holiday');
+            var checkboxes = $('.others_holiday');
             var selected_length = $('.others_holiday:checked').length;
             var actual_length = $("#length").val();
 
             if(selected_length == actual_length) {
-                $checkboxes.filter(':not(:checked)').prop('disabled', true);
+                checkboxes.filter(':not(:checked)').prop('disabled', true);
             }
             else {
-                $checkboxes.filter(':not(:checked)').prop('disabled', false);
+                checkboxes.filter(':not(:checked)').prop('disabled', false);
             }
 
-            if ($(this).prop('checked')) {
+            var array = [];
+            var checked_checkboxes = document.querySelectorAll('input[type=checkbox]:checked');
 
-                var array = [];
-                var checkboxes = document.querySelectorAll('input[type=checkbox]:checked')
-
-                for (var i = 0; i < checkboxes.length; i++) {
-                    array.push(checkboxes[i].value);
-                }
-
-                $("#selected_leaves").val(array);
+            for (var i = 0; i < checked_checkboxes.length; i++) {
+                array.push(checked_checkboxes[i].value);
             }
+
+            $("#selected_leaves").val(array);
         }
 
         function submitForm() {
@@ -158,7 +154,6 @@
             var actual_length = $("#length").val();
 
             if(selected_length == actual_length) {
-
                 return true;
             }
             else {

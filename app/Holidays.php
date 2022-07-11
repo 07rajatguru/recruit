@@ -161,7 +161,7 @@ class Holidays extends Model
             $query = $query->where(\DB::raw('year(holidays.from_date)'),'=',$year);
         }
 
-        $query = $query->orderBy('holidays.from_date','DESC');
+        $query = $query->orderBy('holidays.from_date','ASC');
         $query = $query->groupBy('holidays.id');
         $response = $query->get();
 
@@ -329,7 +329,7 @@ class Holidays extends Model
         return $holidays;
     }
 
-    public static function getFinancialYearHolidaysList() {
+    public static function getFinancialYearHolidaysList($user_id) {
 
         // Set Financial Year
         $y = date('Y');
@@ -351,6 +351,13 @@ class Holidays extends Model
         $next_year = date('Y-m-d',strtotime("last day of $year2"));
 
         $query = Holidays::query();
+
+        if($user_id > 0) {
+
+            $query = $query->join('holidays_users','holidays_users.holiday_id','=','holidays.id');
+            $query = $query->where('holidays_users.user_id',$user_id);
+        }
+
         $query = $query->where('holidays.from_date','>=',$current_year);
         $query = $query->where('holidays.from_date','<=',$next_year);
         $query = $query->orderBy('holidays.from_date','asc');
