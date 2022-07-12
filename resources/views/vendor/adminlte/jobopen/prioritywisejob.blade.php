@@ -95,6 +95,7 @@
                     <th>Min CTC<br/>(in Lacs)</th>
                     <th>Max CTC<br/>(in Lacs)</th>
                     <th>Added Date</th>
+                    <th>Updated Date</th>
                     <th>No. Of <br/> Positions</th>
                     <th>Edu Qualifications</th>
                     <th>Contact <br/> Point</th>
@@ -104,7 +105,7 @@
             </thead>
             <?php $i=0; ?>
             <tbody>
-                @foreach($jobList as $key=>$value)
+                {{-- @foreach($jobList as $key=>$value)
                     <tr>
                         <td>{{ ++$i }}</td>
 
@@ -159,7 +160,7 @@
                         <td>{{ $value['industry'] or ''}}</td>
                         <td>{!! $value['desired_candidate'] or ''!!}</td>
                     </tr>
-                @endforeach
+                @endforeach --}}
             </tbody>
         </table>
     </div>
@@ -192,6 +193,7 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
     <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="priority_title" id="priority_title" value="{{ $priority }}">
 @stop
 
 @section('customscripts')
@@ -201,9 +203,31 @@
             $("#job_priority").select2({width:"565px"});
             $("#priority").select2({width:"565px"});
 
-            var table = jQuery('#jo_table').DataTable({
+            // var table = jQuery('#jo_table').DataTable({
 
-                responsive: true,
+            //     responsive: true,
+            //     "columnDefs": [
+            //         { "width": "10px", "targets": 0, "order": 'desc' },
+            //         { "width": "10px", "targets": 1, "searchable": false, "orderable": false },
+            //         { "width": "10px", "targets": 2, "searchable": false, "orderable": false },
+            //         { "width": "10px", "targets": 3 },
+            //         { "width": "10px", "targets": 4 },
+            //         { "width": "150px", "targets": 5 },
+            //         { "width": "10px", "targets": 6 },
+            //         { "width": "10px", "targets": 7 },
+            //         { "width": "10px", "targets": 8 },
+            //         { "width": "10px", "targets": 9 },
+            //         { "width": "5px", "targets": 10 },
+            //     ],
+            //     "pageLength": 100,
+            //     stateSave: true
+            // });
+
+            var priority = $("#priority_title").val();
+            $("#jo_table").dataTable({
+                'bProcessing' : true,
+                'serverSide' : true,
+                "order" : [11,'desc'],
                 "columnDefs": [
                     { "width": "10px", "targets": 0, "order": 'desc' },
                     { "width": "10px", "targets": 1, "searchable": false, "orderable": false },
@@ -216,16 +240,56 @@
                     { "width": "10px", "targets": 8 },
                     { "width": "10px", "targets": 9 },
                     { "width": "5px", "targets": 10 },
+                    { "visible": false,  "targets": 11 },
                 ],
-                "pageLength": 100,
-                stateSave: true
+                "ajax" : {
+                    'url' : '<?php echo getenv('APP_URL')?>jobs/prioritywiseAjax',
+                    data : {
+                        year:0,
+                        priority:priority,
+                    },
+                    'type' : 'get',
+                    error: function() {
+                    },
+                },
+                responsive: true,
+                "pageLength": 50,
+                "pagingType": "full_numbers",
+                "fnRowCallback": function( Row, Data ) {
+                    if ( Data[17] == "0" ){
+                        $('td:eq(4)', Row).css('background-color', '');
+                    } else if ( Data[17] == "1" ){
+                        $('td:eq(4)', Row).css('background-color', '#FF0000');
+                    } else if ( Data[17] == "2" ){
+                        $('td:eq(4)', Row).css('background-color', '#00B0F0');
+                    } else if ( Data[17] == "3" ){
+                        $('td:eq(4)', Row).css('background-color', '#FABF8F');
+                    } else if ( Data[17] == "4" ){
+                        $('td:eq(4)', Row).css('background-color', '#B1A0C7');
+                    } else if ( Data[17] == "5" ){
+                        $('td:eq(4)', Row).css('background-color', 'yellow');
+                    } else if ( Data[17] == "6" ){
+                        $('td:eq(4)', Row).css('background-color', '');
+                    } else if ( Data[17] == "7" ){
+                        $('td:eq(4)', Row).css('background-color', '#808080');
+                    } else if ( Data[17] == "8" ){
+                        $('td:eq(4)', Row).css('background-color', '#92D050');
+                    } else if ( Data[17] == "9" ){
+                        $('td:eq(4)', Row).css('background-color', '#92D050');
+                    } else if ( Data[17] == "10" ){
+                        $('td:eq(4)', Row).css('background-color', '#FFFFFF');
+                    } else{
+                        $('td:eq(4)', Row).css('background-color', '');
+                    }
+                },
+                // stateSave : true,
             });
 
-            if ( ! table.data().any() ) {
-            }
-            else{
-                new jQuery.fn.dataTable.FixedHeader( table );
-            }
+            // if ( ! table.data().any() ) {
+            // }
+            // else{
+            //     new jQuery.fn.dataTable.FixedHeader( table );
+            // }
 
             $('#allcb').change(function() {
 

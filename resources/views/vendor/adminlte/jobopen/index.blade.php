@@ -356,14 +356,14 @@
                     $("#priority_7").attr("href", '/jobs/priority/'+job_priority[7]+'/'+year);
                     $("#priority_8").attr("href", '/jobs/priority/'+job_priority[8]+'/'+year);*/
 
-                    $("#priority_0").attr("href", '/jobs/priority/'+job_priority[0]);
-                    $("#priority_1").attr("href", '/jobs/priority/'+job_priority[1]);
-                    $("#priority_2").attr("href", '/jobs/priority/'+job_priority[2]);
-                    $("#priority_3").attr("href", '/jobs/priority/'+job_priority[3]);
-                    $("#priority_5").attr("href", '/jobs/priority/'+job_priority[5]);
-                    $("#priority_6").attr("href", '/jobs/priority/'+job_priority[6]);
-                    $("#priority_7").attr("href", '/jobs/priority/'+job_priority[7]);
-                    $("#priority_8").attr("href", '/jobs/priority/'+job_priority[8]);
+                    $("#priority_0").attr("href", '<?php echo getenv('APP_URL') ?>jobs/priority/'+job_priority[0]);
+                    $("#priority_1").attr("href", '<?php echo getenv('APP_URL') ?>jobs/priority/'+job_priority[1]);
+                    $("#priority_2").attr("href", '<?php echo getenv('APP_URL') ?>jobs/priority/'+job_priority[2]);
+                    $("#priority_3").attr("href", '<?php echo getenv('APP_URL') ?>jobs/priority/'+job_priority[3]);
+                    $("#priority_5").attr("href", '<?php echo getenv('APP_URL') ?>jobs/priority/'+job_priority[5]);
+                    $("#priority_6").attr("href", '<?php echo getenv('APP_URL') ?>jobs/priority/'+job_priority[6]);
+                    $("#priority_7").attr("href", '<?php echo getenv('APP_URL') ?>jobs/priority/'+job_priority[7]);
+                    $("#priority_8").attr("href", '<?php echo getenv('APP_URL') ?>jobs/priority/'+job_priority[8]);
 
                     // For salary wise display job listing
 
