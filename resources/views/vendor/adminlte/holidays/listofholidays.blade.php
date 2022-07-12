@@ -56,37 +56,33 @@
 
                                         <?php $i=0; ?>
                                         @foreach($optional_holiday_list as $key => $value)
-
                                             <tr style="font-family:Cambria, serif;font-size: 12.0pt;">
                                                 <td align="center">{{ ++$i }}</td>
-
-                                                @if($value['title'] == 'Any other Religious Holiday for respective community - Please specify')
+                                                @if($value['check'] == 1)
                                                     <td align="left" style="padding-left: 10px;">
-                                                        <input type="checkbox" value="{{ $value['id'] }}" id="holiday_{{ $value['id'] }}" class="others_holiday"> &nbsp; {{ $value['title'] }} :
-
-                                                        <div class="col-md-12">
-                                                            <div class="col-md-6">
-                                                                <input type="text" name="religious_holiday" id="religious_holiday" style="width:150px;" placeholder="Holiday Name" tabindex="1" class="form-control">
-                                                            </div>
-                                                            <div class="col-md-6">
-                                                                <input type="text" name="holiday_date" id="holiday_date" style="width:150px;" placeholder="Select Date" tabindex="2" class="form-control">
-                                                            </div>
-                                                        </div>
+                                                        <input type="checkbox" value="{{ $value['id'] }}" id="holiday_{{ $value['id'] }}" class="others_holiday" checked> &nbsp; {{ $value['title'] }} ( {{ $value['date'] }} - {{ $value['day'] }} )
                                                     </td>
                                                 @else
-
-                                                    @if($value['check'] == 1)
-                                                        <td align="left" style="padding-left: 10px;">
-                                                            <input type="checkbox" value="{{ $value['id'] }}" id="holiday_{{ $value['id'] }}" class="others_holiday" checked> &nbsp; {{ $value['title'] }} ( {{ $value['date'] }} - {{ $value['day'] }} )
-                                                        </td>
-                                                    @else
-                                                        <td align="left" style="padding-left: 10px;">
-                                                            <input type="checkbox" value="{{ $value['id'] }}" id="holiday_{{ $value['id'] }}" class="others_holiday"> &nbsp; {{ $value['title'] }} ( {{ $value['date'] }} - {{ $value['day'] }} )
-                                                        </td>
-                                                    @endif
+                                                    <td align="left" style="padding-left: 10px;">
+                                                        <input type="checkbox" value="{{ $value['id'] }}" id="holiday_{{ $value['id'] }}" class="others_holiday"> &nbsp; {{ $value['title'] }} ( {{ $value['date'] }} - {{ $value['day'] }} )
+                                                    </td>
                                                 @endif
                                             </tr>
                                         @endforeach
+                                        <tr style="font-family:Cambria, serif;font-size: 12.0pt;">
+                                            <td align="center">{{ ++$i }}</td>
+                                            <td align="left" style="padding-left: 10px;">
+                                                <input type="checkbox" value="{{ $value['id'] }}" id="holiday_{{ $value['id'] }}" class="others_holiday"> &nbsp;Any other Religious Holiday for respective community - Please specify :
+                                                <div class="col-md-12">
+                                                    <div class="col-md-6">
+                                                        <input type="text" name="religious_holiday" id="religious_holiday" style="width:150px;" placeholder="Holiday Name" tabindex="1" class="form-control">
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <input type="text" name="holiday_date" id="holiday_date" style="width:150px;" placeholder="Select Date" tabindex="2" class="form-control">
+                                                    </div>
+                                                </div>
+                                            </td>
+                                        </tr>
                                     </table>
                                 </td>
                             </tr>

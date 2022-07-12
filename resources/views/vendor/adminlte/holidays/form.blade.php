@@ -34,62 +34,34 @@
                 <div class="box-header col-md-6 ">
                 </div>
                 <div class="col-xs-12 col-sm-12 col-md-12">
-                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                    <div class="box-body col-xs-4 col-sm-4 col-md-4">
                         <div class="">
                             <div class="form-group {{ $errors->has('title') ? 'has-error' : '' }}">
                                 <strong>Title : <span class = "required_fields">*</span> </strong>
                                 {!! Form::text('title',null, array('id'=>'title','class' => 'form-control','tabindex' => '1' )) !!}
-                                @if ($errors->has('title'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('title') }}</strong>
-                                    </span>
-                                @endif
                             </div>
                         </div>
-
-                        <div class="">
-                            <div class="form-group {{ $errors->has('from_date') ? 'has-error' : '' }}">
-                                <strong>From Date : </strong>
-                                {!! Form::text('from_date',isset($from_date) ? $from_date : null, array('id'=>'from_date','class' => 'form-control','tabindex' => '3' )) !!}
-                                @if ($errors->has('from_date'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('from_date') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <!-- <div class="">
-                            <div class="form-group">
-                                <strong>Remarks : </strong>
-                                {!! Form::textarea('remarks',null, array('id'=>'remarks','class' => 'form-control','tabindex' => '5', 'rows' => '5' )) !!}
-                            </div>
-                        </div> -->
                     </div>
 
-                    <div class="box-body col-xs-6 col-sm-6 col-md-6">
+                    <div class="box-body col-xs-4 col-sm-4 col-md-4">
                         <div class="">
                             <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
-                                <strong>Select Leave Type : <span class = "required_fields">*
-                                </span> </strong>
+                                <strong>Select Leave Type : <span class = "required_fields">*</span> </strong>
                                 {!! Form::select('type',$type,$type_id, array('id'=>'type','class' => 'form-control','tabindex' => '2' )) !!}
-                                @if ($errors->has('type'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('type') }}</strong>
-                                    </span>
-                                @endif
                             </div>
                         </div>
+                    </div>
 
+                    <div class="box-body col-xs-4 col-sm-4 col-md-4">
                         <div class="">
-                            <div class="form-group {{ $errors->has('to_date') ? 'has-error' : '' }}">
-                                <strong>To Date: </strong>
-                                {!! Form::text('to_date',isset($to_date) ? $to_date : null, array('id'=>'to_date','class' => 'form-control','tabindex' => '4' )) !!}
-                                @if ($errors->has('to_date'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('to_date') }}</strong>
-                                    </span>
-                                @endif
+                            <div class="form-group {{ $errors->has('from_date') ? 'has-error' : '' }}">
+                                <strong>Select Date : <span class = "required_fields">*</span> </strong>
+                                <div class="input-group date">
+                                    <div class="input-group-addon">
+                                        <i class="fa fa-calendar target_class"></i>
+                                    </div>
+                                    {!! Form::text('from_date',isset($from_date) ? $from_date : null, array('id'=>'from_date','class' => 'form-control','tabindex' => '3' )) !!}
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -135,10 +107,6 @@
 
             $("#from_date").datetimepicker({
                 format: "DD-MM-YYYY",
-            });
-
-            $("#to_date").datetimepicker({
-                format: "DD-MM-YYYY"
             });
            
             $("#departments_all").click(function () {
@@ -200,6 +168,9 @@
                     "type" : {
                         required: true,
                     },
+                    "from_date" : {
+                        required: true,
+                    },
                 },
                 messages: {
                     "title": {
@@ -207,6 +178,9 @@
                     },
                     "type" : {
                         required: "Type is Required Field.",
+                    },
+                    "from_date" : {
+                        required: "Please Select Date.",
                     },
                 }
             });

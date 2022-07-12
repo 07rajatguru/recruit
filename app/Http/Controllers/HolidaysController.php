@@ -457,14 +457,19 @@ class HolidaysController extends Controller
 
                     $dateClass = new Date();
 
-                    $specific_holiday = new SpecifyHolidays();
-                    $specific_holiday->user_id = $user_id;
-                    $specific_holiday->title = $religious_holiday;
-                    $specific_holiday->date = $dateClass->changeDMYtoYMD($holiday_date);
-                    $specific_holiday->year = date('Y',strtotime($holiday_date));
-                    $specific_holiday->save();
+                    $holiday = new Holidays();
+                    $holiday->title = $religious_holiday;
+                    $holiday->type = 'Optional Leave';
+                    $holiday->from_date = $dateClass->changeDMYtoYMD($holiday_date);
+                    $holiday->department_ids = User::getDepartmentById($user_id);
+                    $holiday_save = $holiday->save();
 
-                    $specific_holiday_id = $specific_holiday->id;
+                    $specific_holiday_id = $holiday->id;
+
+                    $holiday_user = new HolidaysUsers();
+                    $holiday_user->holiday_id = $specific_holiday_id;
+                    $holiday_user->user_id = $user_id;
+                    $holiday_user->save();
                 }
                 else {
 
@@ -559,17 +564,7 @@ class HolidaysController extends Controller
                 }
             }
 
-            // Get Specify Holidays
-            $get_holidays = SpecifyHolidays::getUserHoliday($uid);
-
-            if(isset($get_holidays) && $get_holidays != '') {
-                $specific_day = $get_holidays->title;
-            }
-            else {
-                $specific_day = '';
-            }
-
-            return view('adminlte::holidays.selectedlistofholidays',compact('fixed_holiday_list','optional_holiday_list','uid','specific_day'));
+            return view('adminlte::holidays.selectedlistofholidays',compact('fixed_holiday_list','optional_holiday_list','uid'));
         }
         else {
             return view('errors.403');

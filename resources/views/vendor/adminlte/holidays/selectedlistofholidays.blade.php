@@ -76,13 +76,6 @@
                                             </tr>
                                         @endif
                                     @endforeach
-
-                                    @if(isset($specific_day) && $specific_day != '')
-                                        <tr style="font-family:Cambria, serif;font-size: 12.0pt;">
-                                            <td align="center">{{ ++$i }}</td>
-                                            <td align="left" style="padding-left: 10px;">{{ $specific_day }}</td>
-                                        </tr>
-                                    @endif
                                 </table>
                             </td>
                         </tr>

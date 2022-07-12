@@ -41,8 +41,7 @@
                 <th>Title</th>
                 <th>Type</th>
                 <th>Users</th>
-                <th>From date</th>
-                <th>To date</th>
+                <th>Date</th>
             </tr>
         </thead>
         <tbody>
@@ -64,7 +63,6 @@
                 <td>{{$value['type']}}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">{{$value['users']}}</td>
                 <td>{{$value['from_date']}}</td>
-                <td>{{$value['to_date']}}</td>
             </tr>
             @endforeach
         </tbody>
