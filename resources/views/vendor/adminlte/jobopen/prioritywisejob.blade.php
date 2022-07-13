@@ -224,6 +224,8 @@
             // });
 
             var priority = $("#priority_title").val();
+            var app_url = "{!! env('APP_URL'); !!}";
+
             $("#jo_table").dataTable({
                 'bProcessing' : true,
                 'serverSide' : true,
@@ -243,7 +245,7 @@
                     { "visible": false,  "targets": 11 },
                 ],
                 "ajax" : {
-                    'url' : '<?php echo getenv('APP_URL')?>jobs/prioritywiseAjax',
+                    'url' : app_url+'/jobs/prioritywiseAjax',
                     data : {
                         year:0,
                         priority:priority,

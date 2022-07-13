@@ -346,6 +346,7 @@
 
                     var job_priority = json.job_priority;
                     var job_salary = json.job_salary;
+                    var app_url = "{!! env('APP_URL'); !!}";
 
                     /*$("#priority_0").attr("href", '/jobs/priority/'+job_priority[0]+'/'+year);
                     $("#priority_1").attr("href", '/jobs/priority/'+job_priority[1]+'/'+year);
@@ -356,14 +357,14 @@
                     $("#priority_7").attr("href", '/jobs/priority/'+job_priority[7]+'/'+year);
                     $("#priority_8").attr("href", '/jobs/priority/'+job_priority[8]+'/'+year);*/
 
-                    $("#priority_0").attr("href", '<?php echo getenv('APP_URL') ?>jobs/priority/'+job_priority[0]);
-                    $("#priority_1").attr("href", '<?php echo getenv('APP_URL') ?>jobs/priority/'+job_priority[1]);
-                    $("#priority_2").attr("href", '<?php echo getenv('APP_URL') ?>jobs/priority/'+job_priority[2]);
-                    $("#priority_3").attr("href", '<?php echo getenv('APP_URL') ?>jobs/priority/'+job_priority[3]);
-                    $("#priority_5").attr("href", '<?php echo getenv('APP_URL') ?>jobs/priority/'+job_priority[5]);
-                    $("#priority_6").attr("href", '<?php echo getenv('APP_URL') ?>jobs/priority/'+job_priority[6]);
-                    $("#priority_7").attr("href", '<?php echo getenv('APP_URL') ?>jobs/priority/'+job_priority[7]);
-                    $("#priority_8").attr("href", '<?php echo getenv('APP_URL') ?>jobs/priority/'+job_priority[8]);
+                    $("#priority_0").attr("href", app_url+'/jobs/priority/'+job_priority[0]);
+                    $("#priority_1").attr("href", app_url+'/jobs/priority/'+job_priority[1]);
+                    $("#priority_2").attr("href", app_url+'/jobs/priority/'+job_priority[2]);
+                    $("#priority_3").attr("href", app_url+'/jobs/priority/'+job_priority[3]);
+                    $("#priority_5").attr("href", app_url+'/jobs/priority/'+job_priority[5]);
+                    $("#priority_6").attr("href", app_url+'/jobs/priority/'+job_priority[6]);
+                    $("#priority_7").attr("href", app_url+'/jobs/priority/'+job_priority[7]);
+                    $("#priority_8").attr("href", app_url+'/jobs/priority/'+job_priority[8]);
 
                     // For salary wise display job listing
 
