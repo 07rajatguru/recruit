@@ -354,8 +354,10 @@ class Holidays extends Model
 
         if($user_id > 0) {
 
-            $query = $query->join('holidays_users','holidays_users.holiday_id','=','holidays.id');
+            $query = $query->leftjoin('holidays_users','holidays_users.holiday_id','=','holidays.id');
             $query = $query->where('holidays_users.user_id',$user_id);
+            $query = $query->orwhere('holidays.added_by',$user_id);
+            $query = $query->orwhere('holidays.added_by','=','2');
         }
 
         $query = $query->where('holidays.from_date','>=',$current_year);
@@ -381,52 +383,6 @@ class Holidays extends Model
 
                     $i++;
                 }
-            }
-        }
-        return $holidays;
-    }
-
-    public static function getAllFinancialYearHolidaysList() {
-
-        // Set Financial Year
-        $y = date('Y');
-        $m = date('m');
-
-        if ($m > 3) {
-            $n = $y + 1;
-            $year = $y.'-4, '.$n.'-3';
-        }
-        else{
-            $n = $y-1;
-            $year = $n.'-4, '.$y.'-3';
-        }
-
-        $year_data = explode(", ", $year);
-        $year1 = $year_data[0];
-        $year2 = $year_data[1];
-        $current_year = date('Y-m-d',strtotime("first day of $year1"));
-        $next_year = date('Y-m-d',strtotime("last day of $year2"));
-
-        $query = Holidays::query();
-        $query = $query->select('holidays.*');
-        $query = $query->where('holidays.from_date','>=',$current_year);
-        $query = $query->where('holidays.from_date','<=',$next_year);
-        $query = $query->orderBy('from_date','asc');
-        $query = $query->groupBy('holidays.id');
-        $response = $query->get();
-
-        $holidays = array();
-        $i = 0;
-
-        if(isset($response) && $response != '') {
-
-            foreach ($response as $key => $value) {
-
-                $holidays[$i]['id'] = $value->id;
-                $holidays[$i]['title'] = $value->title;
-                $holidays[$i]['type'] = $value->type;
-                $holidays[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date)); 
-                $i++;
             }
         }
         return $holidays;
