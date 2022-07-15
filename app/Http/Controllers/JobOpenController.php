@@ -583,6 +583,7 @@ class JobOpenController extends Controller
         $order = $_GET['order'][0]['column'];
         $type = $_GET['order'][0]['dir'];
         $priority = $_GET['priority'];
+        $year = $_GET['year'];
         
         $user = \Auth::user();
         $user_id = $user->id;
@@ -763,6 +764,7 @@ class JobOpenController extends Controller
         $order = $_GET['order'][0]['column'];
         $type = $_GET['order'][0]['dir'];
         $salary = $_GET['salary'];
+        $year = $_GET['year'];
         
         $user = \Auth::user();
         $user_id = $user->id;
@@ -788,11 +790,13 @@ class JobOpenController extends Controller
             $next_year = date('Y-m-d 23:59:59',strtotime("last day of $year2"));
 
             $financial_year = date('F-Y',strtotime("$current_year")) . " to " . date('F-Y',strtotime("$next_year"));
+            $priority = 4;
         } else {
             $year = NULL;
             $current_year = NULL;
             $next_year = NULL;
             $financial_year = '';
+            $priority = 1;
         }
 
         $order_column_name = self::getJobOrderColumnName($order);
@@ -802,14 +806,14 @@ class JobOpenController extends Controller
         $client_id = ClientBasicinfo::getClientIdByEmail($user_email);
 
         if($all_jobs_perm) {
-            $job_response = JobOpen::getSalaryWiseJobs(1,$user_id,$salary,$current_year,$next_year,1,$limit,$offset,$search,$order_column_name,$type);
-            $count = JobOpen::getSalaryWiseJobsCount(1,$user_id,$salary,$current_year,$next_year,1,'',0,'','','','','','','','',$search);
+            $job_response = JobOpen::getSalaryWiseJobs(1,$user_id,$salary,$current_year,$next_year,$priority,$limit,$offset,$search,$order_column_name,$type);
+            $count = JobOpen::getSalaryWiseJobsCount(1,$user_id,$salary,$current_year,$next_year,$priority,'',0,'','','','','','','','',$search);
         } else if($isClient) {
-            $job_response = JobOpen::getSalaryWiseJobsByClient($client_id,$salary,$current_year,$next_year,1,$limit,$offset,$search,$order_column_name,$type);
-            $count = JobOpen::getSalaryWiseJobsCountByClient($client_id,$salary,$current_year,$next_year,1,'','','','','','','','','',$search);
+            $job_response = JobOpen::getSalaryWiseJobsByClient($client_id,$salary,$current_year,$next_year,$priority,$limit,$offset,$search,$order_column_name,$type);
+            $count = JobOpen::getSalaryWiseJobsCountByClient($client_id,$salary,$current_year,$next_year,$priority,'','','','','','','','','',$search);
         } else if($user_jobs_perm) {
-            $job_response = JobOpen::getSalaryWiseJobs(0,$user_id,$salary,$current_year,$next_year,1,$limit,$offset,$search,$order_column_name,$type);
-            $count = JobOpen::getSalaryWiseJobsCount(0,$user_id,$salary,$current_year,$next_year,1,'',0,'','','','','','','','',$search);
+            $job_response = JobOpen::getSalaryWiseJobs(0,$user_id,$salary,$current_year,$next_year,$priority,$limit,$offset,$search,$order_column_name,$type);
+            $count = JobOpen::getSalaryWiseJobsCount(0,$user_id,$salary,$current_year,$next_year,$priority,'',0,'','','','','','','','',$search);
         }
 
         $job_priority = JobOpen::getJobPriorities();
@@ -937,7 +941,7 @@ class JobOpenController extends Controller
         return view('adminlte::jobopen.prioritywisejob', $viewVariable);
     }
 
-    public function salaryWiseClosedJobs($priority,$year) {
+    public function salaryWiseClosedJobs($salary,$year) {
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -975,15 +979,15 @@ class JobOpenController extends Controller
 
         if($all_jobs_perm) {
 
-            $job_response = JobOpen::getSalaryWiseJobs(1,$user_id,$priority,$current_year,$next_year,4);
+            $job_response = JobOpen::getSalaryWiseJobs(1,$user_id,$salary,$current_year,$next_year,4);
         }
         else if ($isClient) {
 
-            $job_response = JobOpen::getSalaryWiseJobsByClient($client_id,$priority,$current_year,$next_year,4);
+            $job_response = JobOpen::getSalaryWiseJobsByClient($client_id,$salary,$current_year,$next_year,4);
         }
         else if ($user_jobs_perm) {
 
-            $job_response = JobOpen::getSalaryWiseJobs(0,$user_id,$priority,$current_year,$next_year,4);
+            $job_response = JobOpen::getSalaryWiseJobs(0,$user_id,$salary,$current_year,$next_year,4);
         }
 
         $count = sizeof($job_response);
@@ -992,7 +996,7 @@ class JobOpenController extends Controller
         $viewVariable['jobList'] = $job_response;
         $viewVariable['job_priority'] = JobOpen::getJobPriorities();
         $viewVariable['count'] = $count;
-        $viewVariable['priority'] = $priority;
+        $viewVariable['salary'] = $salary;
         $viewVariable['isClient'] = $isClient;
         $viewVariable['financial_year'] = $financial_year;
         $viewVariable['year'] = $year;

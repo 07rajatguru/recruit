@@ -194,6 +194,7 @@
     </div><!-- /.modal -->
     <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
     <input type="hidden" name="priority_title" id="priority_title" value="{{ $priority }}">
+    <input type="hidden" name="year" id="year" value="{{ $year }}">
 @stop
 
 @section('customscripts')
@@ -224,6 +225,7 @@
             // });
 
             var priority = $("#priority_title").val();
+            var year = $("#year").val();
             var app_url = "{!! env('APP_URL'); !!}";
 
             $("#jo_table").dataTable({
@@ -247,7 +249,7 @@
                 "ajax" : {
                     'url' : app_url+'/jobs/prioritywiseAjax',
                     data : {
-                        year:0,
+                        year:year,
                         priority:priority,
                     },
                     'type' : 'get',

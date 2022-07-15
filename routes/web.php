@@ -1614,6 +1614,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
     ]);
 
+    Route::get('jobs/salarywiseAjax',[
+        'as' => 'jobopen.salarywiseAjax',
+        'uses' => 'JobOpenController@getSalarywiseAjax',
+        'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
+    ]);
+
     Route::get('jobs/priority/{priority}/{year}',[
         'as' => 'jobclose.priority',
         'uses' => 'JobOpenController@priorityWiseClosedJobs',
