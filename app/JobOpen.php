@@ -2392,7 +2392,7 @@ class JobOpen extends Model
         return $jobs_list;
     }
 
-    public static function getPriorityWiseJobsCount($all=0,$user_id,$priority,$current_year=NULL,$next_year=NULL,$client_heirarchy=0,$department_id=0,$mb_name='',$company_name='',$posting_title='',$location='',$min_ctc='',$max_ctc='',$added_date=NULL,$no_of_positions='',$limit=0,$offset=0,$search='',$order_column_name='',$type='') {
+    public static function getPriorityWiseJobsCount($all=0,$user_id,$priority,$current_year=NULL,$next_year=NULL,$client_heirarchy=0,$department_id=0,$mb_name='',$company_name='',$posting_title='',$location='',$min_ctc='',$max_ctc='',$added_date=NULL,$no_of_positions='',$search='') {
 
         $job_open_query = JobOpen::query();
         $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','job_openings.updated_at','client_basicinfo.second_line_am as second_line_am','job_openings.remote_working as remote_working');
@@ -2526,17 +2526,6 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where('job_openings.created_at','<=',$next_year);
         }
 
-        if (isset($order_column_name) && $order_column_name != '') {
-            $job_open_query = $job_open_query->orderBy($order_column_name,$type);
-        } else {
-            $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
-        }
-        if (isset($limit) && $limit > 0) {
-            $job_open_query = $job_open_query->limit($limit);
-        }
-        if (isset($offset) && $offset > 0) {
-            $job_open_query = $job_open_query->offset($offset);
-        }
         if (isset($search) && $search != '') {
             $job_open_query = $job_open_query->where(function($job_open_query) use ($search) {
                 $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
@@ -2546,13 +2535,14 @@ class JobOpen extends Model
                 }
             });
         }
+        $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
         $job_response = $job_open_query->get();
         $job_count = $job_response->count();
 
         return $job_count;
     }
 
-    public static function getSalaryWiseJobsCount($all=0,$user_id,$salary,$current_year=NULL,$next_year=NULL,$priority=0,$client_heirarchy=0,$department_id=0,$mb_name='',$company_name='',$posting_title='',$location='',$min_ctc='',$max_ctc='',$added_date=NULL,$no_of_positions='') {
+    public static function getSalaryWiseJobsCount($all=0,$user_id,$salary,$current_year=NULL,$next_year=NULL,$priority=0,$client_heirarchy=0,$department_id=0,$mb_name='',$company_name='',$posting_title='',$location='',$min_ctc='',$max_ctc='',$added_date=NULL,$no_of_positions='',$search='') {
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -2681,6 +2671,16 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
         }
 
+        if (isset($search) && $search != '') {
+            $job_open_query = $job_open_query->where(function($job_open_query) use ($search) {
+                $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
+                if(($search == 'Remote') || ($search == 'remote')) {
+                    $job_open_query = $job_open_query->orwhere('job_openings.remote_working','=',"1");
+                }
+            });
+        }
+
         $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
         $job_open_query = $job_open_query->groupBy('job_openings.id');
         $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
@@ -2690,7 +2690,7 @@ class JobOpen extends Model
         return $job_response;
     }
 
-    public static function getSalaryWiseJobs($all=0,$user_id,$salary,$current_year=NULL,$next_year=NULL,$priority=0) {
+    public static function getSalaryWiseJobs($all=0,$user_id,$salary,$current_year=NULL,$next_year=NULL,$priority=0,$limit=0,$offset=0,$search='',$order_column_name='',$type='') {
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -2712,16 +2712,13 @@ class JobOpen extends Model
         }
 
         // Salary Wise Listing
-
         if (isset($salary) && $salary == '10') {
             $job_open_query = $job_open_query->where('lacs_from','>=',0);
             $job_open_query = $job_open_query->where('lacs_to','<',10);
-        }
-        else if (isset($salary) && $salary == '10-20') {
+        } else if (isset($salary) && $salary == '10-20') {
             $job_open_query = $job_open_query->where('lacs_to','>=',10);
             $job_open_query = $job_open_query->where('lacs_to','<=',20);
-        }
-        else if (isset($salary) && $salary == '20') {
+        } else if (isset($salary) && $salary == '20') {
             $job_open_query = $job_open_query->where('lacs_to','>',20);
         }
 
@@ -2734,21 +2731,38 @@ class JobOpen extends Model
         }
 
         // For check open & closed jobs priority
-
         if (isset($priority) && $priority == '1') {
             $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
-        }
-        else if (isset($priority) && $priority == '4') {
+        } else if (isset($priority) && $priority == '4') {
             $job_open_query = $job_open_query->whereIn('job_openings.priority',$job_status);
-        }
-        else if (isset($priority) && $priority == '11') {
+        } else if (isset($priority) && $priority == '11') {
             $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
             $job_open_query = $job_open_query->where('adler_career_checkbox','=',1);
         }
 
+        if (isset($order_column_name) && $order_column_name != '') {
+            $job_open_query = $job_open_query->orderBy($order_column_name,$type);
+        } else {
+            $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
+        }
+        if (isset($limit) && $limit > 0) {
+            $job_open_query = $job_open_query->limit($limit);
+        }
+        if (isset($offset) && $offset > 0) {
+            $job_open_query = $job_open_query->offset($offset);
+        }
+        if (isset($search) && $search != '') {
+            $job_open_query = $job_open_query->where(function($job_open_query) use ($search) {
+                $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
+                if(($search == 'Remote') || ($search == 'remote')) {
+                    $job_open_query = $job_open_query->orwhere('job_openings.remote_working','=',"1");
+                }
+            });
+        }
+
         $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
         $job_open_query = $job_open_query->groupBy('job_openings.id');
-        $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
         $job_response = $job_open_query->get();
 
         $jobs_list = array();
@@ -3130,7 +3144,7 @@ class JobOpen extends Model
         return $jobs_list;
     }
 
-    public static function getPriorityWiseJobsByClientCount($client_id,$priority,$current_year=NULL,$next_year=NULL,$client_heirarchy=0,$mb_name='',$company_name='',$posting_title='',$location='',$min_ctc='',$max_ctc='',$added_date='',$no_of_positions='',$limit=0,$offset=0,$search='',$order_column_name='',$type='') {
+    public static function getPriorityWiseJobsByClientCount($client_id,$priority,$current_year=NULL,$next_year=NULL,$client_heirarchy=0,$mb_name='',$company_name='',$posting_title='',$location='',$min_ctc='',$max_ctc='',$added_date='',$no_of_positions='',$search='') {
 
         $job_open_query = JobOpen::query();
         $job_open_query = $job_open_query->select(\DB::raw("COUNT(job_associate_candidates.candidate_id) as count"),'job_openings.id','job_openings.job_id','client_basicinfo.name as company_name','job_openings.no_of_positions','job_openings.posting_title','job_openings.city','job_openings.state','job_openings.country','job_openings.qualifications','job_openings.salary_from','job_openings.salary_to','job_openings.lacs_from','job_openings.thousand_from','job_openings.lacs_to','job_openings.thousand_to','industry.name as industry_name','job_openings.desired_candidate','job_openings.date_opened','job_openings.target_date','users.name as am_name','client_basicinfo.coordinator_name as coordinator_name','job_openings.priority','job_openings.hiring_manager_id','client_basicinfo.display_name','job_openings.created_at','job_openings.updated_at','job_openings.remote_working as remote_working');
@@ -3254,17 +3268,6 @@ class JobOpen extends Model
         $job_open_query = $job_open_query->groupBy('job_openings.id');
         $job_open_query = $job_open_query->where('job_openings.client_id',$client_id);
 
-        if (isset($order) && $order != '') {
-            $job_open_query = $job_open_query->orderBy($order,$type);
-        } else {
-            $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
-        }
-        if (isset($limit) && $limit > 0) {
-            $job_open_query = $job_open_query->limit($limit);
-        }
-        if (isset($offset) && $offset > 0) {
-            $job_open_query = $job_open_query->offset($offset);
-        }
         if (isset($search) && $search != '') {
             $job_open_query = $job_open_query->where(function($job_open_query) use ($search) {
                 $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
@@ -3274,13 +3277,14 @@ class JobOpen extends Model
                 }
             });
         }
+        $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
         $job_response = $job_open_query->get();
         $job_count = $job_response->count();
 
         return $jobs_count;
     }
 
-    public static function getSalaryWiseJobsCountByClient($client_id,$salary,$current_year=NULL,$next_year=NULL,$priority=0,$client_heirarchy=0,$mb_name='',$company_name='',$posting_title='',$location='',$min_ctc='',$max_ctc='',$added_date='',$no_of_positions='') {
+    public static function getSalaryWiseJobsCountByClient($client_id,$salary,$current_year=NULL,$next_year=NULL,$priority=0,$client_heirarchy=0,$mb_name='',$company_name='',$posting_title='',$location='',$min_ctc='',$max_ctc='',$added_date='',$no_of_positions='',$search='') {
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -3398,6 +3402,16 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
         }
 
+        if (isset($search) && $search != '') {
+            $job_open_query = $job_open_query->where(function($job_open_query) use ($search) {
+                $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
+                if(($search == 'Remote') || ($search == 'remote')) {
+                    $job_open_query = $job_open_query->orwhere('job_openings.remote_working','=',"1");
+                }
+            });
+        }
+
         $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
         $job_open_query = $job_open_query->groupBy('job_openings.id');
         $job_open_query = $job_open_query->where('job_openings.client_id',$client_id);
@@ -3407,7 +3421,7 @@ class JobOpen extends Model
         return $job_response;
     }
 
-    public static function getSalaryWiseJobsByClient($client_id,$salary,$current_year=NULL,$next_year=NULL,$priority=0) {
+    public static function getSalaryWiseJobsByClient($client_id,$salary,$current_year=NULL,$next_year=NULL,$priority=0,$limit=0,$offset=0,$search='',$order_column_name='',$type='') {
 
         $job_onhold = getenv('ONHOLD');
         $job_client = getenv('CLOSEDBYCLIENT');
@@ -3457,10 +3471,30 @@ class JobOpen extends Model
             $job_open_query = $job_open_query->where('adler_career_checkbox','=',1);
         }
         
+        if (isset($order_column_name) && $order_column_name != '') {
+            $job_open_query = $job_open_query->orderBy($order_column_name,$type);
+        } else {
+            $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
+        }
+        if (isset($limit) && $limit > 0) {
+            $job_open_query = $job_open_query->limit($limit);
+        }
+        if (isset($offset) && $offset > 0) {
+            $job_open_query = $job_open_query->offset($offset);
+        }
+        if (isset($search) && $search != '') {
+            $job_open_query = $job_open_query->where(function($job_open_query) use ($search) {
+                $job_open_query = $job_open_query->where('job_openings.posting_title','like',"%$search%");
+                $job_open_query = $job_open_query->orwhere('job_openings.city','like',"%$search%");
+                if(($search == 'Remote') || ($search == 'remote')) {
+                    $job_open_query = $job_open_query->orwhere('job_openings.remote_working','=',"1");
+                }
+            });
+        }
+
         $job_open_query = $job_open_query->where('job_associate_candidates.deleted_at',NULL);
         $job_open_query = $job_open_query->groupBy('job_openings.id');
         $job_open_query = $job_open_query->where('job_openings.client_id',$client_id);
-        $job_open_query = $job_open_query->orderBy('job_openings.updated_at','desc');
         $job_response = $job_open_query->get();
 
         $jobs_list = array();

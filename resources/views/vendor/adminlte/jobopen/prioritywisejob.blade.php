@@ -284,7 +284,7 @@
                         $('td:eq(4)', Row).css('background-color', '');
                     }
                 },
-                // stateSave : true,
+                stateSave : true,
             });
 
             // if ( ! table.data().any() ) {

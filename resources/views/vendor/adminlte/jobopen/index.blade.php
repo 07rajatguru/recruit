@@ -368,9 +368,9 @@
 
                     // For salary wise display job listing
 
-                    $("#under_ten_lacs").attr("href", '/jobs/salary/'+job_salary[0]);
-                    $("#between_ten_to_twenty_lacs").attr("href", '/jobs/salary/'+job_salary[1]);
-                    $("#above_twenty_lacs").attr("href", '/jobs/salary/'+job_salary[2]);
+                    $("#under_ten_lacs").attr("href", app_url+'/jobs/salary/'+job_salary[0]);
+                    $("#between_ten_to_twenty_lacs").attr("href", app_url+'/jobs/salary/'+job_salary[1]);
+                    $("#above_twenty_lacs").attr("href", app_url+'/jobs/salary/'+job_salary[2]);
                 },
                 responsive: true,
                 "pageLength": 50,
