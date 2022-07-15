@@ -56,6 +56,7 @@ class HolidaysController extends Controller
 
     public function store(Request $request) {
         
+        $super_admin_userid = getenv('SUPERADMINUSERID');
     	$dateClass = new Date();
 
     	$title = $request->title;
@@ -88,19 +89,17 @@ class HolidaysController extends Controller
     	$holiday->remarks = $remarks;
 
         if(isset($department_ids) && $department_ids != '') {
-
             $holiday->department_ids = implode(",", $department_ids);    
         }
         else {
-
             $holiday->department_ids = '';
         }
 
-
+        if(isset($type) && $type == 'Optional Leave') {
+            $holiday->added_by = $super_admin_userid;
+        }
         $holiday_save = $holiday->save();
         $holiday_id = $holiday->id;
-
-        $super_admin_userid = getenv('SUPERADMINUSERID');
 
         if (isset($holiday_id)) {
 
@@ -167,6 +166,7 @@ class HolidaysController extends Controller
 
     public function update(Request $request,$id) {
 
+        $super_admin_userid = getenv('SUPERADMINUSERID');
         $dateClass = new Date();
 
         $title = $request->title;
@@ -199,20 +199,19 @@ class HolidaysController extends Controller
         $holiday->remarks = $remarks;
 
         if(isset($department_ids) && $department_ids != '') {
-
             $holiday->department_ids = implode(",", $department_ids);    
         }
         else {
-
             $holiday->department_ids = '';
         }
 
+        if(isset($type) && $type == 'Optional Leave') {
+            $holiday->added_by = $super_admin_userid;
+        }
         $holiday_save = $holiday->save();
 
         // Delete Exist Entry
         $holidays_users_delete = HolidaysUsers::where('holiday_id',$id)->delete();
-
-        $super_admin_userid = getenv('SUPERADMINUSERID');
 
         if (isset($users) && $users != '') {
 
@@ -228,7 +227,6 @@ class HolidaysController extends Controller
                     $exist_work_planning = WorkPlanning::getWorkPlanningByAddedDateAndUserID($from_date_save,$value);
 
                     if(isset($exist_work_planning) && $exist_work_planning != '') {
-
                     }
                     else {
 
@@ -265,16 +263,15 @@ class HolidaysController extends Controller
         ->select('users.id as user_id', 'users.name as name')
         ->where('holidays_users.holiday_id',$holiday_id)->get();
 
-        $selected_users = array();
-        $i=0;
+        $selected_users = array();$i=0;
 
         foreach ($holidays_user_res as $key => $value) {
+
             $selected_users[$i] = $value->user_id;
             $i++;       
         }
 
-        $data = array();
-        $j=0;
+        $data = array();$j=0;
 
         foreach ($users as $key => $value) {
 
@@ -313,7 +310,6 @@ class HolidaysController extends Controller
                 $count = sizeof($holiday_details);
             }
             else {
-
                 return view('errors.403');
             }
         }
@@ -365,7 +361,7 @@ class HolidaysController extends Controller
                 }
             }
 
-            $holidays = Holidays::getFinancialYearHolidaysList($user_id);
+            $holidays = Holidays::getFinancialYearHolidaysList($user_id,0);
 
             $fixed_holiday_list = array();
             $optional_holiday_list = array();
@@ -446,10 +442,13 @@ class HolidaysController extends Controller
 
                 foreach ($holidays_ids_array as $key => $value) {
 
-                    $holiday_user = new HolidaysUsers();
-                    $holiday_user->holiday_id = $value;
-                    $holiday_user->user_id = $user_id;
-                    $holiday_user->save();
+                    if($value != 'on') {
+
+                        $holiday_user = new HolidaysUsers();
+                        $holiday_user->holiday_id = $value;
+                        $holiday_user->user_id = $user_id;
+                        $holiday_user->save();
+                    }
                 }
 
                 // Add specific holiday added by user
@@ -511,7 +510,7 @@ class HolidaysController extends Controller
                     $module_id = $selected_leaves;
                 }
                 else {
-                    $module_id = $selected_leaves . "-" . $specific_holiday_id;
+                    $module_id = $selected_leaves . "," . $specific_holiday_id;
                 }
                 event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
             }
@@ -527,7 +526,7 @@ class HolidaysController extends Controller
 
         if($uid == $user_id) {
 
-            $holidays = Holidays::getFinancialYearHolidaysList(0);
+            $holidays = Holidays::getFinancialYearHolidaysList(0,1);
 
             $fixed_holiday_list = array();
             $optional_holiday_list = array();

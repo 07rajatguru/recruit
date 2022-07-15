@@ -36,7 +36,6 @@ use App\WorkPlanningPost;
 use App\LateInEarlyGo;
 use App\Holidays;
 use App\WorkFromHome;
-use App\SpecifyHolidays;
 use App\MonthwiseLeaveBalance;
 
 class EveryMinute extends Command
@@ -2462,11 +2461,8 @@ class EveryMinute extends Command
                 $cc_array = explode(",",$input['cc']);
                 $input['cc_array'] = array_unique($cc_array);
 
-                // Split holidays id & specific holiday
-                $module_ids_array = explode("-", $module_id);
-
                 // Split holidays id
-                $holidays_ids_array = explode(",", $module_ids_array[0]);
+                $holidays_ids_array = explode(",", $module_id);
 
                 $selected_holidays = array();
 
@@ -2478,25 +2474,11 @@ class EveryMinute extends Command
                         $title = $holidays->title;
                         $from_date = date("d-m-Y",strtotime($holidays->from_date));
                         $day = date("l",strtotime($from_date));
+
                         $display_string = '';
-
-                        if($title != "Any other Religious Holiday for respective community - Please specify") {
-
-                            $display_string = $title . " (" . $from_date . " - " . $day . ")";
-                            array_push($selected_holidays,$display_string);
-                        }
+                        $display_string = $title . " (" . $from_date . " - " . $day . ")";
+                        array_push($selected_holidays,$display_string);
                     }
-                }
-
-                if(isset($module_ids_array[1]) && $module_ids_array[1] != '') {
-
-                    $specific_holiday = SpecifyHolidays::find($module_ids_array[1]);
-                    $title1 = $specific_holiday->title;
-                    $from_date1 = date("d-m-Y",strtotime($specific_holiday->date));
-                    $day1 = date("l",strtotime($from_date1));
-
-                    $display_string = $title1 . " (" . $from_date1 . " - " . $day1 . ")";
-                    array_push($selected_holidays,$display_string);
                 }
 
                 $input['selected_holidays'] = $selected_holidays;

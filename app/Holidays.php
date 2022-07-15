@@ -329,7 +329,9 @@ class Holidays extends Model
         return $holidays;
     }
 
-    public static function getFinancialYearHolidaysList($user_id) {
+    public static function getFinancialYearHolidaysList($user_id,$all) {
+
+        $super_admin_userid = getenv('SUPERADMINUSERID');
 
         // Set Financial Year
         $y = date('Y');
@@ -356,8 +358,10 @@ class Holidays extends Model
 
             $query = $query->leftjoin('holidays_users','holidays_users.holiday_id','=','holidays.id');
             $query = $query->where('holidays_users.user_id',$user_id);
-            $query = $query->orwhere('holidays.added_by',$user_id);
-            $query = $query->orwhere('holidays.added_by','=','2');
+
+            if($all == 0) {
+                $query = $query->orwhere('holidays.added_by','=',$super_admin_userid);
+            }
         }
 
         $query = $query->where('holidays.from_date','>=',$current_year);
@@ -374,15 +378,12 @@ class Holidays extends Model
 
             foreach ($response as $key => $value) {
 
-                if($value->title != 'Any other Religious Holiday for respective community - Please specify') {
+                $holidays[$i]['id'] = $value->id;
+                $holidays[$i]['title'] = $value->title;
+                $holidays[$i]['type'] = $value->type;
+                $holidays[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date)); 
 
-                    $holidays[$i]['id'] = $value->id;
-                    $holidays[$i]['title'] = $value->title;
-                    $holidays[$i]['type'] = $value->type;
-                    $holidays[$i]['from_date'] = date('d-m-Y',strtotime($value->from_date)); 
-
-                    $i++;
-                }
+                $i++;
             }
         }
         return $holidays;
