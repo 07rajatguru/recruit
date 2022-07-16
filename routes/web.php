@@ -1824,7 +1824,7 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
     ]);
 
-    Route::get('jobs/applicantprioritywiseAjax', [
+    Route::get('jobs-applicant/applicantprioritywiseAjax', [
         'as' => 'jobopen.applicantprioritywiseAjax',
         'uses' => 'JobOpenController@getprioritywiseApplicantJobsDetailsAjax',
         'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']

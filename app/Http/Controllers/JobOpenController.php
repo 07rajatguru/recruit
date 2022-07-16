@@ -799,6 +799,11 @@ class JobOpenController extends Controller
             $priority = 1;
         }
 
+        $page = $_GET['page'];
+        if (isset($page) && $page == 'Applicant') {
+            $priority = 11;
+        }
+
         $order_column_name = self::getJobOrderColumnName($order);
 
         // for get client id by email
@@ -5472,22 +5477,19 @@ class JobOpenController extends Controller
         $client_id = ClientBasicinfo::getClientIdByEmail($user_email);
 
         if($all_jobs_perm) {
-
-            $job_response = JobOpen::getPriorityWiseApplicantJobs(1,$user_id,$priority);
+            // $job_response = JobOpen::getPriorityWiseApplicantJobs(1,$user_id,$priority);
+            $count = JobOpen::getPriorityWiseApplicantJobsCount(0,$user_id,$priority);
+        } else if($isClient) {
+            // $job_response = JobOpen::getPriorityWiseApplicantJobsByClient($client_id,$priority);
+            $count = JobOpen::getPriorityWiseApplicantJobsByClientCount($client_id,$priority);
+        } else if($user_jobs_perm) {
+            // $job_response = JobOpen::getPriorityWiseApplicantJobs(0,$user_id,$priority);
+            $count = JobOpen::getPriorityWiseApplicantJobsCount(0,$user_id,$priority);
         }
-        else if($isClient) {
-
-            $job_response = JobOpen::getPriorityWiseApplicantJobsByClient($client_id,$priority);
-        }
-        else if($user_jobs_perm) {
-
-            $job_response = JobOpen::getPriorityWiseApplicantJobs(0,$user_id,$priority);
-        }
-
-        $count = sizeof($job_response);
+        // $count = sizeof($job_response);
 
         $viewVariable = array();
-        $viewVariable['jobList'] = $job_response;
+        // $viewVariable['jobList'] = $job_response;
         $viewVariable['job_priority'] = JobOpen::getJobPriorities();
         $viewVariable['count'] = $count;
         $viewVariable['priority'] = $priority;
@@ -5499,7 +5501,111 @@ class JobOpenController extends Controller
 
     public function getprioritywiseApplicantJobsDetailsAjax() {
 
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $draw = $_GET['draw'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+        $priority = $_GET['priority'];
         
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        $all_jobs_perm = $user->can('display-jobs');
+        $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
+        $change_priority_perm = $user->can('change-job-priority');
+        $change_multiple_priority_perm = $user->can('update-multiple-jobs-priority');
+        $clone_perm = $user->can('clone-job');
+        $delete_perm = $user->can('job-delete');
+
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        $user_obj = new User();
+        $isClient = $user_obj::isClient($role_id);
+
+        $order_column_name = self::getJobOrderColumnName($order);
+
+        // for get client id by email
+        $user_email = $user->email;
+        $client_id = ClientBasicinfo::getClientIdByEmail($user_email);
+
+        if($all_jobs_perm) {
+            $job_response = JobOpen::getPriorityWiseApplicantJobs(1,$user_id,$priority,$limit,$offset,$search,$order_column_name,$type);
+            $count = JobOpen::getPriorityWiseApplicantJobsCount(1,$user_id,$priority,$search);
+        } else if($isClient) {
+            $job_response = JobOpen::getPriorityWiseApplicantJobsByClient($client_id,$priority,$limit,$offset,$search,$order_column_name,$type);
+            $count = JobOpen::getPriorityWiseApplicantJobsByClientCount($client_id,$priority,$search);
+        } else if($user_jobs_perm) {
+            $job_response = JobOpen::getPriorityWiseApplicantJobs(0,$user_id,$priority,$limit,$offset,$search,$order_column_name,$type);
+            $count = JobOpen::getPriorityWiseApplicantJobsCount(0,$user_id,$priority,$search);
+        }
+
+        $job_priority = JobOpen::getJobPriorities();
+        $jobs = array();
+        $i = 0;$j = 0;
+        foreach ($job_response as $key => $value) {
+            $action = '';
+            $checkbox = '';
+
+            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
+            $action .= '<a title="Send Vacancy Details"  class="fa fa-send" href="'.route('jobs.sendvd',$value['id']).'" style="margin:3px;"></a>';
+
+            if(isset($value['access']) && $value['access'] == 1) {
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobopen.edit',$value['id']).'" style="margin:3px;"></a>';
+                if($change_priority_perm) {
+                    $status_view = \View::make('adminlte::partials.jobstatus',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job Open','job_priority' => $job_priority]);
+                    $status = $status_view->render();
+                    $action .= $status;
+                }
+            }
+
+            if ($delete_perm) {
+                $delete_view = \View::make('adminlte::partials.jobdelete',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job','title' => 'Job Open']);
+                $delete = $delete_view->render();
+                $action .= $delete;
+            }
+
+            if(isset($value['access']) && $value['access'] == 1) {
+                if($clone_perm) {
+                    $action .= '<a title="Clone Job"  class="fa fa-clone" href="'.route('jobopen.clone',$value['id']).'"></a>';
+                }
+            }
+
+            if($change_multiple_priority_perm) {
+                $checkbox .= '<input type=checkbox name=job_ids value='.$value['id'].' class=multiple_jobs id='.$value['id'].'/>';
+            } else {
+                $checkbox .= '';
+            }
+
+            $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
+            $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'</a>';
+            $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['posting_title'].'</a>';
+            $qual = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['qual'].'</a>';
+            
+            if ($isClient) {
+                $associated_count = '<a title="Show Candidates Details" href="'.route('jobopen.candidates_details_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+                $applicant_count = '<a title="Show Applicant Candidates" href="'.route('applicantjobopen.candidates_details_get',$value['id']).'">'.$value['applicant_count'].'</a>';
+            } else {
+                $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+
+                $applicant_count = '<a title="Show Applicant Candidates" href="'.route('jobopen.applicant_candidates_get',$value['id']).'">'.$value['applicant_count'].'</a>';
+            }
+
+            $data = array(++$j,$checkbox,$action,$managed_by,$company_name,$posting_title,$associated_count,$applicant_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['updated_date'],$value['no_of_positions'],$qual,$value['coordinator_name'],$value['industry'],$value['desired_candidate'],$value['priority']);
+            $jobs[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $jobs,
+        );
+
+        echo json_encode($json_data);exit;
     }
 
     public function salaryWiseApplicant($salary) {
@@ -5526,22 +5632,19 @@ class JobOpenController extends Controller
         $client_id = ClientBasicinfo::getClientIdByEmail($user_email);
 
         if($all_jobs_perm) {
-
-            $job_response = JobOpen::getSalaryWiseJobs(1,$user_id,$salary,$current_year,$next_year,11);
+            // $job_response = JobOpen::getSalaryWiseJobs(1,$user_id,$salary,$current_year,$next_year,11);
+            $count = JobOpen::getSalaryWiseJobsCount(1,$user_id,$salary,$current_year,$next_year,11);
+        } else if($isClient) {
+            // $job_response = JobOpen::getSalaryWiseJobsByClient($client_id,$salary,$current_year,$next_year,11);
+            $count = JobOpen::getSalaryWiseJobsCountByClient($client_id,$salary,$current_year,$next_year,11);
+        } else if($user_jobs_perm) {
+            // $job_response = JobOpen::getSalaryWiseJobs(0,$user_id,$salary,$current_year,$next_year,11);
+            $count = JobOpen::getSalaryWiseJobsCount(0,$user_id,$salary,$current_year,$next_year,11);
         }
-        else if($isClient) {
-
-            $job_response = JobOpen::getSalaryWiseJobsByClient($client_id,$salary,$current_year,$next_year,11);
-        }
-        else if($user_jobs_perm) {
-
-            $job_response = JobOpen::getSalaryWiseJobs(0,$user_id,$salary,$current_year,$next_year,11);
-        }
-
-        $count = sizeof($job_response);
+        // $count = sizeof($job_response);
 
         $viewVariable = array();
-        $viewVariable['jobList'] = $job_response;
+        // $viewVariable['jobList'] = $job_response;
         $viewVariable['job_priority'] = JobOpen::getJobPriorities();
         $viewVariable['count'] = $count;
         $viewVariable['salary'] = $salary;

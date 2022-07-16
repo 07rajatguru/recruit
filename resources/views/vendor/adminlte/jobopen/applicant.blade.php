@@ -187,21 +187,22 @@
                     var count = json.recordsTotal;
                     var job_priority = json.job_priority;
                     var job_salary = json.job_salary;
+                    var app_url = "{!! env('APP_URL'); !!}";
 
                     $("#count").html("(" + count + ")");
 
-                    $("#priority_1").attr("href", '/jobs-applicant/priority/'+job_priority[1]);
-                    $("#priority_2").attr("href", '/jobs-applicant/priority/'+job_priority[2]);
-                    $("#priority_3").attr("href", '/jobs-applicant/priority/'+job_priority[3]);
-                    $("#priority_5").attr("href", '/jobs-applicant/priority/'+job_priority[5]);
-                    $("#priority_7").attr("href", '/jobs-applicant/priority/'+job_priority[7]);
-                    $("#priority_8").attr("href", '/jobs-applicant/priority/'+job_priority[8]);
+                    $("#priority_1").attr("href", app_url+'/jobs-applicant/priority/'+job_priority[1]);
+                    $("#priority_2").attr("href", app_url+'/jobs-applicant/priority/'+job_priority[2]);
+                    $("#priority_3").attr("href", app_url+'/jobs-applicant/priority/'+job_priority[3]);
+                    $("#priority_5").attr("href", app_url+'/jobs-applicant/priority/'+job_priority[5]);
+                    $("#priority_7").attr("href", app_url+'/jobs-applicant/priority/'+job_priority[7]);
+                    $("#priority_8").attr("href", app_url+'/jobs-applicant/priority/'+job_priority[8]);
 
                     // For salary wise display job listing
 
-                    $("#under_ten_lacs").attr("href", '/jobs-applicant/salary/'+job_salary[0]);
-                    $("#between_ten_to_twenty_lacs").attr("href", '/jobs-applicant/salary/'+job_salary[1]);
-                    $("#above_twenty_lacs").attr("href", '/jobs-applicant/salary/'+job_salary[2]);
+                    $("#under_ten_lacs").attr("href", app_url+'/jobs-applicant/salary/'+job_salary[0]);
+                    $("#between_ten_to_twenty_lacs").attr("href", app_url+'/jobs-applicant/salary/'+job_salary[1]);
+                    $("#above_twenty_lacs").attr("href", app_url+'/jobs-applicant/salary/'+job_salary[2]);
                 },
                 responsive: true,
                 "pageLength": 50,

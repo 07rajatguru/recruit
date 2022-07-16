@@ -176,6 +176,11 @@
     <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
     <input type="hidden" name="salary" id="salary" value="{{ $salary }}">
     <input type="hidden" name="year" id="year" value="{{ $year }}">
+    @if(isset($page) && $page != '')
+        <input type="hidden" name="page" id="page" value="{{ $page }}">
+    @else 
+        <input type="hidden" name="page" id="page" value="">
+    @endif
 @stop
 
 @section('customscripts')
@@ -207,6 +212,7 @@
 
             var salary = $("#salary").val();
             var year = $("#year").val();
+            var page = $("#page").val();
             var app_url = "{!! env('APP_URL'); !!}";
 
             $("#jo_table").dataTable({
@@ -229,7 +235,7 @@
                 ],
                 "ajax" : {
                     'url' : app_url+'/jobs/salarywiseAjax',
-                    data : { year:year,salary:salary },
+                    data : { year:year,salary:salary,page:page },
                     'type' : 'get',
                     error: function() {
                     },

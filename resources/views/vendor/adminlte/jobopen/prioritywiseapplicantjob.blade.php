@@ -129,7 +129,7 @@
                     { "visible": false,  "targets": 12 },
                 ],
                 "ajax" : {
-                    'url' : app_url+'/jobs/applicantprioritywiseAjax',
+                    'url' : app_url+'/jobs-applicant/applicantprioritywiseAjax',
                     data : {priority:priority},
                     'type' : 'get',
                     error: function(){
@@ -139,41 +139,29 @@
                 "pageLength": 50,
                 "pagingType": "full_numbers",
                 "fnRowCallback": function( Row, Data ) {
-
                     if ( Data[18] == "0" ) {
                         $('td:eq(4)', Row).css('background-color', '');
-                    }
-                    else if ( Data[18] == "1" ) {
+                    } else if ( Data[18] == "1" ) {
                         $('td:eq(4)', Row).css('background-color', '#FF0000');
-                    }
-                    else if ( Data[18] == "2" ) {
+                    } else if ( Data[18] == "2" ) {
                         $('td:eq(4)', Row).css('background-color', '#00B0F0');
-                    }
-                    else if ( Data[18] == "3" ) {
+                    } else if ( Data[18] == "3" ) {
                         $('td:eq(4)', Row).css('background-color', '#FABF8F');
-                    }
-                    else if ( Data[18] == "4" ) {
+                    } else if ( Data[18] == "4" ) {
                         $('td:eq(4)', Row).css('background-color', '#B1A0C7');
-                    }
-                    else if ( Data[18] == "5" ) {
+                    } else if ( Data[18] == "5" ) {
                         $('td:eq(4)', Row).css('background-color', 'yellow');
-                    }
-                    else if ( Data[18] == "6" ) {
+                    } else if ( Data[18] == "6" ) {
                         $('td:eq(4)', Row).css('background-color', '');
-                    }
-                    else if ( Data[18] == "7" ) {
+                    } else if ( Data[18] == "7" ) {
                         $('td:eq(4)', Row).css('background-color', '#808080');
-                    }
-                    else if ( Data[18] == "8" ) {
+                    } else if ( Data[18] == "8" ) {
                         $('td:eq(4)', Row).css('background-color', '#92D050');
-                    }
-                    else if ( Data[18] == "9" ) {
+                    } else if ( Data[18] == "9" ) {
                         $('td:eq(4)', Row).css('background-color', '#92D050');
-                    }
-                    else if ( Data[18] == "10" ) {
+                    } else if ( Data[18] == "10" ) {
                         $('td:eq(4)', Row).css('background-color', '#FFFFFF');
-                    }
-                    else {
+                    } else {
                         $('td:eq(4)', Row).css('background-color', '');
                     }
                 },
