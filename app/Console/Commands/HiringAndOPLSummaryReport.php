@@ -40,9 +40,6 @@ class HiringAndOPLSummaryReport extends Command
      */
     public function handle()
     {
-        $from_date = date('Y-m-d',strtotime('last Monday'));
-        $to_date = date('Y-m-d',strtotime("$from_date +6days"));
-
         $superadmin_user_id = getenv('SUPERADMINUSERID');
         $super_admin_email = User::getUserEmailById($superadmin_user_id);
 
@@ -54,14 +51,14 @@ class HiringAndOPLSummaryReport extends Command
 
         $cc_array = array($super_admin_email,$manager_user_email);
 
-        $module_name = 'Client Bulk Email';
-        $get_client_opl_data = EmailsNotifications::getAllEmailNotifications($module_name,$from_date,$to_date);
+        // For Client OPL Summary
+        $today = date('Y-m-d');
+        $today_end = date('Y-m-d 23:59:59');
 
-        $module_name2 = 'Hiring Report';
-        $get_client_hiring_report_data = EmailsNotifications::getAllEmailNotifications($module_name2,$from_date,$to_date);
+        $module_name = 'Client Bulk Email';
+        $get_client_opl_data = EmailsNotifications::getAllEmailNotifications($module_name,$today,$today_end);
 
         // Send Email Notifications
-
         if(isset($get_client_opl_data) && sizeof($get_client_opl_data) > 0) {
 
             $module = "Client OPL Summary";
@@ -75,6 +72,14 @@ class HiringAndOPLSummaryReport extends Command
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         }
 
+        // For Client Hiring Report
+        $from_date = date('Y-m-d',strtotime('last Monday'));
+        $to_date = date('Y-m-d',strtotime("$from_date +6days"));
+
+        $module_name2 = 'Hiring Report';
+        $get_client_hiring_report_data = EmailsNotifications::getAllEmailNotifications($module_name2,$from_date,$to_date);
+
+        // Send Email Notifications
         if(isset($get_client_hiring_report_data) && sizeof($get_client_hiring_report_data) > 0) {
 
             $module = "Client Hiring Report Summary";

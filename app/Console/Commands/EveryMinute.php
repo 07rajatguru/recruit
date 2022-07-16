@@ -2753,13 +2753,13 @@ class EveryMinute extends Command
 
                 $cc_array = explode(",",$input['cc']);
 
-                $from_date = date('Y-m-d',strtotime("monday last week"));
-                $to_date = date('Y-m-d',strtotime("$from_date +6days"));
+                $from_date = date('Y-m-d');
+                $to_date = date('Y-m-d 23:59:59');
 
                 $module_name = 'Client Bulk Email';
                 $get_client_opl_data = EmailsNotifications::getAllEmailNotifications($module_name,$from_date,$to_date);
 
-                if(isset($get_client_opl_data) && sizeof($get_client_opl_data) > 0){
+                if(isset($get_client_opl_data) && sizeof($get_client_opl_data) > 0) {
 
                     $client_details = array();
                     $i=0;
