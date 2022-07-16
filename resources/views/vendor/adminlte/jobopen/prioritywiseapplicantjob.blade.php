@@ -22,7 +22,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Applicant Job List <span id="count">({{ $count or 0}})</span></h2>
+                <h2>{{$priority}} Job List <span id="count">({{ $count or 0}})</span></h2>
             </div>
             
             <div class="pull-right">
@@ -37,57 +37,6 @@
             </div>
         </div>
     </div>
-
-    @permission(('display-job-priority-count-in-listing'))
-        <div class="row">
-            <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="priority_1" href="" title="Urgent Positions" style="text-decoration: none;color: black;" target="_blank"><div class="priority_1" style="width:max-content;height:40px;background-color:#FF0000;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_1 }}</div></a>
-                </div>
-                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="priority_8" href="" title="Identified candidates" style="text-decoration: none;color: black;" target="_blank"><div style="width:max-content;height:40px;background-color:#92D050;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px" class="priority_8">{{ $priority_8 }}</div></a>
-                </div>
-                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="priority_2" href="" title="New Positions" style="text-decoration: none;color: black;" target="_blank"><div class="priority_2" style="width:max-content;height:40px;background-color:#00B0F0;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_2 }}</div></a>
-                </div>
-                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="priority_3" href="" title="Constant Deliveries needed" style="text-decoration: none;color: black;" target="_blank"><div class="priority_3" style="width:max-content;height:40px;background-color:#FABF8F;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_3 }}
-                    </div></a>
-                </div>
-                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="priority_5" href="" title="Revived Positions" style="text-decoration: none;color: black;" target="_blank"><div class="priority_5" style="width:max-content;height:40px;background-color:yellow;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_5 }}</div></a>
-                </div>
-                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="priority_7" href="" title="No Deliveries Needed" style="text-decoration: none;color: black;" target="_blank"><div class="priority_7" style="width:max-content;height:40px;background-color:#808080;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px">{{ $priority_7 }}</div></a>
-                </div>
-
-                {{-- Changes from 28-05-2021 Salary Wise Listing --}}
-
-                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
-                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
-                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
-                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
-
-                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
-                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
-                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
-                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;"></div>
-                
-                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="under_ten_lacs" href="" title="Under 10 Lacs" style="text-decoration: none;color: black;"><div class="under_ten_lacs" style="width:max-content;height:40px;background-color:#FFCC00;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"><10L ({{ $under_ten_lacs }})</div>
-                    </a>
-                </div>
-                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="between_ten_to_twenty_lacs" href="" title="Between 10-20 Lacs" style="text-decoration: none;color: black;"><div style="width:max-content;height:40px;background-color:#e87992;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px" class="between_ten_to_twenty_lacs"> 10-20L ({{ $between_ten_to_twenty_lacs }})</div>
-                    </a>
-                </div>
-                <div class="col-xs-3 col-sm-3 col-md-3" style="width: max-content;">
-                    <a id="above_twenty_lacs" href="" title="Above 20 Lacs" style="text-decoration: none;color: black;"><div class="above_twenty_lacs" style="width:max-content;height:40px;background-color:#f17a40;padding:9px 25px;font-weight: 600;border-radius: 22px;margin:0 0 10px"> >20L ({{ $above_twenty_lacs }})</div>
-                    </a>
-                </div>
-            </div>
-        </div>
-    @endpermission
     
     <div class = "table-responsive">
         <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="job_table">
@@ -141,11 +90,12 @@
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                 </div>
                 {!! Form::close() !!}
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+            </div>
+        </div>
+    </div>
 
     <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="priority_title" id="priority_title" value="{{ $priority }}">
 @stop
 
 @section('customscripts')
@@ -155,6 +105,9 @@
             $("#job_priority").select2({width:"565px"});
             $("#priority").select2({width:"565px"});
 
+            var priority = $("#priority_title").val();
+            var app_url = "{!! env('APP_URL'); !!}";
+
             $("#job_table").dataTable({
 
                 'bProcessing' : true,
@@ -162,7 +115,7 @@
                 "order" : [12,'desc'],
                 "columnDefs": [ 
 
-                    { "width": "10px", "targets": 0, "searchable": false},
+                    { "width": "10px", "targets": 0, "order": 'desc',"searchable": false},
                     { "width": "10px", "targets": 1, "searchable": false, "orderable": false},
                     { "width": "10px", "targets": 2, "searchable": false, "orderable": false},
                     { "width": "10px", "targets": 3 },
@@ -176,72 +129,51 @@
                     { "visible": false,  "targets": 12 },
                 ],
                 "ajax" : {
-                    'url' : 'allapplicant',
+                    'url' : app_url+'/jobs/applicantprioritywiseAjax',
+                    data : {priority:priority},
                     'type' : 'get',
                     error: function(){
-
                     },
-                },
-                initComplete:function( settings, json) {
-
-                    var count = json.recordsTotal;
-                    var job_priority = json.job_priority;
-                    var job_salary = json.job_salary;
-
-                    $("#count").html("(" + count + ")");
-
-                    $("#priority_1").attr("href", '/jobs-applicant/priority/'+job_priority[1]);
-                    $("#priority_2").attr("href", '/jobs-applicant/priority/'+job_priority[2]);
-                    $("#priority_3").attr("href", '/jobs-applicant/priority/'+job_priority[3]);
-                    $("#priority_5").attr("href", '/jobs-applicant/priority/'+job_priority[5]);
-                    $("#priority_7").attr("href", '/jobs-applicant/priority/'+job_priority[7]);
-                    $("#priority_8").attr("href", '/jobs-applicant/priority/'+job_priority[8]);
-
-                    // For salary wise display job listing
-
-                    $("#under_ten_lacs").attr("href", '/jobs-applicant/salary/'+job_salary[0]);
-                    $("#between_ten_to_twenty_lacs").attr("href", '/jobs-applicant/salary/'+job_salary[1]);
-                    $("#above_twenty_lacs").attr("href", '/jobs-applicant/salary/'+job_salary[2]);
                 },
                 responsive: true,
                 "pageLength": 50,
                 "pagingType": "full_numbers",
                 "fnRowCallback": function( Row, Data ) {
 
-                    if ( Data[18] == "0" ){
+                    if ( Data[18] == "0" ) {
                         $('td:eq(4)', Row).css('background-color', '');
                     }
-                    else if ( Data[18] == "1" ){
+                    else if ( Data[18] == "1" ) {
                         $('td:eq(4)', Row).css('background-color', '#FF0000');
                     }
-                    else if ( Data[18] == "2" ){
+                    else if ( Data[18] == "2" ) {
                         $('td:eq(4)', Row).css('background-color', '#00B0F0');
                     }
-                    else if ( Data[18] == "3" ){
+                    else if ( Data[18] == "3" ) {
                         $('td:eq(4)', Row).css('background-color', '#FABF8F');
                     }
-                    else if ( Data[18] == "4" ){
+                    else if ( Data[18] == "4" ) {
                         $('td:eq(4)', Row).css('background-color', '#B1A0C7');
                     }
-                    else if ( Data[18] == "5" ){
+                    else if ( Data[18] == "5" ) {
                         $('td:eq(4)', Row).css('background-color', 'yellow');
                     }
-                    else if ( Data[18] == "6" ){
+                    else if ( Data[18] == "6" ) {
                         $('td:eq(4)', Row).css('background-color', '');
                     }
-                    else if ( Data[18] == "7" ){
+                    else if ( Data[18] == "7" ) {
                         $('td:eq(4)', Row).css('background-color', '#808080');
                     }
-                    else if ( Data[18] == "8" ){
+                    else if ( Data[18] == "8" ) {
                         $('td:eq(4)', Row).css('background-color', '#92D050');
                     }
-                    else if ( Data[18] == "9" ){
+                    else if ( Data[18] == "9" ) {
                         $('td:eq(4)', Row).css('background-color', '#92D050');
                     }
-                    else if ( Data[18] == "10" ){
+                    else if ( Data[18] == "10" ) {
                         $('td:eq(4)', Row).css('background-color', '#FFFFFF');
                     }
-                    else{
+                    else {
                         $('td:eq(4)', Row).css('background-color', '');
                     }
                 },

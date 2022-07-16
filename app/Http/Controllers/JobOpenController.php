@@ -5492,8 +5492,14 @@ class JobOpenController extends Controller
         $viewVariable['count'] = $count;
         $viewVariable['priority'] = $priority;
         $viewVariable['isClient'] = $isClient;
+        $viewVariable['year'] = '';
 
-        return view('adminlte::jobopen.prioritywisejob', $viewVariable);
+        return view('adminlte::jobopen.prioritywiseapplicantjob', $viewVariable);
+    }
+
+    public function getprioritywiseApplicantJobsDetailsAjax() {
+
+        
     }
 
     public function salaryWiseApplicant($salary) {
