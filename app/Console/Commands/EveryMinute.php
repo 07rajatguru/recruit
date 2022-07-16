@@ -2762,18 +2762,35 @@ class EveryMinute extends Command
                 if(isset($get_client_opl_data) && sizeof($get_client_opl_data) > 0) {
 
                     $client_details = array();
+                    $client_owners = array();
                     $i=0;
 
                     foreach ($get_client_opl_data as $key => $value) {
 
                         $client_details[$i] = ClientBasicinfo::getClientDetailsById($value['module_id']);
+                        array_push($client_owners, $value['sender_name']);
                         $i++;
+                    }
+                    $client_owners = array_unique($client_owners);
+                }
+                
+                if(isset($client_owners) && $client_owners != '') {
+
+                    $owner_colors = array();$j=0;
+                    $colors = array('#ffe4e1','#eaf4fc','#FFFFCC','#33FFFF','#ffcccc','#CCCC66','#ffb3b3','#cccfff','#dbffcc','#ffccfd');
+
+                    foreach ($client_owners as $key => $value) {
+                        
+                        $owner_colors[$colors[$j]] = $value;
+                        $j++;
                     }
                 }
 
                 if(isset($client_details) && $client_details != '') {
 
                     $input['client_details'] = $client_details;
+                    $input['owner_colors'] = $owner_colors;
+
                     $input['cc_array'] = $cc_array;
 
                      \Mail::send('adminlte::emails.clientSummaryEmail', $input, function ($message) use($input) {
@@ -2799,6 +2816,7 @@ class EveryMinute extends Command
                 if(isset($get_client_hiring_report_data) && sizeof($get_client_hiring_report_data) > 0) {
 
                     $job_details = array();
+                    $client_owners = array();
 
                     foreach ($get_client_hiring_report_data as $key => $value) {
 
@@ -2820,13 +2838,29 @@ class EveryMinute extends Command
                             $job_details[$key]['contact_person'] = $v1['contact_person'];
                             $job_details[$key]['posting_title'] = $title_string;
                             $job_details[$key]['user_name'] = $v1['user_name'];
+
+                            array_push($client_owners, $v1['user_name']);
                         }
+                    }
+                    $client_owners = array_unique($client_owners);
+                }
+
+                if(isset($client_owners) && $client_owners != '') {
+
+                    $owner_colors = array();$j=0;
+                    $colors = array('#ffe4e1','#eaf4fc','#FFFFCC','#33FFFF','#ffcccc','#CCCC66','#ffb3b3','#cccfff','#dbffcc','#ffccfd');
+
+                    foreach ($client_owners as $key => $value) {
+                        
+                        $owner_colors[$colors[$j]] = $value;
+                        $j++;
                     }
                 }
 
                 if(isset($job_details) && $job_details != '') {
 
                     $input['job_details'] = $job_details;
+                    $input['owner_colors'] = $owner_colors;
                     $input['cc_array'] = $cc_array;
 
                      \Mail::send('adminlte::emails.clientSummaryEmail', $input, function ($message) use($input) {

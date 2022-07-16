@@ -176,15 +176,15 @@ class EmailsNotifications extends Model
         $query = EmailsNotifications::query();
         $query = $query->where('module','=',$module);
         $query = $query->where('status','=',1);
+        $query = $query->orderBy('emails_notification.id','asc');
 
         $query = $query->where(function($query) use ($from_date,$to_date) {
 
             $query = $query->where('sent_date','>=',$from_date);
             $query = $query->where('sent_date','<=',$to_date);
-
         });
         
-        $query = $query->select('emails_notification.module_id');
+        $query = $query->select('module_id','sender_name');
         $response = $query->get();
 
         return $response;

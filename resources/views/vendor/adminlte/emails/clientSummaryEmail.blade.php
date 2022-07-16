@@ -28,7 +28,15 @@
                                         </tr>
                                         <?php $i=0; ?>
                                         @foreach($client_details as $key => $value)
-                                            <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+
+                                            <?php
+
+                                                if(in_array($value['account_manager_id'],$owner_colors)) {
+
+                                                    $key = array_search($value['account_manager_id'], $owner_colors);
+                                                }
+                                            ?>
+                                            <tr style="font-family:Cambria, serif;font-size: 11.0pt;background-color: {{ $key }};">
                                                 <td align="center">{{ ++$i }}</td>
                                                 <td align="center">{{ $value['name'] }}</td>
                                                 <td align="center">{{ $value['coordinator_name'] }}</td>
@@ -50,7 +58,14 @@
                                         </tr>
                                         <?php $i=0; ?>
                                         @foreach($job_details as $key => $value)
-                                            <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                            <?php
+
+                                                if(in_array($value['user_name'],$owner_colors)) {
+
+                                                    $key = array_search($value['user_name'], $owner_colors);
+                                                }
+                                            ?>
+                                            <tr style="font-family:Cambria, serif;font-size: 11.0pt;background-color: {{ $key }};">
                                                 <td align="center">{{ ++$i }}</td>
                                                 <td align="center">{{ $value['company_name'] }}</td>
                                                 <td align="center">{{ $value['contact_person'] }}</td>
