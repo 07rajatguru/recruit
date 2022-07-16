@@ -1445,6 +1445,8 @@ class ClientController extends Controller
         $user_id = $user->id;
         $all_perm = $user->can('display-client');
         $userwise_perm = $user->can('display-account-manager-wise-client');
+        $recruit_dept_perm = $user->can('display-recruitment-dashboard');
+        $hr_dept_perm = $user->can('display-hr-advisory-dashboard');
 
         $client_basicinfo_model = new ClientBasicinfo();
         $client_upload_type = $client_basicinfo_model->client_upload_type;
@@ -1459,7 +1461,7 @@ class ClientController extends Controller
    
         if(isset($client_basicinfo) && $client_basicinfo != '') {
 
-            if($all_perm || $userwise_perm ) {
+            if($all_perm || $recruit_dept_perm || $hr_dept_perm || $userwise_perm) {
 
                 $client['name'] = $client_basicinfo->name;
                 $client['source'] = $client_basicinfo->source;
