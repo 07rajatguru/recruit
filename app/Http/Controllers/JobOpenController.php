@@ -2014,6 +2014,8 @@ class JobOpenController extends Controller
         $user_id = $user->id;
 
         $all_jobs_perm = $user->can('display-jobs');
+        $recruit_dept_perm = $user->can('display-recruitment-dashboard');
+        $hr_dept_perm = $user->can('display-hr-advisory-dashboard');
 
         $userRole = $user->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
@@ -2050,14 +2052,11 @@ class JobOpenController extends Controller
 
             $users_array = $job_open['users_ids'];
 
-            if($all_jobs_perm) {
+            if($all_jobs_perm || $recruit_dept_perm || $hr_dept_perm) {
                 $job_open['access'] = '1';
             }
             else if($job_open_detail->hiring_manager_id == $user_id) {
                 $job_open['access'] = '1';
-            }
-            else if(in_array($user_id,$users_array)) {
-                $job_open['access'] = '0';
             }
             else if ($isClient && $job_open_detail->client_id == $client_id) {
                 $job_open['access'] = '1';
