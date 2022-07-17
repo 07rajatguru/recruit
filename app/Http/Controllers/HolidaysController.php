@@ -361,7 +361,7 @@ class HolidaysController extends Controller
                 }
             }
 
-            $holidays = Holidays::getFinancialYearHolidaysList($user_id,0);
+            $holidays = Holidays::getFinancialYearHolidaysList(0,0);
 
             $fixed_holiday_list = array();
             $optional_holiday_list = array();

@@ -353,6 +353,8 @@ class Holidays extends Model
         $next_year = date('Y-m-d',strtotime("last day of $year2"));
 
         $query = Holidays::query();
+        $query = $query->where('holidays.from_date','>=',$current_year);
+        $query = $query->where('holidays.from_date','<=',$next_year);
 
         if($user_id > 0) {
 
@@ -364,8 +366,6 @@ class Holidays extends Model
             }
         }
 
-        $query = $query->where('holidays.from_date','>=',$current_year);
-        $query = $query->where('holidays.from_date','<=',$next_year);
         $query = $query->orderBy('holidays.from_date','asc');
         $query = $query->groupBy('holidays.id');
         $query = $query->select('holidays.*');
