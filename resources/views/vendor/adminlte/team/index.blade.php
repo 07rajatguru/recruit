@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'HRM')
+@section('title', 'Team')
 
 @section('content_header')
     <h1></h1>
@@ -14,7 +14,7 @@
             </div>
 
             <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('team.create') }}"> Create New Team</a>
+                <a class="btn btn-success" href="{{ route('team.create') }}">Add New Team</a>
             </div>
         </div>
     </div>

@@ -17,7 +17,8 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Number of cvs shortlisted this month ({{ $short_month_name }} , {{ $year }}) - {{$count}}</h2>
+                <h2>Number of cvs shortlisted this month ({{ $short_month_name }} , {{ $year }}) - {{$count}}
+                </h2>
             </div>
         </div>
     </div>
