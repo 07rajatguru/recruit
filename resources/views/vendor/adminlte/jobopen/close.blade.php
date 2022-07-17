@@ -219,6 +219,7 @@
                     var close_priority = json.close_priority;
                     var job_priority = json.job_priority;
                     var job_salary = json.job_salary;
+                    var app_url = "{!! env('APP_URL'); !!}";
 
                     $("#count").html("(" + count + ")");
 
@@ -232,9 +233,9 @@
                         $("#closed_client").html(close_priority['priority_10']);
                     }
 
-                    $("#on_hold_href").attr("href", 'jobs/priority/'+job_priority[4]+'/'+year);
-                    $("#closed_us_href").attr("href", 'jobs/priority/'+job_priority[9]+'/'+year);
-                    $("#closed_client_href").attr("href", 'jobs/priority/'+job_priority[10]+'/'+year);
+                    $("#on_hold_href").attr("href", app_url+'jobs/priority/'+job_priority[4]+'/'+year);
+                    $("#closed_us_href").attr("href", app_url+'jobs/priority/'+job_priority[9]+'/'+year);
+                    $("#closed_client_href").attr("href", app_url+'jobs/priority/'+job_priority[10]+'/'+year);
 
                     // For salary wise count
 
@@ -248,9 +249,9 @@
                         $("#above_twenty_lacs").html(close_priority['above_twenty_lacs']);
                     }
 
-                    $("#under_ten_lacs_href").attr("href", 'jobs/salary/'+job_salary[0]+'/'+year);
-                    $("#between_ten_to_twenty_lacs_href").attr("href", 'jobs/salary/'+job_salary[1]+'/'+year);
-                    $("#above_twenty_lacs_href").attr("href", 'jobs/salary/'+job_salary[2]+'/'+year);
+                    $("#under_ten_lacs_href").attr("href", app_url+'jobs/salary/'+job_salary[0]+'/'+year);
+                    $("#between_ten_to_twenty_lacs_href").attr("href", app_url+'jobs/salary/'+job_salary[1]+'/'+year);
+                    $("#above_twenty_lacs_href").attr("href", app_url+'jobs/salary/'+job_salary[2]+'/'+year);
                 },
                 responsive: true,
                 "pageLength": 50,
