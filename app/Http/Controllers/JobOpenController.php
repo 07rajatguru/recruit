@@ -5478,7 +5478,7 @@ class JobOpenController extends Controller
 
         if($all_jobs_perm) {
             // $job_response = JobOpen::getPriorityWiseApplicantJobs(1,$user_id,$priority);
-            $count = JobOpen::getPriorityWiseApplicantJobsCount(0,$user_id,$priority);
+            $count = JobOpen::getPriorityWiseApplicantJobsCount(1,$user_id,$priority);
         } else if($isClient) {
             // $job_response = JobOpen::getPriorityWiseApplicantJobsByClient($client_id,$priority);
             $count = JobOpen::getPriorityWiseApplicantJobsByClientCount($client_id,$priority);
