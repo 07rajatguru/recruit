@@ -35,7 +35,7 @@
 
                    <p style="text-align: justify;">At Adler, we care about giving our employees everything they need to perform their best. As you will soon see, we have prepared your workstation with all the necessary equipment, system & software.</p>
 
-                    <p style="text-align: justify;">We’ve planned your first day to help you settle in properly. You can find more details in the enclosed agenda. As you will see, you’ll have plenty of time to read and complete your employment paperwork (HR will be there to help you during this process!) You will also meet with your <b>{{ $reporting_manager_name }}</b> to discuss your first steps. For your first week, we have planned a few training videos/sessions to give you a better understanding of our company and operations.</p>
+                    <p style="text-align: justify;">We’ve planned your first day to help you settle in properly. You can find more details in the enclosed agenda. As you will see, you’ll have plenty of time to read and complete your employment paperwork (HR will be there to help you during this process!) You will also meet with your Reporting Manager <b>({{ $reporting_manager_name }})</b> to discuss your first steps. For your first week, we have planned a few training videos/sessions to give you a better understanding of our company and operations.</p>
 
                     <u><p style="text-align: justify;">The action points for the coming 3 days are as follows:</p></u>
 

@@ -2061,6 +2061,9 @@ class JobOpenController extends Controller
             else if ($isClient && $job_open_detail->client_id == $client_id) {
                 $job_open['access'] = '1';
             }
+            else if(in_array($user_id,$users_array)) {
+                $job_open['access'] = '0';
+            }
             else {
                 $job_open['access'] = '0';
                 return view('errors.403');
