@@ -128,6 +128,11 @@ return [
                    'url'  => 'hr-advisory-dashboard',
                    'icon' => 'list',
                ],
+               [
+                   'text' => 'Monthwise Dashboard',
+                   'url'  => 'dashboard/monthwise',
+                   'icon' => 'list',
+               ],
             ]
         ],
         [

@@ -2426,7 +2426,12 @@ class ClientController extends Controller
 
         $user =  \Auth::user();
 
-        $response = ClientBasicinfo::getMonthWiseClientByUserId($user->id,1,$month,$year,0);
+        $display_userwise_count = $user->can('display-userwise-count');
+        if ($display_userwise_count) {
+            $response = ClientBasicinfo::getMonthWiseClientByUserId($user->id,1,$month,$year,0);
+        } else {
+            $response = ClientBasicinfo::getMonthWiseClientByUserId($user->id,0,$month,$year,0);
+        }
         $count = sizeof($response);
 
         return view('adminlte::client.monthwiseclient', array('clients' => $response,'count' => $count));
