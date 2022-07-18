@@ -82,7 +82,7 @@ class AfterIntrviewReminder extends Command
 
             foreach ($job_response as $key => $value) {
 
-                $added_date = date("Y-m-d", strtotime($value['created_date']));
+                $added_date = $value['open_date'];
                 $job_id = $value['id'];
 
                 if($added_date <= $prior_date) {
@@ -100,7 +100,7 @@ class AfterIntrviewReminder extends Command
 
             foreach ($jobs as $key1 => $value1) {
 
-                $job_added_date = date("Y-m-d", strtotime($value1['created_date']));
+                $job_added_date = $value1['open_date'];
                 $jobid = $value1['id'];
 
                 if($job_added_date <= $one_month_prior_date) {
