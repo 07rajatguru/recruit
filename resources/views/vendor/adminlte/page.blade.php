@@ -81,36 +81,38 @@
                                         <ul class="menu" style="width: 100%;">
                                             @if($user_id != $superadmin_userid)
                                                 <li>
-                                                    <a href="{{getenv('APP_URL').'/employee-self-service'}}" target="_blank">
+                                                    <a href="{{getenv('APP_URL').'employee-self-service'}}" target="_blank">
                                                     MY ESS</a>
                                                 </li>
                                             @endif
                                             @if($user_id == $superadmin_userid || $user_id == $hr_userid)
                                                 <li>
-                                                    <a href="{{getenv('APP_URL').'/hr-employee-service'}}" target="_blank">
+                                                    <a href="{{getenv('APP_URL').'hr-employee-service'}}" target="_blank">
                                                     HR ESS</a>
                                                 </li>
                                             @endif
                                             <li>
-                                                <a href="{{getenv('APP_URL').'/work-planning'}}" target="_blank">Work Planning</a>
+                                                <a href="{{getenv('APP_URL').'work-planning'}}" target="_blank">Work Planning</a>
                                             </li>
                                             <li>
-                                                <a href="{{getenv('APP_URL').'/late-in-early-go/add'}}" target="_blank">Apply For Late in / Early Go</a>
+                                                <a href="{{getenv('APP_URL').'late-in-early-go/add'}}" target="_blank">Apply For Late in / Early Go</a>
                                             </li>
                                             <li>
-                                                <a href="{{getenv('APP_URL').'/leave/add'}}" target="_blank">Apply For Leave Application</a>
+                                                <a href="{{getenv('APP_URL').'leave/add'}}" target="_blank">Apply For Leave Application</a>
                                             </li>
                                             <li>
-                                                <a href="{{getenv('APP_URL').'/work-from-home/add'}}" target="_blank">Apply For Work From Home</a>
+                                                <a href="{{getenv('APP_URL').'work-from-home/add'}}" target="_blank">Apply For Work From Home</a>
                                             </li>
                                             <li>
                                                 <a href="/users-attendance/self/{{ $month }}/{{ $year }}" target="_blank">Attendance</a>
                                             </li>
+                                            @if($user_id != $superadmin_userid)
+                                                <li>
+                                                    <a href="/list-of-selected-holidays/{{ $user_id }}" target="_blank">My Holidays</a>
+                                                </li>
+                                            @endif
                                             <li>
-                                                <a href="/list-of-selected-holidays/{{ $user_id }}" target="_blank">My Holidays</a>
-                                            </li>
-                                            <li>
-                                                <a href="{{getenv('APP_URL').'/ticket-discussion/add'}}">Add Ticket</a>
+                                                <a href="{{getenv('APP_URL').'ticket-discussion/add'}}">Add Ticket</a>
                                             </li>
                                         </ul>
                                         

@@ -14,6 +14,7 @@
             @else
                 <h2>Add New Leave Application</h2>
             @endif
+            <h4> (PL Balance : {{ $leave_balance->leave_remaining or 0 }}, SL Balance : {{ $leave_balance->seek_leave_remaining or 0 }})</h4>
         </div>
         <div class="pull-right">
             <a class="btn btn-primary" href="{{ route('leave.index') }}"> Back</a>

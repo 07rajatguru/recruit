@@ -261,8 +261,10 @@ class LeaveController extends Controller
         $half_leave_type = UserLeave::getHalfDayOptions();
 
         $selected_half_leave_type = '';
+
+        $leave_balance = LeaveBalance::getLeaveBalanceByUserId($loggedin_user_id);
         
-        return view('adminlte::leave.create',compact('action','leave_type','leave_category','selected_leave_type','selected_leave_category','loggedin_user_id','half_leave_type','selected_half_leave_type'));
+        return view('adminlte::leave.create',compact('action','leave_type','leave_category','selected_leave_type','selected_leave_category','loggedin_user_id','half_leave_type','selected_half_leave_type','leave_balance'));
     }
 
     public function leaveStore(Request $request) {
@@ -1143,6 +1145,8 @@ class LeaveController extends Controller
         $loggedin_user_id = $_GET['loggedin_user_id'];
         $leave_cat = $_GET['leave_cat'];
 
+        echo $leave_cat;exit;
+
         $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($loggedin_user_id);
 
         if($leave_cat == 'Privilege Leave') {
@@ -1164,6 +1168,8 @@ class LeaveController extends Controller
                 $leave_count = $leave_balance_details->seek_leave_remaining;
             }
         }
+
+        echo $leave_count;exit;
 
         return json_encode($leave_count);
     }
