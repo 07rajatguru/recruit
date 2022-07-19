@@ -366,7 +366,16 @@ class CandidateController extends Controller
 
         $user =  \Auth::user();
 
-        $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,1,$month,$year,0);
+        $display_all_count = $user->can('display-all-count');
+        $display_userwise_count = $user->can('display-userwise-count');
+        $manager_user_id = getenv('MANAGERUSERID');
+        if($display_all_count || $user->id == $manager_user_id) {
+            $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,1,$month,$year,0);
+        } else if ($display_userwise_count) {
+            $response = JobCandidateJoiningdate::getJoiningCandidateByUserId($user->id,0,$month,$year,0);
+        } else {
+            $response = array();
+        }
         $count = sizeof($response);
         
         return view('adminlte::candidate.candidatejoin', array('candidates' => $response,'count' => $count));

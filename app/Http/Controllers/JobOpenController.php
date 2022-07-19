@@ -4737,8 +4737,17 @@ class JobOpenController extends Controller
         $user = \Auth::user();
         $user_id = $user->id;
 
-        $response = JobAssociateCandidates::getAssociatedCvsByUseridMonthWise(0,$month,$year,0);
-        $count = sizeof($response);
+        $display_all_count = $user->can('display-all-count');
+        $display_userwise_count = $user->can('display-userwise-count');
+        $manager_user_id = getenv('MANAGERUSERID');
+        if($display_all_count || $user_id == $manager_user_id) {
+            $response = JobAssociateCandidates::getAssociatedCvsByUseridMonthWise(0,$month,$year,0);
+        } else if ($display_userwise_count) {
+            $response = JobAssociateCandidates::getAssociatedCvsByUseridMonthWise($user_id,$month,$year,0);
+        } else {
+            $response = array();
+        }
+            $count = sizeof($response);
 
         $short_month_name = date("M", mktime(0, 0, 0, $month, 10)); 
         return view ('adminlte::jobopen.associatedcvs',compact('response','count','short_month_name','year'));
@@ -5008,7 +5017,16 @@ class JobOpenController extends Controller
         $user = \Auth::user();
         $user_id = $user->id;
 
-        $response = JobAssociateCandidates::getShortlistedCvsByUseridMonthWise(0,$month,$year,0);
+        $display_all_count = $user->can('display-all-count');
+        $display_userwise_count = $user->can('display-userwise-count');
+        $manager_user_id = getenv('MANAGERUSERID');
+        if($display_all_count || $user_id == $manager_user_id) {
+            $response = JobAssociateCandidates::getShortlistedCvsByUseridMonthWise(0,$month,$year,0);
+        } else if ($display_userwise_count) {
+            $response = JobAssociateCandidates::getShortlistedCvsByUseridMonthWise($user_id,$month,$year,0);
+        } else {
+            $response = array();
+        }
         $count = sizeof($response);
 
         $short_month_name = date("M", mktime(0, 0, 0, $month, 10));
@@ -6439,7 +6457,16 @@ class JobOpenController extends Controller
         $user = \Auth::user();
         $user_id = $user->id;
 
-        $count = JobOpen::getAllJobsCountByDepartment(1,$user_id,'',0);
+        $display_all_count = $user->can('display-all-count');
+        $display_userwise_count = $user->can('display-userwise-count');
+        $manager_user_id = getenv('MANAGERUSERID');
+        if($display_all_count || $user_id == $manager_user_id) {
+            $count = JobOpen::getAllJobsCountByDepartment(1,$user_id,'',0);
+        } else if ($display_userwise_count) {
+            $count = JobOpen::getAllJobsCountByDepartment(0,$user_id,'',0);
+        } else {
+            $count = 0;
+        }
 
         return view('adminlte::jobopen.monthwise-jobs', compact('count'));
     }
@@ -6457,9 +6484,17 @@ class JobOpenController extends Controller
 
         $user = \Auth::user();
         $user_id = $user->id;
-            
-        $job_response = JobOpen::getAllJobsByDepartment(1,$user_id,$limit,$offset,$search,$order_column_name,$type,0);
-        $count = JobOpen::getAllJobsCountByDepartment(1,$user_id,$search,0);
+
+        $display_all_count = $user->can('display-all-count');
+        $display_userwise_count = $user->can('display-userwise-count');
+        $manager_user_id = getenv('MANAGERUSERID');
+        if($display_all_count || $user_id == $manager_user_id) {
+            $job_response = JobOpen::getAllJobsByDepartment(1,$user_id,$limit,$offset,$search,$order_column_name,$type,0);
+            $count = JobOpen::getAllJobsCountByDepartment(1,$user_id,$search,0);
+        } else if ($display_userwise_count) {
+            $job_response = JobOpen::getAllJobsByDepartment(0,$user_id,$limit,$offset,$search,$order_column_name,$type,0);
+            $count = JobOpen::getAllJobsCountByDepartment(0,$user_id,$search,0);
+        }   
 
         $jobs = array();
         $i = 0;$j = 0;
