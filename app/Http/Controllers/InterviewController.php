@@ -543,12 +543,14 @@ class InterviewController extends Controller
 
         $display_all_count = $user->can('display-all-count');
         $display_userwise_count = $user->can('display-userwise-count');
-        $manager_user_id = getenv('MANAGERUSERID');
-        if($display_all_count || $user->id == $manager_user_id) {
+        
+        if($display_all_count) {
             $attended_interview = Interview::getAttendedInterviews(1,$user->id,$month,$year,0);
-        } else if ($display_userwise_count) {
+        }
+        else if ($display_userwise_count) {
             $attended_interview = Interview::getAttendedInterviews(0,$user->id,$month,$year,0);
-        } else {
+        }
+        else {
             $attended_interview = array();
         }
 

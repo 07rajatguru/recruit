@@ -343,17 +343,18 @@ class HomeController extends Controller
         $display_monthwise = $user->can('display-month-wise-dashboard');
         $display_all_count = $user->can('display-all-count');
         $display_userwise_count = $user->can('display-userwise-count');
-        $manager_user_id = getenv('MANAGERUSERID');
         
         if(isset($_POST['month']) && $_POST['month']!='') {
             $month = $_POST['month'];
-        } else {
+        }
+        else {
             $month = date("n");
         }
 
         if(isset($_POST['year']) && $_POST['year']!='') {
             $year = $_POST['year'];
-        } else {
+        }
+        else {
             $year = date("Y");
         }
 
@@ -372,7 +373,9 @@ class HomeController extends Controller
         }
 
         if($display_monthwise) {
-            if($display_all_count || $user_id == $manager_user_id) {
+
+            if($display_all_count) {
+
                 // Client Count
                 $clientCount = DB::table('client_basicinfo')
                 ->whereRaw('MONTH(created_at) = ?',[$month])
@@ -395,7 +398,8 @@ class HomeController extends Controller
 
                 // Candidate Join this month
                 $candidatejoinCount = JobCandidateJoiningdate::getJoiningCandidateByUserIdCountByMonthwise($user_id,1,$month,$year,0);
-            } else if($display_userwise_count) {
+            }
+            else if($display_userwise_count) {
 
                 // Client Count
                 $clientCount = DB::table('client_basicinfo')
@@ -434,7 +438,8 @@ class HomeController extends Controller
             $viewVariable['shortlisted_count'] = $shortlisted_count;
 
             return view('dashboardmonthwise',$viewVariable);
-        } else {
+        }
+        else {
             return view('errors.403');
         }
     }

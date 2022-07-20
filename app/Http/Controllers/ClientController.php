@@ -2428,13 +2428,14 @@ class ClientController extends Controller
 
         $display_all_count = $user->can('display-all-count');
         $display_userwise_count = $user->can('display-userwise-count');
-        $manager_user_id = getenv('MANAGERUSERID');
-        if($display_all_count || $user->id == $manager_user_id) {
+
+        if($display_all_count) {
             $response = ClientBasicinfo::getMonthWiseClientByUserId($user->id,1,$month,$year,0);
         }
         else if ($display_userwise_count) {
             $response = ClientBasicinfo::getMonthWiseClientByUserId($user->id,0,$month,$year,0);
-        } else {
+        }
+        else {
             $response = array();
         }
         $count = sizeof($response);
