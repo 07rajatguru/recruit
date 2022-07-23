@@ -378,7 +378,13 @@ class LeaveController extends Controller
         $user_leave->from_tommorrow_date_2 = $from_tommorrow_date_2;
         $user_leave->days = $days;
         $user_leave->selected_dates = implode(",", $dates);
-        $user_leave->half_leave_type = $half_leave_type;
+
+        if($leave_type == 'Half Day') {
+            $user_leave->half_leave_type = $half_leave_type;
+        }
+        else {
+            $user_leave->half_leave_type = NULL;
+        }
         $user_leave->save();
 
         $leave_id = $user_leave->id;
@@ -494,7 +500,9 @@ class LeaveController extends Controller
 
         $selected_half_leave_type = $leave->half_leave_type;
 
-        return view('adminlte::leave.edit',compact('action','leave_type','leave_category','leave','selected_leave_type','selected_leave_category','from_date','to_date','loggedin_user_id','half_leave_type','selected_half_leave_type'));
+        $leave_balance = LeaveBalance::getLeaveBalanceByUserId($loggedin_user_id);
+
+        return view('adminlte::leave.edit',compact('action','leave_type','leave_category','leave','selected_leave_type','selected_leave_category','from_date','to_date','loggedin_user_id','half_leave_type','selected_half_leave_type','leave_balance'));
     }
 
     public function update(Request $request,$id) {
@@ -606,7 +614,13 @@ class LeaveController extends Controller
         $user_leave->status = '0';
         $user_leave->days = $days;
         $user_leave->selected_dates = implode(",", $dates);
-        $user_leave->half_leave_type = $half_leave_type;
+
+        if($leave_type == 'Half Day') {
+            $user_leave->half_leave_type = $half_leave_type;
+        }
+        else {
+            $user_leave->half_leave_type = NULL;
+        }
         $user_leave->save();
 
         if(isset($email_value) && $email_value != '') {
@@ -1138,40 +1152,6 @@ class LeaveController extends Controller
         $user_leave_delete = LeaveBalance::where('id',$id)->delete();
 
         return redirect()->route('leave.userwise')->with('success','User Leave Balance Deleted Successfully.');
-    }
-
-    public function getTotalLeaveBalance() {
-        
-        $loggedin_user_id = $_GET['loggedin_user_id'];
-        $leave_cat = $_GET['leave_cat'];
-
-        echo $leave_cat;exit;
-
-        $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($loggedin_user_id);
-
-        if($leave_cat == 'Privilege Leave') {
-
-            $leave_count = array();
-
-            if(isset($leave_balance_details) && $leave_balance_details != '') {
-
-                $leave_count = $leave_balance_details->leave_remaining;
-            }
-        }
-
-        if($leave_cat == 'Sick Leave') {
-
-            $leave_count = array();
-
-            if(isset($leave_balance_details) && $leave_balance_details != '') {
-
-                $leave_count = $leave_balance_details->seek_leave_remaining;
-            }
-        }
-
-        echo $leave_count;exit;
-
-        return json_encode($leave_count);
     }
 
     public function exportLeaveBalance() {

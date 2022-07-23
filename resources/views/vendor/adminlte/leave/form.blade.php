@@ -14,7 +14,12 @@
             @else
                 <h2>Add New Leave Application</h2>
             @endif
-            <h4> (PL Balance : {{ $leave_balance->leave_remaining or 0 }}, SL Balance : {{ $leave_balance->seek_leave_remaining or 0 }})</h4>
+
+            @if(isset($leave_balance) && $leave_balance != '')
+                <h4> (PL Balance : {{ $leave_balance->leave_remaining or 0 }}, SL Balance : {{ $leave_balance->seek_leave_remaining or 0 }})</h4>
+            @else
+                <h4> (PL Balance : 0, SL Balance : 0)</h4>
+            @endif
         </div>
         <div class="pull-right">
             <a class="btn btn-primary" href="{{ route('leave.index') }}"> Back</a>
@@ -131,6 +136,33 @@
     </div>
 
     <input type="hidden" name="loggedin_user_id" id="loggedin_user_id" value="{{ $loggedin_user_id }}">
+
+    @if(isset($leave_balance) && $leave_balance != '')
+        <input type="hidden" name="pl_balance" id="pl_balance" value="{{ $leave_balance->leave_remaining }}">
+        <input type="hidden" name="sl_balance" id="sl_balance" value="{{ $leave_balance->seek_leave_remaining }}">
+    @else
+        <input type="hidden" name="pl_balance" id="pl_balance" value="0">
+        <input type="hidden" name="sl_balance" id="sl_balance" value="0">
+    @endif
+</div>
+
+<div class="modal fade" id="leaveBalanceModal" tabindex="-1" role="dialog" aria-labelledby="leaveBalanceModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document" style="width:400px;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <center><h5 class="modal-title" id="leaveBalanceModalLabel">Leave Balance</h5></center>
+            </div>
+            <div class="modal-body">
+                <div class="container" style="width:350px;">
+                    <p class="display_content"></p>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="submitForm();">Yes</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+            </div>
+        </div>
+    </div>
 </div>
 
 <input type="hidden" name="email_value" id="email_value" value="">
@@ -213,7 +245,7 @@
 
         function checkLeaveBalance() {
 
-            // For calculate leaves added by user
+            // Calculate Days From Selected Dates
             var leave_cat = $("#leave_category").val();
             var leave_type = $("#leave_type").val();
 
@@ -229,50 +261,45 @@
             const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
             var days = diffInDays + 1;
 
-            if(leave_cat == 'Privilege Leave' || leave_cat == 'Sick Leave') {
-
-                var loggedin_user_id = $("#loggedin_user_id").val();
-                var app_url = "{!! env('APP_URL') !!}";
-                var token = $("input[name=_token]").val();
-
-                if(leave_type == 'Half Day') {
-                    var total_days = days/2;
-                }
-                if(leave_type == 'Full Day') {
-                    var total_days = days;
-                }
-                
-                $.ajax({
-
-                    type: 'GET',
-                    url:app_url+'/leave/balance',
-                    data: {'_token':token, loggedin_user_id:loggedin_user_id,leave_cat:leave_cat},
-                    dataType:'json',
-                    success: function(leave_count) {
-
-                        if (leave_count < total_days) {
-
-                            var rest = total_days - leave_count;
-
-                            if(leave_count == '') {
-                                leave_count = 0;
-                            }
-                                    
-                            if(leave_cat == 'Privilege Leave') {
-
-                                var msg = 'You have only '+leave_count+' PL Balance, rest '+rest+' leaves will fall into LWP, do you still want to apply?';
-                                alert(msg);
-                            }
-
-                            if(leave_cat == 'Sick Leave') {
-
-                                var msg = 'You have only '+leave_count+' SL Balance, rest '+rest+' leaves will fall into LWP, do you still want to apply?';
-                                alert(msg);
-                            }
-                        }
-                    }
-                });
+            if(leave_type == 'Half Day') {
+                var total_days = days/2;
             }
+            else if(leave_type == 'Full Day') {
+                var total_days = days;
+            }
+
+            var pl_balance = $("#pl_balance").val();
+            var sl_balance = $("#sl_balance").val();
+
+            if(leave_cat == 'Privilege Leave') {
+
+                if(pl_balance != '' && pl_balance < total_days) {
+
+                    var rest_balance = total_days - pl_balance;
+
+                    var msg = 'You have '+pl_balance+' PL Balance, rest '+rest_balance+' leaves will fall into LWP, do you still want to apply?';
+
+                    $(".display_content").empty();
+                    $(".display_content").append(msg);
+                    $("#leaveBalanceModal").modal('show');
+                    return false;
+                }
+            }
+            else if(leave_cat == 'Sick Leave') {
+
+                if(sl_balance != '' && sl_balance < total_days) {
+
+                    var rest_balance = total_days - sl_balance;
+                    
+                    var msg = 'You have '+sl_balance+' SL Balance, rest '+rest_balance+' leaves will fall into LWP, do you still want to apply?';
+
+                    $(".display_content").empty();
+                    $(".display_content").append(msg);
+                    $("#leaveBalanceModal").modal('show');
+                    return false;
+                }
+            }
+            submitForm();
         }
 
         function displayHalfDayOptions() {
@@ -295,9 +322,14 @@
             var confirmvalue = confirm(msg);
 
             if(confirmvalue) {
-
                 $("#email_value").val(confirmvalue);
             }
+            return false;
+        }
+
+        function submitForm() {
+
+            document.forms['leave_form'].submit();
             return true;
         }
     </script>
