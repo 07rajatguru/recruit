@@ -81,14 +81,12 @@
                                         <ul class="menu" style="width: 100%;">
                                             @if($user_id != $superadmin_userid)
                                                 <li>
-                                                    <a href="{{getenv('APP_URL').'employee-self-service'}}" target="_blank">
-                                                    MY ESS</a>
+                                                    <a href="{{getenv('APP_URL').'employee-self-service'}}" target="_blank">MY ESS</a>
                                                 </li>
                                             @endif
                                             @if($user_id == $superadmin_userid || $user_id == $hr_userid)
                                                 <li>
-                                                    <a href="{{getenv('APP_URL').'hr-employee-service'}}" target="_blank">
-                                                    HR ESS</a>
+                                                    <a href="{{getenv('APP_URL').'hr-employee-service'}}" target="_blank">HR ESS</a>
                                                 </li>
                                             @endif
                                             <li>
@@ -106,6 +104,11 @@
                                             <li>
                                                 <a href="/users-attendance/self/{{ $month }}/{{ $year }}" target="_blank">Attendance</a>
                                             </li>
+                                            @permission('display-leave-balance')
+                                                <li>
+                                                    <a href="/userwiseleave" target="_blank">Userwise Leave Balance</a>
+                                                </li>
+                                            @endpermission
                                             @if($user_id != $superadmin_userid)
                                                 <li>
                                                     <a href="/list-of-selected-holidays/{{ $user_id }}" target="_blank">My Holidays</a>

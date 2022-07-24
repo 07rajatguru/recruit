@@ -37,6 +37,15 @@ class MonthwiseLeaveBalance extends Model
                 $leave_balance_data[$user_id]['sl_total'] = $value->sl_total;
                 $leave_balance_data[$user_id]['sl_taken'] = $value->sl_taken;
                 $leave_balance_data[$user_id]['sl_remaining'] = $value->sl_total - $value->sl_taken;
+
+                if($value->edited_by != '' && $value->edited_by != '0') {
+
+                    $balance_edited_by = User::getProfileInfo($value->edited_by);
+                    $leave_balance_data[$user_id]['edited_by'] = $balance_edited_by->first_name . " " . $balance_edited_by->last_name;
+                }
+                else {
+                    $leave_balance_data[$user_id]['edited_by'] = '';
+                }
             }
         }
         return $leave_balance_data;

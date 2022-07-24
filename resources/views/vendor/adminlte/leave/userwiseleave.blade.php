@@ -26,9 +26,9 @@
                 <h2>User Wise Leave Balance</h2>
             </div>
             <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('leave.userwisecreate') }}">Add Leave Balance
-                </a>
-                <a class="btn btn-primary" href="/monthwise-leave-balance" target="_blank">View Monthwise Balance</a>
+                {{-- <a class="btn btn-success" href="{{ route('leave.userwisecreate') }}">Add Leave Balance
+                </a> --}}
+                <a class="btn btn-primary" href="monthwise-leave-balance" target="_blank">View Monthwise Balance</a>
             </div>
         </div>
     </div>
@@ -80,9 +80,6 @@
             else {
                 new jQuery.fn.dataTable.FixedHeader( table );
             }
-
-            $("#month").select2();
-            $("#year").select2();
         });
     </script>
 @endsection

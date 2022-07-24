@@ -163,22 +163,22 @@
                 messages: {
                 	
                     "leave_total": {
-                        required: "Total Privilege Leave is Required field."
+                        required: "Total PL is Required."
                     },
                     "leave_taken": {
-                    	required: "Taken Privilege Leave is Required field."
+                    	required: "Opted PL is Required."
                     },
                     "leave_remaining": {
-                    	required: "Remaining Privilege Leave is Required field."
+                    	required: "PL Balance is Required."
                     },
                     "seek_leave_total": {
-                        required: "Total Sick Leave is Required field."
+                        required: "Total SL is Required."
                     },
                     "seek_leave_taken": {
-                    	required: "Taken Sick Leave is Required field."
+                    	required: "Opted SL is Required."
                     },
                     "seek_leave_remaining": {
-                    	required: "Remaining Sick Leave is Required field."
+                    	required: "SL Balance is Required."
                     }
                 }
             });

@@ -72,11 +72,11 @@ class LeaveController extends Controller
         }
         else if($userwise_perm) {
 
-            $floor_reports_id = User::getAssignedUsers($user_id);
+            /*$floor_reports_id = User::getAssignedUsers($user_id);
             foreach ($floor_reports_id as $key => $value) {
                 $user_ids[] = $key;
-            }
-
+            }*/
+            $user_ids[] = $user_id;
             $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'');
         }
 
@@ -183,11 +183,13 @@ class LeaveController extends Controller
         }
         else if($userwise_perm) {
 
-            $reports_to_ids = User::getAssignedUsers($user_id);
+            /*$reports_to_ids = User::getAssignedUsers($user_id);
 
             foreach ($reports_to_ids as $key => $value) {
                 $user_ids[] = $key;
-            }
+            }*/
+
+            $user_ids[] = $user_id;
 
             $leave_details_all = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'');
             $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,$status);
@@ -238,31 +240,24 @@ class LeaveController extends Controller
         $action = 'add';
 
         $leave_type = UserLeave::getLeaveType();
-
         $selected_leave_type = '';
-        $selected_leave_category = '';
 
         $loggedin_user_id = \Auth::user()->id;
 
-        // Get user employeement type for set leave category
-        $user_details = User::getAllDetailsByUserID($loggedin_user_id);
-        $user_details = User::getAllDetailsByUserID($loggedin_user_id);
+        // Get user leave balance
+        $leave_balance = LeaveBalance::getLeaveBalanceByUserId($loggedin_user_id);
 
-        if($user_details->employment_type == 'Trainee' || $user_details->employment_type == 'Intern') {
-
-            $leave_category = array('LWP' => "LWP");
-        }
-        else {
-
+        if(isset($leave_balance) && $leave_balance != '') {
             $leave_category = UserLeave::getLeaveCategory();
         }
+        else {
+            $leave_category = array('LWP' => "LWP");
+        }
+        $selected_leave_category = '';
 
         // Get Half day options
         $half_leave_type = UserLeave::getHalfDayOptions();
-
         $selected_half_leave_type = '';
-
-        $leave_balance = LeaveBalance::getLeaveBalanceByUserId($loggedin_user_id);
         
         return view('adminlte::leave.create',compact('action','leave_type','leave_category','selected_leave_type','selected_leave_category','loggedin_user_id','half_leave_type','selected_half_leave_type','leave_balance'));
     }
@@ -275,15 +270,9 @@ class LeaveController extends Controller
         if (Input::get('from_date') != '') {
             $from_date = $dateClass->changeDMYtoYMD(Input::get('from_date'));
         }
-        else {
-            $from_date = NULL;
-        }
 
         if (Input::get('to_date') != '') {
             $to_date = $dateClass->changeDMYtoYMD(Input::get('to_date'));
-        }
-        else {
-            $to_date = NULL;
         }
 
         // Get All fields values
@@ -295,7 +284,6 @@ class LeaveController extends Controller
         $half_leave_type = Input::get('half_leave_type');
 
         // Calculate Difference Between Two Dates
-
         $from_date_1 = strtotime($from_date);
         $to_date_1 = strtotime($to_date);
 
@@ -303,7 +291,6 @@ class LeaveController extends Controller
         $diff_in_days = $diff_in_days + 1;
 
         // Calculate Final Leave Days
-
         $first_dt = strtotime($from_date);
         $last_dt = strtotime($to_date);
 
@@ -447,7 +434,6 @@ class LeaveController extends Controller
         $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
 
         if($report_email == '') {
-
             $cc_users_array = array($hremail,$vibhuti_gmail_id);
         }
         else {
@@ -469,38 +455,32 @@ class LeaveController extends Controller
 
     public function edit($id) {
 
-        $action = 'edit';
-
-        $leave_type = UserLeave::getLeaveType();
-
         $leave = UserLeave::find($id);
 
+        $action = 'edit';
+        $loggedin_user_id = \Auth::user()->id;
+
+        $leave_type = UserLeave::getLeaveType();
         $selected_leave_type = $leave->type_of_leave;
+
+        // Get user leave balance
+        $leave_balance = LeaveBalance::getLeaveBalanceByUserId($loggedin_user_id);
+
+        if(isset($leave_balance) && $leave_balance != '') {
+            $leave_category = UserLeave::getLeaveCategory();
+        }
+        else {
+            $leave_category = array('LWP' => "LWP");
+        }
         $selected_leave_category = $leave->category;
+        
+        // Get Half day options
+        $half_leave_type = UserLeave::getHalfDayOptions();
+        $selected_half_leave_type = $leave->half_leave_type;
 
         $dateClass = new Date();
         $from_date = $dateClass->changeYMDtoDMY($leave->from_date);
         $to_date = $dateClass->changeYMDtoDMY($leave->to_date);
-
-        $loggedin_user_id = \Auth::user()->id;
-
-        // Get user employeement type for set leave category
-        $user_details = User::getAllDetailsByUserID($loggedin_user_id);
-        if($user_details->employment_type == 'Trainee' || $user_details->employment_type == 'Intern') {
-
-            $leave_category = array('LWP' => "LWP");
-        }
-        else {
-
-            $leave_category = UserLeave::getLeaveCategory();
-        }
-        
-        // Get Half day options
-        $half_leave_type = UserLeave::getHalfDayOptions();
-
-        $selected_half_leave_type = $leave->half_leave_type;
-
-        $leave_balance = LeaveBalance::getLeaveBalanceByUserId($loggedin_user_id);
 
         return view('adminlte::leave.edit',compact('action','leave_type','leave_category','leave','selected_leave_type','selected_leave_category','from_date','to_date','loggedin_user_id','half_leave_type','selected_half_leave_type','leave_balance'));
     }
@@ -515,19 +495,12 @@ class LeaveController extends Controller
         if (Input::get('from_date') != '') {
             $from_date = $dateClass->changeDMYtoYMD(Input::get('from_date'));
         }
-        else {
-            $from_date = NULL;
-        }
 
         if (Input::get('to_date') != '') {
             $to_date = $dateClass->changeDMYtoYMD(Input::get('to_date'));
         }
-        else {
-            $to_date = NULL;
-        }
 
         // Get All fields values
-
         $subject = Input::get('subject');
         $leave_type = Input::get('leave_type');
         $leave_category = Input::get('leave_category');
@@ -535,7 +508,6 @@ class LeaveController extends Controller
         $half_leave_type = Input::get('half_leave_type');
 
         // Calculate Difference Between Two Dates
-
         $from_date_1 = strtotime($from_date);
         $to_date_1 = strtotime($to_date);
 
@@ -543,7 +515,6 @@ class LeaveController extends Controller
         $diff_in_days = $diff_in_days + 1;
 
         // Calculate Final Leave Days
-
         $first_dt = strtotime($from_date);
         $last_dt = strtotime($to_date);
 
@@ -568,11 +539,9 @@ class LeaveController extends Controller
             foreach ($dates as $key => $value) {
                         
                 if (in_array($value,$holidays_dates)) {
-
                     $selected_holiday_dates[$i] = $value;
                 }
                 else {
-
                     $selected_other_dates[$i] = $value;
                 }
                 $i++;
@@ -595,13 +564,11 @@ class LeaveController extends Controller
         else {
 
             if($leave_type == 'Half Day') {
-
                 $days = $diff_in_days/2;
             }
             else {
                 $days = $diff_in_days;
             }
-            
         }
 
         $user_leave = UserLeave::find($id);
@@ -649,7 +616,6 @@ class LeaveController extends Controller
             $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
 
             if($report_email == '') {
-
                 $cc_users_array = array($hremail,$vibhuti_gmail_id);
             }
             else {
@@ -705,7 +671,6 @@ class LeaveController extends Controller
         $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
 
         if($report_email == '') {
-
             $cc_users_array = array($hremail,$vibhuti_gmail_id);
         }
         else {
@@ -918,7 +883,6 @@ class LeaveController extends Controller
 
         return json_encode($data);
     }
-
     // End function for single user apply for leave & leave data
 
     // Starts All User Leave Balance Module function
@@ -1109,6 +1073,7 @@ class LeaveController extends Controller
 
     public function userWiseLeaveUpdate(Request $request,$id) {
 
+        $loggedin_user_id = \Auth::user()->id;
         $user_id = $request->get('user_id');
 
         $leave_total = $request->get('leave_total');
@@ -1127,6 +1092,7 @@ class LeaveController extends Controller
         $monthwise_leave_balance->sl_total = $seek_leave_total;
         $monthwise_leave_balance->sl_taken = $seek_leave_taken;
         $monthwise_leave_balance->sl_remaining = $seek_leave_remaining;
+        $monthwise_leave_balance->edited_by = $loggedin_user_id;
         $monthwise_leave_balance->save();
 
         // Get all month total count & update in main leave balance table
@@ -1157,7 +1123,7 @@ class LeaveController extends Controller
     public function exportLeaveBalance() {
 
         $user = \Auth::user();
-        $all_perm = $user->can('display-leave');
+        $all_perm = $user->can('display-leave-balance');
 
         $month = $_POST['month'];
         $year = $_POST['year'];

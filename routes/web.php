@@ -727,48 +727,53 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     // All Users Leave Balance Routes
-
+    
     Route::any('monthwise-leave-balance',[
         'as' => 'monthwise.leavebalance',
         'uses' => 'LeaveController@viewMonthwiseLeaveBalance',
-        'middleware' => ['permission:display-leave']
+        'middleware' => ['permission:display-leave-balance']
     ]);
 
     Route::any('userwiseleave',[
         'as' => 'leave.userwise',
         'uses' => 'LeaveController@userWiseLeave',
-        'middleware' => ['permission:display-leave']
+        'middleware' => ['permission:display-leave-balance']
     ]);
 
     Route::get('userwiseleave/create',[
         'as' => 'leave.userwisecreate',
-        'uses' => 'LeaveController@userWiseLeavaAdd'
+        'uses' => 'LeaveController@userWiseLeavaAdd',
+        'middleware' => ['permission:display-leave-balance']
     ]);
 
     Route::post('userwiseleave/create',[
         'as' => 'leave.userwisestore',
-        'uses' => 'LeaveController@userWiseLeaveStore'
+        'uses' => 'LeaveController@userWiseLeaveStore',
+        'middleware' => ['permission:display-leave-balance']
     ]);
 
     Route::get('userwiseleave/{id}/{month}/{year}/edit',[
         'as' => 'leave.userwiseedit',
-        'uses' => 'LeaveController@userWiseLeaveEdit'
+        'uses' => 'LeaveController@userWiseLeaveEdit',
+        'middleware' => ['permission:display-leave-balance']
     ]);
 
     Route::patch('userwiseleave/{id}/edit',[
         'as' => 'leave.userwiseupdate',
-        'uses' => 'LeaveController@userWiseLeaveUpdate'
+        'uses' => 'LeaveController@userWiseLeaveUpdate',
+        'middleware' => ['permission:display-leave-balance']
     ]);
 
     Route::delete('userwiseleave/{id}',[
         'as' => 'leaveuserwise.destroy',
-        'uses' => 'LeaveController@userWiseLeaveDestroy'
+        'uses' => 'LeaveController@userWiseLeaveDestroy',
+        'middleware' => ['permission:display-leave-balance']
     ]);
 
     Route::post('userwiseleave/export',[
         'as' => 'userwiseleave.export',
         'uses' => 'LeaveController@exportLeaveBalance',
-        'middleware' => ['permission:display-leave']
+        'middleware' => ['permission:display-leave-balance']
     ]);
 
     // User Late in Early go Routes
