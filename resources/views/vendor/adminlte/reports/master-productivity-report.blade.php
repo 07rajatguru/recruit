@@ -176,6 +176,7 @@
                             <p align="center" style="text-align: center;"><b><span style="color: rgb(153,0,0);">Monthly Achievement</span></b></p>
                         </td>
                     </tr>
+                    <?php $week1_c=0; $week2_c=0; $week3_c=0; $week4_c=0; $week5_c=0; ?>
                     <tr style="height: 15px;">
                         <td valign="bottom" style="border-top: none;border-left: solid black 2px;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
                             <p align="center" style="text-align: center;"><span>1</span></p>
@@ -206,6 +207,7 @@
                         </td>
 
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
+                            <?php $a = 0; ?>
                             @foreach($frm_to_date_array as $key => $value)
 
                                 <?php $from_date = date('Y-m-d',strtotime($value['from_date'])); ?>
@@ -223,6 +225,7 @@
                                                 <span>{{ $value['ass_cnt'] }}</span>
                                             </p>
                                         </td>
+                                        @if($a==0) {{ $week1_c++ }} @elseif($a==1) {{ $week2_c++ }} @elseif($a==2) {{ $week3_c++ }} @elseif($a==3) {{ $week4_c++ }} @elseif($a==4) {{ $week5_c++ }} @endif
                                     @else
                                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="no_of_resumes_weeks">
                                             <p align="center" style="text-align: center;">
@@ -231,6 +234,7 @@
                                         </td>
                                     @endif
                                 @endif
+                                <?php $a = $a + 1; ?>
                             @endforeach
                         @endif
 
@@ -281,6 +285,7 @@
                         </td>
                         
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
+                            <?php $b = 0; ?>
                             @foreach($frm_to_date_array as $key => $value)
                                 
                                 <?php $from_date = date('Y-m-d',strtotime($value['from_date'])); ?>
@@ -298,6 +303,7 @@
                                                 <span>{{ $value['shortlisted_cnt'] }}</span>
                                             </p>
                                         </td>
+                                        @if($b==0) {{ $week1_c++ }} @elseif($b==1) {{ $week2_c++ }} @elseif($b==2) {{ $week3_c++ }} @elseif($b==3) {{ $week4_c++ }} @elseif($b==4) {{ $week5_c++ }} @endif
                                     @else
                                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="shortlist_ratio_weeks">
                                             <p align="center" style="text-align: center;">
@@ -306,6 +312,7 @@
                                         </td>
                                     @endif
                                 @endif
+                                <?php $b = $b + 1; ?>
                             @endforeach
                         @endif
 
@@ -356,6 +363,7 @@
                         </td>
                         
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
+                            <?php $c = 0; ?>
                             @foreach($frm_to_date_array as $key => $value)
                                 
                                 <?php $from_date = date('Y-m-d',strtotime($value['from_date'])); ?>
@@ -373,6 +381,7 @@
                                                 <span>{{ $value['interview_cnt'] }}</span>
                                             </p>
                                         </td>
+                                        @if($c==0) {{ $week1_c++ }} @elseif($c==1) {{ $week2_c++ }} @elseif($c==2) {{ $week3_c++ }} @elseif($c==3) {{ $week4_c++ }} @elseif($c==4) {{ $week5_c++ }} @endif
                                     @else
                                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="interview_ratio_weeks">
                                             <p align="center" style="text-align: center;">
@@ -381,6 +390,7 @@
                                         </td>
                                     @endif
                                 @endif
+                                <?php $c = $c + 1; ?>
                             @endforeach
                         @endif
 
@@ -431,6 +441,7 @@
                         </td>
                        
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
+                            <?php $d = 0; ?>
                             @foreach($frm_to_date_array as $key => $value)
                                 
                                 <?php $from_date = date('Y-m-d',strtotime($value['from_date'])); ?>
@@ -448,6 +459,7 @@
                                                 <span>{{ $value['selected_cnt'] }}</span>
                                             </p>
                                         </td>
+                                        @if($d==0) {{ $week1_c++ }} @elseif($d==1) {{ $week2_c++ }} @elseif($d==2) {{ $week3_c++ }} @elseif($d==3) {{ $week4_c++ }} @elseif($d==4) {{ $week5_c++ }} @endif
                                     @else
                                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="selection_ratio_weeks">
                                             <p align="center" style="text-align: center;cursor: pointer;" title="{{ $value['selected_candidate'] }}">
@@ -456,6 +468,7 @@
                                         </td>
                                     @endif
                                 @endif
+                                <?php $d = $d + 1; ?>
                             @endforeach
                         @endif
 
@@ -507,6 +520,7 @@
                         </td>
 
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
+                            <?php $e = 0; ?>
                             @foreach($frm_to_date_array as $key => $value)
 
                                 <?php $from_date = date('Y-m-d',strtotime($value['from_date'])); ?>
@@ -524,6 +538,7 @@
                                                 <span>{{ $value['offer_acceptance_ratio'] }}</span>
                                             </p>
                                         </td>
+                                        @if($e==0) {{ $week1_c++ }} @elseif($e==1) {{ $week2_c++ }} @elseif($e==2) {{ $week3_c++ }} @elseif($e==3) {{ $week4_c++ }} @elseif($e==4) {{ $week5_c++ }} @endif
                                     @else
                                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="offer_acceptance_ratio_weeks">
                                             <p align="center" style="text-align: center;cursor: pointer;" title="{{ $value['offer_acceptance_candidate'] }}">
@@ -532,6 +547,7 @@
                                         </td>
                                     @endif
                                 @endif
+                                <?php $e = $e + 1; ?>
                             @endforeach
                         @endif
 
@@ -582,6 +598,7 @@
                         </td>
 
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
+                            <?php $f = 0; ?>
                             @foreach($frm_to_date_array as $key => $value)
 
                                 <?php $from_date = date('Y-m-d',strtotime($value['from_date'])); ?>
@@ -599,6 +616,7 @@
                                                 <span>{{ $value['joining_ratio'] }}</span>
                                             </p>
                                         </td>
+                                        @if($f==0) {{ $week1_c++ }} @elseif($f==1) {{ $week2_c++ }} @elseif($f==2) {{ $week3_c++ }} @elseif($f==3) {{ $week4_c++ }} @elseif($f==4) {{ $week5_c++ }} @endif
                                     @else
                                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="joining_ratio_weeks">
                                             <p align="center" style="text-align: center;cursor: pointer;" title="{{ $value['joining_candidate'] }}">
@@ -607,6 +625,7 @@
                                         </td>
                                     @endif
                                 @endif
+                                <?php $f = $f + 1; ?>
                             @endforeach
                         @endif
 
@@ -657,6 +676,7 @@
                         </td>
 
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
+                            <?php $g = 0; ?>
                             @foreach($frm_to_date_array as $key => $value)
                                 
                                 <?php $from_date = date('Y-m-d',strtotime($value['from_date'])); ?>
@@ -674,6 +694,7 @@
                                                 <span>{{ $value['joining_success_ratio'] }}</span>
                                             </p>
                                         </td>
+                                        @if($g==0) {{ $week1_c++ }} @elseif($g==1) {{ $week2_c++ }} @elseif($g==2) {{ $week3_c++ }} @elseif($g==3) {{ $week4_c++ }} @elseif($g==4) {{ $week5_c++ }} @endif
                                     @else
                                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;border-bottom: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="after_joining_success_ratio_weeks">
                                             <p align="center" style="text-align: center;cursor: pointer;" title="{{ $value['joining_success_candidate'] }}">
@@ -682,6 +703,7 @@
                                         </td>
                                     @endif
                                 @endif
+                                <?php $g = $g + 1; ?>
                             @endforeach
                         @endif
 
@@ -707,11 +729,11 @@
                             </center>
                         </td>
                         
-                        <td width="74" valign="bottom" style="width: 55.5pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
-                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
-                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
-                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
-                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
+                        <td width="74" valign="bottom" style="width: 55.5pt;border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;@if($week1_c >= 2) background-color: limegreen; @else background-color: red; @endif"></td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;@if($week2_c >= 2) background-color: limegreen; @else background-color: red; @endif"></td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;@if($week3_c >= 2) background-color: limegreen; @else background-color: red; @endif"></td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;@if($week4_c >= 2) background-color: limegreen; @else background-color: red; @endif"></td>
+                        <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid rgb(204,204,204) 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;@if(isset($frm_to_date_array) && sizeof($frm_to_date_array) == '4') 'NA' @else @if($week5_c >= 2) background-color: limegreen; @else background-color: red; @endif @endif"></td>
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid rgb(204,204,204) 1px;border-right: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;"></td>
                     </tr>
                     <tr style="height: 15px;">
@@ -825,9 +847,10 @@
 
         function export_data() {
 
+            var app_url = "{!! env('APP_URL'); !!}";
             var month = $("#month").val();
             var year = $("#year").val();
-            var url = '/master-productivity-report/export';
+            var url = app_url+'/master-productivity-report/export';
 
             var form = $('<form action="'+url+ '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
