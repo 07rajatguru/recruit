@@ -63,25 +63,44 @@
                 <th>Total SL</th>
                 <th>Opted SL</th>
                 <th>SL Balance</th>
+                <th>Edited By</th>
 	    	</tr>
     	</thead>
 
     	<?php $i=0; ?>
     	<tbody>
     		@foreach($user_leave_data as $key => $value)
-	    		<tr>
-		    		<td>{{ ++$i }}</td>
-                    <td>
-                        <a class="fa fa-edit" href="{{ route('leave.userwiseedit',['id' => $value['id'],'month' => $month,'year' => $year]) }}" title="Edit"></a>
-                    </td>
-		    		<td>{{ $value['user_name'] }}</td>
-		    		<td>{{ $value['pl_total'] }}</td>
-		    		<td>{{ $value['pl_taken'] }}</td>
-		    		<td>{{ $value['pl_remaining'] }}</td>
-                    <td>{{ $value['sl_total'] }}</td>
-                    <td>{{ $value['sl_taken'] }}</td>
-                    <td>{{ $value['sl_remaining'] }}</td>
-		    	</tr>
+                @if($value['edited_by'] != '')
+    	    		<tr style="background-color:#ACACAC;">
+    		    		<td>{{ ++$i }}</td>
+                        <td>
+                            <a class="fa fa-edit" href="{{ route('leave.userwiseedit',['id' => $value['id'],'month' => $month,'year' => $year]) }}" title="Edit"></a>
+                        </td>
+    		    		<td>{{ $value['user_name'] }}</td>
+    		    		<td>{{ $value['pl_total'] }}</td>
+    		    		<td>{{ $value['pl_taken'] }}</td>
+    		    		<td>{{ $value['pl_remaining'] }}</td>
+                        <td>{{ $value['sl_total'] }}</td>
+                        <td>{{ $value['sl_taken'] }}</td>
+                        <td>{{ $value['sl_remaining'] }}</td>
+                        <td>{{ $value['edited_by'] }}</td>
+    		    	</tr>
+                @else
+                    <tr>
+                        <td>{{ ++$i }}</td>
+                        <td>
+                            <a class="fa fa-edit" href="{{ route('leave.userwiseedit',['id' => $value['id'],'month' => $month,'year' => $year]) }}" title="Edit"></a>
+                        </td>
+                        <td>{{ $value['user_name'] }}</td>
+                        <td>{{ $value['pl_total'] }}</td>
+                        <td>{{ $value['pl_taken'] }}</td>
+                        <td>{{ $value['pl_remaining'] }}</td>
+                        <td>{{ $value['sl_total'] }}</td>
+                        <td>{{ $value['sl_taken'] }}</td>
+                        <td>{{ $value['sl_remaining'] }}</td>
+                        <td></td>
+                    </tr>
+                @endif
     		@endforeach
     	</tbody>		
     </table>
@@ -110,10 +129,10 @@
         function select_data() {
 
             var app_url = "{!! env('APP_URL'); !!}";
+            var url = app_url+'monthwise-leave-balance';
+
             var month = $("#month").val();
             var year = $("#year").val();
-
-            var url = app_url+'/monthwise-leave-balance';
 
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
@@ -130,7 +149,7 @@
             var month = $("#month").val();
             var year = $("#year").val();
 
-            var url = '/userwiseleave/export';
+            var url = 'userwiseleave/export';
 
             var form = $('<form action="'+url+ '" method="post">' +
             '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +

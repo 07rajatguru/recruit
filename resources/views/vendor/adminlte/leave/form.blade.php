@@ -17,8 +17,6 @@
 
             @if(isset($leave_balance) && $leave_balance != '')
                 <h4> (PL Balance : {{ $leave_balance->leave_remaining or 0 }}, SL Balance : {{ $leave_balance->seek_leave_remaining or 0 }})</h4>
-            @else
-                <h4> (PL Balance : 0, SL Balance : 0)</h4>
             @endif
         </div>
         <div class="pull-right">
@@ -136,6 +134,7 @@
     </div>
 
     <input type="hidden" name="loggedin_user_id" id="loggedin_user_id" value="{{ $loggedin_user_id }}">
+    <input type="hidden" name="action" id="action" value="{{ $action }}">
 
     @if(isset($leave_balance) && $leave_balance != '')
         <input type="hidden" name="pl_balance" id="pl_balance" value="{{ $leave_balance->leave_remaining }}">
@@ -158,7 +157,7 @@
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="submitForm();">Yes</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Ok</button>
                 <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
             </div>
         </div>
@@ -277,12 +276,18 @@
 
                     var rest_balance = total_days - pl_balance;
 
-                    var msg = 'You have '+pl_balance+' PL Balance, rest '+rest_balance+' leaves will fall into LWP, do you still want to apply?';
+                    //var msg = 'You have only '+pl_balance+' PL Balance, rest '+rest_balance+' leaves will fall into LWP, do you still want to apply?';
+                    var msg = 'You have '+pl_balance+' PL Balance, Please select other option.';
 
                     $(".display_content").empty();
                     $(".display_content").append(msg);
                     $("#leaveBalanceModal").modal('show');
                     return false;
+                }
+                else {
+
+                    document.forms['leave_form'].submit();
+                    return true;
                 }
             }
             else if(leave_cat == 'Sick Leave') {
@@ -291,15 +296,30 @@
 
                     var rest_balance = total_days - sl_balance;
                     
-                    var msg = 'You have '+sl_balance+' SL Balance, rest '+rest_balance+' leaves will fall into LWP, do you still want to apply?';
+                    //var msg = 'You have '+sl_balance+' SL Balance, rest '+rest_balance+' leaves will fall into LWP, do you still want to apply?';
+                    var msg = 'You have '+sl_balance+' SL Balance, Please select other option.';
 
                     $(".display_content").empty();
                     $(".display_content").append(msg);
                     $("#leaveBalanceModal").modal('show');
                     return false;
                 }
+                else {
+
+                    document.forms['leave_form'].submit();
+                    return true;
+                }
             }
-            submitForm();
+            else if(leave_cat == 'LWP') {
+
+                var action = $("#action").val();
+
+                if(action == 'edit') {
+
+                    document.forms['leave_form'].submit();
+                    return true;
+                }
+            }
         }
 
         function displayHalfDayOptions() {
@@ -327,10 +347,5 @@
             return false;
         }
 
-        function submitForm() {
-
-            document.forms['leave_form'].submit();
-            return true;
-        }
     </script>
 @endsection

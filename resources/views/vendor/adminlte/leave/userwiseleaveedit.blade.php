@@ -37,21 +37,21 @@
 
 	            	<div class="col-xs-4 col-sm-4 col-md-4">
 		            	<div class="form-group">
-		                    <strong>Select User : <span class = "required_fields">*</span> </strong>
+		                    <strong>User : <span class = "required_fields">*</span> </strong>
 		                    {!! Form::select('user_id',$users, $user_id, array('id'=>'user_id','class' => 'form-control', 'tabindex' => '1')) !!}
 		                </div>
 		            </div>
 
 		            <div class="col-xs-4 col-sm-4 col-md-4">
 			            <div class="form-group">
-			            	<strong>Select Month : <span class = "required_fields">*</span> </strong>
+			            	<strong>Month : <span class = "required_fields">*</span> </strong>
 			                {{Form::select('month',$month_array, $month, array('id'=>'month','class'=>'form-control', 'tabindex' => '2')) }}
 			            </div>
 			        </div>
 		      
 		      		<div class="col-xs-4 col-sm-4 col-md-4">
 			            <div class="form-group">
-			            	<strong>Select Year : <span class = "required_fields">*</span> </strong>
+			            	<strong>Year : <span class = "required_fields">*</span> </strong>
 			                {{Form::select('year',$year_array, $year, array('id'=>'year','class'=>'form-control', 'tabindex' => '3')) }}
 			            </div>
 			        </div>
