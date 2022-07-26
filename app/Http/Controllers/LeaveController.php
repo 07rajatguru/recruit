@@ -773,15 +773,16 @@ class LeaveController extends Controller
             // Get Leave Type
             $leave_category = $leave_details['category'];
 
-            if($leave_category == 'Privilege Leave') {
+            // Get Leave Balance
+            $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
+            $monthwise_leave_balance_details = MonthwiseLeaveBalance::getMonthwiseLeaveBalanceByUserId($user_id,$month,$year);
 
-                // Update Leave Balance
-                $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
-                $monthwise_leave_balance_details = MonthwiseLeaveBalance::getMonthwiseLeaveBalanceByUserId($user_id,$month,$year);
+            // Update Leave balance
+            if($leave_category == 'Privilege Leave') {
 
                 if(isset($leave_balance_details) && $leave_balance_details != '') {
 
-                    // Update in main leave balance table
+                    // Update leave balance in main table
                     $leave_taken = $leave_balance_details['leave_taken'];
                     $leave_remaining = $leave_balance_details['leave_remaining'];
 
@@ -789,8 +790,11 @@ class LeaveController extends Controller
                     $new_leave_remaining = $leave_remaining - $days;
 
                     \DB::statement("UPDATE `leave_balance` SET `leave_taken` = '$new_leave_taken', `leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
+                }
 
-                    // Update in monthwise leave balance table
+                if(isset($monthwise_leave_balance_details) && $monthwise_leave_balance_details != '') {
+
+                    // Update leave balance in monthwise table
                     $pl_taken = $monthwise_leave_balance_details['pl_taken'];
                     $pl_remaining = $monthwise_leave_balance_details['pl_remaining'];
 
@@ -802,13 +806,9 @@ class LeaveController extends Controller
             }
             else if($leave_category == 'Sick Leave') {
 
-                // Update Leave Balance
-                $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
-                $monthwise_leave_balance_details = MonthwiseLeaveBalance::getMonthwiseLeaveBalanceByUserId($user_id,$month,$year);
-
                 if(isset($leave_balance_details) && $leave_balance_details != '') {
 
-                    // Update in main leave balance table
+                    // Update leave balance in main table
                     $seek_leave_taken = $leave_balance_details['seek_leave_taken'];
                     $seek_leave_remaining = $leave_balance_details['seek_leave_remaining'];
 
@@ -816,8 +816,11 @@ class LeaveController extends Controller
                     $new_leave_remaining = $seek_leave_remaining - $days;
 
                     \DB::statement("UPDATE `leave_balance` SET `seek_leave_taken` = '$new_leave_taken', `seek_leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
+                }
 
-                    // Update in monthwise leave balance table
+                if(isset($monthwise_leave_balance_details) && $monthwise_leave_balance_details != '') {
+
+                    // Update leave balance in monthwise table
                     $sl_taken = $monthwise_leave_balance_details['sl_taken'];
                     $sl_remaining = $monthwise_leave_balance_details['sl_remaining'];
 

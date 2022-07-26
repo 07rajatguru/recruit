@@ -292,7 +292,7 @@ class UserLeave extends Model
             $query = $query->where('type_of_leave','=',$type_of_leave);
         }
 
-        $query = $query->select('category','id');
+        $query = $query->select('id','days','category');
         $response = $query->first();
 
         return $response;

@@ -1591,6 +1591,84 @@ class WorkPlanningController extends Controller
 
         $data = 'success';
 
+        // If There is user take leave & working is added then apply cancel leave & revert in balance
+        $pending_leave_data = UserLeave::getLeaveByDateAndID($added_date,$added_by_id,'0','');
+
+        if(isset($pending_leave_data) && $pending_leave_data != '') {
+
+            $leave_id = $pending_leave_data->id;
+            \DB::statement("UPDATE `user_leave` SET `cancel_leave` = '1' WHERE `id` = $leave_id");
+        }
+        else {
+            $approved_leave_data = UserLeave::getLeaveByDateAndID($added_date,$added_by_id,'1','');
+
+            if(isset($approved_leave_data) && $approved_leave_data != '') {
+
+                $leave_id = $approved_leave_data->id;
+                $category = $approved_leave_data->category;
+                $days = $approved_leave_data->days;
+
+                \DB::statement("UPDATE `user_leave` SET `cancel_leave` = '1' WHERE `id` = $leave_id");
+
+                // Update Leave Balance
+                $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($added_date);
+                $monthwise_leave_balance_details = MonthwiseLeaveBalance::getMonthwiseLeaveBalanceByUserId($added_date,$month,$year);
+
+                if($category == 'Privilege Leave') {
+
+                    if(isset($leave_balance_details) && $leave_balance_details != '') {
+
+                        // Update in main leave balance table
+                        $leave_taken = $leave_balance_details['leave_taken'];
+                        $leave_remaining = $leave_balance_details['leave_remaining'];
+
+                        $new_leave_taken = $leave_taken - $days;
+                        $new_leave_remaining = $leave_remaining + $days;
+
+                        \DB::statement("UPDATE `leave_balance` SET `leave_taken` = '$new_leave_taken', `leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
+                    }
+
+                    if(isset($monthwise_leave_balance_details) && $monthwise_leave_balance_details != '') {
+
+                        // Update in monthwise leave balance table
+                        $pl_taken = $monthwise_leave_balance_details['pl_taken'];
+                        $pl_remaining = $monthwise_leave_balance_details['pl_remaining'];
+
+                        $new_pl_taken = $pl_taken - $days;
+                        $new_pl_remaining = $pl_remaining + $days;
+
+                        \DB::statement("UPDATE `monthwise_leave_balance` SET `pl_taken` = '$new_pl_taken', `pl_remaining` = '$new_pl_remaining' WHERE `user_id` = '$user_id' AND `month` = '$month' AND `year` = '$year'");
+                    }
+                }
+                else if($category == 'Sick Leave') {
+
+                    if(isset($leave_balance_details) && $leave_balance_details != '') {
+
+                        // Update in main leave balance table
+                        $seek_leave_taken = $leave_balance_details['seek_leave_taken'];
+                        $seek_leave_remaining = $leave_balance_details['seek_leave_remaining'];
+
+                        $new_leave_taken = $seek_leave_taken - $days;
+                        $new_leave_remaining = $seek_leave_remaining + $days;
+
+                        \DB::statement("UPDATE `leave_balance` SET `seek_leave_taken` = '$new_leave_taken', `seek_leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
+                    }
+
+                    if(isset($monthwise_leave_balance_details) && $monthwise_leave_balance_details != '') {
+
+                        // Update in monthwise leave balance table
+                        $sl_taken = $monthwise_leave_balance_details['sl_taken'];
+                        $sl_remaining = $monthwise_leave_balance_details['sl_remaining'];
+
+                        $new_sl_taken = $sl_taken - $days;
+                        $new_sl_remaining = $sl_remaining + $days;
+
+                        \DB::statement("UPDATE `monthwise_leave_balance` SET `sl_taken` = '$new_sl_taken', `sl_remaining` = '$new_sl_remaining' WHERE `user_id` = '$user_id' AND `month` = '$month' AND `year` = '$year'");
+                    }
+                }
+            }
+        }
+
         return json_encode($data);
     }
 
