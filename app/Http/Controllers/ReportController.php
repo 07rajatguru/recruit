@@ -2156,7 +2156,21 @@ class ReportController extends Controller
 
     public function masterProductivityReportExport() {
 
-        Excel::create('Master_Productivity_Report',function($excel) {
+        if (isset($_POST['year']) && $_POST['year'] != 0) {
+            $year = $_POST['year'];
+        }
+        else {
+            $year = date('Y');
+        }
+
+        if (isset($_POST['month']) && $_POST['month'] != 0) {
+            $month = date('M',mktime(0,0,0,$_POST['month'],1,$year));
+        }
+        else {
+            $month = date('M');
+        }
+
+        Excel::create('Master_Productivity_Report_'.$month.'_'.$year,function($excel) {
             $excel->sheet('sheet 1',function($sheet) {
 
                 // get logged in user
@@ -2712,7 +2726,20 @@ class ReportController extends Controller
                     $bench_mark = array();
                 }
                 
-                $sheet->loadview('adminlte::reports.master-productivity-report-export')->with('bench_mark',$bench_mark);
+                $sheet->loadview('adminlte::reports.master-productivity-report-export')->with('bench_mark',$bench_mark)
+                ->getStyle('F4')->getAlignment()->setWrapText(true);
+
+                $sheet->getStyle('C3')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('D3')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('E3')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('B5')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('G4')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('H4')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('I4')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('J4')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('K4')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('A14')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('D12')->getAlignment()->setWrapText(true);
             });
         })->export('xlsx');
     }

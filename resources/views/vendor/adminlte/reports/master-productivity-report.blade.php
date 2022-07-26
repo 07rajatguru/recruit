@@ -676,7 +676,6 @@
                         </td>
 
                         @if(isset($frm_to_date_array) && sizeof($frm_to_date_array) > 0)
-                            <?php $g = 0; ?>
                             @foreach($frm_to_date_array as $key => $value)
                                 
                                 <?php $from_date = date('Y-m-d',strtotime($value['from_date'])); ?>
@@ -694,7 +693,6 @@
                                                 <span>{{ $value['joining_success_ratio'] }}</span>
                                             </p>
                                         </td>
-                                        @if($g==0) {{ $week1_c++ }} @elseif($g==1) {{ $week2_c++ }} @elseif($g==2) {{ $week3_c++ }} @elseif($g==3) {{ $week4_c++ }} @elseif($g==4) {{ $week5_c++ }} @endif
                                     @else
                                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;border-bottom: solid black 2px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="after_joining_success_ratio_weeks">
                                             <p align="center" style="text-align: center;cursor: pointer;" title="{{ $value['joining_success_candidate'] }}">
@@ -703,7 +701,6 @@
                                         </td>
                                     @endif
                                 @endif
-                                <?php $g = $g + 1; ?>
                             @endforeach
                         @endif
 
