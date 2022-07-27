@@ -97,7 +97,7 @@
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="30" width="25">
                         <span>NA</span>
                     </td>
-                    <td style="background-color: #ead1dc;text-align: center;color: #000000;border: 5px solid #000000;" height="30" width="15">
+                    <td style="background: #ead1dc;text-align: center;color: #000000;border: 5px solid #000000;" height="30" width="15">
                        {{ $bench_mark['no_of_resumes_monthly'] }}
                     </td>
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="30" width="15">
@@ -114,10 +114,10 @@
                                 <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="30" width="10" class="no_of_resumes_weeks"></td>
                             @else
                                 @if($value['ass_cnt'] >= $bench_mark['no_of_resumes_weekly'])
-                                    <td style="background-color: #32CD32; text-align: center;color: #000000;border: 5px solid #000000;" height="30" width="10" class="no_of_resumes_weeks">{{ $value['ass_cnt'] }}</td>
+                                    <td style="background: #32CD32; text-align: center;color: #000000;border: 5px solid #000000;" height="30" width="10" class="no_of_resumes_weeks">{{ $value['ass_cnt'] }}</td>
                                     @if($a==0) {{ $week1_c++ }} @elseif($a==1) {{ $week2_c++ }} @elseif($a==2) {{ $week3_c++ }} @elseif($a==3) {{ $week4_c++ }} @elseif($a==4) {{ $week5_c++ }} @endif
                                 @else
-                                    <td style="background-color: #ff0000; text-align: center;color: #000000;border: 5px solid #000000;" height="30" width="10">{{ $value['ass_cnt'] }}</td>
+                                    <td style="background: #ff0000; text-align: center;color: #000000;border: 5px solid #000000;" height="30" width="10">{{ $value['ass_cnt'] }}</td>
                                 @endif
                             @endif
                             <?php $a = $a + 1; $a_cnt = $a_cnt + $value['ass_cnt']; ?>
@@ -140,7 +140,7 @@
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="25">
                         <span>50% (of Total CVs)</span>
                     </td>
-                    <td style="background-color: #ead1dc;text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
+                    <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
                        {{ $bench_mark['shortlist_ratio_monthly'] }}
                     </td>
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
@@ -157,10 +157,10 @@
                                 <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15" class="no_of_resumes_weeks"></td>
                             @else
                                 @if($value['shortlisted_cnt'] >= $bench_mark['shortlist_ratio_weekly'])
-                                    <td style="background-color: #32CD32; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15" class="no_of_resumes_weeks">{{ $value['shortlisted_cnt'] }} </td>
+                                    <td style="background: #32CD32; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15" class="no_of_resumes_weeks">{{ $value['shortlisted_cnt'] }} </td>
                                     @if($b==0) {{ $week1_c++ }} @elseif($b==1) {{ $week2_c++ }} @elseif($b==2) {{ $week3_c++ }} @elseif($b==3) {{ $week4_c++ }} @elseif($b==4) {{ $week5_c++ }} @endif
                                 @else
-                                    <td style="background-color: #ff0000; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">{{ $value['shortlisted_cnt'] }} </td>
+                                    <td style="background: #ff0000; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">{{ $value['shortlisted_cnt'] }} </td>
                                 @endif
                             @endif
                             <?php $b = $b + 1; $b_cnt = $b_cnt + $value['shortlisted_cnt']; ?>
@@ -184,7 +184,7 @@
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="25">
                         <span>50% (Shortlist Ratio)</span>
                     </td>
-                    <td style="background-color: #ead1dc;text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
+                    <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
                        {{ $bench_mark['interview_ratio_monthly'] }}
                     </td>
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
@@ -201,10 +201,10 @@
                                 <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15" class="no_of_resumes_weeks"></td>
                             @else
                                 @if($value['interview_cnt'] >= $bench_mark['interview_ratio_weekly'])
-                                    <td style="background-color: #32CD32; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15" class="no_of_resumes_weeks">{{ $value['interview_cnt'] }}</td>
+                                    <td style="background: #32CD32; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15" class="no_of_resumes_weeks">{{ $value['interview_cnt'] }}</td>
                                     @if($c==0) {{ $week1_c++ }} @elseif($c==1) {{ $week2_c++ }} @elseif($c==2) {{ $week3_c++ }} @elseif($c==3) {{ $week4_c++ }} @elseif($c==4) {{ $week5_c++ }} @endif
                                 @else
-                                    <td style="background-color: #ff0000; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">{{ $value['interview_cnt'] }}</td>
+                                    <td style="background: #ff0000; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">{{ $value['interview_cnt'] }}</td>
                                 @endif
                             @endif
                             <?php $c = $c + 1; $c_cnt = $c_cnt + $value['interview_cnt']; ?>
@@ -228,7 +228,7 @@
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="25">
                         <span>20% (of Interview Ratio)</span>
                     </td>
-                    <td style="background-color: #ead1dc;text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
+                    <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
                        {{ $bench_mark['selection_ratio_monthly'] }}
                     </td>
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
@@ -245,10 +245,10 @@
                                 <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15" class="no_of_resumes_weeks"></td>
                             @else
                                 @if($value['selected_cnt'] >= $bench_mark['selection_ratio_weekly'])
-                                    <td style="background-color: #32CD32; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15" class="no_of_resumes_weeks"> {{ $value['selected_cnt'] }} </td>
+                                    <td style="background: #32CD32; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15" class="no_of_resumes_weeks"> {{ $value['selected_cnt'] }} </td>
                                     @if($d==0) {{ $week1_c++ }} @elseif($d==1) {{ $week2_c++ }} @elseif($d==2) {{ $week3_c++ }} @elseif($d==3) {{ $week4_c++ }} @elseif($d==4) {{ $week5_c++ }} @endif
                                 @else
-                                    <td style="background-color: #ff0000; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15"> {{ $value['selected_cnt'] }} </td>
+                                    <td style="background: #ff0000; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15"> {{ $value['selected_cnt'] }} </td>
                                 @endif
                             @endif
                             <?php $d = $d + 1; $d_cnt = $d_cnt + $value['selected_cnt']; ?>
@@ -272,7 +272,7 @@
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="25">
                         <span>70% (of Selection Ratio)</span>
                     </td>
-                    <td style="background-color: #ead1dc;text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
+                    <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
                        {{ $bench_mark['offer_acceptance_ratio_monthly'] }}
                     </td>
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
@@ -289,10 +289,10 @@
                                 <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15" class="no_of_resumes_weeks"></td>
                             @else
                                 @if($value['offer_acceptance_ratio'] >= $bench_mark['offer_acceptance_ratio_weekly'])
-                                    <td style="background-color: #32CD32; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15" class="no_of_resumes_weeks"> {{ $value['offer_acceptance_ratio'] }} </td>
+                                    <td style="background: #32CD32; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15" class="no_of_resumes_weeks"> {{ $value['offer_acceptance_ratio'] }} </td>
                                     @if($e==0) {{ $week1_c++ }} @elseif($e==1) {{ $week2_c++ }} @elseif($e==2) {{ $week3_c++ }} @elseif($e==3) {{ $week4_c++ }} @elseif($e==4) {{ $week5_c++ }} @endif
                                 @else
-                                    <td style="background-color: #ff0000; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15"> {{ $value['offer_acceptance_ratio'] }} </td>
+                                    <td style="background: #ff0000; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15"> {{ $value['offer_acceptance_ratio'] }} </td>
                                 @endif
                             @endif
                             <?php $e = $e + 1; $e_cnt = $e_cnt + $value['offer_acceptance_ratio']; ?>
@@ -316,7 +316,7 @@
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="25">
                         <span>80% (of offer acceptance)</span>
                     </td>
-                    <td style="background-color: #ead1dc;text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
+                    <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
                        {{ $bench_mark['joining_ratio_monthly'] }}
                     </td>
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
@@ -333,10 +333,10 @@
                                 <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15" class="no_of_resumes_weeks"></td>
                             @else
                                 @if($value['joining_ratio'] >= $bench_mark['joining_ratio_weekly'])
-                                    <td style="background-color: #32CD32; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15" class="no_of_resumes_weeks">{{ $value['joining_ratio'] }}</td>
+                                    <td style="background: #32CD32; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15" class="no_of_resumes_weeks">{{ $value['joining_ratio'] }}</td>
                                     @if($f==0) {{ $week1_c++ }} @elseif($f==1) {{ $week2_c++ }} @elseif($f==2) {{ $week3_c++ }} @elseif($f==3) {{ $week4_c++ }} @elseif($f==4) {{ $week5_c++ }} @endif
                                 @else
-                                    <td style="background-color: #ff0000; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">{{ $value['joining_ratio'] }}</td>
+                                    <td style="background: #ff0000; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">{{ $value['joining_ratio'] }}</td>
                                 @endif
                             @endif
                             <?php $f = $f + 1; $f_cnt = $f_cnt + $value['joining_ratio']; ?>
@@ -360,7 +360,7 @@
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="25">
                         <span>80% (Joining Ratio)</span>
                     </td>
-                    <td style="background-color: #ead1dc;text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
+                    <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
                        {{ $bench_mark['after_joining_success_ratio_monthly'] }}
                     </td>
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
@@ -377,10 +377,10 @@
                                 <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15" class="no_of_resumes_weeks"></td>
                             @else
                                 @if($value['joining_success_ratio'] >= $bench_mark['after_joining_success_ratio_weekly'])
-                                    <td style="background-color: #32CD32; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15" class="no_of_resumes_weeks"> {{ $value['joining_success_ratio'] }} </td>
+                                    <td style="background: #32CD32; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15" class="no_of_resumes_weeks"> {{ $value['joining_success_ratio'] }} </td>
                                     @if($g==0) {{ $week1_c++ }} @elseif($g==1) {{ $week2_c++ }} @elseif($g==2) {{ $week3_c++ }} @elseif($g==3) {{ $week4_c++ }} @elseif($g==4) {{ $week5_c++ }} @endif
                                 @else
-                                    <td style="background-color: #ff0000; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15"> {{ $value['joining_success_ratio'] }} </td>
+                                    <td style="background: #ff0000; text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15"> {{ $value['joining_success_ratio'] }} </td>
                                 @endif
                             @endif
                             <?php $g = $g + 1; $g_cnt = $g_cnt + $value['joining_success_ratio']; ?>
@@ -403,11 +403,11 @@
                 	<td colspan="2" style="background: #46BDC6;text-align: center;color: #000000;border: 5px solid #000000;" height="55">
                         <b>Overall Feedback (Meet <br/> Expectation / Improvements <br/> Needed)</b>
                     </td>
-                    <td height="55" style="text-align: center;color: #000000;border: 5px solid #000000;@if($week1_c >= 2) background-color: #32CD32; @else background-color: #ff0000; @endif"></td>
-                    <td height="55" style="text-align: center;color: #000000;border: 5px solid #000000;@if($week2_c >= 2) background-color: #32CD32; @else background-color: #ff0000; @endif"></td>
-                    <td height="55" style="text-align: center;color: #000000;border: 5px solid #000000;@if($week3_c >= 2) background-color: #32CD32; @else background-color: #ff0000; @endif"></td>
-                    <td height="55" style="text-align: center;color: #000000;border: 5px solid #000000;@if($week4_c >= 2) background-color: #32CD32; @else background-color: #ff0000; @endif"></td>
-                    <td height="55" style="text-align: center;color: #000000;border: 5px solid #000000;@if(isset($bench_mark['frm_to_date_array']) && sizeof($bench_mark['frm_to_date_array']) == '4') 'NA' @else @if($week5_c >= 2) background-color: #32CD32; @else background-color: #ff0000; @endif @endif"></td>
+                    <td height="55" style="text-align: center;color: #000000;border: 5px solid #000000;@if($week1_c >= 2) background: #32CD32; @else background: #ff0000; @endif"></td>
+                    <td height="55" style="text-align: center;color: #000000: 5px solid #000000;@if($week2_c >= 2) background: #32CD32; @else background: #ff0000; @endif"></td>
+                    <td height="55" style="text-align: center;color: #000000;border: 5px solid #000000;@if($week3_c >= 2) background: #32CD32; @else background: #ff0000; @endif"></td>
+                    <td height="55" style="text-align: center;color: #000000;border: 5px solid #000000;@if($week4_c >= 2) background: #32CD32; @else background: #ff0000; @endif"></td>
+                    <td height="55" style="text-align: center;color: #000000;border: 5px solid #000000;@if(isset($bench_mark['frm_to_date_array']) && sizeof($bench_mark['frm_to_date_array']) == '4') 'NA' @else @if($week5_c >= 2) background: #32CD32; @else background: #ff0000; @endif @endif"></td>
                     <td height="55"></td>
                 </tr>
 
@@ -427,27 +427,26 @@
                 <tr style="border:2px solid #000000;" height="170">
                 	<td colspan="11" style="border:2px solid #000000;background: #ead1dc;color: #000000;" height="170">
                         <b><u><span style="color: #CC4125;">Important Notes: </span></u></b>
-                        <b><u><span style="color: #1155CC;"><br/></span></u></b>
-                        <b><u><span style="color: #741B47;"><br/></span></u></b>
-                        <span style="color: #000000;">
+                        <br/><br/>
+                        <span>
                             1) Weekly data is generated Auto Generated by Easy2hire based on actions made on software starting from associating resume to after joining success ratio.<br />
                             2) Please add a comment if that is important to justify weekly numbers. The remarks column is given for overall feedback of monthly performance / action points for coming month.<br />
                             3) Weekly Overall feedback will depend upon Standard Numbers Vs Achievement. Minimum 2 criteria's (out of first 6) should ideally meet expectation on weekly basis.<br />
                             4) Performance for the current month will lead to Benefits OR Efforts to improve (Penalties) for the next month. 
                         </span>
-                        <span style="color: #741B47;"><br /></span>
+                        <span><br /></span>
                         <b>
-                            <span style="color: #000000;">
+                            <span>
                                 5) Monthly achievement will lead to Reflection Process.
                             </span>
                         </b>
-                        <span style="color: #000000;"> <br />
+                        <span> <br />
                             a. Weightage percentage to be given between (80-100%) in case monthly productivity report is meet expectation / exceeds expectation / exceptional.<br />
                             b. Weightage percentage to be given between (50-80%) in case monthly productivity report is improvements needed.<br />
                             c. Weightage percentage to be given between (Less than 50%) in case monthly productivity report is unsatisfactory.
                         </span>
                         <b>
-                            <u><span style="color: #CC4125;"></span></u>
+                            <u><span></span></u>
                         </b>
                 	</td>
                 </tr>
