@@ -2739,7 +2739,21 @@ class ReportController extends Controller
                 $sheet->getStyle('J4')->getAlignment()->setWrapText(true);
                 $sheet->getStyle('K4')->getAlignment()->setWrapText(true);
                 $sheet->getStyle('A14')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('A15')->getAlignment()->setWrapText(true);
+                $sheet->getStyle('A17')->getAlignment()->setWrapText(true);
                 $sheet->getStyle('D12')->getAlignment()->setWrapText(true);
+                $sheet->cell('A14', function($cell){
+                    $cell->setBorder('thin','thin','','thin');
+                });
+                $sheet->cell('A15', function($cell){
+                    $cell->setBorder('','thin','','thin');
+                });
+                $sheet->cell('A16', function($cell){
+                    $cell->setBorder('','thin','','thin');
+                });
+                $sheet->cell('A17', function($cell){
+                    $cell->setBorder('','thin','thin','thin');
+                });
             });
         })->export('xlsx');
     }

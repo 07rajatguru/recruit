@@ -225,7 +225,7 @@
                                                 <span>{{ $value['ass_cnt'] }}</span>
                                             </p>
                                         </td>
-                                        @if($a==0) {{ $week1_c++ }} @elseif($a==1) {{ $week2_c++ }} @elseif($a==2) {{ $week3_c++ }} @elseif($a==3) {{ $week4_c++ }} @elseif($a==4) {{ $week5_c++ }} @endif
+                                        <?php if($a==0){ $week1_c++; } elseif($a==1){ $week2_c++; } elseif($a==2){ $week3_c++; } elseif($a==3){ $week4_c++; } elseif($a==4){ $week5_c++; } ?>
                                     @else
                                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="no_of_resumes_weeks">
                                             <p align="center" style="text-align: center;">
@@ -303,7 +303,7 @@
                                                 <span>{{ $value['shortlisted_cnt'] }}</span>
                                             </p>
                                         </td>
-                                        @if($b==0) {{ $week1_c++ }} @elseif($b==1) {{ $week2_c++ }} @elseif($b==2) {{ $week3_c++ }} @elseif($b==3) {{ $week4_c++ }} @elseif($b==4) {{ $week5_c++ }} @endif
+                                        <?php if($b==0){ $week1_c++; } elseif($b==1){ $week2_c++; } elseif($b==2){ $week3_c++; } elseif($b==3){ $week4_c++; } elseif($b==4){ $week5_c++; } ?>
                                     @else
                                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="shortlist_ratio_weeks">
                                             <p align="center" style="text-align: center;">
@@ -381,7 +381,7 @@
                                                 <span>{{ $value['interview_cnt'] }}</span>
                                             </p>
                                         </td>
-                                        @if($c==0) {{ $week1_c++ }} @elseif($c==1) {{ $week2_c++ }} @elseif($c==2) {{ $week3_c++ }} @elseif($c==3) {{ $week4_c++ }} @elseif($c==4) {{ $week5_c++ }} @endif
+                                        <?php if($c==0){ $week1_c++; } elseif($c==1){ $week2_c++; } elseif($c==2){ $week3_c++; } elseif($c==3){ $week4_c++; } elseif($c==4){ $week5_c++; } ?>
                                     @else
                                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="interview_ratio_weeks">
                                             <p align="center" style="text-align: center;">
@@ -459,7 +459,7 @@
                                                 <span>{{ $value['selected_cnt'] }}</span>
                                             </p>
                                         </td>
-                                        @if($d==0) {{ $week1_c++ }} @elseif($d==1) {{ $week2_c++ }} @elseif($d==2) {{ $week3_c++ }} @elseif($d==3) {{ $week4_c++ }} @elseif($d==4) {{ $week5_c++ }} @endif
+                                        <?php if($d==0){ $week1_c++; } elseif($d==1){ $week2_c++; } elseif($d==2){ $week3_c++; } elseif($d==3){ $week4_c++; } elseif($d==4){ $week5_c++; } ?>
                                     @else
                                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="selection_ratio_weeks">
                                             <p align="center" style="text-align: center;cursor: pointer;" title="{{ $value['selected_candidate'] }}">
@@ -538,7 +538,7 @@
                                                 <span>{{ $value['offer_acceptance_ratio'] }}</span>
                                             </p>
                                         </td>
-                                        @if($e==0) {{ $week1_c++ }} @elseif($e==1) {{ $week2_c++ }} @elseif($e==2) {{ $week3_c++ }} @elseif($e==3) {{ $week4_c++ }} @elseif($e==4) {{ $week5_c++ }} @endif
+                                        <?php if($e==0){ $week1_c++; } elseif($e==1){ $week2_c++; } elseif($e==2){ $week3_c++; } elseif($e==3){ $week4_c++; } elseif($e==4){ $week5_c++; } ?>
                                     @else
                                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="offer_acceptance_ratio_weeks">
                                             <p align="center" style="text-align: center;cursor: pointer;" title="{{ $value['offer_acceptance_candidate'] }}">
@@ -616,7 +616,7 @@
                                                 <span>{{ $value['joining_ratio'] }}</span>
                                             </p>
                                         </td>
-                                        @if($f==0) {{ $week1_c++ }} @elseif($f==1) {{ $week2_c++ }} @elseif($f==2) {{ $week3_c++ }} @elseif($f==3) {{ $week4_c++ }} @elseif($f==4) {{ $week5_c++ }} @endif
+                                        <?php if($f==0){ $week1_c++; } elseif($f==1){ $week2_c++; } elseif($f==2){ $week3_c++; } elseif($f==3){ $week4_c++; } elseif($f==4){ $week5_c++; } ?>
                                     @else
                                         <td style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: red;" class="joining_ratio_weeks">
                                             <p align="center" style="text-align: center;cursor: pointer;" title="{{ $value['joining_candidate'] }}">
