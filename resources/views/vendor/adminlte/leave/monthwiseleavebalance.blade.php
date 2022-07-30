@@ -129,7 +129,7 @@
         function select_data() {
 
             var app_url = "{!! env('APP_URL'); !!}";
-            var url = app_url+'monthwise-leave-balance';
+            var url = app_url+'/monthwise-leave-balance';
 
             var month = $("#month").val();
             var year = $("#year").val();

@@ -351,20 +351,20 @@
                     $("#priority_7").attr("href", '/jobs/priority/'+job_priority[7]+'/'+year);
                     $("#priority_8").attr("href", '/jobs/priority/'+job_priority[8]+'/'+year);*/
 
-                    $("#priority_0").attr("href", app_url+'jobs/priority/'+job_priority[0]);
-                    $("#priority_1").attr("href", app_url+'jobs/priority/'+job_priority[1]);
-                    $("#priority_2").attr("href", app_url+'jobs/priority/'+job_priority[2]);
-                    $("#priority_3").attr("href", app_url+'jobs/priority/'+job_priority[3]);
-                    $("#priority_5").attr("href", app_url+'jobs/priority/'+job_priority[5]);
-                    $("#priority_6").attr("href", app_url+'jobs/priority/'+job_priority[6]);
-                    $("#priority_7").attr("href", app_url+'jobs/priority/'+job_priority[7]);
-                    $("#priority_8").attr("href", app_url+'jobs/priority/'+job_priority[8]);
+                    $("#priority_0").attr("href", app_url+'/jobs/priority/'+job_priority[0]);
+                    $("#priority_1").attr("href", app_url+'/jobs/priority/'+job_priority[1]);
+                    $("#priority_2").attr("href", app_url+'/jobs/priority/'+job_priority[2]);
+                    $("#priority_3").attr("href", app_url+'/jobs/priority/'+job_priority[3]);
+                    $("#priority_5").attr("href", app_url+'/jobs/priority/'+job_priority[5]);
+                    $("#priority_6").attr("href", app_url+'/jobs/priority/'+job_priority[6]);
+                    $("#priority_7").attr("href", app_url+'/jobs/priority/'+job_priority[7]);
+                    $("#priority_8").attr("href", app_url+'/jobs/priority/'+job_priority[8]);
 
                     // For salary wise display job listing
 
-                    $("#under_ten_lacs").attr("href", app_url+'jobs/salary/'+job_salary[0]);
-                    $("#between_ten_to_twenty_lacs").attr("href", app_url+'jobs/salary/'+job_salary[1]);
-                    $("#above_twenty_lacs").attr("href", app_url+'jobs/salary/'+job_salary[2]);
+                    $("#under_ten_lacs").attr("href", app_url+'/jobs/salary/'+job_salary[0]);
+                    $("#between_ten_to_twenty_lacs").attr("href", app_url+'/jobs/salary/'+job_salary[1]);
+                    $("#above_twenty_lacs").attr("href", app_url+'/jobs/salary/'+job_salary[2]);
                 },
                 responsive: true,
                 "pageLength": 50,

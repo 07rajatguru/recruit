@@ -811,7 +811,7 @@
             var month = $("#month").val();
             var year = $("#year").val();
 
-            var url = app_url+'master-productivity-report';
+            var url = app_url+'/master-productivity-report';
 
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
@@ -829,7 +829,7 @@
             var month = $("#month").val();
             var year = $("#year").val();
 
-            var url = app_url+'master-productivity-report';
+            var url = app_url+'/master-productivity-report';
 
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
@@ -847,7 +847,7 @@
             var app_url = "{!! env('APP_URL'); !!}";
             var month = $("#month").val();
             var year = $("#year").val();
-            var url = app_url+'master-productivity-report/export';
+            var url = app_url+'/master-productivity-report/export';
 
             var form = $('<form action="'+url+ '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +

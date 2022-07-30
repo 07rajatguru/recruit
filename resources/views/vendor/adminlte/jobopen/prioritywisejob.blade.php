@@ -247,7 +247,7 @@
                     { "visible": false,  "targets": 11 },
                 ],
                 "ajax" : {
-                    'url' : app_url+'jobs/prioritywiseAjax',
+                    'url' : app_url+'/jobs/prioritywiseAjax',
                     data : {
                         year:year,
                         priority:priority,
