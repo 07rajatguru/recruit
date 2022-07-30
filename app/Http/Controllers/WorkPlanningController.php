@@ -20,6 +20,8 @@ use App\Holidays;
 use App\UserLeave;
 use App\JobOpen;
 use App\LateInEarlyGo;
+use App\LeaveBalance;
+use App\MonthwiseLeaveBalance;
 
 class WorkPlanningController extends Controller
 {
@@ -1611,8 +1613,8 @@ class WorkPlanningController extends Controller
                 \DB::statement("UPDATE `user_leave` SET `cancel_leave` = '1' WHERE `id` = $leave_id");
 
                 // Update Leave Balance
-                $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($added_date);
-                $monthwise_leave_balance_details = MonthwiseLeaveBalance::getMonthwiseLeaveBalanceByUserId($added_date,$month,$year);
+                $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($added_by_id);
+                $monthwise_leave_balance_details = MonthwiseLeaveBalance::getMonthwiseLeaveBalanceByUserId($added_by_id,$month,$year);
 
                 if($category == 'Privilege Leave') {
 
@@ -1625,7 +1627,7 @@ class WorkPlanningController extends Controller
                         $new_leave_taken = $leave_taken - $days;
                         $new_leave_remaining = $leave_remaining + $days;
 
-                        \DB::statement("UPDATE `leave_balance` SET `leave_taken` = '$new_leave_taken', `leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
+                        \DB::statement("UPDATE `leave_balance` SET `leave_taken` = '$new_leave_taken', `leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$added_by_id'");
                     }
 
                     if(isset($monthwise_leave_balance_details) && $monthwise_leave_balance_details != '') {
@@ -1637,7 +1639,7 @@ class WorkPlanningController extends Controller
                         $new_pl_taken = $pl_taken - $days;
                         $new_pl_remaining = $pl_remaining + $days;
 
-                        \DB::statement("UPDATE `monthwise_leave_balance` SET `pl_taken` = '$new_pl_taken', `pl_remaining` = '$new_pl_remaining' WHERE `user_id` = '$user_id' AND `month` = '$month' AND `year` = '$year'");
+                        \DB::statement("UPDATE `monthwise_leave_balance` SET `pl_taken` = '$new_pl_taken', `pl_remaining` = '$new_pl_remaining' WHERE `user_id` = '$added_by_id' AND `month` = '$month' AND `year` = '$year'");
                     }
                 }
                 else if($category == 'Sick Leave') {
@@ -1651,7 +1653,7 @@ class WorkPlanningController extends Controller
                         $new_leave_taken = $seek_leave_taken - $days;
                         $new_leave_remaining = $seek_leave_remaining + $days;
 
-                        \DB::statement("UPDATE `leave_balance` SET `seek_leave_taken` = '$new_leave_taken', `seek_leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
+                        \DB::statement("UPDATE `leave_balance` SET `seek_leave_taken` = '$new_leave_taken', `seek_leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$added_by_id'");
                     }
 
                     if(isset($monthwise_leave_balance_details) && $monthwise_leave_balance_details != '') {
@@ -1663,7 +1665,7 @@ class WorkPlanningController extends Controller
                         $new_sl_taken = $sl_taken - $days;
                         $new_sl_remaining = $sl_remaining + $days;
 
-                        \DB::statement("UPDATE `monthwise_leave_balance` SET `sl_taken` = '$new_sl_taken', `sl_remaining` = '$new_sl_remaining' WHERE `user_id` = '$user_id' AND `month` = '$month' AND `year` = '$year'");
+                        \DB::statement("UPDATE `monthwise_leave_balance` SET `sl_taken` = '$new_sl_taken', `sl_remaining` = '$new_sl_remaining' WHERE `user_id` = '$added_by_id' AND `month` = '$month' AND `year` = '$year'");
                     }
                 }
             }
