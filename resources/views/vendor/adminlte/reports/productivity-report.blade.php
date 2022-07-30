@@ -823,7 +823,7 @@
             var month = $("#month").val();
             var year = $("#year").val();
 
-            var url = app_url+'/productivity-report';
+            var url = app_url+'productivity-report';
 
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
