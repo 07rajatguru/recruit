@@ -15,13 +15,20 @@
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-12">
-        	<div class="box-body col-xs-4 col-sm-5 col-md-4">
+        	@if($loggedin_userid == $superadmin || $loggedin_userid == $saloni_user_id)
+		        <div class="box-body col-xs-2 col-sm-2 col-md-2">
+		        	<div class="form-group">
+			            {{Form::select('team_type',$team_type,$selected_team_type, array('id'=>'team_type','class'=>'form-control', 'onchange' => 'teamWiseUser();'))}}
+			        </div>
+		        </div>
+		    @endif
+        	<div class="box-body col-xs-2 col-sm-5 col-md-2">
         		<div class="form-group">
-		        	{{Form::select('users_id',$users,$user_id, array('id'=>'users_id','class'=>'form-control'))}}
+		        	{{Form::select('users_id',$users,$user_id, array('id'=>'users_id','class'=>'form-control users_append'))}}
 	        	</div>
     		</div>
 
-    		<div class="box-body col-xs-4 col-sm-5 col-md-4">
+    		<div class="box-body col-xs-3 col-sm-5 col-md-3">
     			<div class="form-group">
 		        	{{Form::text('date',$date , array('id'=>'date', 'placeholder' => 'Date', 'class'=>'form-control','autocomplete'=>'off'))}}
 	        	</div>
@@ -171,6 +178,9 @@
 			</div>
 		@endif
 	</div>
+
+	<input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
+	<input type="hidden" name="selected_user_id" id="selected_user_id" value="{{ $user_id }}">
 @stop
 
 @section('customscripts')
@@ -178,6 +188,8 @@
 		$(document).ready(function(){
 
 			$("#users_id").select2();
+
+			teamWiseUser();
 
 			$("#date").datepicker({
                 format: "yyyy-mm-dd",
@@ -225,18 +237,40 @@
 
             var users_id = $("#users_id").val();
             var date = $("#date").val();
+            var team_type = $("#team_type :selected").val();
             var app_url = "{!! env('APP_URL'); !!}";
 
-            var url = app_url+'/daily-report';
+            var url = app_url+'daily-report';
 
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
                 '<input type="hidden" name="users_id" value="'+users_id+'" />' +
+                '<input type="hidden" name="team_type" value="'+team_type+'" />' +
                 '<input type="hidden" name="date" value="'+date+'" />' +
                 '</form>');
 
             $('body').append(form);
             form.submit();
+        }
+
+        function teamWiseUser() {
+            
+            var token = $('input[name="csrf_token"]').val();
+            var team = $("#team_type").val();
+            var app_url = "{!! env('APP_URL'); !!}";
+            var selected_user_id = $("#selected_user_id").val();
+
+            $.ajax({
+                type: 'POST',
+                url: app_url+'team-wise-uses',
+                data:{'team': team,'selected_user_id': selected_user_id,'_token':token},
+                dataType: 'html',
+                success: function (res) {
+                    $(".users_append").html('');
+                    $(".users_append").append(res);
+                    $("#users_id").select2();
+                },
+            });
         }
 	</script>
 @endsection

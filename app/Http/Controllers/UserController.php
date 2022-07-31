@@ -2734,4 +2734,50 @@ class UserController extends Controller
 
         return redirect()->route('users.myprofile',$user_id)->with('success','Signature Updated Successfully.'); 
     }
+
+    public function getTeamWiseUsersAjax(Request $req) {
+        
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $management = getenv('MANAGEMENT');
+
+        $selected_user_id = $req->input('selected_user_id');
+        $team_type = $req->input('team');
+        if($team_type == 'recruitment') {
+            $type_array = array($recruitment);
+        }
+        else if($team_type == 'hr-advisory') {
+            $type_array = array($hr_advisory);
+        }
+        else {
+            $type_array = array($recruitment,$hr_advisory,$management);
+        }
+
+        $users_array = User::getAllUsers($type_array);
+        $users = array();
+        if(isset($users_array) && sizeof($users_array) > 0) {
+            foreach ($users_array as $k1 => $v1) {
+                $user_details = User::getAllDetailsByUserID($k1);
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $users[$k1] = $v1;
+                    }
+                }
+                else {
+                    $users[$k1] = $v1;
+                }    
+            }
+        }
+
+        $html = '<option value="">Select User</option>';
+        foreach ($users as $key => $value) {
+            if ($key == $selected_user_id) {
+                $html .= '<option value="'.$key.'" selected>'.$value.'</option>';
+            } else {
+                $html .= '<option value="'.$key.'">'.$value.'</option>';
+            }
+        }
+
+        return ($html);
+    }
 }

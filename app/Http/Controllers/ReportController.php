@@ -23,6 +23,7 @@ class ReportController extends Controller
 
         // get logged in user
         $user =  \Auth::user();
+        $loggedin_userid = \Auth::user()->id;
         $user_id = \Auth::user()->id;
         $all_perm = $user->can('display-daily-report-of-all-users');
         $userwise_perm = $user->can('display-daily-report-of-loggedin-user');
@@ -102,7 +103,19 @@ class ReportController extends Controller
         // Get users reports
         $user_details = User::getAllDetailsByUserID($user_id);
 
-        return view('adminlte::reports.dailyreport',compact('date','users','user_id','associate_daily','associate_count','leads_daily','lead_count','interview_daily','interview_count','user_details'));
+        // For add select Team
+        $superadmin = getenv('SUPERADMINUSERID');
+        $saloni_user_id = getenv('SALONIUSERID');
+        // Get Team Type
+        $team_type = User::getTeamType();
+        if (isset($_POST['team_type']) && $_POST['team_type']!= '') {
+            $selected_team_type = $_POST['team_type'];
+        }
+        else {
+            $selected_team_type = 'adler';
+        }
+
+        return view('adminlte::reports.dailyreport',compact('date','users','user_id','associate_daily','associate_count','leads_daily','lead_count','interview_daily','interview_count','user_details','superadmin','saloni_user_id','team_type','selected_team_type','loggedin_userid'));
     }
 
     public function weeklyreportIndex() {
@@ -1073,6 +1086,11 @@ class ReportController extends Controller
         $user_id = \Auth::user()->id;
         $all_perm = $user->can('display-client-wise-report-of-all-users');
 
+        $superadmin = getenv('SUPERADMINUSERID');
+        $saloni_user_id = getenv('SALONIUSERID');
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $management = getenv('MANAGEMENT');
         if ($all_perm) {
             // Year Data
             $starting_year = '2017';
@@ -1099,6 +1117,42 @@ class ReportController extends Controller
                 }
             }
 
+            // Get Team Type
+            $team_type = User::getTeamType();
+            if (isset($_POST['team_type']) && $_POST['team_type'] != '') { 
+                $selected_team_type = $_POST['team_type'];
+                if($selected_team_type == 'recruitment') {
+                    $type_array = array($recruitment);
+                }
+                else if($selected_team_type == 'hr-advisory') {
+                    $type_array = array($hr_advisory);
+                }
+                else {
+                    $selected_team_type = 'adler';
+                    $type_array = array($recruitment,$hr_advisory,$management);
+                }
+            }
+            else {
+                $selected_team_type = 'adler';
+                $type_array = array($recruitment,$hr_advisory,$management);
+            }
+
+            $users_array = User::getAllUsers($type_array);
+            $users = array();
+            if(isset($users_array) && sizeof($users_array) > 0) {
+                foreach ($users_array as $k1 => $v1) {
+                    $user_details = User::getAllDetailsByUserID($k1);
+                    if($user_details->type == '2') {
+                        if($user_details->hr_adv_recruitemnt == 'Yes') {
+                            $users[$k1] = $k1;
+                        }
+                    }
+                    else {
+                        $users[$k1] = $k1;
+                    }    
+                }
+            }
+            // print_r($users);exit;
             $year_data = explode(',', $year);
             $current = $year_data[0];
             $next = $year_data[1];
@@ -1111,7 +1165,7 @@ class ReportController extends Controller
 
                 $client_name = $value->coordinator_name . " - " . $value->name.' - '.$value->billing_city;
                 $c_id = $value->id;
-                $clientwise_data[$client_name] = Bills::getClientwiseReportData($c_id,$current_year,$next_year);
+                $clientwise_data[$client_name] = Bills::getClientwiseReportData($c_id,$current_year,$next_year,$users);
             }
 
             if(isset($clientwise_data) && $clientwise_data != '') {
@@ -1120,7 +1174,7 @@ class ReportController extends Controller
                 $clientwise_data = array();
             }
 
-            return view('adminlte::reports.clientwise-report',compact('year_array','year','clientwise_data'));
+            return view('adminlte::reports.clientwise-report',compact('year_array','year','clientwise_data','superadmin','saloni_user_id','team_type','selected_team_type','user_id'));
         }
         else {
             return view('errors.403');
@@ -1155,13 +1209,52 @@ class ReportController extends Controller
                 $current_year = date('Y-m-d',strtotime("first day of $current"));
                 $next_year = date('Y-m-d',strtotime("last day of $next"));
 
+                $recruitment = getenv('RECRUITMENT');
+                $hr_advisory = getenv('HRADVISORY');
+                $management = getenv('MANAGEMENT');
+                // Get Team Type
+                $team_type = User::getTeamType();
+                if (isset($_POST['team_type']) && $_POST['team_type'] != '') { 
+                    $selected_team_type = $_POST['team_type'];
+                    if($selected_team_type == 'recruitment') {
+                        $type_array = array($recruitment);
+                    }
+                    else if($selected_team_type == 'hr-advisory') {
+                        $type_array = array($hr_advisory);
+                    }
+                    else {
+                        $selected_team_type = 'adler';
+                        $type_array = array($recruitment,$hr_advisory,$management);
+                    }
+                }
+                else {
+                    $selected_team_type = 'adler';
+                    $type_array = array($recruitment,$hr_advisory,$management);
+                }
+
+                $users_array = User::getAllUsers($type_array);
+                $users = array();
+                if(isset($users_array) && sizeof($users_array) > 0) {
+                    foreach ($users_array as $k1 => $v1) {
+                        $user_details = User::getAllDetailsByUserID($k1);
+                        if($user_details->type == '2') {
+                            if($user_details->hr_adv_recruitemnt == 'Yes') {
+                                $users[$k1] = $k1;
+                            }
+                        }
+                        else {
+                            $users[$k1] = $k1;
+                        }    
+                    }
+                }
+
                 $clients = ClientBasicinfo::getLoggedInUserClients(0,$next_year);
 
                 foreach ($clients as $key => $value) {
 
                     $client_name = $value->coordinator_name . " - " . $value->name.' - '.$value->billing_city;
                     $c_id = $value->id;
-                    $clientwise_data[$client_name] = Bills::getClientwiseReportData($c_id,$current_year,$next_year);
+                    $clientwise_data[$client_name] = Bills::getClientwiseReportData($c_id,$current_year,$next_year,$users);
                 }
 
                 if(isset($clientwise_data) && $clientwise_data != '') {
@@ -1180,6 +1273,7 @@ class ReportController extends Controller
         // get logged in user
         $user =  \Auth::user();
         $user_id = \Auth::user()->id;
+        $loggedin_userid = \Auth::user()->id;
         $all_perm = $user->can('display-productivity-report-of-all-users');
         $userwise_perm = $user->can('display-productivity-report-of-loggedin-user');
         $teamwise_perm = $user->can('display-productivity-report-of-loggedin-user-team');
@@ -1242,6 +1336,18 @@ class ReportController extends Controller
             
             $user_id = $user_id;
             $user_name = '';
+        }
+
+        // For add select Team
+        $superadmin = getenv('SUPERADMINUSERID');
+        $saloni_user_id = getenv('SALONIUSERID');
+        // Get Team Type
+        $team_type = User::getTeamType();
+        if (isset($_POST['team_type']) && $_POST['team_type']!= '') {
+            $selected_team_type = $_POST['team_type'];
+        }
+        else {
+            $selected_team_type = 'adler';
         }
 
         // Get user Bench Mark from master
@@ -1453,7 +1559,7 @@ class ReportController extends Controller
             $user_bench_mark['after_joining_success_ratio_daily'] = number_format($user_bench_mark['after_joining_success_ratio_weekly'] / $no_of_weeks);
         }
 
-        return view('adminlte::reports.productivity-report',compact('user_id','users','user_bench_mark','month_array','year_array','month','year','no_of_weeks','frm_to_date_array','user_name'));
+        return view('adminlte::reports.productivity-report',compact('user_id','users','user_bench_mark','month_array','year_array','month','year','no_of_weeks','frm_to_date_array','user_name','superadmin','saloni_user_id','team_type','selected_team_type','loggedin_userid'));
     }
 
     public function masterProductivityReport() {

@@ -2839,6 +2839,11 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-productivity-report-of-all-users']
     ]);
 
+    Route::post('team-wise-uses', [
+        'as' => 'users.teamwise',
+        'uses' => 'UserController@getTeamWiseUsersAjax'
+    ]);
+
     // Report End
 
     // Vendors start

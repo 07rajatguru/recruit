@@ -18,8 +18,16 @@
 
         <div class="col-lg-12 margin-tb">
             <div class="col-md-12">
+                @if($loggedin_userid == $superadmin || $loggedin_userid == $saloni_user_id)
+                    <div class="col-xs-2 col-sm-2 col-md-2">
+                        <div class="form-group">
+                            {{Form::select('team_type',$team_type,$selected_team_type, array('id'=>'team_type','class'=>'form-control', 'onchange' => 'teamWiseUser();'))}}
+                        </div>
+                    </div>
+                @endif
+
                 <div class="col-md-2">
-                    <select class="form-control" name="users_id" id="users_id">
+                    <select class="form-control users_append" name="users_id" id="users_id">
                         @foreach($users as $key=>$value)
                             <option value={{ $key }} @if($key==$user_id) selected="selected" @endif>{{ $value}}</option>
                         @endforeach
@@ -790,11 +798,16 @@
             <center><h4>Please add User Bench Mark.</h4></center>
         @endif
     @endif
+
+    <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
+    <input type="hidden" name="selected_user_id" id="selected_user_id" value="{{ $user_id }}">
 @stop
 
 @section('customscripts')
 	<script type="text/javascript">
 		$(document).ready(function() {
+
+            teamWiseUser();
 
             $("#users_id").select2();
             $("#month").select2({width : '90px'});
@@ -822,14 +835,16 @@
             var app_url = "{!! env('APP_URL'); !!}";
             var month = $("#month").val();
             var year = $("#year").val();
+            var team_type = $("#team_type :selected").val();
 
-            var url = app_url+'/productivity-report';
+            var url = app_url+'productivity-report';
 
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
                 '<input type="hidden" name="users_id" value="'+users_id+'" />' +
                 '<input type="hidden" name="month" value="'+month+'" />' +
                 '<input type="hidden" name="year" value="'+year+'" />' +
+                '<input type="hidden" name="team_type" value="'+team_type+'" />' +
                 '</form>');
 
             $('body').append(form);
@@ -936,6 +951,26 @@
             if(after_joining_success_ratio_weeks > 0) {
                 $(".after_joining_success_ratio_monthly_achievement").text(after_joining_success_ratio_weeks);
             }
+        }
+
+        function teamWiseUser() {
+            
+            var token = $('input[name="csrf_token"]').val();
+            var team = $("#team_type").val();
+            var selected_user_id = $("#selected_user_id").val();
+            var app_url = "{!! env('APP_URL'); !!}";
+
+            $.ajax({
+                type: 'POST',
+                url: app_url+'team-wise-uses',
+                data:{'team': team,'selected_user_id': selected_user_id,'_token':token},
+                dataType: 'html',
+                success: function (res) {
+                    $(".users_append").html('');
+                    $(".users_append").append(res);
+                    $("#users_id").select2();
+                },
+            });
         }
 	</script>
 @endsection

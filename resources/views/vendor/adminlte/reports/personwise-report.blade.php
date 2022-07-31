@@ -140,7 +140,8 @@
         
         var year = $("#year").val();
         var team_type = $("#team_type :selected").val();
-        var url = '/personwise-report';
+        var app_url = "{!! env('APP_URL'); !!}";
+        var url = app_url+'personwise-report';
 
         var form = $('<form action="'+url+ '" method="post">' +
             '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
@@ -156,7 +157,8 @@
         
         var year = $("#year").val();
         var team_type = $("#team_type :selected").val();
-        var url = '/personwise-report/export';
+        var app_url = "{!! env('APP_URL'); !!}";
+        var url = app_url+'personwise-report/export';
 
         var form = $('<form action="'+url+ '" method="post">' +
             '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
