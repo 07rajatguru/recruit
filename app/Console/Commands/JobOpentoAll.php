@@ -59,31 +59,24 @@ class JobOpentoAll extends Command
         $i = 0;
 
         if (isset($job_data) && $job_data != '') {
-
+            $message_m = '<tr><th>Sr No.</th><th>Managed By</th><th>Company Name</th><th>Position Title</th><th>Location</th></tr>'; 
+            $module_ids = ''; $sr = 0;
             foreach ($job_data as $key => $value) {
-
                 $get_role_id = RoleUser::getRoleIdByUserId($value['hiring_manager_id']);
-
                 if($hr_role_id == $get_role_id) {
 
                 }
                 else {
-
                     $job[$i]['id'] = $value['id'];
                     $job_id = $job[$i]['id'];
                     $cv_count = JobAssociateCandidates::getJobAssociatedCvsCount($job_id);
-
                     if ($cv_count < 5) {
 
-                        $users_array = User::getAllUsers($type_array);
                         $users = array();
-
+                        $users_array = User::getAllUsers($type_array);
                         if(isset($users_array) && sizeof($users_array) > 0) {
-
                             foreach ($users_array as $k1 => $v1) {
-                               
                                $user_details = User::getAllDetailsByUserID($k1);
-
                                if($user_details->type == '2') {
                                     if($user_details->hr_adv_recruitemnt == 'Yes') {
                                         $users[$k1] = $v1;
@@ -96,7 +89,6 @@ class JobOpentoAll extends Command
                         }
 
                         if(isset($users) && sizeof($users)>0) {
-
                             $user_emails = array();
                             JobVisibleUsers::where('job_id',$job_id)->delete();
 
@@ -104,9 +96,7 @@ class JobOpentoAll extends Command
                             $shatakshi_user_id = getenv('SHATAKSHIUSERID');
 
                             foreach ($users as $key1=>$value1) {
-
                                 if($value['hiring_manager_id'] == $strategyuserid) {
-
                                     $job_visible_users = new JobVisibleUsers();
                                     $job_visible_users->job_id = $value['id'];
                                     $job_visible_users->user_id = $key1;
@@ -116,12 +106,10 @@ class JobOpentoAll extends Command
                                     $user_emails[] = $email;
                                 }
                                 else {
-
                                     if($key1 == $shatakshi_user_id) {
 
                                     }
                                     else {
-
                                         $job_visible_users = new JobVisibleUsers();
                                         $job_visible_users->job_id = $value['id'];
                                         $job_visible_users->user_id = $key1;
@@ -145,11 +133,18 @@ class JobOpentoAll extends Command
                             $sender_name = $superadminuserid;
                             $to = implode(",",$user_emails);
                             $cc = $cc_user;
-                            $subject = "Job opened by ". $job_details['user_name'] ." - " . $job_details['posting_title'] . " @ " .$client_name . " - " . $client_city;
-                            $message = "<tr><th>" . $job_details['posting_title'] . " / " . $job_details['job_unique_id'] . "</th></tr>";
-                            $module_id = $job_id;
+                            $subject = "Job opened to All";
+                            $message_m .= '<tr><th>'.++$sr.'</th><th>'.$job_details['user_name'].'</th><th>'.$client_name.'</th><th>'.$job_details['posting_title'].'</th><th>'.$job_details['job_location'].'</th></tr>';
+                            if (isset($module_ids) && $module_ids != '') {
+                                $module_ids .= ','. $job_id;
+                            } else {
+                                $module_ids .= $job_id;
+                            }
+                            // $subject = "Job opened by ". $job_details['user_name'] ." - " . $job_details['posting_title'] . " @ " .$client_name . " - " . $client_city;
+                            // $message .= "<tr><th>" . $job_details['posting_title'] . " / " . $job_details['job_unique_id'] . "</th></tr>";
+                            // $module_id = $job_id;
 
-                            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+                            // event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
                             foreach ($users as $key2=>$value2) {
 
@@ -169,6 +164,7 @@ class JobOpentoAll extends Command
                 }
                 $i++;
             }
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message_m,$module_ids,$cc));
         }
     }
 }

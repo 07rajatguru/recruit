@@ -10,7 +10,7 @@
 
     @foreach($mail as $key => $value)
 
-        @if($value['module'] == 'Job Open' || $value['module'] == 'Job Open to All')
+        @if($value['module'] == 'Job Open')
 
         	<table align="center" width="600px" cellpadding="0" cellspacing="0" style="font-family: arial; font-size: 12px; color: #444444;">
             	<tr>
@@ -111,6 +111,56 @@
                     </td>
                 </tr>
         	</table>
+        @elseif($value['module'] == 'Job Open to All')
+        <table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif; border-collapse: collapse; color: #444444;" align="center">
+               <tr>
+                    <td width="600">
+                        <table cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
+                            <tr style="background-color:white;">
+                                <td align="center">
+                                    <div class="site-branding col-md-2 col-sm-6 col-xs-12" >
+                                        <a href="http://adlertalent.com/" title="Adler Talent Solutions Pvt. Ltd." style="font-size: 22px;text-decoration:none">
+                                            <img width="600" class="site-logo"  src="{{ getenv('APP_URL') }}/images/Adler-Header.jpg" alt="Adler Talent Solutions Pvt. Ltd." style="height: 90px;padding-top: 16px; vertical-align: middle;">
+                                        </a>
+                                    </div>
+                                </td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr style="background-color:white;"><td colspan="5"></td></tr>
+                <tr style="background-color:white;"><td colspan="5"></td></tr>
+                <tr style="background-color:white;">
+                    <table align="center" width="600px" cellpadding="0" border="1" cellspacing="0" style="font-family: arial; font-size: 12px; color: #444444;">
+                        <tr style="background-color:white;height: 30px;">
+                            <th>Sr No</th>
+                            <th>Managed By</th>
+                            <th>Company Name</th>
+                            <th>Position Title</th>
+                            <th>Location</th>
+                        </tr>
+                        @if(isset($jobs) && sizeof($jobs) > 0)
+                            @foreach($jobs as $k => $v)
+                                <tr style="background-color:white;height: 30px;">
+                                    <td align="center">{{ ++$k }}</td>
+                                    <td align="center">{{ $v['user_name'] }}</td>
+                                    <td align="center">{{ $v['client_name'] }}</td>
+                                    <td align="center">{{ $v['posting_title'] }}</td>
+                                    <td align="center">{{ $v['job_location'] }}</td>
+                                </tr>
+                            @endforeach
+                        @endif
+                    </table>
+                </tr>
+
+                <tr style="background-color:white;">
+                    <table align="center" width="600px" cellpadding="0" border="0" cellspacing="0" style="font-family: arial; font-size: 12px; color: #444444;">
+                        <tr style="background-color:white;height: 30px;">
+                            <td align="center" style="font-size: 11px; color: #888888; font-family: arial;">Copyright Adler Talent {{ date('Y') }}. All rights reserved.</td>
+                        </tr>
+                    </table>
+                </tr>
+            </table>
         @else
         	{!! $value['message'] !!}
         @endif

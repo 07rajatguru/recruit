@@ -120,7 +120,7 @@ class EveryMinute extends Command
             $sender_id = $value['sender_name'];
             $input['module'] = $value['module'];
 
-            if ($value['module'] == 'Job Open' || $value['module'] == 'Job Open to All') {
+            if ($value['module'] == 'Job Open'/* || $value['module'] == 'Job Open to All'*/) {
 
                 $to_array = array();
                 $to_array = explode(",",$input['to']);
@@ -140,6 +140,44 @@ class EveryMinute extends Command
                 \Mail::send('adminlte::emails.emailNotification', $input, function ($job) use($input) {
                     $job->from($input['from_address'], $input['from_name']);
                     $job->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
+                });  
+
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+
+            else if ($value['module'] == 'Job Open to All') {
+
+                $to_array = array();
+                $to_array = explode(",",$input['to']);
+
+                $cc_array = array();
+                $cc_array = explode(",",$input['cc']);
+
+                $input['to_array'] = $to_array;
+                $input['cc_array'] = array_unique($cc_array);
+
+                $module_ids = explode(",",$module_id);
+                $jobs = array();$jc=0;
+                if (isset($module_ids) && $module_ids > 0) {
+                    foreach ($module_ids as $km => $vm) {
+                        $job_details = JobOpen::getJobById($vm);
+
+                        $client_name = ClientBasicinfo::getCompanyOfClientByID($job_details['client_id']);
+                        $client_city = ClientBasicinfo::getBillingCityOfClientByID($job_details['client_id']);
+
+                        $jobs[$jc]['user_name'] = $job_details['user_name'];
+                        $jobs[$jc]['client_name'] = $client_name;
+                        $jobs[$jc]['posting_title'] = $job_details['posting_title'];
+                        $jobs[$jc]['job_location'] = $job_details['job_location'];
+                        $jc++;
+                    }
+                }
+
+                $input['jobs'] = $jobs;
+
+                \Mail::send('adminlte::emails.emailNotification', $input, function ($jobs) use($input) {
+                    $jobs->from($input['from_address'], $input['from_name']);
+                    $jobs->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
                 });  
 
                 \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
