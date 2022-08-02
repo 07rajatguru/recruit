@@ -128,7 +128,7 @@
         var team_type = $("#team_type :selected").val();
         var app_url = "{!! env('APP_URL'); !!}";
 
-        var url = app_url+'clientwise-report';
+        var url = app_url+'/clientwise-report';
 
         var form = $('<form action="'+url+ '" method="post">' +
             '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
@@ -145,7 +145,7 @@
         var team_type = $("#team_type :selected").val();
         var app_url = "{!! env('APP_URL'); !!}";
 
-        var url = app_url+'clientwise-report/export';
+        var url = app_url+'/clientwise-report/export';
 
         var form = $('<form action="'+url+ '" method="post">' +
             '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +

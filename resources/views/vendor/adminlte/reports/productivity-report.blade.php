@@ -807,8 +807,6 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 
-            teamWiseUser();
-
             $("#users_id").select2();
             $("#month").select2({width : '90px'});
             $("#year").select2({width : '90px'});
@@ -837,18 +835,23 @@
             var year = $("#year").val();
             var team_type = $("#team_type :selected").val();
 
-            var url = app_url+'productivity-report';
+            var url = app_url+'/productivity-report';
 
-            var form = $('<form action="' + url + '" method="post">' +
-                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                '<input type="hidden" name="users_id" value="'+users_id+'" />' +
-                '<input type="hidden" name="month" value="'+month+'" />' +
-                '<input type="hidden" name="year" value="'+year+'" />' +
-                '<input type="hidden" name="team_type" value="'+team_type+'" />' +
-                '</form>');
+            if (users_id > 0) {
+                var form = $('<form action="' + url + '" method="post">' +
+                    '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+                    '<input type="hidden" name="users_id" value="'+users_id+'" />' +
+                    '<input type="hidden" name="month" value="'+month+'" />' +
+                    '<input type="hidden" name="year" value="'+year+'" />' +
+                    '<input type="hidden" name="team_type" value="'+team_type+'" />' +
+                    '</form>');
 
-            $('body').append(form);
-            form.submit();
+                $('body').append(form);
+                form.submit();
+            } 
+            else {
+                alert("Please Select User");
+            }
         }
 
         // For Display Dynamic data in last cell
@@ -962,7 +965,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: app_url+'team-wise-uses',
+                url: app_url+'/team-wise-uses',
                 data:{'team': team,'selected_user_id': selected_user_id,'_token':token},
                 dataType: 'html',
                 success: function (res) {

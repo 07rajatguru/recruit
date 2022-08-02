@@ -189,8 +189,6 @@
 
 			$("#users_id").select2();
 
-			teamWiseUser();
-
 			$("#date").datepicker({
                 format: "yyyy-mm-dd",
                 autoclose: true,
@@ -240,17 +238,22 @@
             var team_type = $("#team_type :selected").val();
             var app_url = "{!! env('APP_URL'); !!}";
 
-            var url = app_url+'daily-report';
+            var url = app_url+'/daily-report';
 
-            var form = $('<form action="' + url + '" method="post">' +
-                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
-                '<input type="hidden" name="users_id" value="'+users_id+'" />' +
-                '<input type="hidden" name="team_type" value="'+team_type+'" />' +
-                '<input type="hidden" name="date" value="'+date+'" />' +
-                '</form>');
+            if (users_id > 0) {
+	            var form = $('<form action="' + url + '" method="post">' +
+	                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+	                '<input type="hidden" name="users_id" value="'+users_id+'" />' +
+	                '<input type="hidden" name="team_type" value="'+team_type+'" />' +
+	                '<input type="hidden" name="date" value="'+date+'" />' +
+	                '</form>');
 
-            $('body').append(form);
-            form.submit();
+	            $('body').append(form);
+	            form.submit();
+	        } 
+	        else {
+	        	alert("Please Select User");
+	        }
         }
 
         function teamWiseUser() {
@@ -262,7 +265,7 @@
 
             $.ajax({
                 type: 'POST',
-                url: app_url+'team-wise-uses',
+                url: app_url+'/team-wise-uses',
                 data:{'team': team,'selected_user_id': selected_user_id,'_token':token},
                 dataType: 'html',
                 success: function (res) {

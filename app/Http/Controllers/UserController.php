@@ -2739,7 +2739,7 @@ class UserController extends Controller
         
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
-        $management = getenv('MANAGEMENT');
+        // $management = getenv('MANAGEMENT');
 
         $selected_user_id = $req->input('selected_user_id');
         $team_type = $req->input('team');
@@ -2750,7 +2750,7 @@ class UserController extends Controller
             $type_array = array($hr_advisory);
         }
         else {
-            $type_array = array($recruitment,$hr_advisory,$management);
+            $type_array = array($recruitment,$hr_advisory);
         }
 
         $users_array = User::getAllUsers($type_array);
