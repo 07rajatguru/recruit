@@ -807,6 +807,8 @@
 	<script type="text/javascript">
 		$(document).ready(function() {
 
+            teamWiseUser();
+
             $("#users_id").select2();
             $("#month").select2({width : '90px'});
             $("#year").select2({width : '90px'});

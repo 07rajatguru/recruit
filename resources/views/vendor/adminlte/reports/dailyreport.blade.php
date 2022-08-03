@@ -228,7 +228,7 @@
 				new jQuery.fn.dataTable.FixedHeader( table3 );
 			}
 			
-            //$('#date').datepicker().datepicker('setDate', 'today');
+            teamWiseUser();
 		});
 
         function select_data(){
