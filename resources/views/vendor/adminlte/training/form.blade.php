@@ -79,6 +79,11 @@
                             ?>
                         @endforeach
 
+                        <div class="form-group">
+                            <strong>Department : <span class = "required_fields">*</span> </strong>
+                            {!! Form::select('department', $all_departments,$department_id, array('id'=>'department','class' => 'form-control', 'tabindex' => '3')) !!}
+                        </div>
+
                         <input type="hidden" name="id_string" id="id_string" value="{{ $id }}">
 
                     </div>
@@ -146,6 +151,8 @@
     <script>
         $(document).ready(function() {
 
+            $("#department").select2();
+
             $("#training_form").validate({
                 rules: {
                     "title": {
@@ -156,7 +163,10 @@
                     },
                     "upload_documents[]": {
                         required: true
-                    }
+                    },
+                    "department": {
+                        required: true
+                    },
                 },
                 messages: {
                     "title": {
@@ -167,6 +177,9 @@
                     },
                     "upload_documents[]": {
                         required: "Please Select File."
+                    },
+                    "department": {
+                        required: "Please Select Department."
                     }
                 }
             });

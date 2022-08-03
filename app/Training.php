@@ -3,6 +3,8 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Department;
+use App\TrainingDoc;
 
 class Training extends Model
 {
@@ -59,6 +61,7 @@ class Training extends Model
             $training_list[$i]['id'] = $value->id;
             $training_list[$i]['title'] = $value->title;
         	$training_list[$i]['owner_id'] = $value->owner_id;
+            $training_list[$i]['department'] = Department::getDepartmentNameById($value->department_id);
             
             if ($all==1) {
               $training_list[$i]['access'] = '1';
@@ -71,7 +74,14 @@ class Training extends Model
                   $training_list[$i]['access'] = '0';
                 }
             }
-            $training_list[$i]['file_url'] = $value->url;
+
+            $doc_count = TrainingDoc::getTrainingDocCount($value['id']);
+            if (isset($doc_count) && $doc_count == 1) {
+                $training_list[$i]['show_doc'] = 'Y';
+                $training_list[$i]['file_url'] = $value->url;
+            } else {
+                $training_list[$i]['show_doc'] = 'N';
+            }
             $i++;
         }
         return $training_list;

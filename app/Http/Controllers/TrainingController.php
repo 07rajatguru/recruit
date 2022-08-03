@@ -111,7 +111,7 @@ class TrainingController extends Controller
                 $title = $value['title'];
             }
 
-            $data = array(++$j,$title,$action);
+            $data = array(++$j,$title,$value['department'],$action);
             $training_data[$i] = $data;
             $i++;
         }
@@ -144,11 +144,21 @@ class TrainingController extends Controller
                 $departments[$r->id] = $r->name;
             }
         }
+
+        $all_departments = array();
+        $all_department_res = Department::orderBy('name','DESC')->get();
+        if(sizeof($all_department_res) > 0) {
+            foreach($all_department_res as $a_r) {
+                $all_departments[$a_r->id] = $a_r->name;
+            }
+        }
+        $all_departments = array_fill_keys(array(''),'Select Department')+$all_departments;
+        $department_id = '';
         
         $selected_departments = array();
         $training_id = 0;
 
-        return view('adminlte::training.create',compact('action','departments','selected_departments','training_id'));
+        return view('adminlte::training.create',compact('action','departments','selected_departments','training_id','all_departments','department_id'));
     }
 
     public function store(Request $request) {
@@ -156,11 +166,13 @@ class TrainingController extends Controller
         $user_id = \Auth::user()->id;
         $title = $request->input('title');
         $department_ids = $request->input('department_ids');
+        $department = $request->input('department');
         
         $training = new Training();
         $training->title = $title;
         $training->department_ids = implode(",", $department_ids);
         $training->owner_id = $user_id;
+        $training->department_id = $department;
         $training->save();
 
         $upload_documents = $request->file('upload_documents');
@@ -318,22 +330,34 @@ class TrainingController extends Controller
             }
         }
 
+        $all_departments = array();
+        $all_department_res = Department::orderBy('name','DESC')->get();
+        if(sizeof($all_department_res) > 0) {
+            foreach($all_department_res as $a_r) {
+                $all_departments[$a_r->id] = $a_r->name;
+            }
+        }
+        $all_departments = array_fill_keys(array(''),'Select Department')+$all_departments;
+        $department_id = $training->department_id;
+
         $selected_departments = explode(",",$training->department_ids);
 
         $users = User::getAllUsers($selected_departments);
 
         $training_id = $id;
   
-        return view('adminlte::training.edit',compact('action','users','selected_users','training','trainingdetails','selected_departments','departments','training_id'));
+        return view('adminlte::training.edit',compact('action','users','selected_users','training','trainingdetails','selected_departments','departments','training_id','all_departments','department_id'));
     }
 
     public function update(Request $request,$id) {
 
         $department_ids = $request->input('department_ids');
+        $department = $request->input('department');
         
         $training = Training::find($id);
         $training->title = $request->input('title');
         $training->department_ids = implode(",", $department_ids);
+        $training->department_id = $department;
         $training->save();
 
         $file = $request->file('file');
@@ -497,8 +521,10 @@ class TrainingController extends Controller
             $trainingdetails['name'][$c] = $value->name;
             $c++;
         }
+
+        $department_name = Department::getDepartmentNameById($training_material->department_id);
        
-        return view('adminlte::training.show',compact('trainingdetails','training_material','user_id'));
+        return view('adminlte::training.show',compact('trainingdetails','training_material','user_id','department_name'));
     }
     
    public function trainingDestroy($id) {

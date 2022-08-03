@@ -45,7 +45,7 @@
 
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/css/fullcalendar.min.css') }}">
 
-    <link href="/css/jquery.fancybox.css" rel="stylesheet">
+    <link href="{{ env('APP_URL') }}/css/jquery.fancybox.css" rel="stylesheet">
 
     @yield('adminlte_css')
     @yield('customs_css')
@@ -92,7 +92,7 @@
 <script src="{{ asset('vendor/adminlte/js/dataTables.fixedColumns.min.js') }}"></script>
 <script src="{{ asset('vendor/adminlte/js/fullcalendar.min.js') }}"></script>
 
-<script src="/js/jquery.fancybox.js"></script>
+<script src="{{ env('APP_URL') }}/js/jquery.fancybox.js"></script>
 @yield('adminlte_js')
 @yield('customscripts')
 

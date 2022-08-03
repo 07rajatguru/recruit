@@ -36,6 +36,7 @@
             <tr>
                 <th width="10%">No</th>
                 <th>Process Name</th>
+                <th>Department</th>
                 <th width="10%">Action</th>
             </tr>
         </thead>
@@ -45,7 +46,14 @@
                 <tr id="{{ $value['id'] }}">
 
                     <td>{{ ++$i }}</td>
-                    <td>{{ $value['title'] }}</td>
+                    <td>
+                        @if($value['show_doc'] == 'Y')
+                            <a target="_blank" href="{{ $value['file_url'] }}">{{ $value['title'] }}</a>
+                        @else
+                            {{ $value['title'] }}
+                        @endif
+                    </td>
+                    <td>{{ $value['department'] }}</td>
                     
                     <td>
                         <a class="fa fa-circle" title="show" href="{{ route('process.show',$value['id']) }}"></a>

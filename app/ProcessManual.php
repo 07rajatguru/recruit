@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Department;
 
 class ProcessManual extends Model
 {
@@ -58,7 +59,8 @@ class ProcessManual extends Model
 
         $process_list[$i]['id'] = $value->id;
         $process_list[$i]['title'] = $value->title;
-        $process_list[$i]['url'] = $value->url;
+        // $process_list[$i]['url'] = $value->url;
+        $process_list[$i]['department'] = Department::getDepartmentNameById($value->department_id);
 
         // Admin/super admin have access to all details
         if($all==1) {
@@ -72,6 +74,14 @@ class ProcessManual extends Model
           else {
               $process_list[$i]['access'] = '0';
           }
+        }
+
+        $doc_count = ProcessManual::getProcessManualsDocCount($value['id']);
+        if (isset($doc_count) && $doc_count == 1) {
+            $process_list[$i]['show_doc'] = 'Y';
+            $process_list[$i]['file_url'] = $value->url;
+        } else {
+            $process_list[$i]['show_doc'] = 'N';
         }
         $i++;
     }

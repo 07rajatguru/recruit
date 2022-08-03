@@ -3,7 +3,7 @@
 @section('adminlte_css')
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/plugins/iCheck/square/blue.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/css/auth.css') }}">
-    <link rel="stylesheet" href="/css/style.css" >
+    <link rel="stylesheet" href="{{ env('APP_URL') }}/css/style.css" >
     @yield('css')
 @stop
 
@@ -31,7 +31,7 @@
                 <div class="login-box-body">
                     <!-- <p class="login-box-msg">{{ trans('adminlte::adminlte.login_message') }}</p> -->
                     <div class="logo text-center">
-                        <img src="/images/black-text-logo.png" style="width:150px;height:40px;" alt="Easy2hire">
+                        <img src="{{ env('APP_URL') }}/images/black-text-logo.png" style="width:150px;height:40px;" alt="Easy2hire">
                     </div><br>
                     <form action="{{ url(config('adminlte.login_url', 'login')) }}" method="post">
                         {!! csrf_field() !!}
