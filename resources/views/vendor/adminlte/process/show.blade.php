@@ -49,12 +49,14 @@
                         <tr>
                             <th scope="row">Process Title</th>
                             <td>{{ $process['title'] }}</td>
-                            <th>Who can show this process</th>
-                            <td>{{ implode(",",$process['name']) }}</td>
                         </tr>
                         <tr>
                             <th scope="row">Department</th>
                             <td>{{ $department_name }}</td>
+                        </tr>
+                        <tr>
+                            <th>Who can show this process</th>
+                            <td>{{ implode(",",$process['name']) }}</td>
                         </tr>
                     </table>
                 </div>
