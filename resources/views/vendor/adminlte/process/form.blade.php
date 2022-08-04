@@ -46,7 +46,7 @@
                 <h3 class="box-title">Basic Information</h3>
             </div>
             <div class="col-xs-12 col-sm-12 col-md-12">
-                <div class="">
+                <div class="col-xs-6 col-sm-6 col-md-6">
                     <div class="form-group {{ $errors->has('title') ? 'has-error' : '' }}">
                         <strong>Title : <span class = "required_fields">*</span></strong>
                         {!! Form::text('title', null, array('id'=>'title','placeholder' => 'Title','class' => 'form-control','tabindex' => '1')) !!}
@@ -56,34 +56,30 @@
                             </span>
                         @endif
                     </div>
-
+                </div>
+                <div class="col-xs-6 col-sm-6 col-md-6">
+                    <div class="form-group">
+                        <strong>Department : <span class = "required_fields">*</span> </strong>
+                        {!! Form::select('department', $all_departments,$department_id, array('id'=>'department','class' => 'form-control', 'tabindex' => '2')) !!}
+                    </div>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
                         <strong>Select Users who can access the Process : <span class = "required_fields">*</span></strong><br/>&nbsp;&nbsp;
                         <input type="checkbox" id="departments_all"/> <strong>Select All</strong><br/>
 
                         @foreach($departments as $k=>$v)&nbsp;&nbsp; 
-                            {!! Form::checkbox('department_ids[]', $k,in_array($k,$selected_departments), array('id'=>'department_ids','class' => 'department_ids','onclick' => 'displayUsers("'.$k.'")')) !!}
-                            {!! Form::label ($v) !!}
+                            {!! Form::checkbox('department_ids[]', $k,in_array($k,$selected_departments), array('id'=>'department_ids','class' => 'department_ids','onclick' => 'displayUsers("'.$k.'")')) !!}{!! Form::label ($v) !!}
                         @endforeach
 
                         <br/><br/>
 
-                        <?php 
-                            $id = '';
-                        ?>
+                        <?php $id = ''; ?>
 
                         @foreach($departments as $k=>$v)
-                            <div class="div_{{ $k }}" style="margin-left: 12px;display:none;">
-                            </div>
-                            <?php
-                                $id = $id . "," . $k;
-                            ?>
+                            <div class="div_{{ $k }}" style="margin-left: 12px;display:none;"></div>
+                            <?php $id = $id . "," . $k; ?>
                         @endforeach
-
-                        <div class="form-group">
-                            <strong>Department : <span class = "required_fields">*</span> </strong>
-                            {!! Form::select('department', $all_departments,$department_id, array('id'=>'department','class' => 'form-control', 'tabindex' => '3')) !!}
-                        </div>
 
                         <input type="hidden" name="id_string" id="id_string" value="{{ $id }}">
                     </div>
@@ -148,10 +144,10 @@
     </div>
 </div>
 
-
 @section('customscripts')
     <script>
-        $(document).ready(function(){
+        $(document).ready(function() {
+
             $("#department").select2();
 
             $("#process_form").validate({
@@ -336,4 +332,3 @@
         }
     </script>
 @endsection
-

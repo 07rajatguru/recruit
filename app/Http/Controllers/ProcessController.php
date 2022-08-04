@@ -146,7 +146,7 @@ class ProcessController extends Controller
         }
 
         $all_departments = array();
-        $all_department_res = Department::orderBy('name','DESC')->get();
+        $all_department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
         if(sizeof($all_department_res) > 0) {
             foreach($all_department_res as $a_r) {
                 $all_departments[$a_r->id] = $a_r->name;
@@ -335,7 +335,7 @@ class ProcessController extends Controller
         $selected_departments = explode(",",$process->department_ids);
 
         $all_departments = array();
-        $all_department_res = Department::orderBy('name','DESC')->get();
+        $all_department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
         if(sizeof($all_department_res) > 0) {
             foreach($all_department_res as $a_r) {
                 $all_departments[$a_r->id] = $a_r->name;
