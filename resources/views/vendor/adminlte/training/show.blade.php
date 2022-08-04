@@ -51,6 +51,10 @@
                             <th>Who can see this Material</th>
                             <td>{{ implode(", ",$trainingdetails['name']) }}</td>
                         </tr>
+                        <tr>
+                            <th scope="row">Department</th>
+                            <td>{{ $department_name }}</td>
+                        </tr>
                     </table>
                 </div>
             </div>

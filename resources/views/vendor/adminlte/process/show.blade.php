@@ -52,6 +52,10 @@
                             <th>Who can show this process</th>
                             <td>{{ implode(",",$process['name']) }}</td>
                         </tr>
+                        <tr>
+                            <th scope="row">Department</th>
+                            <td>{{ $department_name }}</td>
+                        </tr>
                     </table>
                 </div>
             </div>

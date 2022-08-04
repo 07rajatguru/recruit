@@ -111,7 +111,7 @@ class ProcessController extends Controller
                 $title = $value['title'];
             }
             
-            $data = array(++$j,$title,$action);
+            $data = array(++$j,$title,$value['department'],$action);
             $process[$i] = $data;
             $i++;
         }
@@ -144,11 +144,21 @@ class ProcessController extends Controller
                 $departments[$r->id] = $r->name;
             }
         }
+
+        $all_departments = array();
+        $all_department_res = Department::orderBy('name','DESC')->get();
+        if(sizeof($all_department_res) > 0) {
+            foreach($all_department_res as $a_r) {
+                $all_departments[$a_r->id] = $a_r->name;
+            }
+        }
+        $all_departments = array_fill_keys(array(''),'Select Department')+$all_departments;
+        $department_id = '';
         
         $selected_departments = array();
         $process_id = 0;
         
-        return view('adminlte::process.create',compact('action','departments','selected_departments','process_id'));
+        return view('adminlte::process.create',compact('action','departments','selected_departments','process_id','all_departments','department_id'));
     }
 
     public function store(Request $request) {
@@ -156,11 +166,13 @@ class ProcessController extends Controller
 		$user_id = \Auth::user()->id;
         $title = $request->input('title');
         $department_ids = $request->input('department_ids');
+        $department = $request->input('department');
 
         $process = new ProcessManual();
         $process->title = $title;
         $process->department_ids = implode(",", $department_ids);
         $process->owner_id = $user_id;
+        $process->department_id = $department;
         $process->save();
 
         $upload_documents = $request->file('upload_documents');
@@ -322,20 +334,32 @@ class ProcessController extends Controller
 
         $selected_departments = explode(",",$process->department_ids);
 
+        $all_departments = array();
+        $all_department_res = Department::orderBy('name','DESC')->get();
+        if(sizeof($all_department_res) > 0) {
+            foreach($all_department_res as $a_r) {
+                $all_departments[$a_r->id] = $a_r->name;
+            }
+        }
+        $all_departments = array_fill_keys(array(''),'Select Department')+$all_departments;
+        $department_id = $process->department_id;
+
         $users = User::getAllUsers($selected_departments);
 
         $process_id = $id;
 
-        return view('adminlte::process.edit',compact('action','users','selected_users','process','processdetails','selected_departments','departments','process_id'));
+        return view('adminlte::process.edit',compact('action','users','selected_users','process','processdetails','selected_departments','departments','process_id','all_departments','department_id'));
      }
 
      public function update(Request $request,$id) {
         
         $department_ids = $request->input('department_ids');
+        $department = $request->input('department');
         
         $process = ProcessManual::find($id);
         $process->title = $request->input('title');
         $process->department_ids = implode(",", $department_ids);
+        $process->department_id = $department;
         $process->save();
 
         $file = $request->file('file');
@@ -500,7 +524,8 @@ class ProcessController extends Controller
                 $i++;
             }
         }
-        return view('adminlte::process.show',compact('processdetails','process'));
+        $department_name = Department::getDepartmentNameById($process_res->department_id);
+        return view('adminlte::process.show',compact('processdetails','process','department_name'));
     }
     
     public function processDestroy($id) {
