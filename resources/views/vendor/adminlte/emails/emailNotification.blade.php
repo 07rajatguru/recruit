@@ -123,6 +123,7 @@
                             <th>Company Name</th>
                             <th>Position Title</th>
                             <th>Location</th>
+                            <th width="90">Action</th>
                         </tr>
                         @if(isset($jobs) && sizeof($jobs) > 0)
                             @foreach($jobs as $k => $v)
@@ -132,6 +133,9 @@
                                     <td align="center">{{ $v['client_name'] }}</td>
                                     <td align="center">{{ $v['posting_title'] }}</td>
                                     <td align="center">{{ $v['job_location'] }}</td>
+                                    <td align="center" width="90">
+                                        <a style="border: black; background-color: #9c5cac;color: white;padding: 3px 15px 3px 15px; border-radius: 18px;font-size: 15px;width: 59%;" class="btn btn-primary" formtarget="_blank" href="{{getenv('APP_URL').'/jobs/'.$v['job_id']}}">Show</a>
+                                    </td>
                                 </tr>
                             @endforeach
                         @endif

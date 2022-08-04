@@ -59,7 +59,7 @@ class JobOpentoAll extends Command
         $i = 0;
 
         if (isset($job_data) && $job_data != '') {
-            $message_m = '<tr><th>Sr No.</th><th>Managed By</th><th>Company Name</th><th>Position Title</th><th>Location</th></tr>'; 
+            $message_m = '<tr><th>Sr No.</th><th>Managed By</th><th>Company Name</th><th>Position Title</th><th>Location</th><th>Action</th></tr>'; 
             $module_ids = ''; $sr = 0;
             foreach ($job_data as $key => $value) {
                 $get_role_id = RoleUser::getRoleIdByUserId($value['hiring_manager_id']);
@@ -134,7 +134,7 @@ class JobOpentoAll extends Command
                             $to = implode(",",$user_emails);
                             $cc = $cc_user;
                             $subject = "Job opened to All";
-                            $message_m .= '<tr><th>'.++$sr.'</th><th>'.$job_details['user_name'].'</th><th>'.$client_name.'</th><th>'.$job_details['posting_title'].'</th><th>'.$job_details['job_location'].'</th></tr>';
+                            $message_m .= '<tr><th>'.++$sr.'</th><th>'.$job_details['user_name'].'</th><th>'.$client_name.'</th><th>'.$job_details['posting_title'].'</th><th>'.$job_details['job_location'].'</th><th></th></tr>';
                             if (isset($module_ids) && $module_ids != '') {
                                 $module_ids .= ','. $job_id;
                             } else {

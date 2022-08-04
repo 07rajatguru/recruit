@@ -169,6 +169,7 @@ class EveryMinute extends Command
                         $jobs[$jc]['client_name'] = $client_name;
                         $jobs[$jc]['posting_title'] = $job_details['posting_title'];
                         $jobs[$jc]['job_location'] = $job_details['job_location'];
+                        $jobs[$jc]['job_id'] = $vm;
                         $jc++;
                     }
                 }
