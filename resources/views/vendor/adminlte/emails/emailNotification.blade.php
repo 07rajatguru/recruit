@@ -112,22 +112,7 @@
                 </tr>
         	</table>
         @elseif($value['module'] == 'Job Open to All')
-        <table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif; border-collapse: collapse; color: #444444;" align="center">
-               <tr>
-                    <td width="600">
-                        <table cellpadding="0" cellspacing="0" style="border:0;height: 70px;">
-                            <tr style="background-color:white;">
-                                <td align="center">
-                                    <div class="site-branding col-md-2 col-sm-6 col-xs-12" >
-                                        <a href="http://adlertalent.com/" title="Adler Talent Solutions Pvt. Ltd." style="font-size: 22px;text-decoration:none">
-                                            <img width="600" class="site-logo"  src="{{ getenv('APP_URL') }}/images/Adler-Header.jpg" alt="Adler Talent Solutions Pvt. Ltd." style="height: 90px;padding-top: 16px; vertical-align: middle;">
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                        </table>
-                    </td>
-                </tr>
+            <table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif; border-collapse: collapse; color: #444444;" align="center">
                 <tr style="background-color:white;"><td colspan="5"></td></tr>
                 <tr style="background-color:white;"><td colspan="5"></td></tr>
                 <tr style="background-color:white;">
@@ -150,14 +135,6 @@
                                 </tr>
                             @endforeach
                         @endif
-                    </table>
-                </tr>
-
-                <tr style="background-color:white;">
-                    <table align="center" width="600px" cellpadding="0" border="0" cellspacing="0" style="font-family: arial; font-size: 12px; color: #444444;">
-                        <tr style="background-color:white;height: 30px;">
-                            <td align="center" style="font-size: 11px; color: #888888; font-family: arial;">Copyright Adler Talent {{ date('Y') }}. All rights reserved.</td>
-                        </tr>
                     </table>
                 </tr>
             </table>
