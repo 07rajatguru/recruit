@@ -156,4 +156,37 @@ class ProcessManual extends Model
     }
     return $process_manual_id;
   }
+
+  public static function getTodaysProcessManual($start,$end) {
+
+    $query = ProcessManual::query();
+    $query = $query->select('process_manual.id','process_manual.title');
+    $query = $query->whereBetween('process_manual.created_at', [$start, $end]);
+    $res = $query->get();
+
+    $process = array(); $i = 0;
+    if (isset($res) && $res != '') {
+        foreach ($res as $key => $value) {
+            $process[$i]['id'] = $value->id;
+            $process[$i]['title'] = $value->title;
+            $i++;
+        }
+    }
+    return $process;
+  }
+
+  public static function getProcessManualByProcessId($process_id) {
+      
+    $query = ProcessManual::query();
+    $query = $query->select('process_manual.id','process_manual.title');
+    $query = $query->where('process_manual.id', $process_id);
+    $res = $query->first();
+
+    $process_manual = array();
+    if (isset($res) && $res != '') {
+        $process_manual['id'] = $res->id;
+        $process_manual['title'] = $res->title;
+    }
+    return $process_manual;
+  }
 }

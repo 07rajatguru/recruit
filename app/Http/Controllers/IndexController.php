@@ -33,6 +33,14 @@ class IndexController extends Controller
         \Artisan::call('client:status');
     }
 
+    public function getDailyTrainingMail() {
+        \Artisan::call('trainingmail:daily');
+    }
+    
+    public function getDailyProcessMail() {
+        \Artisan::call('processmail:daily');
+    }
+
     // Home Page
     public function getIndex()
     {

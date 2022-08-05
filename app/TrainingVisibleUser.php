@@ -22,4 +22,14 @@ class TrainingVisibleUser extends Model
 
     	return $res;
     }
+
+    public static function getTrainingUsersBytrainingId($tid='') {
+        
+        $query = TrainingVisibleUser::query();
+        $query = $query->select('user_id');
+        $query = $query->where('training_id',$tid);
+        $res = $query->get();
+
+        return $res;
+    }
 }

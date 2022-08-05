@@ -143,4 +143,37 @@ class Training extends Model
         }
         return $training_id;
     }
+
+    public static function getTodaysTrainingMaterial($start,$end) {
+        
+        $query = Training::query();
+        $query = $query->select('training.id','training.title');
+        $query = $query->whereBetween('training.created_at', [$start, $end]);
+        $res = $query->get();
+
+        $trainings = array(); $i = 0;
+        if (isset($res) && $res != '') {
+            foreach ($res as $key => $value) {
+                $trainings[$i]['id'] = $value->id;
+                $trainings[$i]['title'] = $value->title;
+                $i++;
+            }
+        }
+        return $trainings;
+    }
+
+    public static function getTrainingMaterialByTrainingid($training_id) {
+        
+        $query = Training::query();
+        $query = $query->select('training.id','training.title');
+        $query = $query->where('training.id', $training_id);
+        $res = $query->first();
+
+        $training = array();
+        if (isset($res) && $res != '') {
+            $training['id'] = $res->id;
+            $training['title'] = $res->title;
+        }
+        return $training;
+    }
 }

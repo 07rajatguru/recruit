@@ -37,6 +37,8 @@ use App\LateInEarlyGo;
 use App\Holidays;
 use App\WorkFromHome;
 use App\MonthwiseLeaveBalance;
+use App\Training;
+use App\ProcessManual;
 
 class EveryMinute extends Command
 {
@@ -457,6 +459,35 @@ class EveryMinute extends Command
                 \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
 
+            else if ($value['module'] == 'Today\'s Training Material') {
+
+                $to_array = explode(",",$input['to']);
+                $cc_array = explode(",",$input['cc']);
+
+                $module_ids = explode(",",$module_id);
+                $trainings = array();$tc=0;
+                if (isset($module_ids) && $module_ids > 0) {
+                    foreach ($module_ids as $kt => $vt) {
+                        $training_data = Training::getTrainingMaterialByTrainingid($vt);
+
+                        $trainings[$tc]['title'] = $training_data['title'];
+                        $trainings[$tc]['t_id'] = $vt;
+                        $tc++;
+                    }
+                }
+
+                $input['to_array'] = $to_array;
+                $input['cc_array'] = array_unique($cc_array);
+                $input['trainings'] = $trainings;
+
+                \Mail::send('adminlte::emails.training', $input, function ($trainings) use($input) {
+                    $trainings->from($input['from_address'], $input['from_name']);
+                    $trainings->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+
             else if ($value['module'] == 'Process Manual') {
 
                 $to_array = explode(",",$input['to']);
@@ -469,6 +500,35 @@ class EveryMinute extends Command
                 \Mail::send('adminlte::emails.processmanual', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+
+            else if ($value['module'] == 'Today\'s Process Manual') {
+
+                $to_array = explode(",",$input['to']);
+                $cc_array = explode(",",$input['cc']);
+
+                $module_ids = explode(",",$module_id);
+                $process = array();$pc=0;
+                if (isset($module_ids) && $module_ids > 0) {
+                    foreach ($module_ids as $kp => $vp) {
+                        $process_data = ProcessManual::getProcessManualByProcessId($vp);
+
+                        $process[$pc]['title'] = $process_data['title'];
+                        $process[$pc]['t_id'] = $vp;
+                        $pc++;
+                    }
+                }
+
+                $input['to_array'] = $to_array;
+                $input['cc_array'] = array_unique($cc_array);
+                $input['process'] = $process;
+
+                \Mail::send('adminlte::emails.processmanual', $input, function ($process) use($input) {
+                    $process->from($input['from_address'], $input['from_name']);
+                    $process->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
                 });
 
                 \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");

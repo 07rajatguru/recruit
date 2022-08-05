@@ -22,4 +22,14 @@ class ProcessVisibleUser extends Model
 
     	return $res;
     }
+
+    public static function getProcessUsersByProcessId($pid='') {
+        
+        $query = ProcessVisibleUser::query();
+        $query = $query->select('user_id');
+        $query = $query->where('process_id',$pid);
+        $res = $query->get();
+
+        return $res;
+    }
 }

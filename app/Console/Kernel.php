@@ -61,6 +61,8 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\NewJobOpentoall',
         'App\Console\Commands\AddYesterdayWorkPlanning',
         'App\Console\Commands\HiringAndOPLSummaryReport',
+        'App\Console\Commands\DailyTrainingMail',
+        'App\Console\Commands\DailyProcessMail',
     ];
 
     /**
