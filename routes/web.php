@@ -88,6 +88,14 @@ Route::get('/careers',[
     'uses' => 'IndexController@getCareers'
 ]);
 
+Route::get('/daily-trainig-mail',[
+    'uses' => 'IndexController@getDailyTrainingMail'
+]);
+
+Route::get('/daily-process-mail',[
+    'uses' => 'IndexController@getDailyProcessMail'
+]);
+
 Route::get('/contact_us',[
     'uses' => 'IndexController@getContactUs'
 ]);
