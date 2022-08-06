@@ -109,6 +109,9 @@
                     $unapproved_leave_data = App\UserLeave::getLeaveByDateAndID($added_date,$value['added_by_id'],'2','Full Day');
 
                     $wfh_data = App\WorkFromHome::getWorkFromHomeRequestByDate($added_date,$value['added_by_id'],1);
+
+                    $edit_date = date('Y-m-d', strtotime($value['added_date'].'first day of +1 month'));
+                    $edit_date_valid = date('Y-m-d', strtotime($edit_date."+3days"));
                 ?>
                 <tr>
                     @if($value['loggedin_time'] != '')
@@ -117,7 +120,9 @@
                         <td>
                             <a class="fa fa-circle" href="{{ route('workplanning.show',$value['id']) }}" title="Show"></a>
 
-                            <a class="fa fa-edit" href="{{ route('workplanning.edit',$value['id']) }}" title="Edit"></a>
+                            @if(date('Y-m-d') <= $edit_date_valid)
+                                <a class="fa fa-edit" href="{{ route('workplanning.edit',$value['id']) }}" title="Edit"></a>
+                            @endif
                             
                             @permission(('work-planning-delete'))
                                 @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'workplanning','display_name'=>'Work Planning'])

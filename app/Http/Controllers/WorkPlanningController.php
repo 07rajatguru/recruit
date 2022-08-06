@@ -91,8 +91,9 @@ class WorkPlanningController extends Controller
         }
 
         $manager_user_id = env('MANAGERUSERID');
+        $superadmin_userid = getenv('SUPERADMINUSERID');
 
-        return view('adminlte::workPlanning.index',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','approval_post_discussion','user_id','manager_user_id'));
+        return view('adminlte::workPlanning.index',compact('work_planning_res','month_array','month','year_array','year','pending','approved','rejected','approval_post_discussion','user_id','manager_user_id','superadmin_userid'));
     }
 
     public function teamIndex() {

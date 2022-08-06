@@ -137,6 +137,9 @@
                                     $unapproved_leave_data = App\UserLeave::getLeaveByDateAndID($added_date,$v['added_by_id'],'2','Full Day');
                                     
                                     $wfh_data = App\WorkFromHome::getWorkFromHomeRequestByDate($added_date,$v['added_by_id'],1);
+
+                                    $edit_date = date('Y-m-d', strtotime($v['added_date'].'first day of +1 month'));
+                                    $edit_date_valid = date('Y-m-d', strtotime($edit_date."+3days"));
                                 ?>
                                 <tr>
                                     @if($v['loggedin_time'] != '')
@@ -145,9 +148,14 @@
                                         <td>
                                             <a class="fa fa-circle" href="{{ route('workplanning.show',$v['id']) }}" title="Show">
                                             </a>
-                                                
-                                            <a class="fa fa-edit" href="{{ route('workplanning.edit',$v['id']) }}" title="Edit">
-                                            </a>
+                                            
+                                            @if($superadminuserid == $user_id)
+                                                <a class="fa fa-edit" href="{{ route('workplanning.edit',$v['id']) }}" title="Edit"></a>
+                                            @else
+                                                @if(date('Y-m-d') <= $edit_date_valid)
+                                                    <a class="fa fa-edit" href="{{ route('workplanning.edit',$v['id']) }}" title="Edit"></a>
+                                                @endif
+                                            @endif
                                                 
                                             @permission(('work-planning-delete'))
                                                 @include('adminlte::partials.deleteModal', ['data' => $v, 'name' => 'workplanning','display_name'=>'Work Planning'])
