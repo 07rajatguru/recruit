@@ -265,16 +265,16 @@ class TrainingController extends Controller
             }
         }
 
-        $module = "Training Material";
-        $sender_name = $user_id;
-        $to = implode(",",$user_emails);
-        $cc = $superadminemail;
+        // $module = "Training Material";
+        // $sender_name = $user_id;
+        // $to = implode(",",$user_emails);
+        // $cc = $superadminemail;
 
-        $subject = "Training Material - ". $title;
-        $message = "Training Material - ". $title;
-        $module_id = $training_id;
+        // $subject = "Training Material - ". $title;
+        // $message = "Training Material - ". $title;
+        // $module_id = $training_id;
 
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        // event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
         return redirect()->route('training.index')->with('success','Training Material Added Successfully.');
     }

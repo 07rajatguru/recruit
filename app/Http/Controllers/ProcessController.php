@@ -266,16 +266,16 @@ class ProcessController extends Controller
             }
         }
 
-        $module = "Process Manual";
-        $sender_name = $user_id;
-        $to = implode(",",$user_emails);
-        $cc = $superadminemail;
+        // $module = "Process Manual";
+        // $sender_name = $user_id;
+        // $to = implode(",",$user_emails);
+        // $cc = $superadminemail;
 
-        $subject = "Process Manual - ". $title;
-        $message = "Process Manual - ". $title;
-        $module_id = $process_id;
+        // $subject = "Process Manual - ". $title;
+        // $message = "Process Manual - ". $title;
+        // $module_id = $process_id;
 
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        // event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
     	return redirect()->route('process.index')->with('success','Process Manual Created Successfully.');
     }
