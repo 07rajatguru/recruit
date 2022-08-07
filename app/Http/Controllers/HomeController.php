@@ -1301,6 +1301,9 @@ class HomeController extends Controller
             $sundays[] = $i;
         }
 
+        $edit_date = date('Y-m-d', strtotime($date.'first day of +1 month'));
+        $edit_date_valid = date('Y-m-d', strtotime($edit_date."+3days"));
+    
         $month_array =array();
         for ($m=1; $m<=12; $m++) {
             $month_array[$m] = date('M', mktime(0,0,0,$m,1,$year));
@@ -1759,7 +1762,9 @@ class HomeController extends Controller
             }
         }
 
-        return view('user-attendance',array("list"=>$list,"new_list"=>$new_list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark,"attendance_type" => $attendance_type,"selected_attendance_type" => $selected_attendance_type,"attendance_value" => $attendance_value),compact('users_name','department_nm'));
+        $superadmin_userid = getenv('SUPERADMINUSERID');
+
+        return view('user-attendance',array("list"=>$list,"new_list"=>$new_list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark,"attendance_type" => $attendance_type,"selected_attendance_type" => $selected_attendance_type,"attendance_value" => $attendance_value),compact('users_name','department_nm','edit_date_valid','superadmin_userid','user_id'));
     }
 
     public function exportAttendance() {

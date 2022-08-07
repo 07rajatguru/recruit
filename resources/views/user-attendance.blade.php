@@ -57,9 +57,19 @@
         @endif
 
         @permission('edit-user-attendance')
-            <div class="col-md-1" style="margin-left: -40px;">
-                @include('adminlte::partials.editUserAttendance', ['users' => $users_name,'attendance_value' => $attendance_value,'name' => $department_nm,'month' => $month,'year' => $year])
-            </div>
+            @if($superadmin_userid == $user_id)
+                <div class="col-md-1" style="margin-left: -40px;">
+                    @include('adminlte::partials.editUserAttendance', ['users' => $users_name,'attendance_value' => $attendance_value,'name' => $department_nm,'month' => $month,'year' => $year])
+                </div>
+            @else        
+                @if(isset($edit_date_valid) && $edit_date_valid != '')
+                    @if(date('Y-m-d') <= $edit_date_valid)
+                        <div class="col-md-1" style="margin-left: -40px;">
+                            @include('adminlte::partials.editUserAttendance', ['users' => $users_name,'attendance_value' => $attendance_value,'name' => $department_nm,'month' => $month,'year' => $year])
+                        </div>
+                    @endif
+                @endif
+            @endif
         @endpermission
     </div><br/>
 
@@ -953,8 +963,9 @@
             var month = $("#month :selected").val();
             var year = $("#year :selected").val();
             var attendance_type = $("#attendance_type :selected").val();
+            var app_url = "{!! env('APP_URL'); !!}";
 
-            var url = '/users-attendance/'+attendance_type+'/'+month+'/'+year;
+            var url = app_url+'/users-attendance/'+attendance_type+'/'+month+'/'+year;
 
             var form = $('<form action="' + url + '" method="post">' +
             '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
@@ -972,8 +983,9 @@
             var month = $("#month :selected").val();
             var year = $("#year :selected").val();
             var attendance_type = $("#attendance_type :selected").val();
+            var app_url = "{!! env('APP_URL'); !!}";
 
-            var url = '/attendance/export';
+            var url = app_url+'/attendance/export';
 
             var form = $('<form action="' + url + '" method="post">' +
             '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
