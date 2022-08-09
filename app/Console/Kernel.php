@@ -63,6 +63,7 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\HiringAndOPLSummaryReport',
         'App\Console\Commands\DailyTrainingMail',
         'App\Console\Commands\DailyProcessMail',
+        'App\Console\Commands\InterviewReminder',
     ];
 
     /**

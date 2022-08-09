@@ -1690,6 +1690,49 @@ class EveryMinute extends Command
                 }
             }
 
+            else if ($value['module'] == "Pending Interview Weekly Reminder") {
+
+                $interview_ids = explode(",",$module_id);
+                if (isset($interview_ids) && sizeof($interview_ids)>0) {
+                    $idata = array();$int=0;
+                    foreach ($interview_ids as $key => $value) {
+                        $interview = Interview::getInterviewById($value);
+                        if (isset($interview) && $interview != '') {
+                            $idata[$int]['id'] = $interview['id'];
+                            $idata[$int]['job_designation'] = $interview['posting_title'];
+                            $idata[$int]['job_location'] = $interview['job_city'];
+                            $idata[$int]['cname'] = $interview['full_name'];
+                            $idata[$int]['interview_date'] = $interview['interview_date'];
+                            $idata[$int]['interview_time'] = $interview['interview_date'];
+                            $idata[$int]['interview_location'] = $interview['interview_location'];
+                            $idata[$int]['candidate_location'] = $interview['candidate_location'];
+                            $idata[$int]['interview_type'] = $interview['interview_type'];
+                            $idata[$int]['cmobile'] = $interview['candidate_mobile'];
+                            $idata[$int]['cemail'] = $interview['candidate_email'];
+                            $int++;
+                        }
+                    }
+
+                    // $to_array = explode(",",$input['to']);
+                    // $cc_array = explode(",",$input['cc']);
+
+                    $user_name = User::getUserNameByEmail($input['to']);
+
+                    $input['uname'] = $user_name;
+
+                    $input['to_array'] = $input['to'];
+                    // $input['cc_array'] = $input['cc'];
+                    $input['idata'] = $idata;
+
+                    \Mail::send('adminlte::emails.interviewreminder', $input, function ($idata) use($input) {
+                        $idata->from($input['from_address'], $input['from_name']);
+                        $idata->to($input['to_array'])/*->cc($input['cc_array'])*/->subject($input['subject']);
+                    });
+
+                    \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
+                }
+            }
+
             else if ($value['module'] == 'Update User Informations') {
 
                 $to_array = explode(",",$input['to']);

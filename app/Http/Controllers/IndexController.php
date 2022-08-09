@@ -41,6 +41,10 @@ class IndexController extends Controller
         \Artisan::call('processmail:daily');
     }
 
+    public function getInterviewReminderMail() {
+        \Artisan::call('interview:reminder');
+    }
+
     // Home Page
     public function getIndex()
     {

@@ -96,6 +96,10 @@ Route::get('/daily-process-mail',[
     'uses' => 'IndexController@getDailyProcessMail'
 ]);
 
+Route::get('/interview-reminder',[
+    'uses' => 'IndexController@getInterviewReminderMail'
+]);
+
 Route::get('/contact_us',[
     'uses' => 'IndexController@getContactUs'
 ]);

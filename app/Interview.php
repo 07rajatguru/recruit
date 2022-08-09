@@ -1456,4 +1456,63 @@ class Interview extends Model
         }
         return $list;
     }
+
+    // function for Interview reminder mail by status
+    public static function getInterviewsByStatus($status=array(),$from_date='',$to_date='') {
+        
+        $query = Interview::query();
+        $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id');
+        $query = $query->join('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id');
+        $query = $query->join('users','users.id','=','candidate_otherinfo.owner_id');
+        $query = $query->join('job_openings','job_openings.id','=','interview.posting_title');
+        $query = $query->join('client_basicinfo','client_basicinfo.id','=','job_openings.client_id');
+        $query = $query->select('interview.id as id','interview.interview_owner_id as interview_owner_id','interview.interview_date','client_basicinfo.name as client_name','candidate_basicinfo.full_name as full_name','candidate_basicinfo.email as candidate_email','job_openings.posting_title as posting_title','job_openings.city as job_city','candidate_basicinfo.mobile as candidate_mobile','users.name as candidate_owner','interview.type as interview_type','interview.interview_location as interview_location','interview.candidate_location as candidate_location','interview.skype_id as skype_id','interview.candidate_id as candidate_id','client_basicinfo.account_manager_id as am_id','job_openings.remote_working as remote_working');
+        $query = $query->orderby('interview.interview_date','desc');
+        if (isset($status) && sizeof($status)>0) {
+            $query = $query->whereIn('interview.status',$status);
+        }
+        if(isset($from_date) && $from_date != '' && isset($to_date) && $to_date != '') {
+            $query = $query->where('interview_date','>=',"$from_date");
+            $query = $query->where('interview_date','<=',"$to_date");
+        }
+        $response = $query->get();
+
+        $interview = array();$i=0;
+        if (isset($response) && sizeof($response)>0) {
+            foreach ($response as $key => $value) {
+                $interview[$value->interview_owner_id][$i]['id'] = $value->id;
+                $interview[$value->interview_owner_id][$i]['am_id'] = $value->am_id;
+                $interview[$value->interview_owner_id][$i]['client_name'] = $value->client_name;
+                $interview[$value->interview_owner_id][$i]['posting_title'] = $value->posting_title;
+                $interview[$value->interview_owner_id][$i]['interview_type'] = $value->interview_type;
+                $interview[$value->interview_owner_id][$i]['interview_location'] = $value->interview_location;
+                $interview[$value->interview_owner_id][$i]['candidate_id'] = $value->candidate_id;
+                $interview[$value->interview_owner_id][$i]['candidate_owner'] = $value->candidate_owner;
+                $interview[$value->interview_owner_id][$i]['cname'] = $value->full_name;
+                $interview[$value->interview_owner_id][$i]['cemail'] = $value->candidate_email;
+                $interview[$value->interview_owner_id][$i]['cmobile'] = $value->candidate_mobile;
+                $interview[$value->interview_owner_id][$i]['candidate_location'] = $value->candidate_location;
+                $interview[$value->interview_owner_id][$i]['skype_id'] = $value->skype_id;
+
+                $datearray = explode(' ', $value->interview_date);
+                $interview_date = $datearray[0];
+                $interview_time = $datearray[1];
+                $interview[$value->interview_owner_id][$i]['interview_date'] = $interview_date;
+                $interview[$value->interview_owner_id][$i]['interview_time'] = $interview_time;
+
+                $interview[$value->interview_owner_id][$i]['job_designation'] = $value->posting_title;
+
+                if($value->remote_working == '1') {
+                    $interview[$value->interview_owner_id][$i]['job_location'] = "Remote";
+                }
+                else {
+                    $interview[$value->interview_owner_id][$i]['job_location'] = $value->job_city;
+                }
+                $interview[$value->interview_owner_id][$i]['interview_date_actual'] = $value->interview_date;
+                
+                $i++;
+            }
+        }
+        return $interview;
+    }
 }
