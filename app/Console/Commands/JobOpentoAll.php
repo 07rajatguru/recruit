@@ -58,7 +58,8 @@ class JobOpentoAll extends Command
         $job = array();
         $i = 0;
 
-        if (isset($job_data) && $job_data != '') {
+        if (isset($job_data) && sizeof($job_data) > 0) {
+            
             $message_m = '<tr><th>Sr No.</th><th>Managed By</th><th>Company Name</th><th>Position Title</th><th>Location</th><th>Action</th></tr>'; 
             $module_ids = ''; $sr = 0;
             foreach ($job_data as $key => $value) {
