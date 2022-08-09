@@ -74,7 +74,7 @@
             <div class="small-box bg-aqua">
                 <div class="inner">
                     <h3> {{ $interviewCount or 0}} </h3>
-                    <p>Today's and Tomorrow's Interviews</p>
+                    <p>Upcoming Interviews</p>
                 </div>
                 <div class="icon">
                     <i class="ion ion-bag"></i>

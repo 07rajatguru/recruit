@@ -61,7 +61,7 @@ class InterviewPriorEmail extends Command
                     $module = "Today's Interviews";
                     $sender_name = $key;
                     $to = User::getUserEmailById($key);
-                    $subject = "Today's Interviews";
+                    $subject = "Upcoming Interviews";
                     $message = "";
                     $module_id = 0;
                     $cc = "";

@@ -10,7 +10,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Today & Tomorrow Interview ({{ $count }})</h2>
+                <h2>Upcoming Interviews ({{ $count }})</h2>
             </div>
         </div>
     </div>
