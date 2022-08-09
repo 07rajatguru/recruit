@@ -14,11 +14,24 @@
             </div>
 
             <div class="pull-right">
+                <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-status-{{ $id }}">Update Status</button>
                 <a class="btn btn-primary" href="{{ route('interview.index') }}">Back</a>
             </div>
         </div>
     </div>
 
+    @if ($message = Session::get('success'))
+        <div class="alert alert-success">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
+
+    @if($message = Session::get('error'))
+        <div class="alert alert-error">
+            <p>{{ $message }}</p>
+        </div>
+    @endif
+    
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
@@ -76,6 +89,40 @@
                         @endif
                     </table>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interview Status Update Model -->
+    <div id="modal-status-{!! $id !!}" class="modal text-left fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h1 class="modal-title">Change Interview Status</h1>
+                </div>
+                {!! Form::open(['method' => 'POST', 'route' => ["interview.status", $id]]) !!}
+
+                <input type="hidden" id="interview_id" name="interview_id" value="{!! $id !!}">
+
+                <div class="modal-body">
+                    <strong>Select Interview Status :</strong> <br>
+                    {!! Form::select('status', $interview_status,null, array('id'=>'status','class' => 'form-control')) !!}
+                </div>
+
+                @if(isset($year) && $year != '')
+                    <input type="hidden" name="year" id="year" value="{{ $year }}"/>
+                @endif
+
+                @if(isset($source) && $source != '')
+                    <input type="hidden" name="source" id="source" value="{{ $source }}"/>
+                @endif
+                
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+                {!! Form::close() !!}
             </div>
         </div>
     </div>

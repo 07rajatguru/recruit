@@ -985,6 +985,8 @@ class InterviewController extends Controller
         $interview['interview_round'] = $interview_round;
         $interview['candidate_location'] = $interviewDetails->candidate_location;
         $interview['interview_location'] = $interviewDetails->interview_location;
+        $interview['interview_status'] = Interview::getEditInterviewStatus();
+        $interview['source'] = 'Show';
         
         return view('adminlte::interview.show', $interview);
     }
@@ -1238,6 +1240,8 @@ class InterviewController extends Controller
             }
             else if($source == 'Upcoming & Previous') {
                 return redirect('/interview/upcomingprevious')->with('success','Interview Status Updated Successfully.');
+            } else if($source == 'Show') {
+                return redirect('/interview/'.$interview_id.'/show')->with('success','Interview Status Updated Successfully.');
             }
             else {
                 return redirect('/interview')->with('success','Interview Status Updated Successfully.');
