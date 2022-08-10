@@ -1309,7 +1309,7 @@ class JobOpenController extends Controller
 
         $jobs = array();
         $i = 0;$j = 0;
-
+        $total_number_of_position = 0;
         foreach ($job_response as $key => $value) {
 
             $action = '';
@@ -1373,8 +1373,9 @@ class JobOpenController extends Controller
             else {
                 $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
             }
+            $total_number_of_position = $total_number_of_position + $value['no_of_positions'];
 
-            $data = array(++$j,$checkbox,$action,$managed_by,$company_name,$posting_title,$associated_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['updated_date'],$value['no_of_positions'],$qual,$value['coordinator_name'],$value['industry'],$value['desired_candidate'],$value['priority']);
+            $data = array(++$j,$checkbox,$action,$managed_by,$company_name,$posting_title,$associated_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['updated_date'],$value['no_of_positions'],$qual,$value['coordinator_name'],$value['industry'],$value['desired_candidate'],$value['priority'],$total_number_of_position);
             $jobs[$i] = $data;
             $i++;
         }

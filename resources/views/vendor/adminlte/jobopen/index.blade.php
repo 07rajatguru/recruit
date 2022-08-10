@@ -223,7 +223,7 @@
                     <th>Max CTC<br/>(in Lacs)</th>
                     <th>Added Date</th>
                     <th>Updated Date</th>
-                    <th>No. Of <br/> Positions</th>
+                    <th>No. Of <br/> Positions <br/> <span class="total_number_of_position"></span></th>
                     <th>Edu Qualifications</th>
                     <th>Contact <br/> Point</th>
                     <th>Target Industries</th>
@@ -371,6 +371,8 @@
                 "pagingType": "full_numbers",
                 "fnRowCallback": function( Row, Data ) {
 
+                    $(".total_number_of_position").html("");
+                    $(".total_number_of_position").append(' ('+Data[18]+')');
                     if ( Data[17] == "0" ){
                         $('td:eq(4)', Row).css('background-color', '');
                     }
