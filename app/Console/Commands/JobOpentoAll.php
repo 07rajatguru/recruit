@@ -59,7 +59,7 @@ class JobOpentoAll extends Command
         $i = 0;
 
         if (isset($job_data) && sizeof($job_data) > 0) {
-            
+            $module = ''; $sender_name = ''; $to = ''; $subject = ''; $cc = '';
             $message_m = '<tr><th>Sr No.</th><th>Managed By</th><th>Company Name</th><th>Position Title</th><th>Location</th><th>Action</th></tr>'; 
             $module_ids = ''; $sr = 0;
             foreach ($job_data as $key => $value) {
@@ -165,7 +165,9 @@ class JobOpentoAll extends Command
                 }
                 $i++;
             }
-            event(new NotificationMail($module,$sender_name,$to,$subject,$message_m,$module_ids,$cc));
+            if ((isset($module) && $module != '') && (isset($to) && $to != '') ) {
+                event(new NotificationMail($module,$sender_name,$to,$subject,$message_m,$module_ids,$cc));
+            }
         }
     }
 }
