@@ -242,6 +242,7 @@ class JobOpenController extends Controller
             //$job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
 
             $count = JobOpen::getAllJobsCount(1,$user_id,NULL,'','',$client_heirarchy);
+            $no_of_positions = JobOpen::getAllJobsNoofPositions(1,$user_id,NULL,'','',$client_heirarchy);
             $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,'','',$client_heirarchy,0);
 
             // For salary wise count
@@ -254,6 +255,7 @@ class JobOpenController extends Controller
 
             $job_response = JobOpen::getAllJobsByCLient($client_id,0,0,0,NULL,'',$client_heirarchy);
             $count = sizeof($job_response);
+            $no_of_positions = JobOpen::getAllJobsNoofPositions(0,$user_id,NULL,'','',$client_heirarchy);
             $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL,'','',$client_heirarchy);
 
             // For salary wise count
@@ -268,6 +270,7 @@ class JobOpenController extends Controller
             //$job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year,$client_heirarchy);
 
             $count = JobOpen::getAllJobsCount(0,$user_id,NULL,'','',$client_heirarchy);
+            $no_of_positions = JobOpen::getAllJobsNoofPositions(0,$user_id,NULL,'','',$client_heirarchy);
             $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,'','',$client_heirarchy,0);
 
             // For salary wise count
@@ -367,6 +370,7 @@ class JobOpenController extends Controller
         $viewVariable = array();
         $viewVariable['job_priority'] = JobOpen::getJobPriorities();
         $viewVariable['count'] = $count;
+        $viewVariable['no_of_positions'] = $no_of_positions;
         $viewVariable['isClient'] = $isClient;
         $viewVariable['year_array'] = $year_array;
         $viewVariable['year'] = $year;
@@ -1309,7 +1313,6 @@ class JobOpenController extends Controller
 
         $jobs = array();
         $i = 0;$j = 0;
-        $total_number_of_position = 0;
         foreach ($job_response as $key => $value) {
 
             $action = '';
@@ -1373,9 +1376,8 @@ class JobOpenController extends Controller
             else {
                 $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
             }
-            $total_number_of_position = $total_number_of_position + $value['no_of_positions'];
 
-            $data = array(++$j,$checkbox,$action,$managed_by,$company_name,$posting_title,$associated_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['updated_date'],$value['no_of_positions'],$qual,$value['coordinator_name'],$value['industry'],$value['desired_candidate'],$value['priority'],$total_number_of_position);
+            $data = array(++$j,$checkbox,$action,$managed_by,$company_name,$posting_title,$associated_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['updated_date'],$value['no_of_positions'],$qual,$value['coordinator_name'],$value['industry'],$value['desired_candidate'],$value['priority']);
             $jobs[$i] = $data;
             $i++;
         }

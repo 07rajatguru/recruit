@@ -1848,6 +1848,33 @@ class JobOpen extends Model
         return sizeof($job_response);
     }
 
+    public static function getAllJobsNoofPositions($all=0,$user_id,$search,$current_year=NULL,$next_year=NULL,$client_heirarchy=0,$mb_name='',$company_name='',$posting_title='',$location='',$min_ctc='',$max_ctc='',$added_date=NULL,$no_of_positions='') {
+
+        $job_onhold = getenv('ONHOLD');
+        $job_client = getenv('CLOSEDBYCLIENT');
+        $job_us = getenv('CLOSEDBYUS');
+        $job_status = array($job_onhold,$job_us,$job_client);
+
+        $job_open_query = JobOpen::query();
+        $job_open_query = $job_open_query->select(\DB::raw("SUM(job_openings.no_of_positions) as no_of_positions"));
+
+        // assign jobs to logged in user
+        if($all==0) {
+            $job_open_query = $job_open_query->join('job_visible_users','job_visible_users.job_id','=','job_openings.id');
+            $job_open_query = $job_open_query->where('user_id','=',$user_id);
+        }
+
+        $job_open_query = $job_open_query->whereNotIn('job_openings.priority',$job_status);
+
+        if (isset($client_heirarchy) && $client_heirarchy > 0) {
+            $job_open_query = $job_open_query->where('job_openings.level_id','=',$client_heirarchy);
+        }
+
+        $job_response = $job_open_query->first();
+        
+        return $job_response['no_of_positions'];
+    }
+
     public static function getJobById($job_id) {
 
         $job_query = JobOpen::query();

@@ -84,7 +84,10 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Job Openings List <span id="count">({{ $count or 0}})</span></h2>
+                <h2>List of Job Opening 
+                    <span class="badge badge-info" title="Total No of Job Opening">{{ $count or 0}}</span>
+                    <span class="badge badge-success" title="Total No of Positions">{{ $no_of_positions or 0}}</span>
+                </h2>
             </div>
             
             <div class="pull-right">
@@ -371,8 +374,6 @@
                 "pagingType": "full_numbers",
                 "fnRowCallback": function( Row, Data ) {
 
-                    $(".total_number_of_position").html("");
-                    $(".total_number_of_position").append(' ('+Data[18]+')');
                     if ( Data[17] == "0" ){
                         $('td:eq(4)', Row).css('background-color', '');
                     }
