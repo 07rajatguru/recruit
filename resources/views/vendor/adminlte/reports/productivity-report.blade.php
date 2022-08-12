@@ -801,13 +801,20 @@
 
     <input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
     <input type="hidden" name="selected_user_id" id="selected_user_id" value="{{ $user_id }}">
+    <input type="hidden" name="superadmin" id="superadmin" value="{{ $superadmin }}">
+    
 @stop
 
 @section('customscripts')
 	<script type="text/javascript">
 		$(document).ready(function() {
 
-            teamWiseUser();
+            var selected_user_id = $("#selected_user_id").val();
+            var superadmin = $("#superadmin").val();
+
+            if(superadmin == selected_user_id) {
+                teamWiseUser();
+            }
 
             $("#users_id").select2();
             $("#month").select2({width : '90px'});

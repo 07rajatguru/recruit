@@ -181,6 +181,7 @@
 
 	<input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
 	<input type="hidden" name="selected_user_id" id="selected_user_id" value="{{ $user_id }}">
+    <input type="hidden" name="superadmin" id="superadmin" value="{{ $superadmin }}">
 @stop
 
 @section('customscripts')
@@ -228,7 +229,12 @@
 				new jQuery.fn.dataTable.FixedHeader( table3 );
 			}
 			
-            teamWiseUser();
+			var selected_user_id = $("#selected_user_id").val();
+            var superadmin = $("#superadmin").val();
+
+            if(superadmin == selected_user_id) {
+                teamWiseUser();
+            }
 		});
 
         function select_data(){
