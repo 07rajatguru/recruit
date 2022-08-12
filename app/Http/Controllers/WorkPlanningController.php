@@ -903,7 +903,11 @@ class WorkPlanningController extends Controller
         // Get users reports
         $user_details = User::getAllDetailsByUserID($added_by_id);
 
-        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','wp_id','loggedin_user_id','added_by_id','appr_rejct_by','work_planning_post','added_date','associate_daily','associate_count','leads_daily','lead_count','interview_daily','interview_count','user_details','added_day'));
+        $edit_date = date('Y-m-d', strtotime($work_planning['added_date'].'first day of +1 month'));
+        $edit_date_valid = date('Y-m-d', strtotime($edit_date."+3days"));
+        $superadmin_userid = getenv('SUPERADMINUSERID');
+
+        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','wp_id','loggedin_user_id','added_by_id','appr_rejct_by','work_planning_post','added_date','associate_daily','associate_count','leads_daily','lead_count','interview_daily','interview_count','user_details','added_day','edit_date_valid','superadmin_userid'));
     }
 
     public function candidateList($uid,$job_id,$date) {

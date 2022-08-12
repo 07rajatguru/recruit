@@ -46,7 +46,9 @@
 
         <div class="pull-right">
             @if($loggedin_user_id == $added_by_id)
-                <a class="btn btn-primary" href="{{ route('workplanning.edit',$work_planning['id']) }}">Edit</a>
+                @if(date('Y-m-d') <= $edit_date_valid)
+                    <a class="btn btn-primary" href="{{ route('workplanning.edit',$work_planning['id']) }}">Edit</a>
+                @endif
                 <a class="btn btn-primary" href="{{ route('workplanning.index') }}">Back</a>
             @else
                 @if($work_planning['evening_status'] == 1)
@@ -261,18 +263,35 @@
                         </tbody>
                     </table>
 
-                    <div class="col-xs-12 col-sm-12 col-md-12">
-                        <h4>Comments</h4>
-                    </div>
-                    <div class="col-md-12">
-                        <div>
-                            @include('adminlte::workPlanning.postnew',array('wp_id' => $wp_id,'user_id'=>$loggedin_user_id,'added_by_id'=>$added_by_id))   
+                    @if($loggedin_user_id == $superadmin_userid)
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <h4>Comments</h4>
                         </div>
+                        <div class="col-md-12">
+                            <div>
+                                @include('adminlte::workPlanning.postnew',array('wp_id' => $wp_id,'user_id'=>$loggedin_user_id,'added_by_id'=>$added_by_id))   
+                            </div>
 
-                        <div>
-                            @include('adminlte::workPlanning.postlist',array('post' => $work_planning_post))
+                            <div>
+                                @include('adminlte::workPlanning.postlist',array('post' => $work_planning_post))
+                            </div>
                         </div>
-                    </div>
+                    @else
+                        @if(date('Y-m-d') <= $edit_date_valid)
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <h4>Comments</h4>
+                            </div>
+                            <div class="col-md-12">
+                                <div>
+                                    @include('adminlte::workPlanning.postnew',array('wp_id' => $wp_id,'user_id'=>$loggedin_user_id,'added_by_id'=>$added_by_id))   
+                                </div>
+
+                                <div>
+                                    @include('adminlte::workPlanning.postlist',array('post' => $work_planning_post))
+                                </div>
+                            </div>
+                        @endif
+                    @endif
 
                     <input type="hidden" name="wp_list_id_string" id="wp_list_id_string" value="{{ $wp_list_id }}">
                 </div>
