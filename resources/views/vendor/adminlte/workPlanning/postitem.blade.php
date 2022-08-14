@@ -30,17 +30,33 @@
             <ul>
                 <div class="auth-links">
 
-                    @if((isset(Auth::user()->id) && $per_post->user->id == \Auth::user()->id))
-                        <li>
-                            <a href="#" title="Edit Comment" data-toggle="modal" data-target="#update-review-{{$per_post->id }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
-                        </li>
-                    @endpermission
+                    @if(\Auth::user()->id == $superadmin_userid)
+                        @if((isset(Auth::user()->id) && $per_post->user->id == \Auth::user()->id))
+                            <li>
+                                <a href="#" title="Edit Comment" data-toggle="modal" data-target="#update-review-{{$per_post->id }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                            </li>
+                        @endpermission
 
-                    @permission(('display-work-planning'))
-                        <li>
-                            <a href="javascript:void(0);" title="Delete Comment" onclick="deletePost({{$per_post->id }})"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
-                        </li>
-                    @endpermission
+                        @permission(('display-work-planning'))
+                            <li>
+                                <a href="javascript:void(0);" title="Delete Comment" onclick="deletePost({{$per_post->id }})"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                            </li>
+                        @endpermission
+                    @else
+                        @if(date('Y-m-d') <= $edit_date_valid)
+                            @if((isset(Auth::user()->id) && $per_post->user->id == \Auth::user()->id))
+                                <li>
+                                    <a href="#" title="Edit Comment" data-toggle="modal" data-target="#update-review-{{$per_post->id }}"><i class="fa fa-pencil" aria-hidden="true"></i></a>
+                                </li>
+                            @endpermission
+
+                            @permission(('display-work-planning'))
+                                <li>
+                                    <a href="javascript:void(0);" title="Delete Comment" onclick="deletePost({{$per_post->id }})"><i class="fa fa-trash-o" aria-hidden="true"></i></a>
+                                </li>
+                            @endpermission
+                        @endif
+                    @endif
                 </div>
             </ul>
         </div>

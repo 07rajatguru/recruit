@@ -273,24 +273,24 @@
                             </div>
 
                             <div>
-                                @include('adminlte::workPlanning.postlist',array('post' => $work_planning_post))
+                                @include('adminlte::workPlanning.postlist',array('post' => $work_planning_post,'edit_date_valid' => $edit_date_valid, 'superadmin_userid' => $superadmin_userid))
                             </div>
                         </div>
                     @else
-                        @if(date('Y-m-d') <= $edit_date_valid)
-                            <div class="col-xs-12 col-sm-12 col-md-12">
-                                <h4>Comments</h4>
-                            </div>
-                            <div class="col-md-12">
+                        <div class="col-xs-12 col-sm-12 col-md-12">
+                            <h4>Comments</h4>
+                        </div>
+                        <div class="col-md-12">
+                            @if(date('Y-m-d') <= $edit_date_valid)
                                 <div>
                                     @include('adminlte::workPlanning.postnew',array('wp_id' => $wp_id,'user_id'=>$loggedin_user_id,'added_by_id'=>$added_by_id))   
                                 </div>
+                            @endif
 
-                                <div>
-                                    @include('adminlte::workPlanning.postlist',array('post' => $work_planning_post))
-                                </div>
+                            <div>
+                                @include('adminlte::workPlanning.postlist',array('post' => $work_planning_post,'edit_date_valid' => $edit_date_valid, 'superadmin_userid' => $superadmin_userid))
                             </div>
-                        @endif
+                        </div>
                     @endif
 
                     <input type="hidden" name="wp_list_id_string" id="wp_list_id_string" value="{{ $wp_list_id }}">
