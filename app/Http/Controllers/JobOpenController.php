@@ -678,7 +678,11 @@ class JobOpenController extends Controller
                 $checkbox .= '';
             }
 
-            $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
+            if ($value['priority_by'] > 0) {
+                $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:rgb(177, 160, 199); text-decoration:none;font-weight: 600;">'.$value['am_name'].'</a>';
+            } else {
+                $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
+            }
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'</a>';
             $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['posting_title'].'</a>';
             $qual = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['qual'].'</a>';
@@ -862,7 +866,11 @@ class JobOpenController extends Controller
                 $checkbox .= '';
             }
 
-            $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
+            if ($value['priority_by'] > 0) {
+                $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:rgb(177, 160, 199); text-decoration:none;font-weight: 600;">'.$value['am_name'].'</a>';
+            } else {
+                $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
+            }
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'</a>';
             $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['posting_title'].'</a>';
             $qual = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['qual'].'</a>';
@@ -4117,6 +4125,7 @@ class JobOpenController extends Controller
 
     public function status(Request $request) {
 
+        $user_id = \Auth::user()->id;
         $priority = $request->get('job_priority');
         $job_id = $request->get('job_id');
         $display_name = $request->get('display_name');
@@ -4128,6 +4137,7 @@ class JobOpenController extends Controller
 
         if (isset($priority) && $priority != '') {
             $job_open->priority = $priority;
+            $job_open->priority_by = $user_id;
             $job_open->save();
         }
     
@@ -4516,8 +4526,12 @@ class JobOpenController extends Controller
                     $action .= '<a title="Clone Job"  class="fa fa-clone" href="'.route('jobopen.clone',$value['id']).'"></a>';
                 }
             }
-
-            $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
+            
+            if ($value['priority_by'] > 0) {
+                $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:rgb(177, 160, 199); text-decoration:none;font-weight: 600;">'.$value['am_name'].'</a>';
+            } else {
+                $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
+            }
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'</a>';
             $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['posting_title'].'</a>';
             $qual = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['qual'].'</a>';
