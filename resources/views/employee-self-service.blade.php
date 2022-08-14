@@ -1,13 +1,13 @@
 @extends('adminlte::page')
 
-@section('title', 'Employee Self Service')
+@section('title', 'AdleRite Self Service')
 
 @section('content_header')
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="col-md-12">
                 <div class="col-md-4">
-                    <h2>Employee Self Service</h2>
+                    <h2>AdleRite Self Service</h2>
                 </div>
             </div>
         </div>

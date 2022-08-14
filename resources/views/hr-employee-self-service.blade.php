@@ -1,12 +1,12 @@
 @extends('adminlte::page')
 
-@section('title', 'HR Employee Service')
+@section('title', 'HR AdleRite Service')
 
 @section('content_header')
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="col-md-12">
-                <div class="col-md-4"><h2>HR Employee Service</h2></div>
+                <div class="col-md-4"><h2>HR AdleRite Service</h2></div>
             </div>
         </div>
 

@@ -73,7 +73,7 @@
                 <ul class="nav navbar-nav">
                     @if(!$isClient)
                         <li class="dropdown messages-menu">
-                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-university"></i>ESS</a>
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="fa fa-university"></i>ASS</a>
                             <ul class="dropdown-menu add-button-home">
                                 <li>
                                     <!-- inner menu: contains the actual data -->
@@ -81,12 +81,12 @@
                                         <ul class="menu" style="width: 100%;">
                                             @if($user_id != $superadmin_userid)
                                                 <li>
-                                                    <a href="/employee-self-service" target="_blank">MY ESS</a>
+                                                    <a href="/employee-self-service" target="_blank">MY ASS</a>
                                                 </li>
                                             @endif
                                             @if($user_id == $superadmin_userid || $user_id == $hr_userid)
                                                 <li>
-                                                    <a href="/hr-employee-service" target="_blank">HR ESS</a>
+                                                    <a href="/hr-employee-service" target="_blank">HR ASS</a>
                                                 </li>
                                             @endif
                                             <li>
