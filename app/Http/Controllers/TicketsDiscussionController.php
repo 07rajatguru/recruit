@@ -199,8 +199,11 @@ class TicketsDiscussionController extends Controller
         // get superadmin email id
         $superadminuserid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($superadminuserid);
+        // get manager email id
+        $manager_user_id = env('MANAGERUSERID');
+        $manager_email = User::getUserEmailById($manager_user_id);
 
-        $cc_users_array = array($superadminemail,$loggedin_useremail);
+        $cc_users_array = array($superadminemail,$loggedin_useremail,$manager_email);
 
         $module = "Ticket Discussion";
         $sender_name = $user_id;
@@ -429,8 +432,11 @@ class TicketsDiscussionController extends Controller
         // get superadmin email id
         $superadminuserid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($superadminuserid);
+        // get manager email id
+        $manager_user_id = env('MANAGERUSERID');
+        $manager_email = User::getUserEmailById($manager_user_id);
 
-        $cc_users_array = array($superadminemail,$loggedin_useremail);
+        $cc_users_array = array($superadminemail,$loggedin_useremail,$manager_email);
 
         $module = "Ticket Discussion Comment";
         $sender_name = $user_id;
