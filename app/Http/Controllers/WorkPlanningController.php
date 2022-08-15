@@ -140,6 +140,7 @@ class WorkPlanningController extends Controller
             if($user_id == $superadminuserid) {
 
                 $team_users = User::getUsersByJoiningDate($user_id,'');
+                $operation_users = User::getUsersByJoiningDate(0,['3']);
                 $other_users = User::getUsersByJoiningDate(0,'');
 
                 if(isset($team_users) && sizeof($team_users) > 0) {
@@ -154,6 +155,16 @@ class WorkPlanningController extends Controller
                             $work_planning_res[$key."-".$value] = $response;
                         }
                     }   
+                }
+
+                if(isset($operation_users) && sizeof($operation_users) > 0) {
+                    foreach ($operation_users as $key1 => $value1) {
+                        $response = array();
+                        $response = WorkPlanning::getWorkPlanningDetails($key1,$month,$year,'','');
+                        if(isset($response) && sizeof($response) > 0) {
+                            $work_planning_res[$key1."-".$value1] = $response;
+                        }
+                    }
                 }
 
                 if(isset($other_users) && sizeof($other_users) > 0) {
