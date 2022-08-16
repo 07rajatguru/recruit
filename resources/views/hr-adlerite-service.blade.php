@@ -584,7 +584,7 @@
             var month = $("#month :selected").val();
             var year = $("#year :selected").val();
 
-            var url = '/hr-employee-service';
+            var url = '/hr-adlerite-service';
 
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +

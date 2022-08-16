@@ -193,12 +193,12 @@ Route::group(['middleware' => ['auth']], function () {
 
     // ESS
 
-    Route::any('/employee-self-service', array (
-        'uses' => 'HomeController@employeeSelfService'
+    Route::any('/adlerite-self-service', array (
+        'uses' => 'HomeController@adleriteSelfService'
     ));
 
-    Route::any('/hr-employee-service', array (
-        'uses' => 'HomeController@hrEmployeeSelfService',
+    Route::any('/hr-adlerite-service', array (
+        'uses' => 'HomeController@hrAdleriteService',
         'middleware' => ['permission:hr-employee-service-dashboard']
     ));
 

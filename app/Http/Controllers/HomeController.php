@@ -975,7 +975,7 @@ class HomeController extends Controller
 
     // ESS Module Functions
 
-    public function employeeSelfService() {
+    public function adleriteSelfService() {
 
         $user = \Auth::user();
         $user_id =  $user->id;
@@ -1088,11 +1088,11 @@ class HomeController extends Controller
 
         $viewVariable['user_id'] = $user_id;
 
-        return view('employee-self-service',$viewVariable);
+        return view('adlerite-self-service',$viewVariable);
     }
 
     // HR ESS
-    public function hrEmployeeSelfService() {
+    public function hrAdleriteService() {
 
         $user = \Auth::user();
         $user_id =  $user->id;
@@ -1270,7 +1270,7 @@ class HomeController extends Controller
         $viewVariable['team_wfh_details'] = $team_wfh_details;
         $viewVariable['all_wfh_details'] = $all_wfh_details;
 
-        return view('hr-employee-self-service',$viewVariable);
+        return view('hr-adlerite-service',$viewVariable);
     }
 
     public function usersAttendance($department_nm,$month,$year) {

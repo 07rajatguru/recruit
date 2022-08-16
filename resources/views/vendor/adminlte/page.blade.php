@@ -81,12 +81,12 @@
                                         <ul class="menu" style="width: 100%;">
                                             @if($user_id != $superadmin_userid)
                                                 <li>
-                                                    <a href="/employee-self-service" target="_blank">MY ASS</a>
+                                                    <a href="/adlerite-self-service" target="_blank">MY ASS</a>
                                                 </li>
                                             @endif
                                             @if($user_id == $superadmin_userid || $user_id == $hr_userid)
                                                 <li>
-                                                    <a href="/hr-employee-service" target="_blank">HR ASS</a>
+                                                    <a href="/hr-adlerite-service" target="_blank">HR ASS</a>
                                                 </li>
                                             @endif
                                             <li>
