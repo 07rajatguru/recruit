@@ -122,15 +122,15 @@
 
                             @if(date('Y-m-d') <= $edit_date_valid)
                                 <a class="fa fa-edit" href="{{ route('workplanning.edit',$value['id']) }}" title="Edit"></a>
+
+                                @if($user_id == $value['added_by_id'])
+                                    @include('adminlte::partials.sendWorkPlanningReport', ['data' => $value, 'name' => 'workplanning'])
+                                @endif
                             @endif
                             
                             @permission(('work-planning-delete'))
                                 @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'workplanning','display_name'=>'Work Planning'])
                             @endpermission
-
-                            @if($user_id == $value['added_by_id'])
-                                @include('adminlte::partials.sendWorkPlanningReport', ['data' => $value, 'name' => 'workplanning'])
-                            @endif
                         </td>
 
                         @if($value['status'] == 0)

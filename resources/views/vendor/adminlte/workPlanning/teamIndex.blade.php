@@ -94,6 +94,8 @@
                         $i = 0;
                         $user = explode("-", $key);
                         $report_to_id = App\User::getReportsToById($user[0]);
+                        $user_data = App\User::getAllDetailsByUserID($user[0]);
+                        $type = $user_data['type'];
                     ?>
 
                     @if(isset($value) && sizeof($value) > 0)
@@ -101,6 +103,10 @@
                             @if(isset($report_to_id) && $report_to_id == $superadminuserid && $user_id == $superadminuserid)
                                 <tr>
                                     <td colspan="9" style="text-align: center;background-color:#C4D79B;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{ $user[1] }}</b></td>
+                                </tr>
+                            @elseif(isset($report_to_id) && $report_to_id != $superadminuserid && $user_id == $superadminuserid && (isset($type) && $type == '3'))
+                                <tr>
+                                    <td colspan="9" style="text-align: center;background-color:#ffc87a;border: 2px solid black;" class="button" data-id="{{ $j }}"><b>{{ $user[1] }}</b></td>
                                 </tr>
                             @elseif(isset($report_to_id) && $report_to_id == $manager_user_id && $user_id == $manager_user_id)
                                 <tr>
@@ -154,16 +160,16 @@
                                             @else
                                                 @if(date('Y-m-d') <= $edit_date_valid)
                                                     <a class="fa fa-edit" href="{{ route('workplanning.edit',$v['id']) }}" title="Edit"></a>
+
+                                                    @if($user_id == $v['added_by_id'])
+                                                        @include('adminlte::partials.sendWorkPlanningReport', ['data' => $v, 'name' => 'workplanning'])
+                                                    @endif
                                                 @endif
                                             @endif
                                                 
                                             @permission(('work-planning-delete'))
                                                 @include('adminlte::partials.deleteModal', ['data' => $v, 'name' => 'workplanning','display_name'=>'Work Planning'])
                                             @endpermission
-
-                                            @if($user_id == $v['added_by_id'])
-                                                @include('adminlte::partials.sendWorkPlanningReport', ['data' => $v, 'name' => 'workplanning'])
-                                            @endif
                                         </td>
 
                                         @if($v['status'] == 0)
