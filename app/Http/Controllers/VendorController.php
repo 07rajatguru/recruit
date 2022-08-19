@@ -19,7 +19,7 @@ class VendorController extends Controller
     public function index() {
 
         $vendor_array = array();
-        $vendors=  VendorBasicInfo::select('id','name','mobile','mail','contact_point');
+        $vendors=  VendorBasicInfo::select('id','name','mobile','mail','contact_point','organization_type');
 
         $vendors = $vendors->orderBy('id','DESC')->get();
         $i = 0;
@@ -31,6 +31,7 @@ class VendorController extends Controller
             $vendor_array[$i]['mobile'] = $vendor->mobile;
             $vendor_array[$i]['mail']= $vendor->mail;
             $vendor_array[$i]['contact_point'] = $vendor->contact_point;
+            $vendor_array[$i]['category'] = $vendor->organization_type;
 
             $i++;
         }

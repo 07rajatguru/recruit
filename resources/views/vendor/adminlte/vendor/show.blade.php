@@ -42,7 +42,7 @@
                         <tr>
                             <th>Designation</th>
                             <td>{{ $vendor['designation'] }}</td>
-                            <th>Type Of Organization</th>
+                            <th>Category</th>
                             <td>{{ $vendor['organization_type'] }}</td>
                             
                         </tr>

@@ -40,6 +40,7 @@
                 <th>Mobile</th>
                 <th>Email</th>
                 <th>Contact Point</th>
+                <th>Category</th>
                 <th width="280px">Action</th>
             </tr>
         </thead>
@@ -52,6 +53,7 @@
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $vendor['mobile'] }}</td>
                 <td>{{ $vendor['mail'] }}</td>
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $vendor['contact_point'] }}</td>
+                <td>{{ $vendor['category'] }}</td>
                 <td>
                     <a title="Show" class="fa fa-circle"  href="{{ route('vendor.show',$vendor['id']) }}">
                     </a>

@@ -105,8 +105,8 @@
                         </div>
 
                         <div class="form-group {{ $errors->has('organization') ? 'has-error' : '' }}">
-                            <strong>Type Of Organization:</strong>
-                            {!! Form::text('organization', null, array('id'=>'organization','placeholder' => 'Type Of Organization','class' => 'form-control', 'tabindex' => '6' )) !!}
+                            <strong>Category:</strong>
+                            {!! Form::text('organization', null, array('id'=>'organization','placeholder' => 'Enter Category','class' => 'form-control', 'tabindex' => '6' )) !!}
                             @if ($errors->has('organization'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('organization') }}</strong>
