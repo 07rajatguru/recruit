@@ -319,6 +319,13 @@
                                         {{ $v['added_date'] }}</td>
                                         <td colspan="7"><center><b>Sunday</b></center></td>
 
+                                    @elseif($v['attendance'] == 'CO')
+
+                                        <td>{{ ++$i }}</td><td></td>
+                                        <td style="background-color:#eedc82;">{{ $v['added_date'] }}</td>
+                                        <td colspan="7"><center><b>Compensatory Off</b></center>
+                                        </td>
+
                                     @elseif(isset($half_day_leave_data) && $half_day_leave_data != '')
                                     @else
 

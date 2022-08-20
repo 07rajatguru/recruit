@@ -133,6 +133,8 @@ class WorkPlanning extends Model
                 }
                 else if($added_day == 'Sunday' && $value->loggedin_time == '' && $get_date > $current_date) {
                 }
+                else if($value->loggedin_time == 'CO') {
+                }
                 else {
 
                     $work_planning_res[$i]['id'] = $value->id;
@@ -246,6 +248,9 @@ class WorkPlanning extends Model
 
                         $work_planning_res[$i]['status_date'] = '';
                     }
+
+                    // Get Work Planning Attendance
+                    $work_planning_res[$i]['attendance'] = $value->attendance;
                 }
 
                 $i++;
