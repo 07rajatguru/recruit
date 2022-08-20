@@ -80,6 +80,9 @@
                     <td style="border: 5px solid #000000;"></td>
 
                     <td colspan="6" style="text-align:center;border: 5px solid #000000;background-color:#fac090;">"UL" - Unapproved Leave</td>
+                    <td style="border: 5px solid #000000;"></td>
+
+                    <td colspan="6" style="text-align:center;border: 5px solid #000000;background-color:#eedc82;">"CO+" - Compensatory Off</td>
 
                     <td style="border: 5px solid #000000;"></td>
                     <td style="border: 5px solid #000000;"></td>
@@ -282,6 +285,9 @@
 
                                     if($key2 < $joining_date_array[0] && $joining_date_array[1] == $month && $year <= $joining_date_array[2]) {
                                         $attendance = 'O';
+                                    }
+                                    else if(isset($value2['attendance']) && $value2['attendance'] == 'CO') {
+                                        $attendance = 'CO';
                                     }
                                     else if($working_hours == '') {
                                         $attendance = 'B';
@@ -490,6 +496,10 @@
                                 @elseif($attendance == 'WFHP')
                                     <?php $present++; ?>
                                     <td style="border: 5px solid #000000;background-color:#d8d8d8;color: #0000FF;" title="Work From Home">P</td>
+
+                                @elseif($attendance == 'CO')
+                                    <?php $present++; ?>
+                                    <td style="border: 5px solid #000000;background-color:#eedc82;" title="Compensatory Off">CO</td>
 
                                 @elseif($attendance == 'A')
                                 	<?php $absent++; ?>
