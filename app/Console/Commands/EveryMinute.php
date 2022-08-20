@@ -166,11 +166,13 @@ class EveryMinute extends Command
 
                         $client_name = ClientBasicinfo::getCompanyOfClientByID($job_details['client_id']);
                         $client_city = ClientBasicinfo::getBillingCityOfClientByID($job_details['client_id']);
+                        $cv_count = JobAssociateCandidates::getJobAssociatedCvsCount($vm);
 
                         $jobs[$jc]['user_name'] = $job_details['user_name'];
                         $jobs[$jc]['client_name'] = $client_name;
                         $jobs[$jc]['posting_title'] = $job_details['posting_title'];
-                        $jobs[$jc]['job_location'] = $job_details['job_location'];
+                        $jobs[$jc]['job_location'] = $job_details['city'];
+                        $jobs[$jc]['no_of_cvs'] = $cv_count;
                         $jobs[$jc]['job_id'] = $vm;
                         $jc++;
                     }

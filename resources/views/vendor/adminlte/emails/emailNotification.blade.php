@@ -118,12 +118,13 @@
                 <tr style="background-color:white;">
                     <table align="center" width="600px" cellpadding="0" border="1" cellspacing="0" style="font-family: arial; font-size: 12px; color: #444444;">
                         <tr style="background-color:white;height: 30px;">
-                            <th>Sr No</th>
-                            <th>Managed By</th>
-                            <th>Company Name</th>
-                            <th>Position Title</th>
-                            <th>Location</th>
-                            <th width="90">Action</th>
+                            <th width="5%">Sr No</th>
+                            <th width="17%">Managed By</th>
+                            <th width="22%">Company Name</th>
+                            <th width="20%">Position Title</th>
+                            <th width="7%">No of CVs</th>
+                            <th width="13%">Location</th>
+                            <th width="16%">Action</th>
                         </tr>
                         @if(isset($jobs) && sizeof($jobs) > 0)
                             @foreach($jobs as $k => $v)
@@ -132,8 +133,11 @@
                                     <td align="center">{{ $v['user_name'] }}</td>
                                     <td align="center">{{ $v['client_name'] }}</td>
                                     <td align="center">{{ $v['posting_title'] }}</td>
+                                    <td align="center">
+                                        <a title="Show Associated Candidates" href="{{getenv('APP_URL').'/jobs/'.$v['job_id'].'/associated_candidates' }}">{{ $v['no_of_cvs'] }}</a>
+                                    </td>
                                     <td align="center">{{ $v['job_location'] }}</td>
-                                    <td align="center" width="90">
+                                    <td align="center">
                                         <a style="border: black; background-color: #9c5cac;color: white;padding: 3px 15px 3px 15px; border-radius: 18px;font-size: 15px;width: 59%;" class="btn btn-primary" formtarget="_blank" href="{{getenv('APP_URL').'/jobs/'.$v['job_id']}}">Show</a>
                                     </td>
                                 </tr>
