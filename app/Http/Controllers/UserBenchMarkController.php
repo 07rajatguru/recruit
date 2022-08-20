@@ -59,7 +59,7 @@ class UserBenchMarkController extends Controller
     	$user_bench_mark->after_joining_success_ratio = $after_joining_success_ratio;
     	$user_bench_mark->save();
 
-    	return redirect()->route('userbenchmark.index')->with('success','Bench Mark Added Successfully.');
+    	return redirect()->route('userbenchmark.index')->with('success','Benchmark Added Successfully.');
     }
 
     public function edit($id) {
@@ -104,12 +104,12 @@ class UserBenchMarkController extends Controller
     	$user_bench_mark->after_joining_success_ratio = $after_joining_success_ratio;
     	$user_bench_mark->save();
 
-    	return redirect()->route('userbenchmark.index')->with('success','Bench Mark Updated Successfully.');
+    	return redirect()->route('userbenchmark.index')->with('success','Benchmark Updated Successfully.');
     }
 
     public function destroy($id) {
 
     	UserBenchMark::where('id',$id)->delete();
-    	return redirect()->route('userbenchmark.index')->with('success','Bench Mark Deleted Successfully.');
+    	return redirect()->route('userbenchmark.index')->with('success','Benchmark Deleted Successfully.');
     }
 }

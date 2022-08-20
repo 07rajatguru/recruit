@@ -597,12 +597,12 @@ return [
                     'icon' => 'circle-o',
                 ],
                 [
-                    'text' => 'Rolewise Bench Mark',
+                    'text' => 'Rolewise Benchmark',
                     'url'  => 'bench-mark',
                     'icon' => 'circle-o',
                 ],
                 [
-                    'text' => 'User Bench Mark',
+                    'text' => 'User Benchmark',
                     'url'  => 'user-bench-mark',
                     'icon' => 'circle-o',
                 ],

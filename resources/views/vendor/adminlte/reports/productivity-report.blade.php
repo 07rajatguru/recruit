@@ -795,7 +795,7 @@
     @else
         @if($user_name == '')
         @else
-            <center><h4>Please add User Bench Mark.</h4></center>
+            <center><h4>Please add User Benchmark.</h4></center>
         @endif
     @endif
 

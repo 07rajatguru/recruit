@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Bench Mark')
+@section('title', 'Benchmark')
 
 @section('content_header')
     <h1></h1>
@@ -10,11 +10,11 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-left">
-                <h2>Bench Mark({{ $count or 0}})</h2>
+                <h2>Benchmark({{ $count or 0}})</h2>
             </div>
 
             <div class="pull-right">
-                <a class="btn btn-success" href="{{ route('rolewisebenchmark.create') }}">Add New Bench Mark</a>
+                <a class="btn btn-success" href="{{ route('rolewisebenchmark.create') }}">Add New Benchmark</a>
             </div>
         </div>
     </div>
@@ -69,7 +69,7 @@
                         <a class = "fa fa-edit" title = "Edit" href="{{ route('rolewisebenchmark.edit',$value['id']) }}"></a>
 
                         @permission(('user-benchmark-delete'))
-                            @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'rolewisebenchmark','display_name'=>'Bench Mark'])
+                            @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'rolewisebenchmark','display_name'=>'Benchmark'])
                         @endpermission
                     </td>
                 </tr>

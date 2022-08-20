@@ -10,9 +10,9 @@
     <div class="col-lg-12 margin-tb">
         <div class="pull-left">
             @if($action == 'edit')
-                <h2>Edit User Bench Mark</h2>
+                <h2>Edit User Benchmark</h2>
             @else
-                <h2>Add New User Bench Mark</h2>
+                <h2>Add New User Benchmark</h2>
             @endif
         </div>
         <div class="pull-right">
