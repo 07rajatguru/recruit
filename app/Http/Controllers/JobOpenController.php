@@ -678,7 +678,7 @@ class JobOpenController extends Controller
                 $checkbox .= '';
             }
 
-            if ($value['priority_by'] > 0) {
+            if ($value['priority_by'] > 0 && $value['priority'] == 4) {
                 $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:rgb(177, 160, 199); text-decoration:none;font-weight: 600;">'.$value['am_name'].'</a>';
             } else {
                 $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
@@ -866,7 +866,7 @@ class JobOpenController extends Controller
                 $checkbox .= '';
             }
 
-            if ($value['priority_by'] > 0) {
+            if ($value['priority_by'] > 0 && $value['priority'] == 4) {
                 $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:rgb(177, 160, 199); text-decoration:none;font-weight: 600;">'.$value['am_name'].'</a>';
             } else {
                 $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
@@ -4527,7 +4527,7 @@ class JobOpenController extends Controller
                 }
             }
             
-            if ($value['priority_by'] > 0) {
+            if ($value['priority_by'] > 0 && $value['priority'] == 4) {
                 $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:rgb(177, 160, 199); text-decoration:none;font-weight: 600;">'.$value['am_name'].'</a>';
             } else {
                 $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
