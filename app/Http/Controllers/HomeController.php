@@ -1491,7 +1491,11 @@ class HomeController extends Controller
 
                         $rejected_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id,2);
 
-                        if($value->status == 2 && $value->attendance == "A") {
+                        if($value->attendance == "CO") {
+
+                            $list[$combine_name][$get_dt]['attendance'] = 'CO';
+                        }
+                        else if($value->status == 2 && $value->attendance == "A") {
 
                             $list[$combine_name][$get_dt]['attendance'] = 'FR';
                         }
@@ -1910,7 +1914,11 @@ class HomeController extends Controller
 
                     $rejected_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id,2);
 
-                    if($value->status == 2 && $value->attendance == "A") {
+                    if($value->attendance == "CO") {
+
+                        $list[$combine_name][$get_dt]['attendance'] = 'CO';
+                    }
+                    else if($value->status == 2 && $value->attendance == "A") {
 
                         $list[$combine_name][$get_dt]['attendance'] = 'FR';
                     }
@@ -2117,7 +2125,11 @@ class HomeController extends Controller
 
                 $rejected_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$user_id,2);
 
-                if($value->status == 2 && $value->attendance == "A") {
+                if($value->attendance == "CO") {
+
+                    $list[$user_id][$get_dt]['attendance'] = 'CO';
+                }
+                else if($value->status == 2 && $value->attendance == "A") {
 
                     $list[$user_id][$get_dt]['attendance'] = 'FR';
                 }

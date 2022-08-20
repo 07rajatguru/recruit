@@ -229,6 +229,9 @@
                                                     if($key2 < $joining_date_array[0] && $joining_date_array[1] == $month && $year <= $joining_date_array[2]) {
                                                         $attendance = 'O';
                                                     }
+                                                    else if(isset($value2['attendance']) && $value2['attendance'] == 'CO') {
+                                                        $attendance = 'CO';
+                                                    }
                                                     else if($working_hours == '') {
 
                                                         $attendance = 'B';
@@ -658,6 +661,22 @@
                                                     ?>
 
                                                     <td style="border: 1px solid black;background-color:#d8d8d8;text-align: center;cursor: pointer;color: blue;" title="Present - Work From Home">P</td>
+                                                @endif
+
+                                                <!-- For Set Full Day Compensatory Off -->
+                                                @if(isset($value2['remarks']) && $value2['remarks'] != '' && $attendance == 'CO')
+                                                    <?php 
+                                                        $present++;
+                                                    ?>
+
+                                                    <td style="border: 1px solid black;background-color:#eedc82;text-align: center;cursor: pointer;" title="Compensatory Off (Remarks Added)">CO</td>
+
+                                                @elseif($attendance == 'CO')
+                                                    <?php 
+                                                        $present++;
+                                                    ?>
+
+                                                    <td style="border: 1px solid black;background-color:#eedc82;text-align: center;cursor: pointer;" title="Compensatory Off">CO</td>
                                                 @endif
 
                                                 <!-- For Set Full Day Absent -->
