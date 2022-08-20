@@ -41,7 +41,8 @@ class PassiveClientList extends Command
     public function handle()
     {
         // Get Passive clients of last week
-        $client_res = ClientBasicinfo::getPassiveClients();
+        $jenny_user_id = getenv('JENNYUSERID');
+        $client_res = ClientBasicinfo::getPassiveClients($jenny_user_id);
 
         if (isset($client_res) && sizeof($client_res)>0) {
 

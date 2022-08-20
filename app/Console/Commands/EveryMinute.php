@@ -723,7 +723,8 @@ class EveryMinute extends Command
 
                 $cc_array = explode(",",$input['cc']);
 
-                $client_res = ClientBasicinfo::getPassiveClients();
+                $jenny_user_id = getenv('JENNYUSERID');
+                $client_res = ClientBasicinfo::getPassiveClients($jenny_user_id);
                 $clients_count = sizeof($client_res);
                 
                 $input['client_res'] = $client_res;
