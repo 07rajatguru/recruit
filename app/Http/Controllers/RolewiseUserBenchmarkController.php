@@ -58,7 +58,7 @@ class RolewiseUserBenchmarkController extends Controller
         $bench_mark->after_joining_success_ratio = $after_joining_success_ratio;
         $bench_mark->save();
 
-        return redirect()->route('rolewisebenchmark.index')->with('success','Bench Mark Added Successfully.');
+        return redirect()->route('rolewisebenchmark.index')->with('success','Benchmark Added Successfully.');
     }
 
     public function edit($id) {
@@ -110,12 +110,12 @@ class RolewiseUserBenchmarkController extends Controller
                 DB::statement("UPDATE `user_bench_mark` SET `no_of_resumes` = '$no_of_resumes',`shortlist_ratio` = '$shortlist_ratio',`interview_ratio` = '$interview_ratio',`selection_ratio` = '$selection_ratio',`offer_acceptance_ratio` = '$offer_acceptance_ratio',`joining_ratio` = '$joining_ratio',`after_joining_success_ratio` = '$after_joining_success_ratio' WHERE `user_id` = '$value'");
             }
         }
-        return redirect()->route('rolewisebenchmark.index')->with('success','Bench Mark Updated Successfully.');
+        return redirect()->route('rolewisebenchmark.index')->with('success','Benchmark Updated Successfully.');
     }
 
     public function destroy($id) {
 
         RolewiseUserBenchmark::where('id',$id)->delete();
-        return redirect()->route('rolewisebenchmark.index')->with('success','Bench Mark Deleted Successfully.');
+        return redirect()->route('rolewisebenchmark.index')->with('success','Benchmark Deleted Successfully.');
     }
 }
