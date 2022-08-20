@@ -356,14 +356,9 @@ class Holidays extends Model
         $query = $query->where('holidays.from_date','>=',$current_year);
         $query = $query->where('holidays.from_date','<=',$next_year);
 
-        if($user_id > 0) {
-
-            $query = $query->leftjoin('holidays_users','holidays_users.holiday_id','=','holidays.id');
-            $query = $query->where('holidays_users.user_id',$user_id);
-
-            if($all == 0) {
-                $query = $query->orwhere('holidays.added_by','=',$super_admin_userid);
-            }
+        if($all == 0) {
+            $query = $query->where('holidays.added_by','=',$super_admin_userid);
+            $query = $query->orwhere('holidays.added_by','=',$user_id);
         }
 
         $query = $query->orderBy('holidays.from_date','asc');

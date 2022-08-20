@@ -43,6 +43,7 @@ use App\TicketsDiscussionPostDoc;
 use App\WorkPlanningList;
 use App\WorkPlanningPost;
 use App\SpecifyHolidays;
+use App\HolidaysUsers;
 
 class HomeController extends Controller
 {
@@ -1038,7 +1039,37 @@ class HomeController extends Controller
         $birthday_dates = User::getUserBirthDatesByMonth($month);
 
         // Get Holiday of Current Year
-        $holidays = Holidays::getFinancialYearHolidaysList($user_id,1);
+        $all_holidays = Holidays::getFinancialYearHolidaysList(0,1);
+
+        if(isset($all_holidays) && sizeof($all_holidays) > 0) {
+
+            $holidays = array();
+            $i=0;
+
+            foreach($all_holidays as $key => $value) {
+
+                if($value['type'] == 'Optional Leave') {
+
+                    $check = HolidaysUsers::checkUserHoliday($user_id,$value['id']);
+
+                    if(isset($check) && $check != '') {
+
+                        $holidays[$i]['title'] = $value['title'];
+                        $holidays[$i]['type'] = $value['type'];
+                        $holidays[$i]['from_date'] = $value['from_date'];
+                        $i++;
+                    }
+                }
+                else if($value['type'] == 'Fixed Leave') {
+
+                    $holidays[$i]['title'] = $value['title'];
+                    $holidays[$i]['type'] = $value['type'];
+                    $holidays[$i]['from_date'] = $value['from_date'];
+
+                    $i++;
+                }   
+            }
+        }
 
         // Get Assigners users
         $assigned_users = User::getAssignedUsers($user_id);
