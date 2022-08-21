@@ -289,8 +289,7 @@ class ProcessController extends Controller
         $i = 0;
         $processdetails['files'] = array();
 
-        $processFiles = ProcessDoc::select('process_doc.*')->where('process_doc.process_id',$id)
-        ->orderBy('process_doc.id','asc')->get();
+        $processFiles = ProcessDoc::select('process_doc.*')->where('process_doc.process_id',$id)->orderBy('process_doc.position','asc')->get();
 
         $utils = new Utils();
 
@@ -506,8 +505,7 @@ class ProcessController extends Controller
 
 		$i = 0;
         $processdetails['files'] = array();
-        $processFiles = ProcessDoc::select('process_doc.*')->where('process_doc.process_id',$id)
-        ->orderBy('process_doc.id','asc')->get();
+        $processFiles = ProcessDoc::select('process_doc.*')->where('process_doc.process_id',$id)->orderBy('process_doc.position','asc')->get();
 
         $utils = new Utils();
 
@@ -574,6 +572,20 @@ class ProcessController extends Controller
             $order = ProcessManual::find($id);
             $order->position = $i;
             $order->save();
+            $i++;
+        }
+    }
+
+    // For update process docs position
+    public function UpdateProcessDocPosition() {
+        
+        $ids_array = explode(",", $_GET['ids']);
+
+        $i = 1;
+        foreach ($ids_array as $id) {
+            $doc_order = ProcessDoc::find($id);
+            $doc_order->position = $i;
+            $doc_order->save();
             $i++;
         }
     }

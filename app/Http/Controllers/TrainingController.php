@@ -287,7 +287,7 @@ class TrainingController extends Controller
 
         $i = 0;
         $trainingdetails['files'] = array();
-        $trainingFiles = TrainingDoc::select('training_doc.*')->where('training_doc.training_id',$id)->get();
+        $trainingFiles = TrainingDoc::select('training_doc.*')->where('training_doc.training_id',$id)->orderBy('position','ASC')->get();
 
         $utils = new Utils();
 
@@ -494,8 +494,7 @@ class TrainingController extends Controller
 
         $i = 0;
         $trainingdetails['files'] = array();
-        $trainingFiles = TrainingDoc::select('training_doc.*')->where('training_doc.training_id',$id)
-        ->get();
+        $trainingFiles = TrainingDoc::select('training_doc.*')->where('training_doc.training_id',$id)->orderBy('position','ASC')->get();
 
         $utils = new Utils();
 
@@ -571,6 +570,20 @@ class TrainingController extends Controller
             $order = Training::find($id);
             $order->position = $i;
             $order->save();
+            $i++;
+        }
+    }
+
+    // Update Training Documents positions
+    public function UpdateTrainingDocPosition() {
+
+        $ids_array = explode(",", $_GET['ids']);
+        // print_r($ids_array);exit;
+        $i = 1;
+        foreach ($ids_array as $id) {
+            $doc_order = TrainingDoc::find($id);
+            $doc_order->position = $i;
+            $doc_order->save();
             $i++;
         }
     }

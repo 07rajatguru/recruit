@@ -82,25 +82,53 @@
                             <th>Size</th>
                         </tr>
 
-                        @if(isset($trainingdetails['files']) && sizeof($trainingdetails['files']) > 0)
-                            @foreach($trainingdetails['files'] as $key => $value)
-                                <tr>
-                                    <td>
-                                        {{--<a download href="{{ $value['url'] }}"><i class="fa fa-fw fa-download"></i></a>--}}
-                                        &nbsp;
-                                        @if(isset($training_material['access']) && $training_material['access']==1)     
-                                            @include('adminlte::partials.confirm', ['data' => $value,'id'=>$training_material['id'], 'name' => 'trainingattachments' ,'display_name'=> 'Attachments','type' => 'Show'])
-                                        @endif
-                                    </td>
+                        <tbody id="training_doc_table_tbody_id">
+                            @if(isset($trainingdetails['files']) && sizeof($trainingdetails['files']) > 0)
+                                @foreach($trainingdetails['files'] as $key => $value)
+                                    <tr id="{{ $value['id'] }}">
+                                        <td>
+                                            {{--<a download href="{{ $value['url'] }}"><i class="fa fa-fw fa-download"></i></a>--}}
+                                            &nbsp;
+                                            @if(isset($training_material['access']) && $training_material['access']==1)     
+                                                @include('adminlte::partials.confirm', ['data' => $value,'id'=>$training_material['id'], 'name' => 'trainingattachments' ,'display_name'=> 'Attachments','type' => 'Show'])
+                                            @endif
+                                        </td>
 
-                                    <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}</a></td>
-                                    <td>{{ $value['size'] }}</td>
-                                   </tr>
-                            @endforeach
-                        @endif
+                                        <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}</a></td>
+                                        <td>{{ $value['size'] }}</td>
+                                       </tr>
+                                @endforeach
+                            @endif
+                        </tbody>
                     </table>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('customscripts')
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script type="text/javascript">
+
+    jQuery(document).ready(function(){
+        var app_url = "{!! env('APP_URL'); !!}";
+        jQuery("#training_doc_table_tbody_id").sortable({
+            update: function (event, ui) {
+                var order = $(this).sortable('toArray');
+                var dataString = 'ids=' + order;
+                $.ajax ({
+                    type: "GET",
+                    url: app_url+'/training/update-doc-position',
+                    data: dataString,
+                    cache: false,
+                    success: function (data) {
+                        if (data == 'success') {
+                        }
+                    }
+                });
+            }
+        });
+    });
+</script>
 @endsection

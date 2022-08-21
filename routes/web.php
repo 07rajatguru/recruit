@@ -2520,6 +2520,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'TrainingController@UpdatePosition'
     ]);
 
+    Route::get('training/update-doc-position',[
+        'as' => 'training.update-doc-position',
+        'uses' => 'TrainingController@UpdateTrainingDocPosition'
+    ]);
+
     Route::get('getUsersByTrainingID', [
         'as' => 'getusers.bytrainingid',
         'uses' => 'TrainingController@getUsersByTrainingID',
@@ -2590,6 +2595,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('process/update-position',[
         'as' => 'process.update-position',
         'uses' => 'ProcessController@UpdatePosition',
+        'middleware' => ['permission:display-process-manual']
+    ]);
+
+    Route::get('process/update-doc-position',[
+        'as' => 'process.update-doc-position',
+        'uses' => 'ProcessController@UpdateProcessDocPosition',
         'middleware' => ['permission:display-process-manual']
     ]);
 

@@ -113,20 +113,21 @@
                                     <th>File Name</th>
                                     <th>Size</th>
                                 </tr>
+                                <tbody id="training_doc_table_tbody_id">
+                                    @if(isset($trainingdetails['files']) && sizeof($trainingdetails['files']) > 0)
+                                        @foreach($trainingdetails['files'] as $key => $value)
+                                            <tr id="{{ $value['id'] }}">
+                                                <td>
+                                                    {{--<a download href="{{ $value['url'] }}"><i class="fa fa-fw fa-download"></i></a>--}}&nbsp;
+                                                    @include('adminlte::partials.confirm', ['data' => $value,'id'=>$training['id'], 'name' => 'trainingattachments' ,'display_name'=> 'Attachments','type' => 'Edit'])
+                                                </td>
 
-                                @if(isset($trainingdetails['files']) && sizeof($trainingdetails['files']) > 0)
-                                    @foreach($trainingdetails['files'] as $key => $value)
-                                        <tr>
-                                            <td>
-                                                {{--<a download href="{{ $value['url'] }}"><i class="fa fa-fw fa-download"></i></a>--}}&nbsp;
-                                                @include('adminlte::partials.confirm', ['data' => $value,'id'=>$training['id'], 'name' => 'trainingattachments' ,'display_name'=> 'Attachments','type' => 'Edit'])
-                                            </td>
-
-                                            <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}</a></td>
-                                            <td>{{ $value['size'] }}</td>
-                                           </tr>
-                                    @endforeach
-                                @endif
+                                                <td><a target="_blank" href="{{ $value['url'] }}">{{ $value['name'] }}</a></td>
+                                                <td>{{ $value['size'] }}</td>
+                                               </tr>
+                                        @endforeach
+                                    @endif
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -144,6 +145,7 @@
 
 
 @section('customscripts')
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <script>
         $(document).ready(function() {
 
@@ -220,11 +222,32 @@
             }        
         });
 
+        jQuery(document).ready(function(){
+            var app_url = "{!! env('APP_URL'); !!}";
+            jQuery("#training_doc_table_tbody_id").sortable({
+                update: function (event, ui) {
+                    var order = $(this).sortable('toArray');
+                    var dataString = 'ids=' + order;
+                    $.ajax ({
+                        type: "GET",
+                        url: app_url+'/training/update-doc-position',
+                        data: dataString,
+                        cache: false,
+                        success: function (data) {
+                            if (data == 'success') {
+                            }
+                        }
+                    });
+                }
+            });
+        });
+
         function displayUsers(department_id) {
 
+            var app_url = "{!! env('APP_URL'); !!}";
             $.ajax({
 
-                url:'/getusers/bydepartment',
+                url: app_url+'/getusers/bydepartment',
                 data:'department_id='+department_id,
                 dataType:'json',
                 success: function(data) {
@@ -283,6 +306,7 @@
 
         function loadUsers() {
 
+            var app_url = "{!! env('APP_URL'); !!}";
             // for department_ids
             var department_items = document.getElementsByName('department_ids[]');
             var department_selected_items = "";
@@ -297,7 +321,7 @@
 
             $.ajax({
 
-                url:'/getUsersByTrainingID',
+                url: app_url+'/getUsersByTrainingID',
                 method:'GET',
                 data:{'training_id':training_id,'department_selected_items':department_selected_items},
                 dataType:'json',
