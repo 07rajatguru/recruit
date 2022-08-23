@@ -1332,6 +1332,18 @@ class HomeController extends Controller
             $sundays[] = $i;
         }
 
+        // Get 3rd Saturday date in selected month
+        $date = "$year-$month-01";
+        $first_day = date('N',strtotime($date));
+        $first_day = 6 - $first_day + 1;
+        $last_day =  date('t',strtotime($date));
+        $saturdays = array();
+
+        for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+            $saturdays[] = $i;
+        }
+
+        // Edit Attendance disabled changes
         $edit_date = date('Y-m-d', strtotime($date.'first day of +1 month'));
         $edit_date_valid = date('Y-m-d', strtotime($edit_date."+3days"));
     
@@ -1348,7 +1360,6 @@ class HomeController extends Controller
         }
 
         // Check type name wise permissions
-
         if($department_nm == 'self') {
 
             $selected_attendance_type = 'self';
@@ -1537,6 +1548,10 @@ class HomeController extends Controller
                         else if(in_array($get_dt, $sundays)) {
 
                             $list[$combine_name][$get_dt]['attendance'] = 'H';
+                        }
+                        else if($get_dt == $saturdays[2]) {
+
+                            $list[$combine_name][$get_dt]['attendance'] = 'TS';
                         }
                         else if($value->status == NULL && $value->loggedin_time == NULL) {
 
@@ -1828,6 +1843,17 @@ class HomeController extends Controller
                 $sundays[] = $i;
             }
 
+            // Get 3rd Saturday date in selected month
+            $date = "$year-$month-01";
+            $first_day = date('N',strtotime($date));
+            $first_day = 6 - $first_day + 1;
+            $last_day =  date('t',strtotime($date));
+            $saturdays = array();
+
+            for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+                $saturdays[] = $i;
+            }
+
             if($attendance_type == 'self') {
 
                 if($month <= 9) {
@@ -1960,6 +1986,10 @@ class HomeController extends Controller
                     else if(in_array($get_dt, $sundays)) {
 
                         $list[$combine_name][$get_dt]['attendance'] = 'H';
+                    }
+                    else if($get_dt == $saturdays[2]) {
+
+                        $list[$combine_name][$get_dt]['attendance'] = 'TS';
                     }
                     else if($value->status == NULL && $value->loggedin_time == NULL) {
 
@@ -2270,6 +2300,17 @@ class HomeController extends Controller
             $sundays[] = $i;
         }
 
+        // Get 3rd Saturday date in selected month
+        $date = "$year-$month-01";
+        $first_day = date('N',strtotime($date));
+        $first_day = 6 - $first_day + 1;
+        $last_day =  date('t',strtotime($date));
+        $saturdays = array();
+
+        for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+            $saturdays[] = $i;
+        }
+
         if(isset($list) && sizeof($list) > 0) {
 
             foreach ($list as $k=>$v) {
@@ -2309,6 +2350,11 @@ class HomeController extends Controller
                     else if(in_array($key1, $sundays)) {
                         
                         $attendance = 'H';
+                        $color = '#ffc000';
+                    }
+                    else if($key1 == $saturdays[2]) {
+                        
+                        $attendance = 'TS';
                         $color = '#ffc000';
                     }
                     else if(isset($value1['attendance']) && $value1['attendance'] == 'F') {

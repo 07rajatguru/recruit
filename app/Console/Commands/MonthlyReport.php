@@ -108,6 +108,35 @@ class MonthlyReport extends Command
                     }
                 }
             }
+
+            // Get 3rd Saturday date in current month
+            $date = "$year-$month-01";
+            $first_day = date('N',strtotime($date));
+            $first_day = 6 - $first_day + 1;
+            $last_day =  date('t',strtotime($date));
+            $saturdays = array();
+
+            for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+                $saturdays[] = $i;
+            }
+
+            // Add Third Saturday's Entry
+            foreach ($users as $key1 => $value1) {
+
+                $saturday_date = $year."-".$month."-".$saturdays[2];
+                
+                //If Saturday Entry already exists then not add
+                $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($saturday_date,$key1);
+
+                if(isset($get_work_planning_res) && $get_work_planning_res != '') {
+                }
+                else {
+                    $work_planning = new WorkPlanning();
+                    $work_planning->added_date = $saturday_date;
+                    $work_planning->added_by = $key1;
+                    $work_planning->save();
+                }
+            }
         }
     }
 }

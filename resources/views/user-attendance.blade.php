@@ -309,6 +309,10 @@
                                                             $kk=0;
                                                         }
                                                     }
+                                                    else if(isset($value2['attendance']) && $value2['attendance'] == 'TS') {
+
+                                                        $attendance = 'TS';
+                                                    }
                                                     else if($key2 == $get_cur_dt && $month == $get_cur_month) {
 
                                                         $attendance = 'WPP';
@@ -629,6 +633,37 @@
                                                     ?>
 
                                                     <td style="border: 1px solid black;background-color:#ffc000;text-align: center;cursor: pointer;" title="Sunday">H</td>
+                                                @endif
+
+                                                <!-- For Set Half & Full Third Saturday -->
+                                                @if(isset($value2['remarks']) && $value2['remarks'] != '' && $attendance == 'TS' && $working_hours[0] == '04')
+                                                    <?php 
+                                                        $week_off = $week_off + 0.5;
+                                                    ?>
+
+                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;" title="Half Third Saturday (Remarks Added)">H</td>
+
+                                                @elseif($attendance == 'TS' && $working_hours[0] == '04')
+                                                    <?php 
+                                                        $week_off = $week_off + 0.5;
+                                                    ?>
+
+                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;" title="Half Third Saturday">H</td>
+
+                                                @elseif(isset($value2['remarks']) && $value2['remarks'] != '' && $attendance == 'TS')
+                                                    <?php 
+                                                        $week_off++;
+                                                    ?>
+
+                                                    <td style="border: 1px solid black;background-color:#ffc000;text-align: center;cursor: pointer;" title="Third Saturday (Remarks Added)">H</td>
+
+                                                @elseif($attendance == 'TS')
+                                                    <?php 
+                                                        $week_off++;
+                                                    ?>
+
+                                                    <td style="border: 1px solid black;background-color:#ffc000;text-align: center;cursor: pointer;" title="Third Saturday">H
+                                                    </td>
                                                 @endif
 
                                                 <!-- For Set Full Day Present -->

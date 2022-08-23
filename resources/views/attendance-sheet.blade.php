@@ -365,6 +365,10 @@
                                             $kk=0;
                                         }
                                     }
+                                    else if(isset($value2['attendance']) && $value2['attendance'] == 'TS') {
+
+                                        $attendance = 'TS';
+                                    }
                                     else if($key2 == $get_cur_dt && $month == $get_cur_month) {
 
                                         $attendance = 'WPP';
@@ -488,6 +492,14 @@
                                 @elseif($attendance == 'H')
                                     <?php $week_off++; ?>
                                     <td style="border: 5px solid #000000;background-color:#ffc000;"  title="Sunday">H</td>
+
+                                @elseif($attendance == 'TS' && $working_hours[0] == '04')
+                                    <?php $week_off = $week_off + 0.5; ?>
+                                    <td style="border: 5px solid #000000;background-color:#d99594;" title="Half Third Saturday">H</td>
+
+                                @elseif($attendance == 'TS')
+                                    <?php $week_off++; ?>
+                                    <td style="border: 5px solid #000000;background-color:#ffc000;"  title="Third Saturday">H</td>
 
                                 @elseif($attendance == 'P')
                                 	<?php $present++; ?>
