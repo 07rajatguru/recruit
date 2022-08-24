@@ -71,7 +71,7 @@ class MonthlyReport extends Command
             $month = date('m');
             $year = date('Y');
 
-            // Get All Sundays dates in current month
+            // Get All Sundays dates of current month
             $date = "$year-$month-01";
             $first_day = date('N',strtotime($date));
             $first_day = 7 - $first_day + 1;
@@ -109,7 +109,7 @@ class MonthlyReport extends Command
                 }
             }
 
-            // Get 3rd Saturday date in current month
+            // Get All Saturday dates of current month
             $date = "$year-$month-01";
             $first_day = date('N',strtotime($date));
             $first_day = 6 - $first_day + 1;

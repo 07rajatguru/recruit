@@ -364,7 +364,7 @@
                                             $jj=0;
                                             $kk=0;
                                         }
-                                    }
+                                    } // For third saturday
                                     else if(isset($value2['attendance']) && $value2['attendance'] == 'TS') {
 
                                         $attendance = 'TS';

@@ -110,8 +110,24 @@
 
                     $wfh_data = App\WorkFromHome::getWorkFromHomeRequestByDate($added_date,$value['added_by_id'],1);
 
+                    // For hide edit icon
                     $edit_date = date('Y-m-d', strtotime($value['added_date'].'first day of +1 month'));
                     $edit_date_valid = date('Y-m-d', strtotime($edit_date."+3days"));
+
+                    // Get All Saturday dates of current month
+                    $date = "$year-$month-01";
+                    $first_day = date('N',strtotime($date));
+                    $first_day = 6 - $first_day + 1;
+                    $last_day =  date('t',strtotime($date));
+                    $saturdays = array();
+
+                    for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+                        $saturdays[] = $i;
+                    }
+
+                    // Check Saturday Date
+                    $current_date = date('Y-m-d');
+                    $saturday_date = $year."-".$month."-".$saturdays[2];
                 ?>
                 <tr>
                     @if($value['loggedin_time'] != '')
@@ -252,6 +268,12 @@
                         <td>{{ ++$i }}</td><td></td>
                         <td style="background-color:#ffc000;">{{ $value['added_date'] }}</td>
                         <td colspan="7"><center><b>Sunday</b></center></td>
+
+                    @elseif($saturday_date == $current_date && $value['added_day'] == 'Saturday' && $value['loggedin_time'] == '') {
+
+                        <td>{{ ++$i }}</td><td></td>
+                        <td style="background-color:#ffc000;">{{ $value['added_date'] }}</td>
+                        <td colspan="7"><center><b>Saturday</b></center></td>
 
                     @elseif($value['attendance'] == 'CO')
 
