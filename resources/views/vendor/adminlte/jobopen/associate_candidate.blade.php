@@ -78,6 +78,7 @@
 
             var initial_letter = $("#letter").val();
             var job_id = $("#job_id").val();
+            var app_url = "{!! env('APP_URL'); !!}";
 
             $("#candidate_table").dataTable({
 
@@ -87,7 +88,7 @@
                 "ajax": {
 
                     type: "GET",
-                    url :"/associate-candidate/all",
+                    url : app_url+"/associate-candidate/all",
                     data: {initial_letter:initial_letter,job_id:job_id},
                     beforeSend: function() {
                         document.getElementById("select_btn").value="Loading...";
