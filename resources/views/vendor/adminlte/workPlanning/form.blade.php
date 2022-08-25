@@ -491,11 +491,11 @@
     }
 
     function loadDetails(work_planning_id) {
-
+        var app_url = "{!! env('APP_URL'); !!}";
         $.ajax({
 
             type: 'GET',
-            url: '/work-planning/getlist',
+            url: app_url+'/work-planning/getlist',
             data:{work_planning_id:work_planning_id},
             dataType: 'json',
             async:true,
@@ -554,7 +554,7 @@
                         }
                         else {
 
-                            cell5.innerHTML = '<td style="border:1px solid black;"><textarea name="rm_hr_remarks[]" placeholder="RM / HR Remarks" id="rm_hr_remarks_'+row_cnt+'" class="form-control" rows="5" disabled>'+rm_hr_remarks+'</textarea></td>';
+                            cell5.innerHTML = '<td style="border:1px solid black;"><textarea name="rm_hr_remarks[]" placeholder="RM / HR Remarks" id="rm_hr_remarks_'+row_cnt+'" class="form-control" rows="5" readonly>'+rm_hr_remarks+'</textarea></td>';
                         }
                         
 
