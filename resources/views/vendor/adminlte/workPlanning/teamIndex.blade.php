@@ -89,6 +89,26 @@
             </thead>
             <?php $j = 0;?>
             @if(isset($work_planning_res) && $work_planning_res != '')
+
+                <?php
+                    // Get All Saturday dates of current month
+                    $date = "$year-$month-01";
+                    $first_day = date('N',strtotime($date));
+                    $first_day = 6 - $first_day + 1;
+                    $last_day =  date('t',strtotime($date));
+                    $saturdays = array();
+
+                    for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+                            $saturdays[] = $i;
+                    }
+
+                    // Check Saturday Date
+                    if($month < 10) {
+                        $month1 = "0$month";
+                    }
+                    $saturday_date = $year."-".$month1."-".$saturdays[2];
+                ?>
+
                 @foreach($work_planning_res as $key => $value)
                     <?php
                         $i = 0;
@@ -144,6 +164,7 @@
                                     
                                     $wfh_data = App\WorkFromHome::getWorkFromHomeRequestByDate($added_date,$v['added_by_id'],1);
 
+                                    // For hide edit icon
                                     $edit_date = date('Y-m-d', strtotime($v['added_date'].'first day of +1 month'));
                                     $edit_date_valid = date('Y-m-d', strtotime($edit_date."+3days"));
                                 ?>
@@ -318,6 +339,13 @@
                                         <td style="background-color:#ffc000;">
                                         {{ $v['added_date'] }}</td>
                                         <td colspan="7"><center><b>Sunday</b></center></td>
+
+                                    @elseif($added_date == $saturday_date && $v['added_day'] == 'Saturday' && $v['loggedin_time'] == '')
+
+                                        <td>{{ ++$i }}</td><td></td>
+                                        <td style="background-color:#ffc000;">
+                                        {{ $v['added_date'] }}</td>
+                                        <td colspan="7"><center><b>Saturday</b></center></td>
 
                                     @elseif($v['attendance'] == 'CO')
 

@@ -147,7 +147,7 @@ class WorkPlanning extends Model
                 }
                 else if($added_day == 'Sunday' && $value->loggedin_time == '' && $get_date > $current_date) {
                 }
-                else if($saturday_date == $current_date && $added_day == 'Saturday' && $value->loggedin_time == '' && $saturday_date > $current_date) {
+                else if($added_day == 'Saturday' && $value->loggedin_time == '' && $saturday_date < $current_date) {
                 }
                 else if($value->loggedin_time == 'CO') {
                 }
