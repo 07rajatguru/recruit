@@ -117,18 +117,21 @@ class WorkPlanning extends Model
         $i=0;
         $work_planning_res = array();
 
+        // Get All Saturday dates of current month
+        $date = "$year-$month-01";
+        $first_day = date('N',strtotime($date));
+        $first_day = 6 - $first_day + 1;
+        $last_day =  date('t',strtotime($date));
+        $saturdays = array();
+
+        for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+            $saturdays[] = $i;
+        }
+
+        // Check Saturday Date
+        $saturday_date = $year."-".$month."-".$saturdays[2];
+
         if(isset($response) && sizeof($response) > 0) {
-
-            // Get All Saturday dates of current month
-            $date = "$year-$month-01";
-            $first_day = date('N',strtotime($date));
-            $first_day = 6 - $first_day + 1;
-            $last_day =  date('t',strtotime($date));
-            $saturdays = array();
-
-            for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
-                $saturdays[] = $i;
-            }
 
             foreach ($response as $key => $value) {
 
@@ -137,9 +140,6 @@ class WorkPlanning extends Model
                 $get_date = date('Y-m-d', strtotime("$value->added_date"));
                 $current_date = date('Y-m-d');
 
-                // Check Saturday Date
-                $saturday_date = $year."-".$month."-".$saturdays[2];
-
                 // Check for holidays
                 $holidays_dates = Holidays::checkUsersHolidays($value->added_by);
 
@@ -147,7 +147,7 @@ class WorkPlanning extends Model
                 }
                 else if($added_day == 'Sunday' && $value->loggedin_time == '' && $get_date > $current_date) {
                 }
-                else if($added_day == 'Saturday' && $value->loggedin_time == '' && $saturday_date < $current_date) {
+                else if($added_day == 'Saturday' && $value->loggedin_time == '' && $get_date == $saturday_date) {
                 }
                 else if($value->loggedin_time == 'CO') {
                 }
