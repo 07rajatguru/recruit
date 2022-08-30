@@ -34,6 +34,22 @@
 
 <div class="row">
     <div class="col-lg-12 margin-tb">
+        @if($pre_id > 0)
+            <div class="pull-left">
+                <a class="btn btn-success" href="{{ route('workplanning.show',$pre_id) }}" title="Previous Day Work Planning"><i class="fa fa-angle-double-left"></i></a>
+            </div>
+        @endif
+
+        @if($next_id > 0)
+            <div class="pull-right">
+                <a class="btn btn-info" href="{{ route('workplanning.show',$next_id) }}" title="Next Day Work Planning"><i class="fa fa-angle-double-right"></i></a>
+            </div>
+        @endif
+    </div>
+</div>
+<br/>
+<div class="row">
+    <div class="col-lg-12 margin-tb">
         <div class="pull-left">
             @if($work_planning['status'] == 0)
                 <h4>{{ $work_planning['added_date'] }} - {{ $added_day }}</h4>

@@ -918,7 +918,22 @@ class WorkPlanningController extends Controller
         $edit_date_valid = date('Y-m-d', strtotime($edit_date."+3days"));
         $superadmin_userid = getenv('SUPERADMINUSERID');
 
-        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','wp_id','loggedin_user_id','added_by_id','appr_rejct_by','work_planning_post','added_date','associate_daily','associate_count','leads_daily','lead_count','interview_daily','interview_count','user_details','added_day','edit_date_valid','superadmin_userid'));
+        // Next btn ID
+        $next_data = WorkPlanning::getWorkPlanningByAddedDateAndUserID(date('Y-m-d', strtotime($added_date.'+1 day')),$added_by_id);
+        if (isset($next_data) && $next_data != '') {
+            $next_id = $next_data['id'];
+        } else {
+            $next_id = 0;
+        }
+        // Pre btn ID
+        $pre_data = WorkPlanning::getWorkPlanningByAddedDateAndUserID(date('Y-m-d', strtotime($added_date.'-1 day')),$added_by_id);
+        if (isset($pre_data) && $pre_data != '') {
+            $pre_id = $pre_data['id'];
+        } else {
+            $pre_id = 0;
+        }
+
+        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','wp_id','loggedin_user_id','added_by_id','appr_rejct_by','work_planning_post','added_date','associate_daily','associate_count','leads_daily','lead_count','interview_daily','interview_count','user_details','added_day','edit_date_valid','superadmin_userid','next_id','pre_id'));
     }
 
     public function candidateList($uid,$job_id,$date) {
