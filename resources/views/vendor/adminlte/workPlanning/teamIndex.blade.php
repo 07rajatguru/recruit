@@ -106,6 +106,9 @@
                     if($month < 10) {
                         $month1 = "0$month";
                     }
+                    else {
+                        $month1 = $month;
+                    }
                     $saturday_date = $year."-".$month1."-".$saturdays[2];
                 ?>
 
