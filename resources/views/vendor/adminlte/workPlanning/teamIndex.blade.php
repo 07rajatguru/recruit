@@ -87,7 +87,7 @@
                    <th style="border: 2px solid black;text-align: center;">Status Time</th>
         	    </tr>
             </thead>
-            <?php $j = 0;?>
+            <?php $j = 0; ?>
             @if(isset($work_planning_res) && $work_planning_res != '')
 
                 <?php
@@ -99,17 +99,11 @@
                     $saturdays = array();
 
                     for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
-                            $saturdays[] = $i;
+                        $saturdays[] = $i;
                     }
 
-                    // Check Saturday Date
-                    if($month < 10) {
-                        $month1 = "0$month";
-                    }
-                    else {
-                        $month1 = $month;
-                    }
-                    $saturday_date = $year."-".$month1."-".$saturdays[2];
+                    // Get Saturday Date
+                    $saturday_date = $year."-".$month."-".$saturdays[2];
                 ?>
 
                 @foreach($work_planning_res as $key => $value)
@@ -343,7 +337,7 @@
                                         {{ $v['added_date'] }}</td>
                                         <td colspan="7"><center><b>Sunday</b></center></td>
 
-                                    @elseif($added_date == $saturday_date && $v['added_day'] == 'Saturday' && $v['loggedin_time'] == '')
+                                    @elseif($v['added_day'] == 'Saturday' && $v['loggedin_time'] == '' && $added_date == $saturday_date)
 
                                         <td>{{ ++$i }}</td><td></td>
                                         <td style="background-color:#ffc000;">

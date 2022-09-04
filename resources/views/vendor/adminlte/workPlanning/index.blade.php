@@ -101,17 +101,11 @@
                 $saturdays = array();
 
                 for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
-                        $saturdays[] = $i;
+                    $saturdays[] = $i;
                 }
 
-                // Check Saturday Date
-                if($month < 10) {
-                    $month1 = "0$month";
-                }
-                else {
-                    $month1 = $month;
-                }
-                $saturday_date = $year."-".$month1."-".$saturdays[2];
+                // Get Saturday Date
+                $saturday_date = $year."-".$month."-".$saturdays[2];
             ?>
             @foreach ($work_planning_res as $key => $value)
                 <?php

@@ -49,6 +49,12 @@ class WorkPlanningController extends Controller
         // Get Selected Month
         $month_array = array();
         for ($i = 1; $i <= 12 ; $i++) {
+
+            if($i < 10) 
+                $i = "0$i";
+            else 
+                $i = $i;
+
             $month_array[$i] = date('M',mktime(0,0,0,$i,1,$year));
         }
 
@@ -120,6 +126,12 @@ class WorkPlanningController extends Controller
         // Get Selected Month
         $month_array = array();
         for ($i = 1; $i <= 12 ; $i++) {
+
+            if($i < 10) 
+                $i = "0$i";
+            else 
+                $i = $i;
+
             $month_array[$i] = date('M',mktime(0,0,0,$i,1,$year));
         }
 
