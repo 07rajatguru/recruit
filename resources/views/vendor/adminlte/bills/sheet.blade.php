@@ -4,7 +4,7 @@
 		<table style="width: 40%;">
 			<tr>
 				<td></td>
-				<td colspane="10" style="width: 7;">
+				<td colspan="10" style="width: 7;">
 					<img src="{{ public_path().'/images/Adler-Header.jpg' }}" height="143%" width="143%" />
 				</td>
 				<td></td>
@@ -275,7 +275,15 @@
 				</td><td></td>
 			</tr>
 			<tr>
-				<td></td><td colspan="10" height="80"></td><td></td>
+				<td></td>
+				<td style="width: 6;"></td> <td style="width: 6;"></td> <td style="width: 2;"></td> <td style="width: 3;"></td> <td style="width: 3;"></td> <td></td> <td style="width: 5;"></td> <td></td> <td></td> <td></td> <td></td>
+			</tr>
+			<tr>
+				<td></td>
+				<td colspan="10" style="width: 5;">
+					<img src="{{ public_path().'/images/Adler-Address.png' }}" height="55%" width="55%" />
+				</td>
+				<td></td>
 			</tr>
 		</table>
 	</body>
