@@ -1060,6 +1060,7 @@ class ClientController extends Controller
                 $client['tan'] = $client_basicinfo->tan;
                 $client['percentage_charged_below'] = $client_basicinfo->percentage_charged_below;
                 $client['percentage_charged_above'] = $client_basicinfo->percentage_charged_above;
+                $client['designation'] = $client_basicinfo->designation;
 
                 $client_status = $client_basicinfo->status;
                 $client_all_status = $client_basicinfo->status;
@@ -1183,6 +1184,7 @@ class ClientController extends Controller
         $client_basic_info->mobile = $input['mobile'];
         $client_basic_info->other_number = $input['other_number'];
         $client_basic_info->website = $input['website'];
+        $client_basic_info->designation = $input['designation'];
 
         if(isset($input['percentage_charged_below']) && $input['percentage_charged_below']!= '') {
             $client_basic_info->percentage_charged_below = $input['percentage_charged_below'];
@@ -1480,6 +1482,7 @@ class ClientController extends Controller
                 $client['status'] = $client_basicinfo->status;
                 $client['category'] = $client_basicinfo->category;
                 $client['display_name'] = $client_basicinfo->display_name;
+                $client['designation'] = $client_basicinfo->designation;
 
                 if(isset($client['status'])) {
 
@@ -1749,6 +1752,7 @@ class ClientController extends Controller
         $client_basicinfo->mail = $input->mail;
         $client_basicinfo->s_email = $input->s_email;
         $client_basicinfo->description = $input->description;
+        $client_basicinfo->designation = $input->designation;
 
         if(isset($input->percentage_charged_below) && $input->percentage_charged_below != '') {
             $client_basicinfo->percentage_charged_below = $input->percentage_charged_below;

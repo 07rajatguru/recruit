@@ -117,6 +117,11 @@
                                 <td colspan="3">{{ $client['display_name'] }}</td>
                             @endpermission
                         </tr>
+
+                        <tr>
+                            <th>Designation</th>
+                            <td>{{ $client['designation'] }}</td>
+                        </tr>
                     </table>
                 </div>
             </div>

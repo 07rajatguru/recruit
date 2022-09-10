@@ -853,6 +853,7 @@ class LeadController extends Controller
         $client_basic_info->website = $input['website'];
         $client_basic_info->account_manager_id = $input['account_manager'];
         $client_basic_info->industry_id = $input['industry_id'];
+        $client_basic_info->designation = $input['designation'];
         $generatelead = $input['generatelead'];
 
         $convert_client = 0;

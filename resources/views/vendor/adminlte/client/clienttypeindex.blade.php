@@ -314,6 +314,8 @@
             var client_city = $("#client_city").val();
             var client_industry = $("#client_industry").val();
 
+            var app_url = "{!! env('APP_URL'); !!}";
+
             $("#clienttype_table").DataTable({
 
                 'bProcessing' : true,
@@ -321,7 +323,7 @@
                 "order" : [0,'desc'],
                 "columnDefs": [ {orderable: false, targets: [1]},{orderable: false, targets: [2]} ],
                 "ajax" : {
-                    'url' : '/client/allbytype',
+                    'url' : app_url+'/client/allbytype',
                     "data" : {
                         "source" : source,
                         "client_owner": client_owner,

@@ -86,9 +86,19 @@
                             @endif
                         </div>
 
+                        <div class="form-group {{ $errors->has('designation') ? 'has-error' : '' }}">
+                            <strong>Designation: <span class = "required_fields">*</span></strong>
+                            {!! Form::text('designation', null, array('id'=>'designation','placeholder' => 'Designation','class' => 'form-control', 'tabindex' => '6')) !!}
+                            @if ($errors->has('designation'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('designation') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+
                         <div class="form-group {{ $errors->has('mobile') ? 'has-error' : '' }}">
                             <strong>Mobile Number : <span class = "required_fields">*</span></strong>
-                            {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile Number','class' => 'form-control', 'tabindex' => '6','minLength' => '10')) !!}
+                            {!! Form::text('mobile', null, array('id'=>'mobile','placeholder' => 'Mobile Number','class' => 'form-control', 'tabindex' => '8','minLength' => '10')) !!}
                             @if ($errors->has('mobile'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('mobile') }}</strong>
@@ -100,19 +110,19 @@
 
                         <div class="form-group">
                             <strong>Other Number :</strong>
-                            {!! Form::text('other_number', null, array('id'=>'other_number','placeholder' => 'Other Number','class' => 'form-control', 'tabindex' => '8','minLength' => '10')) !!}
+                            {!! Form::text('other_number', null, array('id'=>'other_number','placeholder' => 'Other Number','class' => 'form-control', 'tabindex' => '10','minLength' => '10')) !!}
                         </div>
 
                         <div class="form-group {{ $errors->has('account_manager_id') ? 'has-error' : '' }}">
                             <strong>Account Manager :</strong>
 
                             @permission(('display-client'))
-                                {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control', 'tabindex' => '10')) !!}
+                                {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control', 'tabindex' => '12')) !!}
                             @else
                                 @if($action == 'copy')
-                                    {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control', 'tabindex' => '10')) !!}
+                                    {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control', 'tabindex' => '12')) !!}
                                 @else
-                                    {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control','disabled', 'tabindex' => '10')) !!}
+                                    {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control','disabled', 'tabindex' => '12')) !!}
                                 @endif
                             @endpermission
 
@@ -127,7 +137,7 @@
 
                         <div class="form-group {{ $errors->has('industry_id') ? 'has-error' : '' }}">
                             <strong>Industry : <span class = "required_fields">*</span> </strong>
-                            {!! Form::select('industry_id', $industry,$industry_id, array('id'=>'industry_id','class' => 'form-control', 'tabindex' => '12','placeholder' => 'Select Industry')) !!}
+                            {!! Form::select('industry_id', $industry,$industry_id, array('id'=>'industry_id','class' => 'form-control', 'tabindex' => '14','placeholder' => 'Select Industry')) !!}
                             @if ($errors->has('industry_id'))
                                 <span class="help-block">
                                 <strong>{{ $errors->first('industry_id') }}</strong>
@@ -138,7 +148,7 @@
                         @permission(('display-client'))
                             <div class="form-group {{ $errors->has('source') ? 'has-error' : '' }}">
                                 <strong>Source :</strong>
-                                {!! Form::text('source', null, array('id'=>'source','placeholder' => 'Source','class' => 'form-control', 'tabindex' => '14' )) !!}
+                                {!! Form::text('source', null, array('id'=>'source','placeholder' => 'Source','class' => 'form-control', 'tabindex' => '16' )) !!}
                                 @if ($errors->has('source'))
                                     <span class="help-block">
                                     <strong>{{ $errors->first('source') }}</strong>
@@ -150,19 +160,19 @@
                         @permission(('display-client'))
                             <div class="form-group">
                                 <strong>GST Number : </strong>
-                                {!! Form::text('gst_no', null, array('id'=>'gst_no','placeholder' => 'GST Number','class' => 'form-control','tabindex' => '16')) !!}
+                                {!! Form::text('gst_no', null, array('id'=>'gst_no','placeholder' => 'GST Number','class' => 'form-control','tabindex' => '18')) !!}
                             </div>
                         @endpermission
 
                         @permission(('display-client'))
-                            <div class="form-group">
+                            <div class="col-md-6 form-group" style="margin-left: -15px;">
                                 <strong>Charges Below AM Position(%) : </strong>
-                                {!! Form::number('percentage_charged_below', $percentage_charged_below, array('id'=>'percentage_charged_below','placeholder' => 'Charges Below AM Position','class' => 'form-control', 'tabindex' => '18')) !!}
+                                {!! Form::number('percentage_charged_below', $percentage_charged_below, array('id'=>'percentage_charged_below','placeholder' => 'Charges Below AM Position','class' => 'form-control', 'tabindex' => '20')) !!}
                             </div>
 
-                            <div class="form-group">
+                            <div class="col-md-6 form-group">
                                 <strong>Charges Above AM Position(%) : </strong>
-                                {!! Form::number('percentage_charged_above', $percentage_charged_above, array('id'=>'percentage_charged_above','placeholder' => 'Charges Above AM Position','class' => 'form-control', 'tabindex' => '20')) !!}
+                                {!! Form::number('percentage_charged_above', $percentage_charged_above, array('id'=>'percentage_charged_above','placeholder' => 'Charges Above AM Position','class' => 'form-control', 'tabindex' => '21')) !!}
                             </div>
                         @endpermission
 
@@ -186,9 +196,9 @@
                             @endif
 
                             @permission(('display-client'))
-                                {!! Form::select('status', $client_all_status_key, $client_all_status, array('id'=>'status','class' => 'form-control', 'tabindex' => '21' )) !!}
+                                {!! Form::select('status', $client_all_status_key, $client_all_status, array('id'=>'status','class' => 'form-control', 'tabindex' => '22' )) !!}
                             @else
-                                {!! Form::select('status', $client_status_key, $client_status, array('id'=>'status','class' => 'form-control', 'tabindex' => '21' )) !!}
+                                {!! Form::select('status', $client_status_key, $client_status, array('id'=>'status','class' => 'form-control', 'tabindex' => '22' )) !!}
                             @endpermission
                                 
                             @if ($errors->has('status'))
@@ -257,26 +267,26 @@
                                 @if($action == 'add' || $action == 'copy')
                                     <div class="form-group">
                                         <strong>Second-line Account Manager :</strong>
-                                        {!! Form::select('second_line_am', $users, null, array('id'=>'second_line_am','class' => 'form-control', 'tabindex' => '10','placeholder' => '---None---')) !!}
+                                        {!! Form::select('second_line_am', $users, null, array('id'=>'second_line_am','class' => 'form-control', 'tabindex' => '11','placeholder' => '---None---')) !!}
                                     </div>
                                 @endif
 
                                 @if($action == 'edit')
                                     <div class="form-group">
                                         <strong>Second-line Account Manager :</strong>
-                                        {!! Form::select('second_line_am', $users, $second_line_am, array('id'=>'second_line_am','class' => 'form-control', 'tabindex' => '10','placeholder' => '---None---')) !!}
+                                        {!! Form::select('second_line_am', $users, $second_line_am, array('id'=>'second_line_am','class' => 'form-control', 'tabindex' => '11','placeholder' => '---None---')) !!}
                                     </div>
                                 @endif
                             @endpermission
 
                             <div class="form-group">
                                 <strong>Website :</strong>
-                                {!! Form::text('website', null, array('id'=>'website','placeholder' => 'Website','class' => 'form-control', 'tabindex' => '11' )) !!}
+                                {!! Form::text('website', null, array('id'=>'website','placeholder' => 'Website','class' => 'form-control', 'tabindex' => '13' )) !!}
                             </div>
 
                             <div class="form-group">
                                 <strong>About :</strong>
-                                {!! Form::textarea('description', null, array('id'=>'description','placeholder' => 'About','class' => 'form-control', 'tabindex' => '15' )) !!}
+                                {!! Form::textarea('description', null, array('id'=>'description','placeholder' => 'About','class' => 'form-control', 'tabindex' => '19' )) !!}
                             </div>
                         </div>
                 </div>
@@ -300,28 +310,28 @@
                     <div class="">
                         <div class="form-group">
                             <strong>Enter your address 1 :</strong>
-                            {!! Form::text('client_address', null, array('id'=>'client_address','placeholder' => 'Enter your address 1','class' => 'form-control' , 'onFocus'=>"geolocate()", 'tabindex' => '21' )) !!}
+                            {!! Form::text('client_address', null, array('id'=>'client_address','placeholder' => 'Enter your address 1','class' => 'form-control' , 'onFocus'=>"geolocate()", 'tabindex' => '23' )) !!}
                         </div>
 
                         <div class="form-group">
                             <strong>Street address :</strong>
-                            {!! Form::text('billing_street1', null, array('id'=>'billing_street1','placeholder' => 'Address Line 1','class' => 'form-control', 'tabindex' => '22')) !!}
-                            {!! Form::text('billing_street2', null, array('id'=>'billing_street2','placeholder' => 'Address Line 2','class' => 'form-control', 'tabindex' => '23')) !!}
+                            {!! Form::text('billing_street1', null, array('id'=>'billing_street1','placeholder' => 'Address Line 1','class' => 'form-control', 'tabindex' => '24')) !!}
+                            {!! Form::text('billing_street2', null, array('id'=>'billing_street2','placeholder' => 'Address Line 2','class' => 'form-control', 'tabindex' => '25')) !!}
                         </div>
 
                         <div class="form-group">
                             <strong>City : <span class = "required_fields">*</span> </strong>
                             @if($action == 'copy')
-                                {!! Form::text('billing_city', $billing_city, array('id'=>'billing_city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '24')) !!}
+                                {!! Form::text('billing_city', $billing_city, array('id'=>'billing_city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '26')) !!}
                             @else
-                                {!! Form::text('billing_city', null, array('id'=>'billing_city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '25')) !!}
+                                {!! Form::text('billing_city', null, array('id'=>'billing_city','placeholder' => 'City','class' => 'form-control', 'tabindex' => '26')) !!}
                             @endif
                         </div>
 
                         <div class="form-group">
                             <strong>State :</strong>
                             @if( $action == 'copy')
-                                {!! Form::text('billing_state', $billing_state, array('id'=>'billing_state','placeholder' => 'State','class' => 'form-control', 'tabindex' => '26')) !!}
+                                {!! Form::text('billing_state', $billing_state, array('id'=>'billing_state','placeholder' => 'State','class' => 'form-control', 'tabindex' => '27')) !!}
                             @else
                                 {!! Form::text('billing_state', null, array('id'=>'billing_state','placeholder' => 'State','class' => 'form-control', 'tabindex' => '27')) !!}
                             @endif
