@@ -152,6 +152,7 @@ class ProcessController extends Controller
                 $all_departments[$a_r->id] = $a_r->name;
             }
         }
+        $all_departments = array_fill_keys(array('0'),'All')+$all_departments;
         $all_departments = array_fill_keys(array(''),'Select Department')+$all_departments;
         $department_id = '';
         
@@ -340,6 +341,7 @@ class ProcessController extends Controller
                 $all_departments[$a_r->id] = $a_r->name;
             }
         }
+        $all_departments = array_fill_keys(array('0'),'All')+$all_departments;
         $all_departments = array_fill_keys(array(''),'Select Department')+$all_departments;
         $department_id = $process->department_id;
 
