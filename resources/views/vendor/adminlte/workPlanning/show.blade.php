@@ -40,6 +40,18 @@
             </div>
         @endif
 
+        <div class="pull-left" style="margin-left: 22px;margin-top: 2px;">
+            @if(isset($all_dates) && sizeof($all_dates) > 0)
+            @foreach($all_dates as $kd => $vd)
+                @if($vd['id'] > 0)
+                    <a class="btn btn-success" title="{{ $vd['day'] }}" href="{{ route('workplanning.show',$vd['id']) }}" style="background-color: {{ $vd['bg'] }}; padding: 4px 8px;">{{ $kd }}</a>
+                @else 
+                    <a class="btn btn-success" title="{{ $vd['day'] }}" style="background-color: {{ $vd['bg'] }}; padding: 4px 8px;">{{ $kd }}</a>
+                @endif
+            @endforeach
+        @endif
+        </div>
+
         @if($next_id > 0)
             <div class="pull-right">
                 <a class="btn btn-info" href="{{ route('workplanning.show',$next_id) }}" title="Next Day Work Planning"><i class="fa fa-angle-double-right"></i></a>
@@ -347,9 +359,9 @@
                                     <tr>
                                         <td>
                                             @if(isset($value['associate_candidate_count']) && $value['associate_candidate_count'] == 1)
-                                                <a href="/{{ $value['candidate_resume'] }}" target="_blank">CV</a>
+                                                <a href="{{ getenv('APP_URL') }}/{{ $value['candidate_resume'] }}" target="_blank">CV</a>
                                             @else
-                                                <a href="/candidate-list/{{ $added_by_id }}/{{ $value['job_id'] }}/{{ $added_date }}" target="_blank">Candidate List</a>
+                                                <a href="{{ getenv('APP_URL') }}/candidate-list/{{ $added_by_id }}/{{ $value['job_id'] }}/{{ $added_date }}" target="_blank">Candidate List</a>
                                             @endif
                                         </td>
                                         <td>{{ $value['posting_title'] }}</td>

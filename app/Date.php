@@ -116,4 +116,13 @@ class Date
         }
         return $final_array;
     }
+    
+    public static function getTotalMonthDays($month) {
+        $month_n = date('m', strtotime($month));
+        $year = date('Y', strtotime($month));
+
+        $month_count = cal_days_in_month(CAL_GREGORIAN,$month_n,$year);
+        
+        return $month_count;
+    }
 }

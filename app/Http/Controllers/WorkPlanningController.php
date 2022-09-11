@@ -22,6 +22,7 @@ use App\JobOpen;
 use App\LateInEarlyGo;
 use App\LeaveBalance;
 use App\MonthwiseLeaveBalance;
+use App\Date;
 
 class WorkPlanningController extends Controller
 {
@@ -931,21 +932,109 @@ class WorkPlanningController extends Controller
         $superadmin_userid = getenv('SUPERADMINUSERID');
 
         // Next btn ID
-        $next_data = WorkPlanning::getWorkPlanningByAddedDateAndUserID(date('Y-m-d', strtotime($added_date.'+1 day')),$added_by_id);
+        $next_date = date('Y-m-d', strtotime($added_date.'+1 day'));
+        $next_date_day = date('l', strtotime($next_date));
+        if ($next_date_day == 'Sunday') {
+            $next_date = date('Y-m-d', strtotime($next_date.'+1 day'));
+        }
+        $next_data = WorkPlanning::getWorkPlanningByAddedDateAndUserID($next_date,$added_by_id);
         if (isset($next_data) && $next_data != '') {
             $next_id = $next_data['id'];
         } else {
             $next_id = 0;
         }
         // Pre btn ID
-        $pre_data = WorkPlanning::getWorkPlanningByAddedDateAndUserID(date('Y-m-d', strtotime($added_date.'-1 day')),$added_by_id);
+        $pre_date = date('Y-m-d', strtotime($added_date.'-1 day'));
+        $pre_date_day = date('l', strtotime($pre_date));
+        if ($pre_date_day == 'Sunday') {
+            $pre_date = date('Y-m-d', strtotime($pre_date.'-1 day'));
+        }
+        $pre_data = WorkPlanning::getWorkPlanningByAddedDateAndUserID($pre_date,$added_by_id);
         if (isset($pre_data) && $pre_data != '') {
             $pre_id = $pre_data['id'];
         } else {
             $pre_id = 0;
         }
 
-        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','wp_id','loggedin_user_id','added_by_id','appr_rejct_by','work_planning_post','added_date','associate_daily','associate_count','leads_daily','lead_count','interview_daily','interview_count','user_details','added_day','edit_date_valid','superadmin_userid','next_id','pre_id'));
+        // Working planning Month all dates
+        $month = date('Y-m', strtotime($added_date));
+        $total_month_days = Date::getTotalMonthDays($month);
+        $all_dates = array();
+        // Get All Saturday dates of current month
+        $date = "$month-01";
+        $first_day = date('N',strtotime($date));
+        $first_day = 6 - $first_day + 1;
+        $last_day =  date('t',strtotime($date));
+        $saturdays = array();
+        for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+            $saturdays[] = $i;
+        }
+
+        // Get Saturday Date
+        $saturday_date = $month."-".$saturdays[2];
+        for ($i=1; $i <= $total_month_days ; $i++) {
+            if ($i <= 9) { $i = '0'.$i; }
+            $date = $month."-$i"; 
+            $day = date('l', strtotime($date));
+            if ($day == 'Sunday') {
+                $all_dates[$i]['bg'] = '#ffc000';
+                $all_dates[$i]['day'] = $day;
+                $all_dates[$i]['id'] = 0;
+            } else {
+                $wp_data = WorkPlanning::getWorkPlanningByAddedDateAndUserID($date,$added_by_id);
+                $leave_data = UserLeave::getLeaveByDateAndID($date,$added_by_id,'1','Full Day');
+                $unapproved_leave_data = UserLeave::getLeaveByDateAndID($date,$added_by_id,'2','Full Day');
+                $holiday_data = Holidays::getHolidayByDateAndID($date,$added_by_id,'');
+                $half_day_leave_data = UserLeave::getLeaveByDateAndID($date,$added_by_id,'1','Half Day');
+                if (isset($wp_data) && $wp_data != '' && $wp_data['loggedin_time'] != '') {
+                    $all_dates[$i]['id'] = $wp_data['id'];
+                    // for bg color set
+                    if ($wp_data['status'] == '0') {
+                        $all_dates[$i]['bg'] = '#8FB1D5';
+                    } else if ($wp_data['status'] == '1' && $wp_data['post_discuss_status'] == '1') {
+                        $all_dates[$i]['bg'] = '#ffb347';
+                    } else if ($wp_data['status'] == '1') {
+                        $all_dates[$i]['bg'] = '#32CD32';
+                    } else if ($wp_data['status'] == '2') {
+                        $all_dates[$i]['bg'] = '#FF3C28';
+                    } else if ($wp_data['attendance'] == 'CO') {
+                        $all_dates[$i]['bg'] = '#eedc82';
+                        $all_dates[$i]['id'] = 0;
+                    } else if ($date == $saturday_date && $day == 'Saturday' && $value['loggedin_time'] == '') {
+                        $all_dates[$i]['bg'] = '#ffc000';
+                        $all_dates[$i]['id'] = 0;
+                    } else {
+                        $all_dates[$i]['bg'] = '#FF3C28';
+                    }
+                } else if (isset($leave_data) && $leave_data != '') {
+                    if ($leave_data->category == 'Privilege Leave') {
+                        $all_dates[$i]['bg'] = '#8db3e2';
+                    } else if ($leave_data->category == 'Sick Leave') {
+                        $all_dates[$i]['bg'] = '#c075f8';
+                    } else if ($leave_data->category == 'LWP') {
+                        $all_dates[$i]['bg'] = '#fd5e53';
+                    } else {
+                        $all_dates[$i]['bg'] = '#fd5e53';
+                    }
+                    $all_dates[$i]['id'] = 0;
+                } else if (isset($unapproved_leave_data) && $unapproved_leave_data != '') {
+                    $all_dates[$i]['bg'] = '#fac090';
+                    $all_dates[$i]['id'] = 0;
+                } else if (isset($holiday_data) && sizeof($holiday_data) > 0) {
+                    $all_dates[$i]['bg'] = '#76933C';
+                    $all_dates[$i]['id'] = 0;
+                } else if (isset($half_day_leave_data) && $half_day_leave_data != '') {
+                    continue;
+                } else {
+                    $all_dates[$i]['id'] = 0;
+                    $all_dates[$i]['bg'] = '#fd5e53';
+                }
+                $all_dates[$i]['day'] = $day;
+            }
+        }
+        // print_r($all_dates);
+        // exit;
+        return view('adminlte::workPlanning.show',compact('work_planning','work_planning_list','wp_id','loggedin_user_id','added_by_id','appr_rejct_by','work_planning_post','added_date','associate_daily','associate_count','leads_daily','lead_count','interview_daily','interview_count','user_details','added_day','edit_date_valid','superadmin_userid','next_id','pre_id','all_dates'));
     }
 
     public function candidateList($uid,$job_id,$date) {
