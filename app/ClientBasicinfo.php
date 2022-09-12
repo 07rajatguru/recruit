@@ -1454,6 +1454,7 @@ class ClientBasicinfo extends Ardent
         // Not Display Delete Client
         $query = $query->where('client_basicinfo.delete_client','=','0');
         $query = $query->where('client_basicinfo.status','=','0');
+        $query = $query->where('client_basicinfo.account_manager_id','!=','0');
 
         // jenny_user_id remove
         if (isset($jenny_user_id) && $jenny_user_id > 0) {
