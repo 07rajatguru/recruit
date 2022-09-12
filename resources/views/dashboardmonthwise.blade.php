@@ -145,7 +145,7 @@
             var year = $("#year :selected").val();
             var app_url = "{!! env('APP_URL'); !!}";
 
-            var url = app_url+'dashboard/monthwise';
+            var url = app_url+'/dashboard/monthwise';
 
             var form = $('<form action="' + url + '" method="post">' +
                 '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
