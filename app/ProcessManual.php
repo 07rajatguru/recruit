@@ -60,7 +60,17 @@ class ProcessManual extends Model
         $process_list[$i]['id'] = $value->id;
         $process_list[$i]['title'] = $value->title;
         // $process_list[$i]['url'] = $value->url;
-        $process_list[$i]['department'] = Department::getDepartmentNameById($value->department_id);
+        $dep_ids = explode(",", $value->department_id);$d_name = '';
+        if (isset($dep_ids) && sizeof($dep_ids)>0) {
+          foreach ($dep_ids as $kd => $vd) {
+            if (isset($d_name) && $d_name != '') {
+              $d_name .= ", " . Department::getDepartmentNameById($vd);
+            } else { 
+              $d_name .= Department::getDepartmentNameById($vd);
+            }
+          }
+        }
+        $process_list[$i]['department'] = $d_name;
 
         // Admin/super admin have access to all details
         if($all==1) {

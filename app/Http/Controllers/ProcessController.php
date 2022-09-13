@@ -152,7 +152,7 @@ class ProcessController extends Controller
                 $all_departments[$a_r->id] = $a_r->name;
             }
         }
-        $all_departments = array_fill_keys(array('0'),'All')+$all_departments;
+        $all_departments = array_fill_keys(array(implode(",", $type_array)),'All')+$all_departments;
         $all_departments = array_fill_keys(array(''),'Select Department')+$all_departments;
         $department_id = '';
         
@@ -341,7 +341,7 @@ class ProcessController extends Controller
                 $all_departments[$a_r->id] = $a_r->name;
             }
         }
-        $all_departments = array_fill_keys(array('0'),'All')+$all_departments;
+        $all_departments = array_fill_keys(array(implode(",", $type_array)),'All')+$all_departments;
         $all_departments = array_fill_keys(array(''),'Select Department')+$all_departments;
         $department_id = $process->department_id;
 
@@ -524,7 +524,17 @@ class ProcessController extends Controller
                 $i++;
             }
         }
-        $department_name = Department::getDepartmentNameById($process_res->department_id);
+        $dep_ids = explode(",", $process_res->department_id);$d_name = '';
+        if (isset($dep_ids) && sizeof($dep_ids)>0) {
+          foreach ($dep_ids as $kd => $vd) {
+            if (isset($d_name) && $d_name != '') {
+              $d_name .= ", " . Department::getDepartmentNameById($vd);
+            } else { 
+              $d_name .= Department::getDepartmentNameById($vd);
+            }
+          }
+        }
+        $department_name = $d_name;
         return view('adminlte::process.show',compact('processdetails','process','department_name'));
     }
     
