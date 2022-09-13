@@ -974,62 +974,67 @@ class WorkPlanningController extends Controller
         $saturday_date = $month."-".$saturdays[2];
         for ($i=1; $i <= $total_month_days ; $i++) {
             if ($i <= 9) { $i = '0'.$i; }
-            $date = $month."-$i"; 
-            $day = date('l', strtotime($date));
-            if ($day == 'Sunday') {
-                $all_dates[$i]['bg'] = '#ffc000';
-                $all_dates[$i]['day'] = $day;
-                $all_dates[$i]['id'] = 0;
+
+            if (date('Y-m-d', strtotime($month."-$i")) >= date('Y-m-d', strtotime("+1 day")) ) {
+                continue;
             } else {
-                $wp_data = WorkPlanning::getWorkPlanningByAddedDateAndUserID($date,$added_by_id);
-                $leave_data = UserLeave::getLeaveByDateAndID($date,$added_by_id,'1','Full Day');
-                $unapproved_leave_data = UserLeave::getLeaveByDateAndID($date,$added_by_id,'2','Full Day');
-                $holiday_data = Holidays::getHolidayByDateAndID($date,$added_by_id,'');
-                $half_day_leave_data = UserLeave::getLeaveByDateAndID($date,$added_by_id,'1','Half Day');
-                if (isset($wp_data) && $wp_data != '' && $wp_data['loggedin_time'] != '') {
-                    $all_dates[$i]['id'] = $wp_data['id'];
-                    // for bg color set
-                    if ($wp_data['status'] == '0') {
-                        $all_dates[$i]['bg'] = '#8FB1D5';
-                    } else if ($wp_data['status'] == '1' && $wp_data['post_discuss_status'] == '1') {
-                        $all_dates[$i]['bg'] = '#ffb347';
-                    } else if ($wp_data['status'] == '1') {
-                        $all_dates[$i]['bg'] = '#32CD32';
-                    } else if ($wp_data['status'] == '2') {
-                        $all_dates[$i]['bg'] = '#FF3C28';
-                    } else if ($wp_data['attendance'] == 'CO') {
-                        $all_dates[$i]['bg'] = '#eedc82';
-                        $all_dates[$i]['id'] = 0;
-                    } else if ($date == $saturday_date && $day == 'Saturday' && $value['loggedin_time'] == '') {
-                        $all_dates[$i]['bg'] = '#ffc000';
-                        $all_dates[$i]['id'] = 0;
-                    } else {
-                        $all_dates[$i]['bg'] = '#FF3C28';
-                    }
-                } else if (isset($leave_data) && $leave_data != '') {
-                    if ($leave_data->category == 'Privilege Leave') {
-                        $all_dates[$i]['bg'] = '#8db3e2';
-                    } else if ($leave_data->category == 'Sick Leave') {
-                        $all_dates[$i]['bg'] = '#c075f8';
-                    } else if ($leave_data->category == 'LWP') {
-                        $all_dates[$i]['bg'] = '#fd5e53';
-                    } else {
-                        $all_dates[$i]['bg'] = '#fd5e53';
-                    }
+                $date = $month."-$i"; 
+                $day = date('l', strtotime($date));
+                if ($day == 'Sunday') {
+                    $all_dates[$i]['bg'] = '#ffc000';
+                    $all_dates[$i]['day'] = $day;
                     $all_dates[$i]['id'] = 0;
-                } else if (isset($unapproved_leave_data) && $unapproved_leave_data != '') {
-                    $all_dates[$i]['bg'] = '#fac090';
-                    $all_dates[$i]['id'] = 0;
-                } else if (isset($holiday_data) && sizeof($holiday_data) > 0) {
-                    $all_dates[$i]['bg'] = '#76933C';
-                    $all_dates[$i]['id'] = 0;
-                } else if (isset($half_day_leave_data) && $half_day_leave_data != '') {
-                    continue;
                 } else {
-                    $all_dates[$i]['id'] = 0;
-                    $all_dates[$i]['bg'] = '#fd5e53';
+                    $wp_data = WorkPlanning::getWorkPlanningByAddedDateAndUserID($date,$added_by_id);
+                    $leave_data = UserLeave::getLeaveByDateAndID($date,$added_by_id,'1','Full Day');
+                    $unapproved_leave_data = UserLeave::getLeaveByDateAndID($date,$added_by_id,'2','Full Day');
+                    $holiday_data = Holidays::getHolidayByDateAndID($date,$added_by_id,'');
+                    $half_day_leave_data = UserLeave::getLeaveByDateAndID($date,$added_by_id,'1','Half Day');
+                    if (isset($wp_data) && $wp_data != '' && $wp_data['loggedin_time'] != '') {
+                        $all_dates[$i]['id'] = $wp_data['id'];
+                        // for bg color set
+                        if ($wp_data['status'] == '0') {
+                            $all_dates[$i]['bg'] = '#8FB1D5';
+                        } else if ($wp_data['status'] == '1' && $wp_data['post_discuss_status'] == '1') {
+                            $all_dates[$i]['bg'] = '#ffb347';
+                        } else if ($wp_data['status'] == '1') {
+                            $all_dates[$i]['bg'] = '#32CD32';
+                        } else if ($wp_data['status'] == '2') {
+                            $all_dates[$i]['bg'] = '#FF3C28';
+                        } else if ($wp_data['attendance'] == 'CO') {
+                            $all_dates[$i]['bg'] = '#eedc82';
+                            $all_dates[$i]['id'] = 0;
+                        } else if ($date == $saturday_date && $day == 'Saturday' && $value['loggedin_time'] == '') {
+                            $all_dates[$i]['bg'] = '#ffc000';
+                            $all_dates[$i]['id'] = 0;
+                        } else {
+                            $all_dates[$i]['bg'] = '#FF3C28';
+                        }
+                    } else if (isset($leave_data) && $leave_data != '') {
+                        if ($leave_data->category == 'Privilege Leave') {
+                            $all_dates[$i]['bg'] = '#8db3e2';
+                        } else if ($leave_data->category == 'Sick Leave') {
+                            $all_dates[$i]['bg'] = '#c075f8';
+                        } else if ($leave_data->category == 'LWP') {
+                            $all_dates[$i]['bg'] = '#fd5e53';
+                        } else {
+                            $all_dates[$i]['bg'] = '#fd5e53';
+                        }
+                        $all_dates[$i]['id'] = 0;
+                    } else if (isset($unapproved_leave_data) && $unapproved_leave_data != '') {
+                        $all_dates[$i]['bg'] = '#fac090';
+                        $all_dates[$i]['id'] = 0;
+                    } else if (isset($holiday_data) && sizeof($holiday_data) > 0) {
+                        $all_dates[$i]['bg'] = '#76933C';
+                        $all_dates[$i]['id'] = 0;
+                    } else if (isset($half_day_leave_data) && $half_day_leave_data != '') {
+                        continue;
+                    } else {
+                        $all_dates[$i]['id'] = 0;
+                        $all_dates[$i]['bg'] = '#fd5e53';
+                    }
+                    $all_dates[$i]['day'] = $day;
                 }
-                $all_dates[$i]['day'] = $day;
             }
         }
         // print_r($all_dates);
