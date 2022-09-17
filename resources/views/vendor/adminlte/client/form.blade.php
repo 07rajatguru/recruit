@@ -87,7 +87,7 @@
                         </div>
 
                         <div class="form-group {{ $errors->has('designation') ? 'has-error' : '' }}">
-                            <strong>Designation: <span class = "required_fields">*</span></strong>
+                            <strong>Designation: </strong>
                             {!! Form::text('designation', null, array('id'=>'designation','placeholder' => 'Designation','class' => 'form-control', 'tabindex' => '6')) !!}
                             @if ($errors->has('designation'))
                                 <span class="help-block">
