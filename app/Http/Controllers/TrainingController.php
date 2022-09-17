@@ -152,6 +152,7 @@ class TrainingController extends Controller
                 $all_departments[$a_r->id] = $a_r->name;
             }
         }
+        $all_departments = array_fill_keys(array(implode(",", $type_array)),'All')+$all_departments;
         $all_departments = array_fill_keys(array(''),'Select Department')+$all_departments;
         $department_id = '';
         
@@ -337,6 +338,7 @@ class TrainingController extends Controller
                 $all_departments[$a_r->id] = $a_r->name;
             }
         }
+        $all_departments = array_fill_keys(array(implode(",", $type_array)),'All')+$all_departments;
         $all_departments = array_fill_keys(array(''),'Select Department')+$all_departments;
         $department_id = $training->department_id;
 
@@ -521,7 +523,22 @@ class TrainingController extends Controller
             $c++;
         }
 
-        $department_name = Department::getDepartmentNameById($training_material->department_id);
+        //$department_name = Department::getDepartmentNameById($training_material->department_id);
+        $dep_ids = explode(",", $training_material->department_id);
+        $department_name = '';
+
+        if(isset($dep_ids) && sizeof($dep_ids) > 0) {
+
+            foreach($dep_ids as $kd => $vd) {
+
+                if (isset($department_name) && $department_name != '') {
+                    $department_name .= ", " . Department::getDepartmentNameById($vd);
+                }
+                else { 
+                    $department_name .= Department::getDepartmentNameById($vd);
+                }
+            }
+        }
        
         return view('adminlte::training.show',compact('trainingdetails','training_material','user_id','department_name'));
     }
