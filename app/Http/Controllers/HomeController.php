@@ -777,7 +777,7 @@ class HomeController extends Controller
 
             $wp_id = $get_work_planning->id;
 
-            if($attendance == 'HD' || $attendance == 'F' || $attendance == 'A') {
+            if($attendance == 'HD' || $attendance == 'F' || $attendance == 'A' || $attendance == 'CO') {
                 \DB::statement("UPDATE `work_planning` SET `attendance` = '$attendance' WHERE `id` = $wp_id");
             }
             else {
@@ -790,7 +790,7 @@ class HomeController extends Controller
             $work_planning->added_date = $added_date;
             $work_planning->added_by = $user_id;
 
-            if($attendance == 'HD' || $attendance == 'F' || $attendance == 'A') {
+            if($attendance == 'HD' || $attendance == 'F' || $attendance == 'A' || $attendance == 'CO') {
                 
                 $work_planning->attendance = $attendance;
             }

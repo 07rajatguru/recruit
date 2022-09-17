@@ -137,6 +137,7 @@ class User extends Authenticatable
         $attendance_value['SL'] = 'SL - Sick Leave';
         $attendance_value['UL'] = 'UL - Unapproved Leave';
         $attendance_value['PH'] = 'PH - Paid Holiday';
+        $attendance_value['CO'] = 'CO - Compensatory Off';
         $attendance_value['H'] = 'H - Holiday';
 
         return $attendance_value;
