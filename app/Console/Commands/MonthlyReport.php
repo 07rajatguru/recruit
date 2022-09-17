@@ -120,10 +120,11 @@ class MonthlyReport extends Command
                 $saturdays[] = $i;
             }
 
+            // Get only Third Saturday's date
+            $saturday_date = $year."-".$month."-".$saturdays[2];
+
             // Add Third Saturday's Entry
             foreach ($users as $key1 => $value1) {
-
-                $saturday_date = $year."-".$month."-".$saturdays[2];
                 
                 //If Saturday Entry already exists then not add
                 $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($saturday_date,$key1);
@@ -133,6 +134,7 @@ class MonthlyReport extends Command
                 else {
                     $work_planning = new WorkPlanning();
                     $work_planning->added_date = $saturday_date;
+                    $work_planning->attendance = 'TS';
                     $work_planning->added_by = $key1;
                     $work_planning->save();
                 }

@@ -1549,7 +1549,7 @@ class HomeController extends Controller
 
                             $list[$combine_name][$get_dt]['attendance'] = 'H';
                         }
-                        else if($get_dt == $saturdays[2]) {
+                        else if($get_dt == $saturdays[2] && $value->attendance == "TS") {
 
                             $list[$combine_name][$get_dt]['attendance'] = 'TS';
                         }
@@ -1987,7 +1987,7 @@ class HomeController extends Controller
 
                         $list[$combine_name][$get_dt]['attendance'] = 'H';
                     }
-                    else if($get_dt == $saturdays[2]) {
+                    else if($get_dt == $saturdays[2] && $value->attendance == "TS") {
 
                         $list[$combine_name][$get_dt]['attendance'] = 'TS';
                     }
@@ -2352,7 +2352,7 @@ class HomeController extends Controller
                         $attendance = 'H';
                         $color = '#ffc000';
                     }
-                    else if($key1 == $saturdays[2]) {
+                    else if($key1 == $saturdays[2] && $value1['attendance'] == "TS") {
                         
                         $attendance = 'TS';
                         $color = '#ffc000';

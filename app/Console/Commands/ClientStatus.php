@@ -42,7 +42,6 @@ class ClientStatus extends Command
      */
     public function handle()
     {
-
         $active_clients = array();
 
         //$job_data = \DB::select(\DB::raw('SELECT `id`,`job_id`,`client_id`,`created_at` FROM `job_openings` WHERE `created_at` IN (SELECT MAX(`created_at`) FROM `job_openings` GROUP BY `client_id`)'));
@@ -61,10 +60,10 @@ class ClientStatus extends Command
 
                 $date1 = date('Y-m-d',strtotime("-30 days"));
 
-                if(($job_created_at) < $date1) {
+                if($job_created_at < $date1) {
 
                     if ($client_status == 0) {
-                            continue;
+                        continue;
                     }
                     else {
                         

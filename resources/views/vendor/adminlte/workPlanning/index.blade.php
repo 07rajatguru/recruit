@@ -106,6 +106,9 @@
 
                 // Get Saturday Date
                 $saturday_date = $year."-".$month."-".$saturdays[2];
+
+                // Because start from August'22
+                $august_date = '2022-08-01';
             ?>
             @foreach ($work_planning_res as $key => $value)
                 <?php
@@ -269,7 +272,7 @@
                         <td style="background-color:#ffc000;">{{ $value['added_date'] }}</td>
                         <td colspan="7"><center><b>Sunday</b></center></td>
 
-                    @elseif($added_date == $saturday_date && $value['added_day'] == 'Saturday' && $value['loggedin_time'] == '')
+                    @elseif($added_date == $saturday_date && $value['added_day'] == 'Saturday' && $value['loggedin_time'] == '' && $saturday_date > $august_date)
 
                         <td>{{ ++$i }}</td><td></td>
                         <td style="background-color:#ffc000;">{{ $value['added_date'] }}</td>
