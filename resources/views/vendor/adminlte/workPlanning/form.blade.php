@@ -31,19 +31,23 @@
                         $current_time = date("H:i", $time);
                     ?>
 
-                    @if($current_time >= '18:00')
-                        <div role="tabpanel">
-                            <ul class="nav nav-tabs" role="tablist">
-                                <li role="presentation" class="today active">
-                                    <a href="" role="tab" data-toggle="tab" style="font-size:15px;color: black;" title="Today" onclick="setDateValue('Today');"><b>Today</b></a>
-                                </li>
+                    <div role="tabpanel">
+                        <ul class="nav nav-tabs" role="tablist">
+                            <li role="presentation" class="yesterday">
+                                <a href="" role="tab" data-toggle="tab" style="font-size:15px;color: black;" title="Yesterday" onclick="setDateValue('Yesterday');"><b>Yesterday</b></a>
+                            </li>
 
+                            <li role="presentation" class="today active">
+                                <a href="" role="tab" data-toggle="tab" style="font-size:15px;color: black;" title="Today" onclick="setDateValue('Today');"><b>Today</b></a>
+                            </li>
+
+                            @if($current_time >= '18:00')
                                 <li role="presentation" class="tomorrow">
                                     <a href="" role="tab" data-toggle="tab" style="font-size:15px;color: black;" title="Tomorrow" onclick="setDateValue('Tomorrow');"><b>Tomorrow</b></a>
                                 </li>
-                            </ul>
-                        </div>
-                    @endif
+                            @endif
+                        </ul>
+                    </div>
                 @endpermission
             @endif
         </div>
@@ -235,7 +239,7 @@
             <div class="modal-body">
                 <p>Have you Reported Late to Work?</p>
 
-                <div class="detail_class" style="display:none;">
+                <div class="yes_detail_class" style="display:none;">
                     {!! Form::radio('report_delay','Late in / Early Go',false,['id' => 'report_delay','onchange' => 'displayTextArea("Late in / Early Go")']) !!}
                     {!! Form::label('Late in / Early Go') !!} &nbsp;
 
@@ -253,17 +257,22 @@
                         {!! Form::textarea('report_delay_content', null, array('id' => 'report_delay_content','placeholder' => 'Specify Reason','class' => 'form-control','rows' => '5')) !!}
                     </div>
                 </div>
+                <div class="no_detail_class" style="display:none;">
+                    <div class="form-group">
+                        <br/><strong>&nbsp; Please Specify Reason :</strong>
+                        {!! Form::textarea('no_report_content', null, array('id' => 'no_report_content','placeholder' => 'Specify Reason','class' => 'form-control','rows' => '5')) !!}
+                    </div>
+                </div>
             </div>
             <div class="modal-footer first_footer">
-                <button type="button" class="btn btn-primary" onclick="displaybuttons();">Yes
+                <button type="button" class="btn btn-primary" onclick="displaybuttons('Yes');">Yes
                 </button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                <!-- <button type="button" class="btn btn-default" data-dismiss="modal">No</button> -->
+                <button type="button" class="btn btn-default" onclick="displaybuttons('No');">No</button>
             </div>
             <div class="modal-footer second_footer" style="display:none;">
-                <button type="button" class="btn btn-primary" onclick="submitform();">OK
-                </button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel
-                </button>
+                <button type="button" class="btn btn-primary" onclick="submitform();">OK</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
             </div>
         </div>
     </div>
@@ -528,32 +537,48 @@
                         cell1.style.border = '1px solid black';
                         cell1.innerHTML = row_cnt;
 
-                        var cell2 = row.insertCell(1);
-                        cell2.style.border = '1px solid black';
-                        cell2.innerHTML = '<td style="border:1px solid black;"><textarea name="task[]" placeholder="Task" id="task_'+row_cnt+'" class="form-control" rows="3">'+task+'</textarea></td>';
-
-                        var cell3 = row.insertCell(2);
-                        cell3.style.border = '1px solid black';
-                        cell3.innerHTML = '<td style="border:1px solid black;"><select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setTotalProjectedTime()"></select> <br/><br/><select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" onchange="setTotalActualTime()"></select></td>';
-
-                        var cell4 = row.insertCell(3);
-                        cell4.style.border = '1px solid black';
-                        cell4.innerHTML = '<td style="border:1px solid black;"><textarea name="remarks[]" placeholder="Remarks" id="remarks_'+row_cnt+'" class="form-control" rows="5">'+remarks+'</textarea></td>';
-
-                        if(rm_hr_remarks == null) {
-
-                            rm_hr_remarks = '';
-                        }
-
-                        var cell5 = row.insertCell(4);
-                        cell5.style.border = '1px solid black';
-
                         if(added_by != loggedin_userid) {
 
+                            var cell2 = row.insertCell(1);
+                            cell2.style.border = '1px solid black';
+                            cell2.innerHTML = '<td style="border:1px solid black;"><textarea name="task[]" placeholder="Task" id="task_'+row_cnt+'" class="form-control" rows="3" readonly>'+task+'</textarea></td>';
+
+                            var cell3 = row.insertCell(2);
+                            cell3.style.border = '1px solid black';
+                            cell3.innerHTML = '<td style="border:1px solid black;"><select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setTotalProjectedTime()" disabled></select> <br/><br/><select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" onchange="setTotalActualTime()" disabled></select></td>';
+
+                            var cell4 = row.insertCell(3);
+                            cell4.style.border = '1px solid black';
+                            cell4.innerHTML = '<td style="border:1px solid black;"><textarea name="remarks[]" placeholder="Remarks" id="remarks_'+row_cnt+'" class="form-control" rows="5" readonly>'+remarks+'</textarea></td>';
+
+                            if(rm_hr_remarks == null) {
+                                rm_hr_remarks = '';
+                            }
+
+                            var cell5 = row.insertCell(4);
+                            cell5.style.border = '1px solid black';
                             cell5.innerHTML = '<td style="border:1px solid black;"><textarea name="rm_hr_remarks[]" placeholder="RM / HR Remarks" id="rm_hr_remarks_'+row_cnt+'" class="form-control" rows="5">'+rm_hr_remarks+'</textarea></td>';   
                         }
                         else {
 
+                            var cell2 = row.insertCell(1);
+                            cell2.style.border = '1px solid black';
+                            cell2.innerHTML = '<td style="border:1px solid black;"><textarea name="task[]" placeholder="Task" id="task_'+row_cnt+'" class="form-control" rows="3">'+task+'</textarea></td>';
+
+                            var cell3 = row.insertCell(2);
+                            cell3.style.border = '1px solid black';
+                            cell3.innerHTML = '<td style="border:1px solid black;"><select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setTotalProjectedTime()"></select> <br/><br/><select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" onchange="setTotalActualTime()"></select></td>';
+
+                            var cell4 = row.insertCell(3);
+                            cell4.style.border = '1px solid black';
+                            cell4.innerHTML = '<td style="border:1px solid black;"><textarea name="remarks[]" placeholder="Remarks" id="remarks_'+row_cnt+'" class="form-control" rows="5">'+remarks+'</textarea></td>';
+
+                            if(rm_hr_remarks == null) {
+                                rm_hr_remarks = '';
+                            }
+
+                            var cell5 = row.insertCell(4);
+                            cell5.style.border = '1px solid black';
                             cell5.innerHTML = '<td style="border:1px solid black;"><textarea name="rm_hr_remarks[]" placeholder="RM / HR Remarks" id="rm_hr_remarks_'+row_cnt+'" class="form-control" rows="5" readonly>'+rm_hr_remarks+'</textarea></td>';
                         }
                         
@@ -638,9 +663,15 @@
         return true;
     }
 
-    function displaybuttons() {
+    function displaybuttons(value) {
 
-        $(".detail_class").show();
+        if(value == 'Yes') {
+            $(".yes_detail_class").show();
+        }
+        else if(value == 'No') {
+            $(".no_detail_class").show();
+        }
+
         $(".first_footer").hide();
         $(".second_footer").show();
     }
@@ -680,7 +711,13 @@
             var utc_date = new Date().toJSON().slice(0,10).replace(/-/g,'-');
             $("#date_value").val(utc_date);
         }
-        if(day == 'Tomorrow') {
+        else if(day == 'Yesterday') {
+            
+            var a = new Date(new Date().setDate(new Date().getDate() - 1));
+            var utc_date = a.toJSON().slice(0,10).replace(/-/g,'-');
+            $("#date_value").val(utc_date);
+        }
+        else if(day == 'Tomorrow') {
             
             var a = new Date(new Date().setDate(new Date().getDate() + 1));
             var utc_date = a.toJSON().slice(0,10).replace(/-/g,'-');

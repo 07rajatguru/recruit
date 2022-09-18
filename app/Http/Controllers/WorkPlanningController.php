@@ -655,9 +655,7 @@ class WorkPlanningController extends Controller
     public function store(Request $request) {
 
         // Get Current Time
-        $current_date = date('Y-m-d') . " " . date('H:i:s');
-
-        $utc_current_date = $current_date;
+        $utc_current_date = date('Y-m-d') . " " . date('H:i:s');
         $dt_current_date = new \DateTime($utc_current_date);
         $tz_current_date = new \DateTimeZone('Asia/Kolkata');
 
@@ -685,8 +683,9 @@ class WorkPlanningController extends Controller
         }
         else {
 
-            $time = date('H:i:s');
-            $login_date = $date . " " . $time;
+            $current = date('Y-m-d');
+            $get_time = UsersLog::getUserTimeByID($user_id,$current);
+            $login_date = $current . " " . $get_time['login'];
             $login_utc = $login_date;
             $login_dt = new \DateTime($login_utc);
             $login_tz = new \DateTimeZone('Asia/Kolkata');
@@ -697,6 +696,19 @@ class WorkPlanningController extends Controller
             // Get Difference between login time & report submit time
             $diff = $current_time - $loginTime;
             $time_diff = date("H:i", $diff);
+
+          /*  $time = date('H:i:s');
+            $login_date = $date . " " . $time;
+            $login_utc = $login_date;
+            $login_dt = new \DateTime($login_utc);
+            $login_tz = new \DateTimeZone('Asia/Kolkata');
+
+            $login_dt->setTimezone($login_tz);
+            $loginTime = strtotime($login_dt->format('H:i:s'));
+
+            // Get Difference between login time & report submit time
+            $diff = $current_time - $loginTime;
+            $time_diff = date("H:i", $diff);*/
         }
 
         //Set for popup
@@ -708,6 +720,9 @@ class WorkPlanningController extends Controller
         $link = $request->input('link');
         $report_delay = $request->input('report_delay');
         $report_delay_content = $request->input('report_delay_content');
+
+        // If click on NO in report late option then get value and set it report_delay_content field
+        $no_report_content = $request->input('no_report_content');
 
         // If report delay
         if(isset($report_delay) && $report_delay != '') {
@@ -727,8 +742,11 @@ class WorkPlanningController extends Controller
         // If report delay
         if(isset($report_delay_content) && $report_delay_content != '') {
         }
+        else if(isset($no_report_content) && $no_report_content != '') {
+        }
         else {
             $report_delay_content = NULL;
+            $no_report_content = NULL;
         }
 
         if($time_diff > '01:00' || $actual_loggedin_time > '10:30') {
@@ -775,7 +793,14 @@ class WorkPlanningController extends Controller
         $work_planning->added_date = $date;
         $work_planning->added_by = $user_id;
         $work_planning->report_delay = $report_delay;
-        $work_planning->report_delay_content = $report_delay_content;
+
+        if(isset($report_delay_content) && $report_delay_content != '') {
+            $work_planning->report_delay_content = $report_delay_content;
+        }
+        else if(isset($no_report_content) && $no_report_content != '') {
+            $work_planning->report_delay_content = $no_report_content;
+        }
+
         $work_planning->link = $link;
         $work_planning->total_projected_time = $total_projected_time;
         $work_planning->evening_status = 0;
@@ -1060,7 +1085,7 @@ class WorkPlanningController extends Controller
         $work_planning_res = WorkPlanning::find($id);
 
         $user_id = $work_planning_res->added_by;
-        $date = date('d-m-Y',strtotime($work_planning_res->added_date));
+        $date = date('d-m-Y',strtotime($work_planning_res->created_at));
         $status_date = date('d-m-Y',strtotime($work_planning_res->work_planning_status_date));
 
         $work_type = WorkPlanning::getWorkType();
@@ -1306,15 +1331,16 @@ class WorkPlanningController extends Controller
                     $yesterday = date("l", strtotime("-1 days"));
                     $yesterday_date = date("Y-m-d", strtotime("-1 days"));
                     $yesterday_before_date = date("Y-m-d", strtotime("-2 days"));
+                    $actual_added_date = $work_planning['actual_added_date'];
 
                     $holidays = Holidays::getHolidayByDateAndID($yesterday_date,$added_by_id,'');
                     $leave_data = UserLeave::getLeaveByDateAndID($yesterday_date,$added_by_id,'','');
 
                     if((isset($holidays) && sizeof($holidays) > 0) || (isset($leave_data) && $leave_data != '')) {
                     }
-                    else if($today == 'Sunday' && $work_planning_date == $yesterday_date) {
+                    else if($today == 'Sunday' && $actual_added_date == $yesterday_date) {
                     }
-                    else if($yesterday == 'Sunday' && $work_planning_date == $yesterday_before_date) {
+                    else if($yesterday == 'Sunday' && $actual_added_date == $yesterday_before_date) {
                     }
                     else {
 

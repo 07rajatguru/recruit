@@ -291,6 +291,7 @@ class WorkPlanning extends Model
             $work_planning_res['id'] = $response->id;
             $work_planning_res['added_by'] = $response->fnm . " " . $response->lnm;
             $work_planning_res['work_type'] = $response->work_type;
+            $work_planning_res['actual_added_date'] = $response->added_date;
             $work_planning_res['added_date'] = date('d-m-Y', strtotime("$response->added_date"));
             $work_planning_res['created_at'] = date('d-m-Y', strtotime("$response->created_at"));
 
