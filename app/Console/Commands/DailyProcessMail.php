@@ -22,7 +22,7 @@ class DailyProcessMail extends Command
      *
      * @var string
      */
-    protected $description = 'Command for daily consolidated Process Manual mail at 2:00 PM';
+    protected $description = 'Command for daily consolidated Process Manual mail at 2:00 PM & 9:00 PM';
 
     /**
      * Create a new command instance.
@@ -41,44 +41,71 @@ class DailyProcessMail extends Command
      */
     public function handle() {
         
-        // $start = date('Y-m-d 14:00:00',strtotime("-1day"));
-        $start = date('Y-m-d 00:00:00');
-        $end = date('Y-m-d 14:00:00');
+        $now = date('Y-m-d H:i:s');
+        if ($now == date('Y-m-d 14:00:00')) {
+            $start = date('Y-m-d 00:00:00');
+            $end = date('Y-m-d 14:00:00');
 
-        $process = ProcessManual::getTodaysProcessManual($start,$end);
-
-        $user_emails = array();
-        $p_ids = '';
-        if (isset($process) && sizeof($process) > 0) {
-            foreach ($process as $key => $value) {
-                if (isset($p_ids) && $p_ids != '') {
-                    $p_ids .= ','. $value['id'];
-                } else {
-                    $p_ids .= $value['id'];
-                }
-
-                $users = ProcessVisibleUser::getProcessUsersByProcessId($value['id']);
-                if (isset($users) && sizeof($users)>0) {
-                    foreach ($users as $key => $value) {
-                        $email = User::getUserEmailById($value['user_id']);
-                        $user_emails[] = $email;
+            $process = ProcessManual::getTodaysProcessManual($start,$end);
+            if (isset($process) && sizeof($process) > 0) {
+                foreach ($process as $key => $value) {
+                    $user_emails = array();
+                    $users = ProcessVisibleUser::getProcessUsersByProcessId($value['id']);
+                    if (isset($users) && sizeof($users)>0) {
+                        foreach ($users as $key_u => $value_u) {
+                            $email = User::getUserEmailById($value_u['user_id']);
+                            $user_emails[] = $email;
+                        }
                     }
+
+                    $superadminuserid = getenv('SUPERADMINUSERID');
+                    $superadminsecondemail = User::getUserEmailById($superadminuserid);
+                    $cc_user = $superadminsecondemail;
+
+                    $module = "Today's Process Manual";
+                    $sender_name = $superadminuserid;
+                    $to = implode(",", $user_emails);
+                    $subject = "Today's Process Manual: ".$value['title'];
+                    $message = "Today's Process Manual";
+                    $module_id = $value['id'];
+                    $cc = $cc_user;
+
+                    event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
                 }
             }
+        } else if ($now == date('Y-m-d 21:00:00')) {
+            $start = date('Y-m-d 14:00:01');
+            $end = date('Y-m-d 21:00:00');
 
-            $superadminuserid = getenv('SUPERADMINUSERID');
-            $superadminsecondemail = User::getUserEmailById($superadminuserid);
-            $cc_user = $superadminsecondemail;
+            $process = ProcessManual::getTodaysProcessManual($start,$end);
+            if (isset($process) && sizeof($process) > 0) {
+                foreach ($process as $key => $value) {
+                    $user_emails = array();
+                    $users = ProcessVisibleUser::getProcessUsersByProcessId($value['id']);
+                    if (isset($users) && sizeof($users)>0) {
+                        foreach ($users as $key_u => $value_u) {
+                            $email = User::getUserEmailById($value_u['user_id']);
+                            $user_emails[] = $email;
+                        }
+                    }
 
-            $module = "Today's Process Manual";
-            $sender_name = $superadminuserid;
-            $to = implode(",", $user_emails);
-            $subject = "Today's Process Manual";
-            $message = "Today's Process Manual";
-            $module_id = $p_ids;
-            $cc = $cc_user;
+                    $superadminuserid = getenv('SUPERADMINUSERID');
+                    $superadminsecondemail = User::getUserEmailById($superadminuserid);
+                    $cc_user = $superadminsecondemail;
 
-            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+                    $module = "Today's Process Manual";
+                    $sender_name = $superadminuserid;
+                    $to = implode(",", $user_emails);
+                    $subject = "Today's Process Manual: ".$value['title'];
+                    $message = "Today's Process Manual";
+                    $module_id = $value['id'];
+                    $cc = $cc_user;
+
+                    event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+                }
+            }
+        } else {
+            echo "Please check script run time.";
         }
     }
 }
