@@ -4138,6 +4138,7 @@ class JobOpenController extends Controller
         if (isset($priority) && $priority != '') {
             $job_open->priority = $priority;
             $job_open->priority_by = $user_id;
+            $job_open->priority_date = date('Y-m-d H:i:s');
             $job_open->save();
         }
     
@@ -4799,6 +4800,7 @@ class JobOpenController extends Controller
 
         $job_page = $_POST['job_page'];
 
+        $user_id = \Auth::user()->id;
         $job_ids = $_POST['job_ids'];
         $priority = $_POST['priority'];
         $updated_at = date('Y-m-d H:i:s');
@@ -4806,8 +4808,7 @@ class JobOpenController extends Controller
         $job_ids_array = explode(",", $job_ids);
 
         foreach ($job_ids_array as $key => $value) {
-
-            DB::statement("UPDATE job_openings SET priority = '$priority', updated_at='$updated_at' where id = $value");
+            DB::statement("UPDATE job_openings SET priority = '$priority', priority_by = '$user_id', priority_date = '$updated_at', updated_at='$updated_at' where id = $value");
         }
 
         if ($job_page == 'Search Job') {

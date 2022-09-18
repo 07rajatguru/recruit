@@ -92,19 +92,15 @@ class AfterIntrviewReminder extends Command
             }
         }
 
-        // Change Job Priority From Grey To On Hold After 1 Month Of Added Date
-        $jobs = JobOpen::getPriorityWiseJobs(1,0,'No Deliveries Needed');
+        // Change Job Priority From Grey To On Hold After 1 Month Of Priority Date
         $one_month_prior_date = date("Y-m-d", strtotime("-1 month"));
-
+        $jobs = JobOpen::getPriorityWiseJobs(1,0,'No Deliveries Needed');
         if(isset($jobs) && sizeof($jobs) > 0) {
-
             foreach ($jobs as $key1 => $value1) {
-
-                $job_added_date = $value1['open_date'];
+                $job_priority_date = $value1['priority_date'];
                 $jobid = $value1['id'];
 
-                if($job_added_date <= $one_month_prior_date) {
-
+                if($job_priority_date < $one_month_prior_date) {
                     DB::statement("UPDATE `job_openings` SET `priority` = '4' WHERE `id` = $jobid");
                 }
             }
