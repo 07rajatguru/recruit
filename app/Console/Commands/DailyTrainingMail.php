@@ -22,7 +22,7 @@ class DailyTrainingMail extends Command
      *
      * @var string
      */
-    protected $description = 'Command for daily consolidated Training Material mail at 2:00 PM & 9:00 PM';
+    protected $description = 'Command for daily consolidated Training Material mail at 2:00 PM & 8:00 PM';
 
     /**
      * Create a new command instance.
@@ -73,9 +73,9 @@ class DailyTrainingMail extends Command
                     event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
                 }
             }
-        } else if ($now == date('Y-m-d 21:00:00')) {
+        } else if ($now == date('Y-m-d 20:00:00')) {
             $start = date('Y-m-d 14:00:01');
-            $end = date('Y-m-d 21:00:00');
+            $end = date('Y-m-d 20:00:00');
 
             $training = Training::getTodaysTrainingMaterial($start,$end);
             if (isset($training) && sizeof($training) > 0) {
