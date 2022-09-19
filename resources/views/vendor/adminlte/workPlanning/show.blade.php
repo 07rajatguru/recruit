@@ -79,15 +79,16 @@
                 @endif
                 <a class="btn btn-primary" href="{{ route('workplanning.index') }}">Back</a>
             @else
-                @if($work_planning['evening_status'] == 1)
+                @if($work_planning['evening_status'] == 1 && $work_planning['total_actual_time'] != '')
                     @if($work_planning['status'] == 1)
                         <button type="submit" class="btn btn-success" onclick="updateStatus('Approved')" disabled="disabled">Approve</button>
                     @else
                         <button type="submit" class="btn btn-success" onclick="updateStatus('Approved')">Approve</button>
                     @endif
                     <button type="submit" class="btn btn-danger" onclick="updateStatus('Rejected')">Reject</button>
-                @endif
-                @if($work_planning['evening_status'] == 0)
+                @elseif($work_planning['evening_status'] == 0)
+                    <button type="submit" class="btn btn-danger" onclick="updateStatus('Rejected')">Reject</button>
+                @elseif($work_planning['total_actual_time'] == '')
                     <button type="submit" class="btn btn-danger" onclick="updateStatus('Rejected')">Reject</button>
                 @endif
                 <a class="btn btn-primary" href="{{ route('teamworkplanning.index') }}">Back</a>
