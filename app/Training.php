@@ -66,7 +66,11 @@ class Training extends Model
             $dep_ids = explode(",", $value->department_id);
             $d_name = '';
 
-            if (isset($dep_ids) && sizeof($dep_ids) > 0) {
+            if (isset($dep_ids) && sizeof($dep_ids) == 4) {
+
+                $training_list[$i]['department'] = 'All';
+            }
+            else if (isset($dep_ids) && sizeof($dep_ids) > 0) {
 
                 foreach ($dep_ids as $kd => $vd) {
                     
@@ -77,26 +81,29 @@ class Training extends Model
                         $d_name .= Department::getDepartmentNameById($vd);
                     }
                 }
+
+                $training_list[$i]['department'] = $d_name;
             }
-            $training_list[$i]['department'] = $d_name;
             
-            if ($all==1) {
-              $training_list[$i]['access'] = '1';
+            if($all==1) {
+                $training_list[$i]['access'] = '1';
             }
             else {
                 if (isset($value->owner_id) && $value->owner_id == $user_id) {
-                  $training_list[$i]['access'] = '1';
+                    $training_list[$i]['access'] = '1';
                 }
                 else {
-                  $training_list[$i]['access'] = '0';
+                    $training_list[$i]['access'] = '0';
                 }
             }
 
             $doc_count = TrainingDoc::getTrainingDocCount($value['id']);
             if (isset($doc_count) && $doc_count == 1) {
+
                 $training_list[$i]['show_doc'] = 'Y';
                 $training_list[$i]['file_url'] = $value->url;
-            } else {
+            }
+            else {
                 $training_list[$i]['show_doc'] = 'N';
             }
             $i++;
