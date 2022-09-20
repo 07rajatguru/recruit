@@ -435,7 +435,7 @@
 
         if(action == "add") {
 
-            cell3.innerHTML =  '<td style="border:1px solid black;"><select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setTotalProjectedTime()"></select> <br/><br/><select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" readonly=true></select></td>';
+            cell3.innerHTML =  '<td style="border:1px solid black;"><select class="form-control" name="projected_time[]" id="projected_time_'+row_cnt+'" onchange="setTotalProjectedTime()"></select> <br/><br/><select class="form-control" name="actual_time[]" id="actual_time_'+row_cnt+'" disabled></select></td>';
         }
         else {
 
@@ -541,7 +541,7 @@
 
                             var cell2 = row.insertCell(1);
                             cell2.style.border = '1px solid black';
-                            cell2.innerHTML = '<td style="border:1px solid black;"><textarea name="task[]" placeholder="Task" id="task_'+row_cnt+'" class="form-control" rows="3" readonly>'+task+'</textarea></td>';
+                            cell2.innerHTML = '<td style="border:1px solid black;"><textarea name="task[]" placeholder="Task" id="task_'+row_cnt+'" class="form-control" rows="3" disabled>'+task+'</textarea></td>';
 
                             var cell3 = row.insertCell(2);
                             cell3.style.border = '1px solid black';
@@ -549,7 +549,7 @@
 
                             var cell4 = row.insertCell(3);
                             cell4.style.border = '1px solid black';
-                            cell4.innerHTML = '<td style="border:1px solid black;"><textarea name="remarks[]" placeholder="Remarks" id="remarks_'+row_cnt+'" class="form-control" rows="5" readonly>'+remarks+'</textarea></td>';
+                            cell4.innerHTML = '<td style="border:1px solid black;"><textarea name="remarks[]" placeholder="Remarks" id="remarks_'+row_cnt+'" class="form-control" rows="5" disabled>'+remarks+'</textarea></td>';
 
                             if(rm_hr_remarks == null) {
                                 rm_hr_remarks = '';
@@ -579,9 +579,8 @@
 
                             var cell5 = row.insertCell(4);
                             cell5.style.border = '1px solid black';
-                            cell5.innerHTML = '<td style="border:1px solid black;"><textarea name="rm_hr_remarks[]" placeholder="RM / HR Remarks" id="rm_hr_remarks_'+row_cnt+'" class="form-control" rows="5" readonly>'+rm_hr_remarks+'</textarea></td>';
+                            cell5.innerHTML = '<td style="border:1px solid black;"><textarea name="rm_hr_remarks[]" placeholder="RM / HR Remarks" id="rm_hr_remarks_'+row_cnt+'" class="form-control" rows="5" disabled>'+rm_hr_remarks+'</textarea></td>';
                         }
-                        
 
                         $.each(time_array_1, function(key1, value1) {
 
