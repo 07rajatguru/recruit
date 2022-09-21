@@ -76,7 +76,7 @@
                 </button>
                 <button type="button" class="btn bg-blue" data-toggle="modal" data-target="#modal-shortlist" onclick="shortlistcandidate(3)">Selected</button>
                 <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-mail" onclick="associatedmail()"> Send Mail</button>
-                <a class="btn bg-blue" href="{{url()->previous()}}">Back</a>
+                <a class="btn bg-blue" href="{{ route('jobopen.index') }}">Back</a>
              </div>
 
             {{-- <ul class="nav navbar-nav">
