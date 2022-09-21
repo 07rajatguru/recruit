@@ -1981,25 +1981,26 @@ class EveryMinute extends Command
                 $to_array = explode(",",$input['to']);
 
                 $jobs = JobOpen::getJobsByMB($value['sender_name']);
-
+                $applicant_data = array();$i=0;
                 if(isset($jobs) && sizeof($jobs) > 0) {
-
                     foreach ($jobs as $k1 => $v1) {
-
                         if(isset($v1['applicant_candidates']) && sizeof($v1['applicant_candidates']) > 0) {
-
-                            $input['applicant_candidates'] = $v1['applicant_candidates'];
-                            $input['to_array'] = $to_array;
-
-                            \Mail::send('adminlte::emails.applicantcandidatesreport', $input, function ($message) use($input) {
-
-                                $message->from($input['from_address'], $input['from_name']);
-                                $message->to($input['to_array'])->subject($input['subject']);
-                            });
-
-                            \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                            $applicant_data[$i]['applicant_candidates'] = $v1['applicant_candidates'];
+                            $applicant_data[$i]['posting_title'] = $v1['posting_title'];
+                            $applicant_data[$i]['city'] = $v1['city'];
+                            $i++;
                         }
                     }
+                
+                    $input['applicant_data'] = $applicant_data;
+                    $input['to_array'] = $to_array;
+                    \Mail::send('adminlte::emails.applicantcandidatesreport', $input, function ($message) use($input) {
+
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to_array'])->subject($input['subject']);
+                    });
+
+                    \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
                 }
             }
 
