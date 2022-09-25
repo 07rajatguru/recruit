@@ -2126,7 +2126,9 @@ class EveryMinute extends Command
             }
 
             else if ($value['module'] == 'Work Planning') {
-
+                // For timing issue in work planning data
+                date_default_timezone_set('UTC');
+                
                 $cc_array = explode(",",$input['cc']);
                 $input['cc_array'] = $cc_array;
               
