@@ -220,6 +220,9 @@
                                                     $sunday_date = $key2."-".$month."-".$year;   
                                                     $today_day = date('l',strtotime($sunday_date));
 
+                                                    // September Fixed Date
+                                                    $fixed_date = '10-9-2022';
+
                                                     //$user_id = App\User::getUserIdByBothName($user_name);
 
                                                     //$user_holidays = App\Holidays::getHolidaysByUserID($user_id,$month,$year);
@@ -280,7 +283,7 @@
                                                     else if(isset($value2['unapproved_leave']) && $value2['unapproved_leave'] == 'Y') {
                                                         $attendance = 'UL';
                                                     }
-                                                    else if(isset($value2['fixed_holiday']) && $value2['fixed_holiday'] == 'Y') {
+                                                    else if((isset($value2['fixed_holiday']) && $value2['fixed_holiday'] == 'Y') || $fixed_date == $sunday_date) {
                                                         $attendance = 'PH';
                                                     }
                                                     else if(isset($value2['optional_holiday']) && $value2['optional_holiday'] == 'Y') {
@@ -572,7 +575,11 @@
                                                         $ph++;
                                                     ?>
 
-                                                    <td style="border: 1px solid black;background-color:#76933C;text-align: center;cursor: pointer;" title="Paid Holiday">PH</td>
+                                                    @if($fixed_date == $sunday_date)
+                                                        <td style="border: 1px solid black;background-color:#E6812F;text-align: center;cursor: pointer;" title="Paid Holiday">PH</td>
+                                                    @else
+                                                        <td style="border: 1px solid black;background-color:#76933C;text-align: center;cursor: pointer;" title="Paid Holiday">PH</td>
+                                                    @endif
                                                 @endif
 
                                                 <!-- For Set Half & Full  Optional Holiday -->

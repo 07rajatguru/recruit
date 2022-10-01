@@ -108,6 +108,9 @@
                     // Because start from August'22
                     $august_date = '2022-08-01';
 
+                    // September Fixed Date
+                    $fixed_date = '2022-09-10';
+
                     // Get Today's date
                     $today_date = date('Y-m-d');
                 ?>
@@ -332,9 +335,18 @@
 
                                     @elseif(isset($holiday_data) && sizeof($holiday_data) > 0)
 
-                                        <td>{{ ++$i }}</td><td></td>
-                                        <td style="background-color:#76933C;">{{ $v['added_date'] }}</td>
-                                        <td colspan="7"><center><b>{{ $holiday_data['title'] }} - ({{ $holiday_data['type'] }})</b></center></td>
+                                        @if($v['loggedin_time'] == '' && $added_date == $fixed_date)
+
+                                            <td>{{ ++$i }}</td><td></td>
+                                            <td style="background-color:#E6812F;">{{ $v['added_date'] }}</td>
+                                            <td colspan="7"><center><b>{{ $holiday_data['title'] }}
+                                            </b></center></td>
+                                        @else
+
+                                            <td>{{ ++$i }}</td><td></td>
+                                            <td style="background-color:#76933C;">{{ $v['added_date'] }}</td>
+                                            <td colspan="7"><center><b>{{ $holiday_data['title'] }} - ({{ $holiday_data['type'] }})</b></center></td>
+                                        @endif
 
                                     @elseif($v['added_day'] == 'Sunday' && $v['loggedin_time'] == '')
 

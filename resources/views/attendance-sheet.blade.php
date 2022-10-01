@@ -281,6 +281,9 @@
                                     $sunday_date = $key2."-".$month."-".$year;   
                                     $today_day = date('l',strtotime($sunday_date));
 
+                                    // September Fixed Date
+                                    $fixed_date = '10-9-2022';
+
                                     $joining_date_array = explode('/', $joining_date);
 
                                     if($key2 < $joining_date_array[0] && $joining_date_array[1] == $month && $year <= $joining_date_array[2]) {
@@ -336,7 +339,7 @@
                                     else if(isset($value2['unapproved_leave']) && $value2['unapproved_leave'] == 'Y') {
                                         $attendance = 'UL';
                                     }
-                                    else if(isset($value2['fixed_holiday']) && $value2['fixed_holiday'] == 'Y') {
+                                    else if((isset($value2['fixed_holiday']) && $value2['fixed_holiday'] == 'Y') || $fixed_date == $sunday_date) {
                                         $attendance = 'PH';
                                     }
                                     else if(isset($value2['optional_holiday']) && $value2['optional_holiday'] == 'Y') {
@@ -475,7 +478,11 @@
 
                                 @elseif($attendance == 'PH')
                                     <?php $ph++; ?>
-                                    <td style="border: 5px solid #000000;background-color:#76933C;" title="Paid Holiday">PH</td>
+                                    @if($fixed_date == $sunday_date)
+                                        <td style="border: 5px solid #000000;background-color:#E6812F;" title="Paid Holiday">PH</td>
+                                    @else
+                                        <td style="border: 5px solid #000000;background-color:#76933C;" title="Paid Holiday">PH</td>
+                                    @endif
 
                                 @elseif($attendance == 'OH' && $working_hours[0] == '04')
                                     <?php $ph = $ph + 0.5; ?>
