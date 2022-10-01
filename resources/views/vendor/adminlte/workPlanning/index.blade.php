@@ -109,6 +109,9 @@
 
                 // Because start from August'22
                 $august_date = '2022-08-01';
+
+                // Get Today's date
+                $today_date = date('Y-m-d');
             ?>
             @foreach ($work_planning_res as $key => $value)
                 <?php
@@ -272,7 +275,7 @@
                         <td style="background-color:#ffc000;">{{ $value['added_date'] }}</td>
                         <td colspan="7"><center><b>Sunday</b></center></td>
 
-                    @elseif($added_date == $saturday_date && $value['added_day'] == 'Saturday' && $value['loggedin_time'] == '' && $saturday_date > $august_date)
+                    @elseif($added_date == $saturday_date && $value['added_day'] == 'Saturday' && $value['loggedin_time'] == '' && $saturday_date > $august_date && $today_date > $saturday_date)
 
                         <td>{{ ++$i }}</td><td></td>
                         <td style="background-color:#ffc000;">{{ $value['added_date'] }}</td>
@@ -288,9 +291,12 @@
                     
                     @else
 
-                        <td>{{ ++$i }}</td><td></td>
-                        <td style="background-color:#fd5e53;">{{ $value['added_date'] }}</td>
-                        <td colspan="7"><center><b>Absent</b></center></td>
+                        @if($added_date == $saturday_date && $value['added_day'] == 'Saturday' && $value['loggedin_time'] == '')
+                        @else
+                            <td>{{ ++$i }}</td><td></td>
+                            <td style="background-color:#fd5e53;">{{ $value['added_date'] }}</td>
+                            <td colspan="7"><center><b>Absent</b></center></td>
+                        @endif
                     @endif
                 </tr>
             @endforeach

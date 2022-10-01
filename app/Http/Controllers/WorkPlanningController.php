@@ -784,8 +784,8 @@ class WorkPlanningController extends Controller
         }
         else {
 
-            $work_planning->loggedin_time = $time;
-            $work_planning->loggedout_time = $time;
+            $work_planning->loggedin_time = date('H:i:s');
+            $work_planning->loggedout_time = date('H:i:s');
         }
 
         $work_planning->work_planning_time = date('H:i:s');

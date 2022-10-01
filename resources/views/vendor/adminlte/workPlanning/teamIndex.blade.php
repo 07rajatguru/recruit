@@ -107,6 +107,9 @@
 
                     // Because start from August'22
                     $august_date = '2022-08-01';
+
+                    // Get Today's date
+                    $today_date = date('Y-m-d');
                 ?>
 
                 @foreach($work_planning_res as $key => $value)
@@ -340,7 +343,7 @@
                                         {{ $v['added_date'] }}</td>
                                         <td colspan="7"><center><b>Sunday</b></center></td>
 
-                                    @elseif($v['added_day'] == 'Saturday' && $v['loggedin_time'] == '' && $added_date == $saturday_date && $saturday_date > $august_date)
+                                    @elseif($v['added_day'] == 'Saturday' && $v['loggedin_time'] == '' && $added_date == $saturday_date && $saturday_date > $august_date && $today_date > $saturday_date)
 
                                         <td>{{ ++$i }}</td><td></td>
                                         <td style="background-color:#ffc000;">
@@ -356,11 +359,13 @@
 
                                     @elseif(isset($half_day_leave_data) && $half_day_leave_data != '')
                                     @else
-
-                                        <td>{{ ++$i }}</td><td></td>
-                                        <td style="background-color:#fd5e53;">
-                                        {{ $v['added_date'] }}</td>
-                                        <td colspan="7"><center><b>Absent</b></center></td>
+                                        @if($v['added_day'] == 'Saturday' && $v['loggedin_time'] == '' && $added_date == $saturday_date)
+                                        @else
+                                            <td>{{ ++$i }}</td><td></td>
+                                            <td style="background-color:#fd5e53;">
+                                            {{ $v['added_date'] }}</td>
+                                            <td colspan="7"><center><b>Absent</b></center></td>
+                                        @endif        
                                     @endif
                                 </tr>
                             @endforeach
