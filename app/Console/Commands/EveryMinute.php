@@ -2816,7 +2816,8 @@ class EveryMinute extends Command
 
                 // Get Holidays details
                 $holidays = Holidays::find($holiday_id);
-                $from_date = $holidays->from_date;
+                $holiday_date = date('d-m-Y',strtotime($holidays->from_date));
+                $holiday_day = date('l',strtotime($holidays->from_date));
                 $holiday_name = $holidays->title;
 
                 $rm_name_string = User::getUserNameByEmail($input['to']);
@@ -2833,10 +2834,11 @@ class EveryMinute extends Command
                     $input['rm_name'] = $rm_name;
                     $input['user_name'] = $user_name;
                     $input['owner_email'] = $owner_email;
-                    $input['from_date'] = $from_date;
+                    $input['holiday_date'] = $holiday_date;
+                    $input['holiday_day'] = $holiday_day;
                     $input['holiday_name'] = $holiday_name;
 
-                     \Mail::send('adminlte::emails.leaveapplicationreminder', $input, function ($message) use($input) {
+                    \Mail::send('adminlte::emails.leaveapplicationreminder', $input, function ($message) use($input) {
                     
                         $message->from($input['from_address'], $input['from_name']);
                         $message->to($input['to'])->cc($input['cc_array'])->bcc($input['owner_email'])->subject($input['subject']);

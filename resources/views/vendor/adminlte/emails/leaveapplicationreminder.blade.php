@@ -31,7 +31,7 @@
 
                         <b><p style="text-align: left;">Dear {{ $rm_name }},</p></b>
 
-                        <p style="text-align: left;">This is to remind you that {{ $user_name }} has opted for {{ $holiday_name }} as the Optional Holiday.</p>
+                        <p style="text-align: left;">This is to remind you that {{ $user_name }} has opted for {{ $holiday_name }} ({{ $holiday_date }} - {{ $holiday_day }}) as the Optional Holiday.</p>
 
                         <p style="text-align: left;">Request you to schedule a handover call and take a download on the positions as well as clients before he/she goes for the leave.
                         </p>
