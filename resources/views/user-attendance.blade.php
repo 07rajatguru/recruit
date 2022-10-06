@@ -57,7 +57,7 @@
         @endif
 
         @permission('edit-user-attendance')
-            @if($superadmin_userid == $user_id)
+            @if($user_id == $superadmin_userid || $user_id == $hr_user_id)
                 <div class="col-md-1" style="margin-left: -40px;">
                     @include('adminlte::partials.editUserAttendance', ['users' => $users_name,'attendance_value' => $attendance_value,'name' => $department_nm,'month' => $month,'year' => $year])
                 </div>
