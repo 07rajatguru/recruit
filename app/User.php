@@ -1425,4 +1425,49 @@ class User extends Authenticatable
         }
         return $user_dept;
     }
+
+    public static function getAllUsersDataWithReportsTo() {
+        
+        $saloni_user_id = getenv('SALONIUSERID');
+        $super_array = array($saloni_user_id);
+
+        $query = User::query();
+        $query = $query->select('users.id','u1.email as remail','u1.secondary_email as rsemail','u1.id as rid','u1.name as rname');
+        $query = $query->join('users as u1','u1.id','=','users.reports_to');
+        $query = $query->groupBy('users.reports_to');
+        $query = $query->whereNotIn('users.reports_to',$super_array);
+        $res = $query->get();
+
+        $users = array();
+        if (isset($res) && sizeof($res) > 0) {
+            foreach ($res as $key => $value) {
+                // $users[$value->rid]['name'] = $value->rname;
+
+                $manager_user_id = getenv('MANAGERUSERID');
+
+                $recruitment = getenv('RECRUITMENT');
+                $hr_advisory = getenv('HRADVISORY');
+                if ($value->rid == $manager_user_id) {
+                    $type_array = $recruitment;
+                    $report_id = 0;
+                } else {
+                    $type_array = array();
+                    $report_id = $value->rid;
+                }
+                $user_data = User::getAllUsersEmails($type_array,'','',$report_id);
+                if (isset($user_data) && sizeof($user_data)>0) {
+                    $i=0;
+                    foreach ($user_data as $key_u => $value_u) {
+                        if ($key_u != $value->rid) {
+                            $users[$value->rid][$i]['id'] = $key_u;
+                            $users[$value->rid][$i]['email'] = $value_u;
+                            $i++;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $users;
+    }
 }
