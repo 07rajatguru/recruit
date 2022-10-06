@@ -1813,8 +1813,9 @@ class HomeController extends Controller
         }
 
         $superadmin_userid = getenv('SUPERADMINUSERID');
+        $hr_user_id = getenv('HRUSERID');
 
-        return view('user-attendance',array("list"=>$list,"new_list"=>$new_list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark,"attendance_type" => $attendance_type,"selected_attendance_type" => $selected_attendance_type,"attendance_value" => $attendance_value),compact('users_name','department_nm','edit_date_valid','superadmin_userid','user_id'));
+        return view('user-attendance',array("list"=>$list,"new_list"=>$new_list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark,"attendance_type" => $attendance_type,"selected_attendance_type" => $selected_attendance_type,"attendance_value" => $attendance_value),compact('users_name','department_nm','edit_date_valid','superadmin_userid','hr_user_id','user_id'));
     }
 
     public function exportAttendance() {
