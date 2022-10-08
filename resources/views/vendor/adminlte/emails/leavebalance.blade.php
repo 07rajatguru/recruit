@@ -23,9 +23,9 @@
                                         <td align="center"><b>Total PL</b></td>
                                         <td align="center"><b>Opted PL</b></td>
                                         <td align="center"><b>PL Balacne</b></td>
-                                        <td align="center"><b>Total SL</b></td>
+                                        <!-- <td align="center"><b>Total SL</b></td>
                                         <td align="center"><b>Opted SL</b></td>
-                                        <td align="center"><b>SL Balacne</b></td>
+                                        <td align="center"><b>SL Balacne</b></td> -->
                                     </tr>
 
                                     <?php $i=0; ?>
@@ -36,9 +36,9 @@
                                             <td align="center">{{ $value['pl_total'] }}</td>
                                             <td align="center">{{ $value['pl_taken'] }}</td>
                                             <td align="center">{{ $value['pl_remaining'] }}</td>
-                                            <td align="center">{{ $value['sl_total'] }}</td>
+                                            <!-- <td align="center">{{ $value['sl_total'] }}</td>
                                             <td align="center">{{ $value['sl_taken'] }}</td>
-                                            <td align="center">{{ $value['sl_remaining'] }}</td>
+                                            <td align="center">{{ $value['sl_remaining'] }}</td> -->
                                         </tr>
                                     @endforeach
                                 </table>
