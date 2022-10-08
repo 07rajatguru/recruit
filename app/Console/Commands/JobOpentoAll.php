@@ -46,6 +46,7 @@ class JobOpentoAll extends Command
     public function handle()
     {
         $superadminuserid = getenv('SUPERADMINUSERID');
+        $jenny_user_id = getenv('JENNYUSERID');
         $hr_role_id = getenv('HR');
         
         $recruitment = getenv('RECRUITMENT');
@@ -123,7 +124,9 @@ class JobOpentoAll extends Command
                             }
                             
                             $superadminsecondemail = User::getUserEmailById($superadminuserid);
-                            $cc_user = $superadminsecondemail;
+                            $all_client_user_email = User::getUserEmailById($jenny_user_id);
+
+                            $cc_user_array = array($superadminsecondemail,$all_client_user_email);
 
                             $job_details = JobOpen::getJobById($job_id);
 
@@ -133,7 +136,8 @@ class JobOpentoAll extends Command
                             $module = "Job Open to All";
                             $sender_name = $superadminuserid;
                             $to = implode(",",$user_emails);
-                            $cc = $cc_user;
+                            $cc = implode(",",$cc_user_array);
+
                             $subject = "Job opened to All";
                             $message_m .= '<tr><th>'.++$sr.'</th><th>'.$job_details['user_name'].'</th><th>'.$client_name.'</th><th>'.$job_details['posting_title'].'</th><th>'.$job_details['job_location'].'</th><th></th></tr>';
                             if (isset($module_ids) && $module_ids != '') {

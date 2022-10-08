@@ -16,7 +16,8 @@
             @endif
 
             @if(isset($leave_balance) && $leave_balance != '')
-                <h4> (PL Balance : {{ $leave_balance->leave_remaining or 0 }}, SL Balance : {{ $leave_balance->seek_leave_remaining or 0 }})</h4>
+                {{-- <h4> (PL Balance : {{ $leave_balance->leave_remaining or 0 }}, SL Balance : {{ $leave_balance->seek_leave_remaining or 0 }})</h4> --}}
+                <h4> (PL Balance : {{ $leave_balance->leave_remaining or 0 }})</h4>
             @endif
         </div>
         <div class="pull-right">

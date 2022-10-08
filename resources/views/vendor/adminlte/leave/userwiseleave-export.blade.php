@@ -6,9 +6,9 @@
 			<th style="width: 12;">Total PL</th>
 			<th style="width: 12;">Opted PL</th>
 			<th style="width: 12;">PL Balance</th>
-			<th style="width: 12;">Total SL</th>
+			<!-- <th style="width: 12;">Total SL</th>
 			<th style="width: 12;">Opted SL</th>
-			<th style="width: 12;">SL Balance</th>
+			<th style="width: 12;">SL Balance</th> -->
 			<th style="width: 30;">Edited By</th>
 		</tr>
 	</thead>
@@ -23,9 +23,9 @@
 						<td>{{ $value['pl_total'] }}</td>
 						<td>{{ $value['pl_taken'] }}</td>
 						<td>{{ $value['pl_remaining'] }}</td>
-						<td>{{ $value['sl_total'] }}</td>
+						<!-- <td>{{ $value['sl_total'] }}</td>
 						<td>{{ $value['sl_taken'] }}</td>
-						<td>{{ $value['sl_remaining'] }}</td>
+						<td>{{ $value['sl_remaining'] }}</td> -->
 						<td>{{ $value['edited_by'] }}</td>
 					</tr>
 				@else
@@ -35,9 +35,9 @@
 						<td>{{ $value['pl_total'] }}</td>
 						<td>{{ $value['pl_taken'] }}</td>
 						<td>{{ $value['pl_remaining'] }}</td>
-						<td>{{ $value['sl_total'] }}</td>
+						<!-- <td>{{ $value['sl_total'] }}</td>
 						<td>{{ $value['sl_taken'] }}</td>
-						<td>{{ $value['sl_remaining'] }}</td>
+						<td>{{ $value['sl_remaining'] }}</td> -->
 						<td>{{ $value['edited_by'] }}</td>
 					</tr>
 				@endif

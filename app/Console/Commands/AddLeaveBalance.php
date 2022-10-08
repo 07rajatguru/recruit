@@ -66,9 +66,9 @@ class AddLeaveBalance extends Command
                         $leave_balance->leave_total = 1.5;
                         $leave_balance->leave_taken = 0.0;
                         $leave_balance->leave_remaining = 1.5;
-                        $leave_balance->seek_leave_total = 0.5;
+                        /*$leave_balance->seek_leave_total = 0.5;
                         $leave_balance->seek_leave_taken = 0.0;
-                        $leave_balance->seek_leave_remaining = 0.5;
+                        $leave_balance->seek_leave_remaining = 0.5;*/
                         $leave_balance->save();
 
                         //Add User Leave Balance data Monthwise
@@ -77,9 +77,9 @@ class AddLeaveBalance extends Command
                         $monthwise_leave_balance->pl_total = 1.5;
                         $monthwise_leave_balance->pl_taken = 0.0;
                         $monthwise_leave_balance->pl_remaining = 1.5;
-                        $monthwise_leave_balance->sl_total = 0.5;
+                        /*$monthwise_leave_balance->sl_total = 0.5;
                         $monthwise_leave_balance->sl_taken = 0.0;
-                        $monthwise_leave_balance->sl_remaining = 0.5;
+                        $monthwise_leave_balance->sl_remaining = 0.5;*/
                         $monthwise_leave_balance->month = date('m');
                         $monthwise_leave_balance->year = date('Y');
                         $monthwise_leave_balance->save();
