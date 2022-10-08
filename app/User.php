@@ -1426,8 +1426,10 @@ class User extends Authenticatable
         return $user_dept;
     }
 
+    // Get All Report to User and users under that report to user
     public static function getAllUsersDataWithReportsTo() {
         
+        // Remove Saloni User ID
         $saloni_user_id = getenv('SALONIUSERID');
         $super_array = array($saloni_user_id);
 
@@ -1441,24 +1443,53 @@ class User extends Authenticatable
         $users = array();
         if (isset($res) && sizeof($res) > 0) {
             foreach ($res as $key => $value) {
-                // $users[$value->rid]['name'] = $value->rname;
 
                 $manager_user_id = getenv('MANAGERUSERID');
+                $superadminuserid = getenv('SUPERADMINUSERID');
 
                 $recruitment = getenv('RECRUITMENT');
                 $hr_advisory = getenv('HRADVISORY');
                 if ($value->rid == $manager_user_id) {
-                    $type_array = $recruitment;
+                    // For Manager Role Data
+                    $type_array = array($recruitment);
+                    $report_id = 0;
+                } else if($value->rid == $superadminuserid) {
+                    // For Super Admin Role Data
+                    $type_array = array($recruitment,$hr_advisory);
                     $report_id = 0;
                 } else {
+                    // For remaining all reports to
                     $type_array = array();
                     $report_id = $value->rid;
                 }
-                $user_data = User::getAllUsersEmails($type_array,'','',$report_id);
-                if (isset($user_data) && sizeof($user_data)>0) {
+                if (isset($type_array) && sizeof($type_array) > 0) {
                     $i=0;
-                    foreach ($user_data as $key_u => $value_u) {
-                        if ($key_u != $value->rid) {
+                    foreach ($type_array as $key_t => $value_t) {
+                        // Get All users whos work under that report id with type
+                        $user_data = User::getAllUsersEmails($value_t,'','',$report_id);
+                        if (isset($user_data) && sizeof($user_data)>0) {
+                            foreach ($user_data as $key_u => $value_u) {
+                                // Check hr_adv_recruitment yes OR No
+                                $user_details = User::getAllDetailsByUserID($key_u);
+                                if($user_details->type == '2') {
+                                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                                        $users[$value->rid][$i]['id'] = $key_u;
+                                        $users[$value->rid][$i]['email'] = $value_u;
+                                    }
+                                } else {
+                                    $users[$value->rid][$i]['id'] = $key_u;
+                                    $users[$value->rid][$i]['email'] = $value_u;
+                                }
+                                $i++;
+                            }
+                        }
+                    }
+                } else {
+                    // Get All users whos work under that report id
+                    $user_data = User::getAllUsersEmails($type_array,'','',$report_id);
+                    if (isset($user_data) && sizeof($user_data)>0) {
+                        $i=0;
+                        foreach ($user_data as $key_u => $value_u) {
                             $users[$value->rid][$i]['id'] = $key_u;
                             $users[$value->rid][$i]['email'] = $value_u;
                             $i++;
