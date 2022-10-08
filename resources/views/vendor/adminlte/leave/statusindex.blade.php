@@ -72,7 +72,7 @@
                     <a style="text-decoration: none;color: black;"><div style="margin-left: 60px;height:35px;background-color:#f6af8c;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 130px;" title="PL Balance">PL Balance ({{ $leave_balance->leave_remaining or 0 }})</div></a>
                 </div>
 
-                <br/><br/><div class="col-xs-1 col-sm-1 col-md-1"></div>
+                {{-- <br/><br/><div class="col-xs-1 col-sm-1 col-md-1"></div>
 
                 <div class="col-xs-1 col-sm-1 col-md-1">
                     <a style="text-decoration: none;color: black;"><div style="margin-left: -20px;height:35px;background-color:#f5ac37;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 130px;" title="Total SL">Total SL ({{ $leave_balance->seek_leave_total or 0 }})</div>
@@ -85,8 +85,9 @@
                 </div>
 
                 <div class="col-xs-1 col-sm-1 col-md-1">
-                    <a style="text-decoration: none;color: black;"><div style="margin-left: 60px;height:35px;background-color:#f9cb82;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 130px;" title="SL Balance">SL Balance ({{ $leave_balance->seek_leave_remaining or 0 }})</div></a>
-                </div>
+                    <a style="text-decoration: none;color: black;"><div style="margin-left: 60px;height:35px;background-color:#f9cb82;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;cursor: pointer;width: 130px;" title="SL Balance">SL Balance ({{ $leave_balance->seek_leave_remaining or 0 }})
+                    </div></a>
+                </div> --}}
             @endif
         </div>
     </div><br/>
@@ -94,7 +95,8 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="col-xs-1 col-sm-1 col-md-1">
-                <a href="{{ route('leave.status',array('pending',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#8FB1D5;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;width:120px;margin-left: -5px;" title="Pending">Pending ({{ $pending }})</div></a>
+                <a href="{{ route('leave.status',array('pending',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#8FB1D5;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;width:120px;margin-left: -5px;" title="Pending">Pending ({{ $pending }})
+                </div></a>
             </div>
 
             <div class="col-xs-1 col-sm-1 col-md-1">

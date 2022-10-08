@@ -86,7 +86,7 @@
 	            	</div>
 	            </div>
 
-	            <div class="col-xs-12 col-sm-12 col-md-12">
+	            {{-- <div class="col-xs-12 col-sm-12 col-md-12">
 	            	<div class="col-xs-4 col-sm-4 col-md-4">
 	            		<div class="">
 	                        <div class="form-group">
@@ -113,7 +113,7 @@
 	                        </div>
 	                    </div>
 	                </div>  
-	            </div>
+	            </div> --}}
 	        </div>
 	    </div>
 		<div class="col-xs-12 col-sm-12 col-md-12">
@@ -148,7 +148,7 @@
                     "leave_remaining": {
                     	required: true
                     },
-                    "seek_leave_total": {
+                    /*"seek_leave_total": {
                         required: true
                     },
                     "seek_leave_taken": {
@@ -156,7 +156,7 @@
                     },
                     "seek_leave_remaining": {
                     	required: true
-                    }
+                    }*/
                 },
                 messages: {
                 	
@@ -169,7 +169,7 @@
                     "leave_remaining": {
                     	required: "Remaining Privilege Leave is Required field."
                     },
-                    "seek_leave_total": {
+                    /*"seek_leave_total": {
                         required: "Total Sick Leave is Required field."
                     },
                     "seek_leave_taken": {
@@ -177,7 +177,7 @@
                     },
                     "seek_leave_remaining": {
                     	required: "Remaining Sick Leave is Required field."
-                    }
+                    }*/
                 }
             });
         });
