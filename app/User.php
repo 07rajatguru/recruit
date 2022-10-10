@@ -509,7 +509,7 @@ class User extends Authenticatable
         return $user_email;
     }
 
-    public static function getAssignedUsers($user_id) {
+    public static function getAssignedUsers($user_id,$type='') {
 
         $status = 'Inactive';
         $status_array = array($status);
@@ -518,6 +518,10 @@ class User extends Authenticatable
         $client_type = array($client);
 
         $user_query = User::query();
+
+        if($type!=NULL) {
+            $user_query = $user_query->where('type','=',$type);
+        }
         
         $user_query = $user_query->where(function($user_query) use ($user_id) {
             $user_query = $user_query->where('reports_to',$user_id);
@@ -1486,7 +1490,7 @@ class User extends Authenticatable
                     }
                 } else {
                     // Get All users whos work under that report id
-                    $user_data = User::getAllUsersEmails($type_array,'','',$report_id);
+                    $user_data = User::getAssignedUsers($report_id,$type_array);
                     if (isset($user_data) && sizeof($user_data)>0) {
                         $i=0;
                         foreach ($user_data as $key_u => $value_u) {

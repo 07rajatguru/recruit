@@ -3073,6 +3073,42 @@ class EveryMinute extends Command
                     \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
                 }
             }
+
+            else if ($value['module'] == 'Daily Work Planning Summary') {
+
+                $to_array = explode(",",$input['to']);
+                $cc_array = explode(",",$input['cc']);
+
+                $date = '2022-04-30';//date('Y-m-d');
+                $module_ids = explode(",",$module_id);
+                $data = array();
+                if (isset($module_ids) && $module_ids > 0) {
+                    foreach ($module_ids as $key_d => $value_d) {
+                        $user_name = User::getUserNameById($value_d);
+
+                        // $user_details = User::getAllDetailsByUserID($value_d);
+                        // $data[$user_name]['user_details'] = $user_details;
+
+                        // Get Today Work Planning Data
+                        $today_work_planning = WorkPlanning::getWorkPlanningsByDateAndUserId($value_d,$date);
+                        $data[$user_name]['today_work_planning'] = $today_work_planning;
+                    }
+                }
+
+                $input['data'] = $data;
+                $input['value'] = User::getUserNameById($sender_id);
+                
+                $input['to_array'] = array_unique($to_array);
+                $input['cc_array'] = array_unique($cc_array);
+                $input['date'] = $date;
+
+                \Mail::send('adminlte::emails.workplanningsummary', $input, function ($message) use ($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to_array'])->cc($input['cc_array'])->subject('Daily Work Planning Summary - ' . $input['value'] . ' - ' . $input['date']);
+                });
+
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
+            }
         }
     }
 }
