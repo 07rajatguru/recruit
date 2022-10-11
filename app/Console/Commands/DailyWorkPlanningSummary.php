@@ -42,7 +42,7 @@ class DailyWorkPlanningSummary extends Command
     public function handle()
     {
         date_default_timezone_set('UTC');
-        $date = '2022-04-30';//date('Y-m-d');
+        $date = date('Y-m-d');
         $fixed_date = Holidays::getFixedLeaveDate();
 
         // Get All Saturday dates of current month
@@ -67,7 +67,7 @@ class DailyWorkPlanningSummary extends Command
                     if (isset($value) && sizeof($value) > 0) {
                         foreach ($value as $key_u => $value_u) {
                             $today_work_planning = WorkPlanning::getWorkPlanningsByDateAndUserId($value_u['id'],$date);
-                            if(isset($today_work_planning) && sizeof($today_work_planning) > 0) {
+                            if(isset($today_work_planning) && $today_work_planning != '') {
                                 $module_ids[] = $value_u['id'];
                             }
                         }

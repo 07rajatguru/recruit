@@ -3079,7 +3079,7 @@ class EveryMinute extends Command
                 $to_array = explode(",",$input['to']);
                 $cc_array = explode(",",$input['cc']);
 
-                $date = '2022-04-30';//date('Y-m-d');
+                $date = date('Y-m-d');
                 $module_ids = explode(",",$module_id);
                 $data = array();
                 if (isset($module_ids) && $module_ids > 0) {
@@ -3090,8 +3090,61 @@ class EveryMinute extends Command
                         // $data[$user_name]['user_details'] = $user_details;
 
                         // Get Today Work Planning Data
-                        $today_work_planning = WorkPlanning::getWorkPlanningsByDateAndUserId($value_d,$date);
-                        $data[$user_name]['today_work_planning'] = $today_work_planning;
+                        // $today_work_planning = WorkPlanning::getWorkPlanningsByDateAndUserId($value_d,$date);
+                        // $data[$user_name]['today_work_planning'] = $today_work_planning;
+
+                        $work_planning = WorkPlanning::getWorkPlanningsByDateAndUserId($value_d,$date);
+                        if (isset($work_planning) && $work_planning != '' && isset($work_planning['id']) && $work_planning['id'] > 0) {
+                            $work_planning_list = WorkPlanningList::getWorkPlanningList($work_planning['id']);
+                            $work_planning_post = WorkPlanningPost::getWorkPlanningPostList($work_planning['id']);
+
+                            $loggedin_time = $work_planning['loggedin_time'];
+                            $loggedout_time = $work_planning['loggedout_time'];
+                            $work_planning_time = $work_planning['work_planning_time'];
+                            $work_planning_status_time = $work_planning['work_planning_status_time'];
+
+                            $today_date = $work_planning['added_date'];
+                            $report_delay = $work_planning['report_delay'];
+                            $report_delay_content = $work_planning['report_delay_content'];
+                            $link = $work_planning['link'];
+                            $total_projected_time = $work_planning['total_projected_time'];
+                            $total_actual_time = $work_planning['total_actual_time'];
+
+                            $data[$user_name]['loggedin_time'] = $loggedin_time;
+                            $data[$user_name]['loggedout_time'] = $loggedout_time;
+                            $data[$user_name]['work_planning_time'] = $work_planning_time;
+                            $data[$user_name]['work_planning_status_time'] = $work_planning_status_time;
+
+                            if($work_planning_status_time == '') {
+                                $data[$user_name]['work_planning_status_time'] = "-";
+                            }
+                            else {
+                                $data[$user_name]['work_planning_status_time'] = $work_planning_status_time;
+                            }
+                            $data[$user_name]['module_id'] = $work_planning['id'];
+                            $data[$user_name]['today_date'] = $today_date;
+                            $data[$user_name]['report_delay'] = $report_delay;
+                            $data[$user_name]['report_delay_content'] = $report_delay_content;
+                            $data[$user_name]['link'] = $link;
+                            $data[$user_name]['total_projected_time'] = $total_projected_time;
+                            $data[$user_name]['total_actual_time'] = $total_actual_time;
+                            $data[$user_name]['work_planning_list'] = $work_planning_list;
+                            $data[$user_name]['work_planning_post'] = $work_planning_post;
+                        } else {
+                            $data[$user_name]['loggedin_time'] = '';
+                            $data[$user_name]['loggedout_time'] = '';
+                            $data[$user_name]['work_planning_time'] = '';
+                            $data[$user_name]['work_planning_status_time'] = '';
+                            $data[$user_name]['module_id'] = 0;
+                            $data[$user_name]['today_date'] = '';
+                            $data[$user_name]['report_delay'] = '';
+                            $data[$user_name]['report_delay_content'] = '';
+                            $data[$user_name]['link'] = '';
+                            $data[$user_name]['total_projected_time'] = '';
+                            $data[$user_name]['total_actual_time'] = '';
+                            $data[$user_name]['work_planning_list'] = array();
+                            $data[$user_name]['work_planning_post'] = array();
+                        }
                     }
                 }
 
@@ -3101,7 +3154,6 @@ class EveryMinute extends Command
                 $input['to_array'] = array_unique($to_array);
                 $input['cc_array'] = array_unique($cc_array);
                 $input['date'] = $date;
-
                 \Mail::send('adminlte::emails.workplanningsummary', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to_array'])->cc($input['cc_array'])->subject('Daily Work Planning Summary - ' . $input['value'] . ' - ' . $input['date']);
