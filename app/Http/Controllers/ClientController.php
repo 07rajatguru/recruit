@@ -1414,8 +1414,9 @@ class ClientController extends Controller
             event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
             // Email Notification : data store in datebase
-
             $superadminemail = User::getUserEmailById($super_admin_userid);
+            $jenny_user_id = getenv('JENNYUSERID');
+            $all_client_user_email = User::getUserEmailById($jenny_user_id);
 
             $module = "Client";
             $sender_name = $user_id;
@@ -1423,7 +1424,8 @@ class ClientController extends Controller
             $subject = "New Client - " . $client_name . " - " . $input['billing_city'];
             $message = "<tr><td>" . $user_name . " added new Client </td></tr>";
             $module_id = $client_id;
-            $cc = $superadminemail;
+            $cc_users_array = array($superadminemail,$all_client_user_email);
+            $cc = implode(",",$cc_users_array);
 
             event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
