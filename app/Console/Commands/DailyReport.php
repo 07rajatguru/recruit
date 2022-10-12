@@ -46,9 +46,22 @@ class DailyReport extends Command
         
         $date = date('Y-m-d');
 
+        // Get All Saturday dates of current month
+        $s_date = date("Y-m-d", strtotime("first day of this month"));
+        $first_day = date('N',strtotime($s_date));
+        $first_day = 6 - $first_day + 1;
+        $last_day =  date('t',strtotime($s_date));
+        $saturdays = array();
+        for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+            $saturdays[] = $i;
+        }
+
+        // Get Saturday Date
+        $saturday_date = date('Y-m')."-".$saturdays[2];
+
         $dayOfWeek = date("l", strtotime($date));
 
-        if ($dayOfWeek == 'Sunday') {
+        if ($dayOfWeek == 'Sunday' || $saturday_date == $date) {
            
         }
         else {
