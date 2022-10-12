@@ -2011,7 +2011,7 @@ class JobOpenController extends Controller
 
         if(isset($client) && $client != '') {
 
-            if($client['status'] == 'Passive') {
+            if($client['status'] == 'Passive' || $client['status'] == 'Leaders') {
 
                 DB::statement("UPDATE `client_basicinfo` SET `status`='1',`passive_date` = NULL WHERE `id`='$client_id'");
             }
@@ -2867,7 +2867,7 @@ class JobOpenController extends Controller
 
         if(isset($client) && $client != '') {
 
-            if($client['status'] == 'Passive' && $job_priority == '5') {
+            if(($client['status'] == 'Passive' || $client['status'] == 'Leaders') && $job_priority == '5') {
 
                 DB::statement("UPDATE `client_basicinfo` SET `status`='1',`passive_date` = NULL WHERE `id`='$client_id'");
             }
@@ -3371,7 +3371,7 @@ class JobOpenController extends Controller
 
         if(isset($client) && $client != '') {
 
-            if($client['status'] == 'Passive') {
+            if($client['status'] == 'Passive' || $client['status'] == 'Leaders') {
 
                 DB::statement("UPDATE `client_basicinfo` SET `status`='1',`passive_date` = NULL WHERE `id`='$client_id'");
             }
