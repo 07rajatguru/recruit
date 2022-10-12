@@ -1027,23 +1027,25 @@ class CandidateController extends Controller
 
                 $job_id = $request->input('jobopen');
 
-                JobAssociateCandidates::where('job_id',$job_id)->where('candidate_id',$candidate_id)->delete();
+                // JobAssociateCandidates::where('job_id',$job_id)->where('candidate_id',$candidate_id)->delete();
+                $job_associate_data = JobAssociateCandidates::where('job_id',$job_id)->where('candidate_id',$candidate_id)->first();
+                if (isset($job_associate_data) && $job_associate_data != '') {
+                } else {
+                    if(isset($job_id) && $job_id>0) {
+                        $job_id = $request->input('jobopen');
+                        $status_id = env('associate_candidate_status', 1);
 
-                if(isset($job_id) && $job_id>0) {
-
-                    $job_id = $request->input('jobopen');
-                    $status_id = env('associate_candidate_status', 1);
-
-                    $jobopening = new JobAssociateCandidates();
-                    $jobopening->job_id = $job_id;
-                    $jobopening->candidate_id = $candidate_id;
-                    $jobopening->status_id = $status_id;
-                    $jobopening->created_at = time();
-                    $jobopening->updated_at = time();
-                    $jobopening->shortlisted = 0;
-                    $jobopening->associate_by = $user_id;
-                    $jobopening->date = date("Y-m-d h:i:s");
-                    $jobopening->save();
+                        $jobopening = new JobAssociateCandidates();
+                        $jobopening->job_id = $job_id;
+                        $jobopening->candidate_id = $candidate_id;
+                        $jobopening->status_id = $status_id;
+                        $jobopening->created_at = time();
+                        $jobopening->updated_at = time();
+                        $jobopening->shortlisted = 0;
+                        $jobopening->associate_by = $user_id;
+                        $jobopening->date = date("Y-m-d h:i:s");
+                        $jobopening->save();
+                    }
                 }
             }
             else {
