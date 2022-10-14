@@ -1785,6 +1785,9 @@ class ClientController extends Controller
             $today_date = date('Y-m-d'); 
             $client_basicinfo->passive_date = $today_date;
         }
+        else {
+            $client_basicinfo->passive_date = NULL;
+        }
 
         if(isset($input->source) && $input->source!='') {
             $client_basicinfo->source = $input->source;
