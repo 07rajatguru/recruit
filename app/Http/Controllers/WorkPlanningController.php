@@ -956,36 +956,8 @@ class WorkPlanningController extends Controller
         $edit_date_valid = date('Y-m-d', strtotime($edit_date."+3days"));
         $superadmin_userid = getenv('SUPERADMINUSERID');
 
-        // Next btn ID
-        $next_date = date('Y-m-d', strtotime($added_date.'+1 day'));
-        $next_date_day = date('l', strtotime($next_date));
-        if ($next_date_day == 'Sunday') {
-            $next_date = date('Y-m-d', strtotime($next_date.'+1 day'));
-        }
-        $next_data = WorkPlanning::getWorkPlanningByAddedDateAndUserID($next_date,$added_by_id);
-        if (isset($next_data) && $next_data != '') {
-            $next_id = $next_data['id'];
-        } else {
-            $next_id = 0;
-        }
-        // Pre btn ID
-        $pre_date = date('Y-m-d', strtotime($added_date.'-1 day'));
-        $pre_date_day = date('l', strtotime($pre_date));
-        if ($pre_date_day == 'Sunday') {
-            $pre_date = date('Y-m-d', strtotime($pre_date.'-1 day'));
-        }
-        $pre_data = WorkPlanning::getWorkPlanningByAddedDateAndUserID($pre_date,$added_by_id);
-        if (isset($pre_data) && $pre_data != '') {
-            $pre_id = $pre_data['id'];
-        } else {
-            $pre_id = 0;
-        }
-
-        // Working planning Month all dates
-        $month = date('Y-m', strtotime($added_date));
-        $total_month_days = Date::getTotalMonthDays($month);
-        $all_dates = array();
         // Get All Saturday dates of current month
+        $month = date('Y-m', strtotime($added_date));
         $date = "$month-01";
         $first_day = date('N',strtotime($date));
         $first_day = 6 - $first_day + 1;
@@ -997,6 +969,55 @@ class WorkPlanningController extends Controller
 
         // Get Saturday Date
         $saturday_date = $month."-".$saturdays[2];
+
+        // Next btn ID
+        $next_date = date('Y-m-d', strtotime($added_date.'+1 day'));
+        start:
+        $next_date_day = date('l', strtotime($next_date));
+        $n_holiday_data = Holidays::getHolidayByDateAndID($next_date,$added_by_id,'');
+        $n_leave_data = UserLeave::getLeaveByDateAndID($next_date,$added_by_id,'1','Full Day');
+        $n_unapproved_leave_data = UserLeave::getLeaveByDateAndID($next_date,$added_by_id,'2','Full Day');
+        if ($next_date_day == 'Sunday' || (isset($n_holiday_data) && sizeof($n_holiday_data) > 0) || (isset($n_leave_data) && $n_leave_data != '') || (isset($n_unapproved_leave_data) && $n_unapproved_leave_data != '')) {
+            $next_date = date('Y-m-d', strtotime($next_date.'+1 day'));
+            goto start;
+        } else if ($next_date == $saturday_date) {
+            $next_date = date('Y-m-d', strtotime($next_date.'+2 day'));
+            goto start;
+        }
+        $next_data = WorkPlanning::getWorkPlanningByAddedDateAndUserID($next_date,$added_by_id);
+        if (isset($next_data) && $next_data != '' && $next_data['loggedin_time'] != '') {
+            $next_id = $next_data['id'];
+        } else {
+            if ($next_date >= date('Y-m-d')) {
+                $next_id = 0;
+            } else {
+                $next_date = date('Y-m-d', strtotime($next_date.'+1 day'));
+                goto start;
+            }
+        }
+
+        // Pre btn ID
+        $pre_date = date('Y-m-d', strtotime($added_date.'-1 day'));
+        pre_start:
+        $pre_date_day = date('l', strtotime($pre_date));
+        $p_holiday_data = Holidays::getHolidayByDateAndID($pre_date,$added_by_id,'');
+        $p_leave_data = UserLeave::getLeaveByDateAndID($pre_date,$added_by_id,'1','Full Day');
+        $p_unapproved_leave_data = UserLeave::getLeaveByDateAndID($pre_date,$added_by_id,'2','Full Day');
+        if ($pre_date_day == 'Sunday' || $pre_date == $saturday_date || (isset($p_holiday_data) && sizeof($p_holiday_data) > 0) || (isset($p_leave_data) && $p_leave_data != '') || (isset($p_unapproved_leave_data) && $p_unapproved_leave_data != '')) {
+            $pre_date = date('Y-m-d', strtotime($pre_date.'-1 day'));
+            goto pre_start;
+        }
+        $pre_data = WorkPlanning::getWorkPlanningByAddedDateAndUserID($pre_date,$added_by_id);
+        if (isset($pre_data) && $pre_data != '' && $pre_data['loggedin_time'] != '') {
+            $pre_id = $pre_data['id'];
+        } else {
+            $pre_date = date('Y-m-d', strtotime($pre_date.'-1 day'));
+            goto pre_start;
+        }
+
+        // Working planning Month all dates
+        $total_month_days = Date::getTotalMonthDays($month);
+        $all_dates = array();
         for ($i=1; $i <= $total_month_days ; $i++) {
             if ($i <= 9) { $i = '0'.$i; }
 
@@ -1054,6 +1075,9 @@ class WorkPlanningController extends Controller
                         $all_dates[$i]['id'] = 0;
                     } else if (isset($half_day_leave_data) && $half_day_leave_data != '') {
                         continue;
+                    } else if ($date == $saturday_date) {
+                        $all_dates[$i]['bg'] = '#ffc000';
+                        $all_dates[$i]['id'] = 0;
                     } else {
                         $all_dates[$i]['id'] = 0;
                         $all_dates[$i]['bg'] = '#fd5e53';
