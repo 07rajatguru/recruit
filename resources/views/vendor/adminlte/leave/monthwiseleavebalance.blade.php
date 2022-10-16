@@ -51,79 +51,104 @@
         </div>
     </div>
 
-    <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="user_leave_table">
-    	<thead>
-    		<tr>
-	    		<th>No</th>
-                <th>Action</th>
-                <th width="15%">User Name</th>
-                <th>Total PL</th>
-                <th>Opted PL</th>
-                <th>PL Balance</th>
-               <!--  <th>Total SL</th>
-                <th>Opted SL</th>
-                <th>SL Balance</th> -->
-                <th>Edited By</th>
-	    	</tr>
-    	</thead>
+    <div id="before_table" style="display:none;">
+        <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="user_leave_table_before">
+        	<thead>
+        		<tr>
+    	    		<th>No</th>
+                    <th width="15%">User Name</th>
+                    <th>Total PL</th>
+                    <th>Opted PL</th>
+                    <th>PL Balance</th>
+                    <th>Total SL</th>
+                    <th>Opted SL</th>
+                    <th>SL Balance</th>
+    	    	</tr>
+        	</thead>
 
-    	<?php $i=0; ?>
-    	<tbody>
-    		@foreach($user_leave_data as $key => $value)
-                @if($value['edited_by'] != '')
-    	    		<tr style="background-color:#ACACAC;">
+        	<?php $i=0; ?>
+        	<tbody>
+        		@foreach($user_leave_data as $key => $value)
+    	    		<tr>
     		    		<td>{{ ++$i }}</td>
-                        <td>
-                            <a class="fa fa-edit" href="{{ route('leave.userwiseedit',['id' => $value['id'],'month' => $month,'year' => $year]) }}" title="Edit"></a>
-                        </td>
     		    		<td>{{ $value['user_name'] }}</td>
     		    		<td>{{ $value['pl_total'] }}</td>
     		    		<td>{{ $value['pl_taken'] }}</td>
     		    		<td>{{ $value['pl_remaining'] }}</td>
-                        <!-- <td>{{ $value['sl_total'] }}</td>
+                        <td>{{ $value['sl_total'] }}</td>
                         <td>{{ $value['sl_taken'] }}</td>
-                        <td>{{ $value['sl_remaining'] }}</td> -->
-                        <td>{{ $value['edited_by'] }}</td>
+                        <td>{{ $value['sl_remaining'] }}</td>
     		    	</tr>
-                @else
-                    <tr>
-                        <td>{{ ++$i }}</td>
-                        <td>
-                            <a class="fa fa-edit" href="{{ route('leave.userwiseedit',['id' => $value['id'],'month' => $month,'year' => $year]) }}" title="Edit"></a>
-                        </td>
-                        <td>{{ $value['user_name'] }}</td>
-                        <td>{{ $value['pl_total'] }}</td>
-                        <td>{{ $value['pl_taken'] }}</td>
-                        <td>{{ $value['pl_remaining'] }}</td>
-                        <!-- <td>{{ $value['sl_total'] }}</td>
-                        <td>{{ $value['sl_taken'] }}</td>
-                        <td>{{ $value['sl_remaining'] }}</td> -->
-                        <td></td>
-                    </tr>
-                @endif
-    		@endforeach
-    	</tbody>		
-    </table>
+        		@endforeach
+        	</tbody>
+        </table>
+    </div>
+
+    <div id="after_table">
+        <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="user_leave_table_after">
+            <thead>
+                <tr>
+                    <th>No</th>
+                    <th>Action</th>
+                    <th width="15%">User Name</th>
+                    <th>Total PL</th>
+                    <th>Opted PL</th>
+                    <th>PL Balance</th>
+                    <!-- <th>Total SL</th>
+                    <th>Opted SL</th>
+                    <th>SL Balance</th> -->
+                    <th>Edited By</th>
+                </tr>
+            </thead>
+
+            <?php $i=0; ?>
+            <tbody>
+                @foreach($user_leave_data as $key => $value)
+                    @if($value['edited_by'] != '')
+                        <tr style="background-color:#ACACAC;">
+                            <td>{{ ++$i }}</td>
+                            <td>
+                                <a class="fa fa-edit" href="{{ route('leave.userwiseedit',['id' => $value['id'],'month' => $month,'year' => $year]) }}" title="Edit"></a>
+                            </td>
+                            <td>{{ $value['user_name'] }}</td>
+                            <td>{{ $value['pl_total'] }}</td>
+                            <td>{{ $value['pl_taken'] }}</td>
+                            <td>{{ $value['pl_remaining'] }}</td>
+                            <!-- <td>{{ $value['sl_total'] }}</td>
+                            <td>{{ $value['sl_taken'] }}</td>
+                            <td>{{ $value['sl_remaining'] }}</td> -->
+                            <td>{{ $value['edited_by'] }}</td>
+                        </tr>
+                    @else
+                        <tr>
+                            <td>{{ ++$i }}</td>
+                            <td>
+                                <a class="fa fa-edit" href="{{ route('leave.userwiseedit',['id' => $value['id'],'month' => $month,'year' => $year]) }}" title="Edit"></a>
+                            </td>
+                            <td>{{ $value['user_name'] }}</td>
+                            <td>{{ $value['pl_total'] }}</td>
+                            <td>{{ $value['pl_taken'] }}</td>
+                            <td>{{ $value['pl_remaining'] }}</td>
+                            <!-- <td>{{ $value['sl_total'] }}</td>
+                            <td>{{ $value['sl_taken'] }}</td>
+                            <td>{{ $value['sl_remaining'] }}</td> -->
+                            <td></td>
+                        </tr>
+                    @endif
+                @endforeach
+            </tbody>
+        </table>
+    </div>
 @stop
 
 @section('customscripts')
     <script type="text/javascript">
         jQuery(document).ready(function() {
 
-            var table = jQuery('#user_leave_table').DataTable({
-                responsive: true,
-                "pageLength": 100,
-                stateSave: true
-            });
-            
-            if ( ! table.data().any() ) {
-            }
-            else {
-                new jQuery.fn.dataTable.FixedHeader( table );
-            }
-
             $("#month").select2();
             $("#year").select2();
+
+            displayDataTable();
         });
 
         function select_data() {
@@ -159,6 +184,46 @@
 
             $('body').append(form);
             form.submit();
+        }
+
+        function displayDataTable() {
+
+            var month = $("#month").val();
+            var year = $("#year").val();
+
+            if(month >= 8 && year >= 2022) {
+
+                var table = jQuery('#user_leave_table_after').DataTable({
+                    responsive: true,
+                    "pageLength": 100,
+                    stateSave: true
+                });
+                
+                if ( ! table.data().any() ) {
+                }
+                else {
+                    new jQuery.fn.dataTable.FixedHeader( table );
+                }
+
+                $('#before_table').hide();
+            }
+            else {
+
+                var table1 = jQuery('#user_leave_table_before').DataTable({
+                    responsive: true,
+                    "pageLength": 100,
+                    stateSave: true
+                });
+                
+                if ( ! table1.data().any() ) {
+                }
+                else {
+                    new jQuery.fn.dataTable.FixedHeader( table1 );
+                }
+
+                $('#before_table').show();
+                $('#after_table').hide();
+            }
         }
     </script>
 @endsection
