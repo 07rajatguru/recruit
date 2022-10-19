@@ -43,19 +43,20 @@ class SentWorkPlanningStatusReminder extends Command
 
         // Today day
         $today = date('l');
-        if ($today != 'Sunday') { 
-            // Get All Saturday dates of current month
-            $date = date("Y-m-d", strtotime("first day of this month"));
-            $first_day = date('N',strtotime($date));
-            $first_day = 6 - $first_day + 1;
-            $last_day =  date('t',strtotime($date));
-            $saturdays = array();
-            for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
-                $saturdays[] = $i;
-            }
+        // Get All Saturday dates of current month
+        $date = date("Y-m-d", strtotime("first day of this month"));
+        $first_day = date('N',strtotime($date));
+        $first_day = 6 - $first_day + 1;
+        $last_day =  date('t',strtotime($date));
+        $saturdays = array();
+        for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+            $saturdays[] = $i;
+        }
 
-            // Get Saturday Date
-            $saturday_date = date('Y-m')."-".$saturdays[2]." 00:00:00";
+        // Get Saturday Date
+        $saturday_date = date('Y-m')."-".$saturdays[2]." 00:00:00";
+        $today_date = date('Y-m-d 00:00:00');
+        if ($today != 'Sunday' && $saturday_date != $today_date) { 
             if ($today == 'Monday') {
                 $from_date = date('Y-m-d 00:00:00',strtotime("-2 days"));
                 $to_date = date("Y-m-d 23:59:59", strtotime("-2 days"));
