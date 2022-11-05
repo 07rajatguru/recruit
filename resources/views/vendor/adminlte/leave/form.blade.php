@@ -41,15 +41,15 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <div class="">
-                        <div class="form-group {{ $errors->has('subject') ? 'has-error' : '' }}">
+                        {{-- <div class="form-group {{ $errors->has('subject') ? 'has-error' : '' }}">
                             <strong>Subject: <span class = "required_fields">*</span></strong>
-                            {!! Form::text('subject',null, array('id'=>'subject','placeholder' => 'Subject','class' => 'form-control', 'tabindex' => '1')) !!}
+                            {!! Form::text('subject',null, array('id'=>'subject','placeholder' => 'Subject','class' => 'form-control')) !!}
                             @if ($errors->has('subject'))
                                 <span class="help-block">
                                     <strong>{{ $errors->first('subject') }}</strong>
                                 </span>
                             @endif
-                        </div>
+                        </div> --}}
 
                         <div class="form-group {{ $errors->has('from_date') ? 'has-error' : '' }}">
                             <strong>From Date: <span class = "required_fields">*</span></strong>
@@ -58,8 +58,20 @@
                                     <i class="fa fa-calendar"></i>
                                 </div>
 
-                                {!! Form::text('from_date', isset($from_date) ? $from_date : null, array('id'=>'from_date','placeholder' => 'From Date','class' => 'form-control', 'tabindex' => '3')) !!}
+                                {!! Form::text('from_date', isset($from_date) ? $from_date : null, array('id'=>'from_date','placeholder' => 'From Date','class' => 'form-control', 'tabindex' => '1')) !!}
                             </div>
+                        </div>
+
+                        <div class="form-group {{ $errors->has('leave_category') ? 'has-error' : '' }}">
+                            <strong>Leave Category: <span class = "required_fields">*</span></strong>
+                            
+                            {!! Form::select('leave_category', $leave_category, $selected_leave_category, array('id' => 'leave_category', 'class' => 'form-control','tabindex' => '3', 'onchange' => 'category();')) !!}
+
+                            @if ($errors->has('leave_category'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('leave_category') }}</strong>
+                                </span>
+                            @endif
                         </div>
 
                         <div class="form-group {{ $errors->has('message') ? 'has-error' : '' }}">
@@ -75,18 +87,6 @@
                 </div>
 
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
-                    
-                    <div class="form-group {{ $errors->has('leave_category') ? 'has-error' : '' }}">
-                        <strong>Leave Category: <span class = "required_fields">*</span></strong>
-                        
-                        {!! Form::select('leave_category', $leave_category, $selected_leave_category, array('id' => 'leave_category', 'class' => 'form-control','tabindex' => '2', 'onchange' => 'category();')) !!}
-
-                        @if ($errors->has('leave_category'))
-                            <span class="help-block">
-                                <strong>{{ $errors->first('leave_category') }}</strong>
-                            </span>
-                        @endif
-                    </div>
 
                     <div class="form-group to_date {{ $errors->has('to_date') ? 'has-error' : '' }}">
                         <strong>To Date: <span class = "required_fields">*</span></strong>
@@ -95,13 +95,13 @@
                                 <i class="fa fa-calendar"></i>
                             </div>
 
-                            {!! Form::text('to_date', isset($to_date) ? $to_date : null, array('id'=>'to_date','placeholder' => 'To Date','class' => 'form-control', 'tabindex' => '4')) !!}
+                            {!! Form::text('to_date', isset($to_date) ? $to_date : null, array('id'=>'to_date','placeholder' => 'To Date','class' => 'form-control', 'tabindex' => '2')) !!}
                         </div>
                     </div>
 
                     <div class="form-group {{ $errors->has('leave_type') ? 'has-error' : '' }}">
                         <strong>Leave Type: <span class = "required_fields">*</span></strong>
-                        {!! Form::select('leave_type', $leave_type,$selected_leave_type, array('id' => 'leave_type','class' => 'form-control','tabindex' => '5', 'onchange' => 'displayHalfDayOptions();')) !!}
+                        {!! Form::select('leave_type', $leave_type,$selected_leave_type, array('id' => 'leave_type','class' => 'form-control','tabindex' => '4', 'onchange' => 'displayHalfDayOptions();')) !!}
                         @if ($errors->has('leave_type'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('leave_type') }}</strong>
@@ -111,7 +111,7 @@
 
                     <div class="form-group half_options {{ $errors->has('half_leave_type') ? 'has-error' : '' }}" style="display: none;">
                         <strong>Select Type: <span class = "required_fields">*</span></strong>
-                        {!! Form::select('half_leave_type', $half_leave_type,$selected_half_leave_type, array('id' => 'half_leave_type','class' => 'form-control','tabindex' => '6')) !!}
+                        {!! Form::select('half_leave_type', $half_leave_type,$selected_half_leave_type, array('id' => 'half_leave_type','class' => 'form-control','tabindex' => '5')) !!}
                         @if ($errors->has('half_leave_type'))
                             <span class="help-block">
                                 <strong>{{ $errors->first('half_leave_type') }}</strong>
