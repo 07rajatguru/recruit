@@ -401,40 +401,29 @@
 
             var department_id = $("#type").val();
             var user_id = $("#user_id").val();
-
+            var app_url = "{!! env('APP_URL'); !!}";
             if(department_id == 2) {
-
                 $(".hr_adv").show();
             }
             else {
-
                 $(".hr_adv").hide();
             }
 
             if(department_id > 0) {
-
                 $.ajax({
-
-                    url:'/departments/getroles',
+                    url: app_url+'/departments/getroles',
                     data:{department_id:department_id,user_id:user_id},
                     dataType:'json',
-
                     success: function(data) {
-
                         if(data.roles_res) {
-
                             $("#roles").empty();
-
                             $("#roles").append('<option value=""> Select Role </option>');
 
                             $.each(data.roles_res,function(key, value) { 
-
                                 if (data.pre_role_id == value.id) {
-
-                                    $('select[id="roles"]').append('<option selected="selected" value="'+ value.id +'">' + value.name + '</option>');        
+                                    $('select[id="roles"]').append('<option selected="selected" value="'+ value.id +'">' + value.name + '</option>');
                                 }
                                 else {
-
                                     $('select[id="roles"]').append('<option value="'+ value.id +'">' + value.name + '</option>');
                                 }
                             }); 
@@ -450,7 +439,6 @@
                         var bizpos_user_id = $("#bizpos_user_id").val();
                         
                         if(department_id == operations && userReportsTo != $bizpos_user_id) {
-
                             $('#reports_to').val(bizpos_user_id);
                             $("#reports_to").select2();
                         }

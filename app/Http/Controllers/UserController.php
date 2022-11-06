@@ -252,7 +252,7 @@ class UserController extends Controller
 
             if($type == '1' || ($type == '2' && $hr_adv_recruitemnt == 'Yes')) {
 
-                $training_ids = Training::getAlltrainingIds(1);
+                $training_ids = Training::getAlltrainingIds(0,1);
 
                 if (isset($training_ids) && $training_ids != '') {
 
@@ -266,7 +266,7 @@ class UserController extends Controller
                 }
             }
 
-            $process_ids = ProcessManual::getAllprocessmanualIds(1);
+            $process_ids = ProcessManual::getAllprocessmanualIds(0,1);
 
             if (isset($process_ids) && $process_ids != '') {
 
@@ -1073,7 +1073,7 @@ class UserController extends Controller
 
             if($department_id == '1' || ($department_id == '2' && $hr_adv_recruitemnt == 'Yes')) {
 
-                $training_ids = Training::getAlltrainingIds(1);
+                $training_ids = Training::getAlltrainingIds(0,1);
 
                 if (isset($training_ids) && $training_ids != '') {
 
@@ -1087,7 +1087,7 @@ class UserController extends Controller
                 }
             }
 
-            $process_ids = ProcessManual::getAllprocessmanualIds(1);
+            $process_ids = ProcessManual::getAllprocessmanualIds(0,1);
 
             if (isset($process_ids) && $process_ids != '') {
 

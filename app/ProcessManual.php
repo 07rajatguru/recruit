@@ -148,13 +148,16 @@ class ProcessManual extends Model
     return $process_count;
   }
 
-  public static function getAllprocessmanualIds($select_all=0) {
+  public static function getAllprocessmanualIds($select_all=0,$is_default_open=0) {
 
     $query = ProcessManual::query();
     $query = $query->select('process_manual.id');
     
     if ($select_all > 0) {
       $query = $query->where('process_manual.select_all',$select_all);
+    }
+    if ($is_default_open == 1) {
+      $query = $query->where('process_manual.is_default_open','1');
     }
     
     $res = $query->get();

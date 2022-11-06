@@ -146,13 +146,16 @@ class Training extends Model
         return $training_count;
     }
 
-    public static function getAlltrainingIds($select_all=0) {
+    public static function getAlltrainingIds($select_all=0,$is_default_open=0) {
 
         $query = Training::query();
         $query = $query->select('training.id');
 
         if ($select_all > 0) {
             $query = $query->where('training.select_all',$select_all);
+        }
+        if ($is_default_open == 1) {
+            $query = $query->where('training.is_default_open','1');
         }
         $res = $query->get();
 
