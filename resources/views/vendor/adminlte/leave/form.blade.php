@@ -261,6 +261,14 @@
             const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
             var days = diffInDays + 1;
 
+            if(days < 0) {
+
+                alert("Please Select Proper date.");
+                $("#from_date").val("");
+                $("#to_date").val("");
+                return false;
+            }
+
             if(leave_type == 'Half Day') {
                 var total_days = days/2;
             }

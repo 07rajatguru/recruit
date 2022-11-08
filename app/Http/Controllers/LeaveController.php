@@ -275,9 +275,20 @@ class LeaveController extends Controller
             $to_date = $dateClass->changeDMYtoYMD(Input::get('to_date'));
         }
 
+        $user_name = User::getUserNameById($user_id);
+        $get_from_date = Input::get('from_date');
+        $get_to_date = Input::get('to_date');
+
+        if($get_from_date == $get_to_date) {
+            $subject = "Leave Application - ". $user_name . " - " . $get_from_date;
+        }
+        else {
+            $subject = "Leave Application - ". $user_name . " - " . $get_from_date . " - " . $get_to_date;
+        }
+
         // Get All fields values
 
-        $subject = Input::get('subject');
+        //$subject = Input::get('subject');
         $leave_type = Input::get('leave_type');
         $leave_category = Input::get('leave_category');
         $message = Input::get('message');
@@ -444,7 +455,6 @@ class LeaveController extends Controller
         $sender_name = $user_id;
         $to = $superadminemail;
         $cc = implode(",",$cc_users_array);
-        $subject = $leave_details['subject'];
         $body_message = $leave_details['message'];
         $module_id = $leave_id;
 
