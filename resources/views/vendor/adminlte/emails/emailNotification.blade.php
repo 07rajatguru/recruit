@@ -115,6 +115,13 @@
             <table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif; border-collapse: collapse; color: #444444;" align="center">
                 <tr style="background-color:white;"><td colspan="5"></td></tr>
                 <tr style="background-color:white;"><td colspan="5"></td></tr>
+                <tr>
+                    <td width="600" style="font-family:Cambria, serif;font-size: 11.0pt;">
+                        <b><p style="text-align: left;">Dear Users,</p></b>
+                        <p style="text-align: left;">Please find the list of jobs opened today below:</p>
+                    </td>
+                </tr>
+
                 <tr style="background-color:white;">
                     <table align="center" width="600px" cellpadding="0" border="1" cellspacing="0" style="font-family: arial; font-size: 12px; color: #444444;">
                         <tr style="background-color:white;height: 30px;">
@@ -143,6 +150,18 @@
                                 </tr>
                             @endforeach
                         @endif
+                    </table>
+                </tr>
+
+                <tr>
+                    <table align="center" width="600px" cellpadding="0" border="0" cellspacing="0" style="font-family: arial; font-size: 12px; color: #444444;">
+                        <tr>
+                            <td width="600" style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                <p style="text-align: left;">Request you to connect with your Reporting Manager and understand the priority of positions to work accordingly.</p>
+                                <p style="text-align: left;">Thanks.<br/>E2H Team</p>
+                            </td>
+
+                        </tr>
                     </table>
                 </tr>
             </table>

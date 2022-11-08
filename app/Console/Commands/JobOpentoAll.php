@@ -138,7 +138,7 @@ class JobOpentoAll extends Command
                             $to = implode(",",$user_emails);
                             $cc = implode(",",$cc_user_array);
 
-                            $subject = "Job opened to All";
+                            $subject = "Jobs Opened to All - ". date('d/m/Y');
                             $message_m .= '<tr><th>'.++$sr.'</th><th>'.$job_details['user_name'].'</th><th>'.$client_name.'</th><th>'.$job_details['posting_title'].'</th><th>'.$job_details['job_location'].'</th><th></th></tr>';
                             if (isset($module_ids) && $module_ids != '') {
                                 $module_ids .= ','. $job_id;
@@ -154,12 +154,12 @@ class JobOpentoAll extends Command
                             foreach ($users as $key2=>$value2) {
 
                                 $module_id = $job_id;
-                                $module = 'Job Open to All';
+                                $module1 = "Jobs Opened to All - ". date('d/m/Y');
                                 $message = "Job opened by ". $job_details['user_name'] ." - " . $job_details['posting_title'] . " @ " .$client_name . " - " . $client_city;
                                 $link = route('jobopen.show',$job_id);
                                 $user_arr = trim($key2);
 
-                                event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
+                                event(new NotificationEvent($module_id, $module1, $message, $link, $user_arr));
                             }
                         }
 
