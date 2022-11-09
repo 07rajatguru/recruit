@@ -92,18 +92,31 @@
     </div><br/>
 
     <div class="row">
-        <div class="col-xs-12 col-sm-12 col-md-12">
-            <div class="col-xs-1 col-sm-1 col-md-1">
+        <div class="col-xs-6 col-sm-6 col-md-6">
+            <div class="col-xs-2 col-sm-2 col-md-2">
                 <a href="{{ route('leave.status',array('pending',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#8FB1D5;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;width:120px;margin-left: -5px;" title="Pending">Pending ({{ $pending }})
                 </div></a>
             </div>
 
-            <div class="col-xs-1 col-sm-1 col-md-1">
+            <div class="col-xs-2 col-sm-2 col-md-2">
                 <a href="{{ route('leave.status',array('approved',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#32CD32;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;width:120px;margin-left: 25px;" title="Approved">Approved ({{ $approved }})</div></a>
             </div>
 
-            <div class="col-xs-1 col-sm-1 col-md-1">
+            <div class="col-xs-2 col-sm-2 col-md-2">
                 <a href="{{ route('leave.status',array('rejected',$month,$year)) }}" style="text-decoration: none;color: black;"><div style="height:35px;background-color:#F08080;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;width:120px;margin-left: 55px;" title="Rejected">Rejected ({{ $rejected }})</div></a>
+            </div>
+        </div>
+        <div class="col-xs-6 col-sm-6 col-md-6">
+            <div class="col-xs-2 col-sm-2 col-md-2">
+                <div style="height:35px;background-color:#FFCC00;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;width:120px;margin-left: -5px;" title="Cancelled">Cancelled ({{ $c_pending }})</div>
+            </div>
+
+            <div class="col-xs-2 col-sm-2 col-md-2">
+                <div style="height:35px;background-color:#e87992;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;width:180px;margin-left: 25px;" title="Cancelled Approved">Cancelled Approved ({{ $c_approved }})</div>
+            </div>
+
+            <div class="col-xs-2 col-sm-2 col-md-2">
+                <div style="height:35px;background-color:#f17a40;font-weight: 600;border-radius: 50px;padding:9px 0px 0px 9px;text-align: center;width:180px;margin-left: 115px;" title="Cancelled Rejected">Cancelled Rejected ({{ $c_rejected }})</div>
             </div>   
         </div>
     </div>
@@ -133,6 +146,9 @@
 
                         @if($user_id == $value['user_id'])
                             <a class="fa fa-edit" title="edit" href="{{ route('leave.edit',$value['id']) }}"></a>
+                            @if(date('Y-m-d') <= $value['cancel_leave_btn_date'])
+                                @include('adminlte::leave.cancelLeaveModal', ['data' => $value, 'name' => 'leave','display_name'=>'Leave Application'])
+                            @endif
                         @endif
 
                         @permission(('leave-delete'))
@@ -144,7 +160,15 @@
                         @endif --}}
                     </td>
 
-                    <td>{{ $value['user_name'] }}</td>
+                    @if(isset($value['is_leave_cancel']) && $value['is_leave_cancel'] == '1' && $value['leave_cancel_status'] == '0')
+                        <td style="background-color:#FFCC00;">{{ $value['user_name'] }}</td>
+                    @elseif(isset($value['is_leave_cancel']) && $value['is_leave_cancel'] == '1' && $value['leave_cancel_status'] == '1')
+                        <td style="background-color:#e87992;">{{ $value['user_name'] }}</td>
+                    @elseif(isset($value['is_leave_cancel']) && $value['is_leave_cancel'] == '1' && $value['leave_cancel_status'] == '2')
+                        <td style="background-color:#f17a40;">{{ $value['user_name'] }}</td>
+                    @else
+                        <td>{{ $value['user_name'] }}</td>
+                    @endif
                     <td>{{ $value['subject'] }}</td>
                     <td>{{ $value['from_date'] }}</td>
                     <td>{{ $value['to_date'] }}</td>

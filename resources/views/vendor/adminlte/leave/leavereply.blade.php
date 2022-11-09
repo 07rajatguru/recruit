@@ -26,7 +26,15 @@
             		<table class="table table-bordered">
                         <tr>
                             <th>User Name</th>
-                            <td>{{ $leave_details['uname'] }}</td>
+                            @if(isset($leave_details['is_leave_cancel']) && $leave_details['is_leave_cancel'] == '1' && $leave_details['leave_cancel_status'] == '0')
+                                <td style="background-color:#FFCC00;">{{ $leave_details['uname'] }}</td>
+                            @elseif(isset($leave_details['is_leave_cancel']) && $leave_details['is_leave_cancel'] == '1' && $leave_details['leave_cancel_status'] == '1')
+                                <td style="background-color:#e87992;">{{ $leave_details['uname'] }}</td>
+                            @elseif(isset($leave_details['is_leave_cancel']) && $leave_details['is_leave_cancel'] == '1' && $leave_details['leave_cancel_status'] == '2')
+                                <td style="background-color:#f17a40;">{{ $leave_details['uname'] }}</td>
+                            @else
+                                <td>{{ $leave_details['uname'] }}</td>
+                            @endif
                             <th>From Date</th>
                             <td>{{ $leave_details['from_date'] }}</td>
                             <th>To Date</th>
@@ -59,6 +67,15 @@
                             <th>Leave Message</th>
                             <td colspan="6">{!! $leave_details['message'] !!}</td>
                         </tr>
+
+                        @if(isset($leave_details['is_leave_cancel']) && $leave_details['is_leave_cancel'] == '1')
+                            <tr>
+                                <th>Leave Cancel Date</th>
+                                <td>{{ $leave_details['leave_cancel_date'] }}</td>
+                                <th>Leave Cancel Remarks</th>
+                                <td colspan="4">{{ $leave_details['leave_cancel_remarks'] }}</td>
+                            </tr>
+                        @endif
 
                         @if(isset($leave_details['remarks']) && $leave_details['remarks'] != '')
                             <tr>
@@ -130,21 +147,50 @@
                 <button type="button" class="btn btn-danger" disabled="disabled">Rejected by {{ $leave_details['approved_by'] }}</button>
             </div>
         @endif
+
+        @if(isset($leave_details['is_leave_cancel']) && $leave_details['is_leave_cancel'] == '1' && $leave_details['leave_cancel_status'] == '1')
+            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                <button type="button" class="btn btn-success" disabled="disabled">Cancelled Approved by {{ $leave_details['leave_cancel_approved_by'] }}</button>
+            </div>
+        @elseif(isset($leave_details['is_leave_cancel']) && $leave_details['is_leave_cancel'] == '1' && $leave_details['leave_cancel_status'] == '2')
+            <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                <button type="button" class="btn btn-danger" disabled="disabled">Cancelled Rejected by {{ $leave_details['leave_cancel_approved_by'] }}</button>
+            </div>
+        @endif
     @else
-        @if($leave_details['status'] == 0)
+        @if(isset($leave_details['is_leave_cancel']) && $leave_details['is_leave_cancel'] == '0')
+            @if($leave_details['status'] == 0)
+                <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                    <button type="submit" class="btn btn-success" onclick="permission('Approved')" title="Approve">Approve</button> &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="submit" class="btn btn-danger" onclick="permission('Rejected')" title="Reject">Reject</button>
+                </div>
+            @elseif($leave_details['status'] == 1)
+                <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                    <button type="button" class="btn btn-success" disabled="disabled">Approved by {{ $leave_details['approved_by'] }}</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="submit" class="btn btn-danger" onclick="permission('Rejected')" title="Reject">Reject</button>
+                </div>
+            @elseif($leave_details['status'] == 2)
+                <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+                    <button type="submit" class="btn btn-success" onclick="permission('Approved')" title="Approve">Approve</button> &nbsp;&nbsp;&nbsp;&nbsp;
+                    <button type="button" class="btn btn-danger" disabled="disabled">Rejected by {{ $leave_details['approved_by'] }}</button>
+                </div>
+            @endif
+        @endif
+        
+        @if(isset($leave_details['is_leave_cancel']) && $leave_details['is_leave_cancel'] == '1' && $leave_details['leave_cancel_status'] == '0')
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                <button type="submit" class="btn btn-success" onclick="permission('Approved')" title="Approve">Approve</button> &nbsp;&nbsp;&nbsp;&nbsp;
-                <button type="submit" class="btn btn-danger" onclick="permission('Rejected')" title="Reject">Reject</button>
+                <button type="submit" class="btn btn-success" onclick="cancelPermission('Approved')" title="Approve">Cancel Approve</button> &nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="submit" class="btn btn-danger" onclick="cancelPermission('Rejected')" title="Reject">Cancel Reject</button>
             </div>
-        @elseif($leave_details['status'] == 1)
+        @elseif(isset($leave_details['is_leave_cancel']) && $leave_details['is_leave_cancel'] == '1' && $leave_details['leave_cancel_status'] == '1')
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                <button type="button" class="btn btn-success" disabled="disabled">Approved by {{ $leave_details['approved_by'] }}</button>&nbsp;&nbsp;&nbsp;&nbsp;
-                <button type="submit" class="btn btn-danger" onclick="permission('Rejected')" title="Reject">Reject</button>
+                <button type="button" class="btn btn-success" disabled="disabled">Cancelled Approved by {{ $leave_details['leave_cancel_approved_by'] }}</button>&nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="submit" class="btn btn-danger" onclick="cancelPermission('Rejected')" title="Reject">Cancel Reject</button>
             </div>
-        @elseif($leave_details['status'] == 2)
+        @elseif(isset($leave_details['is_leave_cancel']) && $leave_details['is_leave_cancel'] == '1' && $leave_details['leave_cancel_status'] == '2')
             <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-                <button type="submit" class="btn btn-success" onclick="permission('Approved')" title="Approve">Approve</button> &nbsp;&nbsp;&nbsp;&nbsp;
-                <button type="button" class="btn btn-danger" disabled="disabled">Rejected by {{ $leave_details['approved_by'] }}</button>
+                <button type="submit" class="btn btn-success" onclick="cancelPermission('Approved')" title="Approve">Cancel Approve</button> &nbsp;&nbsp;&nbsp;&nbsp;
+                <button type="button" class="btn btn-danger" disabled="disabled">Cancelled Rejected by {{ $leave_details['leave_cancel_approved_by'] }}</button>
             </div>
         @endif
     @endif
@@ -237,6 +283,34 @@
                 }
             });
         }
+    }
+
+    function cancelPermission(check) {
+        var leave_id = $("#leave_id").val();
+        var app_url = "{!! env('APP_URL') !!}";
+        var token = $("input[name=_token]").val();
+        var msg = $("#msg").val();
+        var user_name = $("#user_name").val();
+        var loggedin_user_id = $("#loggedin_user_id").val();
+        var user_id = $("#user_id").val();
+        var subject = $("#subject").val();
+        var approved_by = $("#approved_by").val();
+        var type_of_leave = $("#type_of_leave").val();
+
+        $("#check").val(check);
+        var remarks = '';
+        $.ajax({
+            type: 'POST',
+            url:app_url+'/leave/cancel_reply/'+leave_id,
+            data: {leave_id: leave_id, 'check':check, '_token':token, msg:msg, user_name:user_name, loggedin_user_id:loggedin_user_id,user_id:user_id,subject:subject,approved_by:approved_by,'remarks':remarks},
+            dataType:'json',
+            success: function(data) {
+                if (data == 'success') { 
+                    window.location.reload();
+                    alert('Reply Sent Successfully.');
+                }
+            }
+        });
     }
 
     function hideModal() {

@@ -3161,6 +3161,126 @@ class EveryMinute extends Command
 
                 \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
+
+            else if ($value['module'] == 'Cancel Leave') {
+
+                $cc_array = array();
+                $cc_array = explode(",",$input['cc']);
+                $input['cc_array'] = $cc_array;
+
+                // Get Sender name details
+                $user_details = User::getAllDetailsByUserID($value['sender_name']);
+                // $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
+                $input['owner_email'] = $user_details->email;
+
+                $user_info = User::getProfileInfo($value['sender_name']);
+                $input['signature'] = $user_info['signature'];
+
+                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
+
+                // $input['from_address'] = trim($user_email_details->email);
+
+                $leave = UserLeave::find($module_id);
+                // User Name
+                $u_name = User::getUserNameById($leave['user_id']);
+
+                $body_message = '<p>Dear</p>';
+                $body_message .= '<p>Greetings from Easy2Hire!</p>';
+                $body_message .= '<p>This is to inform you that '.$u_name.' has Cancelled '.$leave['category'].' from '.$leave['from_date'].' to '.$leave['to_date'].' due to '.$leave['leave_cancel_remarks'].'.</p>';
+
+                $input['leave_message'] = $body_message;
+                $input['leave_id'] = $module_id;
+
+                // if(strpos($input['from_address'], '@gmail.com') !== false) {
+                //     config([
+                //         'mail.driver' => trim('mail'),
+                //         'mail.host' => trim('smtp.gmail.com'),
+                //         'mail.port' => trim('587'),
+                //         'mail.username' => trim($user_email_details->email),
+                //         'mail.password' => trim($user_email_details->password),
+                //         'mail.encryption' => trim('tls'),
+                //     ]);
+                // } else {
+                //     config([
+                //         'mail.driver' => trim('sendmail'),
+                //         'mail.host' => trim('smtp.zoho.com'),
+                //         'mail.port' => trim('465'),
+                //         'mail.username' => trim($user_email_details->email),
+                //         'mail.password' => trim($user_email_details->password),
+                //         'mail.encryption' => trim('ssl'),
+                //     ]);
+                // }
+
+                \Mail::send('adminlte::emails.leavemail', $input, function ($message) use ($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc_array'])->bcc($input['owner_email'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'"); 
+            }
+
+            // Mail for Cancel Leave reply approved/unapproved
+            else if ($value['module'] == 'Leave Cancel Reply') {
+
+                $cc_array = array();
+                $cc_array = explode(",",$input['cc']); 
+
+                $input['cc_array'] = array_unique($cc_array);
+
+                // Get Sender name details
+                $user_details = User::getAllDetailsByUserID($value['sender_name']);
+                // $input['from_name'] = $user_details->first_name . " " . $user_details->last_name;
+
+                $user_info = User::getProfileInfo($value['sender_name']);
+                $input['signature'] = $user_info['signature'];
+
+                $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
+
+                // $input['from_address'] = trim($user_email_details->email);
+
+                $leave = UserLeave::find($module_id);
+                $input['leave_message'] = $leave->leave_cancel_reply_message;
+                $input['remarks'] = $leave->remarks;
+                $input['days'] = $leave->days;
+                $input['status'] = $leave->status;
+                $input['type_of_leave'] = $leave->type_of_leave;
+                $input['from_date'] = date('d-m-Y',strtotime($leave->from_date));
+                $input['to_date'] = date('d-m-Y',strtotime($leave->to_date));
+                $input['half_leave_type'] = $leave->half_leave_type;
+
+                $user_name = User::getUserNameByEmail($input['to']);
+                $input['user_name'] = $user_name;
+
+                // if(strpos($input['from_address'], '@gmail.com') !== false) {
+
+                //     config([
+                //         'mail.driver' => trim('mail'),
+                //         'mail.host' => trim('smtp.gmail.com'),
+                //         'mail.port' => trim('587'),
+                //         'mail.username' => trim($user_email_details->email),
+                //         'mail.password' => trim($user_email_details->password),
+                //         'mail.encryption' => trim('tls'),
+                //     ]);
+                // }
+                // else {
+
+                //     config([
+                //         'mail.driver' => trim('sendmail'),
+                //         'mail.host' => trim('smtp.zoho.com'),
+                //         'mail.port' => trim('465'),
+                //         'mail.username' => trim($user_email_details->email),
+                //         'mail.password' => trim($user_email_details->password),
+                //         'mail.encryption' => trim('ssl'),
+                //     ]);
+                // }
+
+                \Mail::send('adminlte::emails.leavereply', $input, function ($message) use ($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'"); 
+            }
         }
     }
 }

@@ -85,7 +85,7 @@ class LeaveController extends Controller
         $pending = 0;
         $approved = 0;
         $rejected = 0;
-
+        $c_pending = 0; $c_approved = 0; $c_rejected = 0;
         foreach($leave_details as $leave_detail) {
 
             if($leave_detail['status'] == '0') {
@@ -96,6 +96,15 @@ class LeaveController extends Controller
             }
             else if($leave_detail['status'] == '2') {
                 $rejected++;
+            }
+
+            // Cancel Leave Count
+            if(isset($leave_detail['is_leave_cancel']) && $leave_detail['is_leave_cancel'] == '1' && $leave_detail['leave_cancel_status'] == '0') {
+                $c_pending++;
+            } else if(isset($leave_detail['is_leave_cancel']) && $leave_detail['is_leave_cancel'] == '1' && $leave_detail['leave_cancel_status'] == '1') {
+                $c_approved++;
+            } else if(isset($leave_detail['is_leave_cancel']) && $leave_detail['is_leave_cancel'] == '1' && $leave_detail['leave_cancel_status'] == '2') {
+                $c_rejected++;
             }
         }
 
@@ -116,7 +125,7 @@ class LeaveController extends Controller
 
         $chart_data = '';
 
-        return view('adminlte::leave.index',compact('leave_details','leave_balance','user_id','count','pending','approved','rejected','month_array','month','year_array','year','chart_data','super_admin_userid'));
+        return view('adminlte::leave.index',compact('leave_details','leave_balance','user_id','count','pending','approved','rejected','month_array','month','year_array','year','chart_data','super_admin_userid','c_pending','c_approved','c_rejected'));
     }
 
     public function getAllDetailsByStatus($status,$month,$year) {
@@ -896,6 +905,202 @@ class LeaveController extends Controller
 
         return json_encode($data);
     }
+
+    // User Cancel Leave function
+    public function leaveCancel($id,Request $req) {
+
+        $leave_c_remarks = $req->input('leave_c_remarks');
+
+        // Update Leave Cancel flag
+        $cancel_leave = UserLeave::find($id);
+        $cancel_leave->is_leave_cancel = '1';
+        $cancel_leave->leave_cancel_date = date('Y-m-d H:i:s');
+        $cancel_leave->leave_cancel_remarks = $leave_c_remarks;
+        $cancel_leave->leave_cancel_status = '0';
+        $c_leave = $cancel_leave->save();
+        if (isset($c_leave) && $c_leave != '') {
+            // Send email notification
+            $leave_details = UserLeave::getLeaveDetails($id);
+
+            //Get Superadmin Email
+            $superadminuserid = getenv('SUPERADMINUSERID');
+            $superadminemail = User::getUserEmailById($superadminuserid);
+
+            // Get HR email id
+            $hr = getenv('HRUSERID');
+            $hremail = User::getUserEmailById($hr);
+
+            //Get Reports to Email
+            $report_res = User::getReportsToUsersEmail($leave_details['user_id']);
+            if(isset($report_res->remail) && $report_res->remail!='') {
+                $cc_users_array = array($report_res->remail,$hremail);
+            } else {
+                $cc_users_array = array($hremail);
+            }
+
+            // User Name
+            $u_name = User::getUserNameById($leave_details['user_id']);
+
+            $module = "Cancel Leave";
+            $sender_name = $leave_details['user_id'];
+            $to = $superadminemail;
+            $cc = implode(",",$cc_users_array);
+            $subject = "Cancel Leave Application - ".$u_name." - from ".$leave_details['from_date']." to ".$leave_details['to_date'];
+            $body_message = '<p>Dear</p>';
+            $body_message .= '<p>Greetings from Easy2Hire!</p>';
+            $body_message .= '<p>This is to inform you that '.$u_name.' has Cancelled '.$leave_details['category'].' from '.$leave_details['from_date'].' to '.$leave_details['to_date'].' due to '.$leave_c_remarks.'.</p>';
+            $module_id = $id;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+
+            return redirect()->route('leave.index')->with('success','Cancelled Leave submitted Successfully.');    
+        } else {
+            return redirect()->route('leave.index')->with('error','Something went wrong. Please try again.');    
+        }
+    }
+
+    public function leaveCancelReplySend() {
+        
+        $leave_id = $_POST['leave_id'];
+        $reply = $_POST['check'];
+        $msg = $_POST['msg'];
+        $subject = $_POST['subject'];
+        $user_name = $_POST['user_name'];
+        $loggedin_user_id = $_POST['loggedin_user_id'];
+        $user_id = $_POST['user_id'];
+        $remarks = $_POST['remarks'];
+
+        if(isset($remarks) && $remarks != '') {
+            \DB::statement("UPDATE `user_leave` SET `remarks` = '$remarks' WHERE `id` = $leave_id");
+        }
+
+        // Get user leave details
+        $leave_details = UserLeave::getLeaveDetails($leave_id);
+
+        // User Name
+        $u_name = User::getUserNameById($leave_details['user_id']);
+
+        // Get total days
+        $days = $leave_details['days'];
+
+        // Get Month & Year from date of leave
+        $month = date('m',strtotime($leave_details['from_date']));
+        $year = date('Y',strtotime($leave_details['from_date']));
+
+        // Email Notifications
+        $user_email = User::getUserEmailById($user_id);
+    
+        //Get Superadmin Email
+        $superadminuserid = getenv('SUPERADMINUSERID');
+        $superadminemail = User::getUserEmailById($superadminuserid);
+
+        // Get HR email id
+        $hr = getenv('HRUSERID');
+        $hremail = User::getUserEmailById($hr);
+
+        //Get Reports to Email
+        $report_res = User::getReportsToUsersEmail($user_id);
+        if(isset($report_res->remail) && $report_res->remail!='') {
+            $report_email = $report_res->remail;
+            $cc_users_array = array($report_email,$superadminemail,$hremail);
+        } else {
+            $cc_users_array = array($superadminemail,$hremail);
+        }
+
+        if ($reply == 'Approved') {
+
+            $message = "<p><b>Dear " . $user_name . " ,</b></p><p><b>Your Cancelled leave has been Approved.</b></p>";
+
+            $module = "Leave Cancel Reply";
+            $sender_name = $loggedin_user_id;
+            $to = $user_email;
+            $cc = implode(",",$cc_users_array);
+            $subject = "Cancel Leave Application - ".$u_name." - from ".$leave_details['from_date']." to ".$leave_details['to_date'];
+            $body_message = $message;
+            $module_id = $leave_id;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+
+            \DB::statement("UPDATE `user_leave` SET `leave_cancel_status` = '1', `leave_cancel_approved_by`=$loggedin_user_id, `leave_cancel_reply_message` = '$message', `leave_cancel_approved_date` = '".date('Y-m-d H:i:s')."' WHERE `id` = $leave_id");
+
+            // Get Leave Type
+            $leave_category = $leave_details['category'];
+            $leave_status = $leave_details['status'];
+
+            if ($leave_status == '1') {
+                // Get Leave Balance
+                $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
+                $monthwise_leave_balance_details = MonthwiseLeaveBalance::getMonthwiseLeaveBalanceByUserId($user_id,$month,$year);
+                // Update Leave balance
+                if($leave_category == 'Privilege Leave') {
+                    if(isset($leave_balance_details) && $leave_balance_details != '') {
+                        // Update leave balance in main table
+                        $leave_taken = $leave_balance_details['leave_taken'];
+                        $leave_remaining = $leave_balance_details['leave_remaining'];
+
+                        $new_leave_taken = $leave_taken - $days;
+                        $new_leave_remaining = $leave_remaining + $days;
+
+                        \DB::statement("UPDATE `leave_balance` SET `leave_taken` = '$new_leave_taken', `leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
+                    }
+
+                    if(isset($monthwise_leave_balance_details) && $monthwise_leave_balance_details != '') {
+
+                        // Update leave balance in monthwise table
+                        $pl_taken = $monthwise_leave_balance_details['pl_taken'];
+                        $pl_remaining = $monthwise_leave_balance_details['pl_remaining'];
+
+                        $new_pl_taken = $pl_taken - $days;
+                        $new_pl_remaining = $pl_remaining + $days;
+
+                        \DB::statement("UPDATE `monthwise_leave_balance` SET `pl_taken` = '$new_pl_taken', `pl_remaining` = '$new_pl_remaining' WHERE `user_id` = '$user_id' AND `month` = '$month' AND `year` = '$year'");
+                    }
+                }
+                else if($leave_category == 'Sick Leave') {
+                    if(isset($leave_balance_details) && $leave_balance_details != '') {
+                        // Update leave balance in main table
+                        $seek_leave_taken = $leave_balance_details['seek_leave_taken'];
+                        $seek_leave_remaining = $leave_balance_details['seek_leave_remaining'];
+
+                        $new_leave_taken = $seek_leave_taken - $days;
+                        $new_leave_remaining = $seek_leave_remaining + $days;
+
+                        \DB::statement("UPDATE `leave_balance` SET `seek_leave_taken` = '$new_leave_taken', `seek_leave_remaining` = '$new_leave_remaining' WHERE `user_id` = '$user_id'");
+                    }
+
+                    if(isset($monthwise_leave_balance_details) && $monthwise_leave_balance_details != '') {
+                        // Update leave balance in monthwise table
+                        $sl_taken = $monthwise_leave_balance_details['sl_taken'];
+                        $sl_remaining = $monthwise_leave_balance_details['sl_remaining'];
+
+                        $new_sl_taken = $sl_taken - $days;
+                        $new_sl_remaining = $sl_remaining + $days;
+
+                        \DB::statement("UPDATE `monthwise_leave_balance` SET `sl_taken` = '$new_sl_taken', `sl_remaining` = '$new_sl_remaining' WHERE `user_id` = '$user_id' AND `month` = '$month' AND `year` = '$year'");
+                    }
+                }
+            }
+        }
+        elseif ($reply == 'Rejected') {
+            $message = "<p><b>Dear " . $user_name . " ,</b></p><p><b>Your Cancelled leave has been Rejected.</b></p>";
+
+            $module = "Leave Cancel Reply";
+            $sender_name = $loggedin_user_id;
+            $to = $user_email;
+            $cc = implode(",",$cc_users_array);
+            $subject = "Cancel Leave Application - ".$u_name." - from ".$leave_details['from_date']." to ".$leave_details['to_date'];
+            $body_message = $message;
+            $module_id = $leave_id;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
+
+            \DB::statement("UPDATE `user_leave` SET `leave_cancel_status` = '2', `leave_cancel_approved_by`=$loggedin_user_id, `leave_cancel_reply_message` = '$message', `leave_cancel_approved_date` = '".date('Y-m-d H:i:s')."' WHERE `id` = $leave_id");
+        }
+        $data = 'success';
+
+        return json_encode($data);
+    }
+
     // End function for single user apply for leave & leave data
 
     // Starts All User Leave Balance Module function

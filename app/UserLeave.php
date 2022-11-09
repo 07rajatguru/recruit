@@ -103,15 +103,25 @@ class UserLeave extends Model
                 }
                 if (isset($value->to_date) && $value->to_date != '') {
                     $leave[$i]['to_date'] = date('d-m-Y',strtotime($value->to_date));
+                    $leave[$i]['cancel_leave_btn_date'] = date('Y-m-d',strtotime($value->to_date. "+7 days"));
                 }
                 else {
                     $leave[$i]['to_date'] = '';
+                    $leave[$i]['cancel_leave_btn_date'] = '';
                 }
                 $leave[$i]['leave_type'] = $value->type_of_leave;
                 $leave[$i]['leave_category'] = $value->category;
                 $leave[$i]['status'] = $value->status;
                 $leave[$i]['user_name'] = $value->user_name;
                 $leave[$i]['half_leave_type'] = $value->half_leave_type;
+                $leave[$i]['is_leave_cancel'] = $value->is_leave_cancel;
+                $leave[$i]['leave_cancel_date'] = ($value->leave_cancel_date != '' && $value->leave_cancel_date != NULL) ? date('d-m-Y h:i A', strtotime($value->leave_cancel_date)) : '' ;
+                $leave[$i]['leave_cancel_remarks'] = $value->leave_cancel_remarks;
+                $leave[$i]['leave_cancel_approved_by'] = $value->leave_cancel_approved_by;
+                $leave[$i]['leave_cancel_status'] = $value->leave_cancel_status;
+                $leave[$i]['leave_cancel_approved_date'] = ($value->leave_cancel_approved_date != '' && $value->leave_cancel_approved_date != NULL) ? date('d-m-Y h:i A', strtotime($value->leave_cancel_approved_date)) : '' ;
+                $leave[$i]['leave_cancel_approved_date'] = $value->leave_cancel_approved_date;
+
                 $i++;
             }
         }
@@ -123,7 +133,8 @@ class UserLeave extends Model
         $query = UserLeave::query();
         $query = $query->join('users as u1','u1.id','user_leave.user_id');
         $query = $query->leftjoin('users as u2','u2.id','user_leave.approved_by');
-        $query = $query->select('user_leave.*','u1.first_name as fname','u1.last_name as lname','u2.first_name as approved_by_first_name','u2.last_name as approved_by_last_name');
+        $query = $query->leftjoin('users as u3','u3.id','user_leave.leave_cancel_approved_by');
+        $query = $query->select('user_leave.*','u1.first_name as fname','u1.last_name as lname','u2.first_name as approved_by_first_name','u2.last_name as approved_by_last_name','u3.first_name as cancel_approved_by_first_name','u3.last_name as cancel_approved_by_last_name');
         $query = $query->where('user_leave.id',$leave_id);
         $res = $query->first();
 
@@ -161,6 +172,13 @@ class UserLeave extends Model
             $leave_data['remarks'] = $res->remarks;
             $leave_data['selected_dates'] = $res->selected_dates;
             $leave_data['half_leave_type'] = $res->half_leave_type;
+            $leave_data['is_leave_cancel'] = $res->is_leave_cancel;
+            $leave_data['leave_cancel_date'] = ($res->leave_cancel_date != '' && $res->leave_cancel_date != NULL) ? date('d-m-Y h:i A', strtotime($res->leave_cancel_date)) : '' ;
+            $leave_data['leave_cancel_remarks'] = $res->leave_cancel_remarks;
+            $leave_data['leave_cancel_approved_by'] = $res->cancel_approved_by_first_name . " " . $res->cancel_approved_by_last_name;
+            $leave_data['leave_cancel_status'] = $res->leave_cancel_status;
+            $leave_data['leave_cancel_approved_date'] = ($res->leave_cancel_approved_date != '' && $res->leave_cancel_approved_date != NULL) ? date('d-m-Y h:i A', strtotime($res->leave_cancel_approved_date)) : '' ;
+            $leave_data['leave_cancel_approved_date'] = $res->leave_cancel_approved_date;
         }
 
         return $leave_data;

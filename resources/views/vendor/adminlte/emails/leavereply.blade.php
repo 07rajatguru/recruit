@@ -49,6 +49,19 @@
                     </td>
                 </tr>
             </table>
+        @elseif(isset($module) && $module == 'Leave Cancel Reply')
+            <table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif;" align="left">
+                <tr>
+                    <td width="600" style="font-family:Cambria, serif;font-size: 11.0pt;">
+                        {!! $leave_message !!}
+                    </td>
+                </tr>
+                <tr>
+                    <td width="600" style="font-family:Cambria, serif;font-size: 11.0pt;">
+                        <p style="text-align: left;">Thanks.<br/>E2H Team</p>
+                    </td>
+                </tr>
+            </table>
         @else
 
             <table border="0" cellpadding="0" cellspacing="0" width="600" style="font-family:Helvetica,Arial,sans-serif;" align="left">

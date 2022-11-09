@@ -708,6 +708,18 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:leave-edit']
     ]);
 
+    Route::post('leave/cancel/{id}',[
+        'as' => 'leave.cancel',
+        'uses' => 'LeaveController@leaveCancel',
+        'middleware' => ['permission:leave-edit']
+    ]);
+
+    Route::post('leave/cancel_reply/{id}',[
+        'as' => 'leave.cancelreplysend',
+        'uses' => 'LeaveController@leaveCancelReplySend',
+        'middleware' => ['permission:display-leave|display-user-wise-leave']
+    ]);
+
     Route::delete('leave/{id}',[
         'as' => 'leave.destroy',
         'uses' => 'LeaveController@destroy',
