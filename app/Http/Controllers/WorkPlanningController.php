@@ -929,6 +929,7 @@ class WorkPlanningController extends Controller
         $work_planning_list = WorkPlanningList::getWorkPlanningList($id);
 
         $added_by_id = $work_planning['added_by_id'];
+        $added_by_data = User::find($added_by_id);
         $appr_rejct_by = User::getUserNameById($work_planning['appr_rejct_by']);
         $added_date = date("Y-m-d",strtotime($work_planning['added_date']));
         $added_day = date("l",strtotime($work_planning['added_date']));
@@ -1011,8 +1012,17 @@ class WorkPlanningController extends Controller
         if (isset($pre_data) && $pre_data != '' && $pre_data['loggedin_time'] != '') {
             $pre_id = $pre_data['id'];
         } else {
-            $pre_date = date('Y-m-d', strtotime($pre_date.'-1 day'));
-            goto pre_start;
+            if (isset($added_by_data) && $added_by_data != '') {
+                $joining_date = $added_by_data['joining_date'];
+                if ($pre_date < $joining_date) {
+                    $pre_id = 0;
+                } else {
+                    $pre_date = date('Y-m-d', strtotime($pre_date.'-1 day'));
+                    goto pre_start;
+                }
+            } else {
+                $pre_id = 0;
+            }
         }
 
         // Working planning Month all dates
