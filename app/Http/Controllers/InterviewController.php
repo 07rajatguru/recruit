@@ -887,18 +887,14 @@ class InterviewController extends Controller
 
         $interviewUpdated = $interview->save();
 
+        // Interview Schedule Mail
+        $scheduled_mail = Interview::getScheduleEmail($candidate_id,$posting_title,$id);
+
         if ($pre_round != $round && $round > $pre_round) {
-            // Interview Schedule Mail
-            $scheduled_mail = Interview::getScheduleEmail($candidate_id,$posting_title,$id);
-
             if($round == '2') {
-
                 // Add in associated candidate table
-
                 $response = JobAssociateCandidates::where('candidate_id',$candidate_id)->where('job_id',$posting_title)->first();
-
                 if(isset($response) && $response != '') {
-
                     $today_date = date('Y-m-d');
 
                     DB::statement("UPDATE job_associate_candidates SET status_id = '2',shortlisted = '2',shortlisted_date = '$today_date' where candidate_id = $candidate_id and job_id = $posting_title");
@@ -906,13 +902,9 @@ class InterviewController extends Controller
             }
 
             if($round == '3') {
-
                 // Add in associated candidate table
-
                 $response = JobAssociateCandidates::where('candidate_id',$candidate_id)->where('job_id',$posting_title)->first();
-
                 if(isset($response) && $response != '') {
-
                     $today_date = date('Y-m-d');
 
                     DB::statement("UPDATE job_associate_candidates SET status_id = '3',shortlisted = '3',shortlisted_date = '$today_date' where candidate_id = $candidate_id and job_id = $posting_title");
