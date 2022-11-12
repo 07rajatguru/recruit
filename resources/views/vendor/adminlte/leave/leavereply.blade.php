@@ -84,7 +84,7 @@
                             </tr>
                         @endif
 
-                        @if(isset($leave_details['category']) && $leave_details['category'] == 'Privilege Leave')
+                        @if(isset($leave_details['category']) && $leave_details['category'] == 'Paid Leave')
                             <tr>
                                 <th>Note : </th>
                                 <td colspan="6">As per leave policy, the employee is expected to apply for Privileged leaves with 3 days prior intimation.

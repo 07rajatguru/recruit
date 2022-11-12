@@ -23,7 +23,9 @@ class UserLeave extends Model
         $type = array();
         $type[''] = 'Select Leave Category';
         $type['LWP'] = 'LWP';
-        $type['Privilege Leave'] = 'Privilege Leave';
+        // Privilege Leave to Paid Leave title change on 12/11/2022
+        $type['Privilege Leave'] = 'Paid Leave';
+        // $type['Privilege Leave'] = 'Privilege Leave';
         //$type['Sick Leave'] = 'Sick Leave';
 
         return $type;
@@ -110,7 +112,11 @@ class UserLeave extends Model
                     $leave[$i]['cancel_leave_btn_date'] = '';
                 }
                 $leave[$i]['leave_type'] = $value->type_of_leave;
-                $leave[$i]['leave_category'] = $value->category;
+                if ($value->category == 'Privilege Leave') {
+                    $leave[$i]['leave_category'] = 'Paid Leave';
+                } else {
+                    $leave[$i]['leave_category'] = $value->category;
+                }
                 $leave[$i]['status'] = $value->status;
                 $leave[$i]['user_name'] = $value->user_name;
                 $leave[$i]['half_leave_type'] = $value->half_leave_type;
@@ -147,6 +153,11 @@ class UserLeave extends Model
             $leave_data['user_id'] = $res->user_id;
             $leave_data['subject'] = $res->subject;
             $leave_data['category'] = $res->category;
+            if ($res->category == 'Privilege Leave') {
+                $leave_data['category'] = 'Paid Leave';
+            } else {
+                $leave_data['category'] = $res->category;
+            }
             $leave_data['message'] = $res->message;
             $leave_data['status'] = $res->status;
             $leave_data['uname'] = $res->fname . " " . $res->lname;

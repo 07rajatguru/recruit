@@ -413,7 +413,7 @@
                                         $half_day_actual = $half_day / 2;
                                         $pl = $pl + 0.5;
                                     ?>
-                                    <td style="border: 5px solid #000000;background-color:#d99594;" title="Half Day Privilege Leave">HD</td>
+                                    <td style="border: 5px solid #000000;background-color:#d99594;" title="Half Day Paid Leave">HD</td>
 
                                 @elseif($attendance == 'WFHHDPL')
                                     <?php 
@@ -421,7 +421,7 @@
                                         $half_day_actual = $half_day / 2;
                                         $pl = $pl + 0.5;
                                     ?>
-                                    <td style="border: 5px solid #000000;background-color:#d99594;color: #0000FF;" title="Half Day Privilege Leave (Work From Home)">HD</td>
+                                    <td style="border: 5px solid #000000;background-color:#d99594;color: #0000FF;" title="Half Day Paid Leave (Work From Home)">HD</td>
 
                                 @elseif($attendance == 'HDSL')
                                     <?php 
@@ -462,7 +462,7 @@
 
                                 @elseif($attendance == 'PL')
                                     <?php $pl++; ?>
-                                    <td style="border: 5px solid #000000;background-color:#8db3e2;" title="Privilege Leave">PL</td>
+                                    <td style="border: 5px solid #000000;background-color:#8db3e2;" title="Paid Leave">PL</td>
 
                                 @elseif($attendance == 'SL')
                                     <?php $sl++; ?>

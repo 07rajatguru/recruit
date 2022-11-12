@@ -366,7 +366,7 @@
                                                     <td style="border: 1px solid black;text-align: center;background-color: #8FB1D5;cursor: pointer;" title="Pending Work Planning"></td>
                                                 @endif
 
-                                                <!-- For Set Half Day Privilege Leave -->
+                                                <!-- For Set Half Day Paid Leave -->
                                                 @if(isset($value2['remarks']) && $value2['remarks'] != '' && $attendance == 'HDPL')
 
                                                     <?php 
@@ -374,7 +374,7 @@
                                                         $half_day_actual = $half_day / 2;
                                                         $pl = $pl + 0.5;
                                                     ?>
-                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;" title="Half Day Privilege Leave (Remarks Added)">HD</td>
+                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;" title="Half Day Paid Leave (Remarks Added)">HD</td>
 
                                                 @elseif($attendance == 'HDPL')
 
@@ -383,10 +383,10 @@
                                                         $half_day_actual = $half_day / 2;
                                                         $pl = $pl + 0.5;
                                                     ?>
-                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;" title="Half Day Privilege Leave">HD</td>
+                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;" title="Half Day Paid Leave">HD</td>
                                                 @endif
 
-                                                <!-- For Set Work From Home Half Day Privilege Leave -->
+                                                <!-- For Set Work From Home Half Day Paid Leave -->
                                                 @if(isset($value2['remarks']) && $value2['remarks'] != '' && $attendance == 'WFHHDPL')
 
                                                     <?php 
@@ -394,7 +394,7 @@
                                                         $half_day_actual = $half_day / 2;
                                                         $pl = $pl + 0.5;
                                                     ?>
-                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;color: blue;" title="Half Day Privilege Leave (Work From Home - Remarks Added)">HD</td>
+                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;color: blue;" title="Half Day Paid Leave (Work From Home - Remarks Added)">HD</td>
 
                                                 @elseif($attendance == 'WFHHDPL')
 
@@ -403,7 +403,7 @@
                                                         $half_day_actual = $half_day / 2;
                                                         $pl = $pl + 0.5;
                                                     ?>
-                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;color: blue;" title="Half Day Privilege Leave (Work From Home)">HD</td>
+                                                    <td style="border: 1px solid black;background-color:#d99594;text-align: center;cursor: pointer;color: blue;" title="Half Day Paid Leave (Work From Home)">HD</td>
                                                 @endif
 
                                                 <!-- For Set Half Day Sick Leave -->
@@ -506,14 +506,14 @@
                                                         $pl++;
                                                     ?>
 
-                                                    <td style="border: 1px solid black;background-color:#8db3e2;text-align: center;cursor: pointer;" title="Privilege Leave (Remarks Added)">PL</td>
+                                                    <td style="border: 1px solid black;background-color:#8db3e2;text-align: center;cursor: pointer;" title="Paid Leave (Remarks Added)">PL</td>
 
                                                 @elseif($attendance == 'PL')
                                                     <?php 
                                                         $pl++;
                                                     ?>
 
-                                                    <td style="border: 1px solid black;background-color:#8db3e2;text-align: center;cursor: pointer;" title="Privilege Leave">PL</td>
+                                                    <td style="border: 1px solid black;background-color:#8db3e2;text-align: center;cursor: pointer;" title="Paid Leave">PL</td>
                                                 @endif
 
                                                 <!-- For Set Sick Leave -->
