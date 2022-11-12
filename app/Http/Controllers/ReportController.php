@@ -587,6 +587,9 @@ class ReportController extends Controller
         $user_id = \Auth::user()->id;
         $all_perm = $user->can('display-person-wise-report-of-all-users');
         $teamwise_perm = $user->can('display-person-wise-report-of-loggedin-user-team');
+        if ($user_id > 0 && $user_id == 176) {
+            $user_perm = $user->can('display-person-wise-report-of-loggedin-user');
+        }
 
         $recruitment_perm = $user->can('display-recruitment-dashboard');
         $hr_advisory_perm = $user->can('display-hr-advisory-dashboard');
@@ -677,6 +680,13 @@ class ReportController extends Controller
             
             $selected_team_type = '';
             $users = User::getAssignedUsers($user_id);
+        }
+        else if (isset($user_perm) && $user_perm) {
+            $selected_team_type = '';
+            $users = User::getAssignedUsers($user_id);
+        }
+        else {
+            return view('errors.403');
         }
 
         if(isset($users) && $users != '') {

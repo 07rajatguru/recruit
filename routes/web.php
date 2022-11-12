@@ -2800,7 +2800,7 @@ Route::group(['middleware' => ['auth']], function () {
     Route::any('personwise-report',[
         'as' => 'report.personwisereportindex',
         'uses' => 'ReportController@personWiseReportIndex',
-        'middleware' => ['permission:display-person-wise-report-of-all-users|display-person-wise-report-of-loggedin-user-team']
+        'middleware' => ['permission:display-person-wise-report-of-all-users|display-person-wise-report-of-loggedin-user-team|display-person-wise-report-of-loggedin-user']
     ]);
 
     Route::post('personwise-report/export',[
