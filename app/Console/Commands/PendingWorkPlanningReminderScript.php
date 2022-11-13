@@ -40,6 +40,7 @@ class PendingWorkPlanningReminderScript extends Command
      */
     public function handle()
     {
+        date_default_timezone_set('UTC');
         $from_date = date('Y-m-d',strtotime("-8 days"));
         $to_date = date("Y-m-d");
 
