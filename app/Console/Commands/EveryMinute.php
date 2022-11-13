@@ -2176,6 +2176,26 @@ class EveryMinute extends Command
                 }
             }
 
+            else if ($value['module'] == 'Ticket Discussion Closed') {
+
+                $to_array = explode(",",$input['to']);
+                $cc_array = explode(",",$input['cc']);
+
+                // Get users for popup of add information
+                $ticket_res = TicketsDiscussion::getTicketDetailsById($value['module_id']);
+                if(isset($ticket_res) && sizeof($ticket_res) > 0) {
+                    $input['ticket_res'] = $ticket_res;
+                    $input['to_array'] = array_unique($to_array);
+                    $input['cc_array'] = array_unique($cc_array);
+                    \Mail::send('adminlte::emails.ticketdiscussionclosedemail', $input, function ($message) use($input) {
+                        $message->from($input['from_address'], $input['from_name']);
+                        $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
+                    });
+
+                    \DB::statement("UPDATE emails_notification SET `status`='$status' where `id` = '$email_notification_id'");
+                }
+            }
+
             else if ($value['module'] == 'Work Planning') {
                 // For timing issue in work planning data
                 date_default_timezone_set('UTC');

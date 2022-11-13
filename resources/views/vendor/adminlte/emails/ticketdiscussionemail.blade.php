@@ -13,7 +13,15 @@
                     <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 20px 50px 54px;">
                         <tr>
                             <td>
-                                <p style="margin:8px 0; line-height:1.5;"><b>Ticket No. : </b> 
+                                <b><p style="text-align: left;">Dear {{ $ticket_res['added_by'] }},</p></b>
+                                <p style="text-align: left;">Greetings from Easy2Hire!</p>
+                                <p style="text-align: left;">This is to inform that you have added a ticket under the {{ $ticket_res['module_name'] }} on {{ $ticket_res['added_date'] }} with the Ticket No as {{ $ticket_res['ticket_no'] }}. The reason for applying the ticket and its related screenshot can be viewed on E2H directly. For your reference, snapshot is also attached with the ticket. </p>
+                                <p style="text-align: left;"><b>Question Type : </b> {{ $ticket_res['question_type'] }} </p>
+                                <p style="text-align: left;"><b>Description : </b> {{ $ticket_res['description'] }} </p>
+                                <p style="text-align: left;">You can expect a solution on the same in the next 48-72 hours. If you do not receive any communication, feel free to connect with Kazvin/Hemali over mail.</p>
+                                <p style="text-align: left;">Thanks. <br/> Easy2Hire Team</p>
+
+                                <!-- <p style="margin:8px 0; line-height:1.5;"><b>Ticket No. : </b> 
                                 {{ $ticket_res['ticket_no'] }} </p>
                                 <p style="margin:8px 0; line-height:1.5;"><b>Module Name : </b> 
                                 {{ $ticket_res['module_name'] }} </p>
@@ -24,7 +32,7 @@
                                 <p style="margin:8px 0; line-height:1.5;"><b>Description : </b> 
                                 {{ $ticket_res['description'] }}</p>
                                 <p style="margin:8px 0; line-height:1.5;"><b>Ticket Added By : </b> 
-                                {{ $ticket_res['added_by'] }}</p>
+                                {{ $ticket_res['added_by'] }}</p> -->
                             </td>
                         </tr>
                     </table>

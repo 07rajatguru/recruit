@@ -189,13 +189,12 @@ class TicketsDiscussionController extends Controller
         }
 
         // Send email notification
-        $to1 = 'saloni@trajinfotech.com';
-        $to2 = 'dhara@trajinfotech.com';
-        $to_users_array = array($to1,$to2);
-
         // get loggedin_user_email_id
         $loggedin_useremail = User::getUserEmailById($user_id);
+        $to_users_array = array($loggedin_useremail);
 
+        $it1 = 'saloni@trajinfotech.com';
+        $it2 = 'dhara@trajinfotech.com';
         // get superadmin email id
         $superadminuserid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($superadminuserid);
@@ -203,7 +202,7 @@ class TicketsDiscussionController extends Controller
         $manager_user_id = env('MANAGERUSERID');
         $manager_email = User::getUserEmailById($manager_user_id);
 
-        $cc_users_array = array($superadminemail,$loggedin_useremail,$manager_email);
+        $cc_users_array = array($it1,$it2,$superadminemail,$manager_email);
 
         $module = "Ticket Discussion";
         $sender_name = $user_id;
@@ -492,6 +491,39 @@ class TicketsDiscussionController extends Controller
         }
         $status_ticket->status = $status;
         $status_ticket->save();
+
+        if ($status == 'Closed') {
+            // Send email notification
+            // get ticket user email
+            $ticket_useremail = User::getUserEmailById($status_ticket->added_by);
+            $to_users_array = array($ticket_useremail);
+
+            // get loggedin_user_email_id
+            $user_id = \Auth::user()->id;
+            $loggedin_useremail = User::getUserEmailById($user_id);
+
+            $it1 = 'saloni@trajinfotech.com';
+            $it2 = 'dhara@trajinfotech.com';
+            // get superadmin email id
+            $superadminuserid = getenv('SUPERADMINUSERID');
+            $superadminemail = User::getUserEmailById($superadminuserid);
+            // get manager email id
+            $manager_user_id = env('MANAGERUSERID');
+            $manager_email = User::getUserEmailById($manager_user_id);
+
+            $cc_users_array = array($it1,$it2,$superadminemail,$manager_email,$loggedin_useremail);
+
+            $module = "Ticket Discussion Closed";
+            $sender_name = $user_id;
+            $to = implode(",",$to_users_array);
+            $cc = implode(",",$cc_users_array);
+
+            $subject = "Ticket Discussion Closed - " . $status_ticket->ticket_no;
+            $message = "Ticket Discussion Closed - " . $status_ticket->ticket_no;
+            $module_id = $id;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        }
 
         return redirect()->route('ticket.index')->with('success', 'Ticket Status Updated Successfully.');
     }

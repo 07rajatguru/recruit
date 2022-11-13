@@ -93,6 +93,7 @@ class TicketsDiscussion extends Model
             $ticket_res['question_type'] = $response->question_type;
             $ticket_res['description'] = $response->description;
             $ticket_res['added_by'] = $response->added_by;
+            $ticket_res['added_date'] = date('d-m-Y', strtotime("$response->created_at"));
         }
         
         return $ticket_res;
