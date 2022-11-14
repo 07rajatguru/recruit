@@ -5050,4 +5050,48 @@ class HomeController extends Controller
 
         return redirect('/dashboard')->with('success', 'Successfully.');
     }
+
+    public function testMail() {
+        
+        // echo "test";
+        $from_name = getenv('FROM_NAME');
+        $from_address = getenv('FROM_ADDRESS');
+        // $input['from_name'] = $from_name;
+        // $input['from_address'] = $from_address;
+        // $app_url = getenv('APP_URL');
+
+        $input['from_name'] = "Deepak";
+        $input['from_address'] = "atsteam193@gmail.com";
+
+        $input['message'] = "Test";
+        $input['subject'] = "Test";
+
+        $to_array = 'meet@trajinfotech.com';
+        $cc_array = 'janimeet4@gmail.com';
+
+        $input['to_array'] = $to_array;
+        $input['cc_array'] = $cc_array;
+
+        /*config([
+            'mail.driver' => trim('sendmail'),
+            'mail.host' => trim('smtp.zoho.com'),
+            'mail.port' => trim('465'),
+            'mail.username' => trim('kazvin@adlertalent.com'),
+            'mail.password' => trim("dS1^WVmsqj@v^xkS"),
+            'mail.encryption' => trim('ssl'),
+        ]);*/
+        config([
+            'mail.driver' => trim('mail'),
+            'mail.host' => trim('smtp.gmail.com'),
+            'mail.port' => trim('587'),
+            'mail.username' => trim("atsteam193@gmail.com"),
+            'mail.password' => trim("pT82Ngewuw3D4fu"),
+            'mail.encryption' => trim('tls'),
+        ]);
+
+        \Mail::send('adminlte::emails.test', $input, function ($message) use($input) {
+            $message->from($input['from_address'], $input['from_name']);
+            $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
+        });
+    }
 }
