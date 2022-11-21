@@ -530,6 +530,16 @@ class LeaveController extends Controller
         $from_date_1 = strtotime($from_date);
         $to_date_1 = strtotime($to_date);
 
+        $user_name = User::getUserNameById($user_id);
+        $get_from_date = Input::get('from_date');
+        $get_to_date = Input::get('to_date');
+        if($get_from_date == $get_to_date) {
+            $subject = "Leave Application - ". $user_name . " - " . $get_from_date;
+        }
+        else {
+            $subject = "Leave Application - ". $user_name . " - " . $get_from_date . " - " . $get_to_date;
+        }
+
         $diff_in_days = ($to_date_1 - $from_date_1)/60/60/24;
         $diff_in_days = $diff_in_days + 1;
 
