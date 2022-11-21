@@ -45,20 +45,20 @@ class ProductivityReport extends Command
         $date = date('Y-m-d');
 
         // Get All Saturday dates of current month
-        $s_date = date("Y-m-d", strtotime("first day of this month"));
-        $first_day = date('N',strtotime($s_date));
-        $first_day = 6 - $first_day + 1;
-        $last_day =  date('t',strtotime($s_date));
-        $saturdays = array();
-        for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
-            $saturdays[] = $i;
-        }
+        // $s_date = date("Y-m-d", strtotime("first day of this month"));
+        // $first_day = date('N',strtotime($s_date));
+        // $first_day = 6 - $first_day + 1;
+        // $last_day =  date('t',strtotime($s_date));
+        // $saturdays = array();
+        // for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+        //     $saturdays[] = $i;
+        // }
 
-        // Get Saturday Date
-        $saturday_date = date('Y-m')."-".$saturdays[2];
-        if ($saturday_date == $date) {
-        }
-        else {
+        // // Get Saturday Date
+        // $saturday_date = date('Y-m')."-".$saturdays[2];
+        // if ($saturday_date == $date) {
+        // }
+        // else {
             $recruitment = getenv('RECRUITMENT');
             $users = User::getAllUsersEmails($recruitment,'Yes','',0);
 
@@ -74,21 +74,15 @@ class ProductivityReport extends Command
             foreach ($users as $key => $value) {
 
                 $check_users_log_count = UsersLog::getUserLogsOfWeekById($key);
-
                 if(isset($check_users_log_count) && $check_users_log_count > 0) {
-
                     $user_benchmark = UserBenchMark::getBenchMarkByUserID($key);
-
                     if(isset($user_benchmark) && sizeof($user_benchmark) > 0) {
 
                         $cc_array = array();
                         $res = User::getReportsToUsersEmail($key);
-
                         if(isset($res->remail) && $res->remail!='') {
-
                             $report_email = $res->remail;
                             $cc_array = array($report_email,$manager_email,$superadminemail,$hremail);
-
                         }
                         else {
                             $cc_array = array($manager_email,$superadminemail,$hremail);
@@ -114,6 +108,6 @@ class ProductivityReport extends Command
                     }
                 }
             }
-        }
+        // }
     }
 }
