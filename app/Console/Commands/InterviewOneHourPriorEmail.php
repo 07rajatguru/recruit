@@ -43,7 +43,7 @@ class InterviewOneHourPriorEmail extends Command
         // $from_date = date("Y-m-d 00:00:00");
         // $to_date = date("Y-m-d 23:59:59");
         // $curr_date_time = date('Y-m-d H:i:00', time() + 19800);
-        $curr_date_time = date('Y-m-d H:i:00');
+        $curr_date_time = date('Y-m-d H:01:00');
         $one_hour_next_time = date('Y-m-d H:i:00', strtotime($curr_date_time. "+1 hour"));
 
         $recruitment = getenv('RECRUITMENT');
