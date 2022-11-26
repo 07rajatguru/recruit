@@ -3301,6 +3301,43 @@ class EveryMinute extends Command
 
                 \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'"); 
             }
+
+            // Mail for Weekly Ticket Report
+            else if ($value['module'] == 'Weekly Ticket Report') {
+
+                $to_array = explode(",",$input['to']);
+                $cc_array = explode(",",$input['cc']);
+
+                $input['to_array'] = array_unique($to_array);
+                $input['cc_array'] = array_unique($cc_array);
+
+                $from_date = date('Y-m-d 00:00:00', strtotime("monday this week"));
+                $to_date = date('Y-m-d 23:59:59', strtotime("+5 days".$from_date));
+                $tickets_data = TicketsDiscussion::getTicketDetailsBydates($from_date,$to_date);
+                $open = ''; $closed = '';
+                if (isset($tickets_data) && sizeof($tickets_data) > 0) {
+                    foreach ($tickets_data as $key => $value) {
+                        if (isset($value['status']) && $value['status'] == 'Open') {
+                            $open .= '<a formtarget="_blank" href="'.getenv('APP_URL').'/ticket-discussion/'.$value['id'].'">'.$value['ticket_no'].'</a> <hr/>';
+                        }
+
+                        if (isset($value['status']) && $value['status'] == 'Closed') {
+                            $closed .= '<a formtarget="_blank" href="'.getenv('APP_URL').'/ticket-discussion/'.$value['id'].'">'.$value['ticket_no'].'</a> <hr/>';
+                        }
+                    }
+                }
+
+                $input['tickets_data'] = $tickets_data;
+                $input['open'] = $open;
+                $input['closed'] = $closed;
+
+                \Mail::send('adminlte::emails.weeklyTicketReport', $input, function ($message) use ($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to_array'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'"); 
+            }
         }
     }
 }

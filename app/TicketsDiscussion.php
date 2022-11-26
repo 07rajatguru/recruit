@@ -98,4 +98,34 @@ class TicketsDiscussion extends Model
         
         return $ticket_res;
     }
+
+    public static function getTicketDetailsBydates($from_date='',$to_date='') {
+
+        $query = TicketsDiscussion::query();
+        $query = $query->leftjoin('users','users.id','=','tickets_discussion.added_by');
+        $query = $query->leftjoin('module','module.id','=','tickets_discussion.module_id');
+        $query = $query->orderBy('tickets_discussion.id','DESC');
+        $query = $query->select('tickets_discussion.*','users.name as added_by','module.name as module_name');
+        if(isset($from_date) && $from_date != '' && isset($to_date) && $to_date != '') {
+            $query = $query->where('tickets_discussion.status_date','>=',"$from_date");
+            $query = $query->where('tickets_discussion.status_date','<=',"$to_date");
+        }
+        $response = $query->get();
+
+        $tickets_res = array();$i=0;
+        if(isset($response) && sizeof($response) > 0) {
+            foreach ($response as $key => $value) {
+                $tickets_res[$i]['id'] = $value->id;
+                $tickets_res[$i]['ticket_no'] = $value->ticket_no;
+                $tickets_res[$i]['module_name'] = $value->module_name;
+                $tickets_res[$i]['status'] = $value->status;
+                $tickets_res[$i]['question_type'] = $value->question_type;
+                $tickets_res[$i]['added_by'] = $value->added_by;
+                $tickets_res[$i]['added_date'] = date('d-m-Y', strtotime("$value->created_at"));
+                $i++;
+            }
+        }
+        
+        return $tickets_res;
+    }
 }

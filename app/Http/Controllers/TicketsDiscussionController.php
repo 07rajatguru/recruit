@@ -143,6 +143,7 @@ class TicketsDiscussionController extends Controller
         $ticket_discussion->ticket_no = $ticket_no;
         $ticket_discussion->module_id = $module_id;
         $ticket_discussion->status = $status;
+        $ticket_discussion->status_date = date('Y-m-d H:i:s');
         $ticket_discussion->question_type = $question_type;
         $ticket_discussion->description = $description;
         $ticket_discussion->added_by = $user_id;
@@ -248,6 +249,7 @@ class TicketsDiscussionController extends Controller
 
     public function update(Request $request,$id) {
 
+        $logg_user_id = \Auth::user()->id;
         $ticket_no = $request->input('ticket_no');
         $module_id = $request->input('module_id');
         $status = $request->input('status');
@@ -257,10 +259,51 @@ class TicketsDiscussionController extends Controller
         $ticket_discussion = TicketsDiscussion::find($id);
         $ticket_discussion->ticket_no = $ticket_no;
         $ticket_discussion->module_id = $module_id;
+
+        // For changes of ticket status
+        $old_status = $ticket_discussion->status;
+        if (isset($old_status) && $old_status != $status) {
+            $ticket_discussion->status_date = date('Y-m-d H:i:s');
+            $ticket_discussion->status_changed_by = $logg_user_id;
+        }
+
         $ticket_discussion->status = $status;
         $ticket_discussion->question_type = $question_type;
         $ticket_discussion->description = $description;
         $ticket_discussion->save();
+
+        if ($status == 'Closed') {
+            // Send email notification
+            // get ticket user email
+            $ticket_useremail = User::getUserEmailById($ticket_discussion->added_by);
+            $to_users_array = array($ticket_useremail);
+
+            // get loggedin_user_email_id
+            $user_id = \Auth::user()->id;
+            $loggedin_useremail = User::getUserEmailById($user_id);
+
+            $it1 = 'saloni@trajinfotech.com';
+            $it2 = 'dhara@trajinfotech.com';
+            // get superadmin email id
+            $superadminuserid = getenv('SUPERADMINUSERID');
+            $superadminemail = User::getUserEmailById($superadminuserid);
+            // get manager email id
+            $manager_user_id = env('MANAGERUSERID');
+            $manager_email = User::getUserEmailById($manager_user_id);
+
+            $cc_users_array = array($it1,$it2,$superadminemail,$manager_email,$loggedin_useremail);
+
+            $module = "Ticket Discussion Closed";
+            $sender_name = $user_id;
+            $to = implode(",",$to_users_array);
+            $cc = implode(",",$cc_users_array);
+
+            $subject = "Ticket Discussion Closed - " . $ticket_no;
+            $message = "Ticket Discussion Closed - " . $ticket_no;
+            $module_id = $id;
+
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+        }
 
         return redirect()->route('ticket.index')->with('success','Ticket Updated Successfully.');
     }
@@ -481,6 +524,7 @@ class TicketsDiscussionController extends Controller
 
     public function changeTicketstatus(Request $request) {
 
+        $user_id = \Auth::user()->id;
         $ticketstatus = $request->get('ticketstatus');
         $id = $request->get('id');
         $status_ticket = TicketsDiscussion::find($id);
@@ -489,6 +533,14 @@ class TicketsDiscussionController extends Controller
         if (isset($ticketstatus) && $ticketstatus != ''){
             $status = $ticketstatus;
         }
+
+        // For changes of ticket status
+        $old_status = $status_ticket->status;
+        if (isset($old_status) && $old_status != $status) {
+            $status_ticket->status_date = date('Y-m-d H:i:s');
+            $status_ticket->status_changed_by = $user_id;
+        }
+
         $status_ticket->status = $status;
         $status_ticket->save();
 
@@ -499,7 +551,6 @@ class TicketsDiscussionController extends Controller
             $to_users_array = array($ticket_useremail);
 
             // get loggedin_user_email_id
-            $user_id = \Auth::user()->id;
             $loggedin_useremail = User::getUserEmailById($user_id);
 
             $it1 = 'saloni@trajinfotech.com';
