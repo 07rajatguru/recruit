@@ -845,6 +845,10 @@ class InterviewController extends Controller
 
         $interview = Interview::find($id);
         $pre_round = $interview->select_round;
+        $pre_interview_date = $interview->interview_date;
+        $pre_candidate_location = $interview->candidate_location;
+        $pre_interview_location = $interview->interview_location;
+        $pre_type = $interview->type;
       
         if(isset($candidate_id))
             $interview->candidate_id = $candidate_id;
@@ -887,8 +891,10 @@ class InterviewController extends Controller
 
         $interviewUpdated = $interview->save();
 
-        // Interview Schedule Mail
-        $scheduled_mail = Interview::getScheduleEmail($candidate_id,$posting_title,$id);
+        if ($pre_round != $round || $pre_interview_date != $interview_date || $pre_candidate_location != $candidate_location || $pre_interview_location != $interview_location || $pre_type != $type) {
+            // Interview Schedule Mail
+            $scheduled_mail = Interview::getScheduleEmail($candidate_id,$posting_title,$id);
+        }
 
         if ($pre_round != $round && $round > $pre_round) {
             if($round == '2') {
