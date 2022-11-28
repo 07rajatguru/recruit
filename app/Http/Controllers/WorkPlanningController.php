@@ -79,7 +79,7 @@ class WorkPlanningController extends Controller
 
             foreach($work_planning_res as $work_planning) {
 
-                if($work_planning['status'] == '0') {
+                if($work_planning['status'] == '0' && $work_planning['added_day'] != 'Sunday') {
                     $pending++;
                 }
                 else if($work_planning['status'] == '1' && $work_planning['post_discuss_status'] == '1') {
@@ -284,7 +284,7 @@ class WorkPlanningController extends Controller
 
                 foreach ($work_planning as $key => $value) {
                     
-                    if($value['status'] == '0') {
+                    if($value['status'] == '0' && $value['added_day'] != 'Sunday') {
                         $pending++;
                     }
                     else if($value['status'] == '1' && $value['post_discuss_status'] == '1') {
@@ -371,7 +371,7 @@ class WorkPlanningController extends Controller
 
             foreach($work_planning_res as $work_planning) {
 
-                if($work_planning['status'] == '0') {
+                if($work_planning['status'] == '0' && $work_planning['added_day'] != 'Sunday') {
                     $pending++;
                 }
                 else if($work_planning['status'] == '1' && $work_planning['post_discuss_status'] == '1') {
@@ -577,7 +577,7 @@ class WorkPlanningController extends Controller
 
                 foreach ($work_planning as $key => $value) {
                     
-                    if($value['status'] == '0') {
+                    if($value['status'] == '0' && $value['added_day'] != 'Sunday') {
                         $pending++;
                     }
                     else if($value['status'] == '1' && $value['post_discuss_status'] == '1') {

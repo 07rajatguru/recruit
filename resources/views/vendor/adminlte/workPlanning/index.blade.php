@@ -139,7 +139,14 @@
                     $edit_date_valid = date('Y-m-d', strtotime($edit_date."+3days"));
                 ?>
                 <tr>
-                    @if($value['loggedin_time'] != '')
+
+                    @if($value['added_day'] == 'Sunday')
+
+                        <td>{{ ++$i }}</td><td></td>
+                        <td style="background-color:#ffc000;">{{ $value['added_date'] }}</td>
+                        <td colspan="7"><center><b>Sunday</b></center></td>
+
+                    @elseif($value['loggedin_time'] != '')
 
                         <td>{{ ++$i }}</td>
                         <td>
@@ -186,8 +193,8 @@
                                 <td style="background-color:#B0E0E6;cursor: pointer;" title="Working Hours More than 06:00">{{ $value['loggedin_time'] }}</td>
                             @elseif($value['total_actual_time'] == '04:30:00')
                                 <td style="background-color:#fff59a;cursor: pointer;" title="Late in / Early Go">{{ $value['loggedin_time'] }}</td>
-                            @elseif($value['total_actual_time'] < '05:30:00')
-                                <td style="background-color:#d99594;cursor: pointer;" title="Working Hours Less than 05:30">{{ $value['loggedin_time'] }}
+                            @elseif($value['total_actual_time'] < '05:00:00')
+                                <td style="background-color:#d99594;cursor: pointer;" title="Working Hours Less than 05:00">{{ $value['loggedin_time'] }}
                                 </td>
                             @else
                                 <td>{{ $value['loggedin_time'] }}</td>
@@ -280,12 +287,6 @@
                             <td style="background-color:#76933C;">{{ $value['added_date'] }}</td>
                             <td colspan="7"><center><b>{{ $holiday_data['title'] }} - ({{ $holiday_data['type'] }})</b></center></td>
                         @endif
-
-                    @elseif($value['added_day'] == 'Sunday' && $value['loggedin_time'] == '')
-
-                        <td>{{ ++$i }}</td><td></td>
-                        <td style="background-color:#ffc000;">{{ $value['added_date'] }}</td>
-                        <td colspan="7"><center><b>Sunday</b></center></td>
 
                     @elseif($added_date == $saturday_date && $value['added_day'] == 'Saturday' && $value['loggedin_time'] == '' && $saturday_date > $august_date && $today_date > $saturday_date)
 
