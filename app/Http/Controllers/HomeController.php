@@ -143,6 +143,9 @@ class HomeController extends Controller
                     $msg = '';
                 }
             }
+            else {
+                $msg = '';
+            }
         }
         else {
 
@@ -1070,7 +1073,10 @@ class HomeController extends Controller
                 }   
             }
         }
+        else {
 
+            $holidays = array();
+        }
         // Get Assigners users
         $assigned_users = User::getAssignedUsers($user_id);
 
