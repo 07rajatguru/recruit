@@ -725,11 +725,14 @@ class ReportController extends Controller
 
             $user_details = User::getAllDetailsByUserID($key);
 
-            $user_created_at = date('Y-m-d',strtotime($user_details->created_at));
+            if(isset($user_details) && $user_details != '') {
 
-            if($user_created_at <= $next_year) {
+                $user_created_at = date('Y-m-d',strtotime($user_details->created_at));
 
-                $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
+                if($user_created_at <= $next_year) {
+
+                    $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
+                }
             }
         }
         if(isset($personwise_data) && $personwise_data != '') {
@@ -835,14 +838,17 @@ class ReportController extends Controller
                                    
                         $user_details = User::getAllDetailsByUserID($k1);
 
-                        if($user_details->type == '2') {
-                            if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        if(isset($user_details) && $user_details != '') {
+
+                            if($user_details->type == '2') {
+                                if($user_details->hr_adv_recruitemnt == 'Yes') {
+                                    $users[$k1] = $v1;
+                                }
+                            }
+                            else {
                                 $users[$k1] = $v1;
                             }
                         }
-                        else {
-                            $users[$k1] = $v1;
-                        }    
                     }
 
                     if ($all_perm && $selected_team_type == 'adler') {
@@ -855,12 +861,15 @@ class ReportController extends Controller
                 foreach ($users as $key => $value) {
 
                     $user_details = User::getAllDetailsByUserID($key);
+
+                    if(isset($user_details) && $user_details != '') {
                     
-                    $user_created_at = date('Y-m-d',strtotime($user_details->created_at));
+                        $user_created_at = date('Y-m-d',strtotime($user_details->created_at));
 
-                    if($user_created_at <= $next_year) {
+                        if($user_created_at <= $next_year) {
 
-                        $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
+                            $personwise_data[$value] = Bills::getPersonwiseReportData($key,$current_year,$next_year);
+                        }
                     }
                 }
 
@@ -2109,6 +2118,9 @@ class ReportController extends Controller
                 $i++;
             }
         }
+        else {
+            $bench_mark = array();
+        }
 
         if (isset($_POST['mail']) && $_POST['mail'] != '') {
 
@@ -2717,7 +2729,10 @@ class ReportController extends Controller
                         $i++;
                     }
                 }
-
+                else {
+                    $bench_mark = array();
+                }
+                
                 if(isset($frm_to_date_array) && $frm_to_date_array != '') {
 
                     $no_of_resumes_achievement = '';
