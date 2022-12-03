@@ -143,6 +143,9 @@ class HomeController extends Controller
                     $msg = '';
                 }
             }
+            else {
+                $msg = '';
+            }
         }
         else {
 
