@@ -1620,7 +1620,7 @@ class WorkPlanningController extends Controller
         //1st Condition Check Working Hours
         if($added_day == 'Saturday') {
 
-            if($total_actual_time < '05:30:00') {
+            if($total_actual_time < '05:00:00') {
                 $attendance = 'HD';
             }
             else {
@@ -1707,7 +1707,7 @@ class WorkPlanningController extends Controller
 
                             if($day == 'Saturday') {
 
-                                if($get_total_Actual_time < '05:30:00') {
+                                if($get_total_Actual_time < '05:00:00') {
                                     $attendance = 'HD';
                                 }
                                 else {
