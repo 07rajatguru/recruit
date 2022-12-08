@@ -101,7 +101,7 @@ class DailyReport extends Command
 
                             $manager_user_id = getenv('MANAGERUSERID');
                             $manager_email = User::getUserEmailById($manager_user_id);
-                            $cc_array[] = $manager_email;
+                            //$cc_array[] = $manager_email;
                         }
                         //$cc_array[] = 'rajlalwani@adlertalent.com';
                         $cc_array[] = 'info@adlertalent.com';
