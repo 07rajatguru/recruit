@@ -33,19 +33,21 @@ class LeaveBalance extends Model
             foreach ($response as $key => $value) {
 
                 $user_id = $value->user_id;
-                $useer_info = User::getProfileInfo($user_id);
+                $user_info = User::getProfileInfo($user_id);
 
-                $leave_balance_data[$user_id]['id'] = $value->id;
-                $leave_balance_data[$user_id]['user_name'] = $useer_info->first_name . " " . $useer_info->last_name;
-                
-                $leave_balance_data[$user_id]['pl_total'] = $value->leave_total;
-                $leave_balance_data[$user_id]['pl_taken'] = $value->leave_taken;
-                $leave_balance_data[$user_id]['pl_remaining'] = $value->leave_remaining;
+                if($user_info->status == 'Active') {
 
-                $leave_balance_data[$user_id]['sl_total'] = $value->seek_leave_total;
-                $leave_balance_data[$user_id]['sl_taken'] = $value->seek_leave_taken;
-                $leave_balance_data[$user_id]['sl_remaining'] = $value->seek_leave_remaining;
+                    $leave_balance_data[$user_id]['id'] = $value->id;
+                    $leave_balance_data[$user_id]['user_name'] = $user_info->first_name . " " . $user_info->last_name;
+                    
+                    $leave_balance_data[$user_id]['pl_total'] = $value->leave_total;
+                    $leave_balance_data[$user_id]['pl_taken'] = $value->leave_taken;
+                    $leave_balance_data[$user_id]['pl_remaining'] = $value->leave_remaining;
 
+                    $leave_balance_data[$user_id]['sl_total'] = $value->seek_leave_total;
+                    $leave_balance_data[$user_id]['sl_taken'] = $value->seek_leave_taken;
+                    $leave_balance_data[$user_id]['sl_remaining'] = $value->seek_leave_remaining;
+                }
             }
         }
         return $leave_balance_data;

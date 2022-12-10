@@ -27,24 +27,27 @@ class MonthwiseLeaveBalance extends Model
                 $user_id = $value->user_id;
                 $user_info = User::getProfileInfo($user_id);
 
-                $leave_balance_data[$user_id]['id'] = $value->id;
-                $leave_balance_data[$user_id]['user_name'] = $user_info->first_name . " " . $user_info->last_name;
-                
-                $leave_balance_data[$user_id]['pl_total'] = $value->pl_total;
-                $leave_balance_data[$user_id]['pl_taken'] = $value->pl_taken;
-                $leave_balance_data[$user_id]['pl_remaining'] = $value->pl_total - $value->pl_taken;
+                if($user_info->status == 'Active') {
 
-                $leave_balance_data[$user_id]['sl_total'] = $value->sl_total;
-                $leave_balance_data[$user_id]['sl_taken'] = $value->sl_taken;
-                $leave_balance_data[$user_id]['sl_remaining'] = $value->sl_total - $value->sl_taken;
+                    $leave_balance_data[$user_id]['id'] = $value->id;
+                    $leave_balance_data[$user_id]['user_name'] = $user_info->first_name . " " . $user_info->last_name;
+                    
+                    $leave_balance_data[$user_id]['pl_total'] = $value->pl_total;
+                    $leave_balance_data[$user_id]['pl_taken'] = $value->pl_taken;
+                    $leave_balance_data[$user_id]['pl_remaining'] = $value->pl_total - $value->pl_taken;
 
-                if($value->edited_by != '' && $value->edited_by != '0') {
+                    $leave_balance_data[$user_id]['sl_total'] = $value->sl_total;
+                    $leave_balance_data[$user_id]['sl_taken'] = $value->sl_taken;
+                    $leave_balance_data[$user_id]['sl_remaining'] = $value->sl_total - $value->sl_taken;
 
-                    $balance_edited_by = User::getProfileInfo($value->edited_by);
-                    $leave_balance_data[$user_id]['edited_by'] = $balance_edited_by->first_name . " " . $balance_edited_by->last_name;
-                }
-                else {
-                    $leave_balance_data[$user_id]['edited_by'] = '';
+                    if($value->edited_by != '' && $value->edited_by != '0') {
+
+                        $balance_edited_by = User::getProfileInfo($value->edited_by);
+                        $leave_balance_data[$user_id]['edited_by'] = $balance_edited_by->first_name . " " . $balance_edited_by->last_name;
+                    }
+                    else {
+                        $leave_balance_data[$user_id]['edited_by'] = '';
+                    }
                 }
             }
         }
