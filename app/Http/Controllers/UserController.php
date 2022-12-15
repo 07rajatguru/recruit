@@ -396,85 +396,89 @@ class UserController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-        // Send Welcome email notification to user
+        if($type != '6') {
+            
+            // Send Welcome email notification to user
 
-        //Get Reports to Email
-        $report_res = User::getReportsToUsersEmail($user_id);
+            //Get Reports to Email
+            $report_res = User::getReportsToUsersEmail($user_id);
 
-        if(isset($report_res->remail) && $report_res->remail != '') {
+            if(isset($report_res->remail) && $report_res->remail != '') {
 
-            $report_email = $report_res->remail;
-            $cc_users_array = array($report_email,$hr_email);
-        }
-        else {
+                $report_email = $report_res->remail;
+                $cc_users_array = array($report_email,$hr_email);
+            }
+            else {
 
-            $cc_users_array = array($hr_email);
-        }
+                $cc_users_array = array($hr_email);
+            }
 
-        $module = "Welcome Email";
-        $sender_name = $super_admin_userid;
-        $to = $user_email;
-        $subject = "Welcome aboard the Adler Team!";
-        $message = "Welcome aboard the Adler Team!";
-        $module_id = $user_id;
-        $cc = implode(",",$cc_users_array);
+            $module = "Welcome Email";
+            $sender_name = $super_admin_userid;
+            $to = $user_email;
+            $subject = "Welcome aboard the Adler Team!";
+            $message = "Welcome aboard the Adler Team!";
+            $module_id = $user_id;
+            $cc = implode(",",$cc_users_array);
 
-        event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
+            event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-        // Assign Fixed Holidays to new user
+            // Assign Fixed Holidays to new user
 
-        $year = date('Y');
-        $fixed_holidays = Holidays::getFinancialYearHolidaysList(0,0);
+            $year = date('Y');
+            $fixed_holidays = Holidays::getFinancialYearHolidaysList(0,0);
 
-        if(isset($fixed_holidays) && sizeof($fixed_holidays) > 0) {
+            if(isset($fixed_holidays) && sizeof($fixed_holidays) > 0) {
 
-            foreach ($fixed_holidays as $key => $value) {
+                foreach ($fixed_holidays as $key => $value) {
 
-                if($value['type'] == 'Fixed Leave') {
+                    if($value['type'] == 'Fixed Leave') {
 
-                    $holiday_user = new HolidaysUsers();
-                    $holiday_user->holiday_id = $value['id'];
-                    $holiday_user->user_id = $user_id;
-                    $holiday_user->save();
+                        $holiday_user = new HolidaysUsers();
+                        $holiday_user->holiday_id = $value['id'];
+                        $holiday_user->user_id = $user_id;
+                        $holiday_user->save();
+                    }
+                }
+            }
+
+            // Get All Sunday dates of current month and add in work planning
+
+            $month = date('m');
+            $year = date('Y');
+            $date = "$year-$month-01";
+            $first_day = date('N',strtotime($date));
+            $first_day = 7 - $first_day + 1;
+            $last_day =  date('t',strtotime($date));
+            $sundays = array();
+
+            for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+
+                if($i < 10) {
+                    $i = "0$i";
+                }
+                $sundays[] = $i;
+            }
+
+            if(isset($sundays) && sizeof($sundays) > 0) {
+
+                $joining_dt = $dateClass->changeDMYtoYMD($joining_date);
+
+                foreach ($sundays as $k => $v) {
+
+                    $sunday_date = "$year-$month-$v";
+
+                    if($sunday_date >= $joining_dt) {
+
+                        $work_planning = new WorkPlanning();
+                        $work_planning->added_date = $sunday_date;
+                        $work_planning->added_by = $user_id;
+                        $work_planning->save();
+                    }
                 }
             }
         }
 
-        // Get All Sunday dates of current month and add in work planning
-
-        $month = date('m');
-        $year = date('Y');
-        $date = "$year-$month-01";
-        $first_day = date('N',strtotime($date));
-        $first_day = 7 - $first_day + 1;
-        $last_day =  date('t',strtotime($date));
-        $sundays = array();
-
-        for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
-
-            if($i < 10) {
-                $i = "0$i";
-            }
-            $sundays[] = $i;
-        }
-
-        if(isset($sundays) && sizeof($sundays) > 0) {
-
-            $joining_dt = $dateClass->changeDMYtoYMD($joining_date);
-
-            foreach ($sundays as $k => $v) {
-
-                $sunday_date = "$year-$month-$v";
-
-                if($sunday_date >= $joining_dt) {
-
-                    $work_planning = new WorkPlanning();
-                    $work_planning->added_date = $sunday_date;
-                    $work_planning->added_by = $user_id;
-                    $work_planning->save();
-                }
-            }
-        }
         return redirect()->route('users.index')->with('success','User Added Successfully.');
     }
 
