@@ -454,15 +454,18 @@ class LeaveController extends Controller
         $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
 
         if($report_email == '') {
+
+            $to = $superadminemail;
             $cc_users_array = array($hremail,$vibhuti_gmail_id);
         }
         else {
-            $cc_users_array = array($report_email,$hremail,$vibhuti_gmail_id);
+
+            $to = $report_email;
+            $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
         }
 
         $module = "Leave";
         $sender_name = $user_id;
-        $to = $superadminemail;
         $cc = implode(",",$cc_users_array);
         $body_message = $leave_details['message'];
         $module_id = $leave_id;
@@ -645,15 +648,18 @@ class LeaveController extends Controller
             $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
 
             if($report_email == '') {
+
+                $to = $superadminemail;
                 $cc_users_array = array($hremail,$vibhuti_gmail_id);
             }
             else {
-                $cc_users_array = array($report_email,$hremail,$vibhuti_gmail_id);
+
+                $to = $report_email;
+                $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
             }
 
             $module = "Leave";
             $sender_name = $user_id;
-            $to = $superadminemail;
             $cc = implode(",",$cc_users_array);
             $subject = $leave_details['subject'];
             $body_message = $leave_details['message'];
@@ -700,15 +706,18 @@ class LeaveController extends Controller
         $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
 
         if($report_email == '') {
+
+            $to = $superadminemail;
             $cc_users_array = array($hremail,$vibhuti_gmail_id);
         }
         else {
-            $cc_users_array = array($report_email,$hremail,$vibhuti_gmail_id);
+
+            $to = $report_email;
+            $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
         }
 
         $module = "Leave";
         $sender_name = $user_id;
-        $to = $superadminemail;
         $cc = implode(",",$cc_users_array);
         $subject = $leave_details['subject'];
         $body_message = $leave_details['message'];
@@ -942,9 +951,20 @@ class LeaveController extends Controller
 
             //Get Reports to Email
             $report_res = User::getReportsToUsersEmail($leave_details['user_id']);
-            if(isset($report_res->remail) && $report_res->remail!='') {
+            /*if(isset($report_res->remail) && $report_res->remail!='') {
                 $cc_users_array = array($report_res->remail,$hremail);
             } else {
+                $cc_users_array = array($hremail);
+            }*/
+
+            if(isset($report_res->remail) && $report_res->remail!='') {
+
+                $to = $report_res->remail;
+                $cc_users_array = array($superadminemail,$hremail);
+            }
+            else {
+
+                $to = $superadminemail;
                 $cc_users_array = array($hremail);
             }
 
@@ -953,7 +973,6 @@ class LeaveController extends Controller
 
             $module = "Cancel Leave";
             $sender_name = $leave_details['user_id'];
-            $to = $superadminemail;
             $cc = implode(",",$cc_users_array);
             $subject = "Cancel Leave Application - ".$u_name." - from ".$leave_details['from_date']." to ".$leave_details['to_date'];
             $body_message = '<p>Dear</p>';
