@@ -52,10 +52,13 @@ class PassiveClientList extends Command
             $jenny_user_id = getenv('JENNYUSERID');
             $all_client_user_email = User::getUserEmailById($jenny_user_id);
 
-            $kazvin_user_id = getenv('MANAGERUSERID');
-            $manager_user_email = User::getUserEmailById($kazvin_user_id);
+            // $kazvin_user_id = getenv('MANAGERUSERID');
+            // $manager_user_email = User::getUserEmailById($kazvin_user_id);
 
-            $cc_array = array($super_admin_email,$manager_user_email);
+            $bhagyashree_user_id = getenv('BHAGYASHREEUSERID');
+            $user_email = User::getUserEmailById($bhagyashree_user_id);
+
+            $cc_array = array($super_admin_email,$user_email);
 
             $module = "Passive Client List";
             $sender_name = $superadminuserid;
