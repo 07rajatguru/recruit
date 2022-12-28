@@ -707,20 +707,25 @@
         
         if(day == 'Today') {
             
-            var utc_date = new Date().toJSON().slice(0,10).replace(/-/g,'-');
+            // var utc_date = new Date().toJSON().slice(0,10).replace(/-/g,'-');
+            var utc_date = moment().format('YYYY-MM-D');
             $("#date_value").val(utc_date);
         }
         else if(day == 'Yesterday') {
             
-            var a = new Date(new Date().setDate(new Date().getDate() - 1));
-            var utc_date = a.toJSON().slice(0,10).replace(/-/g,'-');
-            $("#date_value").val(utc_date);
+            // var a = new Date(new Date().setDate(new Date().getDate() - 1));
+            // var utc_date = a.toJSON().slice(0,10).replace(/-/g,'-');
+            var utc_date = moment().add(-1, 'd');
+            var y_date = utc_date.format('YYYY-MM-D');
+            $("#date_value").val(y_date);
         }
         else if(day == 'Tomorrow') {
             
-            var a = new Date(new Date().setDate(new Date().getDate() + 1));
-            var utc_date = a.toJSON().slice(0,10).replace(/-/g,'-');
-            $("#date_value").val(utc_date);
+            // var a = new Date(new Date().setDate(new Date().getDate() + 1));
+            // var utc_date = a.toJSON().slice(0,10).replace(/-/g,'-');
+            var utc_date = moment().add(+1, 'd');
+            var tom_date = utc_date.format('YYYY-MM-D');
+            $("#date_value").val(tom_date);
         }
     }
 </script>
