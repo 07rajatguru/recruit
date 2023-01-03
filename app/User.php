@@ -971,10 +971,10 @@ class User extends Authenticatable
                     if($today_date == $birth_date) {
 
                         if($birthday_date_string == '') {
-                            $birthday_date_string = $value->first_name;
+                            $birthday_date_string = $value->first_name . " " . $value->last_name;
                         }
                         else {
-                            $birthday_date_string .= " & " . $value->first_name;
+                            $birthday_date_string .= " & " . $value->first_name . " " . $value->last_name;
                         }
                     }
                 }
@@ -1033,12 +1033,12 @@ class User extends Authenticatable
                         if($work_ani_date_string == '') {
 
                             if($year_diff > 0) {
-                                $work_ani_date_string = $value->first_name . "'s " . $number . " Year";
+                                $work_ani_date_string = $value->first_name . " " . $value->last_name . "'s " . $number . " Year";
                             }
                         }
                         else {
                             if($year_diff > 0) {
-                                $work_ani_date_string .= " & " . $value->first_name . "'s " . $number . " Year";
+                                $work_ani_date_string .= " & " . $value->first_name . " " . $value->last_name . "'s " . $number . " Year";
                             }
                         }
                     }
