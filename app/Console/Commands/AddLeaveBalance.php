@@ -55,7 +55,12 @@ class AddLeaveBalance extends Command
                 if (isset($user_data) && $user_data != '') {
 
                     $joining_date = $user_data->joining_date;
-                    $after_six_month = date('Y-m-d', strtotime("+6 month $joining_date"));
+                    if ($key == '180') {
+                        // For Yash's User | adlerteam84@gmail.com as per mail dated 27/01/2023
+                        $after_six_month = date('Y-m-d', strtotime("+3 month $joining_date"));
+                    } else {
+                        $after_six_month = date('Y-m-d', strtotime("+6 month $joining_date"));
+                    }
                     $current_date = date('Y-m-d');
 
                     if ($after_six_month <= $current_date) {
