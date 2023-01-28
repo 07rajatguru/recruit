@@ -105,7 +105,11 @@
                 }
 
                 // Get Saturday Date
-                $saturday_date = $year."-".$month."-".$saturdays[2];
+                if (date('Y-m') == '2023-01') {
+                    $saturday_date = $year."-".$month."-".$saturdays[3];
+                } else {
+                    $saturday_date = $year."-".$month."-".$saturdays[2];
+                }
 
                 // Because start from August'22
                 $august_date = '2022-08-01';

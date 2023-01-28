@@ -1349,6 +1349,12 @@ class HomeController extends Controller
             $saturdays[] = $i;
         }
 
+        if (date('Y-m') == '2023-01') {
+            $saturday_date = $saturdays[3];
+        } else {
+            $saturday_date = $saturdays[2];
+        }
+
         // Edit Attendance disabled changes
         $edit_date = date('Y-m-d', strtotime($date.'first day of +1 month'));
         $edit_date_valid = date('Y-m-d', strtotime($edit_date."+3days"));
@@ -1555,7 +1561,7 @@ class HomeController extends Controller
 
                             $list[$combine_name][$get_dt]['attendance'] = 'H';
                         }
-                        else if($get_dt == $saturdays[2] && $value->attendance == "TS") {
+                        else if($get_dt == $saturday_date && $value->attendance == "TS") {
 
                             $list[$combine_name][$get_dt]['attendance'] = 'TS';
                         }
@@ -1861,6 +1867,12 @@ class HomeController extends Controller
                 $saturdays[] = $i;
             }
 
+            if (date('Y-m') == '2023-01') {
+                $saturday_date = $saturdays[3];
+            } else {
+                $saturday_date = $saturdays[2];
+            }
+
             if($attendance_type == 'self') {
 
                 if($month <= 9) {
@@ -1994,7 +2006,7 @@ class HomeController extends Controller
 
                         $list[$combine_name][$get_dt]['attendance'] = 'H';
                     }
-                    else if($get_dt == $saturdays[2] && $value->attendance == "TS") {
+                    else if($get_dt == $saturday_date && $value->attendance == "TS") {
 
                         $list[$combine_name][$get_dt]['attendance'] = 'TS';
                     }
@@ -2318,6 +2330,12 @@ class HomeController extends Controller
             $saturdays[] = $i;
         }
 
+        if (date('Y-m') == '2023-01') {
+            $saturday_date = $saturdays[3];
+        } else {
+            $saturday_date = $saturdays[2];
+        }
+
         if(isset($list) && sizeof($list) > 0) {
 
             foreach ($list as $k=>$v) {
@@ -2359,7 +2377,7 @@ class HomeController extends Controller
                         $attendance = 'H';
                         $color = '#ffc000';
                     }
-                    else if($key1 == $saturdays[2] && $value1['attendance'] == "TS") {
+                    else if($key1 == $saturday_date && $value1['attendance'] == "TS") {
                         
                         $attendance = 'TS';
                         $color = '#ffc000';
