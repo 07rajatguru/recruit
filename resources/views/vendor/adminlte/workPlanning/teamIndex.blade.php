@@ -103,7 +103,7 @@
                     }
 
                     // Get Saturday Date
-                    if (date('Y-m') == '2023-01') {
+                    if ($year == '2023' && $month == '01') {
                         $saturday_date = $year."-".$month."-".$saturdays[3];
                     } else {
                         $saturday_date = $year."-".$month."-".$saturdays[2];
