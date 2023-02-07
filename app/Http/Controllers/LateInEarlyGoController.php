@@ -227,18 +227,18 @@ class LateInEarlyGoController extends Controller
         //Get Reports to Email
         $report_res = User::getReportsToUsersEmail($user_id);
 
-        if(isset($report_res->remail) && $report_res->remail!='') {
+        // if(isset($report_res->remail) && $report_res->remail!='') {
 
-            $report_email = $report_res->remail;
-            $cc_users_array = array($report_email,$hremail);
-        }
-        else {
-            $cc_users_array = array($hremail);
-        }
+        //     $report_email = $report_res->remail;
+        //     $cc_users_array = array($report_email,$hremail);
+        // }
+        // else {
+            $cc_users_array = array($superadminemail,$hremail);
+        // }
 
         $module = "Late In Early Go";
         $sender_name = $user_id;
-        $to = $superadminemail;
+        $to = $report_res->remail;
         $cc = implode(",",$cc_users_array);
         $subject = $leave_details['subject'];
         $body_message = $leave_details['message'];
@@ -316,18 +316,18 @@ class LateInEarlyGoController extends Controller
         //Get Reports to Email
         $report_res = User::getReportsToUsersEmail($user_id);
 
-        if(isset($report_res->remail) && $report_res->remail != '') {
+        // if(isset($report_res->remail) && $report_res->remail != '') {
             
-            $report_email = $report_res->remail;
-            $cc_users_array = array($report_email,$hremail);
-        }
-        else {
-            $cc_users_array = array($hremail);
-        }
+        //     $report_email = $report_res->remail;
+        //     $cc_users_array = array($report_email,$hremail);
+        // }
+        // else {
+            $cc_users_array = array($superadminemail,$hremail);
+        // }
 
         $module = "Late In Early Go";
         $sender_name = $user_id;
-        $to = $superadminemail;
+        $to = $report_res->remail;
         $cc = implode(",",$cc_users_array);
         $subject = $leave_details['subject'];
         $body_message = $leave_details['message'];
