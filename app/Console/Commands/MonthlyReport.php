@@ -5,6 +5,7 @@ namespace App\Console\Commands;
 use Illuminate\Console\Command;
 use App\User;
 use App\WorkPlanning;
+use App\Date;
 
 class MonthlyReport extends Command
 {
@@ -110,18 +111,20 @@ class MonthlyReport extends Command
             }
 
             // Get All Saturday dates of current month
-            $date = "$year-$month-01";
-            $first_day = date('N',strtotime($date));
-            $first_day = 6 - $first_day + 1;
-            $last_day =  date('t',strtotime($date));
-            $saturdays = array();
+            // $date = "$year-$month-01";
+            // $first_day = date('N',strtotime($date));
+            // $first_day = 6 - $first_day + 1;
+            // $last_day =  date('t',strtotime($date));
+            // $saturdays = array();
 
-            for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
-                $saturdays[] = $i;
-            }
+            // for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+            //     $saturdays[] = $i;
+            // }
 
-            // Get only Third Saturday's date
-            $saturday_date = $year."-".$month."-".$saturdays[2];
+            // // Get only Third Saturday's date
+            // $saturday_date = $year."-".$month."-".$saturdays[2];
+            $third_saturday = Date::getThirdSaturdayOfMonth($month,$year);
+            $saturday_date = $third_saturday['full_date'];
 
             // Add Third Saturday's Entry
             foreach ($users as $key1 => $value1) {

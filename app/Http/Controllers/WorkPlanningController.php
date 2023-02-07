@@ -957,19 +957,21 @@ class WorkPlanningController extends Controller
         $edit_date_valid = date('Y-m-d', strtotime($edit_date."+3days"));
         $superadmin_userid = getenv('SUPERADMINUSERID');
 
-        // Get All Saturday dates of current month
         $month = date('Y-m', strtotime($added_date));
-        $date = "$month-01";
-        $first_day = date('N',strtotime($date));
-        $first_day = 6 - $first_day + 1;
-        $last_day =  date('t',strtotime($date));
-        $saturdays = array();
-        for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
-            $saturdays[] = $i;
-        }
+        // Get All Saturday dates of current month
+        // $date = "$month-01";
+        // $first_day = date('N',strtotime($date));
+        // $first_day = 6 - $first_day + 1;
+        // $last_day =  date('t',strtotime($date));
+        // $saturdays = array();
+        // for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+        //     $saturdays[] = $i;
+        // }
 
-        // Get Saturday Date
-        $saturday_date = $month."-".$saturdays[2];
+        // // Get Saturday Date
+        // $saturday_date = $month."-".$saturdays[2];
+        $third_saturday = Date::getThirdSaturdayOfMonth(date('m', strtotime($month)),date('Y', strtotime($year)));
+        $saturday_date = $third_saturday['full_date'];
 
         // Next btn ID
         $next_date = date('Y-m-d', strtotime($added_date.'+1 day'));

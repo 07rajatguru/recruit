@@ -1339,21 +1339,24 @@ class HomeController extends Controller
         }
 
         // Get 3rd Saturday date in selected month
-        $date = "$year-$month-01";
-        $first_day = date('N',strtotime($date));
-        $first_day = 6 - $first_day + 1;
-        $last_day =  date('t',strtotime($date));
-        $saturdays = array();
+        // $date = "$year-$month-01";
+        // $first_day = date('N',strtotime($date));
+        // $first_day = 6 - $first_day + 1;
+        // $last_day =  date('t',strtotime($date));
+        // $saturdays = array();
 
-        for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
-            $saturdays[] = $i;
-        }
+        // for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+        //     $saturdays[] = $i;
+        // }
 
-        if ($year == '2023' && $month == '01') {
-            $saturday_date = $saturdays[3];
-        } else {
-            $saturday_date = $saturdays[2];
-        }
+        // if ($year == '2023' && $month == '01') {
+        //     $saturday_date = $saturdays[3];
+        // } else {
+        //     $saturday_date = $saturdays[2];
+        // }
+
+        $third_saturday = Date::getThirdSaturdayOfMonth($month,$year);
+        $saturday_date = $third_saturday['date_no'];
 
         // Edit Attendance disabled changes
         $edit_date = date('Y-m-d', strtotime($date.'first day of +1 month'));
@@ -1857,21 +1860,23 @@ class HomeController extends Controller
             }
 
             // Get 3rd Saturday date in selected month
-            $date = "$year-$month-01";
-            $first_day = date('N',strtotime($date));
-            $first_day = 6 - $first_day + 1;
-            $last_day =  date('t',strtotime($date));
-            $saturdays = array();
+            // $date = "$year-$month-01";
+            // $first_day = date('N',strtotime($date));
+            // $first_day = 6 - $first_day + 1;
+            // $last_day =  date('t',strtotime($date));
+            // $saturdays = array();
 
-            for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
-                $saturdays[] = $i;
-            }
+            // for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+            //     $saturdays[] = $i;
+            // }
 
-            if (date('Y-m') == '2023-01') {
-                $saturday_date = $saturdays[3];
-            } else {
-                $saturday_date = $saturdays[2];
-            }
+            // if (date('Y-m') == '2023-01') {
+            //     $saturday_date = $saturdays[3];
+            // } else {
+            //     $saturday_date = $saturdays[2];
+            // }
+            $third_saturday = Date::getThirdSaturdayOfMonth($month,$year);
+            $saturday_date = $third_saturday['date_no'];
 
             if($attendance_type == 'self') {
 
@@ -2320,21 +2325,23 @@ class HomeController extends Controller
         }
 
         // Get 3rd Saturday date in selected month
-        $date = "$year-$month-01";
-        $first_day = date('N',strtotime($date));
-        $first_day = 6 - $first_day + 1;
-        $last_day =  date('t',strtotime($date));
-        $saturdays = array();
+        // $date = "$year-$month-01";
+        // $first_day = date('N',strtotime($date));
+        // $first_day = 6 - $first_day + 1;
+        // $last_day =  date('t',strtotime($date));
+        // $saturdays = array();
 
-        for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
-            $saturdays[] = $i;
-        }
+        // for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+        //     $saturdays[] = $i;
+        // }
 
-        if (date('Y-m') == '2023-01') {
-            $saturday_date = $saturdays[3];
-        } else {
-            $saturday_date = $saturdays[2];
-        }
+        // if (date('Y-m') == '2023-01') {
+        //     $saturday_date = $saturdays[3];
+        // } else {
+        //     $saturday_date = $saturdays[2];
+        // }
+        $third_saturday = Date::getThirdSaturdayOfMonth($month,$year);
+        $saturday_date = $third_saturday['date_no'];
 
         if(isset($list) && sizeof($list) > 0) {
 

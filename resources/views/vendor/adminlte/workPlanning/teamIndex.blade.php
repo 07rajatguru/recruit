@@ -92,22 +92,24 @@
 
                 <?php
                     // Get All Saturday dates of current month
-                    $date = "$year-$month-01";
-                    $first_day = date('N',strtotime($date));
-                    $first_day = 6 - $first_day + 1;
-                    $last_day =  date('t',strtotime($date));
-                    $saturdays = array();
+                    // $date = "$year-$month-01";
+                    // $first_day = date('N',strtotime($date));
+                    // $first_day = 6 - $first_day + 1;
+                    // $last_day =  date('t',strtotime($date));
+                    // $saturdays = array();
 
-                    for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
-                        $saturdays[] = $i;
-                    }
+                    // for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+                    //     $saturdays[] = $i;
+                    // }
 
-                    // Get Saturday Date
-                    if ($year == '2023' && $month == '01') {
-                        $saturday_date = $year."-".$month."-".$saturdays[3];
-                    } else {
-                        $saturday_date = $year."-".$month."-".$saturdays[2];
-                    }
+                    // // Get Saturday Date
+                    // if ($year == '2023' && $month == '01') {
+                    //     $saturday_date = $year."-".$month."-".$saturdays[3];
+                    // } else {
+                    //     $saturday_date = $year."-".$month."-".$saturdays[2];
+                    // }
+                    $third_saturday = App\Date::getThirdSaturdayOfMonth($month,$year);
+                    $saturday_date = $third_saturday['full_date'];
 
                     // Because start from August'22
                     $august_date = '2022-08-01';

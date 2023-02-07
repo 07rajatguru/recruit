@@ -125,4 +125,23 @@ class Date
         
         return $month_count;
     }
+
+    public static function getThirdSaturdayOfMonth($month,$year) {
+
+        // For third saturday number formula day_number(Sun=0, Sat=7) + (week_number(1,2,3)-1)*7
+        $number = 7 + (3-1)*7;
+        $firstday = new DateTime("$year-$month-1 0:0:0");
+        $first_w = $firstday->format('w'); // weekday of firstday 
+
+        $saturday1 = new DateTime;
+        $saturday1->setDate($year,$month,$number-$first_w);
+        $full_date = $saturday1->format('Y-m-d');
+        $date_no = $saturday1->format('d');
+
+        $ts = array();
+        $ts['full_date'] = $full_date;
+        $ts['date_no'] = $date_no;
+
+        return $ts;
+    }
 }

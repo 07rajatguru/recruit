@@ -49,17 +49,21 @@ class DailyReportNew extends Command
         $fixed_date = Holidays::getFixedLeaveDate();
 
         // Get All Saturday dates of current month
-        $s_date = date("Y-m-d", strtotime("first day of this month"));
-        $first_day = date('N',strtotime($s_date));
-        $first_day = 6 - $first_day + 1;
-        $last_day =  date('t',strtotime($s_date));
-        $saturdays = array();
-        for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
-            $saturdays[] = $i;
-        }
+        // $s_date = date("Y-m-d", strtotime("first day of this month"));
+        // $first_day = date('N',strtotime($s_date));
+        // $first_day = 6 - $first_day + 1;
+        // $last_day =  date('t',strtotime($s_date));
+        // $saturdays = array();
+        // for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+        //     $saturdays[] = $i;
+        // }
 
-        // Get Saturday Date
-        $saturday_date = date('Y-m')."-".$saturdays[2];
+        // // Get Saturday Date
+        // $saturday_date = date('Y-m')."-".$saturdays[2];
+        $month = date('m');
+        $year = date('Y');
+        $third_saturday = Date::getThirdSaturdayOfMonth($month,$year);
+        $saturday_date = $third_saturday['full_date'];
         $dayOfWeek = date("l", strtotime($date));
         if ($dayOfWeek == 'Sunday' || $saturday_date == $date || (in_array($date, $fixed_date))) {
         } else {
