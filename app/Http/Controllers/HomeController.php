@@ -271,6 +271,16 @@ class HomeController extends Controller
                 $interviews_cnt = sizeof($interviews);
             }
         }
+        else {
+            $interviews = array();
+            $interviews_cnt = 0;
+            $job = 0;
+            $client = 0;
+            $candidatecount = 0;
+            $associate_count = 0;
+            $interview_attend = 0;
+            $shortlisted_count = 0;
+        }
 
         // Get User logs from log table
 

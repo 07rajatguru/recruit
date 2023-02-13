@@ -970,7 +970,7 @@ class WorkPlanningController extends Controller
 
         // // Get Saturday Date
         // $saturday_date = $month."-".$saturdays[2];
-        $third_saturday = Date::getThirdSaturdayOfMonth(date('m', strtotime($month)),date('Y', strtotime($year)));
+        $third_saturday = Date::getThirdSaturdayOfMonth(date('m', strtotime($month)),date('Y', strtotime($month)));
         $saturday_date = $third_saturday['full_date'];
 
         // Next btn ID
