@@ -65,6 +65,7 @@ class VendorController extends Controller
 
     public function edit($id) {
 
+        $id = \Crypt::decrypt($id);
         $state_res = State::orderBy('state_id','ASC')->get();
         $state = array();
 
@@ -294,6 +295,7 @@ class VendorController extends Controller
   
     public function show($id) {
 
+        $id = \Crypt::decrypt($id);
         $vendor = array();
         $vendor_basicinfo  = \DB::table('vendor_basicinfo')
             ->leftjoin('vendor_bank_details', 'vendor_bank_details.vendor_id', '=', 'vendor_basicinfo.id')
@@ -511,7 +513,7 @@ class VendorController extends Controller
             }
         }
 
-        return redirect()->route('vendor.show',[$id])->with('success','Attachment Uploaded Successfully');
+        return redirect()->route('vendor.show',[\Crypt::encrypt($id)])->with('success','Attachment Uploaded Successfully');
     }
 
     public function attachmentsDestroy($docid) {
@@ -529,7 +531,7 @@ class VendorController extends Controller
             $vendor_doc=VendorDoc::where('id','=',$docid)->delete();
         }
 
-        return redirect()->route('vendor.show',[$id])->with('success','Attachment Deleted Successfully');
+        return redirect()->route('vendor.show',[\Crypt::encrypt($id)])->with('success','Attachment Deleted Successfully');
     }
 
     public function importExport(){

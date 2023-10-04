@@ -46,9 +46,9 @@
                 <tr>
                     <td>{{ ++$i }}</td>
                     <td>
-                        <a class="fa fa-circle" href="{{ route('emailtemplate.show',$value['id']) }}">
+                        <a class="fa fa-circle" href="{{ route('emailtemplate.show',\Crypt::encrypt($value['id'])) }}">
                         </a>
-                        <a class="fa fa-edit" href="{{ route('emailtemplate.edit',$value['id']) }}">
+                        <a class="fa fa-edit" href="{{ route('emailtemplate.edit',\Crypt::encrypt($value['id'])) }}">
                         </a>
                         @permission(('email-template-delete'))
                             @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'emailtemplate','display_name'=>'Email Template'])

@@ -53,6 +53,7 @@
 
 @section('customscripts')
     <script type="text/javascript">
+
         jQuery( document ).ready(function() {
 
             $("#client_table").DataTable({
@@ -145,5 +146,31 @@
                 form.submit();
             }
         }
+
+        function downloadHiringReport(client_id) {
+
+                var from_date = $("#from_date_" + client_id).val();
+                var to_date = $("#to_date_" + client_id).val();
+                var page_nm = $("#page_nm").val();
+                var source = $("#source").val();
+
+                     if (from_date === '' || to_date === '') {
+                         alert("Please enter a date.");
+                      return false;
+                     }
+
+                 var url = '/download-hiring-report';
+                 var form = $('<form action="' + url + '" method="post">' +
+                   '<input type="hidden" name="_token" value="{{ csrf_token() }}">' +
+                   '<input type="hidden" name="from_date" value="' + from_date + '">' +
+                   '<input type="hidden" name="to_date" value="' + to_date + '">' +
+                   '<input type="hidden" name="client_id" value="' + client_id + '">' +
+                   '<input type="hidden" name="page_nm" value="' + page_nm + '">' +
+                   '<input type="hidden" name="source" value="' + source + '">' +
+                   '</form>');
+
+                   $('body').append(form); // Append the form to the body
+                   form.submit(); // Submit the form              
+                    }
     </script>
 @endsection

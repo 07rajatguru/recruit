@@ -50,10 +50,10 @@
             <tr>
                 <td>{{ ++$i }}</td>
                 <td>
-                    <a class="fa fa-circle" title="Show" href="{{ route('roles.show',$role->id) }}"></a>
+                    <a class="fa fa-circle" title="Show" href="{{ route('roles.show',\Crypt::encrypt($role->id)) }}"></a>
 
                     @permission(('role-edit'))
-                        <a class="fa fa-edit" title="Edit" href="{{ route('roles.edit',$role->id) }}"></a>
+                        <a class="fa fa-edit" title="Edit" href="{{ route('roles.edit',\Crypt::encrypt($role->id)) }}"></a>
                     @endpermission
 
                     @permission(('role-delete'))

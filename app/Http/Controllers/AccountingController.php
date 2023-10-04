@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Crypt;
 use App\AccountingHeads;
 use App\User;
 use App\Utils;
@@ -37,6 +38,8 @@ class AccountingController extends Controller
     }
 
     public function edit($id) {
+
+        $id = Crypt::decrypt($id);
 
      	$accounting = AccountingHeads::find($id);
         $action = "edit";

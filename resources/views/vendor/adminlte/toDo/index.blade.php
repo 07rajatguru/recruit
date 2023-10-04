@@ -55,9 +55,9 @@
 
                 <td>
 
-                    <a title="Show"  class="fa fa-circle" href="{{ route('todos.show',$todo['id']) }}"></a>
+                    <a title="Show"  class="fa fa-circle" href="{{ route('todos.show',\Crypt::encrypt($todo['id'])) }}"></a>
                     @if(($todo['task_owner'] == $user_id) || $isSuperAdmin || $isStrategyCoordination)
-                        <a title="Edit" class="fa fa-edit" href="{{ route('todos.edit',$todo['id']) }}"></a>
+                        <a title="Edit" class="fa fa-edit" href="{{ route('todos.edit',\Crypt::encrypt($todo['id'])) }}"></a>
                     @endif
                     @if($isSuperAdmin)
                         @include('adminlte::partials.deleteModal', ['data' => $todo, 'name' => 'todos','display_name'=>'Todo'])

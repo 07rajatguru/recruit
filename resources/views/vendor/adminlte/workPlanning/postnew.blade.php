@@ -1,6 +1,6 @@
 <div class="m-post-row comment-box">
     {!! Form::open(['route' => ['workplanning.post.write', $wp_id], 'name' => 'write_a_post', 'id' => 'write_a_post', 'files' => 'true']) !!}
-        {!! Form::hidden('wp_id', $wp_id) !!}
+        {!! Form::hidden('wp_id', \Crypt::encrypt($wp_id)) !!}
         {!! Form::hidden('user_id', $user_id) !!}
 
         <div class="comment-area">

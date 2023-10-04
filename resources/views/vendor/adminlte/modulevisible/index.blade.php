@@ -39,7 +39,7 @@
             <tr>
                 <td>{{ ++$i }}</td>
                 <td>
-                    <a class="fa fa-edit" title="edit" href="{{ route('modulevisible.edit',$value['main_id']) }}"></a>
+                    <a class="fa fa-edit" title="edit" href="{{ route('modulevisible.edit',\Crypt::encrypt($value['main_id'])) }}"></a>
 
                     @permission(('module-visibility-delete'))
                         @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'modulevisible','display_name'=>'Module Visible User'])

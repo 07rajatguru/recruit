@@ -217,18 +217,18 @@ class BillsController extends Controller
 
             if ($title == 'Forecasting') {
 
-                $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
                 if($access || ($user_id == $value['uploaded_by']) || ($user_id == $value['account_manager_id'])) {
                     
-                    $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
+                    $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
                     if($generate_recovery_perm) {
 
                         if($value['status']==0 && $value['cancel_bill']!=1) {
                             //BM will be generated after date of joining
                             if(date("Y-m-d")>= date("Y-m-d",strtotime($value['date_of_joining']))) {
-                                $action .= '<a title="Generate Recovery" class="fa fa-square" href="'.route('bills.generaterecovery',$value['id']).'" style="margin:2px;"></a>';
+                                $action .= '<a title="Generate Recovery" class="fa fa-square" href="'.route('bills.generaterecovery',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
                             }
                         }
                     }
@@ -262,9 +262,9 @@ class BillsController extends Controller
 
                 if($access || ($user_id == $value['uploaded_by']) || ($user_id == $value['account_manager_id'])) {
 
-                    $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
+                    $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
-                    $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
+                    $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
                     if($cancel_bill_perm) {
 
@@ -566,11 +566,11 @@ class BillsController extends Controller
 
             if ($title == 'Cancel Forecasting') {
 
-                $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
                 if($access || ($user_id == $value['uploaded_by']) || ($user_id == $value['account_manager_id'])) {
                     
-                    $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
+                    $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
                     if($cancel_bill_perm) {
 
@@ -592,7 +592,7 @@ class BillsController extends Controller
                         if($value['status']==0 && $value['cancel_bill']!=1){
                             //BM will be generated after date of joining
                             if(date("Y-m-d")>= date("Y-m-d",strtotime($value['date_of_joining']))) {
-                                $action .= '<a title="Generate Recovery" class="fa fa-square" href="'.route('bills.generaterecovery',$value['id']).'" style="margin:2px;"></a>';
+                                $action .= '<a title="Generate Recovery" class="fa fa-square" href="'.route('bills.generaterecovery',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
                             }
                         }
                     }
@@ -610,9 +610,9 @@ class BillsController extends Controller
 
                 if($access || ($user_id == $value['uploaded_by']) || ($user_id == $value['account_manager_id'])) {
 
-                    $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
+                    $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
-                    $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
+                    $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
                     if($cancel_bill_perm) {
                         if($value['cancel_bill']==0) {
@@ -1296,13 +1296,15 @@ class BillsController extends Controller
 
     public function show($id) {
 
+        $id = \Crypt::decrypt($id);
         $viewVariable = Bills::getShowBill($id);
 
-       return view('adminlte::bills.show', $viewVariable);
+        return view('adminlte::bills.show', $viewVariable);
     }
 
     public function edit($id) {
 
+        $id = \Crypt::decrypt($id);
         $action = 'edit';
         $generate_bm ='0';
         $user = \Auth::user();
@@ -1348,7 +1350,12 @@ class BillsController extends Controller
         $i = 0;
         if (isset($efforts) && sizeof($efforts) > 0) {
             foreach ($efforts as $k => $v) {
-                $employee_name[$i] = $k;
+                $user_details = User::getAllDetailsByUserID($k);
+                if (isset($user_details) && $user_details != '' && $user_details['status'] == 'Inactive') {
+                    $employee_name[$i] = $user_details['name'] .'+'.$user_details['id'];
+                } else {
+                    $employee_name[$i] = $k;
+                }
                 $employee_percentage[$i] = $v;
                 $i++;
             }
@@ -1658,11 +1665,11 @@ class BillsController extends Controller
 
             if ($status == 1) {
 
-                return redirect()->route('bills.generaterecovery',$id)->with('success', 'Attchment Upload Successfully.');
+                return redirect()->route('bills.generaterecovery',\Crypt::encrypt($id))->with('success', 'Attchment Upload Successfully.');
             }
             else{
            
-            return redirect()->route('forecasting.edit',$id)->with('success', 'Attchment Upload Successfully.');
+            return redirect()->route('forecasting.edit',\Crypt::encrypt($id))->with('success', 'Attchment Upload Successfully.');
             }
         }
 
@@ -2020,7 +2027,7 @@ class BillsController extends Controller
 
         $billFileDelete = BillsDoc::where('id',$id)->delete();
 
-        return redirect()->route('forecasting.show',[$billId])->with('success','Attachment Deleted Successfully.');
+        return redirect()->route('forecasting.show',[\Crypt::encrypt($billId)])->with('success','Attachment Deleted Successfully.');
     }
 
     public function upload(Request $request) {
@@ -2029,7 +2036,12 @@ class BillsController extends Controller
         $file = $request->file('file');
         $bill_id = $request->id;
 
-        if (isset($file) && $file->isValid()) {
+        if(isset($file) && $file->isValid()) {
+
+            $allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png', 'gif', 'xls', 'xlsx', 'doc', 'docx', 'ppt', 'pptx', 'txt'];
+            $extension = strtolower($file->getClientOriginalExtension());
+
+            if (in_array($extension, $allowedExtensions)) { 
             $file_name = $file->getClientOriginalName();
             $file_size = $file->getSize();
             $dir = 'uploads/bills/' . $bill_id . '/';
@@ -2049,12 +2061,19 @@ class BillsController extends Controller
             $bills_doc->name = $file_name;
             $bills_doc->size = $file_size;
             $bills_doc->save();
-        }
-        return redirect()->route('forecasting.show',[$bill_id])->with('success','Attachment uploaded successfully.');
-    }
+        
+        return redirect()->route('forecasting.show',[\Crypt::encrypt($bill_id)])->with('success','Attachment uploaded successfully.');
+     }
+     else {
+        return redirect()->route('forecasting.show',[\Crypt::encrypt($bill_id)])->with('success','Attachment uploaded successfully.');
+     }
+   }
+  }
+    
 
     public function generateBM($id) {
 
+        $id = \Crypt::decrypt($id);
         $generate_bm = '1';
         $action = 'edit';
 
@@ -2099,7 +2118,12 @@ class BillsController extends Controller
         $i = 0;
         if (isset($efforts) && sizeof($efforts) > 0) {
             foreach ($efforts as $k => $v) {
-                $employee_name[$i] = $k;
+                $user_details = User::getAllDetailsByUserID($k);
+                if (isset($user_details) && $user_details != '' && $user_details['status'] == 'Inactive') {
+                    $employee_name[$i] = $user_details['name'] .'+'.$user_details['id'];
+                } else {
+                    $employee_name[$i] = $k;
+                }
                 $employee_percentage[$i] = $v;
                 $i++;
             }
@@ -2746,9 +2770,9 @@ class BillsController extends Controller
 
             if($access || ($user_id == $value['uploaded_by']) || ($user_id == $value['account_manager_id'])) {
 
-                $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a title="show" class="fa fa-circle" href="'.route('forecasting.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
-                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('forecasting.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
                 if($cancel_bill_perm) {
 

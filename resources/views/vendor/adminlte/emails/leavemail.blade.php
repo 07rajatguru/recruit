@@ -30,9 +30,9 @@
                         <tr>
                             <td align="center" style="padding: 0px;">
                                 @if(isset($module) && ($module == 'Leave' || $module == 'Cancel Leave'))
-                                    <a style="border: black; background-color: skyblue;color: white;padding: 10px 20px 10px 20px; border-radius: 50px;font-size: 15px;width: 59%;text-decoration: none;" class="btn btn-primary" formtarget="_blank" href="{{getenv('APP_URL').'/leave/reply/'.$leave_id}}">Reply</a>
+                                    <a style="border: black; background-color: skyblue;color: white;padding: 10px 20px 10px 20px; border-radius: 50px;font-size: 15px;width: 59%;text-decoration: none;" class="btn btn-primary" formtarget="_blank" href="{{getenv('APP_URL').'/leave/reply/'.\Crypt::encrypt($leave_id) }}">Reply</a>
                                 @else
-                                    <a style="border: black; background-color: skyblue;color: white;padding: 10px 20px 10px 20px; border-radius: 50px;font-size: 15px;width: 59%;text-decoration: none;" class="btn btn-primary" formtarget="_blank" href="{{getenv('APP_URL').'/late-in-early-go/reply/'.$leave_id}}">Reply</a>
+                                    <a style="border: black; background-color: skyblue;color: white;padding: 10px 20px 10px 20px; border-radius: 50px;font-size: 15px;width: 59%;text-decoration: none;" class="btn btn-primary" formtarget="_blank" href="{{getenv('APP_URL').'/late-in-early-go/reply/'.\Crypt::encrypt($leave_id) }}">Reply</a>
                                 @endif
                             </td>
                         </tr>

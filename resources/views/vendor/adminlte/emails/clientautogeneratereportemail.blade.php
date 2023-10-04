@@ -19,6 +19,7 @@
                             <!-- <td align="center"><b>Client Owner</b></td> -->
                             <td align="center" width="15%"><b>Position Name</b></td>
                             <td align="center" width="14%"><b>CVs Shared</b></td>
+                            <td align="center" width="15%"><b>Duplicate Candidates</b></td>
                             <td align="center" width="15%"><b>Shortlisted Names</b></td>
                             <td align="center" width="15%"><b>Interview Attended Names</b></td>
                             <td align="center" width="18%"><b>Adler's Remarks</b></td>
@@ -31,42 +32,55 @@
                                 
                                 @if(isset($value['associate_candidates']) && sizeof($value['associate_candidates']) > 0)
                                     <?php
-                                        $ass_names_string = '';
-                                        $ass_incr = 1;
+                                        $ass_names_string = ''; $ass_incr = 1;
+                                        $duplicate_candidates_string = ''; $duplicate_candidates_names = ''; $dup_can = ''; $duplicate_candidates = 0; $dup_incr = 1;
                                     ?>
                                     @foreach($value['associate_candidates'] as $k1 => $v1)
                                         <?php 
+                                            if ($v1['is_duplicates'] == '1') {
+                                                $duplicate_candidates++;
+                                                if($duplicate_candidates_names == '') {
+                                                    $duplicate_candidates_names = $dup_incr . ". " . $v1['candidate_name'] . " " . "<br/>";
+                                                } else {
+                                                    $duplicate_candidates_names .= $dup_incr . ". " . $v1['candidate_name'] . " " . "<br/>";
+                                                }
+                                                $dup_incr++;
+                                            }
                                             if($ass_names_string == '') {
                                                 $ass_names_string = $ass_incr . " . " . $v1['candidate_name'] . " " . "<br/>";
-                                            }
-                                            else {
+                                            } else {
                                                 $ass_names_string .= $ass_incr . " . " . $v1['candidate_name'] . " " . "<br/>";
                                             }
 
                                             $ass_incr++;
                                         ?>
                                     @endforeach
+                                    <?php 
+                                      $total_candidates = $ass_incr - 1;
+                                        $duplicate_candidates_string = $duplicate_candidates. ' out of '.$total_candidates .'candidates are duplicate.';
+                                        if ($duplicate_candidates <= '5') {
+                                            $dup_can = $duplicate_candidates_names . '<hr/>' . $duplicate_candidates_string;
+                                        } else {
+                                            $dup_can = $duplicate_candidates_string;
+                                        }
+                                    ?>
                                 @else
                                     <?php
-                                        $ass_names_string = '';
+                                        $ass_names_string = ''; $duplicate_candidates_string = ''; $duplicate_candidates_names = ''; $dup_can = '';
                                     ?>
                                 @endif
 
                                 @if(isset($value['shortlisted_candidates']) && sizeof($value['shortlisted_candidates']) > 5)
-                                    <?php 
-                                        $short_names_string = sizeof($value['shortlisted_candidates']);
-                                    ?>
+                                    <?php $short_names_string = sizeof($value['shortlisted_candidates']); ?>
                                 @elseif(isset($value['shortlisted_candidates']) && sizeof($value['shortlisted_candidates']) > 0)
                                     <?php
-                                        $short_names_string = '';
-                                        $short_incr = 1;
+                                        $short_names_string = ''; $short_incr = 1;
                                     ?>
                                     @foreach($value['shortlisted_candidates'] as $k2 => $v2)
                                         <?php 
                                             if($short_names_string == '') {
                                                 $short_names_string = $short_incr . " . " . $v2['candidate_name'] . " " . "<br/>";
-                                            }
-                                            else {
+                                            } else {
                                                 $short_names_string .= $short_incr . " . " . $v2['candidate_name'] . " " . "<br/>";
                                             }
 
@@ -74,22 +88,18 @@
                                         ?>
                                     @endforeach
                                 @else
-                                    <?php
-                                        $short_names_string = '';
-                                    ?>
+                                    <?php $short_names_string = ''; ?>
                                 @endif
 
                                 @if(isset($value['attended_interviews']) && sizeof($value['attended_interviews']) > 0)
                                     <?php
-                                        $attend_names_string = '';
-                                        $attend_incr = 1;
+                                        $attend_names_string = ''; $attend_incr = 1;
                                     ?>
                                     @foreach($value['attended_interviews'] as $k3 => $v3)
                                         <?php 
                                             if($attend_names_string == '') {
                                                 $attend_names_string = $attend_incr . " . " . $v3['candidate_name'] . " " . "<br/>";
-                                            }
-                                            else {
+                                            } else {
                                                 $attend_names_string .= $attend_incr . " . " . $v3['candidate_name'] . " " . "<br/>";
                                             }
 
@@ -97,15 +107,14 @@
                                         ?>
                                     @endforeach
                                 @else
-                                    <?php
-                                        $attend_names_string = '';
-                                    ?>
+                                    <?php $attend_names_string = ''; ?>
                                 @endif
 
                                 <td align="center">{{ ++$i }}</td>
                                 {{-- <td align="center">{{ $client_owner }}</td> --}}
                                 <td align="center">{{ $value['posting_title'] }}</td>
                                 <td align="center">{!! $ass_names_string !!}</td>
+                                <td align="center">{!! $dup_can !!}</td>
                                 <td align="center">{!! $short_names_string !!}</td>
                                 <td align="center">{!! $attend_names_string !!}</td>
                                 <td align="center"></td>

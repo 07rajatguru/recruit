@@ -86,10 +86,10 @@
                     <tr>
                         <td>{{ ++$i }}</td>
                         <td>
-                            <a class="fa fa-circle" href="{{ route('workfromhome.show',$value['id']) }}" title="Show"></a>
+                            <a class="fa fa-circle" href="{{ route('workfromhome.show',\Crypt::encrypt($value['id'])) }}" title="Show"></a>
 
                             @if($user_id == $value['user_id'])
-                                <a class="fa fa-edit" href="{{ route('workfromhome.edit',$value['id']) }}" title="Edit"></a>
+                                <a class="fa fa-edit" href="{{ route('workfromhome.edit',\Crypt::encrypt($value['id'])) }}" title="Edit"></a>
                             @endif
                             
                             @permission(('work-from-home-delete'))

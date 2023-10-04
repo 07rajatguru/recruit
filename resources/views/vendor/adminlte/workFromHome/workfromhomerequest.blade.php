@@ -60,7 +60,7 @@
                                 <tr>
                                     <td>{{ ++$i }}</td>
                                     <td>
-                                        <a class="fa fa-circle" href="{{ route('workfromhome.show',$value['id']) }}" title="Show"></a>
+                                        <a class="fa fa-circle" href="{{ route('workfromhome.show',\Crypt::encrypt($value['id'])) }}" title="Show"></a>
                                     </td>
 
                                     <td>{{ $value['from_date'] }}</td>
@@ -83,7 +83,7 @@
                                 <tr>
                                     <td>{{ ++$i }}</td>
                                     <td>
-                                        <a class="fa fa-circle" href="{{ route('workfromhome.show',$value['id']) }}" title="Show"></a>
+                                        <a class="fa fa-circle" href="{{ route('workfromhome.show',\Crypt::encrypt($value['id'])) }}" title="Show"></a>
                                     </td>
 
                                     <td>{{ $value['from_date'] }}</td>
@@ -107,7 +107,7 @@
                                 <tr>
                                     <td>{{ ++$i }}</td>
                                     <td>
-                                        <a class="fa fa-circle" href="{{ route('workfromhome.show',$value['id']) }}" title="Show"></a>
+                                        <a class="fa fa-circle" href="{{ route('workfromhome.show',\Crypt::encrypt($value['id'])) }}" title="Show"></a>
                                     </td>
 
                                     <td>{{ $value['from_date'] }}</td>
@@ -158,7 +158,7 @@
                                 <tr>
                                     <td>{{ ++$i }}</td>
                                     <td>
-                                        <a class="fa fa-circle" href="{{ route('workfromhome.show',$value['id']) }}" title="Show"></a>
+                                        <a class="fa fa-circle" href="{{ route('workfromhome.show',\Crypt::encrypt($value['id'])) }}" title="Show"></a>
                                     </td>
 
                                     <td>{{ $value['from_date'] }}</td>
@@ -181,7 +181,7 @@
                                 <tr>
                                     <td>{{ ++$i }}</td>
                                     <td>
-                                        <a class="fa fa-circle" href="{{ route('workfromhome.show',$value['id']) }}" title="Show"></a>
+                                        <a class="fa fa-circle" href="{{ route('workfromhome.show',\Crypt::encrypt($value['id'])) }}" title="Show"></a>
                                     </td>
 
                                     <td>{{ $value['from_date'] }}</td>
@@ -205,7 +205,7 @@
                                 <tr>
                                     <td>{{ ++$i }}</td>
                                     <td>
-                                        <a class="fa fa-circle" href="{{ route('workfromhome.show',$value['id']) }}" title="Show"></a>
+                                        <a class="fa fa-circle" href="{{ route('workfromhome.show',\Crypt::encrypt($value['id'])) }}" title="Show"></a>
                                     </td>
 
                                     <td>{{ $value['from_date'] }}</td>
@@ -256,7 +256,7 @@
                                 <tr>
                                     <td>{{ ++$i }}</td>
                                     <td>
-                                        <a class="fa fa-circle" href="{{ route('workfromhome.show',$value['id']) }}" title="Show"></a>
+                                        <a class="fa fa-circle" href="{{ route('workfromhome.show',\Crypt::encrypt($value['id'])) }}" title="Show"></a>
                                     </td>
 
                                     <td>{{ $value['from_date'] }}</td>
@@ -279,7 +279,7 @@
                                 <tr>
                                     <td>{{ ++$i }}</td>
                                     <td>
-                                        <a class="fa fa-circle" href="{{ route('workfromhome.show',$value['id']) }}" title="Show"></a>
+                                        <a class="fa fa-circle" href="{{ route('workfromhome.show',\Crypt::encrypt($value['id'])) }}" title="Show"></a>
                                     </td>
 
                                     <td>{{ $value['from_date'] }}</td>
@@ -303,7 +303,7 @@
                                 <tr>
                                     <td>{{ ++$i }}</td>
                                     <td>
-                                        <a class="fa fa-circle" href="{{ route('workfromhome.show',$value['id']) }}" title="Show"></a>
+                                        <a class="fa fa-circle" href="{{ route('workfromhome.show',\Crypt::encrypt($value['id'])) }}" title="Show"></a>
                                     </td>
 
                                     <td>{{ $value['from_date'] }}</td>

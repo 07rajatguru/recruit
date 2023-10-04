@@ -385,22 +385,23 @@
             <div class="col-xs-12 col-sm-12 col-md-12">
                 <div class="form-group">
                     <strong>Resume : [Allow only .doc, .docx, .pdf extension files.]</strong>
-                    <input type="file" name="resume" id="resume" class="form-control">
+                    <input type="file" name="resume" id="resume"  accept=".pdf,.jpg,.jpeg,.png,.gif,.xls,.xlsx,.doc,.docx,.ppt,.pptx,.txt" multiple class="form-control" onchange="FormValidation.validateFile(this)"/>
                 </div>
 
                 <div class="form-group">
                     <strong>Formatted Resume : [Allow only .doc, .docx, .pdf extension files.]</strong>
-                    <input type="file" name="formatted_resume" id="formatted_resume" class="form-control">
+                    <input type="file" name="formatted_resume" id="formatted_resume"  accept=".pdf,.jpg,.jpeg,.png,.gif,.xls,.xlsx,.doc,.docx,.ppt,.pptx,.txt" multiple class="form-control" onchange="FormValidation.validateFile(this)"/>
                 </div>
 
                 <div class="form-group">
                     <strong>Cover Letter : [Allow only .doc, .docx, .pdf extension files.]</strong>
-                    <input type="file" name="cover_letter" id="cover_letter" class="form-control">
+                    <input type="file" name="cover_letter" id="cover_letter"  accept=".pdf,.jpg,.jpeg,.png,.gif,.xls,.xlsx,.doc,.docx,.ppt,.pptx,.txt" multiple class="form-control" onchange="FormValidation.validateFile(this)"/>
                 </div>
 
                 <div class="form-group">
                     <strong>Others : </strong>
-                    <input type="file" name="others[]" id="others" class="form-control" multiple>
+                    <input type="file" name="others[]" id="others" accept=".pdf,.jpg,.jpeg,.png,.gif,.xls,.xlsx,.doc,.docx,.ppt,.pptx,.txt" multiple class="form-control" onchange="FormValidation.validateFile(this)"/>
+
                 </div>
             </div>
         </div>
@@ -463,6 +464,8 @@
 @endif
 
 @section('customscripts')
+<script src="{{ asset('js/validation_file.js') }}"></script>
+
     <script>
         $(document).ready(function() {
 

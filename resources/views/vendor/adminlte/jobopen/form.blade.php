@@ -68,7 +68,7 @@
                                 @endif
                             </div>
                         </div>
-                        <div class="col-md-8" style="width: 72%;margin: 20px 0 0 -20px;">
+                        <div class="col-md-4" style="width: 72%;margin: 20px 0 0 -20px;">
                             <div class="form-group {{ $errors->has('posting_title') ? 'has-error' : '' }}">
                                 {!! Form::text('posting_title', null, array('id'=>'posting_title','placeholder' => 'Posting Title','class' => 'form-control', 'tabindex' => '1','style' => 'width:402px','onchange' => 'validPostingTitleText();')) !!}
                                 @if ($errors->has('posting_title'))
@@ -520,21 +520,21 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
                         <strong>Candidate Tracker : <!-- <span class = "required_fields"> *</span> --> [Allow only .doc, .docx, .pdf, .xlsx, .xls extension files.]</strong>
-                        <input type="file" name="candidate_tracker"  id="candidate_tracker" class="form-control">
+                        <input type="file" name="candidate_tracker"  id="candidate_tracker" accept=".pdf,.jpg,.jpeg,.png,.gif,.xls,.xlsx,.doc,.docx,.ppt,.pptx,.txt" multiple class="form-control" onchange="FormValidation.validateFile(this)"/>
                     </div>
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
                         <strong>Job Description : [Allow only .doc, .docx, .pdf, .txt extension files.]</strong>
-                        <input type="file" name="job_summary"  id="job_summary" class="form-control">
+                        <input type="file" name="job_summary"  id="job_summary" accept=".pdf,.jpg,.jpeg,.png,.gif,.xls,.xlsx,.doc,.docx,.ppt,.pptx,.txt" multiple class="form-control" onchange="FormValidation.validateFile(this)"/>
                     </div>
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
                         <strong>Others : </strong>
-                        <input type="file" name="others_doc[]"  id="others_doc" class="form-control" multiple>
+                        <input type="file" name="others_doc[]"  id="others_doc" accept=".pdf,.jpg,.jpeg,.png,.gif,.xls,.xlsx,.doc,.docx,.ppt,.pptx,.txt" multiple class="form-control" onchange="FormValidation.validateFile(this)"/>
                     </div>
                 </div>
             </div>
@@ -625,6 +625,7 @@
 {!! Form::close() !!}
 
 @section('customscripts')
+<script src="{{ asset('js/validation_file.js') }}"></script>
     <script type="text/javascript">
 
         var action = {!! json_encode($action) !!};

@@ -36,7 +36,7 @@
     <div class="col-lg-12 margin-tb">
         @if($pre_id > 0)
             <div class="pull-left">
-                <a class="btn btn-success" href="{{ route('workplanning.show',$pre_id) }}" title="Previous Day Work Planning"><i class="fa fa-angle-double-left"></i></a>
+                <a class="btn btn-success" href="{{ route('workplanning.show', \Crypt::encrypt($pre_id)) }}" title="Previous Day Work Planning"><i class="fa fa-angle-double-left"></i></a>
             </div>
         @endif
 
@@ -44,7 +44,7 @@
             @if(isset($all_dates) && sizeof($all_dates) > 0)
             @foreach($all_dates as $kd => $vd)
                 @if($vd['id'] > 0)
-                    <a class="btn btn-success" title="{{ $vd['day'] }}" href="{{ route('workplanning.show',$vd['id']) }}" style="background-color: {{ $vd['bg'] }}; padding: 4px 8px;">{{ $kd }}</a>
+                    <a class="btn btn-success" title="{{ $vd['day'] }}" href="{{ route('workplanning.show',\Crypt::encrypt($vd['id'])) }}" style="background-color: {{ $vd['bg'] }}; padding: 4px 8px;">{{ $kd }}</a>
                 @else 
                     <a class="btn btn-success" title="{{ $vd['day'] }}" style="background-color: {{ $vd['bg'] }}; padding: 4px 8px;">{{ $kd }}</a>
                 @endif
@@ -54,7 +54,7 @@
 
         @if($next_id > 0)
             <div class="pull-right">
-                <a class="btn btn-info" href="{{ route('workplanning.show',$next_id) }}" title="Next Day Work Planning"><i class="fa fa-angle-double-right"></i></a>
+                <a class="btn btn-info" href="{{ route('workplanning.show', \Crypt::encrypt($next_id)) }}" title="Next Day Work Planning"><i class="fa fa-angle-double-right"></i></a>
             </div>
         @endif
     </div>
@@ -75,7 +75,7 @@
         <div class="pull-right">
             @if($loggedin_user_id == $added_by_id)
                 @if(date('Y-m-d') <= $edit_date_valid)
-                    <a class="btn btn-primary" href="{{ route('workplanning.edit',$work_planning['id']) }}">Edit</a>
+                    <a class="btn btn-primary" href="{{ route('workplanning.edit',\Crypt::encrypt($work_planning['id'])) }}">Edit</a>
                 @endif
                 <a class="btn btn-primary" href="{{ route('workplanning.index') }}">Back</a>
             @else
@@ -461,6 +461,7 @@
 @endif
 
 <input type="hidden" name="wp_id" id="wp_id" value="{{ $wp_id }}">
+<input type="hidden" name="encrypt_wp_id" id="encrypt_wp_id" value="{{ \Crypt::encrypt($wp_id) }}">
 
 @foreach($work_planning_list as $k1=>$v1)
     <div id="modal-edit-remarks-{!! $v1['work_planning_list_id']!!}" class="modal text-left fade" style="width:100%;">
@@ -600,7 +601,7 @@
 
     function updateStatus(check) {
 
-        var wp_id = $("#wp_id").val();
+        var wp_id = $("#encrypt_wp_id").val();
         var app_url = "{!! env('APP_URL') !!}";
         var token = $("input[name=_token]").val();
 

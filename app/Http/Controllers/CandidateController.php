@@ -8,6 +8,7 @@ use App\CandidateUploadedResume;
 use App\docParser;
 use App\pdfParser;
 use App\Utils;
+use App\CandidateAll;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Input;
@@ -216,8 +217,8 @@ class CandidateController extends Controller
         foreach ($response as $key => $value) {
 
             $action = '';
-            $action .= '<a class="fa fa-circle" href="'.route('candidate.show',$value['id']).'" title="Show" style = "margin:3px"></a>';
-            $action .= '<a class="fa fa-edit" href="'.route('candidate.edit',$value['id']).'" title="Edit" style = "margin:3px"></a>';
+            $action .= '<a class="fa fa-circle" href="'.route('candidate.show',\Crypt::encrypt($value['id'])).'" title="Show" style = "margin:3px"></a>';
+            $action .= '<a class="fa fa-edit" href="'.route('candidate.edit',\Crypt::encrypt($value['id'])).'" title="Edit" style = "margin:3px"></a>';
 
             if ($delete_perm) {
                 $delete_view = \View::make('adminlte::partials.deleteModal',['data' => $value, 'name' => 'candidate', 'display_name'=>'Candidate','form_name' => 'login']);
@@ -292,8 +293,8 @@ class CandidateController extends Controller
         foreach ($response as $key => $value) {
 
             $action = '';
-            $action .= '<a class="fa fa-circle" href="'.route('applicant-candidate.show',$value['id']).'" title="Show" style = "margin:3px"></a>';
-            $action .= '<a class="fa fa-edit" href="'.route('applicant-candidate.edit',$value['id']).'" title="Edit" style = "margin:3px"></a>';
+            $action .= '<a class="fa fa-circle" href="'.route('applicant-candidate.show',\Crypt::encrypt($value['id'])).'" title="Show" style = "margin:3px"></a>';
+            $action .= '<a class="fa fa-edit" href="'.route('applicant-candidate.edit',\Crypt::encrypt($value['id'])).'" title="Edit" style = "margin:3px"></a>';
 
             if ($delete_perm) {
 
@@ -764,6 +765,8 @@ class CandidateController extends Controller
 
     public function edit($id) {
 
+        $id = \Crypt::decrypt($id);
+
         $candidates = CandidateBasicInfo::leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id')
         ->leftjoin('candidate_uploaded_resume','candidate_uploaded_resume.candidate_id','=','candidate_basicinfo.id')
         ->select('candidate_basicinfo.id as id', 'candidate_basicinfo.type as candidateSex', 'candidate_basicinfo.marital_status as maritalStatus','candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname','candidate_basicinfo.mobile as mobile', 'candidate_basicinfo.phone as phone','candidate_basicinfo.fax as fax', 'candidate_basicinfo.email as email','candidate_basicinfo.country as country', 'candidate_basicinfo.state as state','candidate_basicinfo.city as city', 'candidate_basicinfo.street1 as street1','candidate_basicinfo.street2 as street2', 'candidate_basicinfo.zipcode as zipcode','candidate_otherinfo.highest_qualification as highest_qualification', 'candidate_otherinfo.experience_years as experience_years','candidate_otherinfo.experience_months as experience_months', 'candidate_otherinfo.current_job_title as current_job_title','candidate_otherinfo.current_employer as current_employer', 'candidate_otherinfo.expected_salary as expected_salary','candidate_otherinfo.current_salary as current_salary', 'candidate_otherinfo.skill as skill','candidate_otherinfo.skype_id as skype_id', 'candidate_otherinfo.status_id as candidateStatus','candidate_otherinfo.source_id as candidateSource', 'candidate_uploaded_resume.file_name as resume')
@@ -1021,7 +1024,7 @@ class CandidateController extends Controller
                         $candidateFileUpload->uploaded_date = date('Y-m-d');
                         $candidateFileUploadUpdated = $candidateFileUpload->save();
 
-                        return redirect()->route('candidate.edit',[$candidate_id])->with('success','Attachment Uploaded Successfully.');
+                        return redirect()->route('candidate.edit',[\Crypt::encrypt($candidate_id)])->with('success','Attachment Uploaded Successfully.');
                     }
                 }
 
@@ -1059,6 +1062,8 @@ class CandidateController extends Controller
     }
 
     public function show($id) {
+
+        $id = \Crypt::decrypt($id);
 
         $candidates = CandidateBasicInfo::leftjoin('candidate_otherinfo','candidate_otherinfo.candidate_id','=','candidate_basicinfo.id')
 
@@ -1201,6 +1206,10 @@ class CandidateController extends Controller
 
         if(isset($file) && $file->isValid()) {
 
+            $allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png', 'gif', 'xls', 'xlsx', 'doc', 'docx', 'ppt', 'pptx', 'txt'];
+            $extension = strtolower($file->getClientOriginalExtension());
+
+            if (in_array($extension, $allowedExtensions)) { 
             $fileName = $file->getClientOriginalName();
             $fileExtention = $file->getClientOriginalExtension();
             $fileRealPath = $file->getRealPath();
@@ -1239,13 +1248,14 @@ class CandidateController extends Controller
         }
 
         if(isset($form_name) && $form_name == 'applicantShow'){
-            return redirect()->route('applicant-candidate.show',[$candidate_id])->with('success','Attachment Uploaded Successfully.');
+            return redirect()->route('applicant-candidate.show',[\Crypt::encrypt($candidate_id)])->with('success','Attachment Uploaded Successfully.');
         }
         else{
-            return redirect()->route('candidate.show',[$candidate_id])->with('success','Attachment Uploaded Successfully.');
+            return redirect()->route('candidate.show',[\Crypt::encrypt($candidate_id)])->with('success','Attachment Uploaded Successfully.');
         }
     }
-
+    }
+    
     public function attachmentsDestroy($fileId) {
 
         $candiateFileDetails = CandidateUploadedResume::find($fileId);
@@ -1257,18 +1267,18 @@ class CandidateController extends Controller
         if (isset($_POST['edit']) && $_POST['edit'] != '') {
 
             $action = $_POST['edit'];
-            return redirect()->route('candidate.edit',[$candidateId])->with('success','Attachment Deleted Successfully.');
+            return redirect()->route('candidate.edit',[\Crypt::encrypt($candidateId)])->with('success','Attachment Deleted Successfully.');
         }
 
         if (isset($_POST['applicant_name']) && $_POST['applicant_name'] == 'applicantShow') {
-            return redirect()->route('applicant-candidate.show',[$candidateId])->with('success','Attachment Deleted Successfully.');
+            return redirect()->route('applicant-candidate.show',[\Crypt::encrypt($candidateId)])->with('success','Attachment Deleted Successfully.');
         }
 
         if (isset($_POST['applicant_name']) && $_POST['applicant_name'] == 'applicantEdit') {
-            return redirect()->route('applicant-candidate.edit',[$candidateId])->with('success','Attachment Deleted Successfully.');
+            return redirect()->route('applicant-candidate.edit',[\Crypt::encrypt($candidateId)])->with('success','Attachment Deleted Successfully.');
         }
 
-        return redirect()->route('candidate.show',[$candidateId])->with('success','Attachment deleted Successfully');
+        return redirect()->route('candidate.show',[\Crypt::encrypt($candidateId)])->with('success','Attachment deleted Successfully');
     }
 
     public function getCandidateInfo($id) {
@@ -1564,226 +1574,360 @@ class CandidateController extends Controller
     }
 
     public function importExport() {
-
+        
         $candidateSource = CandidateBasicInfo::getCandidateimportsource();
         return view('adminlte::candidate.import',compact('candidateSource'));
     }
 
-    public function importn1excel() {
+    public function import(){
+        return view('adminlte::candidate.import');
+    }
 
-        if($request->hasFile('import_file')) {
+    // public function importn1excel(Request $request) {
 
-            $path = $request->file('import_file')->getRealPath();
+    //     if($request->hasFile('import_file')) {
 
-            $data = Excel::load($path, function ($reader) {})->get();
+    //         $path = $request->file('import_file')->getRealPath();
 
-            $messages = array();
+    //         $data = Excel::load($path, function ($reader) {})->get();
 
-            if (!empty($data) && $data->count()) {
+    //         $messages = array();
 
-                foreach ($data->toArray() as $key => $value) {
+    //         if (!empty($data) && $data->count()) {
 
-                    if(!empty($value)) {
+    //             foreach ($data->toArray() as $key => $value) {
+
+    //                 if(!empty($value)) {
                        
-                            $name = $value['name'];
-                            $gender = $value['gender'];
-                            $marital_status =$value['marital_status'];
-                            $mobile_number = $value['phone_number'];
-                            $email = $value['email_id'];
-                            $current_employer = $value['curr_company_name'];
-                            $experience = $value['total_experience'];
-                            $job_title = $value['curr_company_designation'];
-                            $skill = $value['key_skills'];
-                            $city = $value['home_towncity'];
-                            $zipcode = $value['pin_code'];
-                            $address = $value['permanent_address'];
-                            $current_salary = $value['annual_salary'];
+    //                         $name = $value['name'];
+    //                         $gender = $value['gender'];
+    //                         $marital_status =$value['marital_status'];
+    //                         $mobile_number = $value['phone_number'];
+    //                         $email = $value['email_id'];
+    //                         $current_employer = $value['curr_company_name'];
+    //                         $experience = $value['total_experience'];
+    //                         $job_title = $value['curr_company_designation'];
+    //                         $skill = $value['key_skills'];
+    //                         $city = $value['home_towncity'];
+    //                         $zipcode = $value['pin_code'];
+    //                         $address = $value['permanent_address'];
+    //                         $current_salary = $value['annual_salary'];
 
-                            // first check email already exist or not , if exist doesnot update data
-                            $candidate_cnt = CandidateBasicInfo::checkCandidateByEmail($email);
+    //                         // first check email already exist or not , if exist doesnot update data
+    //                         $candidate_cnt = CandidateBasicInfo::checkCandidateByEmail($email);
 
-                            if($candidate_cnt>0) {
-                                $messages[] = "Record $name already present ";
-                            }
-                            else {
-                                    $mobilearray = explode(',', $mobile_number);
-                                    $addressarray = explode(',', $address);
+    //                         if($candidate_cnt>0) {
+    //                             $messages[] = "Record $name already present ";
+    //                         }
+    //                         else {
+    //                                 $mobilearray = explode(',', $mobile_number);
+    //                                 $addressarray = explode(',', $address);
 
-                                    // Insert new candidate
-                                    $candidate_basic_info = new CandidateBasicInfo();
-                                    $candidate_basic_info->full_name = $name;
-                                    $candidate_basic_info->email = $email;
-                                    $candidate_basic_info->mobile = $mobilearray[0];
-                                    if(isset($mobilearray[1]) && sizeof($mobilearray[1])>0){
-                                        $candidate_basic_info->phone = $mobilearray[1];
-                                    }
-                                    if ($marital_status == 'Single/unmarried') {
-                                         $candidate_basic_info->marital_status = 'Single';     
-                                    }
-                                    else{
-                                    $candidate_basic_info->marital_status = $marital_status;
-                                    }
-                                    $candidate_basic_info->type = $gender;
-                                    $candidate_basic_info->city = $city;
-                                    $candidate_basic_info->zipcode = $zipcode;
-                                    $candidate_basic_info->street1 = $addressarray[0];
+    //                                 // Insert new candidate
+    //                                 $candidate_basic_info = new CandidateBasicInfo();
+    //                                 $candidate_basic_info->full_name = $name;
+    //                                 $candidate_basic_info->email = $email;
+    //                                 $candidate_basic_info->mobile = $mobilearray[0];
+    //                                 if(isset($mobilearray[1]) && sizeof($mobilearray[1])>0){
+    //                                     $candidate_basic_info->phone = $mobilearray[1];
+    //                                 }
+    //                                 if ($marital_status == 'Single/unmarried') {
+    //                                      $candidate_basic_info->marital_status = 'Single';     
+    //                                 }
+    //                                 else{
+    //                                 $candidate_basic_info->marital_status = $marital_status;
+    //                                 }
+    //                                 $candidate_basic_info->type = $gender;
+    //                                 $candidate_basic_info->city = $city;
+    //                                 $candidate_basic_info->zipcode = $zipcode;
+    //                                 $candidate_basic_info->street1 = $addressarray[0];
 
-                                    if($candidate_basic_info->save()) {
+    //                                 if($candidate_basic_info->save()) {
 
-                                        $candidate_id = $candidate_basic_info->id;
+    //                                     $candidate_id = $candidate_basic_info->id;
 
-                                        $experiencearray = explode(' ', $experience);
-                                        $currentsalaryarray = explode(' ', $current_salary);
+    //                                     $experiencearray = explode(' ', $experience);
+    //                                     $currentsalaryarray = explode(' ', $current_salary);
 
-                                        $candidate_otherinfo = new CandidateOtherInfo();
-                                        $candidate_otherinfo->candidate_id = $candidate_id;
-                                        $candidate_otherinfo->current_job_title = $job_title;
-                                        $candidate_otherinfo->current_employer = $current_employer;
-                                        $candidate_otherinfo->experience_years = $experiencearray[0];
-                                        $candidate_otherinfo->experience_months = $experiencearray[2];
-                                        $candidate_otherinfo->skill = $skill;
+    //                                     $candidate_otherinfo = new CandidateOtherInfo();
+    //                                     $candidate_otherinfo->candidate_id = $candidate_id;
+    //                                     $candidate_otherinfo->current_job_title = $job_title;
+    //                                     $candidate_otherinfo->current_employer = $current_employer;
+    //                                     $candidate_otherinfo->experience_years = $experiencearray[0];
+    //                                     $candidate_otherinfo->experience_months = $experiencearray[2];
+    //                                     $candidate_otherinfo->skill = $skill;
 
-                                        if (isset($currentsalaryarray[1]) && sizeof($currentsalaryarray)>0) {
-                                            $candidate_otherinfo->current_salary = $currentsalaryarray[1];
-                                        }
+    //                                     if (isset($currentsalaryarray[1]) && sizeof($currentsalaryarray)>0) {
+    //                                         $candidate_otherinfo->current_salary = $currentsalaryarray[1];
+    //                                     }
 
-                                        $candidate_otherinfo->owner_id = $user_id;
-                                        $candidate_otherinfo->save();
+    //                                     $candidate_otherinfo->owner_id = $user_id;
+    //                                     $candidate_otherinfo->save();
 
-                                        if ($candidate_id > 0) {
-                                            $messages[] = "Record $name inserted successfully";
-                                        }
-                                    }
-                                    else {
-                                        $messages[] = "Error while inserting record $sr_no ";
-                                    }
-                                }
-                            }
-                    else {
-                        $messages[] = "No Data in file";
+    //                                     if ($candidate_id > 0) {
+    //                                         $messages[] = "Record $name inserted successfully";
+    //                                     }
+    //                                 }
+    //                                 else {
+    //                                     $messages[] = "Error while inserting record $sr_no ";
+    //                                 }
+    //                             }
+    //                         }
+    //                 else {
+    //                     $messages[] = "No Data in file";
+    //                 }
+    //             }
+    //         }
+    //         return view('adminlte::candidate.import',compact('messages'));
+    //     }
+    // }
+
+    public function getOrderCandidateColumnName($order) {
+
+        $order_column_name = '';
+        if (isset($order) && $order >= 0) {
+            if ($order == 0) {
+                $order_column_name = "id";
+            }
+            else if ($order == 2) {
+                $order_column_name = "fname";
+            }
+            else if ($order == 3) {
+                $order_column_name = "mobile";
+            }
+            else if ($order == 4) {
+                $order_column_name = "phone";
+            }
+            else if ($order == 5) {
+                $order_column_name = "email";
+            }
+            else if ($order == 6) {
+                $order_column_name = "marital_status";
+            }
+            else if ($order == 7) {
+                $order_column_name = "type";
+            }
+        }
+        return $order_column_name;
+    }
+
+    public function getCandidates() {
+
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $page = $_GET['start'] / $limit; // calculate the page number
+       
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        $candidate = array();
+        // if(isset($candidate_id) && sizeof($candidate_id)>0) {
+
+            $order_column_name = self::getOrderCandidateColumnName($order);
+            $candidate = CandidateAll::getAllCandidate(array(),$limit,$page,$search,$order_column_name,$type);
+            $count = CandidateAll::getAllCandidateCount(array(),$search);
+            
+        // }
+        // else {
+        //     $count = 0;
+        // }
+
+        $candidate_details = array();
+        $i = 0;$j = 0;
+
+        foreach ($candidate as $key => $value) {
+
+            $data = array(++$j,$value['fname'],$value['mobile'],$value['phone'],$value['email'],$value['marital_status'],$value['type']);
+            $candidate_details[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $candidate_details,
+        );
+
+        echo json_encode($json_data);exit;
+    }
+
+    public function importExcel(Request $request){
+    
+    if($request->hasFile('import_file')) {
+       $path = $request->file('import_file')->getRealPath();
+       $data = Excel::load($path, function ($reader) {})->get();
+       $messages = array();
+       $successCount = 0; 
+
+       if(!empty($data) && $data->count()) {
+
+           foreach($data->toArray() as $key => $value) {
+
+               if(!empty($value)) {   
+
+                         
+                       $id = $value['id'];
+                       $fname = $value['fname'];
+                       $mobile = $value['mobile'];
+                       $phone = $value['phone'];
+                       $email = $value['email'];
+                       $marital_status = $value['marital_status'];
+                       $type = $value['type'];
+                     
+                       $candidate_basicinfo = new CandidateAll();
+                       $candidate_basicinfo->fname = $fname;
+                       $candidate_basicinfo->mobile = $mobile;
+                       $candidate_basicinfo->phone = $phone;
+                       $candidate_basicinfo->email = $email;
+                       $candidate_basicinfo->marital_status = $marital_status;
+                       $candidate_basicinfo->type = $type;
+
+                       if ($candidate_basicinfo->save()) {
+                        
+                          $successCount++; 
+                          $imported = true;
+
+                       }else {
+                        $messages[] = "Error while inserting the record $id";
+                        break; // Break the loop on error
                     }
                 }
+             }
+               if ($successCount > 0) {
+                   $messages[] = "$successCount records inserted successfully.";
+                   $imported = true;
+               } else {
+                   $messages[] = "No records inserted.";
+               }
             }
-            return view('adminlte::candidate.import',compact('messages'));
+           return view('adminlte::candidate.import',compact('messages','imported'));
+        }
+        else {
+           return redirect()->route('candidate.import')->with('error','Please Select Excel file.');
         }
     }
 
-    public function importExcel(Request $request) {
+//    public function importExcel(Request $request) {
 
-        $user_id = \Auth::user()->id;
+//     $user_id = \Auth::user()->id;
 
-        $candidateSource = CandidateBasicInfo::getCandidateimportsource();
+//     $candidateSource = CandidateBasicInfo::getCandidateimportsource();
 
-        $candidatesource = $request->input('candidateSource');
+//     $candidatesource = $request->input('candidateSource');
 
 
-        if($candidatesource == 'n1'){
-            $candidate = CandidateController::importn1excel();
-        }
-        elseif ($candidatesource == 'n2') {
-            $candidate = CandidateController::importn2excel();
-        }
+//     if($candidatesource == 'n1'){
+//         $candidate = CandidateController::importn1excel();
+//     }
+//     elseif ($candidatesource == 'n2') {
+//         $candidate = CandidateController::importn2excel();
+//     }
 
-        if($request->hasFile('import_file')) {
-            $path = $request->file('import_file')->getRealPath();
+//     if($request->hasFile('import_file')) {
+//         $path = $request->file('import_file')->getRealPath();
 
-            $data = Excel::load($path, function ($reader) {})->get();
+//         $data = Excel::load($path, function ($reader) {})->get();
 
-            $messages = array();
+//         $messages = array();
 
-            if (!empty($data) && $data->count()) {
+//         if (!empty($data) && $data->count()) {
 
-                foreach ($data->toArray() as $key => $value) {
+//             foreach ($data->toArray() as $key => $value) {
 
-                    if(!empty($value)) {
+//                 if(!empty($value)) {
 
-                            $name = $value['name'];
-                            $gender = $value['gender'];
-                            $marital_status =$value['marital_status'];
-                            $mobile_number = $value['phone_number'];
-                            $email = $value['email_id'];
-                            $current_employer = $value['curr_company_name'];
-                            $experience = $value['total_experience'];
-                            $job_title = $value['curr_company_designation'];
-                            $skill = $value['key_skills'];
-                            $city = $value['home_towncity'];
-                            $zipcode = $value['pin_code'];
-                            $address = $value['permanent_address'];
-                            $current_salary = $value['annual_salary'];
+//                         $name = $value['name'];
+//                         $gender = $value['gender'];
+//                         $marital_status =$value['marital_status'];
+//                         $mobile_number = $value['phone_number'];
+//                         $email = $value['email_id'];
+//                         $current_employer = $value['curr_company_name'];
+//                         $experience = $value['total_experience'];
+//                         $job_title = $value['curr_company_designation'];
+//                         $skill = $value['key_skills'];
+//                         $city = $value['home_towncity'];
+//                         $zipcode = $value['pin_code'];
+//                         $address = $value['permanent_address'];
+//                         $current_salary = $value['annual_salary'];
 
-                            // first check email already exist or not , if exist doesnot update data
-                            $candidate_cnt = CandidateBasicInfo::checkCandidateByEmail($email);
+//                         // first check email already exist or not , if exist doesnot update data
+//                         $candidate_cnt = CandidateBasicInfo::checkCandidateByEmail($email);
 
-                            if($candidate_cnt>0) {
-                                $messages[] = "Record $name already present ";
-                            }
-                            else {
-                                    $mobilearray = explode(',', $mobile_number);
-                                    $addressarray = explode(',', $address);
+//                         if($candidate_cnt>0) {
+//                             $messages[] = "Record $name already present ";
+//                         }
+//                         else {
+//                                 $mobilearray = explode(',', $mobile_number);
+//                                 $addressarray = explode(',', $address);
 
-                                    // Insert new candidate
-                                    $candidate_basic_info = new CandidateBasicInfo();
-                                    $candidate_basic_info->full_name = $name;
-                                    $candidate_basic_info->email = $email;
-                                    $candidate_basic_info->mobile = $mobilearray[0];
+//                                 // Insert new candidate
+//                                 $candidate_basic_info = new CandidateBasicInfo();
+//                                 $candidate_basic_info->full_name = $name;
+//                                 $candidate_basic_info->email = $email;
+//                                 $candidate_basic_info->mobile = $mobilearray[0];
 
-                                    if(isset($mobilearray[1]) && sizeof($mobilearray[1])>0) {
-                                        $candidate_basic_info->phone = $mobilearray[1];
-                                    }
+//                                 if(isset($mobilearray[1]) && sizeof($mobilearray[1])>0) {
+//                                     $candidate_basic_info->phone = $mobilearray[1];
+//                                 }
 
-                                    if ($marital_status == 'Single/unmarried') {
-                                         $candidate_basic_info->marital_status = 'Single';     
-                                    }
-                                    else {
-                                        $candidate_basic_info->marital_status = $marital_status;
-                                    }
+//                                 if ($marital_status == 'Single/unmarried') {
+//                                      $candidate_basic_info->marital_status = 'Single';     
+//                                 }
+//                                 else {
+//                                     $candidate_basic_info->marital_status = $marital_status;
+//                                 }
 
-                                    $candidate_basic_info->type = $gender;
-                                    $candidate_basic_info->city = $city;
-                                    $candidate_basic_info->zipcode = $zipcode;
-                                    $candidate_basic_info->street1 = $addressarray[0];
+//                                 $candidate_basic_info->type = $gender;
+//                                 $candidate_basic_info->city = $city;
+//                                 $candidate_basic_info->zipcode = $zipcode;
+//                                 $candidate_basic_info->street1 = $addressarray[0];
 
-                                    if($candidate_basic_info->save()) {
+//                                 if($candidate_basic_info->save()) {
 
-                                        $candidate_id = $candidate_basic_info->id;
+//                                     $candidate_id = $candidate_basic_info->id;
 
-                                        $experiencearray = explode(' ', $experience);
-                                        $currentsalaryarray = explode(' ', $current_salary);
+//                                     $experiencearray = explode(' ', $experience);
+//                                     $currentsalaryarray = explode(' ', $current_salary);
 
-                                        $candidate_otherinfo = new CandidateOtherInfo();
-                                        $candidate_otherinfo->candidate_id = $candidate_id;
-                                        $candidate_otherinfo->current_job_title = $job_title;
-                                        $candidate_otherinfo->current_employer = $current_employer;
-                                        $candidate_otherinfo->experience_years = $experiencearray[0];
-                                        $candidate_otherinfo->experience_months = $experiencearray[2];
-                                        $candidate_otherinfo->skill = $skill;
+//                                     $candidate_otherinfo = new CandidateOtherInfo();
+//                                     $candidate_otherinfo->candidate_id = $candidate_id;
+//                                     $candidate_otherinfo->current_job_title = $job_title;
+//                                     $candidate_otherinfo->current_employer = $current_employer;
+//                                     $candidate_otherinfo->experience_years = $experiencearray[0];
+//                                     $candidate_otherinfo->experience_months = $experiencearray[2];
+//                                     $candidate_otherinfo->skill = $skill;
 
-                                        if (isset($currentsalaryarray[1]) && sizeof($currentsalaryarray)>0) {
-                                            $candidate_otherinfo->current_salary = $currentsalaryarray[1];
-                                        }
+//                                     if (isset($currentsalaryarray[1]) && sizeof($currentsalaryarray)>0) {
+//                                         $candidate_otherinfo->current_salary = $currentsalaryarray[1];
+//                                     }
 
-                                        $candidate_otherinfo->owner_id = $user_id;
-                                        $candidate_otherinfo->save();
+//                                     $candidate_otherinfo->owner_id = $user_id;
+//                                     $candidate_otherinfo->save();
 
-                                        if ($candidate_id > 0) {
-                                            $messages[] = "Record $name inserted successfully";
-                                        }
-                                    }
-                                    else {
-                                        $messages[] = "Error while inserting record $sr_no ";
-                                    }
-                                }
-                            }
-                    
-                    else {
-                        $messages[] = "No Data in file";
-                    }
-                }
-            }
-            return view('adminlte::candidate.import',compact('messages'));
-        }
-        return view('adminlte::candidate.import',compact('messages','candidateSource'));
-    }
+//                                     if ($candidate_id > 0) {
+//                                         $messages[] = "Record $name inserted successfully";
+//                                     }
+//                                 }
+//                                 else {
+//                                     $messages[] = "Error while inserting record $sr_no ";
+//                                 }
+//                             }
+//                         }
+                
+//                 else {
+//                     $messages[] = "No Data in file";
+//                 }
+//             }
+//         }
+//         return view('adminlte::candidate.import',compact('messages'));
+//     }
+//     return view('adminlte::candidate.import',compact('messages','candidateSource'));
+// }
 
     public function getCandidateOwner(Request $request) {
 
@@ -1796,6 +1940,8 @@ class CandidateController extends Controller
     }
 
     public function applicantCandidateShow($id) {
+
+        $id = \Crypt::decrypt($id);
 
         $candidateDetails = CandidateBasicInfo::getCandidateDetailsById($id);
 
@@ -1840,6 +1986,8 @@ class CandidateController extends Controller
     }
 
     public function applicantCandidateEdit($id) {
+
+        $id = \Crypt::decrypt($id);
 
         $candidateSex = CandidateBasicInfo::getTypeArray();
         $maritalStatus = CandidateBasicInfo::getMaritalStatusArray();
@@ -1950,7 +2098,7 @@ class CandidateController extends Controller
             $candidateFileUpload->uploaded_date = date('Y-m-d');
             $candidateFileUpload->save();
 
-            return redirect()->route('applicant-candidate.edit',[$id])->with('success','Attachment Uploaded Successfully.');
+            return redirect()->route('applicant-candidate.edit',[\Crypt::encrypt($id)])->with('success','Attachment Uploaded Successfully.');
         }
 
         $candiateFname = $request->input('fname');

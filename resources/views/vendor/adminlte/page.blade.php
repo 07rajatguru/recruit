@@ -36,6 +36,7 @@
                             </ul>
                         </div>
                         <!-- /.navbar-collapse -->
+
             @else
                 <!-- Logo -->
                 <a href="{{ url(config('adminlte.dashboard_url', 'home')) }}" class="logo">
@@ -134,7 +135,7 @@
                                 <li>
                                     <!-- inner menu: contains the actual data -->
                                     <div class="slimScrollDiv" style="position: relative; overflow: hidden; width: auto; height: 200px;">
-                                        <ul class="menu" style=" width: 100%; height;150px">
+                                        <ul class="menu" style=" width: 100%; height:150px">
                                             <li>
                                                 <a href="{{getenv('APP_URL').'/work-planning/add'}}">Add Work Planning</a>
                                             </li>
@@ -217,10 +218,10 @@
                                         <div class="slimScrollRail" style="width: 3px; height: 100%; position: absolute; top: 0px; display: none; border-top-left-radius: 7px; border-top-right-radius: 7px; border-bottom-right-radius: 7px; border-bottom-left-radius: 7px; background-color: rgb(51, 51, 51); opacity: 0.2; z-index: 90; right: 1px; background-position: initial initial; background-repeat: initial initial;">
                                         </div>
                                     </div>
-                                </li>
-                                <li class="footer"><a href="/todos">See All Todo's</a></li>
-                            </ul>
-                        </li>
+                                    </li>
+                                    <li class="footer"><a href="/todos">See All Todo's</a></li>
+                                </ul>
+                            </li>
                     @endif
                     
                     <li class="dropdown messages-menu">
@@ -237,7 +238,7 @@
                                     <ul class="menu" style="overflow: hidden; width: 100%;/* height: 200px;*/">
                                         @if(!$isClient)
                                             <li>
-                                                <a href="{{ route('users.myprofile',$user_id) }}"><i class="fa fa-user"></i>&nbsp;&nbsp;&nbsp;My Profile</a>
+                                                <a href="{{ route('users.myprofile',[\Crypt::encrypt($user_id)]) }}"><i class="fa fa-user"></i>&nbsp;&nbsp;&nbsp;My Profile</a>
                                             </li>
                                         @endif
 

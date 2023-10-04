@@ -11,7 +11,7 @@ class NotificationController extends Controller
 
         $user_id = \Auth::user()->id;
 
-        $notifications = Notifications::getAllNotificationsByUserId($user_id);
+        $notifications = Notifications::getAllNotificationsByUserId([\Crypt::encrypt($user_id)]);
 
         return json_encode($notifications);
     }

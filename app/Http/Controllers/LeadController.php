@@ -8,12 +8,18 @@ use App\Industry;
 use App\user;
 use App\ClientBasicinfo;
 use App\ClientAddress;
+use App\LeadRemarks;
+use App\LeadPost;
+use App\leadComments;
 use App\ClientDoc;
 use Illuminate\Support\Facades\Input;
 use Mockery\CountValidator\Exception;
 use App\Events\NotificationEvent;
 use App\Events\NotificationMail;
+use Excel;
 use App\ClientTimeline;
+use App\Department;
+use App\ClientVisibleUsers;
 
 class LeadController extends Controller
 {
@@ -134,10 +140,11 @@ class LeadController extends Controller
 
             $action = '';
 
-            $action .= '<a class="fa fa-circle" title="Show" href="'.route('lead.show',$value['id']).'" style="margin:2px;"></a>';
+            $action .= '<a class="fa fa-circle" title="Show" href="'.route('lead.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
+            
             if($all_perm || $value['access']) {
-                $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
             if ($delete_perm) {
                 $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'lead','display_name'=>'Lead','Lead_Type' => 'Index']);
@@ -152,8 +159,116 @@ class LeadController extends Controller
             if ($value['convert_client'] == 0) {
 
                 if($lead_to_client_perm) {
-                    $action .= '<a title="Convert lead to client"  class="fa fa-clone" href="'.route('lead.clone',$value['id']).'" style="margin:2px;"></a>';
+                    $action .= '<a title="Convert lead to client"  class="fa fa-clone" href="'.route('lead.clone',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
                 }
+            }
+            if($all_perm) {
+
+                $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('lead.remarks',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
+            }
+
+            $LeadData = Lead::find($value['id']);  
+            $data_source = $LeadData->data_source;
+
+            if ($data_source === "Import") {
+
+                $fontColor = 'grey';
+            } else {
+                $fontColor = 'black'; 
+            }
+
+            $checkbox = '<input type=checkbox name=lead value='.$value['id'].' class=other_leads id='.$value['id'].'/>';
+
+            $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
+
+            $coordinator_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:'.$fontColor.'; text-decoration:none;">'.$value['coordinator_name'].'</a>';
+
+            if($value['convert_client'] == '1') {
+
+                $checkbox = '';
+
+                $data = array(++$j,$checkbox,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['lead_status'],$value['convert_client']);
+            }
+            else {
+                $data = array(++$j,$checkbox,$action,$company_name,$coordinator_name,$value['mail'],$value['mobile'],$value['city'],$value['referredby'],$value['website'],$value['lead_status'],$value['convert_client']);
+            }
+            $lead[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $lead
+        );
+
+        echo json_encode($json_data);exit;
+    }
+
+    public function getAllLeads() {
+
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $order_column_name = self::getLeadOrderColumnName($order);
+        $user = \Auth::user();
+
+        $all_perm = $user->can('display-lead');
+        $userwise_perm = $user->can('display-user-wise-lead');
+        $cancel_perm = $user->can('cancel-lead');
+        $lead_to_client_perm = $user->can('lead-to-client');
+        $delete_perm = $user->can('lead-delete');
+
+        $data_source = 'Import';
+
+        if($all_perm) {
+
+            $count = Lead::getAllLeadsCount(1,$user->id,$search,'',$data_source);
+            $leads_res = Lead::getAllLeads(1,$user->id,$limit,$offset,$search,$order_column_name,$type,'',$data_source);
+        }
+        else if($userwise_perm) {
+
+            $count = Lead::getAllLeadsCount(0,$user->id,$search,'',$data_source);
+            $leads_res = Lead::getAllLeads(0,$user->id,$limit,$offset,$search,$order_column_name,$type,'',$data_source);
+        }
+
+        $lead = array();
+        $i = 0;$j = 0;
+
+        foreach ($leads_res as $key => $value) {
+
+            $action = '';
+
+            $action .= '<a class="fa fa-circle" title="Show" href="'.route('lead.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
+
+            
+            if($all_perm || $value['access']) {
+                $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
+            }
+            if ($delete_perm) {
+                $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'lead','display_name'=>'Lead','Lead_Type' => 'Index']);
+                $delete = $delete_view->render();
+                $action .= $delete;
+            }
+            if ($cancel_perm) {
+                $cancel_view = \View::make('adminlte::partials.cancelbill', ['data' => $value, 'name' => 'lead','display_name'=>'Lead']);
+                $cancel = $cancel_view->render();
+                $action .= $cancel;
+            }
+            if ($value['convert_client'] == 0) {
+
+                if($lead_to_client_perm) {
+                    $action .= '<a title="Convert lead to client"  class="fa fa-clone" href="'.route('lead.clone',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
+                }
+            }
+            if($all_perm) {
+
+                $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('lead.remarks',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
 
             $checkbox = '<input type=checkbox name=lead value='.$value['id'].' class=other_leads id='.$value['id'].'/>';
@@ -184,6 +299,7 @@ class LeadController extends Controller
 
         echo json_encode($json_data);exit;
     }
+   
 
     public function getAllLeadsByService($service) {
 
@@ -247,6 +363,135 @@ class LeadController extends Controller
         }
 
         return view('adminlte::lead.leadserviceindex',compact('service','count','recruitment','contract_staffing','payroll','hr_advisory','service_name','convert_client_count'));
+    }
+
+    
+    public function leadremarks($id) {
+
+        $id = \Crypt::decrypt($id);
+
+        $user_id = \Auth::user()->id;
+        $lead_id = $id;
+
+        $super_admin_userid = getenv('SUPERADMINUSERID');
+        $manager_user_id = env('MANAGERUSERID');
+
+        $lead = Lead::find($lead_id);
+        $leadpost = $lead->post()->orderBy('created_at', 'desc')->get();
+
+        $lead_remarks = array();
+        $lead_remarks_edit = array();
+
+        return view('adminlte::lead.remarks',compact('user_id','lead_id','lead','leadpost','super_admin_userid','manager_user_id','lead_remarks','lead_remarks_edit'));
+    }
+
+    public function leadwritePost(Request $request, $lead_id) {
+
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $lead_id = $input['lead_id'];
+        $content = $input['content'];
+        $super_admin_userid = $input['super_admin_userid'];
+        $manager_user_id = $input['manager_user_id'];
+
+        if(isset($user_id) && $user_id > 0) {
+
+            $post = new LeadPost();
+            $post->content = $content;
+            $post->user_id = $user_id;
+            $post->lead_id = $lead_id;
+            $post->approved = 0;
+            $post->approved_by = 0;
+            $post->created_at = time();
+            $post->updated_at = time();
+            $post->save();
+
+            // Update in Lead  Table
+            $get_latest_remarks = Lead::getLatestRemarks($lead_id);
+
+            $lead_info = Lead::find($lead_id);
+            $lead_name = $lead_info->name;
+            $account_manager_id = $lead_info->account_manager_id;
+            $lead_info->latest_remarks = $get_latest_remarks;
+            $lead_info->save();
+
+            $jenny_user_id = getenv('JENNYUSERID');
+            if ($jenny_user_id == $user_id) {
+                $to = User::getUserEmailById($account_manager_id);
+            } else {
+                $to = 'clients@adlertalent.com';
+            }
+            $module = "Lead Remarks";
+            $sender_name = $user_id;
+            $to = $to;
+            $cc = 'bhagyashree@adlertalent.com';
+    
+            $subject = $lead_name. " - Remark - " . date('d/m/Y');
+            $message = $lead_name. " - Remark - " . date('d/m/Y');
+            $module_id = $lead_id;
+    
+            event(new NotificationMail($module, $sender_name, $to, $subject, $message, $module_id, $cc));
+        }
+        return redirect()->route('lead.remarks',[\Crypt::encrypt($lead_id)]);
+    }
+
+    public function updateLeadRemarks(Request $request, $lead_id,$leadpost_id) {
+
+        $input = $request->all();
+        $user_id = $input['user_id'];
+        $lead_id = $input['lead_id'];
+        $super_admin_userid = $input['super_admin_userid'];
+
+        // If remarks not added then add that only by superadmin
+        if ($user_id == $super_admin_userid) {
+
+            // Check remark found or not
+            $lead_remark_check = LeadRemarks::checkLeadRemark($input["content"]);
+            if (isset($lead_remark_check) && $lead_remark_check != '') {
+
+            }
+            else {
+                $lead_remarks = new LeadRemarks();
+                $lead_remarks->remarks = $input["content"];
+                $lead_remarks->save();
+            }
+        }
+
+        $response = LeadPost::updatePost($leadpost_id,$input["content"]);
+        $returnValue["success"] = true;
+        $returnValue["message"] = "Remarks Updated";
+        $returnValue["id"] = $leadpost_id;
+
+        // Update in Lead Table
+        $get_latest_remarks = Lead::getLatestRemarks($lead_id);
+
+        $lead_info = Lead::find($lead_id);
+        $lead_info->latest_remarks = $get_latest_remarks;
+        $lead_info->save();
+
+       return redirect()->route('lead.remarks',[\Crypt::encrypt($lead_id)]);
+    }
+
+    public function leadpostDestroy($id) {
+
+        $response['returnvalue'] = 'invalid';
+        $res = LeadPost::deletePost($id);
+
+        if($res) {
+            \DB::table('lead_comments')->where('commentable_id', '=', $id)->delete();
+            $response['returnvalue'] = 'valid';
+        }
+
+        $lead_id = $_POST['lead_id'];
+
+        // Update in Lead Table
+        $get_latest_remarks = Lead::getLatestRemarks($lead_id);
+
+        $lead_info = Lead::find($lead_id);
+        $lead_info->latest_remarks = $get_latest_remarks;
+        $lead_info->save();
+
+        return json_encode($response);exit;
     }
 
     public function getAllLeadsDetailsByService() {
@@ -335,11 +580,11 @@ class LeadController extends Controller
         foreach ($leads_res as $key => $value) {
 
             $action = '';
-            $action .= '<a class="fa fa-circle" title="Show" href="'.route('lead.show',$value['id']).'" style="margin:2px;"></a>';
+            $action .= '<a class="fa fa-circle" title="Show" href="'.route('lead.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
             if($all_perm || $value['access']) {
 
-                $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
 
             if($delete_perm) {
@@ -359,9 +604,13 @@ class LeadController extends Controller
             if ($value['convert_client'] == 0) {
 
                 if($lead_to_client_perm) {
-                    $action .= '<a title="Convert lead to client"  class="fa fa-clone" href="'.route('lead.clone',$value['id']).'" style="margin:2px;"></a>';
+                    $action .= '<a title="Convert lead to client"  class="fa fa-clone" href="'.route('lead.clone',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
                 }
 
+            }
+            if($all_perm) {
+
+                $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('lead.remarks',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
 
             $checkbox = '<input type=checkbox name=lead value='.$value['id'].' class=other_leads id='.$value['id'].'/>';
@@ -448,15 +697,19 @@ class LeadController extends Controller
 
             $action = '';
 
-            $action .= '<a class="fa fa-circle" title="Show" href="'.route('lead.show',$value['id']).'" style="margin:2px;"></a>';
+            $action .= '<a class="fa fa-circle" title="Show" href="'.route('lead.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
             if($all_perm || $value['access']) {
-                $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a class="fa fa-edit" title="Edit" href="'.route('lead.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
             if ($delete_perm) {
                 $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'lead','display_name'=>'Lead','Lead_Type' => 'Cancel']);
                 $delete = $delete_view->render();
                 $action .= $delete;
+            }
+            if($all_perm) {
+
+                $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('lead.remarks',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
 
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
@@ -478,8 +731,10 @@ class LeadController extends Controller
     }
 
     public function cancel($id) {
-
+        
+        try {
         $lead = Lead::find($id);
+        // dd($lead);
         $lead->cancel_lead = '1';
         $lead_cancel = $lead->save();
 
@@ -517,6 +772,9 @@ class LeadController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         return redirect()->route('lead.index')->with('success','Lead Canceled Successfully.');
+    } catch (\Exception $e) {
+        return redirect()->route('lead.index')->with('error', 'Error: ' . $e->getMessage());
+    }
     }
 
     public function create() {
@@ -544,7 +802,7 @@ class LeadController extends Controller
     public function store(Request $request) {
 
         $user = \Auth::user();
- 	    $input = $request->all();
+        $input = $request->all();
 
         $company_name = trim($input['name']);
         $co_category = $input['co_category'];
@@ -564,6 +822,7 @@ class LeadController extends Controller
         $designation=$input['designation'];
         $referredby_id=$input['referredby_id'];
         $lead_status = $input['status'];
+        $data_source = isset($input['data_source']) ? $input['data_source'] : null;
 
         $lead=new Lead();
         $lead->name=$company_name;
@@ -586,6 +845,7 @@ class LeadController extends Controller
         $lead->designation=$designation;
         $lead->referredby=$referredby_id;
         $lead->lead_status=$lead_status;
+        $lead->data_source = empty($data_source) ? null : $data_source;
         
         $validator = \Validator::make(Input::all(),$lead::$rules);
 
@@ -624,16 +884,20 @@ class LeadController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
         return redirect()->route('lead.index')->with('success','Leads Created Successfully.');
-	}
+    }
 
     public function show($id) {
+
+        $id = \Crypt::decrypt($id);
 
         $lead_details = Lead::getLeadDetailsById($id);
 
         return view('adminlte::lead.show',compact('lead_details'));
     }
 
-	public function edit($id) {
+    public function edit($id) {
+
+        $id = \Crypt::decrypt($id);
 
         $action = 'edit';
         $generate_lead = '0';
@@ -666,16 +930,16 @@ class LeadController extends Controller
         $co_prefix = ClientBasicinfo::getcoprefix();
         $co_category = $lead->coordinator_prefix;
         $lead['contact_point'] = $lead->coordinator_name;
-        	        
-	   return view('adminlte::lead.edit',compact('lead','action','users','generate_lead','leadservices_status','service','convert_client', 'referredby','status','cancel_lead','lead_status','co_prefix','co_category'));
-	}
+                    
+       return view('adminlte::lead.edit',compact('lead','action','users','generate_lead','leadservices_status','service','convert_client', 'referredby','status','cancel_lead','lead_status','co_prefix','co_category'));
+    }
 
-	public function update(Request $request, $id) {
+    public function update(Request $request, $id) {
 
-	    $user  = \Auth::user()->id;
+        $user  = \Auth::user()->id;
         $input = $request->all();
 
-	 	$name = trim($request->get('name'));
+        $name = trim($request->get('name'));
         $co_category = $request->get('co_category');
         $coordinator_name = trim($request->get('contact_point'));
         $email = $request->get('mail');
@@ -751,10 +1015,12 @@ class LeadController extends Controller
 
         $lead_basic->save();
         return redirect()->route('lead.index')->with('success','Lead Updated Successfully.');
-	 }
+     }
 
     public function leadClone($id) {
 
+        $id = \Crypt::decrypt($id);
+        
         $client_cat = ClientBasicinfo::getCategory();
         $client_category = ' ';
 
@@ -830,8 +1096,26 @@ class LeadController extends Controller
         $referredby = $lead->referredby;
 
         $lead['contact_point'] = $lead->coordinator_name;
+        
+        // Set Department
+       $departments = array();
+       $department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
+       if(sizeof($department_res) > 0) {
+           foreach($department_res as $r) {
+               $departments[$r->id] = $r->name;
+           }
+       }
 
-        return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','user_id','industry_id','client_cat','client_category','client_status_key','client_status','percentage_charged_below','percentage_charged_above','referredby','client_all_status_key','client_all_status'));
+       $all_departments = array();
+       $all_department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
+       if(sizeof($all_department_res) > 0) {
+           foreach($all_department_res as $a_r) {
+               $all_departments[$a_r->id] = $a_r->name;
+           }
+       }
+       $selected_departments = array();
+
+        return view('adminlte::client.create',compact('co_prefix','co_category','name', 'website', 'billing_city','billing_state','billing_country','lead','action','generate_lead','industry','users','user_id','industry_id','client_cat','client_category','client_status_key','client_status','percentage_charged_below','percentage_charged_above','referredby','client_all_status_key','client_all_status','departments','selected_departments'));
     }
 
     public function clonestore(Request $request,$id) {
@@ -1093,6 +1377,24 @@ class LeadController extends Controller
                     }   
                 } 
             }
+            
+            $users = $request->input('user_ids');
+            if (isset($users) && sizeof($users)>0) {
+                foreach ($users as $key => $value) {
+                    $client_visible_users = new ClientVisibleUsers();
+                    $client_visible_users->client_id = $client_id;
+                    $client_visible_users->user_id = $value;
+                    $client_visible_users->save();
+                }
+    
+                // Add superadmin user id of management department
+                $superadminuserid = getenv('SUPERADMINUSERID');
+    
+                $client_visible_users = new ClientVisibleUsers();
+                $client_visible_users->client_id = $client_id;
+                $client_visible_users->user_id = $superadminuserid;
+                $client_visible_users->save();
+            }
 
             // Notifications : On adding new client notify Super Admin via notification
             $module_id = $client_id;
@@ -1139,9 +1441,9 @@ class LeadController extends Controller
         else {
             return redirect('client/create')->withInput(Input::all())->withErrors($client_basic_info->errors());
         }
-     }
+    }
 
-	public function destroy(Request $request,$id) {
+    public function destroy(Request $request,$id) {
 
         Lead::where('id',$id)->delete();
 
@@ -1153,6 +1455,105 @@ class LeadController extends Controller
         else {
             return redirect()->route('lead.leadcancel')->with('success','Lead Deleted Successfully.');
         }
+    }
+
+    public function import() {
+        // dd('importExport'); 
+        return view('adminlte::lead.import');
+    }
+
+    public function importExcel(Request $request) {
+
+        if($request->hasFile('import_file')) {
+
+            $path = $request->file('import_file')->getRealPath();
+            $data = Excel::selectSheets('Sheet1')->load($path, function ($reader) {})->get();
+            $messages = array();
+
+            if (!empty($data) && $data->count()) {
+                $validator = Validator::make([], []);
+
+                foreach ($data->toArray() as $key => $value) {
+
+                    if(!empty($value)) {
+                        foreach ($value as $v) {
+
+                            $user = \Auth::user();
+                            $user_id = $user->id;
+
+                            $id = $v['id'];
+                            $coordinator_prefix = $v['coordinator_prefix'];
+                            $name = $v['name'];
+                            $mail = $v['mail'];
+                            $mobile = $v['mobile'];
+                            $display_name = $v['display_name'];
+                            $service = $v['service'];
+                            $remarks = $v['remarks'];
+                            $city = $v['city'];
+                            $coordinator_name = $v['coordinator_name'];
+                            $designation = $v['designation'];
+                            $website = $v['website'];
+                            $lead_status = $v['lead_status'];
+
+                            $validationData = $value;
+                            $rules = [
+                                'name' => 'required|string|max:255',
+                                'mobile' => 'required|numeric|digits_between:10,15',
+                                'display_name' => 'required|string|max:255',
+                                'mail' => 'required|email|max:255',
+                                'city' => 'required|string|max:255',
+                                'coordinator_name' => 'required|string|max:255',
+                                'coordinator_prefix' => 'required|string|max:255',
+                            ];
+                            $validator = Validator::make($validationData, $rules);
+       
+                            if ($validator->fails()) {
+                                $messages[] = "Error in row {$key}: " . implode(', ', $validator->errors()->all());
+                                continue;
+                            }
+                            // Insert new client
+                            $lead_basic_info = new Lead();
+                            $lead_basic_info->account_manager_id = $user_id;
+                            $lead_basic_info->referredby = $user_id;
+
+                            $lead_basic_info->convert_client = 0;
+                            $lead_basic_info->cancel_lead = 0;
+                            $lead_basic_info->convert_lead = 0;
+                            $lead_basic_info->contact_id = null;
+                            $lead_basic_info->data_source = "Import";
+
+                            $lead_basic_info->coordinator_prefix = $coordinator_prefix;
+                            $lead_basic_info->name = $name;
+                            $lead_basic_info->mail = $mail;
+                            $lead_basic_info->mobile = $mobile;
+                            $lead_basic_info->display_name = $display_name;
+                            $lead_basic_info->service = $service;
+                            $lead_basic_info->remarks = $remarks;
+                            $lead_basic_info->city = $city;
+                            $lead_basic_info->coordinator_name = $coordinator_name;
+                            $lead_basic_info->designation = $designation;
+                            $lead_basic_info->website = $website;
+                            $lead_basic_info->lead_status = $lead_status;
+
+                              if($lead_basic_info->save()) {
+                                
+                                 $messages[] = "Record  inserted successfully.";
+                            } else {
+                                 $messages[] = "Error while inserting record $id";  
+                            }
+                          }
+                        }
+                            else {
+                                $messages[] = "No Data in file.";
+                            }
+                            
+                        }
+                        return view('adminlte::lead.import',compact('messages'));
+                    }
+                    else {
+                        return redirect()->route('lead.import')->with('error','Please Select Excel file.');
+                    }
+                }
     }
 
     public function checkLeadId() {

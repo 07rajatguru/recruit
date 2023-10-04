@@ -16,15 +16,23 @@ use Carbon\Carbon;
 use Carbon\CarbonInterval;
 use App\Date;
 use App\Events\NotificationMail;
+use App\RolewiseUserBenchmark;
 
 class ReportController extends Controller
 {  
-    public function dailyreportIndex() {
+    public function dailyreportIndex($selected_user_id=NULL) {
 
         // get logged in user
-        $user =  \Auth::user();
+        $user = \Auth::user();
         $loggedin_userid = \Auth::user()->id;
-        $user_id = \Auth::user()->id;
+        if (isset($selected_user_id) && ($selected_user_id != NULL || $selected_user_id != '')) {
+
+            $selected_user_id = substr($selected_user_id, 74, -74);
+            $selected_user_id = $selected_user_id;
+        } else {
+            $selected_user_id = $loggedin_userid;
+        }
+
         $all_perm = $user->can('display-daily-report-of-all-users');
         $userwise_perm = $user->can('display-daily-report-of-loggedin-user');
         $teamwise_perm = $user->can('display-daily-report-of-loggedin-user-team');
@@ -34,32 +42,24 @@ class ReportController extends Controller
         $hr_user_id = getenv('HRUSERID');
 
         if($all_perm) {
-
             $manager_user_id = getenv('MANAGERUSERID');
-
-            if($user_id == $manager_user_id) {
-                $type_array = array($recruitment);
-            }
-            else {
+            // if($user_id == $manager_user_id) {
+            //     $type_array = array($recruitment);
+            // }
+            // else {
                 $type_array = array($recruitment,$hr_advisory);
-            }
-
-            $users_array = User::getAllUsersExpectSuperAdmin($type_array);
+            // }
 
             $users = array();
-
+            $users_array = User::getAllUsersExpectSuperAdmin($type_array);
             if(isset($users_array) && sizeof($users_array) > 0) {
-
                 foreach ($users_array as $k1 => $v1) {
-                               
                     $user_details = User::getAllDetailsByUserID($k1);
-
                     if($user_details->type == '2') {
                         if($user_details->hr_adv_recruitemnt == 'Yes') {
                             $users[$k1] = $v1;
                         }
-                    }
-                    else {
+                    } else {
                         $users[$k1] = $v1;
                     }    
                 }
@@ -67,41 +67,31 @@ class ReportController extends Controller
 
             $get_hr_user_name = User::getUserNameById($hr_user_id);
             $users[$hr_user_id] = $get_hr_user_name;
-        }
-        else if($userwise_perm || $teamwise_perm) {
-            $users = User::getAssignedUsers($user_id);
-        }
-
-        if (isset($_POST['users_id']) && $_POST['users_id']!=0) {
-            $user_id = $_POST['users_id'];
-        }
-        else {
-            $user_id = $user_id;
+        } else if($userwise_perm || $teamwise_perm) {
+            $users = User::getAssignedUsers($loggedin_userid);
         }
 
         if (isset($_POST['date']) && $_POST['date']!=0) {
             $date = $_POST['date'];
-        }
-        else {
+        } else {
             $date = date('Y-m-d');
         }
 
-        $associate_res = JobAssociateCandidates::getDailyReportAssociate($user_id,$date);
+        $associate_res = JobAssociateCandidates::getDailyReportAssociate($selected_user_id,$date);
         $associate_daily = $associate_res['associate_data'];
         $associate_count = $associate_res['cvs_cnt'];
 
         // Get Leads with count
-
-        $leads = Lead::getDailyReportLeads($user_id,$date);
+        $leads = Lead::getDailyReportLeads($selected_user_id,$date);
         $leads_daily = $leads['leads_data'];
 
-        $lead_count = Lead::getDailyReportLeadCount($user_id,$date);
+        $lead_count = Lead::getDailyReportLeadCount($selected_user_id,$date);
 
-        $interview_daily = Interview::getDailyReportInterview($user_id,$date);
+        $interview_daily = Interview::getDailyReportInterview($selected_user_id,$date);
         $interview_count = sizeof($interview_daily);
 
         // Get users reports
-        $user_details = User::getAllDetailsByUserID($user_id);
+        $user_details = User::getAllDetailsByUserID($selected_user_id);
 
         // For add select Team
         $superadmin = getenv('SUPERADMINUSERID');
@@ -110,12 +100,11 @@ class ReportController extends Controller
         $team_type = User::getTeamType();
         if (isset($_POST['team_type']) && $_POST['team_type']!= '') {
             $selected_team_type = $_POST['team_type'];
-        }
-        else {
+        } else {
             $selected_team_type = 'adler';
         }
 
-        return view('adminlte::reports.dailyreport',compact('date','users','user_id','associate_daily','associate_count','leads_daily','lead_count','interview_daily','interview_count','user_details','superadmin','saloni_user_id','team_type','selected_team_type','loggedin_userid'));
+        return view('adminlte::reports.dailyreport',compact('date','users','selected_user_id','associate_daily','associate_count','leads_daily','lead_count','interview_daily','interview_count','user_details','superadmin','saloni_user_id','team_type','selected_team_type','loggedin_userid'));
     }
 
     public function weeklyreportIndex() {
@@ -1306,12 +1295,12 @@ class ReportController extends Controller
             // Set all recruitment reports for Manager Role
             $manager_user_id = getenv('MANAGERUSERID');
 
-            if($user_id == $manager_user_id) {
-                $type_array = array($recruitment);
-            }
-            else {
+            // if($user_id == $manager_user_id) {
+            //     $type_array = array($recruitment);
+            // }
+            // else {
                 $type_array = array($recruitment,$hr_advisory);
-            }
+            // }
 
             $users_array = User::getAllUsersExpectSuperAdmin($type_array);
 
@@ -1597,12 +1586,12 @@ class ReportController extends Controller
             // Set all recruitment reports for Manager Role
             $manager_user_id = getenv('MANAGERUSERID');
 
-            if($user_id == $manager_user_id) {
-                $type_array = array($recruitment);
-            }
-            else {
+            // if($user_id == $manager_user_id) {
+            //     $type_array = array($recruitment);
+            // }
+            // else {
                 $type_array = array($recruitment,$hr_advisory);
-            }
+            // }
 
             $users_array = User::getAllUsersExpectSuperAdmin($type_array);
 
@@ -1840,40 +1829,42 @@ class ReportController extends Controller
                     $user_bench_mark[$i]['no_of_resumes_monthly'] = $value['no_of_resumes'];
                     $user_bench_mark[$i]['no_of_resumes_weekly'] = number_format($value['no_of_resumes'] / $no_of_weeks);
 
-                    /*$user_bench_mark[$i]['shortlist_ratio_monthly'] = number_format($value['no_of_resumes'] * $value['shortlist_ratio']/100);
+                    // Get Benchmark from rolewise table
+                    $role = getenv('SUPERADMIN');
+                    $date = date('Y-m-d',mktime(0,0,0,$month,1,$year));
+                    $role_bench_mark = RolewiseUserBenchmark::getBenchMarkByRoleID($role,$date);
+                    if (isset($role_bench_mark) && sizeof($role_bench_mark) > 0) {
+                        $role_shortlist_ratio = $role_bench_mark['shortlist_ratio'];
+                        $role_interview_ratio = $role_bench_mark['interview_ratio'];
+                        $role_selection_ratio = $role_bench_mark['selection_ratio'];
+                        $role_offer_acceptance_ratio = $role_bench_mark['offer_acceptance_ratio'];
+                        $role_joining_ratio = $role_bench_mark['joining_ratio'];
+                        $role_after_joining_success_ratio = $role_bench_mark['after_joining_success_ratio'];
+                    } else {
+                        $role_shortlist_ratio = 40;
+                        $role_interview_ratio = 50;
+                        $role_selection_ratio = 15;
+                        $role_offer_acceptance_ratio = 80;
+                        $role_joining_ratio = 80;
+                        $role_after_joining_success_ratio = 80;
+                    }
+
+                    $user_bench_mark[$i]['shortlist_ratio_monthly'] = number_format($value['no_of_resumes'] * $role_shortlist_ratio/100);
                     $user_bench_mark[$i]['shortlist_ratio_weekly'] = number_format($user_bench_mark[$i]['shortlist_ratio_monthly'] / $no_of_weeks);
 
-                    $user_bench_mark[$i]['interview_ratio_monthly'] = number_format($user_bench_mark[$i]['shortlist_ratio_monthly'] * $value['interview_ratio'] / 100);
+                    $user_bench_mark[$i]['interview_ratio_monthly'] = number_format($user_bench_mark[$i]['shortlist_ratio_monthly'] * $role_interview_ratio / 100);
                     $user_bench_mark[$i]['interview_ratio_weekly'] = number_format($user_bench_mark[$i]['interview_ratio_monthly'] / $no_of_weeks);
 
-                    $user_bench_mark[$i]['selection_ratio_monthly'] = number_format($user_bench_mark[$i]['interview_ratio_monthly'] * $value['selection_ratio'] / 100);
+                    $user_bench_mark[$i]['selection_ratio_monthly'] = number_format($user_bench_mark[$i]['interview_ratio_monthly'] * $role_selection_ratio / 100);
                     $user_bench_mark[$i]['selection_ratio_weekly'] = number_format($user_bench_mark[$i]['selection_ratio_monthly'] / $no_of_weeks);
 
-                    $user_bench_mark[$i]['offer_acceptance_ratio_monthly'] = number_format($user_bench_mark[$i]['selection_ratio_monthly'] * $value['offer_acceptance_ratio'] / 100);
+                    $user_bench_mark[$i]['offer_acceptance_ratio_monthly'] = number_format($user_bench_mark[$i]['selection_ratio_monthly'] * $role_offer_acceptance_ratio / 100);
                     $user_bench_mark[$i]['offer_acceptance_ratio_weekly'] = number_format($user_bench_mark[$i]['offer_acceptance_ratio_monthly'] / $no_of_weeks);
 
-                    $user_bench_mark[$i]['joining_ratio_monthly'] = number_format($user_bench_mark[$i]['offer_acceptance_ratio_monthly'] * $value['joining_ratio'] / 100);
+                    $user_bench_mark[$i]['joining_ratio_monthly'] = number_format($user_bench_mark[$i]['offer_acceptance_ratio_monthly'] * $role_joining_ratio / 100);
                     $user_bench_mark[$i]['joining_ratio_weekly'] = number_format($user_bench_mark[$i]['joining_ratio_monthly'] / $no_of_weeks);
 
-                    $user_bench_mark[$i]['after_joining_success_ratio_monthly'] = number_format($user_bench_mark[$i]['joining_ratio_monthly'] * $value['after_joining_success_ratio'] / 100);
-                    $user_bench_mark[$i]['after_joining_success_ratio_weekly'] = number_format($user_bench_mark[$i]['after_joining_success_ratio_monthly'] / $no_of_weeks);*/
-
-                    $user_bench_mark[$i]['shortlist_ratio_monthly'] = number_format($value['no_of_resumes'] * 50/100);
-                    $user_bench_mark[$i]['shortlist_ratio_weekly'] = number_format($user_bench_mark[$i]['shortlist_ratio_monthly'] / $no_of_weeks);
-
-                    $user_bench_mark[$i]['interview_ratio_monthly'] = number_format($user_bench_mark[$i]['shortlist_ratio_monthly'] * 50 / 100);
-                    $user_bench_mark[$i]['interview_ratio_weekly'] = number_format($user_bench_mark[$i]['interview_ratio_monthly'] / $no_of_weeks);
-
-                    $user_bench_mark[$i]['selection_ratio_monthly'] = number_format($user_bench_mark[$i]['interview_ratio_monthly'] * 20 / 100);
-                    $user_bench_mark[$i]['selection_ratio_weekly'] = number_format($user_bench_mark[$i]['selection_ratio_monthly'] / $no_of_weeks);
-
-                    $user_bench_mark[$i]['offer_acceptance_ratio_monthly'] = number_format($user_bench_mark[$i]['selection_ratio_monthly'] * 70 / 100);
-                    $user_bench_mark[$i]['offer_acceptance_ratio_weekly'] = number_format($user_bench_mark[$i]['offer_acceptance_ratio_monthly'] / $no_of_weeks);
-
-                    $user_bench_mark[$i]['joining_ratio_monthly'] = number_format($user_bench_mark[$i]['offer_acceptance_ratio_monthly'] * 80 / 100);
-                    $user_bench_mark[$i]['joining_ratio_weekly'] = number_format($user_bench_mark[$i]['joining_ratio_monthly'] / $no_of_weeks);
-
-                    $user_bench_mark[$i]['after_joining_success_ratio_monthly'] = number_format($user_bench_mark[$i]['joining_ratio_monthly'] * 80 / 100);
+                    $user_bench_mark[$i]['after_joining_success_ratio_monthly'] = number_format($user_bench_mark[$i]['joining_ratio_monthly'] * $role_after_joining_success_ratio / 100);
                     $user_bench_mark[$i]['after_joining_success_ratio_weekly'] = number_format($user_bench_mark[$i]['after_joining_success_ratio_monthly'] / $no_of_weeks);
 
                     $i++;
@@ -2263,7 +2254,7 @@ class ReportController extends Controller
         }
         else {
 
-            return view('adminlte::reports.master-productivity-report',compact('bench_mark','month_array','year_array','month','year','no_of_weeks','frm_to_date_array'));
+            return view('adminlte::reports.master-productivity-report',compact('bench_mark','month_array','year_array','month','year','no_of_weeks','frm_to_date_array', 'role_shortlist_ratio', 'role_interview_ratio', 'role_selection_ratio', 'role_offer_acceptance_ratio', 'role_joining_ratio', 'role_after_joining_success_ratio'));
         }
     }
 

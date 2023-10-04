@@ -90,10 +90,10 @@ class ProcessController extends Controller
 
             $action = '';
 
-            $action .= '<a title="Show" class="fa fa-circle" href="'.route('process.show',$value['id']).'" style="margin:2px;"></a>';
+            $action .= '<a title="Show" class="fa fa-circle" href="'.route('process.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
             if(isset($value['access']) && $value['access']==1){
-                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('process.edit',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('process.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
             if ($delete_perm) {
 
@@ -283,6 +283,8 @@ class ProcessController extends Controller
 
     public function edit($id) {
 
+        $id = \Crypt::decrypt($id);
+
      	$process = ProcessManual::find($id);
        
         $action = "edit";
@@ -393,7 +395,7 @@ class ProcessController extends Controller
                 $process_doc->updated_at = date('Y-m-d');
 			    $process_doc->save();
             }
-            return redirect()->route('process.edit',[$process_id])->with('success','Attachment Uploaded Successfully.'); 
+            return redirect()->route('process.edit',[\Crypt::encrypt($process_id)])->with('success','Attachment Uploaded Successfully.'); 
         }
 
         // Update in process visible table
@@ -437,40 +439,52 @@ class ProcessController extends Controller
 
 	public function upload(Request $request) {
 
-        $file = $request->file('file');
+        $files = $request->file('file');
         $process_id = $request->id;
-
+    
         $user_id = \Auth::user()->id;
-
-        if(isset($file) && $file->isValid()) {
-
-            $fileName = $file->getClientOriginalName();
-            $fileSize = $file->getSize();
-
-            $dir = 'uploads/process/'.$process_id.'/';
-
-            if (!file_exists($dir) && !is_dir($dir)) {
-
-                mkdir($dir, 0777, true);
-                chmod($dir, 0777);
+    
+        foreach ($files as $file) {
+            if(isset($file) && $file->isValid()) {
+    
+                $allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png', 'gif', 'xls', 'xlsx', 'doc', 'docx', 'ppt', 'pptx', 'txt'];
+                $extension = strtolower($file->getClientOriginalExtension());
+    
+                if (in_array($extension, $allowedExtensions)) { 
+                    $fileName = $file->getClientOriginalName();
+                    $fileSize = $file->getSize();
+    
+                    $dir = 'uploads/process/'.$process_id.'/';
+    
+                    if (!file_exists($dir) && !is_dir($dir)) {
+                        mkdir($dir, 0777, true);
+                        chmod($dir, 0777);
+                    }
+    
+                    $file->move($dir,$fileName);
+                    $filePath = $dir . $fileName;
+    
+                    $processFileUpload = new ProcessDoc();
+                    $processFileUpload->process_id = $process_id;
+                    $processFileUpload->file = $filePath;
+                    $processFileUpload->name = $fileName;
+                    $processFileUpload->size = $fileSize;
+                    $processFileUpload->save();
+                } else {
+                    return redirect()->route('process.show', [Crypt::encrypt($process_id)])->with('error', 'Invalid file type. Allowed file types: PDF, JPG, JPEG, PNG, GIF, XLS, XLSX, DOC, DOCX, PPT, PPTX, TXT.');
+                }
             }
-
-            $file->move($dir,$fileName);
-            $filePath = $dir . $fileName;
-
-            $processFileUpload = new ProcessDoc();
-            $processFileUpload->process_id = $process_id;
-            $processFileUpload->file = $filePath;
-            $processFileUpload->name = $fileName;
-            $processFileUpload->size = $fileSize;
-            $processFileUpload->save();
         }
-
-        return redirect()->route('process.show',[$process_id])->with('success','Attachment Uploaded Successfully.');
+    
+        return redirect()->route('process.show', [Crypt::encrypt($process_id)])->with('success', 'Attachments Uploaded Successfully.');
     }
+    
+
 
     public function show($id) {
-		
+	
+        $id = \Crypt::decrypt($id);
+
         $process_res = \DB::table('process_manual')
         ->select('process_manual.*')->where('process_manual.id','=',$id)->first();
 
@@ -567,10 +581,10 @@ class ProcessController extends Controller
         ProcessDoc::where('id',$docid)->delete();
 
         if($type == 'Edit') {
-            return redirect()->route('process.edit',[$id])->with('success','Attachment Deleted Successfully.');
+            return redirect()->route('process.edit',[\Crypt::encrypt($id)])->with('success','Attachment Deleted Successfully.');
         }
         else {
-            return redirect()->route('process.show',[$id])->with('success','Attachment Deleted Successfully.');
+            return redirect()->route('process.show',[\Crypt::encrypt($id)])->with('success','Attachment Deleted Successfully.');
         }
     }
 

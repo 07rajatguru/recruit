@@ -64,13 +64,13 @@
                     <tr>
                         <td>{{ ++$i }}</td>
                         <td>
-                            <a title="Show" class="fa fa-circle" href="{{ route('jobopen.show',$value['id']) }}"></a>
+                            <a title="Show" class="fa fa-circle" href="{{ route('jobopen.show',\Crypt::encrypt($value['id'])) }}"></a>
 
                             @if(isset($value['access']) && $value['access'] == 1)
-                                <a title="Edit" class="fa fa-edit" href="{{ route('jobopen.edit',$value['id']) }}"></a>
+                                <a title="Edit" class="fa fa-edit" href="{{ route('jobopen.edit',\Crypt::encrypt($value['id'])) }}"></a>
                             @else
                                 @permission(('display-jobs'))
-                                    <a title="Edit" class="fa fa-edit" href="{{ route('jobopen.edit',$value['id']) }}"></a>
+                                    <a title="Edit" class="fa fa-edit" href="{{ route('jobopen.edit',\Crypt::encrypt($value['id'])) }}"></a>
                                 @endpermission
                             @endif
 
@@ -83,7 +83,7 @@
                             @endpermission
 
                             @permission(('clone-job'))
-                                <a title="Clone Job" class="fa fa-clone" href="{{ route('jobopen.clone', $value['id']) }}"></a>
+                                <a title="Clone Job" class="fa fa-clone" href="{{ route('jobopen.clone', \Crypt::encrypt($value['id'])) }}"></a>
                             @endpermission
                         </td>
 
@@ -92,7 +92,7 @@
                         </td>
                         <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['posting_title'] or ''}}</td>
                         <td>
-                            <a title="Show Associated Candidates" href="{{ route('jobopen.associated_candidates_get',$value['id']) }}">{{ $value['associate_candidate_cnt'] or ''}}</a>
+                            <a title="Show Associated Candidates" href="{{ route('jobopen.associated_candidates_get',\Crypt::encrypt($value['id'])) }}">{{ $value['associate_candidate_cnt'] or ''}}</a>
                         </td>
 
                         <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $value['city'] or ''}}</td>

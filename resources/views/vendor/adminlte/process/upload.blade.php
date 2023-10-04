@@ -16,10 +16,11 @@
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
-                    <div class="form-group">
-                        {!! Form::file('file', null, array('id'=>'file','class' => 'form-control')) !!}
+                   <div class="form-group">
+                    <label for="file">Choose File:</label>
+                    <input type="file" name="file" id="file" class="form-control" accept=".pdf, .jpg, .jpeg, .png, .gif, .xls, .xlsx, .doc, .docx, .ppt, .pptx, .txt"  multiple class="form-control" onchange="FormValidation.validateFile(this)" />
                     </div>
-                </div>
+                   </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12 text-center">
                     <button type="submit" class="btn btn-primary">Submit</button>
@@ -29,3 +30,4 @@
         </div><!-- /.modal-content -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
+<script src="{{ asset('js/validation_file.js') }}"></script>

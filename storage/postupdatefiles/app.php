@@ -180,16 +180,6 @@ return [
 
         JeroenNoten\LaravelAdminLte\ServiceProvider::class,
 
-        Zizaco\Entrust\EntrustServiceProvider::class,
-
-        Collective\Html\HtmlServiceProvider::class,
-
-        Maatwebsite\Excel\ExcelServiceProvider::class,
-        Barryvdh\Debugbar\ServiceProvider::class,
-
-        MaddHatter\LaravelFullcalendar\ServiceProvider::class,
-
-        BrianFaust\Commentable\CommentableServiceProvider::class,
     ],
 
     /*
@@ -238,12 +228,8 @@ return [
         'Validator' => Illuminate\Support\Facades\Validator::class,
         'View' => Illuminate\Support\Facades\View::class,
         'AdminLTE' => Acacha\AdminLTETemplateLaravel\Facades\AdminLTE::class,
-        'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
         'Form'=> Collective\Html\FormFacade::class,
         'HTML'=> Collective\Html\FormFacade::class,
-        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
-        'Debugbar' => 'Barryvdh\Debugbar\Facade',
-        'Calendar' => MaddHatter\LaravelFullcalendar\Facades\Calendar::class,
     ],
 
 ];

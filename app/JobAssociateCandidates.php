@@ -29,7 +29,7 @@ class JobAssociateCandidates extends Model
         $query = $query->leftjoin('candidate_otherinfo', 'candidate_otherinfo.candidate_id', '=', 'candidate_basicinfo.id');
         $query = $query->leftjoin('candidate_status','candidate_status.id', '=' , 'candidate_otherinfo.status_id');
         $query = $query->join('users', 'users.id', '=', 'candidate_otherinfo.owner_id');
-        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname', 'candidate_basicinfo.email as email', 'users.name as owner','job_associate_candidates.shortlisted','candidate_status.name as status', 'job_associate_candidates.shortlisted as shortlisted', 'candidate_basicinfo.id as cid','job_associate_candidates.created_at as job_associate_candidates_date','candidate_basicinfo.mobile as mobile','candidate_basicinfo.created_at as created_at','job_associate_candidates.selected_date as selected_date','job_associate_candidates.status_id as status_id');
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as fname', 'candidate_basicinfo.lname as lname', 'candidate_basicinfo.email as email', 'users.name as owner','job_associate_candidates.shortlisted','candidate_status.name as status', 'job_associate_candidates.shortlisted as shortlisted', 'candidate_basicinfo.id as cid','job_associate_candidates.created_at as job_associate_candidates_date','candidate_basicinfo.mobile as mobile','candidate_basicinfo.created_at as created_at','job_associate_candidates.selected_date as selected_date','job_associate_candidates.status_id as status_id','job_associate_candidates.is_duplicates');
 
         if(isset($from_date) && $from_date != NULL) {
 
@@ -723,7 +723,7 @@ class JobAssociateCandidates extends Model
         $query = new JobAssociateCandidates();
         $query = $query->join('candidate_basicinfo','candidate_basicinfo.id','=','job_associate_candidates.candidate_id');
         
-        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as candidate_name');
+        $query = $query->select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as candidate_name','job_associate_candidates.is_duplicates');
         $query = $query->where('job_associate_candidates.job_id','=',$job_id);
 
         if(isset($from_date) && $from_date != NULL) {
@@ -750,6 +750,11 @@ class JobAssociateCandidates extends Model
             foreach ($response as $key => $value) {
 
                 $list[$i]['candidate_name'] = $value->candidate_name;
+                if ($value->is_duplicates == 0) {
+                    $list[$i]['is_duplicates'] = 'No';
+                } else {
+                    $list[$i]['is_duplicates'] = 'Yes';
+                }
                 $i++;
             }
         }

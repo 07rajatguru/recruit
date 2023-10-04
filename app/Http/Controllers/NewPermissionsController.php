@@ -40,6 +40,8 @@ class NewPermissionsController extends Controller
 
     public function edit($id) {
 
+        $id = \Crypt::decrypt($id);
+
     	$permission = Permission::find($id);
 
        	$modules = Module::getModules();

@@ -82,7 +82,7 @@
         <div class="col-lg-2 col-xs-4">
             <div class="small-box bg-red">
                 <div class="inner">
-                    <h3>{{ $clientCount or 0 }}</h3>
+                    <h3>{{ $clientCount ?? 0 }}</h3>
                     <p>No. of Clients added this month</p>
                 </div>
                 <div class="icon">
@@ -95,7 +95,7 @@
         <div class="col-lg-2 col-xs-4">
             <div class="small-box bg-green">
                 <div class="inner">
-                    <h3>{{ $jobCount or 0 }}</h3>
+                    <h3>{{ $jobCount ?? 0 }}</h3>
                     <p>No. of Current Job Openings</p>
                 </div>
                 <div class="icon">
@@ -108,7 +108,7 @@
         <div class="col-lg-2 col-xs-4">
             <div class="small-box bg-maroon">
                 <div class="inner">
-                    <h3>{{ $associatedCount or 0}}</h3>
+                    <h3>{{ $associatedCount ?? 0}}</h3>
                     <p>No. of CVS associated this month</p>
                 </div>
                 <div class="icon">
@@ -121,7 +121,7 @@
         <div class="col-lg-2 col-xs-4">
             <div class="small-box bg-aqua">
                 <div class="inner">
-                    <h3> {{ $shortlisted_count or 0}} </h3>
+                    <h3> {{ $shortlisted_count ?? 0}} </h3>
                     <p>No. of CVS shortlisted this month</p>
                 </div>
                 <div class="icon">
@@ -134,7 +134,7 @@
         <div class="col-lg-2 col-xs-4">
             <div class="small-box bg-purple">
                 <div class="inner">
-                    <h3> {{ $interviewAttendCount or 0}} </h3>
+                    <h3> {{ $interviewAttendCount ?? 0}} </h3>
                     <p>Interviews attended this month</p>
                 </div>
                 <div class="icon">
@@ -147,7 +147,7 @@
         <div class="col-lg-2 col-xs-4">
             <div class="small-box bg-yellow">
                 <div class="inner">
-                    <h3> {{$candidatejoinCount or 0}}</h3>
+                    <h3> {{$candidatejoinCount ?? 0}}</h3>
                     <p>Candidate Joining this month</p>
                 </div>
                 <div class="icon">
@@ -177,13 +177,13 @@
                                     @if(isset($value['photo']) && $value['photo'] != '')
                                         <li>
                                             <img src="/{{ $value['photo'] }}" alt="{{ $value['name'] }}" style="height:40px;width:40px;">
-                                            <a class="users-list-name" href="/users/myprofile/{{ $value['id'] }}" target="_blank">{{ $value['name'] }}</a>
+                                            <a class="users-list-name" href="/users/myprofile/{{ \Crypt::encrypt($value['id']) }}" target="_blank">{{ $value['name'] }}</a>
                                             <span class="users-list-date">{{ $value['role_name'] }}</span>
                                         </li>
                                     @else
                                         <li>
                                             <img src="/images/default.png" alt="{{ $value['name'] }}" style="height:40px;width:40px;">
-                                            <a class="users-list-name" href="/users/myprofile/{{ $value['id'] }}" target="_blank">{{ $value['name'] }}</a>
+                                            <a class="users-list-name" href="/users/myprofile/{{ \Crypt::encrypt($value['id']) }}" target="_blank">{{ $value['name'] }}</a>
                                             <span class="users-list-date">{{ $value['role_name'] }}</span>
                                         </li>
                                     @endif
@@ -199,13 +199,49 @@
         @endif
     @endpermission
 
+    @if($user_id == $superadmin)
+        <div class="row">
+            <div class="col-lg-12 col-xs-12">
+                <div class="box box-default collapsed-box" style="border-top-color:#00c0ef;">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Latest Tracking Log</h3>
+                        <div class="box-tools pull-right">
+                            <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-plus"></i></button>
+                            <button type="button" class="btn btn-box-tool" data-widget="remove"><i class="fa fa-times"></i></button>
+                        </div>
+                    </div>
+                    <div class="box-body">
+                        <div class="table-responsive">
+                            <table class="table no-margin" style="border: 1px solid #00c0ef;font-size: 14px;">
+                                <thead>
+                                <tr>
+                                    <th style="border: 1px solid #00c0ef;">User Name</th>
+                                    <th style="border: 1px solid #00c0ef;">IP</th>
+                                    <th style="border: 1px solid #00c0ef;">Date & Time</th>
+                                    <th style="border: 1px solid #00c0ef;">Activity</th>
+                                    <th style="border: 1px solid #00c0ef;">Device (Is Mobile?)</th>
+                                    <th style="border: 1px solid #00c0ef;">Browser</th>
+                                    <th style="border: 1px solid #00c0ef;">Platform</th>
+                                </tr>
+                                </thead>
+                                <tbody id="tracking_log_body"></tbody>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="box-footer clearfix">
+                        <a href="{{ route('dashboard.trakingAllLog') }}" class="btn btn-sm btn-default btn-flat pull-right">View All Logs</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endif
+
     @permission(('display-jobs-open-to-all'))
         <div class="row">
             <div class="col-lg-12 col-xs-12">
                 <div class="box box-info">
                     <div class="box-header with-border">
                         <h3 class="box-title">Jobs open to all</h3>
-
                         <div class="box-tools pull-right">
                             <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                             </button>
@@ -245,7 +281,6 @@
             <div class="box box-info">
                 <div class="box-header with-border">
                     <h3 class="box-title">Upcoming Interviews ({{ $interviewCount }})</h3>
-
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                         </button>
@@ -272,7 +307,7 @@
                             @if(isset($interviews) && sizeof($interviews) > 0)
                                 @foreach($interviews as $interview)
                                     <?php
-                                        $link = 'interview/' . $interview->id . "/show";
+                                        $link = 'interview/' . \Crypt::encrypt($interview->id) . "/show";
                                     ?>
                                     <tr>
                                         @if(isset($interview->remote_working) && $interview->remote_working != '')
@@ -313,7 +348,6 @@
             <div class="box box-info">
                 <div class="box-header with-border">
                     <h3 class="box-title">To Do's</h3>
-
                     <div class="box-tools pull-right">
                         <button type="button" class="btn btn-box-tool" data-widget="collapse"><i class="fa fa-minus"></i>
                         </button>
@@ -336,7 +370,7 @@
                                 <?php $i =1; ?>
                                 @foreach($toDos as $toDo)
                                     <?php 
-                                        $todo_link = 'todos/' . $toDo['id'];
+                                        $todo_link = 'todos/' . \Crypt::encrypt($toDo['id']);
                                     ?>
                                     <tr>
                                         <td style="border: 1px solid #00c0ef;">{{ $i }}</td>
@@ -531,6 +565,7 @@
             }
             
             opentoalljob();
+            getTrackerLogDetails();
 
             // Get Current Date & Time
             var event = new Date();
@@ -594,9 +629,9 @@
 
                         for (var i = 0; i <= job_opened.length; i++) {
 
-                            var link = /jobs/+job_opened[i].id+/associated_candidates/;
+                            var link = /jobs/ + job_opened[i].id + /associated_candidates/;
                             var html = '';
-                            var show_job_link = /jobs/+job_opened[i].id+'/';
+                            var show_job_link = /jobs/ + job_opened[i].id + '/';
 
                             html += '<tr>';
                             html += '<td style="background-color: '+job_opened[i].color+';border: 1px solid #00c0ef;">'+job_opened[i].display_name+'</td>';
@@ -628,6 +663,39 @@
 
                         $("#job_open_to_all").append(html);
                     }
+                }
+            });
+        }
+
+        function getTrackerLogDetails() {
+            
+            var app_url = "{!! env('APP_URL'); !!}";
+            var limit = 10;
+
+            $.ajax({
+                url:app_url+'/dashboard/tracking-log-data-ajax',
+                data:{limit:limit},
+                dataType:'json',
+                success: function(tracking_list) {
+                    var html = '';
+                    if (tracking_list.length > 0) {
+                        for (var i = 0; i < tracking_list.length; i++) {
+                            html += '<tr>';
+                                html += '<td style="border: 1px solid #00c0ef;">'+tracking_list[i].user_name+'</td>';
+                                html += '<td style="border: 1px solid #00c0ef;">'+tracking_list[i].ip+'</td>';
+                                html += '<td style="border: 1px solid #00c0ef;">'+tracking_list[i].date_time+'</td>';
+                                html += '<td style="border: 1px solid #00c0ef;">'+tracking_list[i].page_type+'</td>';
+                                html += '<td style="border: 1px solid #00c0ef;">'+tracking_list[i].device+' ('+tracking_list[i].is_mobile+')</td>';
+                                html += '<td style="border: 1px solid #00c0ef;">'+tracking_list[i].browser+'</td>';
+                                html += '<td style="border: 1px solid #00c0ef;">'+tracking_list[i].platform+'</td>';
+                            html += '</tr>';
+                        }
+                    } else {
+                        html += '<tr>';
+                            html += '<td colspan="8" style="border: 1px solid #00c0ef;">No Data Found..!!</td>';
+                        html += '</tr>';
+                    }
+                    $("#tracking_log_body").append(html);
                 }
             });
         }

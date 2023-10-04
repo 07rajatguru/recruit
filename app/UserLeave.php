@@ -41,7 +41,7 @@ class UserLeave extends Model
         return $type;
     }
 
-    public static function getAllLeavedataByUserId($all=0,$user_ids,$month,$year,$status='',$limit=0) {
+    public static function getAllLeavedataByUserId($all=0,$user_ids,$month,$year,$status='',$limit=0,$cancel_status='') {
 
         $query = UserLeave::query();
         $query = $query->join('users','users.id','=','user_leave.user_id');
@@ -53,9 +53,16 @@ class UserLeave extends Model
 
         if(isset($status) && $status != '') {
             $query = $query->where('user_leave.status','=',$status);
+            $query = $query->where('user_leave.is_leave_cancel','0');
         }
         else if(isset($status) && $status >= '0') {
             $query = $query->where('user_leave.status','=',$status);
+            $query = $query->where('user_leave.is_leave_cancel','0');
+        }
+
+        if(isset($cancel_status) && $cancel_status >= '0') {
+            $query = $query->where('user_leave.is_leave_cancel','1');
+            $query = $query->where('user_leave.leave_cancel_status','=',''.$cancel_status.'');
         }
 
         if ($month != '' && $year != '') {
@@ -306,6 +313,93 @@ class UserLeave extends Model
         return $leave;
     }
 
+    public static function getUserLeavesByIdNew($user_id,$month,$year,$category,$status) {
+        
+        $query = UserLeave::query();
+        $query = $query->leftjoin('users','users.id','=','user_leave.user_id');
+        $query = $query->select('user_leave.*','users.name as user_name','users.id as u_id');
+        
+        if(isset($user_id) && $user_id != 0) {
+            $query = $query->where('user_leave.user_id','=',$user_id);
+        }
+
+        if ($month != '' && $year != '') {
+
+            $date = $year.'-'.$month.'-01';
+
+            $first_date = strtotime(date("Y-m-d", strtotime($date)) . ", first day of this month");
+            $last_date = strtotime(date("Y-m-d", strtotime($date)) . ", last day of this month"); 
+
+            // Loop from the start date to end date and output all between dates
+            $dates_array = array();
+            for ($i=$first_date; $i<=$last_date; $i+=86400) {
+
+                $date_value = date("Y-m-d", $i);
+                array_push($dates_array,$date_value); 
+            }
+
+            $query = $query->where(function($query) use ($dates_array) {
+
+                $query = $query->whereIn('user_leave.from_date',$dates_array);
+                $query = $query->orWhereIn('user_leave.to_date',$dates_array);
+            });   
+        }
+
+        if (isset($category) && $category != '') {
+            $query = $query->where('user_leave.category','=',$category);
+        }
+
+        if(isset($status) && $status != '') {
+            $query = $query->where('user_leave.status','=',$status);
+        }
+
+        $query = $query->orderBy('user_leave.id','desc');
+        $query = $query->groupBy('user_leave.id');
+        $response = $query->get();
+
+        $leave = array();
+        $i = 0;
+
+        if(isset($response) && sizeof($response) > 0) {
+
+            foreach ($response as $key => $value) {
+
+                if (isset($value->from_date) && $value->from_date != '' && isset($value->to_date) && $value->to_date != '') {
+
+                    $from_date = explode("-",$value->from_date);
+                    $to_date = explode("-",$value->to_date);
+
+                    if($from_date[2] < 10) {
+                        $leave[] = str_replace(0,'',$from_date[2]);
+                    }
+                    else {
+                        $leave[] = $from_date[2];
+                    }
+
+                    if($to_date[2] < 10) {
+                        $leave[] = str_replace(0,'',$to_date[2]);
+                    }
+                    else {
+                        $leave[] = $to_date[2];
+                    }
+                }
+                else if(isset($value->from_date) && $value->from_date != '') {
+
+                    $from_date = explode("-",$value->from_date);
+
+                    if($from_date[2] < 10) {
+                        $leave[] = str_replace(0,'',$from_date[2]);
+                    }
+                    else {
+                        $leave[] = $from_date[2];
+                    }
+                }
+                $i++;
+            }
+        }
+        return $leave;
+    }
+
     public static function getLeaveByDateAndID($date,$user_id,$status=0,$type_of_leave='') {
 
         $query = UserLeave::query();
@@ -337,5 +431,56 @@ class UserLeave extends Model
         $response = $query->first();
 
         return $response;
+    }
+
+    public static function getUserPendingLeaveByCategory($user_id=0, $status=0, $category='') {
+        
+        $query = UserLeave::query();
+        $query = $query->select('user_leave.*');
+        
+        if ($user_id > 0) {
+            $query = $query->where('user_leave.user_id',$user_id);
+        }
+
+        if(isset($status) && $status >= 0) {
+            $query = $query->where('user_leave.status','=',$status);
+        }
+
+        if(isset($category) && $category != '') {
+            $query = $query->where('user_leave.category','=',$category);
+        }
+
+        $query = $query->orderBy('user_leave.id','desc');
+        $response = $query->get();
+        
+        $pending_data = ''; $days = 0;
+        if (isset($response) && sizeof($response)>0) {
+            foreach ($response as $key => $value) {
+                if ($value->is_leave_cancel == '1') {
+                    if ($value->leave_cancel_status == '1') {
+                        $pending_data = '';
+                    } else {
+                        if (isset($pending_data) && $pending_data != '') {
+                            $pending_data .= ', '. date('d-m-Y',strtotime($value->from_date)) . ' to ' . date('d-m-Y',strtotime($value->to_date)) . ' canceled ';
+                        } else {
+                            $pending_data .= date('d-m-Y',strtotime($value->from_date)) . ' to ' . date('d-m-Y',strtotime($value->to_date)) . ' canceled ';
+                        }
+                    }
+                } else {
+                    if (isset($pending_data) && $pending_data != '') {
+                        $pending_data .= ', '. date('d-m-Y',strtotime($value->from_date)) . ' to ' . date('d-m-Y',strtotime($value->to_date));
+                    } else {
+                        $pending_data .= date('d-m-Y',strtotime($value->from_date)) . ' to ' . date('d-m-Y',strtotime($value->to_date));
+                    }
+
+                    $days = $days + $value->days;
+                }
+            }
+        }
+
+        $data['days'] = $days;
+        $data['pending_data'] = $pending_data;
+
+        return $data;
     }
 }

@@ -38,8 +38,8 @@ class NotificationEvent
      *
      * @return Channel|array
      */
-    /*public function broadcastOn()
-    {
-        return new PrivateChannel('channel-name');
-    }*/
+    // public function broadcastOn()
+    // {
+    //     return new PrivateChannel('channel-name');
+    // }
 }

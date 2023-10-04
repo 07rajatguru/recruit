@@ -41,6 +41,7 @@
 @if( $action == 'edit')
 
     {!! Form::model($client,['method' => 'PATCH','files' => true, 'id' => 'clientForm','autocomplete' => 'off','onsubmit' => "return emailValidation()",'route' => ['client.update', $client['id']]] ) !!}
+    <input type="hidden" id="client_id" name="client_id" value="{{ $client['id'] }}"/>
 
 @elseif( $action == 'copy')
 
@@ -53,6 +54,7 @@
 @endif
 
 <input type="hidden" id="generatelead" name="generatelead" value="1">
+<input type="hidden" id="action" name="action" value="{{ $action }}"/>
 
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
@@ -116,7 +118,7 @@
                         <div class="form-group {{ $errors->has('account_manager_id') ? 'has-error' : '' }}">
                             <strong>Account Manager :</strong>
 
-                            @permission(('display-client'))
+                            @if (permission('display-client'))
                                 {!! Form::select('account_manager_id', $users, $user_id, array('id'=>'account_manager_id','class' => 'form-control', 'tabindex' => '12')) !!}
                             @else
                                 @if($action == 'copy')
@@ -144,6 +146,13 @@
                                 </span>
                             @endif
                         </div>
+
+                        <!-- <div id="otherIndustry" style="display: none;">
+                            <div class="form-group">
+                                <strong>Other Industry : <span class="required_fields">*</span> </strong>
+                                <input type="text" id="otherIndustryInput" name="other" class="form-control" tabindex="15" placeholder="Enter Other Industry">
+                            </div>
+                        </div> -->
 
                         @permission(('display-client'))
                             <div class="form-group {{ $errors->has('source') ? 'has-error' : '' }}">
@@ -212,83 +221,104 @@
 
                 <div class="box-body col-xs-6 col-sm-6 col-md-6">
                     <strong>Contact Point : <span class = "required_fields">*</span></strong>
-                        <div class="">
-                            <div class="col-md-4 form-group {{ $errors->has('co_category') ? 'has-error' : '' }}" style="margin-left: -15px;">
-                                {!! Form::select('co_category', $co_prefix, $co_category, array('id'=>'co_category','class' => 'form-control', 'tabindex' => '2' )) !!}
+                    <div class="">
+                        <div class="col-md-4 form-group {{ $errors->has('co_category') ? 'has-error' : '' }}" style="margin-left: -15px;">
+                            {!! Form::select('co_category', $co_prefix, $co_category, array('id'=>'co_category','class' => 'form-control', 'tabindex' => '2' )) !!}
 
-                                @if ($errors->has('co_category'))
-                                    <span class="help-block">
-                                    <strong>{{ $errors->first('co_category') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-
-                            <div class="col-md-8 form-group {{ $errors->has('contact_point') ? 'has-error' : '' }}" style="margin-left: -15px;">
-                                {!! Form::text('contact_point', null, array('id'=>'contact_point','placeholder' => 'Contact Point','class' => 'form-control', 'tabindex' => '3','minLength' => '3','onchange' => 'validContactPointText();')) !!}
-                                @if ($errors->has('contact_point'))
-                                    <span class="help-block">
-                                    <strong>{{ $errors->first('contact_point') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-
-                            <div class="form-group {{ $errors->has('client_category') ? 'has-error' : '' }}">
-                                <strong>Select Category : <span class = "required_fields">*</span></strong>
-                                {!! Form::select('client_category', $client_cat, $client_category, array('id'=>'client_category','class' => 'form-control', 'tabindex' => '5')) !!}
-
-                                @if ($errors->has('client_category'))
-                                    <span class="help-block">
-                                    <strong>{{ $errors->first('client_category') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-                    
-                            <div class="form-group {{ $errors->has('mail') ? 'has-error' : '' }}">
-                                <strong>Email : <span class = "required_fields">*</span></strong>
-                                {!! Form::email('mail', null, array('id'=>'mail','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '7')) !!}
-                                @if ($errors->has('mail'))
-                                    <span class="help-block">
-                                    <strong>{{ $errors->first('mail') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-
-                            <div class="form-group {{ $errors->has('s_mail') ? 'has-error' : '' }}">
-                                <strong>Secondary Email : </strong>
-                                {!! Form::email('s_email', null, array('id'=>'s_email','placeholder' => 'Secondary Email','class' => 'form-control', 'tabindex' => '9' )) !!}
-                                @if ($errors->has('s_email'))
-                                    <span class="help-block">
-                                    <strong>{{ $errors->first('s_email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-
-                            @permission(('display-account-manager-wise-client'))
-                                @if($action == 'add' || $action == 'copy')
-                                    <div class="form-group">
-                                        <strong>Second-line Account Manager :</strong>
-                                        {!! Form::select('second_line_am', $users, null, array('id'=>'second_line_am','class' => 'form-control', 'tabindex' => '11','placeholder' => '---None---')) !!}
-                                    </div>
-                                @endif
-
-                                @if($action == 'edit')
-                                    <div class="form-group">
-                                        <strong>Second-line Account Manager :</strong>
-                                        {!! Form::select('second_line_am', $users, $second_line_am, array('id'=>'second_line_am','class' => 'form-control', 'tabindex' => '11','placeholder' => '---None---')) !!}
-                                    </div>
-                                @endif
-                            @endpermission
-
-                            <div class="form-group">
-                                <strong>Website :</strong>
-                                {!! Form::text('website', null, array('id'=>'website','placeholder' => 'Website','class' => 'form-control', 'tabindex' => '13' )) !!}
-                            </div>
-
-                            <div class="form-group">
-                                <strong>About :</strong>
-                                {!! Form::textarea('description', null, array('id'=>'description','placeholder' => 'About','class' => 'form-control', 'tabindex' => '19' )) !!}
-                            </div>
+                            @if ($errors->has('co_category'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('co_category') }}</strong>
+                                </span>
+                            @endif
                         </div>
+
+                        <div class="col-md-8 form-group {{ $errors->has('contact_point') ? 'has-error' : '' }}" style="margin-left: -15px;">
+                            {!! Form::text('contact_point', null, array('id'=>'contact_point','placeholder' => 'Contact Point','class' => 'form-control', 'tabindex' => '3','minLength' => '3','onchange' => 'validContactPointText();')) !!}
+                            @if ($errors->has('contact_point'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('contact_point') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+
+                        <div class="form-group {{ $errors->has('client_category') ? 'has-error' : '' }}">
+                            <strong>Select Category : <span class = "required_fields">*</span></strong>
+                            {!! Form::select('client_category', $client_cat, $client_category, array('id'=>'client_category','class' => 'form-control', 'tabindex' => '5')) !!}
+
+                            @if ($errors->has('client_category'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('client_category') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+                
+                        <div class="form-group {{ $errors->has('mail') ? 'has-error' : '' }}">
+                            <strong>Email : <span class = "required_fields">*</span></strong>
+                            {!! Form::email('mail', null, array('id'=>'mail','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '7')) !!}
+                            @if ($errors->has('mail'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('mail') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+
+                        <div class="form-group {{ $errors->has('s_mail') ? 'has-error' : '' }}">
+                            <strong>Secondary Email : </strong>
+                            {!! Form::email('s_email', null, array('id'=>'s_email','placeholder' => 'Secondary Email','class' => 'form-control', 'tabindex' => '9' )) !!}
+                            @if ($errors->has('s_email'))
+                                <span class="help-block">
+                                <strong>{{ $errors->first('s_email') }}</strong>
+                                </span>
+                            @endif
+                        </div>
+
+                        @permission(('display-account-manager-wise-client'))
+                            @if($action == 'add' || $action == 'copy')
+                                <div class="form-group">
+                                    <strong>Second-line Account Manager :</strong>
+                                    {!! Form::select('second_line_am', $users, null, array('id'=>'second_line_am','class' => 'form-control', 'tabindex' => '11','placeholder' => '---None---')) !!}
+                                </div>
+                            @endif
+
+                            @if($action == 'edit')
+                                <div class="form-group">
+                                    <strong>Second-line Account Manager :</strong>
+                                    {!! Form::select('second_line_am', $users, $second_line_am, array('id'=>'second_line_am','class' => 'form-control', 'tabindex' => '11','placeholder' => '---None---')) !!}
+                                </div>
+                            @endif
+                        @endpermission
+
+                        <div class="form-group">
+                            <strong>Website :</strong>
+                            {!! Form::text('website', null, array('id'=>'website','placeholder' => 'Website','class' => 'form-control', 'tabindex' => '13' )) !!}
+                        </div>
+
+                        <div class="form-group">
+                            <strong>About :</strong>
+                            {!! Form::textarea('description', null, array('id'=>'description','placeholder' => 'About','class' => 'form-control', 'tabindex' => '19' )) !!}
+                        </div>
+                    </div>
+                </div>
+
+
+                <div class="col-xs-12 col-sm-12 col-md-12">
+                    <div class="form-group">
+                        <strong>Select Users who can see this Client : <span class = "required_fields">*</span></strong><br/>&nbsp;&nbsp;
+                        <input type="checkbox" id="departments_all"/><strong> Select All</strong><br/>
+
+                        @foreach($departments as $k=>$v)&nbsp;&nbsp; 
+                            {!! Form::checkbox('department_ids[]', $k,in_array($k,$selected_departments), array('id'=>'department_ids','class' => 'department_ids','onclick' => 'displayUsers("'.$k.'")')) !!} {!! Form::label ($v) !!}
+                        @endforeach
+
+                        <br/><br/>
+                        <?php $id = ''; ?>
+                        @foreach($departments as $k=>$v)
+                            <div class="div_{{ $k }}" style="margin-left: 12px;display:none;"></div>
+                            <?php $id = $id . "," . $k; ?>
+                        @endforeach
+
+                        <input type="hidden" name="id_string" id="id_string" value="{{ $id }}">
+                    </div>
                 </div>
             </div>
         </div>
@@ -402,21 +432,21 @@
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
                         <strong>Client Contract : [Allow only .doc, .docx, .pdf extension files.]</strong>
-                        <input type="file" name="client_contract"  id="client_contract" class="form-control">
+                        <input type="file" name="client_contract"  id="client_contract" accept=".pdf,.jpg,.jpeg,.png,.gif,.xls,.xlsx,.doc,.docx,.ppt,.pptx,.txt" class="form-control" onchange="FormValidation.validateFile(this)"/>
                     </div>
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
                         <strong>Client Logo : [Allow only .gif, .png, .jpg, .jpeg extension files.]</strong>
-                        <input type="file" name="client_logo"  id="client_logo" class="form-control">
+                        <input type="file" name="client_logo"  id="client_logo" accept=".pdf,.jpg,.jpeg,.png,.gif,.xls,.xlsx,.doc,.docx,.ppt,.pptx,.txt"  class="form-control" onchange="FormValidation.validateFile(this)"/>
                     </div>
                 </div>
 
                 <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
                         <strong>Others :</strong>
-                        <input type="file" name="others_doc[]"  id="others_doc" class="form-control" multiple>
+                        <input type="file" name="others_doc[]"  id="others_doc" accept=".pdf,.jpg,.jpeg,.png,.gif,.xls,.xlsx,.doc,.docx,.ppt,.pptx,.txt" multiple class="form-control" onchange="FormValidation.validateFile(this)"/>
                     </div>
                 </div>
             </div>
@@ -463,10 +493,11 @@
         {!! Form::submit(isset($client) ? 'Update' : 'Submit', ['class' => 'btn btn-primary']) !!}
     </div>
 </div>
-
 {!! Form::close() !!}
 
 @section('customscripts')
+
+<script src="{{ asset('js/validation_file.js') }}"></script>
     <script>
         $(document).ready(function() {
 
@@ -484,12 +515,22 @@
 
             $("#account_manager_id").select2();
             $("#second_line_am").select2();
-            
+
             $("#industry_id").select2();
+            /*$("#industry_id").on('change', function() {
+                if ($(this).find(":selected").text() === "Other") {
+                    $("#otherIndustry").show();
+                    $("#otherIndustryInput").prop('required', true);
+                } else {
+                    $("#otherIndustry").hide();
+                    $("#otherIndustryInput").prop('required', false);
+                }
+            });*/
 
             $("#description").wysihtml5();
             
             $("#clientForm").validate({
+                
                 rules: {
                         
                     "name": {
@@ -515,6 +556,10 @@
                     },
                     "billing_city" : {
                         required: true,
+                    },
+                    "department_ids[]": {
+                      required: true,
+                      minlength: 1
                     },
                 },
                 messages: {
@@ -542,6 +587,9 @@
                     },
                     "billing_city" : {
                         required: "City is Required."
+                    },     
+                    "department_ids[]": {
+                        required: "At least one department must be selected."
                     },
                 }
             });
@@ -610,7 +658,123 @@
                     this.value = null;
                 }
             });
+
+
+            $("#departments_all").click(function () {
+                $('.department_ids').prop('checked', this.checked);
+
+                var isChecked = $("#departments_all").is(":checked");
+                var id_string = $("#id_string").val();
+                var id_arr = id_string.split(",");;
+
+                if(isChecked == true) {
+                    $('.department_ids').prop('checked', this.checked);
+                    for (var i = 1; i < id_arr.length; i++) {
+                        displayUsers(id_arr[i]);
+                    }
+                }
+                else {
+                    $('.department_ids').prop('checked', false);
+                    $('.department_class').prop('checked', false);
+
+                    for (var i = 1; i < id_arr.length; i++) {
+                        $(".div_"+id_arr[i]).hide();
+                    }
+                }
+            });
+
+            $(".department_ids").click(function () {
+                $("#departments_all").prop('checked', ($('.department_ids:checked').length == $('.department_ids').length) ? true : false);
+
+                displayUsers();
+            });
+
+            var action = $("#action").val();
+            if(action == 'edit') {
+                loadUsers();
+
+                $("#departments_all").prop('checked', ($('.department_ids:checked').length == $('.department_ids').length) ? true : false);
+            }     
+
         });
+
+        function displayUsers(department_id) {
+            var app_url = "{!! env('APP_URL'); !!}";
+            $.ajax({
+                url: app_url + '/getusers/bydepartment',
+                data: {department_id:department_id, am:'Yes'},
+                dataType: 'json',
+                success: function (data) {
+                    var department_selected_items = $("input[name='department_ids[]']:checked").map(function () {
+                        return this.value;
+                    }).get();
+
+                    if (department_selected_items.includes(department_id)) {
+                        if (data.length > 0) {
+                            $(".div_" + department_id).html('');
+
+                            var html = '<div class="user-container">';
+                            for (var i = 0; i < data.length; i++) {
+                                html += '<input type="checkbox" name="user_ids[]" value="' + data[i].id + '" class="department_class" >';
+                                html += '<span style="margin-right: 5px;"></span>'; 
+                                html += '<b><span style="font-size:15px;">' + data[i].name + '</span>&nbsp;&nbsp;</b>';
+                            }
+                            html += '</div>';
+
+                            $(".div_" + department_id).append(html);
+                            $(".div_" + department_id).show();
+                        }
+                    } else {
+                        $(".div_" + department_id).html('');
+                        $(".div_" + department_id).hide();
+                    }
+                }
+            });
+        }
+
+         function loadUsers() {
+
+            var app_url = "{!! env('APP_URL'); !!}";
+            // for department_ids
+            var department_items = document.getElementsByName('department_ids[]');
+            var department_selected_items = "";
+            // print_r($department_selected_items);exit;
+
+            for(var i=0; i<department_items.length; i++) {
+
+                if(department_items[i].type == 'checkbox' && department_items[i].checked == true)
+                    department_selected_items += department_items[i].value+",";
+            }
+
+            var client_id = $("#client_id").val();
+            $.ajax({
+                url: app_url+'/getUsersByClientID',
+                method:'POST',
+                data:{'client_id':client_id,'department_selected_items':department_selected_items,"_token": "{{ csrf_token() }}",'am':'Yes'},
+                dataType:'json',
+                success: function(data) {
+                    if(data.length > 0) {
+                        for (var i = 0; i < data.length; i++) {
+                            var html = '';
+                            if(data[i].checked == '1') {
+                                html += '<input type="checkbox" name="user_ids[]" value="'+data[i].id+'" class="department_class" checked>';
+                                html += '&nbsp;&nbsp;';
+                                html += '<b><span style="font-size:15px;">'+data[i].name+'</span></b>&nbsp;&nbsp;';
+                            }
+
+                            if(data[i].checked == '0') {
+                                html += '<input type="checkbox" name="user_ids[]" value="'+data[i].id+'" class="department_class">';
+                                html += '&nbsp;&nbsp;';
+                                html += '<b><span style="font-size:15px;">'+data[i].name+'</span></b>&nbsp;&nbsp;';
+                            }
+
+                            $(".div_"+data[i].type).append(html);
+                            $(".div_"+data[i].type).show();
+                        }
+                    }
+                }
+            });
+        }
 
         function validCompanyNameText() {
 

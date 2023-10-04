@@ -243,7 +243,7 @@
             }
         }
 
-        function checkLeaveBalance() {
+         function checkLeaveBalance() {
 
             // Calculate Days From Selected Dates
             var leave_cat = $("#leave_category").val();
@@ -330,7 +330,6 @@
                 }
             }
         }
-
         function displayHalfDayOptions() {
 
             var leave_type = $("#leave_type").val();

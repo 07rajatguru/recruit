@@ -10,6 +10,7 @@ use App\Interview;
 use App\Holidays;
 use App\Events\NotificationMail;
 use App\UsersLog;
+use App\Date;
 
 class DailyReportNew extends Command
 {
@@ -62,23 +63,30 @@ class DailyReportNew extends Command
         // $saturday_date = date('Y-m')."-".$saturdays[2];
         $month = date('m');
         $year = date('Y');
+
         $third_saturday = Date::getThirdSaturdayOfMonth($month,$year);
         $saturday_date = $third_saturday['full_date'];
         $dayOfWeek = date("l", strtotime($date));
         if ($dayOfWeek == 'Sunday' || $saturday_date == $date || (in_array($date, $fixed_date))) {
         } else {
             $users_data = User::getAllUsersDataWithReportsTo();
+            
             if (isset($users_data) && sizeof($users_data)>0) {
+
                 foreach ($users_data as $key => $value) {
                     $to_array = array();$cc_array = array();$module_ids = array();
+
                     if (isset($value) && sizeof($value) > 0) {
+                        
                         foreach ($value as $key_u => $value_u) {
                             $check_users_log_count = UsersLog::getUserLogsByIdDate($value_u['id'],$date);
+
                             if(isset($check_users_log_count) && $check_users_log_count > 0) {
                                 $module_ids[] = $value_u['id'];
                             }
                         }
                     }
+                    //print_r($module_ids);exit;
 
                     if (isset($module_ids) && sizeof($module_ids) > 0) {
                         $user_name = User::getUserNameById($key);

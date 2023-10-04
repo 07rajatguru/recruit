@@ -113,6 +113,16 @@
                                 </span>
                                 @endif
                             </div>
+
+                            <div class="form-group {{ $errors->has('remarks') ? 'has-error' : '' }}">
+                                <strong>Remarks :</strong>
+                                {!! Form::textarea('remarks', null, array('id'=>'remarks','placeholder' => 'Remarks','class' => 'form-control', 'tabindex' => '9', 'rows' => '3' )) !!}
+                                @if ($errors->has('remarks'))
+                                <span class="help-block">
+                                    <strong>{{ $errors->first('remarks') }}</strong>
+                                </span>
+                                @endif
+                            </div>
                         </div>
 
                         <div class="box-body col-xs-6 col-sm-6 col-md-6">

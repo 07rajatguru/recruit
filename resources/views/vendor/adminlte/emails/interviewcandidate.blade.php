@@ -51,6 +51,10 @@
                                 <p> {!! $job_description !!}</p>
                                 <p><b>Interview Date/Day : </b> {{date('jS F,y (l)',strtotime($interview_date)) }}</p>
                                 <p><b>Interview Time : </b> {{date('h:i A',strtotime($interview_time))  }}</p>
+                                <p><b>Interview Type : </b> {{ $interview_type }}</p>
+                                @if(isset($interview_type) && $interview_type == 'Video-G Meet' || $interview_type == 'Video-Zoom' || $interview_type == 'Video-Microsoft Teams' || $interview_type == 'Video-Others' )
+                                    <p><b>Video ID : </b> {{ $skype_id }}</p>
+                                @endif
 
                                 @if(isset($interview_type) && $interview_type == 'Personal Interview')
                                     <p><b>Interview Venue : </b> {{ $interview_location }}</p>

@@ -8,12 +8,13 @@ class UserBenchMark extends Model
 {
     public $table = "user_bench_mark";
 
-    public static function getAllUsersBenchMark() {
+    public static function getAllUsersBenchMark($status) {
 
     	$query = UserBenchMark::query();
         $query = $query->leftjoin('users','users.id','=','user_bench_mark.user_id');
         $query = $query->leftjoin('department','department.id','=','users.type');
-        $query = $query->select('user_bench_mark.*','users.name as user_name','department.name as department_name');
+        $query = $query->select('user_bench_mark.*','users.name as user_name','department.name as department_name','users.status');
+        $query = $query->where('users.status', '=', $status);
         $query = $query->orderBy('user_bench_mark.id','desc');
         $response = $query->get();
 

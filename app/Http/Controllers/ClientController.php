@@ -11,6 +11,8 @@ use App\ClientAddress;
 use App\ClientDoc;
 use App\Industry;
 use Illuminate\Support\Facades\Input;
+use PHPExcel_Style_Alignment;
+use PHPExcel_Style_Fill;
 use Mockery\CountValidator\Exception;
 use Storage;
 use App\User;
@@ -20,11 +22,14 @@ use Excel;
 use App\Events\NotificationEvent;
 use App\Events\NotificationMail;
 use App\EmailsNotifications;
+use Illuminate\Support\Facades\File;
 use App\JobVisibleUsers;
 use App\Post;
 use App\EmailTemplate;
+use App\Department;
 use App\ClientRemarks;
 use App\ClientTimeline;
+use App\ClientVisibleUsers;
 use App\Notifications;
 use Illuminate\Validation\Rule;
 use Validator;
@@ -218,13 +223,13 @@ class ClientController extends Controller
         $order = $_GET['order'][0]['column'];
         $type = $_GET['order'][0]['dir'];
 
-        $client_owner = $_GET['client_owner'];
-        $client_company = $_GET['client_company'];
-        $client_contact_point = $_GET['client_contact_point'];
-        $client_cat = $_GET['client_cat'];
-        $client_status = $_GET['client_status'];
-        $client_city = $_GET['client_city'];
-        $client_industry = $_GET['client_industry'];
+        $client_owner = $_GET['client_owner'] ?? null;
+        $client_company = $_GET['client_company'] ?? null;
+        $client_contact_point = $_GET['client_contact_point'] ?? null;
+        $client_cat = $_GET['client_cat'] ?? null;
+        $client_status = $_GET['client_status'] ?? null;
+        $client_city = $_GET['client_city'] ?? null;
+        $client_industry = $_GET['client_industry'] ?? null;
         
         $user =  \Auth::user();
         $all_perm = $user->can('display-client');
@@ -278,15 +283,17 @@ class ClientController extends Controller
 
         $clients = array();
         $i = 0;$j = 0;
+        
 
         foreach ($client_res as $key => $value) {
 
+
             $action = '';
-            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
-        
+            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>'; 
+
             if($edit_perm) {
 
-                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
             if($delete_perm) {
 
@@ -314,7 +321,193 @@ class ClientController extends Controller
             }
             if($all_perm || $value['client_owner']) {
 
-                $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
+            }
+
+            if($all_perm || $value['client_owner'] || $value['second_line_client_owner']) {
+
+                // Client Hiring Report
+                $hiring_report = \View::make('adminlte::partials.client_hiring_report', ['data' => $value,'page' => 'Main','source' => '']);
+                $report = $hiring_report->render();
+                $action .= $report;
+            }
+            if($all_perm || $value['client_owner']) {
+
+                $days_array = ClientTimeline::getTimelineDetailsByClientId($value['id']);
+
+                $timeline_view = \View::make('adminlte::partials.client_timeline_view', ['data' => $value,'days_array' => $days_array]);
+                $timeline = $timeline_view->render();
+                $action .= $timeline;
+            }
+
+            $clientData = ClientBasicinfo::find($value['id']);  
+            $data_source = $clientData->data_source;
+
+            if ($data_source === "Import") {
+                $fontColor = 'grey';
+            } else {
+                $fontColor = 'black'; 
+            }
+    
+
+            $checkbox = '<input type=checkbox name=client value='.$value['id'].' class=others_client id='.$value['id'].'/>';
+            $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['name'].'</a>';
+            $contact_point = '<a style="white-space: pre-wrap; word-wrap: break-word; color:'.$fontColor.'; text-decoration:none;">'.$value['hr_name'].'</a>';
+            $industry_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['industry_name'].'</a>';
+
+            if($value['status'] == 'Active')
+                $client_status = '<span class="label label-sm label-success">'.$value['status'].'</span></td>';
+            else if($value['status'] == 'Passive')
+                $client_status = '<span class="label label-sm label-danger">'.$value['status'].'</span></td>';
+            else if($value['status'] == 'Leaders')
+                $client_status = '<span class="label label-sm label-primary">'.$value['status'].'</span></td>';
+            else if($value['status'] == 'Forbid')
+                $client_status = '<span class="label label-sm label-default">'.$value['status'].'</span>';
+            else if($value['status'] == 'Left')
+                $client_status = '<span class="label label-sm label-info">'.$value['status'].'</span>';
+
+                
+            $client_category = $value['category'];
+
+            if(isset($value['second_line_am_name']) && $value['second_line_am_name'] != '') {
+
+                $am_name = $value['am_name']." | ".$value['second_line_am_name'];
+            }
+            else {
+                $am_name = $value['am_name'];
+            }
+
+            if($category_perm) {
+
+                $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_category,$client_status,$value['address'],$industry_name,$value['second_line_am']);
+            }
+            else {
+
+                $data = array(++$j,$checkbox,$action,$am_name,$company_name,$contact_point,$client_status,$value['address'],$industry_name,$value['second_line_am']);
+            }
+
+            $clients[$i] = $data;
+            $i++;
+        }
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $clients
+        );
+
+        echo json_encode($json_data);exit;
+    }
+
+    public function getClients() {
+
+     
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $client_owner = $_GET['client_owner'] ?? null;
+        $client_company = $_GET['client_company'] ?? null;
+        $client_contact_point = $_GET['client_contact_point'] ?? null;
+        $client_cat = $_GET['client_cat'] ?? null;
+        $client_status = $_GET['client_status'] ?? null;
+        $client_city = $_GET['client_city'] ?? null;
+        $client_industry = $_GET['client_industry'] ?? null;
+        
+        $user =  \Auth::user();
+        $all_perm = $user->can('display-client');
+        $userwise_perm = $user->can('display-account-manager-wise-client');
+        $edit_perm = $user->can('client-edit');
+        $delete_perm = $user->can('client-delete');
+        $category_perm = $user->can('display-client-category-in-client-list');
+
+        $data_source = 'Import';
+        
+        if($all_perm) {
+
+            $order_column_name = self::getOrderColumnName($order);
+            $client_res = ClientBasicinfo::getAllClients(1,$user->id,$limit,$offset,$search,$order_column_name,$type,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city,$client_industry,$data_source);
+            
+            $count = ClientBasicinfo::getAllClientsCount(1,$user->id,$search,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city,$client_industry,$data_source);
+        }
+        else if($userwise_perm) {
+
+            $order_column_name = self::getOrderColumnName($order);
+            $client_res = ClientBasicinfo::getAllClients(0,$user->id,$limit,$offset,$search,$order_column_name,$type,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city,$client_industry,$data_source);
+            $count = ClientBasicinfo::getAllClientsCount(0,$user->id,$search,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city,$client_industry,$data_source);
+        }
+
+
+        $recruitment = getenv('RECRUITMENT');
+        $hr_advisory = getenv('HRADVISORY');
+        $management = getenv('MANAGEMENT');
+        $type_array = array($recruitment,$hr_advisory,$management);
+
+        $users_array = User::getAllUsers(NULL,'Yes');
+        $account_manager = array();
+
+        if(isset($users_array) && sizeof($users_array) > 0) {
+
+            foreach ($users_array as $k1 => $v1) {
+                               
+                $user_details = User::getAllDetailsByUserID($k1);
+
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $account_manager[$k1] = $v1;
+                    }
+                }
+                else {
+                    $account_manager[$k1] = $v1;
+                }    
+            }
+        }
+
+        $account_manager[0] = 'Yet to Assign';
+
+        $clients = array();
+        $i = 0;$j = 0;
+
+        foreach ($client_res as $key => $value) {
+
+            $action = '';
+            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>'; 
+        
+            if($edit_perm) {
+
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
+            }
+            if($delete_perm) {
+
+                $delete_view = \View::make('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'client','display_name'=>'Client']);
+                $delete = $delete_view->render();
+                $action .= $delete;
+
+                if(isset($value['url']) && $value['url'] != '') {
+                    $action .= '<a target="_blank" href="'.$value['url'].'"><i  class="fa fa-fw fa-download"></i></a>';
+                }
+            }
+            if($all_perm) {
+
+                $account_manager_view = \View::make('adminlte::partials.client_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager, 'source' => '']);
+                $account = $account_manager_view->render();
+                $action .= $account;
+            }
+
+            if($userwise_perm) {
+
+                $secondline_account_manager_view = \View::make('adminlte::partials.secondline_account_manager', ['data' => $value, 'name' => 'client', 'account_manager' => $account_manager, 'source' => '']);
+                $secondline_account = $secondline_account_manager_view->render();
+                $action .= $secondline_account;
+
+            }
+            if($all_perm || $value['client_owner']) {
+
+                $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
 
             if($all_perm || $value['client_owner'] || $value['second_line_client_owner']) {
@@ -748,11 +941,11 @@ class ClientController extends Controller
         foreach ($client_res as $key => $value) {
 
             $action = '';
-            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
+            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>'; 
            
             if($edit_perm) {
 
-                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
             if($delete_perm) {
 
@@ -781,7 +974,7 @@ class ClientController extends Controller
 
             if($all_perm || $value['client_owner']) {
 
-                $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
 
             if($all_perm || $value['client_owner'] || $value['second_line_client_owner']) {
@@ -906,6 +1099,41 @@ class ClientController extends Controller
         echo json_encode($json_data);exit;
     }
 
+    public function getUsersByClientID() {
+
+        $department_ids = $_POST['department_selected_items'];
+        $client_id = $_POST['client_id'];
+        $am = (isset($_POST['am']) && $_POST['am'] != '') ? $_POST['am'] : NULL;
+
+        $users = User::getUsersByDepartmentIDArray($department_ids,$am);
+
+        $client_user_res = \DB::table('client_visible_users')
+        ->join('users','users.id','=','client_visible_users.user_id')
+        ->select('users.id as user_id', 'users.name as name')
+        ->where('users.account_manager','=',$am)
+        ->where('client_visible_users.client_id',$client_id)->get();
+
+        $selected_users = array(); $i=0;
+        foreach ($client_user_res as $key => $value) {
+            $selected_users[$i] = $value->user_id;
+            $i++;       
+        }
+
+        $data = array(); $j=0;
+        foreach ($users as $key => $value) {
+            if(in_array($value['id'], $selected_users)) {
+                $data[$j]['checked'] = '1';
+            } else {
+                $data[$j]['checked'] = '0';
+            }
+            $data[$j]['id'] = $value['id'];
+            $data[$j]['type'] = $value['type'];
+            $data[$j]['name'] = $value['name'];
+            $j++;
+        }
+        return $data;
+    }
+
     // Forbid client listing page function
     public function getForbidClient() {
 
@@ -957,47 +1185,70 @@ class ClientController extends Controller
         $user_id = $user->id;
 
         // For account manager
-
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
-        $management = getenv('MANAGEMENT');
-        $type_array = array($recruitment,$hr_advisory,$management);
+        $operations = getenv('OPERATIONS');
+        $type_array = array($recruitment,$hr_advisory,$operations);
 
-        $users_array = User::getAllUsers(NULL,'Yes');
         $users = array();
-
+        $users_array = User::getAllUsers(NULL,'Yes');
         if(isset($users_array) && sizeof($users_array) > 0) {
-
             foreach ($users_array as $k1 => $v1) {
-                               
                 $user_details = User::getAllDetailsByUserID($k1);
-
                 if($user_details->type == '2') {
                     if($user_details->hr_adv_recruitemnt == 'Yes') {
                         $users[$k1] = $v1;
                     }
-                }
-                else {
+                } else {
                     $users[$k1] = $v1;
                 }    
             }
         }
 
         $users[0] = 'Yet to Assign';
+
+       // Set Department
+       $departments = array();
+       $department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
+       if(sizeof($department_res) > 0) {
+           foreach($department_res as $r) {
+               $departments[$r->id] = $r->name;
+           }
+       }
+
+       $all_departments = array();
+       $all_department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
+       if(sizeof($all_department_res) > 0) {
+           foreach($all_department_res as $a_r) {
+               $all_departments[$a_r->id] = $a_r->name;
+           }
+       }
+       $selected_departments = array();
         
         // User Account Manager access check
         $user_acc_manager = \Auth::user()->account_manager;
         if ($user_acc_manager == 'No') {
             return view('errors.clientpermission');
         }
+        $user_ids_list = User::getAssignedUsers($user_id);
+        $loggedin_user_report_to = User::getReportsToById($user_id);
 
+        if(isset($user_ids_list) && sizeof($user_ids_list) > 0) {
+            $user_ids_array = array(); $i=0;
+            foreach ($user_ids_list as $key => $value) {
+                $user_ids_array[$i] = $key;
+                $i++;
+            }
+        } else {
+            $user_ids_array[] = $loggedin_user_report_to;
+        }
         
         $percentage_charged_below = '8.33';
         $percentage_charged_above = '8.33';
 
         $action = "add";
 
-        return view('adminlte::client.create',compact('client_status','client_status_key','action','industry','users','user_id','generate_lead','industry_id','co_prefix','co_category','client_cat','client_category','percentage_charged_below','percentage_charged_above','client_all_status_key','client_all_status'));
+        return view('adminlte::client.create',compact('client_status','client_status_key','action','industry','users','user_id','generate_lead','industry_id','co_prefix','co_category','client_cat','client_category','percentage_charged_below','percentage_charged_above','client_all_status_key','client_all_status','departments','selected_departments','user_ids_array'));
     }
 
     public function postClientNames() {
@@ -1011,6 +1262,9 @@ class ClientController extends Controller
 
     public function edit($id) {
 
+        $id = \Crypt::decrypt($id);
+
+        $action = "edit";
         $generate_lead = '1';
 
         $co_prefix = ClientBasicinfo::getcoprefix();
@@ -1098,35 +1352,47 @@ class ClientController extends Controller
             $client['client_address_id'] = $client_address->id;
         }
 
-        // For account manager
+        $selected_users = array();
+        $client_visible_users = ClientVisibleUsers::where('client_id',$id)->get();  
+        if(isset($client_visible_users) && sizeof($client_visible_users)>0)  {
+            foreach($client_visible_users as $row){
+                $selected_users[] = $row->user_id;
+            }
+        }
 
+        // For account manager
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
-        $management = getenv('MANAGEMENT');
-        $type_array = array($recruitment,$hr_advisory,$management);
+        $operations = getenv('OPERATIONS');
+        $type_array = array($recruitment,$hr_advisory,$operations);
 
-        $users_array = User::getAllUsers(NULL,'Yes');
+        $departments = array();
+        $department_res = Department::orderBy('id','ASC')->whereIn('id',$type_array)->get();
+        if(sizeof($department_res) > 0) {
+            foreach($department_res as $r) {
+                $departments[$r->id] = $r->name;
+            }
+        }
+
+        $department_id = $client_basicinfo->department_id;
+        $selected_departments = explode(",",$client_basicinfo->department_ids);
+
+        $users = User::getAllUsers($selected_departments);
         $users = array();
-
+        $users_array = User::getAllUsers(NULL,'Yes');
         if(isset($users_array) && sizeof($users_array) > 0) {
-
             foreach ($users_array as $k1 => $v1) {
-                               
                 $user_details = User::getAllDetailsByUserID($k1);
-
                 if($user_details->type == '2') {
                     if($user_details->hr_adv_recruitemnt == 'Yes') {
                         $users[$k1] = $v1;
                     }
-                }
-                else {
+                } else {
                     $users[$k1] = $v1;
                 }    
             }
         }
         $users[0] = 'Yet to Assign';
-
-        $action = "edit";
 
         $client_basicinfo_model = new ClientBasicinfo();
         $client_upload_type = $client_basicinfo_model->client_upload_type;
@@ -1154,9 +1420,10 @@ class ClientController extends Controller
             }
         }
 
+        $user_ids_array = array();        
         $client_upload_type['Others'] = 'Others';
 
-        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category','percentage_charged_below','percentage_charged_above','client_all_status_key','client_all_status','client_upload_type','second_line_am'));
+        return view('adminlte::client.edit',compact('client_status_key','action','industry','client','users','user_id','generate_lead','industry_id','co_prefix','co_category','client_status','client_cat','client_category','percentage_charged_below','percentage_charged_above','client_all_status_key','client_all_status','client_upload_type','second_line_am','selected_departments','departments','user_ids_array','departments','selected_users'));
     }
 
     public function store(Request $request) {
@@ -1168,11 +1435,14 @@ class ClientController extends Controller
                   $query->where('delete_client', '=', '0');
               })
             ],
+            'department_ids' => 'required|array|min:1',
         ]);
 
         $user_id = \Auth::user()->id;
         $user_name = \Auth::user()->name;
         $user_email = \Auth::user()->email;
+        $department_ids = $request->input('department_ids');
+
         $input = $request->all();
 
         $client_basic_info = new ClientBasicinfo();
@@ -1185,6 +1455,9 @@ class ClientController extends Controller
         $client_basic_info->other_number = $input['other_number'];
         $client_basic_info->website = $input['website'];
         $client_basic_info->designation = $input['designation'];
+        $data_source = isset($input['data_source']) ? $input['data_source'] : null;
+
+        $client_basic_info->department_ids = (isset($department_ids) && sizeof($department_ids) > 0) ? implode(",", $department_ids) : 0;
 
         if(isset($input['percentage_charged_below']) && $input['percentage_charged_below']!= '') {
             $client_basic_info->percentage_charged_below = $input['percentage_charged_below'];
@@ -1203,6 +1476,20 @@ class ClientController extends Controller
         $client_basic_info->status = $input['status'];
         $client_basic_info->account_manager_id = $input['account_manager'];
         $client_basic_info->industry_id = $input['industry_id'];
+        // if ($input['industry_id'] > 0) {
+        //     $industryId = $input['industry_id'];
+        //     if ($industryId == '49') {
+        //         $industryName = $request->input('other');
+        //         $industry = new Industry();
+        //         $industry->name = $industryName;
+        //         $industry->save();
+    
+        //         // Assign the newly created industry ID to the client
+        //         $client_basic_info->industry_id = $industry->id;
+        //     } else {
+        //         $client_basic_info->industry_id = $industryId;
+        //     }
+        // }
         $client_basic_info->about = $input['description'];
 
         if(isset($input['source']) && $input['source']!='')
@@ -1243,13 +1530,10 @@ class ClientController extends Controller
 
         // Save Department Id for Different Dashboard
         $vibhuti_user_id = getenv('STRATEGYUSERID');
-
         if($user_id == $vibhuti_user_id) {
-
             $client_basic_info->department_id = 2;
         }
         else {
-
             $client_basic_info->department_id = 1;
         }
 
@@ -1401,11 +1685,29 @@ class ClientController extends Controller
                 } 
             }
 
+            $users = $request->input('user_ids');
+            if (isset($users) && sizeof($users)>0) {
+                foreach ($users as $key => $value) {
+                    $client_visible_users = new ClientVisibleUsers();
+                    $client_visible_users->client_id = $client_id;
+                    $client_visible_users->user_id = $value;
+                    $client_visible_users->save();
+                }
+    
+                // Add superadmin user id of management department
+                $superadminuserid = getenv('SUPERADMINUSERID');
+    
+                $client_visible_users = new ClientVisibleUsers();
+                $client_visible_users->client_id = $client_id;
+                $client_visible_users->user_id = $superadminuserid;
+                $client_visible_users->save();
+            }
+
             // Notifications : On adding new client notify Super Admin via notification
             $module_id = $client_id;
             $module = 'Client';
             $message = $user_name . " added new Client";
-            $link = route('client.show',$client_id);
+            $link = route('client.show',\Crypt::encrypt($client_id));
 
             $super_admin_userid = getenv('SUPERADMINUSERID');
             $user_arr = array();
@@ -1445,6 +1747,8 @@ class ClientController extends Controller
 
     public function show($id) {
         
+        $id = \Crypt::decrypt($id);
+
         $user = \Auth::user();
         $user_id = $user->id;
         $all_perm = $user->can('display-client');
@@ -1462,6 +1766,33 @@ class ClientController extends Controller
             ->select('client_basicinfo.*', 'users.name as am_name','users.id as am_id', 'industry.name as ind_name')->where('client_basicinfo.id','=',$id)->first();
 
         $client['id'] = $id;
+
+        $client_user_name = '';
+        $client_users = ClientVisibleUsers::getClientUsersByClientId($id);
+        if(isset($client_users) && sizeof($client_users) > 0) {
+            foreach($client_users as $ku => $vu) {
+                if (isset($client_user_name) && $client_user_name != '') {
+                    $client_user_name .= ", " . User::getUserNameById($vu['user_id']);
+                }
+                else {
+                    $client_user_name .= User::getUserNameById($vu['user_id']);
+                }
+            }
+        }
+
+        $department_name = '';
+        $dep_ids = explode(",", $client_basicinfo->department_id);
+        if(isset($dep_ids) && sizeof($dep_ids) > 0) {
+            foreach($dep_ids as $kd => $vd) {
+                if (isset($department_name) && $department_name != '') {
+                    $department_name .= ", " . Department::getDepartmentNameById($vd);
+                }
+                else {
+                    $department_name .= Department::getDepartmentNameById($vd);
+                }
+            }
+        }
+
    
         if(isset($client_basicinfo) && $client_basicinfo != '') {
 
@@ -1572,7 +1903,7 @@ class ClientController extends Controller
         $client_remarks = array();
         $client_remarks_edit = array();
 
-        return view('adminlte::client.show',compact('client','client_upload_type','user_id','post','super_admin_userid','client_remarks','client_remarks_edit','client_id'));
+        return view('adminlte::client.show',compact('client','client_upload_type','user_id','post','super_admin_userid','client_remarks','client_remarks_edit','client_id','client_user_name','department_name','client_basicinfo'));
     }
 
     public function attachmentsDestroy(Request $request,$docid) {
@@ -1594,11 +1925,11 @@ class ClientController extends Controller
 
         if($type == 'edit') {
 
-            return redirect()->route('client.edit',[$clientid])->with('success','Attachment Deleted Successfully.');
+            return redirect()->route('client.edit',[\Crypt::encrypt($clientid)])->with('success','Attachment Deleted Successfully.');
         }
         else {
 
-            return redirect()->route('client.show',[$clientid])->with('success','Attachment Deleted Successfully.');
+            return redirect()->route('client.show',[\Crypt::encrypt($clientid)])->with('success','Attachment Deleted Successfully.');
         }
     }
 
@@ -1641,10 +1972,10 @@ class ClientController extends Controller
         }
 
         if($type == 'show') {
-            return redirect()->route('client.show',[$client_id])->with('success','Attachment Uploaded Successfully.');
+            return redirect()->route('client.show',[\Crypt::encrypt($client_id)])->with('success','Attachment Uploaded Successfully.');
         }
         else {
-            return redirect()->route('client.edit',[$client_id])->with('success','Attachment Uploaded Successfully.');
+            return redirect()->route('client.edit',[\Crypt::encrypt($client_id)])->with('success','Attachment Uploaded Successfully.');
         }
     }
 
@@ -1732,6 +2063,7 @@ class ClientController extends Controller
         $user_id = \Auth::user()->id;
         $input = $request->all();
         $input = (object)$input;
+        $department_ids = $request->input('department_ids');
 
         $client_basicinfo = ClientBasicinfo::find($id);
 
@@ -1755,6 +2087,7 @@ class ClientController extends Controller
         $client_basicinfo->s_email = $input->s_email;
         $client_basicinfo->description = $input->description;
         $client_basicinfo->designation = $input->designation;
+        $client_basicinfo->department_ids = (isset($department_ids) && sizeof($department_ids) > 0) ? implode(",", $department_ids) : 0;
 
         if(isset($input->percentage_charged_below) && $input->percentage_charged_below != '') {
             $client_basicinfo->percentage_charged_below = $input->percentage_charged_below;
@@ -1877,6 +2210,29 @@ class ClientController extends Controller
             $client_address->updated_at = date("Y-m-d H:i:s");
             $client_address->save();
 
+            $users = $request->input('user_ids');
+            if (!is_array($users)) {
+                $users = [$users]; // Convert to an array
+            }
+            
+            if (isset($users) && sizeof($users) > 0) {
+                ClientVisibleUsers::where('client_id', $id)->delete();
+    
+                foreach ($users as $key => $value) {
+                    $client_visible_users = new ClientVisibleUsers();
+                    $client_visible_users->client_id = $id;
+                    $client_visible_users->user_id = $value;
+                    $client_visible_users->save();
+                }
+            
+                // Add superadmin user id of the management department
+                $superadminuserid = getenv('SUPERADMINUSERID');
+                $client_visible_users = new ClientVisibleUsers();
+                $client_visible_users->client_id = $id;
+                $client_visible_users->user_id = $superadminuserid;
+                $client_visible_users->save();
+            }
+
             // if account manager change then jobs hiring manager all changes
             $job_ids = JobOpen::getJobIdByClientId($id);
             /*if ($input->account_manager == '0') {
@@ -1917,7 +2273,7 @@ class ClientController extends Controller
 
                 $module_id = $id;
                 $module = 'Client Account Manager';
-                $link = route('client.show',$id);
+                $link = route('client.show',\Crypt::encrypt($id));
                 $subject = "Client Account Manager Changed - " . $input->name . " - " . $input->billing_city;
                 $message = "<tr><td>" . $input->name . " Change Account Manager </td></tr>";
                 $sender_name = $user_id;
@@ -2029,7 +2385,7 @@ class ClientController extends Controller
                     // Forbid Client Email Notifications : On change status of client as forbid
                     $module_id = $id;
                     $module = 'Forbid Client';
-                    $link = route('client.show',$id);
+                    $link = route('client.show',\Crypt::encrypt($id));
                     $subject = "Forbid Client - " . $input->name . " - " . $input->billing_city;
                     $message = "<tr><td>" . $input->name . " Convert as forbid Client </td></tr>";
                     $sender_name = $user_id;
@@ -2523,7 +2879,7 @@ class ClientController extends Controller
 
         $module_id = $id;
         $module = 'Client Account Manager';
-        $link = route('client.show',$id);
+        $link = route('client.show',\Crypt::encrypt($id));
         $subject = "Client Account Manager Changed - " . $client_name . " - " . $billing_city;
         $message = "<tr><td>" . $client_name . " Change Account Manager </td></tr>";
         $sender_name = $user_id;
@@ -2756,11 +3112,11 @@ class ClientController extends Controller
         foreach ($client_res as $key => $value) {
 
             $action = '';
-            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
+            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>'; 
         
             if($edit_perm) {
 
-                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
             if($delete_perm) {
 
@@ -2787,7 +3143,7 @@ class ClientController extends Controller
             }
             if($all_perm || $value['client_owner']) {
 
-                $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
             if($all_perm || $value['client_owner'] || $value['second_line_client_owner']) {
 
@@ -2861,77 +3217,126 @@ class ClientController extends Controller
         if($request->hasFile('import_file')) {
 
             $path = $request->file('import_file')->getRealPath();
-            $data = Excel::load($path, function ($reader) {})->get();
+            $data = Excel::selectSheets('Sheet1')->load($path, function ($reader) {})->get();
             $messages = array();
+            $successCount = 0;
+            
 
             if (!empty($data) && $data->count()) {
+                $validator = Validator::make([], []);
 
                 foreach ($data->toArray() as $key => $value) {
 
                     if(!empty($value)) {
-                        foreach ($value as $v) {
 
-                            $sr_no = $v['sr_no'];
-                            $managed_by = $v['managed_by'];
-                            $name = $v['client_company'];
-                            $coordinator_name = $v['hrcoordinator_name'];
-                            $location = $v['location'];
-                            $mobile_number = $v['contact_details'];
-                            $email = $v['e_mail'];
+                            $user = \Auth::user();
+                            $user_id = $user->id;
 
-                            // first check email already exist or not , if exist doesnot update data
-                            $client_cnt = ClientBasicinfo::checkClientByEmail($email);
+                            $id = $value['id'];
+                            $name = $value['name'];
+                            $coordinator_prefix = $value['coordinator_prefix'];
+                            $coordinator_name = $value['coordinator_name'];
+                            $category = $value['category'];
+                            $mobile = $value['mobile'];
+                            $display_name = $value['display_name'];
+                            $mail = $value['mail'];
+                            $description = $value['description'];
+                            $percentage_charged_below = $value['percentage_charged_below'];
+                            $percentage_charged_above = $value['percentage_charged_above'];
+                            $billing_city = $value['billing_city'];
+                            $StatusName = $value['status'];
 
-                            if($client_cnt>0) {
-                                $messages[] = "Record $sr_no already present ";
+                            $statusNames = ClientBasicinfo::getAllStatus();
+                            $StatusId = array_search($StatusName, $statusNames);
+                
+                            if ($StatusId === false) {
+                                continue;
                             }
-                            else {
+                            
+                            $industryName = $value['industry_id'];
+                            $industry_id = null;
+     
+                            $industryModel = Industry::where('name', $industryName)->first();
+       
+                           if ($industryModel) {
+                               $industry_id = $industryModel->id;
+                           }
+                           if ($industry_id === null) {
+                               continue;
+                           }
+                            
+                           $validationData = $value;
+                           $rules = [
+                               'name' => 'required|string|max:255',
+                               'coordinator_prefix' => 'required|string|max:255',
+                               'mobile' => 'required|numeric|digits_between:10,15',
+                               'display_name' => 'required|string|max:255',
+                               'mail' => 'required|email|max:255',
+                               'billing_city' => 'required|string|max:255',
+                               'industry_id' => 'required|string|max:255', 
+                           ];
+       
+                           $validator = Validator::make($validationData, $rules);
+       
+                           if ($validator->fails()) {
+                               $messages[] = "Error in row {$key}: " . implode(', ', $validator->errors()->all());
+                               continue;
+                           }
+                          
+                            $client_basic_info = new ClientBasicinfo();
+                            $client_basic_info->department_id = 1;
+                            $client_basic_info->department_ids = 1;
+                            $client_basic_info->second_line_am = 0;
+                            $client_basic_info->delete_client = 0;
+                            $client_basic_info->data_source = "Import";
 
-                                // get user id from managed_by (i.e. username)
-                                $acc_mngr_id = User::getUserIdByName($managed_by);
+                            $client_basic_info->name = $name;
+                            $client_basic_info->mail = $mail;
+                            $client_basic_info->description = $description;
+                            $client_basic_info->mobile = $mobile;
+                            $client_basic_info->account_manager_id = $user_id;
+                            $client_basic_info->industry_id = $industry_id;
+                            $client_basic_info->convert_client = 0;
+                            $client_basic_info->lead_id = 0;
+                            $client_basic_info->percentage_charged_below = $percentage_charged_below;
+                            $client_basic_info->percentage_charged_above = $percentage_charged_above;
+                            $client_basic_info->status = $StatusId;
+                            $client_basic_info->coordinator_prefix = $coordinator_prefix;
+                            $client_basic_info->coordinator_name = $coordinator_name;
+                            $client_basic_info->category = $category;
+                            $client_basic_info->display_name = $display_name;
 
-                                if($acc_mngr_id > 0) {
+                            if ($client_basic_info->save()) {
 
-                                    // Insert new client
-                                    $client_basic_info = new ClientBasicinfo();
-                                    $client_basic_info->name = $name;
-                                    $client_basic_info->mail = $email;
-                                    $client_basic_info->mobile = $mobile_number;
-                                    $client_basic_info->coordinator_name = $coordinator_name;
-                                    $client_basic_info->account_manager_id = $acc_mngr_id;
+                                $client_address = new ClientAddress();
+                                $client_address->client_id = $client_basic_info->id;
+                                $client_address->billing_city = $billing_city;
+                                $client_address->save();
 
-                                    if($client_basic_info->save()) {
-
-                                        $client_id = $client_basic_info->id;
-                                        $input['client_id'] = $client_id;
-                                        $input['billing_city'] = $location;
-                                        $input['shipping_city'] = $location;
-                                        ClientAddress::create($input);
-
-                                        if ($client_id > 0) {
-                                            $messages[] = "Record $sr_no inserted successfully";
-                                        }
-                                    }
-                                    else {
-                                        $messages[] = "Error while inserting record $sr_no ";
-                                    }
-                                }
-                                else {
-                                    $messages[] = "Error while inserting record $sr_no ";
-                                }
+                                $successCount++; 
+                            }else {
+                                // $messages[] = "Error while inserting the record $id -";
+                                break;
                             }
+                         }
+                      }
+                        if ($successCount > 0) {
+                           $messages[] = "$successCount records inserted successfully.";
+                        } else {
+                           $messages[] = "No records inserted.";
                         }
+                        return view('adminlte::client.import',compact('messages'));
+
                     }
-                    else {
-                        $messages[] = "No Data in file";
-                    }
-                }
             }
-            return view('adminlte::client.import',compact('messages'));
-        }
-    }
+            else {
+               return redirect()->route('client.import')->with('error','Please Select Excel file.');
+         }
+    }       
 
     public function remarks($id) {
+
+        $id = \Crypt::decrypt($id);
 
         $user_id = \Auth::user()->id;
         $client_id = $id;
@@ -3001,10 +3406,29 @@ class ClientController extends Controller
             $get_latest_remarks = ClientBasicinfo::getLatestRemarks($client_id);
 
             $client_info = ClientBasicinfo::find($client_id);
+            $client_name = $client_info->name;
+            $account_manager_id = $client_info->account_manager_id;
             $client_info->latest_remarks = $get_latest_remarks;
             $client_info->save();
+
+            $jenny_user_id = getenv('JENNYUSERID');
+            if ($jenny_user_id == $user_id) {
+                $to = User::getUserEmailById($account_manager_id);
+            } else {
+                $to = 'clients@adlertalent.com';
+            }
+            $module = "Client Remarks";
+            $sender_name = $user_id;
+            $to = $to;
+            $cc = '';
+    
+            $subject = $client_name. " - Remark - " . date('d/m/Y');
+            $message = $client_name. " - Remark - " . date('d/m/Y');
+            $module_id = $client_id;
+    
+            event(new NotificationMail($module, $sender_name, $to, $subject, $message, $module_id, $cc));
         }
-        return redirect()->route('client.remarks',[$client_id]);
+        return redirect()->route('client.remarks',[\Crypt::encrypt($client_id)]);
     }
 
     public function writeComment(Request $request,$post_id) {
@@ -3046,10 +3470,29 @@ class ClientController extends Controller
         $get_latest_remarks = ClientBasicinfo::getLatestRemarks($client_id);
 
         $client_info = ClientBasicinfo::find($client_id);
+        $client_name = $client_info->name;
+        $account_manager_id = $client_info->account_manager_id;
         $client_info->latest_remarks = $get_latest_remarks;
         $client_info->save();
 
-        return redirect()->route('client.remarks',[$client_id]);
+        $jenny_user_id = getenv('JENNYUSERID');
+        if ($jenny_user_id == $user_id) {
+            $to = User::getUserEmailById($account_manager_id);
+        } else {
+            $to = 'clients@adlertalent.com';
+        }
+        $module = "Client Remarks";
+        $sender_name = $user_id;
+        $to = $to;
+        $cc = '';
+
+        $subject = $client_name. " - Remark - " . date('d/m/Y');
+        $message = $client_name. " - Remark - " . date('d/m/Y');
+        $module_id = $client_id;
+
+        event(new NotificationMail($module, $sender_name, $to, $subject, $message, $module_id, $cc));
+
+        return redirect()->route('client.remarks',[\Crypt::encrypt($client_id)]);
     }
 
     public function updateClientRemarks(Request $request, $client_id,$post_id) {
@@ -3086,7 +3529,7 @@ class ClientController extends Controller
         $client_info->latest_remarks = $get_latest_remarks;
         $client_info->save();
 
-       return redirect()->route('client.remarks',[$client_id]);
+       return redirect()->route('client.remarks',[\Crypt::encrypt($client_id)]);
     }
 
     public function updateComment() {
@@ -3416,11 +3859,11 @@ class ClientController extends Controller
         foreach ($client_res as $key => $value) {
 
             $action = '';
-            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',$value['id']).'" style="margin:2px;"></a>'; 
+            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('client.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>'; 
         
             if($edit_perm) {
 
-                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('client.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
             if($delete_perm) {
 
@@ -3448,7 +3891,7 @@ class ClientController extends Controller
             }
             if($all_perm || $value['client_owner']) {
 
-                $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a title="Remarks" class="fa fa-plus"  href="'.route('client.remarks',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
                 $days_array = ClientTimeline::getTimelineDetailsByClientId($value['id']);
 
@@ -3798,6 +4241,171 @@ class ClientController extends Controller
             else {
                 
                 return redirect()->route('client.index')->with('error','There are no active positions.');
+            }
+        }
+    }
+
+    public function downloadHiringReport() {
+
+        $from_date = isset($_POST['from_date']) ? date('Y-m-d', strtotime($_POST['from_date'])) : date('Y-m-d');
+        $to_date = isset($_POST['to_date']) ? date('Y-m-d', strtotime($_POST['to_date'])) : date('Y-m-d');
+        $client_id = $_POST['client_id'];
+        $page_nm = $_POST['page_nm'];
+        $source = $_POST['source'];
+    
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $today_date = date('d-m-Y');
+        $client_res = ClientBasicinfo::getClientDetailsById($client_id);
+        $client_jobs = JobOpen::getAllJobsByCLient($client_id);
+        if (isset($client_jobs) && sizeof($client_jobs) > 0) {
+            $list_array = array();
+            $j = 0;
+            foreach ($client_jobs as $client_jobs_key => $client_jobs_value) {
+                $associate_candidates = JobAssociateCandidates::getAssociatedCandidatesByWeek($client_jobs_value['id'], $from_date, $to_date);
+                $list_array[$j]['associate_candidates'] = $associate_candidates;
+    
+                $shortlisted_candidates = JobAssociateCandidates::getShortlistedCandidatesByWeek($client_jobs_value['id'], $from_date, $to_date);
+                $list_array[$j]['shortlisted_candidates'] = $shortlisted_candidates;
+    
+                $attended_interviews = Interview::getAttendedInterviewsByWeek($client_jobs_value['id'], $from_date, $to_date);
+                $list_array[$j]['attended_interviews'] = $attended_interviews;
+    
+                $job_details = JobOpen::getJobById($client_jobs_value['id']);
+                $list_array[$j]['posting_title'] = $job_details['posting_title'] . " - " . $job_details['city'];
+    
+                $j++;
+            }
+        }
+    
+        if (isset($list_array) && sizeof($list_array) > 0) {
+            // Generate Excel file using Excel package
+            $filename = 'Hiring_Report_' . $today_date . '.xlsx';
+            Excel::create($filename,function($excel) use ($list_array) {
+                $excel->sheet('sheet 1',function($sheet) use ($list_array) {
+                    $sheet->loadView('client-hiring-report-sheet', array('list_array' => $list_array));
+
+                    $sheet->getStyle('B2')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('B3')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('B4')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('B5')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('B6')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('B7')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('B8')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('B9')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('B10')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('B11')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('B12')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('B13')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('B14')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('B15')->getAlignment()->setWrapText(true);
+
+                    $sheet->getStyle('C2')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('C3')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('C4')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('C5')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('C6')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('C7')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('C8')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('C9')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('C10')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('C11')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('C12')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('C13')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('C14')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('C15')->getAlignment()->setWrapText(true);
+
+                    $sheet->getStyle('D2')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('D3')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('D4')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('D5')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('D6')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('D7')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('D8')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('D9')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('D10')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('D11')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('D12')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('D13')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('D14')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('D15')->getAlignment()->setWrapText(true);
+
+                    $sheet->getStyle('E2')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('E3')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('E4')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('E5')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('E6')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('E7')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('E8')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('E9')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('E10')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('E11')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('E12')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('E13')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('E14')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('E15')->getAlignment()->setWrapText(true);
+
+                    $sheet->getStyle('F2')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('F3')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('F4')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('F5')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('F6')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('F7')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('F8')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('F9')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('F10')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('F11')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('F12')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('F13')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('F14')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('F15')->getAlignment()->setWrapText(true);
+
+                    $sheet->getStyle('G2')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('G3')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('G4')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('G5')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('G6')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('G7')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('G8')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('G9')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('G10')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('G11')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('G12')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('G13')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('G14')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('G15')->getAlignment()->setWrapText(true);
+
+                    $sheet->getStyle('H2')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('H3')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('H4')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('H5')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('H6')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('H7')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('H8')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('H9')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('H10')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('H11')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('H12')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('H13')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('H14')->getAlignment()->setWrapText(true);
+                    $sheet->getStyle('H15')->getAlignment()->setWrapText(true);
+                });
+            })->export('xlsx');
+
+            if ($page_nm == 'AM') {
+                return redirect()->route('clientlist.amwise')->with('success', 'Hiring Report download Successfully.');
+            } else if ($page_nm == 'Type') {
+                return redirect('/client-list/' . $source)->with('success', 'Hiring Report download Successfully.');
+            } else {
+                return redirect()->route('client.index')->with('success', 'Hiring Report download Successfully.');
+            }
+        } else {
+            if ($page_nm == 'AM') {
+                return redirect()->route('clientlist.amwise')->with('error', 'There are no active positions.');
+            } else if ($page_nm == 'Type') {
+                return redirect('/client-list/' . $source)->with('error', 'There are no active positions.');
+            } else {
+                return redirect()->route('client.index')->with('error', 'There are no active positions.');
             }
         }
     }

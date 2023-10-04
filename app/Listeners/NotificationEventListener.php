@@ -4,6 +4,7 @@ namespace App\Listeners;
 
 use App\Events\NotificationEvent;
 use App\Notifications;
+use Mail;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
@@ -37,6 +38,7 @@ class NotificationEventListener
         $link = $event->link;
         $user_arr = $event->user_arr;
 
+        // Mail::send('eventMail', $module, function($message) use ($user){)
         if(isset($user_arr))
         {
             if(is_array($user_arr)){

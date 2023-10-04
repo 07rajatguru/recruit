@@ -45,7 +45,7 @@
             <tr id="{{ $value['id'] }}">
                 <td>{{ ++$i }}</td>
                 <td>
-                    <a class="fa fa-edit" href="{{ route('clientheirarchy.edit',$value['id']) }}"></a>
+                    <a class="fa fa-edit" href="{{ route('clientheirarchy.edit',\Crypt::encrypt($value['id'])) }}"></a>
 
                     @permission(('client-hierarchy-delete'))
                         @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'clientheirarchy','display_name'=>'Client Hierarchy'])

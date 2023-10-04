@@ -77,6 +77,8 @@ class TeamController extends Controller
 
     public function edit($id) {
 
+        $id = \Crypt::decrypt($id);
+
         $team = Team::find($id);
         $users = User::getAllUsers();
 

@@ -5,171 +5,134 @@
     <title>Adler Talent</title>
 
     @yield('style')
-</head>
 
-<style>
-    .cvs_td_top{
-        border-top: black 1px solid;
-        padding: 8px;
-    }
-    .cvs_td_right{
-        border-right: black 1px solid;
-    }
-    .cvs_td_bottom{
-        border-bottom: black 1px solid;
-    }
-    .cvs_td_left{
-        border-left: black 1px solid;
-    }
+    <style type="text/css">
+        tr { background-color: white; }
+        td { background-color: white; }
+        th { background-color: white; }
+        p {
+            padding-left: 200px;
+            font-size: 14px;
+        }
+        table, th, td {
+            height: 30px;
+            border: 2px solid black;
+            border-collapse: collapse;
+        }
+        button {
+            position: absolute;
+            padding: 5px 20px;
+            background-color: DarkOrchid;
+            color: white;
+            border:none;
+            font-size: 14px;
+            border-radius:50px;
+        }
+        div {
+            padding: 13px;
+            background-color: WhiteSmoke;
+        }
+        body {
+            background-color: WhiteSmoke;
+        }
+    </style>
 
-</style>
-    <body style="margin: 0; padding-top: 30px; background-color: #f5f5f5;">
-        <table align="center" width="600px" cellpadding="0" cellspacing="0" style="font-family: arial; font-size: 12px; color: #444444;">
-            <tr>
-                <td>
-                    @if(isset($data) && sizeof($data)>0)
-                        @foreach($data as $kd => $vd)
-                            <table width="100%" cellpadding="0" cellspacing="0" style="border:0; background-color: #ffffff; padding: 50px 54px;">
-                                <tr>
-                                    <td align="center" colspan="13">
-                                        <u><b><h1>Employee Name: {{ $kd }}</h1></b></u>
-                                    </td>
-                                </tr>
+    </head>
+    <body>
+        <div>
+            <p style="font-family:Cambria, serif;font-size: 11.0pt;">Dear {{ $rm_name }},</p>
+            <p style="font-family:Cambria, serif;font-size: 11.0pt;">Please find the Daily Activity Report as below:</p>
+
+            <center>
+                <table style="width: 60%;">
+                    <thead>
+                        <tr>
+                            <th  width="7%" style="background-color: none;font-size: 9.0pt; ">Sr No</th>
+                            <th  width="20%" style="background-color: none;font-size: 9.0pt; ">Employee Name</th>
+                            <th  width="20%" style="background-color: none;font-size: 9.0pt; ">CVs Added</th>
+                            <th  width="20%" style="background-color: none;font-size: 9.0pt; ">Interviews Scheduled</th>
+                            <th  width="15%" style="background-color: none;font-size: 9.0pt; ">Leads Added</th>
+                            <th  width="17%" style="background-color: none;font-size: 9.0pt; ">Action</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        <?php $i=0; ?>
+                        @if(isset($data) && sizeof($data)>0)
+                            @foreach($data as $kd => $vd)
+                            <?php 
+                                // Set the background color based on the count conditions
+                                $associate_count = isset($vd['associate_count']) ? $vd['associate_count'] : 0;
+                                $total_interview_cnt = isset($vd['interview_daily']) ? sizeof($vd['interview_daily']) : 0;
+                                $leads_count = isset($vd['leads_count']) ? $vd['leads_count'] : 0;
+
+                                $bg_colors = [
+                                    'associate' => '',
+                                    'interview' => '',
+                                    'leads' => ''
+                                ];
+
+                                // Set the background color for associate column
+                                if($associate_count >= 7) {
+                                    $bg_colors['associate'] = '#b6d7a8'; // Light green
+                                } elseif($associate_count >= 4 && $associate_count <= 6) {
+                                    $bg_colors['associate'] = '#ffd966'; // Light yellow
+                                } else {
+                                    $bg_colors['associate'] = '#ea9999'; // Light red
+                                }
+
+                                // Set the background color for interview column
+                                if($total_interview_cnt >= 7) {
+                                    $bg_colors['interview'] = '#b6d7a8'; // Light green
+                                } elseif($total_interview_cnt >= 4 && $total_interview_cnt <= 6) {
+                                    $bg_colors['interview'] = '#ffd966'; // Light yellow
+                                } else {
+                                    $bg_colors['interview'] = '#ea9999'; // Light red
+                                }
+
+                                // Set the background color for leads column
+                                if($leads_count >= 7) {
+                                    $bg_colors['leads'] = '#b6d7a8'; // Light green
+                                } elseif($leads_count >= 4 && $leads_count <= 6) {
+                                    $bg_colors['leads'] = '#ffd966'; // Light yellow
+                                } else {
+                                    $bg_colors['leads'] = '#ea9999'; // Light red
+                                }
+                             ?>
+                            <tr style="font-family:Cambria, serif;font-size: 11.0pt;">
+                                <td align="center">{{ ++$i }}</td>
+                                <td align="center">{{ $kd }}</td>
                                 @if(isset($vd['user_details']->cv_report) && $vd['user_details']->cv_report == 'Yes')
-                                <tr>
-                                    <td colspan="7">
-                                        <u><b><h1>No of CVs Associated : {{$vd['associate_count'] or '0'}}</h1></b></u>
-                                    </td>
-                                </tr>
-                                <tr  style="background-color: #f39c12;">
-                                    <td  align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Sr.No.</b></td>
-                                    <td  align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Date</b></td>
-                                    <td colspan="7" align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Position Name</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding:8px;border-left: black 1px solid;"><b>Company</b></td>
-                                    <td  align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Location</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>No of resumes<br/>associated</b>
-                                    </td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;"><b>Status</b></td>
-                                </tr>
-
-                                <?php
-                                    $i=1;
-                                    $total_cnt = sizeof($vd['associate_daily']);
-                                ?>
-                                @foreach($vd['associate_daily'] as $key=>$value)
-                                    <tr colspan="7">
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{ $i }}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{date('jS F,y') }}</td>
-                                        <td colspan="7" align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['posting_title']}}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['company']}}
-                                        </td>
-                                        <td  align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['location']}}
-                                        </td>
-                                        <td  align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['associate_candidate_count'] or ''}}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid; border-right: black 1px solid;">{{$value['status']}}</td>
-                                    </tr>
-                                    <?php $i++; ?>
-                                @endforeach
+                                    <td align="center" style="background-color:{{$bg_colors['associate']}};">{{$vd['associate_count'] or '0'}}</td>
+                                @else
+                                    <td align="center" style="background-color:{{$bg_colors['associate']}};">0</td>
                                 @endif
 
                                 @if(isset($vd['user_details']->interview_report) && $vd['user_details']->interview_report == 'Yes')
-                                <?php $total_interview_cnt = sizeof($vd['interview_daily']); ?>
-
-                                <tr>
-                                    <td colspan="7">
-                                        <u><b><h1>No of Interviews Scheduled : {{$total_interview_cnt or '0'}}</h1></b></u>
-                                    </td>
-                                </tr>
-
-                                <tr style="background-color: #7598d9">
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Sr.<br/>No.</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Position</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Position Location</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Name of the Candidate</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Interview Date</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Interview Time</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Candidate Location</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Mode of Interview</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Skype ID</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Contact No.</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Email ID</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Confirmed</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;"><b>Source</b></td>
-                                </tr>
-
-                                <?php
-                                    $i=1;
-                                ?>
-                                @foreach($vd['interview_daily'] as $key=>$value)
-                                    <tr>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{ $i }}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['posting_title']}}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['location']}}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['cname']}}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{date('d/m/Y',strtotime($value['interview_date'])) }}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{date('h:i A',strtotime($value['interview_time']))  }}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['ccity']}}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['interview_type']}}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{''}}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['cmobile']}}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['cemail']}}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;"><b>{{'Yes'}}</b></td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($total_interview_cnt==$i): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;border-right: black 1px solid;"><b>{{'Adler'}}</b></td>
-                                    </tr>
-                                    <?php $i++; ?>
-                                @endforeach
+                                    <?php $total_interview_cnt = sizeof($vd['interview_daily']); ?>
+                                    <td align="center" style="background-color:{{$bg_colors['interview']}};"> {{$total_interview_cnt or '0'}}</td>
+                                @else
+                                    <td align="center" style="background-color:{{$bg_colors['interview']}};">0</td>
                                 @endif
 
                                 @if(isset($vd['user_details']->lead_report) && $vd['user_details']->lead_report == 'Yes')
-                                <tr>
-                                    <td colspan="7">
-                                        <u><b><h1>No of Leads Added : {{$vd['leads_count'] or '0'}}</h1></b></u>
-                                    </td>
-                                </tr>
-
-                                <tr style="background-color: #C4D79B">
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Sr.<br/>No.</b></td>
-                                    <td colspan="2" align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Company Name</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Contact Point</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Designation</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Email ID</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Mobile No.</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>City</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Website</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Service</b></td>
-                                    <td colspan="2" align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;"><b>Lead Status</b></td>
-                                    <td align="center" style="border-top: black 1px solid;padding: 8px;border-left: black 1px solid;border-right: black 1px solid;"><b>Source</b></td>
-                                <?php
-                                    $j=1;
-                                ?>
-
-                                @foreach($vd['leads_daily'] as $key=>$value)
-                                    <tr>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($leads_count==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{ $j }}</td>
-                                        <td colspan="2" align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($leads_count==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['company_name']}}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($leads_count==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['contact_point']}}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($leads_count==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['designation']}}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($leads_count==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['email']}}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($leads_count==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['mobile']}}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($leads_count==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['city']}}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($leads_count==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['website']}}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($leads_count==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['service']}}</td>
-                                        <td colspan="2" align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($leads_count==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;">{{$value['lead_status']}}</td>
-                                        <td align="center" style="border-top: black 1px solid;padding: 8px; <?php if ($leads_count==$j): ?>border-bottom: black 1px solid;<?php endif ?>  border-left: black 1px solid;border-right: black 1px solid;">{{$value['source']}}</td>
-                                    </tr>
-                                    <?php $j++; ?>
-                                @endforeach
+                                    <td align="center" style="background-color:{{$bg_colors['leads']}};"> {{$vd['leads_count'] or '0'}}</td>
+                                @else
+                                    <td align="center" style="background-color:{{$bg_colors['leads']}};">0</td>
                                 @endif
-                                <tr>
-                                    <td colspan="13">
-                                        <hr/>
-                                    </td>
-                                </tr>
-                            </table>
-                        @endforeach
-                    @endif
-                </td>
-            </tr>
-        </table>
+
+                                <td align="center"><button><a  style="color: white;" href="{{getenv('APP_URL').'/daily-report/' . \Crypt::encrypt($vd['user_details']->id) }}">Show</a></button></td>
+                            </tr>
+                            @endforeach
+                        @endif
+                    </tbody>
+                </table>
+            </center>
+
+            <p style="font-family:Cambria, serif;font-size: 11.0pt;">Request you to connect with your Team Members and understand the further plan of actions accordingly.</p>
+            <p style="font-family:Cambria, serif;font-size: 11.0pt;">Thanks.</p>
+            <p style="font-family:Cambria, serif;font-size: 11.0pt;">E2H Team</p>
+
+        </div>
     </body>
 </html>

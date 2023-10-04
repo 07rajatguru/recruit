@@ -3,6 +3,10 @@
         .error{
             color:#f56954 !important;
         }
+        .form-horizontal .form-group {
+            margin-right: 0px !important;
+            margin-left: 0px !important;
+        }
     </style>
 @endsection
 
@@ -32,99 +36,112 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <div class="box-header col-md-6 ">
+                
+                <div class="box-body col-xs-4 col-sm-4 col-md-4">
 
+                    <div class="form-group {{ $errors->has('role_id') ? 'has-error' : '' }}">
+                        <strong>Select Role: <span class = "required_fields">*</span> </strong>
+                        {!! Form::select('role_id',['' => 'Select Role'] + $all_roles,$select_role_id, array('id'=>'role_id','class' => 'form-control','tabindex' => '1', 'onchange' => 'onRoleChange()')) !!}
+                        @if ($errors->has('role_id'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('role_id') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+
+                    <div class="form-group {{ $errors->has('no_of_resumes') ? 'has-error' : '' }}" id="no_of_resumes">
+                        <strong>No Of Resumes : <span class = "required_fields">*</span></strong>
+                        {!! Form::number('no_of_resumes', null, array('placeholder' => 'No Of Resumes','class' => 'form-control', 'tabindex' => '2','id' => 'no_of_resumes')) !!}
+                        @if ($errors->has('no_of_resumes'))
+                            <span class="help-block">
+                            <strong>{{ $errors->first('no_of_resumes') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+
+                    <div class="form-group {{ $errors->has('shortlist_ratio') ? 'has-error' : '' }}">
+                        <strong>Shortlist Ratio (Add Percentage) : <span class = "required_fields">*</span></strong>
+                        {!! Form::number('shortlist_ratio', null, array('placeholder' => 'Shortlist Ratio','class' => 'form-control', 'tabindex' => '3','id' => 'shortlist_ratio','onfocusout' => 'checkShortlistRatio();')) !!}
+                        @if ($errors->has('shortlist_ratio'))
+                            <span class="help-block">
+                            <strong>{{ $errors->first('shortlist_ratio') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+
+                    <div class="form-group {{ $errors->has('applicable_date') ? 'has-error' : '' }}">
+                        <strong>Applicable Date : <span class = "required_fields">*</span> </strong>
+                        <div class="input-group date"><div class="input-group-addon"><i class="fa fa-calendar"></i></div>
+                            {!! Form::text('applicable_date', isset($applicable_date) ? $fromDateTime : null, array('id'=>'applicable_date','placeholder' => 'Select  Applicable Date','class' => 'form-control' , 'tabindex' => '3', 'required' => true )) !!}
+                        </div>
+                        @if ($errors->has('applicable_date'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('applicable_date') }}</strong>
+                            </span>
+                        @endif
+                    </div>
                 </div>
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    <div class="">
+                <div class="box-body col-xs-4 col-sm-4 col-md-4">
+                    <div class="form-group {{ $errors->has('interview_ratio') ? 'has-error' : '' }}">
+                        <strong>Interview Ratio (Add Percentage) : <span class = "required_fields">*</span></strong>
+                        {!! Form::number('interview_ratio', null, array('placeholder' => 'Interview Ratio','class' => 'form-control', 'tabindex' => '4','id' => 'interview_ratio','onfocusout' => 'checkInterviewRatio();')) !!}
+                        @if ($errors->has('interview_ratio'))
+                            <span class="help-block">
+                            <strong>{{ $errors->first('interview_ratio') }}</strong>
+                            </span>
+                        @endif
+                    </div>
 
-                        <div class="form-group {{ $errors->has('role_id') ? 'has-error' : '' }}">
-                            <strong>Select Role: <span class = "required_fields">*</span> </strong>
-                            {!! Form::select('role_id',$all_roles,$select_role_id, array('id'=>'role_id','class' => 'form-control','tabindex' => '1')) !!}
-                            @if ($errors->has('role_id'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('role_id') }}</strong>
-                                </span>
-                            @endif
-                        </div>
+                    <div class="form-group {{ $errors->has('selection_ratio') ? 'has-error' : '' }}">
+                        <strong>Selection Ratio (Add Percentage) : <span class = "required_fields">*</span></strong>
+                        {!! Form::number('selection_ratio', null, array('placeholder' => 'Selection Ratio','class' => 'form-control', 'tabindex' => '5','id' => 'selection_ratio','onfocusout' => 'checkSelectionRatio();')) !!}
+                        @if ($errors->has('selection_ratio'))
+                            <span class="help-block">
+                            <strong>{{ $errors->first('selection_ratio') }}</strong>
+                            </span>
+                        @endif
+                    </div>
 
-                        <div class="form-group {{ $errors->has('no_of_resumes') ? 'has-error' : '' }}">
-                            <strong>No Of Resumes : <span class = "required_fields">*</span></strong>
-                            {!! Form::number('no_of_resumes', null, array('placeholder' => 'No Of Resumes','class' => 'form-control', 'tabindex' => '2','id' => 'no_of_resumes')) !!}
-                            @if ($errors->has('no_of_resumes'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('no_of_resumes') }}</strong>
-                                </span>
-                            @endif
-                        </div>
+                    <div class="form-group {{ $errors->has('offer_acceptance_ratio') ? 'has-error' : '' }}">
+                        <strong>Offer Acceptance Ratio (Add Percentage) : <span class = "required_fields">*</span></strong>
+                        {!! Form::number('offer_acceptance_ratio', null, array('placeholder' => 'Offer Acceptance Ratio','class' => 'form-control', 'tabindex' => '6','id' => 'offer_acceptance_ratio','onfocusout' => 'checkOfferAcceptanceRatio();')) !!}
+                        @if ($errors->has('offer_acceptance_ratio'))
+                            <span class="help-block">
+                            <strong>{{ $errors->first('offer_acceptance_ratio') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
 
-                        <div class="form-group {{ $errors->has('shortlist_ratio') ? 'has-error' : '' }}">
-                            <strong>Shortlist Ratio (Add Percentage) : <span class = "required_fields">*</span></strong>
-                            {!! Form::number('shortlist_ratio', null, array('placeholder' => 'Shortlist Ratio','class' => 'form-control', 'tabindex' => '3','id' => 'shortlist_ratio','onfocusout' => 'checkShortlistRatio();')) !!}
-                            @if ($errors->has('shortlist_ratio'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('shortlist_ratio') }}</strong>
-                                </span>
-                            @endif
-                        </div>
+                <div class="box-body col-xs-4 col-sm-4 col-md-4">
 
-                        <div class="form-group {{ $errors->has('interview_ratio') ? 'has-error' : '' }}">
-                            <strong>Interview Ratio (Add Percentage) : <span class = "required_fields">*</span></strong>
-                            {!! Form::number('interview_ratio', null, array('placeholder' => 'Interview Ratio','class' => 'form-control', 'tabindex' => '4','id' => 'interview_ratio','onfocusout' => 'checkInterviewRatio();')) !!}
-                            @if ($errors->has('interview_ratio'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('interview_ratio') }}</strong>
-                                </span>
-                            @endif
-                        </div>
+                    <div class="form-group {{ $errors->has('joining_ratio') ? 'has-error' : '' }}">
+                        <strong>Joining Ratio (Add Percentage) : <span class = "required_fields">*</span></strong>
+                        {!! Form::number('joining_ratio', null, array('placeholder' => 'Joining Ratio','class' => 'form-control', 'tabindex' => '7','id' => 'joining_ratio','onfocusout' => 'checkJoiningRatio();')) !!}
+                        @if ($errors->has('joining_ratio'))
+                            <span class="help-block">
+                            <strong>{{ $errors->first('joining_ratio') }}</strong>
+                            </span>
+                        @endif
+                    </div>
 
-                        <div class="form-group {{ $errors->has('selection_ratio') ? 'has-error' : '' }}">
-                            <strong>Selection Ratio (Add Percentage) : <span class = "required_fields">*</span></strong>
-                            {!! Form::number('selection_ratio', null, array('placeholder' => 'Selection Ratio','class' => 'form-control', 'tabindex' => '5','id' => 'selection_ratio','onfocusout' => 'checkSelectionRatio();')) !!}
-                            @if ($errors->has('selection_ratio'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('selection_ratio') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-
-                        <div class="form-group {{ $errors->has('offer_acceptance_ratio') ? 'has-error' : '' }}">
-                            <strong>Offer Acceptance Ratio (Add Percentage) : <span class = "required_fields">*</span></strong>
-                            {!! Form::number('offer_acceptance_ratio', null, array('placeholder' => 'Offer Acceptance Ratio','class' => 'form-control', 'tabindex' => '6','id' => 'offer_acceptance_ratio','onfocusout' => 'checkOfferAcceptanceRatio();')) !!}
-                            @if ($errors->has('offer_acceptance_ratio'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('offer_acceptance_ratio') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-
-                        <div class="form-group {{ $errors->has('joining_ratio') ? 'has-error' : '' }}">
-                            <strong>Joining Ratio (Add Percentage) : <span class = "required_fields">*</span></strong>
-                            {!! Form::number('joining_ratio', null, array('placeholder' => 'Joining Ratio','class' => 'form-control', 'tabindex' => '7','id' => 'joining_ratio','onfocusout' => 'checkJoiningRatio();')) !!}
-                            @if ($errors->has('joining_ratio'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('joining_ratio') }}</strong>
-                                </span>
-                            @endif
-                        </div>
-
-                        <div class="form-group {{ $errors->has('after_joining_success_ratio') ? 'has-error' : '' }}">
-                            <strong>After Joining Success Ratio (Add Percentage) : <span class = "required_fields">*</span></strong>
-                            {!! Form::number('after_joining_success_ratio', null, array('placeholder' => 'After Joining Success Ratio','class' => 'form-control', 'tabindex' => '8','id' => 'after_joining_success_ratio','onfocusout' => 'checkAfterJoiningSuccessRatio();')) !!}
-                            @if ($errors->has('after_joining_success_ratio'))
-                                <span class="help-block">
-                                <strong>{{ $errors->first('after_joining_success_ratio') }}</strong>
-                                </span>
-                            @endif
-                        </div>
+                    <div class="form-group {{ $errors->has('after_joining_success_ratio') ? 'has-error' : '' }}">
+                        <strong>After Joining Success Ratio (Add Percentage) : <span class = "required_fields">*</span></strong>
+                        {!! Form::number('after_joining_success_ratio', null, array('placeholder' => 'After Joining Success Ratio','class' => 'form-control', 'tabindex' => '8','id' => 'after_joining_success_ratio','onfocusout' => 'checkAfterJoiningSuccessRatio();')) !!}
+                        @if ($errors->has('after_joining_success_ratio'))
+                            <span class="help-block">
+                            <strong>{{ $errors->first('after_joining_success_ratio') }}</strong>
+                            </span>
+                        @endif
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            {!! Form::submit(isset($bench_mark) ? 'Update' : 'Submit', ['class' => 'btn btn-primary']) !!}
-        </div>
     </div>
+    <div class="col-xs-12 col-sm-12 col-md-12 text-center">
+        {!! Form::submit(isset($bench_mark) ? 'Update' : 'Submit', ['class' => 'btn btn-primary']) !!}
+    </div>
+    
 
     {!! Form::close() !!}
 @else
@@ -140,7 +157,14 @@
     <script>
         $(document).ready(function() {
 
+            // For edit data
+            onRoleChange();
+
             $("#role_id").select2();
+
+            $("#applicable_date").datetimepicker({
+                format:'YYYY-MM-DD'
+            });
 
             $('#no_of_resumes').keypress(function (e) {
                 if(e.which == 44 || e.which == 46) {
@@ -337,6 +361,16 @@
                 return false;
             }
             return true;
+        }
+
+        function onRoleChange() {
+            var selectedRoleId = $("#role_id").val();
+            if (selectedRoleId == 1) {  //Super Admin role ID is 1
+                $('#no_of_resumes').hide();
+            } else {
+                $('#no_of_resumes').show();
+            }
+
         }
     </script>
 @endsection

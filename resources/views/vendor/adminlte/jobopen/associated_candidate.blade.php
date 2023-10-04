@@ -71,6 +71,9 @@
             </div>
 
             <div class="pull-right">
+                @if(isset($access) && $access==true)
+                    <button type="button" class="btn btn-warning" data-toggle="modal" data-target="#modal-duplicate" onclick="duplicatecandidate()">Duplicates</button>
+                @endif
                 <button type="button" class="btn bg-blue" data-toggle="modal" data-target="#modal-shortlist" onclick="shortlistcandidate(1)">Shortlist</button>
                 <button type="button" class="btn bg-blue" onclick="shortlistcandidate(2)">Shortlisted & Schedule Interview
                 </button>
@@ -411,7 +414,7 @@
                             </ul>
                         </li>
                     </ul>
-                    &nbsp;<a title="Edit Candidate Information"  href="/candidate/{{$candidate->id}}/edit?jobid={{$job_id}}"><i class="fa fa-edit"></i></a>&nbsp;
+                    &nbsp;<a title="Edit Candidate Information" href="/candidate/{{ Crypt::encrypt($candidate->id) }}/edit?jobid={{ Crypt::encrypt($job_id) }}"><i class="fa fa-edit"></i></a>&nbsp;
 
                     @if(isset($access) && $access==true)
                         <a title="Deassociate Candidate" onclick="deassociate_candidate('{{ $job_id }}' , '{{ $candidate->id }}');" style="cursor: pointer;">
@@ -431,22 +434,55 @@
                 ?>
                 
                 @if($candidate->shortlisted == 1)
-                <td style="background:#FFFF00;"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">{{ $candidate->fname or '' }}</a></td>
-
+                    <td style="background:#FFFF00;">
+                        <a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">
+                            @if(isset($candidate->is_duplicates) && $candidate->is_duplicates == '1') 
+                                <span style="color: red"> {{ $candidate->fname or '' }} </span>
+                            @else 
+                                {{ $candidate->fname or '' }}
+                            @endif
+                        </a>
+                    </td>
                 @elseif($candidate->shortlisted == 2)
-                <td style="background:#FF99FF;"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">
-                   {{ $candidate->fname or '' }}</a></td>
-
+                    <td style="background:#FF99FF;">
+                        <a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">
+                            @if(isset($candidate->is_duplicates) && $candidate->is_duplicates == '1') 
+                                <span style="color: red"> {{ $candidate->fname or '' }} </span>
+                            @else 
+                                {{ $candidate->fname or '' }}
+                            @endif
+                        </a>
+                    </td>
                 @elseif($candidate->shortlisted == 3 && $candidate->selected_date != '')
-                <td style="background:#32CD32;"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}" style="color: blue;">
-                   {{ $candidate->fname or '' }}</a></td>
-
+                    <td style="background:#32CD32;">
+                        <a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}" style="color: blue;">
+                            @if(isset($candidate->is_duplicates) && $candidate->is_duplicates == '1') 
+                                <span style="color: red"> {{ $candidate->fname or '' }} </span>
+                            @else 
+                                {{ $candidate->fname or '' }}
+                            @endif
+                        </a>
+                    </td>
                 @elseif($candidate->shortlisted == 3 && $candidate->selected_date == '')
-                <td style="background:#66FFFF;"><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">
-                   {{ $candidate->fname or '' }}</a></td>
-
+                    <td style="background:#66FFFF;">
+                        <a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">
+                            @if(isset($candidate->is_duplicates) && $candidate->is_duplicates == '1') 
+                                <span style="color: red"> {{ $candidate->fname or '' }} </span>
+                            @else 
+                                {{ $candidate->fname or '' }}
+                            @endif
+                        </a>
+                    </td>
                 @else
-                <td><a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">{{ $candidate->fname or '' }}</a></td>
+                    <td>
+                        <a target="_blank" title="Show Candidate" href="{{ route('candidate.show',$candidate->cid) }}">
+                            @if(isset($candidate->is_duplicates) && $candidate->is_duplicates == '1') 
+                                <span style="color: red"> {{ $candidate->fname or '' }} </span>
+                            @else 
+                                {{ $candidate->fname or '' }}
+                            @endif
+                        </a>
+                    </td>
                 @endif
 
                 <td>{{ $candidate->owner or '' }}</td>
@@ -554,6 +590,37 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+
+    <div id="modal-duplicate" class="modal text-left fade duplicate-candidate" style="display:none;">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    <h2 class="modal-title">Update candidate as duplicate</h2>
+                </div>
+                {!! Form::open(['method' => 'POST', 'route' => 'jobs.duplicatedcandidate'])!!}
+                <div class="modal-body">
+                    <div class="check-all-candidate-ids" style="display:none;"></div>
+                    <div class="duplicate-round" style="display:none;">
+                        Are you sure want to add this candidate as a duplicate ?
+                    </div>
+                    <input type="hidden" name="dup_all_can_ids" id="dup_all_can_ids" value="">
+                    <input type="hidden" name="dup_posting_title" id="dup_posting_title" value="{{ $posting_title }}">
+                    <input type="hidden" name="dup_job_id" id="dup_job_id" value="{{ $job_id }}">
+                </div>
+
+                <div class="modal-footer" id="d_footer1">
+                    <button type="submit" class="btn btn-primary" id="duplicate-btn">Yes</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                </div>
+                <div class="modal-footer" id="d_footer2" style="display: none;">
+                    <button type="submit" class="btn btn-primary" data-dismiss="modal">OK</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                </div>
+                {!! Form::close() !!}
+            </div>
+        </div>
+    </div>
 
     <div id="modal-shortlist" class="modal text-left fade shortlist-candidate" style="display:none;">
         <div class="modal-dialog">
@@ -844,6 +911,46 @@
                     else{
                         $(".mail_users").append(msg.err);
                     }
+                }
+            });
+        }
+
+        function duplicatecandidate() {
+
+            var token = $("#token").val();  
+            var candidate_ids = new Array();
+            var app_url = "{!! env('APP_URL'); !!}";
+
+            $("input:checkbox[name=candidate]:checked").each(function() {
+                candidate_ids.push($(this).val());
+            });
+
+            // Delay opening the modal window by 1 second
+            setTimeout(function() {
+                $("#modal-duplicate").modal('show');
+            }, 1000);
+
+            $("#dup_all_can_ids").val(candidate_ids);
+            $("#all_can_ids_interview").val(candidate_ids);
+            $(".check-all-candidate-ids").empty();
+
+            $.ajax({
+                type: 'POST',
+                url: app_url+'/jobs/checkcandidateids',
+                data: { can_ids:candidate_ids, '_token':token },
+                success: function(msg) { 
+                    $(".duplicate-candidate").show();
+                    if (msg.success == 'success') {
+                        $(".duplicate-round").show();
+                        document.getElementById("d_footer2").style.display = 'none';
+                        document.getElementById("d_footer1").style.display = "block";
+                    } else {
+                        $(".duplicate-round").hide();
+                        $(".check-all-candidate-ids").show();
+                        $(".check-all-candidate-ids").append(msg.err);
+                        document.getElementById("d_footer1").style.display = "none";
+                        document.getElementById("d_footer2").style.display = 'block';
+                    } 
                 }
             });
         }

@@ -52,7 +52,7 @@
                     <td>{{ $permission['display_name'] }}</td>
                     <td>{{ $permission['description'] }}</td>
                     <td>
-                        <a class="fa fa-edit" title="Edit" href="{{ route('userpermission.edit',$permission['id']) }}"></a>
+                        <a class="fa fa-edit" title="Edit" href="{{ route('userpermission.edit',\Crypt::encrypt($permission['id'])) }}"></a>
                        
                         @include('adminlte::partials.deleteModal', ['data' => $permission, 'name' => 'userpermission','display_name'=>'Permission'])
                     </td>

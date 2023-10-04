@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\EmailTemplate;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Input;
 use App\User;
 use App\Events\NotificationMail;
@@ -137,6 +138,8 @@ class EmailTemplateController extends Controller
 
     public function show($id) {
 
+        $id = Crypt::decrypt($id);
+
     	$email_template = EmailTemplate::find($id);
 
         $email_template_users = \DB::table('email_template_visible_users')
@@ -158,6 +161,8 @@ class EmailTemplateController extends Controller
     }
 
     public function edit($id) {
+        
+        $id = Crypt::decrypt($id);
 
     	$email_template = EmailTemplate::find($id);
     	$action = 'edit';

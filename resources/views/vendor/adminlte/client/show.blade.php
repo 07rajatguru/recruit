@@ -122,6 +122,10 @@
                             <th>Designation</th>
                             <td>{{ $client['designation'] }}</td>
                         </tr>
+                        <tr>
+                            <th scope="row">Users who can access the Client</th>
+                            <td colspan="3">{{ $client_user_name }}</td>
+                        </tr>
                     </table>
                 </div>
             </div>

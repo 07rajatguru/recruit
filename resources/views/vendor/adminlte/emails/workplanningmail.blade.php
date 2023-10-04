@@ -56,7 +56,7 @@
                             @endif
 
                             <td align="center">{{ ++$i }}</td>              
-                            <td align="left">{!! $value['task'] !!}</td>
+                            <td align="left">{!! $value['task_name'] !!}</td>
 
                             <?php
 

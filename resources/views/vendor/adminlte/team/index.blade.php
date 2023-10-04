@@ -54,7 +54,7 @@
                     @endif
                 </td>
                 <td>
-                    <a class="fa fa-edit" href="{{ route('team.edit',$key) }}"></a>
+                    <a class="fa fa-edit" href="{{ route('team.edit',\Crypt::encrypt($key)) }}"></a>
                     @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'team','display_name'=>'Team'])
                 </td>
             </tr>

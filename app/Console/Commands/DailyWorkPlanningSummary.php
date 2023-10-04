@@ -7,6 +7,7 @@ use App\User;
 use App\Holidays;
 use App\Events\NotificationMail;
 use App\WorkPlanning;
+use App\Date;
 
 class DailyWorkPlanningSummary extends Command
 {

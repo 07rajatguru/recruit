@@ -138,7 +138,7 @@
                         <span>Shortlist Ratio</span>
                     </td>
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="25">
-                        <span>50% (of Total CVs)</span>
+                       <span>{{ $bench_mark['role_shortlist_ratio'] ?? 0 }}% (of Total CVs)</span>
                     </td>
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
                        {{ $bench_mark['shortlist_ratio_monthly'] }}
@@ -182,7 +182,7 @@
                         <span>Interview Ratio</span>
                     </td>
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="25">
-                        <span>50% (Shortlist Ratio)</span>
+                       <span>{{ $bench_mark['role_interview_ratio'] ?? 0 }}% (Shortlist Ratio)</span>
                     </td>
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
                        {{ $bench_mark['interview_ratio_monthly'] }}
@@ -226,7 +226,7 @@
                         <span>Selection Ratio</span>
                     </td>
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="25">
-                        <span>20% (of Interview Ratio)</span>
+                        <span>{{ $bench_mark['role_selection_ratio'] ?? 0 }}% (of Interview Ratio)</span>
                     </td>
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
                        {{ $bench_mark['selection_ratio_monthly'] }}
@@ -270,7 +270,7 @@
                         <span>Offer Acceptance Ratio</span>
                     </td>
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="25">
-                        <span>70% (of Selection Ratio)</span>
+                        <span>{{ $bench_mark['role_offer_acceptance_ratio'] ?? 0 }}% (of Selection Ratio)</span>
                     </td>
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
                        {{ $bench_mark['offer_acceptance_ratio_monthly'] }}
@@ -314,7 +314,7 @@
                         <span>Joining Ratio</span>
                     </td>
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="25">
-                        <span>80% (of offer acceptance)</span>
+                        <span>{{ $bench_mark['role_joining_ratio'] ?? 0 }}% (of offer acceptance)</span>
                     </td>
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
                        {{ $bench_mark['joining_ratio_monthly'] }}
@@ -358,7 +358,7 @@
                         <span>After Joining Success Ratio</span>
                     </td>
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="25">
-                        <span>80% (Joining Ratio)</span>
+                        <span>{{ $bench_mark['role_after_joining_success_ratio'] ?? 0 }}% (Joining Ratio)</span>
                     </td>
                     <td style="text-align: center;color: #000000;border: 5px solid #000000;" height="15" width="15">
                        {{ $bench_mark['after_joining_success_ratio_monthly'] }}
@@ -403,11 +403,7 @@
                 	<td colspan="2" style="background: #46BDC6;text-align: center;color: #000000;border: 5px solid #000000;" height="55">
                         <b>Overall Feedback (Meet <br/> Expectation / Improvements <br/> Needed)</b>
                     </td>
-                    <td height="55" style="text-align: center;color: #000000;border: 5px solid #000000;@if($week1_c >= 2) background: #32CD32; @else background: #ff0000; @endif"></td>
-                    <td height="55" style="text-align: center;color: #000000: 5px solid #000000;@if($week2_c >= 2) background: #32CD32; @else background: #ff0000; @endif"></td>
-                    <td height="55" style="text-align: center;color: #000000;border: 5px solid #000000;@if($week3_c >= 2) background: #32CD32; @else background: #ff0000; @endif"></td>
-                    <td height="55" style="text-align: center;color: #000000;border: 5px solid #000000;@if($week4_c >= 2) background: #32CD32; @else background: #ff0000; @endif"></td>
-                    <td height="55" style="text-align: center;color: #000000;border: 5px solid #000000;@if(isset($bench_mark['frm_to_date_array']) && sizeof($bench_mark['frm_to_date_array']) == '4') 'NA' @else @if($week5_c >= 2) background: #32CD32; @else background: #ff0000; @endif @endif"></td>
+
                     <td height="55"></td>
                 </tr>
 

@@ -27,8 +27,9 @@ class RolewiseUserBenchmarkController extends Controller
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $operations = getenv('OPERATIONS');
+        $management = getenv('MANAGEMENT');
 
-        $type_array = array($recruitment,$hr_advisory,$operations);
+        $type_array = array($recruitment,$hr_advisory,$operations,$management);
         $all_roles = Role::getRolesByDepartment($type_array);
 
         $select_role_id = '';
@@ -46,6 +47,8 @@ class RolewiseUserBenchmarkController extends Controller
         $offer_acceptance_ratio = $request->get('offer_acceptance_ratio');
         $joining_ratio = $request->get('joining_ratio');
         $after_joining_success_ratio = $request->get('after_joining_success_ratio');
+        $applicable_date = $request->get('applicable_date');
+        $end_date = date("Y-m-d", strtotime("-1 day ".$applicable_date));
         
         $bench_mark = new RolewiseUserBenchmark();
         $bench_mark->role_id = $role_id;
@@ -56,6 +59,17 @@ class RolewiseUserBenchmarkController extends Controller
         $bench_mark->offer_acceptance_ratio = $offer_acceptance_ratio;
         $bench_mark->joining_ratio = $joining_ratio;
         $bench_mark->after_joining_success_ratio = $after_joining_success_ratio;
+        $bench_mark->applicable_date = $applicable_date;
+
+        $role_bench_mark = RolewiseUserBenchmark::getBenchMarkByRoleID($role_id);
+        if (isset($role_bench_mark) && sizeof($role_bench_mark) > 0) {
+            $role_bench_mark_id = $role_bench_mark['id'];
+
+            $rbm_update = RolewiseUserBenchmark::find($role_bench_mark_id);
+            $rbm_update->end_date = $end_date;
+            $rbm_update->save();
+        }
+
         $bench_mark->save();
 
         return redirect()->route('rolewisebenchmark.index')->with('success','Benchmark Added Successfully.');
@@ -63,13 +77,16 @@ class RolewiseUserBenchmarkController extends Controller
 
     public function edit($id) {
 
+        $id = \Crypt::decrypt($id);
+
         $action = 'edit';
 
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $operations = getenv('OPERATIONS');
+        $management = getenv('MANAGEMENT');
 
-        $type_array = array($recruitment,$hr_advisory,$operations);
+        $type_array = array($recruitment,$hr_advisory,$operations,$management);
         $all_roles = Role::getRolesByDepartment($type_array);
 
         $bench_mark = RolewiseUserBenchmark::find($id);
@@ -88,6 +105,8 @@ class RolewiseUserBenchmarkController extends Controller
         $offer_acceptance_ratio = $request->get('offer_acceptance_ratio');
         $joining_ratio = $request->get('joining_ratio');
         $after_joining_success_ratio = $request->get('after_joining_success_ratio');
+        $applicable_date = $request->get('applicable_date');
+        $end_date = date("Y-m-d", strtotime("-1 day ".$applicable_date));
         
         $bench_mark = RolewiseUserBenchmark::find($id);
         $bench_mark->role_id = $role_id;
@@ -98,6 +117,17 @@ class RolewiseUserBenchmarkController extends Controller
         $bench_mark->offer_acceptance_ratio = $offer_acceptance_ratio;
         $bench_mark->joining_ratio = $joining_ratio;
         $bench_mark->after_joining_success_ratio = $after_joining_success_ratio;
+        $bench_mark->applicable_date = $applicable_date;
+
+        $role_bench_mark = RolewiseUserBenchmark::getBenchMarkByRoleID($role_id);
+        if (isset($role_bench_mark) && sizeof($role_bench_mark) > 0) {
+            $role_bench_mark_id = $role_bench_mark['id'];
+
+            $rbm_update = RolewiseUserBenchmark::find($role_bench_mark_id);
+            $rbm_update->end_date = $end_date;
+            $rbm_update->save();
+        }
+
         $bench_mark->save();
 
         // Update in user benchmark table

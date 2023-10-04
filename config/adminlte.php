@@ -200,7 +200,13 @@ return [
                     'text' => 'Cancel Lead',
                     'url'  => 'lead/cancel',
                     'icon' => 'list',
-                ]
+                ],
+                [
+                    'text' => 'Import Leads',
+                    'url'  => 'lead/importExport',
+                    'icon' => 'list',
+                ]   
+                
             ],
         ],
         [
@@ -226,12 +232,12 @@ return [
                     'text' => 'Forbidden Clients',
                     'url'  => 'client-list/Forbid',
                     'icon' => 'list',
-                ]/*,
+                ],
                 [
                     'text' => 'Import Clients',
                     'url'  => 'client/importExport',
                     'icon' => 'list',
-                ]*/
+                ]
             ],
         ],
         [
@@ -257,6 +263,11 @@ return [
                     'text' => 'Applicant Jobs',
                     'url'  => 'job/applicant',
                     'icon' => 'list',
+                ],
+                [
+                    'text' => 'Import Jobs',
+                    'url'  => 'jobs/importExport',
+                    'icon' => 'list',
                 ]
             ],
         ],
@@ -279,12 +290,12 @@ return [
                     'url'  => 'applicant-candidate',
                     'icon' => 'list',
                 ],
-                /*[
+                [
                     'text' => 'Import Candidates',
-                    'url'  => 'candidate/importExport',
+                    'url'  => 'candidate/import',
                     'icon' => 'list',
                 ],
-                [
+                /*[
                     'text' => 'Extract From Resume',
                     'url'  => 'candidate/resume',
                     'icon' => 'list',
@@ -526,6 +537,11 @@ return [
             'text'        => 'Admin',
             'icon'        => 'user-secret',
             'submenu' => [
+                [
+                    'text' => 'Work Planning master',
+                    'url'  => 'work-planning-master',
+                    'icon' => 'circle-o',
+                ],
                 [
                     'text' => 'Companies',
                     'url'  => 'companies',

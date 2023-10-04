@@ -87,10 +87,10 @@
             </div>
             
             @if($action == "add")
-                <div class="col-xs-12 col-sm-12 col-md-12">
+            <div class="col-xs-12 col-sm-12 col-md-12">
                     <div class="form-group">
-                        <strong>Upload Documents : <span class = "required_fields">*</span></strong>
-                        <input type="file" name="upload_documents[]" id="upload_documents" multiple class="form-control"/>
+                        <strong>Upload Documents : <span class = "required_fields">*</span> </strong>
+                        <input type="file" name="upload_documents[]" id="upload_documents" accept=".pdf,.jpg,.jpeg,.png,.gif,.xls,.xlsx,.doc,.docx,.ppt,.pptx,.txt" multiple class="form-control"/>
                     </div>
                 </div>
             @endif
@@ -146,6 +146,7 @@
 
 @section('customscripts')
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+<script src="{{ asset('js/validation_file.js') }}"></script>
     <script>
         $(document).ready(function() {
 
@@ -160,8 +161,8 @@
                         required: true
                     },
                     "upload_documents[]": {
-                        required: true
-                    },
+                        required: true,
+                   },
                     "department": {
                         required: true
                     },
@@ -174,12 +175,16 @@
                         required: "Please Select Department."
                     },
                     "upload_documents[]": {
-                        required: "Please Select File."
+                        required: "Please Select File.",
                     },
                     "department": {
                         required: "Please Select Department."
                     }
                 }
+            });
+
+            $("#upload_documents").change(function() {
+                 FormValidation.validateFile(this);
             });
 
             $("#departments_all").click(function () {
@@ -310,6 +315,7 @@
             // for department_ids
             var department_items = document.getElementsByName('department_ids[]');
             var department_selected_items = "";
+            // print_r($department_selected_items);exit;
 
             for(var i=0; i<department_items.length; i++) {
 

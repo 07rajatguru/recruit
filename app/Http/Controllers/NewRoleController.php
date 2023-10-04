@@ -99,6 +99,7 @@ class NewRoleController extends Controller
 
     public function show($id) {
 
+        $id = \Crypt::decrypt($id);
         $role = \DB::table('roles')
         ->leftjoin('department','department.id','=','roles.department')
         ->select('roles.*','department.name as department')->where('roles.id','=',$id)->first();
@@ -110,6 +111,7 @@ class NewRoleController extends Controller
 
     public function edit($id) {
 
+        $id = \Crypt::decrypt($id);
         $role = Role::find($id);
         $modules = Module::getModules();
 
@@ -199,6 +201,87 @@ class NewRoleController extends Controller
         DB::table("roles")->where('id',$id)->delete();
 
         return redirect()->route('userrole.index')->with('success','Role Deleted Successfully.');
+    }
+
+    public function newRoleClone($id) {
+
+        $id = \Crypt::decrypt($id);
+        $role = Role::find($id);
+        $modules = Module::getModules();
+
+        $rolePermissions = PermissionRole::getPermissionsByRoleID($id);
+
+        $module_ids_array = array();
+        $i=0;
+
+        foreach ($rolePermissions as $key => $value) {
+            $module_ids_array[$i] = $value['module_id'];
+            $i++;       
+        }
+
+        $module_ids_array = array_unique($module_ids_array);
+
+        $department_res = Department::orderBy('id','ASC')->get();
+        $departments = array();
+
+        if(sizeof($department_res) > 0) {
+            foreach($department_res as $r) {
+                $departments[$r->id] = $r->name;
+            }
+        }
+        $department_id = $role->department;
+
+        $role_in_mngmnt_team = $role->role_in_mngmnt_team;
+        $role_visible_to_all = $role->role_visible_to_all;
+
+        return view('adminlte::new_role.clone',compact('role','modules','module_ids_array','departments','department_id','role_in_mngmnt_team','role_visible_to_all'));
+    }
+
+    public function newRolecloneStore(Request $request) {
+
+        $module_ids = $request->input('module_ids');
+
+        if(isset($module_ids) && $module_ids != '') {
+            $module_ids = implode(",", $module_ids);
+        }
+
+        $role = new Role();
+        $role->position = $request->input('position');
+        $role->module_ids = $module_ids;
+        $role->name = $request->input('name');
+        $role->display_name = $request->input('display_name');
+        $role->description = $request->input('description');
+        $role->department = $request->input('department');
+
+        if($request->input('role_in_mngmnt_team') != '') {
+            $role->role_in_mngmnt_team = $request->input('role_in_mngmnt_team');
+        }
+        else {
+            $role->role_in_mngmnt_team = 0;
+        }
+
+        if($request->input('role_visible_to_all') != '') {
+            $role->role_visible_to_all = $request->input('role_visible_to_all');
+        }
+        else {
+            $role->role_visible_to_all = 0;
+        }
+        $role->save();
+
+        if($role->save()) {
+            $role_id = $role->id;
+            $permissions = $request->input('permission');
+            if(isset($permissions) && sizeof($permissions)>0) {
+                foreach ($permissions as $key => $value) {
+                    $permissions_role = new PermissionRole();
+                    $permissions_role->permission_id = $value;
+                    $permissions_role->role_id = $role_id;
+                    $permissions_role->save(); 
+                }
+            }
+        }
+
+        return redirect()->route('userrole.index')->with('success','New Role Cloned Successfully.');
     }
 
     public function getPermissions() {

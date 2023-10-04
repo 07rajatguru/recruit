@@ -39,11 +39,13 @@ use App\Contactsphere;
 use App\TicketsDiscussion;
 use App\TicketsDiscussionDoc;
 use App\TicketDiscussionPost;
+use JeroenNoten\LaravelAdminLte\Menu\Filters\SubmenuFilter;
 use App\TicketsDiscussionPostDoc;
 use App\WorkPlanningList;
 use App\WorkPlanningPost;
 use App\SpecifyHolidays;
 use App\HolidaysUsers;
+use App\Trackerlog;
 
 class HomeController extends Controller
 {
@@ -102,9 +104,9 @@ class HomeController extends Controller
 
         $recruitment = getenv('RECRUITMENT');
 
-        $userRole = $user->roles->pluck('id','id')->toArray();
-        $role_id = key($userRole);
-
+        $userRoles = $user->roles->pluck('id')->toArray();
+        $role_id = !empty($userRoles) ? reset($userRoles) : null;
+        
         $user_obj = new User();
         $isClient = $user_obj::isClient($role_id);
 
@@ -472,6 +474,34 @@ class HomeController extends Controller
             $job_opened = array();
         }
         return json_encode($job_opened);
+    }
+
+    public function trackingAllLogs() {
+        
+        $user = \Auth::user();
+        $user_id =  $user->id;
+        $superadmin = getenv('SUPERADMINUSERID');
+        if($user_id == $superadmin) {
+            return view('tracking_logs');
+        } else {
+            return view('errors.403');
+        }
+    }
+
+    public function trackingLogDataAjax() {
+        
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $superadminuserid = getenv('SUPERADMINUSERID');
+        $limit = (isset($_GET['limit']) && $_GET['limit'] > 0) ? $_GET['limit'] : 0;
+
+        if ($user_id == $superadminuserid) {
+            $tracking_list = Trackerlog::getTrackerLogDetails($limit);
+        } else {
+            $tracking_list = array();
+        }
+
+        return json_encode($tracking_list);
     }
 
     /**
@@ -1843,6 +1873,626 @@ class HomeController extends Controller
         return view('user-attendance',array("list"=>$list,"new_list"=>$new_list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark,"attendance_type" => $attendance_type,"selected_attendance_type" => $selected_attendance_type,"attendance_value" => $attendance_value),compact('users_name','department_nm','edit_date_valid','superadmin_userid','hr_user_id','user_id'));
     }
 
+    public function usersAttendanceNew($department_nm,$month,$year) {
+        
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        if(isset($month) && $month !='') {
+        } else {
+            $month = date("n");
+        }
+
+        if(isset($year) && $year !='') {
+        } else {
+            $year = date("Y");
+        }
+        $date = "$year-$month-01";
+        // get all sunday dates in selected date
+        $sundays = Date::getAllSundayDateOfMonth($month,$year);
+        
+        // get third saturday in selected date
+        $third_saturday = Date::getThirdSaturdayOfMonth($month,$year);
+        $saturday_date = $third_saturday['date_no'];
+
+        // Edit Attendance disabled changes
+        $edit_date = date('Y-m-d', strtotime($date.'first day of +1 month'));
+        $edit_date_valid = date('Y-m-d', strtotime($edit_date."+3days"));
+    
+        $month_array =array();
+        for ($m=1; $m<=12; $m++) {
+            $month_array[$m] = date('M', mktime(0,0,0,$m,1,$year));
+        }
+
+        $starting_year = '2022';
+        $ending_year = date('Y',strtotime('+2 year'));
+        $year_array = array();
+        for ($y=$starting_year; $y < $ending_year ; $y++) {
+            $year_array[$y] = $y;
+        }
+
+        // Check type name wise permissions
+        if($department_nm == 'self') {
+            $all_perm = $user->can('display-attendance-by-loggedin-user-in-admin-panel');
+            $dept_perm = '';
+
+            // Get Previous data from joining date
+            if($month <= 9) {
+                $month = "0".$month;
+            }
+            $check_date = $year."-".$month."-31";
+
+            // Get Users
+            $user_details = User::getProfileInfo($user_id);
+            if($user_details->joining_date <= $check_date) {
+                $joining_date = date('d/m/Y', strtotime("$user_details->joining_date"));
+                $full_name = $user_details->first_name."-".$user_details->last_name.",".$user_details->department_name.",".$user_details->employment_type.",".$user_details->working_hours.",".$joining_date;
+                $users = array($full_name => "");
+            } else {
+                $users = array();
+            }
+
+            // Get Attendance & Remarks
+            $response = WorkPlanning::getWorkPlanningByUserID($user_id,$month,$year);
+            $user_remark = UserRemarks::getUserRemarksDetailsByUserID($user_id,$month,$year);
+            
+            // print_r($response);exit;
+
+            // Set User names array for add remarks using modal popup
+            $users_name = array();
+
+        } else if($department_nm == 'team') {
+            $all_perm = $user->can('display-attendance-by-loggedin-user-in-admin-panel');
+            $dept_perm = '';
+
+            // Get Users
+            $users = User::getOtherUsersNew($user_id,'',$month,$year);
+
+            // Get Attendance & Remarks
+            $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,'');
+            $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,'');
+
+            // Set User names array for add remarks using modal popup
+            $users_name = User::getAllUsersForRemarks($user_id,0);
+        } else if($department_nm == 'adler') {
+            $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
+            $dept_perm = '';
+
+            $department_id = 0;
+
+            // Get Users
+            $users = User::getOtherUsersNew('','',$month,$year);
+
+            // Get Attendance & Remarks
+            $response = WorkPlanning::getUsersAttendanceByWorkPlanning(0,$month,$year,0);
+            $user_remark = UserRemarks::getUserRemarksByUserIDNew(0,$month,$year,0);
+
+            // Set User names array for add remarks using modal popup
+            $users_name = User::getAllUsersForRemarks(0,$department_id);
+        } else if($department_nm == 'recruitment') {
+            $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
+            $dept_perm = $user->can('display-recruitment-dashboard');
+
+            $department_id = getenv('RECRUITMENT');
+
+            // Get Users
+            $users = User::getOtherUsersNew('',$department_id,$month,$year);
+
+            // Get Attendance & Remarks
+            $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,$department_id);
+            $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,$department_id);
+
+            // Set User names array for add remarks using modal popup
+            $users_name = User::getAllUsersForRemarks(0,$department_id);
+        } else if($department_nm == 'hr-advisory') {
+            $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
+            $dept_perm = $user->can('display-hr-advisory-dashboard');
+
+            $department_id = getenv('HRADVISORY');
+
+            // Get Users
+            $users = User::getOtherUsersNew('',$department_id,$month,$year);
+
+            // Get Attendance & Remarks
+            $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,$department_id);
+            $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,$department_id);
+
+            // Set User names array for add remarks using modal popup
+            $users_name = User::getAllUsersForRemarks(0,$department_id);
+        } else if($department_nm == 'operations') {
+            $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
+            $dept_perm = '';
+
+            $department_id = getenv('OPERATIONS');
+
+            // Get Users
+            $users = User::getOtherUsersNew('',$department_id,$month,$year);
+
+            // Get Attendance & Remarks
+            $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,$department_id);
+            $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,$department_id);
+
+            // Set User names array for add remarks using modal popup
+            $users_name = User::getAllUsersForRemarks(0,$department_id);
+        }
+        
+        if($all_perm || $dept_perm) {
+            $list = array();
+            for($d=1; $d<=31; $d++) {
+                $time = mktime(12, 0, 0, $month, $d, $year);
+                foreach ($users as $key => $value) {
+                    if (date('n', $time) == $month)
+                        $list[$key][date('j', $time)]['attendance']='';
+                        $list[$key][date('j', $time)]['remarks']='';
+                        $list[$key][date('j', $time)]['fixed_holiday']='';
+                        $list[$key][date('j', $time)]['optional_holiday']='';
+                        $list[$key][date('j', $time)]['privilege_leave']='';
+                        $list[$key][date('j', $time)]['sick_leave']='';
+                        $list[$key][date('j', $time)]['unapproved_leave']='';
+                        $list[$key][date('j', $time)]['late_login_count']=0;
+                }
+            }
+
+            $date = new Date();
+            if(sizeof($response) > 0) {
+                foreach ($response as $key => $value) {
+                    // Check Date
+                    $u_added_date = date('Y-m-d', strtotime("$value->added_date"));
+                    $u_joining_date = date('Y-m-d', strtotime("$value->joining_date"));
+                    if($u_joining_date <= $u_added_date) {
+                        $get_dt = date("j",strtotime($value->added_date));
+                        $added_day = date("l",strtotime($value->added_date));
+                        $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
+                        $user_work_location = $value->work_location;
+                        $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->employment_type.",".$value->working_hours.",".$joining_date;
+
+                        // Get User id from both name 
+                        $user_name = $value->first_name."-".$value->last_name;
+                        $u_id = User::getUserIdByBothName($user_name);
+                        // get work planning table loggedin and loggedout time diff
+                        $login_date = $value->added_date . " " . $value->loggedin_time;
+                        $login_utc = $login_date;
+                        $login_dt = new \DateTime($login_utc);
+                        $login_tz = new \DateTimeZone('Asia/Kolkata');
+                        $login_dt->setTimezone($login_tz);
+                        $loginTime = strtotime($login_dt->format('H:i:s'));
+
+                        $logout_date = $value->added_date . " " . $value->loggedout_time;
+                        $logout_utc = $logout_date;
+                        $logout_dt = new \DateTime($logout_utc);
+                        $logout_tz = new \DateTimeZone('Asia/Kolkata');
+                        $logout_dt->setTimezone($logout_tz);
+                        $loggedout_time = strtotime($logout_dt->format('H:i:s'));
+
+                        // Get Difference between login time & logout time
+                        $diff = $loggedout_time - $loginTime;
+                        $login_logout_time_diff = date("H:i", $diff);
+                        // fixed holiday
+                        $fixed_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Fixed Leave');
+                        // optional holiday
+                        $optional_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Optional Leave');
+                        // Set Paid Leave Approved dates
+                        $pl_leave_data = UserLeave::getUserLeavesByIdNew($u_id,$month,$year,'Privilege Leave',1);
+                        // Set Unapproved dates
+                        $ul_leave_data = UserLeave::getUserLeavesByIdNew($u_id,$month,$year,'',2);
+
+                        $approved_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id,1);
+                        $rejected_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id,2);
+
+                        // Check if login time is empty or null
+                        // if (empty($value->loggedin_time)) {
+                        //      $list[$combine_name][$get_dt]['attendance'] = 'A';
+                        //      $list[$combine_name][$get_dt]['title'] = 'Absent (Not Logged In)';
+                        //      $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                        //      $list[$combine_name][$get_dt]['color'] = '#000000';
+                        //  }
+
+                        // if work planning status pending
+                         if(isset($value->status) && $value->status == 0) {
+                            $list[$combine_name][$get_dt]['attendance'] = '';
+                            $list[$combine_name][$get_dt]['title'] = 'Work Planning Status Pending';
+                            $list[$combine_name][$get_dt]['bgcolor'] = '#8FB1D5';
+                            $list[$combine_name][$get_dt]['color'] = '';
+                        }
+                        // if work planning status unapproved full day then A
+                        else if($value->status == 2 && $value->attendance == "F") {
+                            $list[$combine_name][$get_dt]['attendance'] = 'A';
+                            $list[$combine_name][$get_dt]['title'] = 'Work Planning Rejection';
+                            $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                            $list[$combine_name][$get_dt]['color'] = '#FFFF00';
+                        }
+                        // if work planning status unapproved half day then A
+                        else if($value->status == 2 && $value->attendance == "HD") {
+                            $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                            $list[$combine_name][$get_dt]['title'] = 'Half Day Rejection';
+                            $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                            $list[$combine_name][$get_dt]['color'] = '#FFFF00';
+                        }
+                        // if work planning attendance A
+                        else if($value->attendance == "A") {
+                            $list[$combine_name][$get_dt]['attendance'] = 'A';
+                            $list[$combine_name][$get_dt]['title'] = 'Absent';
+                            $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                            $list[$combine_name][$get_dt]['color'] = '#000000';
+                        }
+                        // If login time & logout time same then HD
+                        else if (isset($value->status) && $value->status != '' && $value->loggedin_time == $value->loggedout_time) {
+                            $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                            $list[$combine_name][$get_dt]['title'] = 'Logout time not found';
+                            $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                            $list[$combine_name][$get_dt]['color'] = '#000000';
+                        }
+                        // If selected date is saturday
+                        else if($added_day ==  'Saturday') {
+                            // If TS then H
+                            if ($value->attendance == 'TS') {
+                                $list[$combine_name][$get_dt]['attendance'] = 'H';
+                                $list[$combine_name][$get_dt]['title'] = 'Third Saturday';
+                                $list[$combine_name][$get_dt]['bgcolor'] = '#ffc000';
+                                $list[$combine_name][$get_dt]['color'] = '#000000';
+                            } else {
+                                // If login-logout time diff greate than 6 hour
+                                if (isset($login_logout_time_diff) && $login_logout_time_diff >= '06:00') {
+                                    // If work planning total actul time is greate or equal than 05:00 then P OR HD
+                                    if ($value['total_actual_time'] >= '05:00:00') {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'P';
+                                        $list[$combine_name][$get_dt]['title'] = 'Present';
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                        $list[$combine_name][$get_dt]['color'] = '#000000';
+                                    } else {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                        $list[$combine_name][$get_dt]['title'] = 'Work Planning Actual time is less than 05:00 hour.';
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                        $list[$combine_name][$get_dt]['color'] = '#000000';
+                                    }
+                                }
+                                // If loggout time should be less than 3:30 PM then HD
+                                else if (isset($value->loggedout_time) && $value->loggedout_time != '' && $logout_dt->format('H:i:s') < '15:30:00') {
+                                    $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                    $list[$combine_name][$get_dt]['title'] = 'Saturday - Logout time less than 03:30 PM.';
+                                    $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                    $list[$combine_name][$get_dt]['color'] = '#000000';
+                                }
+                                // If login after 10:30 than automatic latein or logout before 4:00 than early goss
+                                else if((isset($value->loggedin_time) && $value->loggedin_time != '' && $login_dt->format('H:i:s') > '10:30:00') || (isset($value->loggedout_time) && $value->loggedout_time != '' && $logout_dt->format('H:i:s') < '16:00:00')) {
+                                    $list[$combine_name][$get_dt]['late_login_count']++;
+                                    if ($list[$combine_name][$get_dt]['late_login_count'] > 3) {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                        $list[$combine_name][$get_dt]['title'] = 'LateIn/EarlyGo limit exceeded to 3. LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                        $list[$combine_name][$get_dt]['color'] = '#000000';
+                                    } else {   
+                                        // If work planning total actul time is greate or equal than 04:30 then P OR HD
+                                        if ($value['total_actual_time'] >= '04:30:00') {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'P';
+                                            $list[$combine_name][$get_dt]['title'] = 'Present. LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                            $list[$combine_name][$get_dt]['color'] = '#000000';
+                                        } else {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                            $list[$combine_name][$get_dt]['title'] = 'Work Planning Actual time is less than 04:30 hour for Saturday latein/earlygo case. LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                            $list[$combine_name][$get_dt]['color'] = '#000000';
+                                        }
+                                    }
+                                }
+                                // paid leave/ fixed holiday/ Optional holiday
+                                else {
+                                    // fixed holiday
+                                    if (in_array($get_dt,$fixed_holidays)) {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'PH';
+                                        $list[$combine_name][$get_dt]['title'] = 'Paid Holiday';
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#76933C';
+                                        $list[$combine_name][$get_dt]['color'] = '#000000';
+                                    }
+                                    // optional holiday
+                                    else if (in_array($get_dt,$optional_holidays)) {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'OH';
+                                        $list[$combine_name][$get_dt]['title'] = 'Optional Holiday';
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#76933C';
+                                        $list[$combine_name][$get_dt]['color'] = '#ffffff';
+                                    }
+                                    // paid approved leave
+                                    else if (in_array($get_dt,$pl_leave_data)) {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'PL';
+                                        $list[$combine_name][$get_dt]['title'] = 'Paid Leave';
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#8db3e2';
+                                        $list[$combine_name][$get_dt]['color'] = '#000000';
+                                    }
+                                    // unapproved leave
+                                    else if (in_array($get_dt,$ul_leave_data)) {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'UL';
+                                        $list[$combine_name][$get_dt]['title'] = 'Unapproved Leave';
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#fac090';
+                                        $list[$combine_name][$get_dt]['color'] = '#000000';
+                                    }
+                                    // 
+                                    else {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'A';
+                                        $list[$combine_name][$get_dt]['title'] = 'Absent - No Data for Saturday';
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                                        $list[$combine_name][$get_dt]['color'] = '#000000';
+                                    }
+                                }
+                            }
+                        }
+                        // If Work from office for Half day 
+                        else if (($value['work_type'] == 'WFO' || $user_work_location == 'WFH') && $value->attendance == "HD") {
+                            // If work planning total actul time is greate or equal than 4:30 then HD OR AB
+                            if ($value['total_actual_time'] >= '04:30:00') {
+                                $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                $list[$combine_name][$get_dt]['title'] = 'Half Day';
+                                $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                $list[$combine_name][$get_dt]['color'] = '#000000';
+                            } else {
+                                $list[$combine_name][$get_dt]['attendance'] = 'A';
+                                $list[$combine_name][$get_dt]['title'] = 'Work Planning Actual time is less than 04:30';
+                                $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                                $list[$combine_name][$get_dt]['color'] = '#000000';
+                            }
+                        }
+                        // If Work from home for Half day
+                        else if (($value['work_type'] == 'WFH' && $user_work_location == 'WFO') && $value->attendance == "HD") {
+                            // If work planning total actul time is greate or equal than 6:00 then HDR OR AB
+                            if ($value['total_actual_time'] >= '06:00:00') {
+                                if(isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
+                                    $list[$combine_name][$get_dt]['attendance'] = 'WFHHD';
+                                    $list[$combine_name][$get_dt]['title'] = 'Half Day - Work From Home';
+                                    $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                    $list[$combine_name][$get_dt]['color'] = 'blue';
+                                } else {
+                                    $list[$combine_name][$get_dt]['attendance'] = 'WFHRHD';
+                                    $list[$combine_name][$get_dt]['title'] = 'Half Day- Work From Home Rejection';
+                                    $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                    $list[$combine_name][$get_dt]['color'] = 'blue';
+                                }
+                            } else {
+                                $list[$combine_name][$get_dt]['attendance'] = 'A';
+                                $list[$combine_name][$get_dt]['title'] = 'Work Planning(WFH) Actual time is less than 06:00';
+                                $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                                $list[$combine_name][$get_dt]['color'] = '#000000';
+                            }
+                        }
+                        // If login-logout time diff greater than 9 hour + WFH/WFO
+                        else if ($added_day != 'Sunday'  &&  $login_logout_time_diff >= '09:00') {
+                            // If work planning total actul time is greate or equal than working hour then P OR HD
+                            if ($value['total_actual_time'] >= $value['working_hours']) {
+                                if ($value['work_type'] == 'WFO' || $user_work_location == 'WFH') {
+                                    $list[$combine_name][$get_dt]['attendance'] = 'P';
+                                    $list[$combine_name][$get_dt]['title'] = 'Present';
+                                    $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                    $list[$combine_name][$get_dt]['color'] = '#000000';
+                                } else {
+                                    if(isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'WFHP';
+                                        $list[$combine_name][$get_dt]['title'] = 'Present - Work From Home';
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                        $list[$combine_name][$get_dt]['color'] = 'blue';
+                                    } else if(isset($rejected_wfh_data) && sizeof($rejected_wfh_data) > 0) {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'WFHRP';
+                                        $list[$combine_name][$get_dt]['title'] = 'Present - Work From Home Rejection';
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#FFFF00';
+                                        $list[$combine_name][$get_dt]['color'] = 'blue';
+                                    } else {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'P';
+                                        $list[$combine_name][$get_dt]['title'] = 'Present - Work From Home No Data';
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                        $list[$combine_name][$get_dt]['color'] = 'blue';
+                                    }
+                                }
+                            } else {
+                                if ($value['work_type'] == 'WFO' || $user_work_location == 'WFH') {
+                                    $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                    $list[$combine_name][$get_dt]['title'] = 'Work Planning Actual time is less than working hour';
+                                    $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                    $list[$combine_name][$get_dt]['color'] = '#000000';
+                                } else {
+                                    if(isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'WFHHD';
+                                        $list[$combine_name][$get_dt]['title'] = 'Work From Home Half Day - Work Planning Actual time is less than working hour';
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                        $list[$combine_name][$get_dt]['color'] = 'blue';
+                                    } else if(isset($rejected_wfh_data) && sizeof($rejected_wfh_data) > 0) {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'WFHRHD';
+                                        $list[$combine_name][$get_dt]['title'] = 'Work From Home(Rejection) Half Day - Work Planning Actual time is less than working hour';
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                                        $list[$combine_name][$get_dt]['color'] = '#FFFF00';
+                                    } else {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                        $list[$combine_name][$get_dt]['title'] = 'Half Day - Work From Home No Data - Work Planning Actual time is less than working hour';
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                        $list[$combine_name][$get_dt]['color'] = 'blue';
+                                    }
+                                }
+                            }
+                        }
+                        // If login after 10:30 than automatic latein or logout before 6:30 than early goss
+                        else if((isset($value->loggedin_time) && $added_day != 'Sunday'  && $value->loggedin_time != '' && $login_dt->format('H:i:s') > '10:30:00') || (isset($value->loggedout_time) && $value->loggedout_time != '' && $logout_dt->format('H:i:s') < '18:00:00')) {
+                            $list[$combine_name][$get_dt]['late_login_count']++;
+                            if ($list[$combine_name][$get_dt]['late_login_count'] > 3) {
+                                $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                $list[$combine_name][$get_dt]['title'] = 'LateIn/EarlyGo limit exceeded to 3. LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                $list[$combine_name][$get_dt]['color'] = '#000000';
+                            } else {  
+                                // If work planning total actul time is greate or equal than working hour then P OR HD
+                                $one_hour = date('h:i:s', strtotime("-1hour $value->working_hours"));
+                                if ($value['total_actual_time'] >= $one_hour) {
+                                    if ($value['work_type'] == 'WFO' || $user_work_location == 'WFH') {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'P';
+                                        $list[$combine_name][$get_dt]['title'] = 'Present LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                        $list[$combine_name][$get_dt]['color'] = '#000000';
+                                    } else {
+                                        if(isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'WFHP';
+                                            $list[$combine_name][$get_dt]['title'] = 'Present - Work From Home LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                            $list[$combine_name][$get_dt]['color'] = 'blue';
+                                        } else if(isset($rejected_wfh_data) && sizeof($rejected_wfh_data) > 0) {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'WFHRP';
+                                            $list[$combine_name][$get_dt]['title'] = 'Present - Work From Home Rejection LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                                            $list[$combine_name][$get_dt]['color'] = '#FFFF00';
+                                        } else {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'P';
+                                            $list[$combine_name][$get_dt]['title'] = 'Present - Work From Home No Data LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                            $list[$combine_name][$get_dt]['color'] = '#000000';
+                                        }
+                                    }
+                                } else {
+                                    if ($value['work_type'] == 'WFO' || $user_work_location == 'WFH') {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                        $list[$combine_name][$get_dt]['title'] = 'Work Planning Actual time is less than working hour LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                        $list[$combine_name][$get_dt]['color'] = '#000000';
+                                    } else {
+                                        if(isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'WFHHD';
+                                            $list[$combine_name][$get_dt]['title'] = 'Work From Home Half Day - Work Planning Actual time is less than working hour LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                            $list[$combine_name][$get_dt]['color'] = '#FFFF00';
+                                        } else if(isset($rejected_wfh_data) && sizeof($rejected_wfh_data) > 0) {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'WFHRHD';
+                                            $list[$combine_name][$get_dt]['title'] = 'Work From Home(Rejection) Half Day - Work Planning Actual time is less than working hour LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                                            $list[$combine_name][$get_dt]['color'] = '#FFFF00';
+                                        } else {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                            $list[$combine_name][$get_dt]['title'] = 'Half Day - Work From Home No Data - Work Planning Actual time is less than working hour LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                            $list[$combine_name][$get_dt]['color'] = '#000000';
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        // If fixed holiday/ optional holiday/ paid leave/ sundays
+                        else {
+                            // fixed holiday
+                            if (in_array($get_dt,$fixed_holidays)) {
+                                $list[$combine_name][$get_dt]['attendance'] = 'PH';
+                                $list[$combine_name][$get_dt]['title'] = 'Paid Holiday';
+                                $list[$combine_name][$get_dt]['bgcolor'] = '#76933C';
+                                $list[$combine_name][$get_dt]['color'] = '#000000';
+                            }
+                            // optional holiday
+                            else if (in_array($get_dt,$optional_holidays)) {
+                                $list[$combine_name][$get_dt]['attendance'] = 'OH';
+                                $list[$combine_name][$get_dt]['title'] = 'Optional Holiday';
+                                $list[$combine_name][$get_dt]['bgcolor'] = '#76933C';
+                                $list[$combine_name][$get_dt]['color'] = '#000000';
+                            }
+                            // paid approved leave
+                            else if (in_array($get_dt,$pl_leave_data)) {
+                                $list[$combine_name][$get_dt]['attendance'] = 'PL';
+                                $list[$combine_name][$get_dt]['title'] = 'Paid Leave';
+                                $list[$combine_name][$get_dt]['bgcolor'] = '#8db3e2';
+                                $list[$combine_name][$get_dt]['color'] = '#000000';
+                            }
+                            // unapproved leave
+                            else if (in_array($get_dt,$ul_leave_data)) {
+                                $list[$combine_name][$get_dt]['attendance'] = 'UL';
+                                $list[$combine_name][$get_dt]['title'] = 'Unapproved Leave';
+                                $list[$combine_name][$get_dt]['bgcolor'] = '#fac090';
+                                $list[$combine_name][$get_dt]['color'] = '#000000';
+                            }
+                            // Sundays
+                            else if (in_array($get_dt, $sundays)) {
+                                $list[$combine_name][$get_dt]['attendance'] = 'H';
+                                $list[$combine_name][$get_dt]['title'] = 'Sunday';
+                                $list[$combine_name][$get_dt]['bgcolor'] = '#ffc000';
+                                $list[$combine_name][$get_dt]['color'] = '#000000';
+                            }
+                            // 
+                            else {
+                                $list[$combine_name][$get_dt]['attendance'] = 'A';
+                                $list[$combine_name][$get_dt]['title'] = 'Absent - No Data.'.$login_dt->format('H:i:s');
+                                $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                                $list[$combine_name][$get_dt]['color'] = '#000000';
+                            }
+                        }
+                    }
+                }
+            }
+            else {
+                if (isset($user_remark) && sizeof($user_remark)>0) {
+                    foreach ($user_remark as $k => $v) {
+                        $split_month = date('n',strtotime($v['remark_date']));
+                        $split_year = date('Y',strtotime($v['remark_date']));
+                        if (($month == $split_month) && ($year == $split_year)) {
+                            $list[$v['full_name']][$v['converted_date']]['remarks'] = $v['remarks'];
+                            $list[$v['full_name']][$v['converted_date']]['color'] = '';
+                            $list[$v['full_name']][$v['converted_date']]['bgcolor'] = '';
+                            $list[$v['full_name']][$v['converted_date']]['title'] = '';
+                            $list[$v['full_name']][$v['converted_date']]['attendance'] = '';
+                        }
+                    }
+                }
+            }
+
+            // New List1
+            $list1 = array();
+            for($d1=1; $d1<=31; $d1++) {
+                $time1 = mktime(12, 0, 0, $month, $d1, $year);
+                foreach ($users as $key => $value) {
+                    if (date('n', $time1) == $month) {
+                        $list1[$key][date('j S', $time1)]='';
+                    }
+                }
+            }
+
+            if(sizeof($list)>0) {
+                foreach ($list as $key => $value) {
+                    if(sizeof($value)>0) {
+                        $i=0;
+                        foreach ($value as $key1 => $value1) {
+                            $split_unm = explode(",",$key);
+                            // Get User id from both name
+                            $u_id = User::getUserIdByBothName($split_unm[0]);
+                            if (isset($user_remark) && sizeof($user_remark)>0) {
+                                foreach ($user_remark as $u_k1 => $u_v1) {
+                                    $split_month = date('n',strtotime($u_v1['remark_date']));
+                                    $split_year = date('Y',strtotime($u_v1['remark_date']));
+
+                                    if (($u_v1['full_name'] == $key) && ($u_v1['converted_date'] == $key1) && ($month == $split_month) && ($year == $split_year)) {
+                                        $list1[$u_v1['full_name']][$u_v1['converted_date']][$u_v1['remark_date']][$i] = $u_v1['remarks'];
+                                    }
+                                    $i++;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        } else {
+            return view('errors.403');
+        }
+
+        // Get Attendance Type
+        $attendance_type = User::getAttendanceType();
+        // Get Attendance Value
+        $attendance_value = User::getAttendanceValue();
+        // Get Employment Type
+        $employment_type = User::getEmploymentType();
+
+        $new_list = array();
+        foreach ($employment_type as $key => $value) {
+            foreach ($list as $key1 => $value1) {
+                if(strpos($key1, $value) !== false) {
+                    $new_list[$key][$key1] = $value1;
+                }
+            }
+        }
+        // print_r($new_list);exit;
+
+        $superadmin_userid = getenv('SUPERADMINUSERID');
+        $hr_user_id = getenv('HRUSERID');
+
+        return view('user-attendance-new',array("list"=>$list,"new_list"=>$new_list,"list1"=>$list1,"month_list"=>$month_array,"year_list"=>$year_array,"month"=>$month,"year"=>$year,"user_remark"=>$user_remark,"attendance_type" => $attendance_type,"selected_attendance_type" => $department_nm,"attendance_value" => $attendance_value),compact('users_name','department_nm','edit_date_valid','superadmin_userid','hr_user_id','user_id'));
+    }
+
     public function exportAttendance() {
 
         $user = \Auth::user();
@@ -2180,6 +2830,583 @@ class HomeController extends Controller
                         $sheet->loadView('attendance-sheet', array('list' => $list,'new_list' => $new_list,'year' => $year,'month' => $month));
                     });
                 })->export('xlsx');
+            }
+        }
+    }
+
+    public function exportAttendanceNew() {
+        
+        $user = \Auth::user();
+        $user_id = $user->id;
+        $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
+
+        if($all_perm) {
+            $attendance_type = $_POST['attendance_type'];
+            $month = $_POST['month'];
+            $year = $_POST['year'];
+
+            $month_name = date("F", mktime(0, 0, 0, $month, 10,$year));
+            $sheet_name = 'Attendance-'.$month_name."-".$year;
+
+            $date = "$year-$month-01";
+            // get all sunday dates in selected date
+            $sundays = Date::getAllSundayDateOfMonth($month,$year);
+            
+            // get third saturday in selected date
+            $third_saturday = Date::getThirdSaturdayOfMonth($month,$year);
+            $saturday_date = $third_saturday['date_no'];
+
+            // Edit Attendance disabled changes
+            $edit_date = date('Y-m-d', strtotime($date.'first day of +1 month'));
+            $edit_date_valid = date('Y-m-d', strtotime($edit_date."+3days"));
+        
+            $month_array =array();
+            for ($m=1; $m<=12; $m++) {
+                $month_array[$m] = date('M', mktime(0,0,0,$m,1,$year));
+            }
+
+            $starting_year = '2022';
+            $ending_year = date('Y',strtotime('+2 year'));
+            $year_array = array();
+            for ($y=$starting_year; $y < $ending_year ; $y++) {
+                $year_array[$y] = $y;
+            }
+
+            // Check type name wise permissions
+            if($attendance_type == 'self') {
+                $all_perm = $user->can('display-attendance-by-loggedin-user-in-admin-panel');
+                $dept_perm = '';
+
+                // Get Previous data from joining date
+                if($month <= 9) {
+                    $month = "0".$month;
+                }
+                $check_date = $year."-".$month."-31";
+
+                // Get Users
+                $user_details = User::getProfileInfo($user_id);
+                if($user_details->joining_date <= $check_date) {
+                    $joining_date = date('d/m/Y', strtotime("$user_details->joining_date"));
+                    $full_name = $user_details->first_name."-".$user_details->last_name.",".$user_details->department_name.",".$user_details->employment_type.",".$user_details->working_hours.",".$joining_date;
+                    $users = array($full_name => "");
+                } else {
+                    $users = array();
+                }
+
+                // Get Attendance & Remarks
+                $response = WorkPlanning::getWorkPlanningByUserID($user_id,$month,$year);
+                $user_remark = UserRemarks::getUserRemarksDetailsByUserID($user_id,$month,$year);
+
+                // Set User names array for add remarks using modal popup
+                $users_name = array();
+            } else if($attendance_type == 'team') {
+                $all_perm = $user->can('display-attendance-by-loggedin-user-in-admin-panel');
+                $dept_perm = '';
+
+                // Get Users
+                $users = User::getOtherUsersNew($user_id,'',$month,$year);
+
+                // Get Attendance & Remarks
+                $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,'');
+                $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,'');
+
+                // Set User names array for add remarks using modal popup
+                $users_name = User::getAllUsersForRemarks($user_id,0);
+            } else if($attendance_type == 'adler') {
+                $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
+                $dept_perm = '';
+
+                $department_id = 0;
+
+                // Get Users
+                $users = User::getOtherUsersNew('','',$month,$year);
+
+                // Get Attendance & Remarks
+                $response = WorkPlanning::getUsersAttendanceByWorkPlanning(0,$month,$year,0);
+                $user_remark = UserRemarks::getUserRemarksByUserIDNew(0,$month,$year,0);
+
+                // Set User names array for add remarks using modal popup
+                $users_name = User::getAllUsersForRemarks(0,$department_id);
+            } else if($attendance_type == 'recruitment') {
+                $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
+                $dept_perm = $user->can('display-recruitment-dashboard');
+
+                $department_id = getenv('RECRUITMENT');
+
+                // Get Users
+                $users = User::getOtherUsersNew('',$department_id,$month,$year);
+
+                // Get Attendance & Remarks
+                $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,$department_id);
+                $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,$department_id);
+
+                // Set User names array for add remarks using modal popup
+                $users_name = User::getAllUsersForRemarks(0,$department_id);
+            } else if($attendance_type == 'hr-advisory') {
+                $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
+                $dept_perm = $user->can('display-hr-advisory-dashboard');
+
+                $department_id = getenv('HRADVISORY');
+
+                // Get Users
+                $users = User::getOtherUsersNew('',$department_id,$month,$year);
+
+                // Get Attendance & Remarks
+                $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,$department_id);
+                $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,$department_id);
+
+                // Set User names array for add remarks using modal popup
+                $users_name = User::getAllUsersForRemarks(0,$department_id);
+            } else if($attendance_type == 'operations') {
+                $all_perm = $user->can('display-attendance-of-all-users-in-admin-panel');
+                $dept_perm = '';
+
+                $department_id = getenv('OPERATIONS');
+
+                // Get Users
+                $users = User::getOtherUsersNew('',$department_id,$month,$year);
+
+                // Get Attendance & Remarks
+                $response = WorkPlanning::getUsersAttendanceByWorkPlanning($user_id,$month,$year,$department_id);
+                $user_remark = UserRemarks::getUserRemarksByUserIDNew($user_id,$month,$year,$department_id);
+
+                // Set User names array for add remarks using modal popup
+                $users_name = User::getAllUsersForRemarks(0,$department_id);
+            }
+            
+            if($all_perm || $dept_perm) {
+                $list = array();
+                for($d=1; $d<=31; $d++) {
+                    $time = mktime(12, 0, 0, $month, $d, $year);
+                    foreach ($users as $key => $value) {
+                        if (date('n', $time) == $month)
+                            $list[$key][date('j', $time)]['attendance']='';
+                            $list[$key][date('j', $time)]['remarks']='';
+                            $list[$key][date('j', $time)]['fixed_holiday']='';
+                            $list[$key][date('j', $time)]['optional_holiday']='';
+                            $list[$key][date('j', $time)]['privilege_leave']='';
+                            $list[$key][date('j', $time)]['sick_leave']='';
+                            $list[$key][date('j', $time)]['unapproved_leave']='';
+                            $list[$key][date('j', $time)]['late_login_count']=0;
+                    }
+                }
+
+                $date = new Date();
+                if(sizeof($response) > 0) {
+                    foreach ($response as $key => $value) {
+                        // Check Date
+                        $u_added_date = date('Y-m-d', strtotime("$value->added_date"));
+                        $u_joining_date = date('Y-m-d', strtotime("$value->joining_date"));
+                        if($u_joining_date <= $u_added_date) {
+                            $get_dt = date("j",strtotime($value->added_date));
+                            $added_day = date("l",strtotime($value->added_date));
+                            $joining_date = date('d/m/Y', strtotime("$value->joining_date"));
+                            $user_work_location = $value->work_location;
+                            $combine_name = $value->first_name."-".$value->last_name.",".$value->department_name.",".$value->employment_type.",".$value->working_hours.",".$joining_date;
+
+                            // Get User id from both name 
+                            $user_name = $value->first_name."-".$value->last_name;
+                            $u_id = User::getUserIdByBothName($user_name);
+                            // get work planning table loggedin and loggedout time diff
+                            $login_date = $value->added_date . " " . $value->loggedin_time;
+                            $login_utc = $login_date;
+                            $login_dt = new \DateTime($login_utc);
+                            $login_tz = new \DateTimeZone('Asia/Kolkata');
+                            $login_dt->setTimezone($login_tz);
+                            $loginTime = strtotime($login_dt->format('H:i:s'));
+
+                            $logout_date = $value->added_date . " " . $value->loggedout_time;
+                            $logout_utc = $logout_date;
+                            $logout_dt = new \DateTime($logout_utc);
+                            $logout_tz = new \DateTimeZone('Asia/Kolkata');
+                            $logout_dt->setTimezone($logout_tz);
+                            $loggedout_time = strtotime($logout_dt->format('H:i:s'));
+
+                            // Get Difference between login time & logout time
+                            $diff = $loggedout_time - $loginTime;
+                            $login_logout_time_diff = date("H:i", $diff);
+                            // fixed holiday
+                            $fixed_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Fixed Leave');
+                            // optional holiday
+                            $optional_holidays = Holidays::getHolidaysByUserID($u_id,$month,$year,'Optional Leave');
+                            // Set Paid Leave Approved dates
+                            $pl_leave_data = UserLeave::getUserLeavesByIdNew($u_id,$month,$year,'Privilege Leave',1);
+                            // Set Unapproved dates
+                            $ul_leave_data = UserLeave::getUserLeavesByIdNew($u_id,$month,$year,'',2);
+
+                            $approved_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id,1);
+                            $rejected_wfh_data = WorkFromHome::getWorkFromHomeRequestByDate($value->added_date,$u_id,2);
+
+                            // if work planning status pending
+                            if(isset($value->status) && $value->status == 0) {
+                                $list[$combine_name][$get_dt]['attendance'] = '';
+                                $list[$combine_name][$get_dt]['title'] = 'Work Planning Status Pending';
+                                $list[$combine_name][$get_dt]['bgcolor'] = '#8FB1D5';
+                                $list[$combine_name][$get_dt]['color'] = '';
+                            }
+                            // if work planning status unapproved full day then A
+                            else if($value->status == 2 && $value->attendance == "F") {
+                                $list[$combine_name][$get_dt]['attendance'] = 'A';
+                                $list[$combine_name][$get_dt]['title'] = 'Work Planning Rejection';
+                                $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                                $list[$combine_name][$get_dt]['color'] = '#FFFF00';
+                            }
+                            // if work planning status unapproved half day then A
+                            else if($value->status == 2 && $value->attendance == "HD") {
+                                $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                $list[$combine_name][$get_dt]['title'] = 'Half Day Rejection';
+                                $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                                $list[$combine_name][$get_dt]['color'] = '#FFFF00';
+                            }
+                            // if work planning attendance A
+                            else if($value->attendance == "A") {
+                                $list[$combine_name][$get_dt]['attendance'] = 'A';
+                                $list[$combine_name][$get_dt]['title'] = 'Absent';
+                                $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                                $list[$combine_name][$get_dt]['color'] = '#000000';
+                            }
+                            // If login time & logout time same then HD
+                            else if (isset($value->status) && $value->status != '' && $value->loggedin_time == $value->loggedout_time) {
+                                $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                $list[$combine_name][$get_dt]['title'] = 'Logout time not found';
+                                $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                $list[$combine_name][$get_dt]['color'] = '#000000';
+                            }
+                            // If selected date is saturday
+                            else if($added_day ==  'Saturday') {
+                                // If TS then H
+                                if ($value->attendance == 'TS') {
+                                    $list[$combine_name][$get_dt]['attendance'] = 'H';
+                                    $list[$combine_name][$get_dt]['title'] = 'Third Saturday';
+                                    $list[$combine_name][$get_dt]['bgcolor'] = '#ffc000';
+                                    $list[$combine_name][$get_dt]['color'] = '#000000';
+                                } else {
+                                    // If login-logout time diff greate than 6 hour
+                                    if (isset($login_logout_time_diff) && $login_logout_time_diff >= '06:00') {
+                                        // If work planning total actul time is greate or equal than 05:00 then P OR HD
+                                        if ($value['total_actual_time'] >= '05:00:00') {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'P';
+                                            $list[$combine_name][$get_dt]['title'] = 'Present';
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                            $list[$combine_name][$get_dt]['color'] = '#000000';
+                                        } else {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                            $list[$combine_name][$get_dt]['title'] = 'Work Planning Actual time is less than 05:00 hour.';
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                            $list[$combine_name][$get_dt]['color'] = '#000000';
+                                        }
+                                    }
+                                    // If loggout time should be less than 3:30 PM then HD
+                                    else if (isset($value->loggedout_time) && $value->loggedout_time != '' && $logout_dt->format('H:i:s') < '15:30:00') {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                        $list[$combine_name][$get_dt]['title'] = 'Saturday - Logout time less than 03:30 PM.';
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                        $list[$combine_name][$get_dt]['color'] = '#000000';
+                                    }
+                                    // If login after 10:30 than automatic latein or logout before 4:00 than early goss
+                                    else if((isset($value->loggedin_time) && $value->loggedin_time != '' && $login_dt->format('H:i:s') > '10:30:00') || (isset($value->loggedout_time) && $value->loggedout_time != '' && $logout_dt->format('H:i:s') < '16:00:00')) {
+                                        $list[$combine_name][$get_dt]['late_login_count']++;
+                                        if ($list[$combine_name][$get_dt]['late_login_count'] > 3) {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                            $list[$combine_name][$get_dt]['title'] = 'LateIn/EarlyGo limit exceeded to 3. LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                            $list[$combine_name][$get_dt]['color'] = '#000000';
+                                        } else {   
+                                            // If work planning total actul time is greate or equal than 04:30 then P OR HD
+                                            if ($value['total_actual_time'] >= '04:30:00') {
+                                                $list[$combine_name][$get_dt]['attendance'] = 'P';
+                                                $list[$combine_name][$get_dt]['title'] = 'Present. LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                                $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                                $list[$combine_name][$get_dt]['color'] = '#000000';
+                                            } else {
+                                                $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                                $list[$combine_name][$get_dt]['title'] = 'Work Planning Actual time is less than 04:30 hour for Saturday latein/earlygo case. LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                                $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                                $list[$combine_name][$get_dt]['color'] = '#000000';
+                                            }
+                                        }
+                                    }
+                                    // paid leave/ fixed holiday/ Optional holiday
+                                    else {
+                                        // fixed holiday
+                                        if (in_array($get_dt,$fixed_holidays)) {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'PH';
+                                            $list[$combine_name][$get_dt]['title'] = 'Paid Holiday';
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#76933C';
+                                            $list[$combine_name][$get_dt]['color'] = '#000000';
+                                        }
+                                        // optional holiday
+                                        else if (in_array($get_dt,$optional_holidays)) {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'OH';
+                                            $list[$combine_name][$get_dt]['title'] = 'Optional Holiday';
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#76933C';
+                                            $list[$combine_name][$get_dt]['color'] = '#ffffff';
+                                        }
+                                        // paid approved leave
+                                        else if (in_array($get_dt,$pl_leave_data)) {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'PL';
+                                            $list[$combine_name][$get_dt]['title'] = 'Paid Leave';
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#8db3e2';
+                                            $list[$combine_name][$get_dt]['color'] = '#000000';
+                                        }
+                                        // unapproved leave
+                                        else if (in_array($get_dt,$ul_leave_data)) {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'UL';
+                                            $list[$combine_name][$get_dt]['title'] = 'Unapproved Leave';
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#fac090';
+                                            $list[$combine_name][$get_dt]['color'] = '#000000';
+                                        }
+                                        // 
+                                        else {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'A';
+                                            $list[$combine_name][$get_dt]['title'] = 'Absent - No Data for Saturday';
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                                            $list[$combine_name][$get_dt]['color'] = '#000000';
+                                        }
+                                    }
+                                }
+                            }
+                            // If Work from office for Half day 
+                            else if (($value['work_type'] == 'WFO' || $user_work_location == 'WFH') && $value->attendance == "HD") {
+                                // If work planning total actul time is greate or equal than 4:30 then HD OR AB
+                                if ($value['total_actual_time'] >= '04:30:00') {
+                                    $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                    $list[$combine_name][$get_dt]['title'] = 'Half Day';
+                                    $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                    $list[$combine_name][$get_dt]['color'] = '#000000';
+                                } else {
+                                    $list[$combine_name][$get_dt]['attendance'] = 'A';
+                                    $list[$combine_name][$get_dt]['title'] = 'Work Planning Actual time is less than 04:30';
+                                    $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                                    $list[$combine_name][$get_dt]['color'] = '#000000';
+                                }
+                            }
+                            // If Work from home for Half day
+                            else if (($value['work_type'] == 'WFH' && $user_work_location == 'WFO') && $value->attendance == "HD") {
+                                // If work planning total actul time is greate or equal than 6:00 then HDR OR AB
+                                if ($value['total_actual_time'] >= '06:00:00') {
+                                    if(isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'WFHHD';
+                                        $list[$combine_name][$get_dt]['title'] = 'Half Day - Work From Home';
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                        $list[$combine_name][$get_dt]['color'] = 'blue';
+                                    } else {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'WFHRHD';
+                                        $list[$combine_name][$get_dt]['title'] = 'Half Day- Work From Home Rejection';
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                        $list[$combine_name][$get_dt]['color'] = 'blue';
+                                    }
+                                } else {
+                                    $list[$combine_name][$get_dt]['attendance'] = 'A';
+                                    $list[$combine_name][$get_dt]['title'] = 'Work Planning(WFH) Actual time is less than 06:00';
+                                    $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                                    $list[$combine_name][$get_dt]['color'] = '#000000';
+                                }
+                            }
+                            // If login-logout time diff greater than 9 hour + WFH/WFO
+                            else if ($login_logout_time_diff >= '09:00') {
+                                // If work planning total actul time is greate or equal than working hour then P OR HD
+                                if ($value['total_actual_time'] >= $value['working_hours']) {
+                                    if ($value['work_type'] == 'WFO' || $user_work_location == 'WFH') {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'P';
+                                        $list[$combine_name][$get_dt]['title'] = 'Present';
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                        $list[$combine_name][$get_dt]['color'] = '#000000';
+                                    } else {
+                                        if(isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'WFHP';
+                                            $list[$combine_name][$get_dt]['title'] = 'Present - Work From Home';
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                            $list[$combine_name][$get_dt]['color'] = 'blue';
+                                        } else if(isset($rejected_wfh_data) && sizeof($rejected_wfh_data) > 0) {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'WFHRP';
+                                            $list[$combine_name][$get_dt]['title'] = 'Present - Work From Home Rejection';
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#FFFF00';
+                                            $list[$combine_name][$get_dt]['color'] = 'blue';
+                                        } else {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'P';
+                                            $list[$combine_name][$get_dt]['title'] = 'Present - Work From Home No Data';
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                            $list[$combine_name][$get_dt]['color'] = 'blue';
+                                        }
+                                    }
+                                } else {
+                                    if ($value['work_type'] == 'WFO' || $user_work_location == 'WFH') {
+                                        $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                        $list[$combine_name][$get_dt]['title'] = 'Work Planning Actual time is less than working hour';
+                                        $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                        $list[$combine_name][$get_dt]['color'] = '#000000';
+                                    } else {
+                                        if(isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'WFHHD';
+                                            $list[$combine_name][$get_dt]['title'] = 'Work From Home Half Day - Work Planning Actual time is less than working hour';
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                            $list[$combine_name][$get_dt]['color'] = 'blue';
+                                        } else if(isset($rejected_wfh_data) && sizeof($rejected_wfh_data) > 0) {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'WFHRHD';
+                                            $list[$combine_name][$get_dt]['title'] = 'Work From Home(Rejection) Half Day - Work Planning Actual time is less than working hour';
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                                            $list[$combine_name][$get_dt]['color'] = '#FFFF00';
+                                        } else {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                            $list[$combine_name][$get_dt]['title'] = 'Half Day - Work From Home No Data - Work Planning Actual time is less than working hour';
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                            $list[$combine_name][$get_dt]['color'] = 'blue';
+                                        }
+                                    }
+                                }
+                            }
+                            // If login after 10:30 than automatic latein or logout before 6:30 than early goss
+                            else if((isset($value->loggedin_time) && $value->loggedin_time != '' && $login_dt->format('H:i:s') > '10:30:00') || (isset($value->loggedout_time) && $value->loggedout_time != '' && $logout_dt->format('H:i:s') < '18:00:00')) {
+                                $list[$combine_name][$get_dt]['late_login_count']++;
+                                if ($list[$combine_name][$get_dt]['late_login_count'] > 3) {
+                                    $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                    $list[$combine_name][$get_dt]['title'] = 'LateIn/EarlyGo limit exceeded to 3. LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                    $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                    $list[$combine_name][$get_dt]['color'] = '#000000';
+                                } else {  
+                                    // If work planning total actul time is greate or equal than working hour then P OR HD
+                                    $one_hour = date('h:i:s', strtotime("-1hour $value->working_hours"));
+                                    if ($value['total_actual_time'] >= $one_hour) {
+                                        if ($value['work_type'] == 'WFO' || $user_work_location == 'WFH') {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'P';
+                                            $list[$combine_name][$get_dt]['title'] = 'Present LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                            $list[$combine_name][$get_dt]['color'] = '#000000';
+                                        } else {
+                                            if(isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
+                                                $list[$combine_name][$get_dt]['attendance'] = 'WFHP';
+                                                $list[$combine_name][$get_dt]['title'] = 'Present - Work From Home LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                                $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                                $list[$combine_name][$get_dt]['color'] = 'blue';
+                                            } else if(isset($rejected_wfh_data) && sizeof($rejected_wfh_data) > 0) {
+                                                $list[$combine_name][$get_dt]['attendance'] = 'WFHRP';
+                                                $list[$combine_name][$get_dt]['title'] = 'Present - Work From Home Rejection LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                                $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                                                $list[$combine_name][$get_dt]['color'] = '#FFFF00';
+                                            } else {
+                                                $list[$combine_name][$get_dt]['attendance'] = 'P';
+                                                $list[$combine_name][$get_dt]['title'] = 'Present - Work From Home No Data LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                                $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                                $list[$combine_name][$get_dt]['color'] = '#000000';
+                                            }
+                                        }
+                                    } else {
+                                        if ($value['work_type'] == 'WFO' || $user_work_location == 'WFH') {
+                                            $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                            $list[$combine_name][$get_dt]['title'] = 'Work Planning Actual time is less than working hour LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                            $list[$combine_name][$get_dt]['bgcolor'] = '#d99594';
+                                            $list[$combine_name][$get_dt]['color'] = '#000000';
+                                        } else {
+                                            if(isset($approved_wfh_data) && sizeof($approved_wfh_data) > 0) {
+                                                $list[$combine_name][$get_dt]['attendance'] = 'WFHHD';
+                                                $list[$combine_name][$get_dt]['title'] = 'Work From Home Half Day - Work Planning Actual time is less than working hour LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                                $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                                $list[$combine_name][$get_dt]['color'] = '#FFFF00';
+                                            } else if(isset($rejected_wfh_data) && sizeof($rejected_wfh_data) > 0) {
+                                                $list[$combine_name][$get_dt]['attendance'] = 'WFHRHD';
+                                                $list[$combine_name][$get_dt]['title'] = 'Work From Home(Rejection) Half Day - Work Planning Actual time is less than working hour LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                                $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                                                $list[$combine_name][$get_dt]['color'] = '#FFFF00';
+                                            } else {
+                                                $list[$combine_name][$get_dt]['attendance'] = 'HD';
+                                                $list[$combine_name][$get_dt]['title'] = 'Half Day - Work From Home No Data - Work Planning Actual time is less than working hour LateIn/EarlyGo: '. $list[$combine_name][$get_dt]['late_login_count'];
+                                                $list[$combine_name][$get_dt]['bgcolor'] = '#d8d8d8';
+                                                $list[$combine_name][$get_dt]['color'] = '#000000';
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                            // If fixed holiday/ optional holiday/ paid leave/ sundays
+                            else {
+                                // fixed holiday
+                                if (in_array($get_dt,$fixed_holidays)) {
+                                    $list[$combine_name][$get_dt]['attendance'] = 'PH';
+                                    $list[$combine_name][$get_dt]['title'] = 'Paid Holiday';
+                                    $list[$combine_name][$get_dt]['bgcolor'] = '#76933C';
+                                    $list[$combine_name][$get_dt]['color'] = '#000000';
+                                }
+                                // optional holiday
+                                else if (in_array($get_dt,$optional_holidays)) {
+                                    $list[$combine_name][$get_dt]['attendance'] = 'OH';
+                                    $list[$combine_name][$get_dt]['title'] = 'Optional Holiday';
+                                    $list[$combine_name][$get_dt]['bgcolor'] = '#76933C';
+                                    $list[$combine_name][$get_dt]['color'] = '#000000';
+                                }
+                                // paid approved leave
+                                else if (in_array($get_dt,$pl_leave_data)) {
+                                    $list[$combine_name][$get_dt]['attendance'] = 'PL';
+                                    $list[$combine_name][$get_dt]['title'] = 'Paid Leave';
+                                    $list[$combine_name][$get_dt]['bgcolor'] = '#8db3e2';
+                                    $list[$combine_name][$get_dt]['color'] = '#000000';
+                                }
+                                // unapproved leave
+                                else if (in_array($get_dt,$ul_leave_data)) {
+                                    $list[$combine_name][$get_dt]['attendance'] = 'UL';
+                                    $list[$combine_name][$get_dt]['title'] = 'Unapproved Leave';
+                                    $list[$combine_name][$get_dt]['bgcolor'] = '#fac090';
+                                    $list[$combine_name][$get_dt]['color'] = '#000000';
+                                }
+                                // Sundays
+                                else if (in_array($get_dt, $sundays)) {
+                                    $list[$combine_name][$get_dt]['attendance'] = 'H';
+                                    $list[$combine_name][$get_dt]['title'] = 'Sunday';
+                                    $list[$combine_name][$get_dt]['bgcolor'] = '#ffc000';
+                                    $list[$combine_name][$get_dt]['color'] = '#000000';
+                                }
+                                // 
+                                else {
+                                    $list[$combine_name][$get_dt]['attendance'] = 'A';
+                                    $list[$combine_name][$get_dt]['title'] = 'Absent - No Data.'.$login_dt->format('H:i:s');
+                                    $list[$combine_name][$get_dt]['bgcolor'] = '#ff0000';
+                                    $list[$combine_name][$get_dt]['color'] = '#000000';
+                                }
+                            }
+                        }
+                    }
+                }
+                else {
+                    if (isset($user_remark) && sizeof($user_remark)>0) {
+                        foreach ($user_remark as $k => $v) {
+                            $split_month = date('n',strtotime($v['remark_date']));
+                            $split_year = date('Y',strtotime($v['remark_date']));
+                            if (($month == $split_month) && ($year == $split_year)) {
+                                $list[$v['full_name']][$v['converted_date']]['remarks'] = $v['remarks'];
+                                $list[$v['full_name']][$v['converted_date']]['color'] = '';
+                                $list[$v['full_name']][$v['converted_date']]['bgcolor'] = '';
+                                $list[$v['full_name']][$v['converted_date']]['title'] = '';
+                                $list[$v['full_name']][$v['converted_date']]['attendance'] = '';
+                            }
+                        }
+                    }
+                }
+
+                if(sizeof($list)>0) {
+                    foreach ($list as $key => $value) {
+                        // Get Employment Type
+                        $employment_type = User::getEmploymentType();
+
+                        $new_list1 = array();
+                        foreach ($employment_type as $key => $value) {
+                                
+                            foreach ($list as $key1 => $value1) {
+
+                                if(strpos($key1, $value) !== false) {
+                                    $new_list1[$key][$key1] = $value1;
+                                }
+                            }
+                        }
+                    }
+
+                    Excel::create($sheet_name,function($excel) use ($list,$new_list1,$year,$month) {
+                        $excel->sheet('sheet 1',function($sheet) use ($list,$new_list1,$year,$month) {
+                            $sheet->loadView('attendance-sheet-new', array('list' => $list,'new_list1' => $new_list1,'year' => $year,'month' => $month));
+                        });
+                    })->export('xlsx');
+                }
+            } else {
+                return view('errors.403');
             }
         }
     }
@@ -3011,7 +4238,9 @@ class HomeController extends Controller
                 //$user_id = $value['module_id'];
 
                 $jenny_user_id = getenv('JENNYUSERID');
-                $client_res = ClientBasicinfo::getPassiveClients($jenny_user_id);
+                $from_date = date('Y-m-d',strtotime('last Monday'));
+                $to_date = date('Y-m-d',strtotime("$from_date +6days"));
+                $client_res = ClientBasicinfo::getPassiveClients($jenny_user_id,$from_date,$to_date);
                 $clients_count = sizeof($client_res);
                 
                 $input['client_res'] = $client_res;

@@ -28,7 +28,7 @@
 
            <div class="pull-right">
                 @if(isset($training_material['access']) && $training_material['access']==1)
-                    <a class="btn btn-primary" href="{{route('training.edit',$training_material['id']) }}">Edit</a>
+                    <a class="btn btn-primary" href="{{route('training.edit',\Crypt::encrypt($training_material['id'])) }}">Edit</a>
                 @endif
                 <a class="btn btn-primary" href="{{ route('training.index') }}">Back</a>
             </div>

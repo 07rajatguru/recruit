@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use App\User;
 use Illuminate\Support\Facades\Input;
 use App\LateInEarlyGo;
@@ -216,33 +217,19 @@ class LateInEarlyGoController extends Controller
         $leave_id = $user_leave->id;
         $leave_details = LateInEarlyGo::getLateInEarlyGoDetailsById($leave_id);
 
-        // Get Superadmin email id
-        $superadminuserid = getenv('SUPERADMINUSERID');
-        $superadminemail = User::getUserEmailById($superadminuserid);
+        // Sent Email Notification
 
-        // Get HR email id
-        $hr = getenv('HRUSERID');
-        $hremail = User::getUserEmailById($hr);
+    $leave_id = $user_leave->id;
+    $leave_details = LateInEarlyGo::getLateInEarlyGoDetailsById($leave_id);
 
-        //Get Reports to Email
-        $report_res = User::getReportsToUsersEmail($user_id);
+    $sender_name = $user_id;
+    $to = 'e2hteam01@gmail.com'; // Replace with your email address
+    $subject = $leave_details['subject'];
+    $body_message = $leave_details['message'];
+    $module_id = $leave_id;
+    $module = "Late In Early Go"; // Set the module here
+    $cc = null; // No need for CC in this case
 
-        // if(isset($report_res->remail) && $report_res->remail!='') {
-
-        //     $report_email = $report_res->remail;
-        //     $cc_users_array = array($report_email,$hremail);
-        // }
-        // else {
-            $cc_users_array = array($superadminemail,$hremail);
-        // }
-
-        $module = "Late In Early Go";
-        $sender_name = $user_id;
-        $to = $report_res->remail;
-        $cc = implode(",",$cc_users_array);
-        $subject = $leave_details['subject'];
-        $body_message = $leave_details['message'];
-        $module_id = $leave_id;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
 
@@ -250,6 +237,8 @@ class LateInEarlyGoController extends Controller
     }
 
     public function edit($id) {
+
+        $id = Crypt::decrypt($id);
 
         $action = 'edit';
         $loggedin_user_id = \Auth::user()->id;
@@ -306,32 +295,16 @@ class LateInEarlyGoController extends Controller
         $user_id = \Auth::user()->id;
 
         // get superadmin email id
-        $superadminuserid = getenv('SUPERADMINUSERID');
-        $superadminemail = User::getUserEmailById($superadminuserid);
+      
+       
+    $sender_name = $user_id;
+    $to = 'e2hteam01@gmail.com'; // Replace with your email address
+    $subject = $leave_details['subject'];
+    $body_message = $leave_details['message'];
+    $module_id = $leave_id;
+    $module = "Late In Early Go"; // Set the module here
+    $cc = null; // No need for CC in this case
 
-        // Get HR email id
-        $hr = getenv('HRUSERID');
-        $hremail = User::getUserEmailById($hr);
-
-        //Get Reports to Email
-        $report_res = User::getReportsToUsersEmail($user_id);
-
-        // if(isset($report_res->remail) && $report_res->remail != '') {
-            
-        //     $report_email = $report_res->remail;
-        //     $cc_users_array = array($report_email,$hremail);
-        // }
-        // else {
-            $cc_users_array = array($superadminemail,$hremail);
-        // }
-
-        $module = "Late In Early Go";
-        $sender_name = $user_id;
-        $to = $report_res->remail;
-        $cc = implode(",",$cc_users_array);
-        $subject = $leave_details['subject'];
-        $body_message = $leave_details['message'];
-        $module_id = $leave_id;
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$body_message,$module_id,$cc));
 
@@ -339,6 +312,8 @@ class LateInEarlyGoController extends Controller
     }
 
     public function leaveReply($id) {
+
+        $id = Crypt::decrypt($id);
 
         $loggedin_user_id = \Auth::user()->id;
         $leave_details = LateInEarlyGo::getLateInEarlyGoDetailsById($id);

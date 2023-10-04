@@ -20,7 +20,7 @@ use App\RoleUser;
 
 class InterviewController extends Controller
 {
-    public function index() {
+    public function index(Request $request) {
 
         $user = \Auth::user();
         $all_perm = $user->can('display-interviews');
@@ -31,6 +31,14 @@ class InterviewController extends Controller
         $ending_year = date('Y',strtotime('+2 year'));
         $year_array = array();
 
+        $posting_title = $request->get('job_id');
+        if($request->get('hid_can') != '') {
+            $candidate_id = $request->get('hid_can');
+            $data['candidate_id'] = $candidate_id;
+        }
+
+        $field_list = Interview::getInterviewFieldsList();
+
         for ($y = $starting_year; $y < $ending_year ; $y++) {
             $next = $y+1;
             $year_array[$y.'-4, '.$next.'-3'] = 'April-' .$y.' to March-'.$next;
@@ -38,9 +46,7 @@ class InterviewController extends Controller
 
         if (isset($_POST['year']) && $_POST['year'] != '') {
             $year = $_POST['year'];
-        }
-        else {
-
+        } else {
             $y = date('Y');
             $m = date('m');
             if ($m > 3) {
@@ -62,16 +68,36 @@ class InterviewController extends Controller
 
         if($all_perm) {
             $count = Interview::getAllInterviewsCountByAjax(1,$user->id,'',$current_year,$next_year);
-        }
-        else if($userwise_perm) {
+        } else if($userwise_perm) {
             $count = Interview::getAllInterviewsCountByAjax(0,$user->id,'',$current_year,$next_year);
         }
-
+       
         $source = 'index';
+
+        $status = Interview::getAllStatus();
 
         $interview_status = Interview::getEditInterviewStatus();
 
-        return view('adminlte::interview.index', compact('count','source','year_array','year','interview_status'));
+        $candidate_owner = User::getAllUsers(NULL);
+        $all_owner = array();
+        if(isset($candidate_owner) && sizeof($candidate_owner) > 0) {
+            $all_owner[''] = 'Select User';
+            foreach ($candidate_owner as $k1 => $v1) {
+                $user_details = User::getAllDetailsByUserID($k1);
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $all_owner[$k1] = $v1;
+                    }
+                } else {
+                    $all_owner[$k1] = $v1;
+                }    
+            }
+        }
+
+        $viewVariable = array();
+        $viewVariable['posting_title'] = $posting_title;
+
+        return view('adminlte::interview.index', compact('count','source','year_array','year','interview_status','field_list','status','candidate_owner','all_owner','posting_title','viewVariable'));
     }
 
     public function getInterviewOrderColumnName($order) {
@@ -214,8 +240,10 @@ class InterviewController extends Controller
             $candidate_email = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['candidate_email'] . '</a>';
             
             $location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['location'] . '</a>';
-            $action .= '<a title="Show"  class="fa fa-circle" href="'. route('interview.show',$value['id']) .'" style="margin:3px;"></a>';
-            $action .= '<a title="Edit" class="fa fa-edit" href="'.route('interview.edit',array($value['id'],'index')).'" style="margin:3px;"></a>';
+            $remarks = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['remarks'] . '</a>';
+
+            $action .= '<a title="Show"  class="fa fa-circle" href="'. route('interview.show',\Crypt::encrypt($value['id'])) .'" style="margin:3px;"></a>';
+            $action .= '<a title="Edit" class="fa fa-edit" href="'.route('interview.edit',array(\Crypt::encrypt($value['id']),'index')).'" style="margin:3px;"></a>';
 
             $status_view = \View::make('adminlte::partials.interviewtatus',['data' => $value, 'name' => 'interview','interview_status' => $interview_status,'year' => $year]);
             $status = $status_view->render();
@@ -227,7 +255,7 @@ class InterviewController extends Controller
                 $action .= $delete;
             }
 
-            $data = array(++$j,$checkbox,$action,$posting_title,$value['candidate_fname'],$contact,$candidate_email,$date,$value['candidate_owner'],$value['status'],$location,$color);
+            $data = array(++$j,$checkbox,$action,$posting_title,$value['candidate_fname'],$contact,$candidate_email,$date,$location,$value['candidate_owner'],$value['status'],$remarks,$color);
             $interview[$i] = $data;
             $i++;
         }
@@ -239,6 +267,237 @@ class InterviewController extends Controller
             "data" => $interview
         );
 
+        echo json_encode($json_data);exit;
+    }
+
+    public function getOrderColumnName($order) {
+
+        $order_column_name = '';
+        if (isset($order) && $order >= 0) {
+            if ($order == 0) {
+                $order_column_name = "interview.id";
+            } else if ($order == 3) {
+                $order_column_name = "job_openings.posting_title";
+            } else if ($order == 4) {
+                $order_column_name = "candidate_basicinfo.full_name";
+            } else if ($order == 5) {
+                $order_column_name = "candidate_basicinfo.mobile";
+            } else if ($order == 6) {
+                $order_column_name = "candidate_basicinfo.email";
+            } else if ($order == 7) {
+                $order_column_name = "interview.interview_date";
+            } else if ($order == 8) {
+                $order_column_name = "candidate_otherinfo.candidate_owner";
+            } else if ($order == 9) {
+                $order_column_name = "interview.status";
+            }
+        }
+        return $order_column_name;
+    }
+
+    public function masterSearch(Request $request) {
+
+        $user =  \Auth::user();
+        $user_id =  $user->id;
+
+        $all_perm = $user->can('display-client');
+        $userwise_perm = $user->can('display-account-manager-wise-client');
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+
+        // if($all_perm) {
+        //     $interview_array = Interview::getAllInterview(1,$user_id,0,0,0,0,'','','','','','','','');
+        //     $count = is_array($interview_array);
+        // } else if($userwise_perm) {
+        //     $interview_array = Interview::getAllInterview(0,$user_id,0,0,0,0,'','','','','','','','');
+        //     $count = is_array($interview_array);
+        // } else {
+            $interview_array = array();
+            $count = is_array($interview_array);
+        // }
+
+        $i = 0; $yes = 0; $no = 0; $attended = 0; $not_attended = 0;
+        if (isset($interview_array) && sizeof($interview_array) > 0) {
+            foreach($interview_array as $status) {
+                if($status['status'] == 'Yes') {
+                    $yes++;
+                } else if ($status['status'] == 'No') {
+                    $no++;
+                } else if($status['status'] == 'Attended') {
+                    $attended++;
+                } else if($status['status'] == 'Not Attended') {
+                    $not_attended++;
+                }
+            }
+        }
+        //candidate name
+        $full_name = CandidateBasicInfo::select('candidate_basicinfo.id as id', 'candidate_basicinfo.full_name as full_name')->get();
+        $i = 0;
+        foreach ($full_name as $name) {
+            $id[$i] = $name->id;
+            $full_name[$i] = $name->full_name;
+            $i++; 
+        }
+
+        //posting title
+        $posting_title = $request->get('job_id');
+
+        if($request->get('hid_can') != '') {
+
+            $candidate_id = $request->get('hid_can');
+            $data['candidate_id'] = $candidate_id;
+            $posting_title = $request->get('job_id');
+        }
+
+        $superadminuserid = getenv('SUPERADMINUSERID');
+        $candidate_owner = User::getAllUsers(NULL);
+        $all_owner = array();
+        if(isset($candidate_owner) && sizeof($candidate_owner) > 0) {
+            $all_owner[''] = 'Select User';
+            foreach ($candidate_owner as $k1 => $v1) {
+                $user_details = User::getAllDetailsByUserID($k1);
+                if($user_details->type == '2') {
+                    if($user_details->hr_adv_recruitemnt == 'Yes') {
+                        $all_owner[$k1] = $v1;
+                    }
+                } else {
+                    $all_owner[$k1] = $v1;
+                }    
+            }
+        }
+
+        // Get Client Status
+        $status = Interview::getAllStatus();
+        // Get Master Search Field List
+        $field_list = Interview::getInterviewFieldsList();
+
+        return view('adminlte::interview.searchindex',compact('count','field_list','all_owner','yes','no','attended','not_attended','status'));
+    }
+
+    public function getAllInterviewsDetailsBySearch(Request $request) {
+
+        $draw = $_GET['draw'];
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+
+        $company_name = $_GET['company_name'];
+        $posting_title = $_GET['posting_title'];
+        $full_name = $_GET['full_name'];
+        $mobile = $_GET['mobile'];
+        $email = $_GET['email'];
+        $interview_date = $_GET['interview_date'];
+        $candidate_owner = $_GET['candidate_owner'];
+        $status = $_GET['status'];
+        $source = 'index';
+
+        $user =  \Auth::user();
+        $all_perm = $user->can('display-interviews');
+        $userwise_perm = $user->can('display-interviews-by-loggedin-user');
+        $delete_perm = $user->can('interview-delete');
+        $count = 0;
+        if($all_perm) {
+            $order_column_name = self::getOrderColumnName($order);
+            $interview_res = Interview::getAllInterview(1,$user->id,$limit,$offset,$search,$order_column_name,$type,$company_name,$posting_title,$full_name,$mobile,$email,$interview_date,$candidate_owner,$status);
+            
+            $count = Interview::getAllInterviewCount(1,$user->id,$search,$company_name,$posting_title,$full_name,$mobile,$email,$interview_date,$candidate_owner,$status);
+            $interview_res_array = Interview::getAllInterview(1,$user->id,0,0,'',$order_column_name,$type,$company_name,$posting_title,$full_name,$mobile,$email,$interview_date,$candidate_owner,$status);
+        } else if($userwise_perm) {
+            $order_column_name = self::getOrderColumnName($order);
+            $interview_res = Interview::getAllInterview(0,$user->id,$limit,$offset,$search,$order_column_name,$type,$company_name,$posting_title,$full_name,$mobile,$email,$interview_date,$candidate_owner,$status);
+            $count = Interview::getAllInterviewCount(0,$user->id,$search,$company_name,$posting_title,$full_name,$mobile,$email,$interview_date,$candidate_owner,$status);
+            $interview_res_array = Interview::getAllInterview(0,$user->id,0,0,'',$order_column_name,$type,$company_name,$posting_title,$full_name,$mobile,$email,$interview_date,$candidate_owner,$status);
+        }
+
+        // $candidate_owner = User::getAllUsers();
+        // $all_owner = array();
+        // if(isset($candidate_owner) && sizeof($candidate_owner) > 0) {
+        //     $all_owner[''] = 'Select User';
+        //     foreach ($candidate_owner as $k1 => $v1) {
+        //         $user_details = User::getAllDetailsByUserID($k1);
+        //         if($user_details->type == '2') {
+        //             $all_owner[$k1] = $v1;
+        //         }
+        //     }
+        // }
+   
+        $interviews = array();
+        $i = 0;$j = 0;
+        if (isset($interview_res) && sizeof($interview_res) > 0) {
+            foreach ($interview_res as $key => $value) {
+                $interview_date = date('Y-m-d', strtotime('this week'));
+
+                if (date("Y-m-d") == date("Y-m-d",strtotime($value['interview_date']))) {
+                    $color = "#8FB1D5";
+                } else if (date('Y-m-d', strtotime('tomorrow')) == date("Y-m-d",strtotime($value['interview_date']))) {
+                    $color = '#feb80a';
+                } else if (date('Y-m-d', strtotime($interview_date)) > date("Y-m-d",strtotime($value['interview_date'])) || date('Y-m-d', strtotime($interview_date.'+6days')) < date("Y-m-d",strtotime($value['interview_date']))) {
+                    $color = '#F08080';
+                } else {
+                    $color = '#C4D79B';
+                }
+
+                $action = '';
+                $date = '<a style="color:black; text-decoration:none;">'. date('d-m-Y h:i A',strtotime($value['interview_date'])) . '</a>';
+                $action .= '<a title="Show"  class="fa fa-circle" href="'. route('interview.show',\Crypt::encrypt($value['id'])) .'" style="margin:3px;"></a>';
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('interview.edit',array(\Crypt::encrypt($value['id']),'index')).'" style="margin:3px;"></a>';
+                if ($delete_perm) {
+                    $delete_view = \View::make('adminlte::partials.deleteInterview',['data' => $value, 'name' => 'interview', 'display_name'=>'Interview','source' => $source]);
+                    $delete = $delete_view->render();
+                    $action .= $delete;
+                }
+
+                $checkbox = '<input type=checkbox name=client value='.$value['id'].' class=others_client id='.$value['id'].'/>';
+                $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['client_name'] . '-' . $value['posting_title'] . ', ' . $value['city'] . '</a>';
+                $full_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['full_name'].'</a>';
+                $mobile = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['mobile'] . '</a>';
+                $email = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['email'] . '</a>';
+                $interview_date = '<a style="color:black; text-decoration:none;">'. date('d-m-Y h:i A',strtotime($value['interview_date'])) . '</a>';
+                $candidate_owner = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['candidate_owner'] .'</a>';
+                $status = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['status'] . '</a>';
+
+                if($value['status'] == 'Yes')
+                    $status = '<span class="label label-sm label-success">'.$value['status'].'</span></td>';
+                else if($value['status'] == 'No')
+                    $status = '<span class="label label-sm label-danger">'.$value['status'].'</span></td>';
+                else if($value['status'] == 'Attended')
+                    $status = '<span class="label label-sm label-primary">'.$value['status'].'</span></td>';
+                else if($value['status'] == 'Not Attended')
+                    $status = '<span class="label label-sm label-default">'.$value['status'].'</span>';
+
+                $data = array(++$j,$checkbox,$action,$posting_title,$full_name,$mobile,$email,$interview_date,$candidate_owner,$status,$date,$color);
+                $interviews[$i] = $data;
+                $i++;
+            }
+        }
+
+        $yes = 0; $no = 0; $attended = 0; $not_attended = 0;
+        if (isset($interview_res_array) && sizeof($interview_res_array)>0) {
+            foreach($interview_res_array as $interview) {
+                if($interview['status'] == 'Yes') {
+                    $yes++;
+                } else if ($interview['status'] == 'No') {
+                    $no++;
+                } else if($interview['status'] == 'Attended') {
+                    $attended++;
+                } else if($interview['status'] == 'Not Attended') {
+                    $not_attended++;
+                }
+            }
+        }
+        
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $interviews,
+            "yes_count" => $yes,
+            "no_count" => $no,
+            "attended_count" => $attended,
+            "not_attended_count" => $not_attended,
+        );
         echo json_encode($json_data);exit;
     }
 
@@ -445,8 +704,8 @@ class InterviewController extends Controller
 
             $location = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'. $value['location'] . '</a>';
 
-            $action .= '<a title="Show"  class="fa fa-circle" href="'. route('interview.show',$value['id']) .'" style="margin:3px;"></a>';
-            $action .= '<a title="Edit" class="fa fa-edit" href="'.route('interview.edit',array($value['id'],'index')).'" style="margin:3px;"></a>';
+            $action .= '<a title="Show"  class="fa fa-circle" href="'. route('interview.show',\Crypt::encrypt($value['id'])) .'" style="margin:3px;"></a>';
+            $action .= '<a title="Edit" class="fa fa-edit" href="'.route('interview.edit',array(\Crypt::encrypt($value['id']),'index')).'" style="margin:3px;"></a>';
 
             $status_view = \View::make('adminlte::partials.interviewtatus',['data' => $value, 'name' => 'interview', 'display_name'=>'Interview','interview_status' => $interview_status,'source' => $source]);
             $status = $status_view->render();
@@ -656,6 +915,7 @@ class InterviewController extends Controller
         $data['posting_title'] = $request->get('posting_title');
         $data['type'] = $request->get('type');
         $data['status'] = $request->get('status');
+        $data['remarks'] = $request->get('remarks');
         $data['about'] = $request->get('about');
         $data['interview_owner_id'] = $user_id;
         $data['skype_id'] = $request->get('skype_id');
@@ -683,7 +943,7 @@ class InterviewController extends Controller
         $module_id = $interview_id;
         $module = 'Interview';
         $message = $user_name . " has scheduled interview";
-        $link = route('interview.show',$interview_id);
+        $link = route('interview.show',\Crypt::encrypt($interview_id));
 
         $super_admin_userid = getenv('SUPERADMINUSERID');
         $user_arr = array();
@@ -731,6 +991,7 @@ class InterviewController extends Controller
 
     public function edit($id,$source) {
 
+        $id = \Crypt::decrypt($id);
         $user = \Auth::user();
         $user_id = $user->id;
 
@@ -831,6 +1092,7 @@ class InterviewController extends Controller
         $interview_date = $dateClass->changeDMYHMStoYMDHMS($request->get('interview_date'));
         $location = $request->get('location');
         $comments = $request->get('comments');
+        $remarks = $request->get('remarks');
         $posting_title = $request->get('posting_title');
         $type = $request->get('type');
         $status = $request->get('status');
@@ -866,6 +1128,8 @@ class InterviewController extends Controller
             $interview->about = $about;
         if(isset($comments))
             $interview->comments = $comments;
+        if(isset($remarks))
+            $interview->remarks = $remarks;
 
         //$interview->interview_owner_id = $interview_owner_id;
         $interview->interview_date = $interview_date;
@@ -922,6 +1186,7 @@ class InterviewController extends Controller
 
     public function show($id) {
 
+        $id = \Crypt::decrypt($id);
         $dateClass = new Date();
 
         $interviewDetails = Interview::join('candidate_basicinfo','candidate_basicinfo.id','=','interview.candidate_id')
@@ -962,6 +1227,7 @@ class InterviewController extends Controller
         $interview['location'] = $interviewDetails->location;
         $interview['status'] = $interviewDetails->status;
         $interview['comments'] = $interviewDetails->comments;
+        $interview['remarks'] = $interviewDetails->remarks;
         $interview['about'] = $interviewDetails->about;
         $interview['interviewOwner'] = $interviewOwner;
         $interview['skype_id'] = $interviewDetails->skype_id;
@@ -1239,7 +1505,7 @@ class InterviewController extends Controller
             else if($source == 'Upcoming & Previous') {
                 return redirect('/interview/upcomingprevious')->with('success','Interview Status Updated Successfully.');
             } else if($source == 'Show') {
-                return redirect('/interview/'.$interview_id.'/show')->with('success','Interview Status Updated Successfully.');
+                return redirect('/interview/'.\Crypt::encrypt($interview_id).'/show')->with('success','Interview Status Updated Successfully.');
             }
             else {
                 return redirect('/interview')->with('success','Interview Status Updated Successfully.');

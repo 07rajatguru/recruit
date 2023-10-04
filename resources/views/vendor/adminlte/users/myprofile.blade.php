@@ -27,12 +27,14 @@
             </div>
             @permission(('edit-profile-of-loggedin-user'))
                 <div class="pull-right">
-                    <a class="btn btn-primary" href="{{ route('users.editprofile',$user_id) }}">Edit Profile</a>
-                    <a class="btn btn-primary" href="{{ route('users.signature',$user_id) }}">Update Signature</a>
+                    <a class="btn btn-primary" href="{{ route('users.editprofile',[\Crypt::encrypt($user_id)]) }}">Edit Profile</a>
+                    <a class="btn btn-primary" href="{{ route('users.signature',[\Crypt::encrypt($user_id)]) }}">Update Signature</a>
+                    <a class="btn btn-primary" href="{{ route('users.importExport',[\Crypt::encrypt($user_id)]) }}">Import Profile</a>
+                    <a class="btn btn-success" href="javascript:void(0);" onClick="export_data()">Export Profile</a>
                 </div>
             @else
                 <div class="pull-right">
-                    <a class="btn btn-primary" href="{{ route('users.signature',$user_id) }}">Update Signature</a>
+                    <a class="btn btn-primary" href="{{ route('users.signature',[\Crypt::encrypt($user_id)]) }}">Update Signature</a>
                 </div>
             @endpermission
         </div>
@@ -289,6 +291,20 @@
         jQuery(document).ready(function () {
 
             $("#users_upload_type").select2();
+
+            
         });
+
+        function export_data() {
+
+            var url = '/users/export';
+
+            var form = $('<form action="'+url+ '" method="post">' +
+            '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+            '</form>');
+
+            $('body').append(form);
+            form.submit();
+        }
     </script>
 @stop

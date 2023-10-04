@@ -88,11 +88,11 @@ class TrainingController extends Controller
 
             $action = '';
 
-            $action .= '<a title="Show" class="fa fa-circle" href="'.route('training.show',$value['id']).'" style="margin:2px;"></a>';
+            $action .= '<a title="Show" class="fa fa-circle" href="'.route('training.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
             if($value['owner_id'] == $user_id) {
 
-                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('training.edit',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('training.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
 
             if($delete_perm) {
@@ -282,6 +282,8 @@ class TrainingController extends Controller
 
     public function edit($id) {
 
+        $id = \Crypt::decrypt($id);
+
         $training = Training::find($id);
         
         $action = "edit";
@@ -394,7 +396,7 @@ class TrainingController extends Controller
                 $training_doc->save();
             }
 
-            return redirect('training/'. $id .'/edit')->with('success','Attachment Uploaded Successfully.');      
+            return redirect('training/'. \Crypt::encrypt($id) .'/edit')->with('success','Attachment Uploaded Successfully.');      
         }
 
         $users = $request->input('user_ids');
@@ -443,8 +445,13 @@ class TrainingController extends Controller
 
         $user_id = \Auth::user()->id;
 
-        if(isset($file) && $file->isValid())
-        {
+        
+        if(isset($file) && $file->isValid()){
+
+            $allowedExtensions = ['pdf', 'jpg', 'jpeg', 'png', 'gif', 'xls', 'xlsx', 'doc', 'docx', 'ppt', 'pptx', 'txt'];
+            $extension = strtolower($file->getClientOriginalExtension());
+
+            if (in_array($extension, $allowedExtensions)) { 
             $fileName = $file->getClientOriginalName();
             $fileSize = $file->getSize();
 
@@ -465,15 +472,22 @@ class TrainingController extends Controller
             $trainingFileUpload->name = $fileName;
             $trainingFileUpload->size = $fileSize;
             $trainingFileUpload->save();
-        }
-
-        return redirect()->route('training.show',[$training_id])->with('success','Attachment Uploaded Successfully.');
+        
+        return redirect()->route('training.show',[\Crypt::encrypt($training_id)])->with('success','Attachment Uploaded Successfully.');
+      }
+    else {
+        return redirect()->route('training.show',[\Crypt::encrypt($training_id)])->with('success','Attachment Uploaded Successfully.');
+      }
     }
+    }
+    
     
     public function show($id) {
 
         $user = \Auth::user();
         $user_id = $user->id;
+
+        $id = \Crypt::decrypt($id);
 
         $all_perm = $user->can('display-training-material');
         
@@ -570,10 +584,10 @@ class TrainingController extends Controller
         TrainingDoc::where('id',$docid)->delete();
 
         if($type == 'Edit') {
-            return redirect()->route('training.edit',[$id])->with('success','Attachment Deleted Successfully.');
+            return redirect()->route('training.edit',[\Crypt::encrypt($id)])->with('success','Attachment Deleted Successfully.');
         }
         else {
-            return redirect()->route('training.show',[$id])->with('success','Attachment Deleted Successfully.');
+            return redirect()->route('training.show',[\Crypt::encrypt($id)])->with('success','Attachment Deleted Successfully.');
         }
     }
 

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Crypt;
 use App\UserLeave;
 use App\Events\NotificationMail;
 use App\Date;
@@ -82,20 +83,18 @@ class LeaveController extends Controller
 
         $count = sizeof($leave_details);
 
-        $pending = 0;
-        $approved = 0;
-        $rejected = 0;
+        $pending = 0; $approved = 0; $rejected = 0;
         $c_pending = 0; $c_approved = 0; $c_rejected = 0;
         foreach($leave_details as $leave_detail) {
 
-            if($leave_detail['status'] == '0') {
-                $pending++;
-            }
-            else if ($leave_detail['status'] == '1') {
-                $approved++;
-            }
-            else if($leave_detail['status'] == '2') {
-                $rejected++;
+            if(isset($leave_detail['is_leave_cancel']) && $leave_detail['is_leave_cancel'] == '0') {
+                if($leave_detail['status'] == '0') {
+                    $pending++;
+                } else if ($leave_detail['status'] == '1') {
+                    $approved++;
+                } else if($leave_detail['status'] == '2') {
+                    $rejected++;
+                }
             }
 
             // Cancel Leave Count
@@ -145,15 +144,13 @@ class LeaveController extends Controller
 
         if (isset($month) && $month != 0) {
             $month = $month;
-        }
-        else {
+        } else {
             $month = date('m');
         }
 
         if (isset($year) && $year != 0) {
             $year = $year;
-        }
-        else {
+        } else {
             $year = date('Y');
         }
 
@@ -169,28 +166,38 @@ class LeaveController extends Controller
         // Set Status value
         if($status == 'pending') {
             $status = '0';
-        }
-        else if($status == 'approved') {
+            $c_status = '';
+        } else if($status == 'approved') {
             $status = '1';
-        }
-        else if($status == 'rejected') {
+            $c_status = '';
+        } else if($status == 'rejected') {
             $status = '2';
+            $c_status = '';
+        }
+
+        // Set cancel Status value
+        if($status == 'c_pending') {
+            $status = '';
+            $c_status = '0';
+        } else if($status == 'c_approved') {
+            $status = '';
+            $c_status = '1';
+        } else if($status == 'c_rejected') {
+            $status = '';
+            $c_status = '2';
         }
 
         // Get userwise leave balance
         if($user_id == $super_admin_userid) {
             $leave_balance = '';
-        }
-        else {
+        } else {
             $leave_balance = LeaveBalance::getLeaveBalanceByUserId($user_id);
         }
  
         if($all_perm) {
-
             $leave_details_all = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,'');
-            $leave_details = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,$status);
-        }
-        else if($userwise_perm) {
+            $leave_details = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,$status,'',$c_status);
+        } else if($userwise_perm) {
 
             /*$reports_to_ids = User::getAssignedUsers($user_id);
 
@@ -201,26 +208,34 @@ class LeaveController extends Controller
             $user_ids[] = $user_id;
 
             $leave_details_all = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'');
-            $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,$status);
+            $leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,$status,'',$c_status);
         }
 
         $count = sizeof($leave_details);
 
         // Set total leave count by status
-        $pending = 0;
-        $approved = 0;
-        $rejected = 0;
-
+        $pending = 0; $approved = 0; $rejected = 0;
+        $c_pending = 0; $c_approved = 0; $c_rejected = 0;
         foreach($leave_details_all as $leave_detail) {
 
-            if($leave_detail['status'] == '0') {
-                $pending++;
-            }
-            else if ($leave_detail['status'] == '1') {
-                $approved++;
-            }
-            else if($leave_detail['status'] == '2') {
-                $rejected++;
+            if(isset($leave_detail['is_leave_cancel']) && $leave_detail['is_leave_cancel'] == '0') {
+                if($leave_detail['status'] == '0') {
+                    $pending++;
+                }
+                else if ($leave_detail['status'] == '1') {
+                    $approved++;
+                }
+                else if($leave_detail['status'] == '2') {
+                    $rejected++;
+                }
+            } else {
+                if($leave_detail['leave_cancel_status'] == '0') {
+                    $c_pending++;
+                } else if ($leave_detail['leave_cancel_status'] == '1') {
+                    $c_approved++;
+                } else if($leave_detail['leave_cancel_status'] == '2') {
+                    $c_rejected++;
+                }
             }
         }
 
@@ -241,7 +256,7 @@ class LeaveController extends Controller
 
         $chart_data = '';
 
-        return view('adminlte::leave.statusindex',compact('status','leave_details','leave_balance','user_id','count','pending','approved','rejected','month_array','month','year_array','year','chart_data','super_admin_userid'));
+        return view('adminlte::leave.statusindex',compact('status','leave_details','leave_balance','user_id','count','pending','approved','rejected','month_array','month','year_array','year','chart_data','super_admin_userid','c_pending','c_approved','c_rejected'));
     }
 
     public function userLeaveAdd() {
@@ -255,38 +270,40 @@ class LeaveController extends Controller
 
         // Get user leave balance
         $leave_balance = LeaveBalance::getLeaveBalanceByUserId($loggedin_user_id);
-
-        if(isset($leave_balance) && $leave_balance != '') {
+        if(isset($leave_balance) && $leave_balance != '' && $leave_balance->leave_remaining > 0) {
             $leave_category = UserLeave::getLeaveCategory();
-        }
-        else {
-            $leave_category = array('LWP' => "LWP");
+        } else {
+            $leave_category = array('' => 'Select Leave Category', 'LWP' => "LWP");
         }
         $selected_leave_category = '';
+
+        $pending_leave_details = UserLeave::getUserPendingLeaveByCategory($loggedin_user_id,0,'Privilege Leave');
 
         // Get Half day options
         $half_leave_type = UserLeave::getHalfDayOptions();
         $selected_half_leave_type = '';
         
-        return view('adminlte::leave.create',compact('action','leave_type','leave_category','selected_leave_type','selected_leave_category','loggedin_user_id','half_leave_type','selected_half_leave_type','leave_balance'));
+        return view('adminlte::leave.create',compact('action','leave_type','leave_category','selected_leave_type','selected_leave_category','loggedin_user_id','half_leave_type','selected_half_leave_type','leave_balance','pending_leave_details'));
     }
 
-    public function leaveStore(Request $request) {
+     public function leaveStore(Request $request) {
 
         $user_id = \Auth::user()->id;
         $dateClass = new Date();
 
-        if (Input::get('from_date') != '') {
-            $from_date = $dateClass->changeDMYtoYMD(Input::get('from_date'));
+        if ($request->has('from_date')) {
+            $from_date = $dateClass->changeDMYtoYMD($request->input('from_date'));
         }
-
-        if (Input::get('to_date') != '') {
-            $to_date = $dateClass->changeDMYtoYMD(Input::get('to_date'));
+        
+        if ($request->has('to_date')) {
+            $to_date = $dateClass->changeDMYtoYMD($request->input('to_date'));
         }
+        
+        
 
         $user_name = User::getUserNameById($user_id);
-        $get_from_date = Input::get('from_date');
-        $get_to_date = Input::get('to_date');
+        $get_from_date = $request->input('from_date');
+        $get_to_date = $request->input('to_date');
 
         if($get_from_date == $get_to_date) {
             $subject = "Leave Application - ". $user_name . " - " . $get_from_date;
@@ -298,10 +315,10 @@ class LeaveController extends Controller
         // Get All fields values
 
         //$subject = Input::get('subject');
-        $leave_type = Input::get('leave_type');
-        $leave_category = Input::get('leave_category');
-        $message = Input::get('message');
-        $half_leave_type = Input::get('half_leave_type');
+        $leave_type =  $request->input('leave_type');
+        $leave_category = $request->input('leave_category');
+        $message = $request->input('message');
+        $half_leave_type = $request->input('half_leave_type');
 
         // Calculate Difference Between Two Dates
         $from_date_1 = strtotime($from_date);
@@ -396,7 +413,7 @@ class LeaveController extends Controller
 
         $leave_id = $user_leave->id;
 
-        $leave_doc = Input::file('leave_doc');
+        $leave_doc = $request->file('leave_doc');
 
         if (isset($leave_doc) && $leave_doc != '') {
 
@@ -477,6 +494,8 @@ class LeaveController extends Controller
 
     public function edit($id) {
 
+        $id = Crypt::decrypt($id);
+
         $leave = UserLeave::find($id);
 
         $action = 'edit';
@@ -488,11 +507,11 @@ class LeaveController extends Controller
         // Get user leave balance
         $leave_balance = LeaveBalance::getLeaveBalanceByUserId($loggedin_user_id);
 
-        if(isset($leave_balance) && $leave_balance != '') {
+        if(isset($leave_balance) && $leave_balance != '' && $leave_balance->leave_remaining > 0) {
             $leave_category = UserLeave::getLeaveCategory();
         }
         else {
-            $leave_category = array('LWP' => "LWP");
+            $leave_category = array('' => 'Select Leave Category', 'LWP' => "LWP");
         }
         $selected_leave_category = $leave->category;
         
@@ -730,6 +749,8 @@ class LeaveController extends Controller
 
     public function leaveReply($id) {
 
+        $id = Crypt::decrypt($id);
+
         $loggedin_user_id = \Auth::user()->id;
         $leave_details = UserLeave::getLeaveDetails($id);
 
@@ -766,7 +787,6 @@ class LeaveController extends Controller
         $year = date('Y',strtotime($leave_details['from_date']));
 
         // Email Notifications
-
         $user_email = User::getUserEmailById($user_id);
     
         //Get Superadmin Email
@@ -816,7 +836,7 @@ class LeaveController extends Controller
             $monthwise_leave_balance_details = MonthwiseLeaveBalance::getMonthwiseLeaveBalanceByUserId($user_id,$month,$year);
 
             // Update Leave balance
-            if($leave_category == 'Privilege Leave') {
+            if($leave_category == 'Paid Leave') {
 
                 if(isset($leave_balance_details) && $leave_balance_details != '') {
 
@@ -927,6 +947,7 @@ class LeaveController extends Controller
 
     // User Cancel Leave function
     public function leaveCancel($id,Request $req) {
+
 
         $leave_c_remarks = $req->input('leave_c_remarks');
 
@@ -1061,7 +1082,7 @@ class LeaveController extends Controller
                 $leave_balance_details = LeaveBalance::getLeaveBalanceByUserId($user_id);
                 $monthwise_leave_balance_details = MonthwiseLeaveBalance::getMonthwiseLeaveBalanceByUserId($user_id,$month,$year);
                 // Update Leave balance
-                if($leave_category == 'Privilege Leave') {
+                if($leave_category == 'Paid Leave') {
                     if(isset($leave_balance_details) && $leave_balance_details != '') {
                         // Update leave balance in main table
                         $leave_taken = $leave_balance_details['leave_taken'];
@@ -1288,6 +1309,8 @@ class LeaveController extends Controller
 
     public function userWiseLeaveEdit($id,$month,$year) {
 
+        $id = Crypt::decrypt($id);
+
         $leave_data = MonthwiseLeaveBalance::find($id);
         $user_id = $leave_data->user_id;
 
@@ -1425,9 +1448,22 @@ class LeaveController extends Controller
         $team_rejected_leave_details = array();
         $all_rejected_leave_details = array();
 
+        $c_team_pending_leave_details = array();
+        $c_all_pending_leave_details = array();
+
+        $c_team_approved_leave_details = array();
+        $c_all_approved_leave_details = array();
+
+        $c_team_rejected_leave_details = array();
+        $c_all_rejected_leave_details = array();
+
         $pending_count = 0;
         $approved_count = 0;
         $rejected_count = 0;
+        $c_pending_count = 0;
+        $c_approved_count = 0;
+        $c_rejected_count = 0;
+
 
         if($id == 0) {
 
@@ -1441,6 +1477,15 @@ class LeaveController extends Controller
 
             $rejected_leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,2);
             $rejected_count = sizeof($rejected_leave_details);
+
+            $c_pending_leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'','',0);
+            $c_pending_count = sizeof($c_pending_leave_details);
+
+            $c_approved_leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'','',1);
+            $c_approved_count = sizeof($c_approved_leave_details);
+
+            $c_rejected_leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'','',2);
+            $c_rejected_count = sizeof($c_rejected_leave_details);
         }
         else if($id == 1) {
 
@@ -1468,6 +1513,15 @@ class LeaveController extends Controller
 
             $rejected_leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,2);
             $rejected_count = sizeof($rejected_leave_details);
+
+            $c_pending_leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'','',0);
+            $c_pending_count = sizeof($c_pending_leave_details);
+
+            $c_approved_leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'','',1);
+            $c_approved_count = sizeof($c_approved_leave_details);
+
+            $c_rejected_leave_details = UserLeave::getAllLeavedataByUserId(0,$user_ids,$month,$year,'','',2);
+            $c_rejected_count = sizeof($c_rejected_leave_details);
         }
         else {
 
@@ -1481,6 +1535,15 @@ class LeaveController extends Controller
 
                 $rejected_leave_details = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,2);
                 $rejected_count = sizeof($rejected_leave_details);
+
+                $c_pending_leave_details = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,'','',0);
+                $c_pending_count = sizeof($c_pending_leave_details);
+
+                $c_approved_leave_details = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,'','',1);
+                $c_approved_count = sizeof($c_approved_leave_details);
+
+                $c_rejected_leave_details = UserLeave::getAllLeavedataByUserId(1,0,$month,$year,'','',2);
+                $c_rejected_count = sizeof($c_rejected_leave_details);
             }
             else {
                 return view('errors.403');
@@ -1560,8 +1623,80 @@ class LeaveController extends Controller
 
                 $rejected_count = sizeof($team_rejected_leave_details) + sizeof($all_rejected_leave_details);
             }
+
+            // Get cancelled Pending Leave Details
+            if(isset($c_pending_leave_details) && sizeof($c_pending_leave_details) > 0) {
+
+                $i = 0;
+
+                foreach ($c_pending_leave_details as $key => $value) {
+
+                    $report_to_id = User::getReportsToById($value['user_id']);
+
+                    if($report_to_id == $super_admin_userid) {
+
+                        $c_team_pending_leave_details[$i] = $value;
+                    }
+                    else {
+
+                        $c_all_pending_leave_details[$i] = $value;
+                    }
+
+                    $i++;
+                }
+
+                $c_pending_count = sizeof($c_team_pending_leave_details) + sizeof($c_all_pending_leave_details);
+            }
+
+            // Get cancelled Approved Leave Details
+            if(isset($c_approved_leave_details) && sizeof($c_approved_leave_details) > 0) {
+
+                $i = 0;
+
+                foreach ($c_approved_leave_details as $key => $value) {
+
+                    $report_to_id = User::getReportsToById($value['user_id']);
+
+                    if($report_to_id == $super_admin_userid) {
+
+                        $c_team_approved_leave_details[$i] = $value;
+                    }
+                    else {
+
+                        $c_all_approved_leave_details[$i] = $value;
+                    }
+
+                    $i++;
+                }
+
+                $c_approved_count = sizeof($c_team_approved_leave_details) + sizeof($c_all_approved_leave_details);
+            }
+
+            // Get cancelled Rejected Leave Details
+            if(isset($c_rejected_leave_details) && sizeof($c_rejected_leave_details) > 0) {
+
+                $i = 0;
+
+                foreach ($c_rejected_leave_details as $key => $value) {
+
+                    $report_to_id = User::getReportsToById($value['user_id']);
+
+                    if($report_to_id == $super_admin_userid) {
+
+                        $c_team_rejected_leave_details[$i] = $value;
+                    }
+                    else {
+
+                        $c_all_rejected_leave_details[$i] = $value;
+                    }
+
+                    $i++;
+                }
+
+                $c_rejected_count = sizeof($c_team_rejected_leave_details) + sizeof($c_all_rejected_leave_details);
+            }
         }
 
-        return view('adminlte::leave.appliedleave',compact('pending_leave_details','pending_count','approved_leave_details','approved_count','rejected_leave_details','rejected_count','user_id','super_admin_userid','team_pending_leave_details','all_pending_leave_details','team_approved_leave_details','all_approved_leave_details','team_rejected_leave_details','all_rejected_leave_details'));
+        return view('adminlte::leave.appliedleave',compact('pending_leave_details','pending_count','approved_leave_details','approved_count','rejected_leave_details','rejected_count','user_id','super_admin_userid','team_pending_leave_details','all_pending_leave_details','team_approved_leave_details','all_approved_leave_details','team_rejected_leave_details','all_rejected_leave_details','c_pending_count','c_approved_count','c_rejected_count','c_pending_leave_details','c_approved_leave_details','c_rejected_leave_details','c_team_pending_leave_details','c_all_pending_leave_details','c_team_approved_leave_details','c_all_approved_leave_details','c_team_rejected_leave_details','c_all_rejected_leave_details'));
     }
 }

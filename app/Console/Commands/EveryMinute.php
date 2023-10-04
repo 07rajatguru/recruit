@@ -324,7 +324,7 @@ class EveryMinute extends Command
 
                 \Mail::send('adminlte::emails.dailyReport', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to_array'])->cc($input['cc_array'])->subject('Daily Activity Report - ' . $input['value'] . ' - ' . date("d-m-Y"));
+                    $message->to($input['to_array'])->subject('Daily Activity Report - ' . $input['value'] . ' - ' . date("d-m-Y"));
                 });
 
                 \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
@@ -333,12 +333,14 @@ class EveryMinute extends Command
             else if ($value['module'] == 'Cosolidated Daily Report') {
 
                 $to_array = explode(",",$input['to']);
-                $cc_array = explode(",",$input['cc']);
+                // $cc_array = explode(",",$input['cc']);
 
                 $module_ids = explode(",",$module_id);
                 $data = array();
                 if (isset($module_ids) && $module_ids > 0) {
                     foreach ($module_ids as $key_d => $value_d) {
+
+
                         $user_name = User::getUserNameById($value_d);
 
                         $user_details = User::getAllDetailsByUserID($value_d);
@@ -368,18 +370,19 @@ class EveryMinute extends Command
                 }
 
                 $input['data'] = $data;
-                $input['value'] = User::getUserNameById($sender_id);
-                
+                $input['rm_name'] = User::getUserNameById($sender_id);
+                // $input['user_id'] = $value_d;
                 $input['to_array'] = array_unique($to_array);
-                $input['cc_array'] = array_unique($cc_array);
+                // $input['cc_array'] = array_unique($cc_array);
 
                 \Mail::send('adminlte::emails.dailyReportConsolidated', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to_array'])->cc($input['cc_array'])->subject('Consolidated Daily Activity Report - ' . $input['value'] . ' - ' . date("d-m-Y"));
+                    $message->to($input['to_array'])->subject('Team Daily Activity Report - ' . $input['rm_name'] . ' - ' . date("d-m-Y"));
                 });
 
                 \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
+
             else if ($value['module'] == 'Weekly Report') {
 
                 $to_array = explode(",",$input['to']);
@@ -775,7 +778,9 @@ class EveryMinute extends Command
                 $cc_array = explode(",",$input['cc']);
 
                 $jenny_user_id = getenv('JENNYUSERID');
-                $client_res = ClientBasicinfo::getPassiveClients($jenny_user_id);
+                $from_date = date('Y-m-d',strtotime('last Monday'));
+                $to_date = date('Y-m-d',strtotime("$from_date +6days"));
+                $client_res = ClientBasicinfo::getPassiveClients($jenny_user_id,$from_date,$to_date);
                 $clients_count = sizeof($client_res);
                 
                 $input['client_res'] = $client_res;
@@ -785,6 +790,62 @@ class EveryMinute extends Command
                 \Mail::send('adminlte::emails.PassiveClients', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
                     $message->to($input['to'])->cc($input['cc_array'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+
+            // Mail for  Client Remarks
+            else if ($value['module'] == 'Client Remarks') {
+                $to_array = explode(",",$input['to']);
+                $cc_array = explode(",",$input['cc']);
+
+                $input['to_array'] = $to_array;
+                $input['cc_array'] = $cc_array;
+
+                $input['module_id'] = $value['module_id'];
+                $input['sender_name'] = $value['sender_name'];
+
+                $clientInfo = ClientBasicinfo::getLatestRemarks($value['module_id']);
+                $user_name = User::getUserNameById($value['sender_name']);
+
+                $recipient_name = User::getUserNameByEmail($input['to']);
+
+                $client_basicinfo = ClientBasicinfo::find($value['module_id']);
+                $client_name = $client_basicinfo->name;
+
+                $content = '';
+                if (is_string($clientInfo)) {
+                    $content = explode(' - ', $clientInfo)[0];
+                }
+
+                $input['username'] = $user_name;
+                $input['latest_remarks'] = $content;
+                $input['client_name'] = $client_name;
+                $input['recipient_name'] = $recipient_name;
+
+                \Mail::send('adminlte::emails.remarks', $input, function ($message) use($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->subject($input['subject']);
+                });
+
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
+            }
+
+            // Mail for Daily Passive Client Listing
+            else if ($value['module'] == 'Daily Passive Client List') {
+                $jenny_user_id = getenv('JENNYUSERID');
+                $from_date = date('Y-m-d');
+                $to_date = date('Y-m-d');
+                $client_res = ClientBasicinfo::getPassiveClients($jenny_user_id,$from_date,$to_date);
+                $clients_count = sizeof($client_res);
+                
+                $input['client_res'] = $client_res;
+                $input['clients_count'] = $clients_count;
+
+                \Mail::send('adminlte::emails.PassiveClients', $input, function ($message) use($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to'])->subject($input['subject']);
                 });
 
                 \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
@@ -1009,7 +1070,7 @@ class EveryMinute extends Command
             else if ($value['module'] == 'Productivity Report') {
 
                 $to_array = explode(",",$input['to']);
-                $cc_array = explode(",",$input['cc']);
+                // $cc_array = explode(",",$input['cc']);
 
                 // Get user Bench Mark from master
                 $user_bench_mark = UserBenchMark::getBenchMarkByUserID($sender_id);
@@ -1256,7 +1317,7 @@ class EveryMinute extends Command
                 $input['no_of_weeks'] = $no_of_weeks;
                 $input['frm_to_date_array'] = $frm_to_date_array;
                 $input['to_array'] = array_unique($to_array);
-                $input['cc_array'] = array_unique($cc_array);
+                // $input['cc_array'] = array_unique($cc_array);
                 $input['user_name'] = $user_details->name;
 
                 // Set last column Monthly Achivment value
@@ -1312,7 +1373,7 @@ class EveryMinute extends Command
                 
                 \Mail::send('adminlte::emails.ProductivityReport', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to_array'])->cc($input['cc_array'])->subject('Productivity Report -'.$input['user_name']);
+                    $message->to($input['to_array'])->subject('Productivity Report -'.$input['user_name']);
                 });
 
                 \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
@@ -2200,8 +2261,8 @@ class EveryMinute extends Command
                 // For timing issue in work planning data
                 date_default_timezone_set('UTC');
                 
-                $cc_array = explode(",",$input['cc']);
-                $input['cc_array'] = $cc_array;
+                // $cc_array = explode(",",$input['cc']);
+                // $input['cc_array'] = $cc_array;
               
                 $input['module_id'] = $value['module_id'];
 
@@ -2215,7 +2276,7 @@ class EveryMinute extends Command
                 $user_email_details = UsersEmailPwd::getUserEmailDetails($value['sender_name']);
                 $input['from_address'] = trim($user_email_details->email);
 
-                if(strpos($input['from_address'], '@gmail.com') !== false) {
+                /*if(strpos($input['from_address'], '@gmail.com') !== false) {
 
                     config([
 
@@ -2237,7 +2298,7 @@ class EveryMinute extends Command
                         'mail.password' => trim($user_email_details->password),
                         'mail.encryption' => trim('ssl'),
                     ]);
-                }
+                }*/
 
                 $work_planning = WorkPlanning::getWorkPlanningDetailsById($value['module_id']);
                 $work_planning_list = WorkPlanningList::getWorkPlanningList($value['module_id']);
@@ -2278,7 +2339,7 @@ class EveryMinute extends Command
 
                 \Mail::send('adminlte::emails.workplanningmail', $input, function ($message) use($input) {
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to'])->cc($input['cc_array'])->bcc($input['owner_email'])->subject($input['subject']);
+                    $message->to($input['to'])->subject($input['subject']);
                 });
 
                 \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
@@ -2509,7 +2570,7 @@ class EveryMinute extends Command
 
                     $input['user_name'] = $user_name;
                     $input['cc_array'] = $cc_array;
-                    $input['attachment'] = public_path() . "/" . 'uploads/Adler_List_of_Holidays.pdf';
+                    $input['attachment'] = public_path() . "/" . 'uploads/Adler_List_of_Holidays_23_24.pdf';
                     $input['module_id'] = $value['module_id'];
 
                      \Mail::send('adminlte::emails.listofholidaysemail', $input, function ($message) use($input) {
@@ -2798,7 +2859,9 @@ class EveryMinute extends Command
             }
 
             else if ($value['module'] == "Pending Work Planning Reminder") {
-
+                // For timing issue in work planning data
+                date_default_timezone_set('UTC');
+                
                 $from_date = date('Y-m-d',strtotime("-4 days"));
                 $to_date = date("Y-m-d");
 
@@ -2951,19 +3014,24 @@ class EveryMinute extends Command
 
                 // Get BCC Email
                 $superAdminUserID = getenv('SUPERADMINUSERID');
-                $input['superadmin_email'] = User::getUserEmailById($superAdminUserID);
+                $superadmin_email = User::getUserEmailById($superAdminUserID);
+                $bhagyashree_user_id = getenv('BHAGYASHREEUSERID');
+                $bhagyashree_email = User::getUserEmailById($bhagyashree_user_id);
+
+                $bcc_array = array($superadmin_email,$bhagyashree_email);
 
                 if(isset($users_details) && $users_details != '') {
 
                     $input['user_name'] = $user_name;
                     $input['reporting_manager_name'] = $reporting_manager_name;
                     $input['cc_array'] = $cc_array;
+                    $input['bcc_array'] = $bcc_array;
                     $input['module_id'] = $value['module_id'];
 
                      \Mail::send('adminlte::emails.welcomeEmail', $input, function ($message) use($input) {
                     
                         $message->from($input['from_address'], $input['from_name']);
-                        $message->to($input['to'])->cc($input['cc_array'])->bcc($input['superadmin_email'])->subject($input['subject']);
+                        $message->to($input['to'])->cc($input['cc_array'])->bcc($input['bcc_array'])->subject($input['subject']);
                     });
 
                     \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
@@ -3095,9 +3163,12 @@ class EveryMinute extends Command
             }
 
             else if ($value['module'] == 'Daily Work Planning Summary') {
+                // For timing issue in work planning data
+                date_default_timezone_set('UTC');
+                
 
                 $to_array = explode(",",$input['to']);
-                $cc_array = explode(",",$input['cc']);
+                // $cc_array = explode(",",$input['cc']);
 
                 $date = date('Y-m-d');
                 $module_ids = explode(",",$module_id);
@@ -3105,14 +3176,6 @@ class EveryMinute extends Command
                 if (isset($module_ids) && $module_ids > 0) {
                     foreach ($module_ids as $key_d => $value_d) {
                         $user_name = User::getUserNameById($value_d);
-
-                        // $user_details = User::getAllDetailsByUserID($value_d);
-                        // $data[$user_name]['user_details'] = $user_details;
-
-                        // Get Today Work Planning Data
-                        // $today_work_planning = WorkPlanning::getWorkPlanningsByDateAndUserId($value_d,$date);
-                        // $data[$user_name]['today_work_planning'] = $today_work_planning;
-
                         $work_planning = WorkPlanning::getWorkPlanningsByDateAndUserId($value_d,$date);
                         if (isset($work_planning) && $work_planning != '' && isset($work_planning['id']) && $work_planning['id'] > 0) {
                             $work_planning_list = WorkPlanningList::getWorkPlanningList($work_planning['id']);
@@ -3122,6 +3185,8 @@ class EveryMinute extends Command
                             $loggedout_time = $work_planning['loggedout_time'];
                             $work_planning_time = $work_planning['work_planning_time'];
                             $work_planning_status_time = $work_planning['work_planning_status_time'];
+                            $late_in_early_go = $work_planning['late_in_early_go'];
+                            $half_leave_type = $work_planning['half_leave_type'];
 
                             $today_date = $work_planning['added_date'];
                             $report_delay = $work_planning['report_delay'];
@@ -3129,6 +3194,106 @@ class EveryMinute extends Command
                             $link = $work_planning['link'];
                             $total_projected_time = $work_planning['total_projected_time'];
                             $total_actual_time = $work_planning['total_actual_time'];
+                         
+
+
+                            // check user leave data
+                            $leave_data = UserLeave::getLeaveByDateAndID($today_date,$work_planning['added_by'],'','Full Day');
+
+                            // set loggin time bg color
+                            if (isset($leave_data) && $leave_data != '') {
+                                if ($leave_data == 'PL/LWP') {
+                                    $login_bg_color = '#93ccea'; // PL/LWP
+                                }
+                            } else if ($work_planning['attendance'] == 'HD') {
+                                if ($work_planning['Half Day'] == '1st') {
+                                    $login_bg_color = '#c5a3ff'; // Half-day, 1st half 
+                                } else {
+                                    $login_bg_color = '#fff59a'; // HD (yellow)
+                                }
+                            } else if($work_planning['loggedin_time'] > '10:30:00') {
+                                if ($work_planning['late_in_early_go']) {
+                                        $login_bg_color = '#FFFF99'; // Login after 10:30:00 with late-in
+                                    } else {
+                                        $login_bg_color = '	#d99594'; // Login after 10:30:00 without late-in
+                                    }
+                            } else if ($work_planning['loggedin_time'] >= '09:30:00' && $work_planning['loggedin_time'] <= '10:30:00') {
+                                $login_bg_color = '#FFFFFF'; // Login between 9:30 and 10:30
+                            } else {
+                                $login_bg_color = '#FFFFFF';
+                            }
+
+
+                            $day_of_week = date('N', strtotime($loggedin_time));
+                            $loginTime = strtotime($loggedin_time); 
+                            $logoutTime = strtotime($loggedout_time);
+                            $timeDifference = ($logoutTime - $loginTime) / 3600; 
+
+                            // set logout time bg color
+                            if ($day_of_week == 6 && $timeDifference < '06:00:00' && !$work_planning['late_in_early_go']) {
+                                $logout_bg_color = '#d99594'; // Saturday with less than 6 hours
+                            } elseif ($day_of_week == 6 && $timeDifference === '06:00:00') {
+                                $logout_bg_color = '#FFFFFF'; // Saturday Logout time exactly 6 hours 
+                            } elseif ($timeDifference === '09:00:00') {
+                                $logout_bg_color = '#FFFFFF'; // Logout time exactly 9 hours 
+                            } elseif ($work_planning['late_in_early_go']) {
+                                $logout_bg_color = '#FFFF99'; // Late-in/early go applied 
+                            } elseif ($work_planning['attendance'] == 'HD') {
+                                if ($work_planning['Half Day'] == '2nd') {
+                                    $logout_bg_color = '#c5a3ff'; // Half-day, 2nd half 
+                                } else {
+                                    $logout_bg_color = '#FFFFFF'; // Default color 
+                                }
+                            } elseif ($timeDifference < '09:00:00' && !$work_planning['late_in_early_go']) {
+                                $logout_bg_color = '#d99594 '; // Logout time less than 9 hours without late-in 
+                            } else {
+                                $logout_bg_color = '#FFFFFF'; // Default color 
+                            }
+                            
+                                 
+                            // set work planning actual time bg color
+                            if ($day_of_week == 6 && $work_planning['total_actual_time'] < '06:00:00' && !$work_planning['half_leave_type'] && !$work_planning['late_in_early_go']) {
+                                $work_planning_actual_time_bg_color = '#fd5e53'; // Saturday with less than 6 hours
+                            }  elseif ($day_of_week == 6 && $work_planning['total_actual_time'] === '06:00:00') {
+                                $work_planning_actual_time_bg_color = '#FFFFFF'; // Saturday Exactly 6 hours
+                            } else if ($day_of_week == 6 && $work_planning['total_actual_time'] > '06:00:00') {
+                                $work_planning_actual_time_bg_color = '#98FB98'; // Saturday with More than 6 hours 
+                            } elseif ($work_planning['total_actual_time'] === '08:00:00') {
+                                $work_planning_actual_time_bg_color = '#FFFFFF'; // Exactly 8 hours
+                            } else if ($work_planning['total_actual_time'] > '08:00:00') {
+                                $work_planning_actual_time_bg_color = '#98FB98'; // More than 8 hours 
+                            } else if ($work_planning['total_actual_time'] < '08:00:00') {
+                                $work_planning_actual_time_bg_color = '#fd5e53'; // Less than 8 hours 
+                            } else {
+                                $work_planning_actual_time_bg_color = '#FFFFFF'; // Default color 
+                            }
+                            
+
+
+                            // set work planning time bg color
+                            $login_time = strtotime($work_planning['loggedin_time']);
+                            $workplanning_time = strtotime($work_planning['work_planning_time']);
+
+                            if ($login_time !== false && $workplanning_time !== false) {
+                                $time_diff = round(($workplanning_time - $login_time) / 3600, 2); // Time difference in hours
+
+                              if ($time_diff >= 1) {
+                                $work_planning_time_bg_color = '#FFBB70'; // Orange if delayed by 1 hour
+                              } else {
+                                $work_planning_time_bg_color = '#FFFFFF'; 
+                              }
+                            } else {
+                                $work_planning_time_bg_color = '#FFFFFF'; 
+                            }
+
+
+                             // set work planning status time bg color
+                            if (!$work_planning['work_planning_status_time']) {
+                                $work_planning_status_time_bg_color = '#FFBB70'; // Orange if not submitted
+                            } else {
+                                $work_planning_status_time_bg_color = '#FFFFFF'; // Default color for Half Day
+                            }
+
 
                             $data[$user_name]['loggedin_time'] = $loggedin_time;
                             $data[$user_name]['loggedout_time'] = $loggedout_time;
@@ -3150,6 +3315,13 @@ class EveryMinute extends Command
                             $data[$user_name]['total_actual_time'] = $total_actual_time;
                             $data[$user_name]['work_planning_list'] = $work_planning_list;
                             $data[$user_name]['work_planning_post'] = $work_planning_post;
+                            $data[$user_name]['login_bg_color'] = $login_bg_color;
+                            $data[$user_name]['logout_bg_color'] = $logout_bg_color;
+                            $data[$user_name]['work_planning_time_bg_color'] = $work_planning_time_bg_color;
+                            $data[$user_name]['work_planning_status_time_bg_color'] = $work_planning_status_time_bg_color;
+                            $data[$user_name]['work_planning_actual_time_bg_color'] = $work_planning_actual_time_bg_color;
+
+
                         } else {
                             $data[$user_name]['loggedin_time'] = '';
                             $data[$user_name]['loggedout_time'] = '';
@@ -3162,6 +3334,11 @@ class EveryMinute extends Command
                             $data[$user_name]['link'] = '';
                             $data[$user_name]['total_projected_time'] = '';
                             $data[$user_name]['total_actual_time'] = '';
+                            $data[$user_name]['login_bg_color'] = '';
+                            $data[$user_name]['logout_bg_color'] = '';
+                            $data[$user_name]['work_planning_time_bg_color'] = '';
+                            $data[$user_name]['work_planning_status_time_bg_color'] = '';
+                            $data[$user_name]['work_planning_actual_time_bg_color'] = '';
                             $data[$user_name]['work_planning_list'] = array();
                             $data[$user_name]['work_planning_post'] = array();
                         }
@@ -3169,14 +3346,14 @@ class EveryMinute extends Command
                 }
 
                 $input['data'] = $data;
-                $input['value'] = User::getUserNameById($sender_id);
+                $input['rm_name'] = User::getUserNameById($sender_id);
                 
                 $input['to_array'] = array_unique($to_array);
-                $input['cc_array'] = array_unique($cc_array);
+                // $input['cc_array'] = array_unique($cc_array);
                 $input['date'] = $date;
                 \Mail::send('adminlte::emails.workplanningsummary', $input, function ($message) use ($input) {
                     $message->from($input['from_address'], $input['from_name']);
-                    $message->to($input['to_array'])->cc($input['cc_array'])->subject('Daily Work Planning Summary - ' . $input['value'] . ' - ' . $input['date']);
+                    $message->to($input['to_array'])->subject('Team Work Planning Sheet - ' . $input['date']);
                 });
 
                 \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
@@ -3337,6 +3514,112 @@ class EveryMinute extends Command
                 });
 
                 \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'"); 
+            }
+
+            // Command to Sent Weekly Team Productivity Report
+            else if ($value['module'] == 'Weekly Productivity Report') {
+                date_default_timezone_set('Asia/Kolkata');
+
+                $to_array = explode(",",$input['to']);
+                // $cc_array = explode(",",$input['cc']);
+
+                $input['to_array'] = array_unique($to_array);
+                // $input['cc_array'] = array_unique($cc_array);
+
+                $year = date('Y');
+                $month = date('m');
+                $lastDayOfWeek = '7';
+
+                // Get Weeks
+                $weeks = Date::getWeeksInMonth($year, $month, $lastDayOfWeek);
+                // Get the current week's starting date (Monday)
+                $from_date = date('Y-m-d', strtotime('this week monday'));
+                // Get the current week's ending date (Saturday)
+                $to_date = date('Y-m-d', strtotime('this week saturday'));
+
+                $module_ids = explode(",",$module_id);
+                $data = array();
+                if (isset($module_ids) && $module_ids > 0) {
+                    foreach ($module_ids as $key_d => $value_d) {
+                        $user_name = User::getUserNameById($value_d);
+
+                        $user_details = User::getAllDetailsByUserID($value_d);
+
+                        $data[$user_name]['user_details'] = $user_details;
+                        // Get no of cv's associated count in this week
+                        $data[$user_name]['ass_cnt'] = JobAssociateCandidates::getProductivityReportCVCount($value_d, $from_date, $to_date);
+                        // Get no of shortlisted candidate count in this week
+                        $data[$user_name]['shortlisted_cnt'] = JobAssociateCandidates::getProductivityReportShortlistedCount($value_d, $from_date, $to_date);
+                        // Get no of interview of candidates count in this week
+                        $data[$user_name]['interview_cnt'] = Interview::getProductivityReportInterviewCount($value_d, $from_date, $to_date);
+                        // Get no of selected candidate count in this week
+                        $data[$user_name]['selected_cnt'] = JobAssociateCandidates::getProductivityReportSelectedCount($value_d, $from_date, $to_date);
+                        // Get no of offer acceptance count in this week
+                        $data[$user_name]['offer_acceptance_ratio'] = Bills::getProductivityReportOfferAcceptanceRatio($value_d, $from_date, $to_date);
+                        // Get no of joining count in this week
+                        $data[$user_name]['joining_ratio'] = Bills::getProductivityReportJoiningRatio($value_d, $from_date, $to_date);
+                        // Get no of after joining success count in this week
+                        $data[$user_name]['joining_success_ratio'] = Bills::getProductivityReportJoiningSuccessRatio($value_d, $from_date, $to_date);
+
+                        // Get user Bench Mark from master
+                        $month = date('m');
+                        $year = date('Y');
+                        $first_day = date("{$year}-{$month}-01");
+                        $last_day = date("{$year}-{$month}-".date('t', strtotime($first_day)));
+                        $no_of_weeks = ceil((date('d', strtotime($first_day)) + date('t', strtotime($first_day)) - date('w', strtotime($first_day)))/7);
+                        $user_bench_mark = UserBenchMark::getBenchMarkByUserID($value_d);
+                        if(isset($user_bench_mark) && sizeof($user_bench_mark) > 0) {
+                            $data[$user_name]['no_of_resumes_monthly'] = $user_bench_mark['no_of_resumes'];
+                            $data[$user_name]['no_of_resumes_weekly'] = number_format($user_bench_mark['no_of_resumes'] / $no_of_weeks);
+
+                            $data[$user_name]['shortlist_ratio_monthly'] = number_format($user_bench_mark['no_of_resumes'] * $user_bench_mark['shortlist_ratio']/100);
+                            $data[$user_name]['shortlist_ratio_weekly'] = number_format($data[$user_name]['shortlist_ratio_monthly'] / $no_of_weeks);
+
+                            $data[$user_name]['interview_ratio_monthly'] = number_format($data[$user_name]['shortlist_ratio_monthly'] * $user_bench_mark['interview_ratio'] / 100);
+                            $data[$user_name]['interview_ratio_weekly'] = number_format($data[$user_name]['interview_ratio_monthly'] / $no_of_weeks);
+
+                            $data[$user_name]['selection_ratio_monthly'] = number_format($data[$user_name]['interview_ratio_monthly'] * $user_bench_mark['selection_ratio'] / 100);
+                            $data[$user_name]['selection_ratio_weekly'] = number_format($data[$user_name]['selection_ratio_monthly'] / $no_of_weeks);
+
+                            $data[$user_name]['offer_acceptance_ratio_monthly'] = number_format($data[$user_name]['selection_ratio_monthly'] * $user_bench_mark['offer_acceptance_ratio'] / 100);
+                            $data[$user_name]['offer_acceptance_ratio_weekly'] = number_format($data[$user_name]['offer_acceptance_ratio_monthly'] / $no_of_weeks);
+
+                            $data[$user_name]['joining_ratio_monthly'] = number_format($data[$user_name]['offer_acceptance_ratio_monthly'] * $user_bench_mark['joining_ratio'] / 100);
+                            $data[$user_name]['joining_ratio_weekly'] = number_format($data[$user_name]['joining_ratio_monthly'] / $no_of_weeks);
+
+                            $data[$user_name]['after_joining_success_ratio_monthly'] = number_format($data[$user_name]['joining_ratio_monthly'] * $user_bench_mark['after_joining_success_ratio'] / 100);
+                            $data[$user_name]['after_joining_success_ratio_weekly'] = number_format($data[$user_name]['after_joining_success_ratio_monthly'] / $no_of_weeks);
+                        } else {
+                            $data[$user_name]['no_of_resumes_monthly'] = 0;
+                            $data[$user_name]['no_of_resumes_weekly'] = 0;
+                            $data[$user_name]['shortlist_ratio_monthly'] = 0;
+                            $data[$user_name]['shortlist_ratio_weekly'] = 0;
+                            $data[$user_name]['interview_ratio_monthly'] = 0;
+                            $data[$user_name]['interview_ratio_weekly'] = 0;
+                            $data[$user_name]['selection_ratio_monthly'] = 0;
+                            $data[$user_name]['selection_ratio_weekly'] = 0;
+                            $data[$user_name]['offer_acceptance_ratio_monthly'] = 0;
+                            $data[$user_name]['offer_acceptance_ratio_weekly'] = 0;
+                            $data[$user_name]['joining_ratio_monthly'] = 0;
+                            $data[$user_name]['joining_ratio_weekly'] = 0;
+                            $data[$user_name]['after_joining_success_ratio_monthly'] = 0;
+                            $data[$user_name]['after_joining_success_ratio_weekly'] = 0;
+                        }
+                    }
+                }
+                
+                $input['data'] = $data;
+                $input['from_date'] = $from_date;
+                $input['to_date'] = $to_date;
+                $input['to_date_sub'] = date('jS F Y', strtotime($to_date));
+                $input['rm_name'] = User::getUserNameById($sender_id);
+
+                \Mail::send('adminlte::emails.weeklyproductivityreport', $input, function ($message) use($input) {
+                    $message->from($input['from_address'], $input['from_name']);
+                    $message->to($input['to_array'])->subject('Weekly Team Productivity Report | ' .$input['to_date_sub']);
+                });
+
+                \DB::statement("UPDATE `emails_notification` SET `status`='$status' where `id` = '$email_notification_id'");
             }
         }
     }

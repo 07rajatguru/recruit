@@ -24,8 +24,8 @@
 
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/css/bootstrap.min.css') }}">
     <link rel="stylesheet" href="{{ asset('vendor/adminlte/css/bootstrap-datepicker.css') }}">
-    <link rel="stylesheet" href="{{ asset('vendor/adminlte/css/bootstrap-datetimepicker.css') }}"><!-- 
-
+    <link rel="stylesheet" href="{{ asset('vendor/adminlte/css/bootstrap-datetimepicker.css') }}">                                                                               
+    <!-- 
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.5.0/css/bootstrap-datepicker.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.44/css/bootstrap-datetimepicker.css" /> -->

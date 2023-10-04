@@ -165,7 +165,7 @@
                             @if(isset($interviews) && sizeof($interviews) > 0)
                                 @foreach($interviews as $interview)
                                     <?php
-                                        $link = 'interview/' . $interview->id . "/show";
+                                        $link = 'interview/' . \Crypt::encrypt($interview->id) . "/show";
                                     ?>
                                     <tr>
                                         @if(isset($interview->remote_working) && $interview->remote_working != '')
@@ -228,7 +228,7 @@
                                 <?php $i =1; ?>
                                 @foreach($toDos as $toDo)
                                     <?php 
-                                        $todo_link = 'todos/' . $toDo['id'];
+                                        $todo_link = 'todos/' . \Crypt::encrypt($toDo['id']);
                                     ?>
                                     <tr>
                                         <td style="border: 1px solid #00c0ef;">{{ $i }}</td>

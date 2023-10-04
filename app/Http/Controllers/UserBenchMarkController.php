@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 use App\UserBenchMark;
@@ -12,10 +13,15 @@ class UserBenchMarkController extends Controller
 {
     public function index() {
 
-    	$user_bench_mark = UserBenchMark::getAllUsersBenchMark();
-    	$count = sizeof($user_bench_mark);
+        $active_user_bench_mark = UserBenchMark::getAllUsersBenchMark('active');
+        $active_count = sizeof($active_user_bench_mark);
 
-    	return view('adminlte::userbenchmark.index',compact('user_bench_mark','count'));
+        $inactive_user_bench_mark = UserBenchMark::getAllUsersBenchMark('inactive');
+        $inactive_count = sizeof($inactive_user_bench_mark);
+
+        $total_count = $active_count + $inactive_count;
+
+    	return view('adminlte::userbenchmark.index',compact('active_user_bench_mark', 'inactive_user_bench_mark', 'active_count', 'inactive_count', 'total_count'));
     }
 
     public function create() {
@@ -65,6 +71,8 @@ class UserBenchMarkController extends Controller
     public function edit($id) {
 
     	$action = 'edit';
+		$id = Crypt::decrypt($id);
+
 
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');

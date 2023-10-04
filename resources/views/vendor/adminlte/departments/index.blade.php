@@ -45,7 +45,7 @@
             <tr>
                 <td>{{ ++$i }}</td>
                 <td>
-                    <a class="fa fa-edit" href="{{ route('departments.edit',$value->id) }}"></a>
+                    <a class="fa fa-edit" href="{{ route('departments.edit',\Crypt::encrypt($value->id)) }}"></a>
 
                     @include('adminlte::partials.deleteModalNew', ['data' => $value, 
                         'name' => 'departments','display_name'=>'Department'])

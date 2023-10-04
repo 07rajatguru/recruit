@@ -91,10 +91,10 @@
                 <tr>
                     <td>{{ ++$i }}</td>
                     <td>
-                        <a class="fa fa-circle" title="Show" href="{{ route('late-early.reply',$value['id']) }}"></a>
+                        <a class="fa fa-circle" title="Show" href="{{ route('late-early.reply',\Crypt::encrypt($value['id'])) }}"></a>
 
                         @if($user_id == $value['user_id'])
-                            <a class="fa fa-edit" title="edit" href="{{ route('late-early.edit',$value['id']) }}"></a>
+                            <a class="fa fa-edit" title="edit" href="{{ route('late-early.edit',\Crypt::encrypt($value['id'])) }}"></a>
                         @endif
 
                         @permission(('leave-delete'))

@@ -41,7 +41,7 @@
                 <td>{{ $value['name'] }}</td>
                 <td>{{ $value['description'] }}</td>
                 <td>
-                    <a class="fa fa-edit" title="edit" href="{{ route('module.edit',$value['id']) }}"></a>
+                    <a class="fa fa-edit" title="edit" href="{{ route('module.edit',\Crypt::encrypt($value['id'])) }}"></a>
 
                     @permission(('module-delete'))
                         @include('adminlte::partials.deleteModalNew', ['data' => $value, 'name' => 'module','display_name'=>'Module'])

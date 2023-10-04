@@ -1,6 +1,6 @@
 @extends('adminlte::page')
 
-@section('title', 'Users')
+@section('title', 'Edit User')
 
 @section('content_header')
 @stop
@@ -21,6 +21,7 @@
                 <h2>Edit user details</h2>
             </div>
             <div class="pull-right">
+                @include('adminlte::users.UserOldData', ['old_data' => $user_old_data, 'display_name'=>'User Old Data'])
                 <a class="btn btn-primary" href="{{ route('users.index') }}">Back</a>
             </div>
         </div>
@@ -42,260 +43,275 @@
     <div class="row">
         <div class="col-xs-12 col-sm-12 col-md-12">
             <div class="box box-warning col-xs-12 col-sm-12 col-md-12">
-                <div class="box-header col-md-6"></div>
-                
-                <div class="col-xs-12 col-sm-12 col-md-12">
-                    <div class="box-body col-xs-12 col-sm-12 col-md-12">
-                        <div class="">
+                <div class="box-body col-xs-4 col-sm-4 col-md-4">
+                    <div class="form-group {{ $errors->has('first_name') ? 'has-error' : '' }}">
+                        <strong>First Name: <span class = "required_fields">*</span> </strong>
+                        {!! Form::text('first_name', null, array('id'=>'first_name','placeholder' => 'First Name','class' => 'form-control', 'tabindex' => '1','onfocusout' => 'getFullName();')) !!}
+                        @if ($errors->has('first_name'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('first_name') }}</strong>
+                            </span>
+                        @endif
+                    </div>
 
-                            <div class="form-group {{ $errors->has('first_name') ? 'has-error' : '' }}">
-                                <strong>First Name: <span class = "required_fields">*</span>
-                                </strong>
-                                {!! Form::text('first_name', null, array('id'=>'first_name','placeholder' => 'First Name','class' => 'form-control', 'tabindex' => '1','onfocusout' => 'getFullName();','onchange' => 'setJoiningDate();')) !!}
-                                @if ($errors->has('first_name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('first_name') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+                    <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
+                        <strong>Email: <span class = "required_fields">*</span> </strong>
+                        {!! Form::text('email', null, array('id'=>'email','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '4')) !!}
+                        @if ($errors->has('email'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('email') }}</strong>
+                            </span>
+                        @endif
+                    </div>
 
-                            <div class="form-group {{ $errors->has('last_name') ? 'has-error' : '' }}">
-                                <strong>Last Name: <span class = "required_fields">*</span>
-                                </strong>
-                                {!! Form::text('last_name', null, array('id'=>'last_name','placeholder' => 'Last Name','class' => 'form-control', 'tabindex' => '2','onfocusout' => 'getFullName();','onchange' => 'setJoiningDate();')) !!}
-                                @if ($errors->has('last_name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('last_name') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+                    <div class="form-group {{ $errors->has('semail') ? 'has-error' : '' }}">
+                        <strong>Secondary Gmail: </strong>
+                        {!! Form::text('semail', null, array('id'=>'semail','placeholder' => 'Secondary Email','class' => 'form-control', 'tabindex' => '5' )) !!}
+                        @if ($errors->has('semail'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('semail') }}</strong>
+                            </span>
+                        @endif
+                    </div>
 
-                            <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
-                                <strong>Full Name: <span class = "required_fields">*</span>
-                                </strong>
-                                {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Full Name','class' => 'form-control', 'tabindex' => '3', 'readonly' => 'true')) !!}
-                                @if ($errors->has('name'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('name') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+                    <div class="form-group {{ $errors->has('roles') ? 'has-error' : '' }}">
+                        <strong> Role : <span class = "required_fields">*</span> </strong>
+                        {!! Form::select('roles',$roles,null, array('id'=>'roles','class' => 'form-control', 'tabindex' => '10')) !!}
+                        @if ($errors->has('roles'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('roles') }}</strong>
+                            </span>
+                        @endif
+                    </div>
 
-                            <div class="form-group {{ $errors->has('email') ? 'has-error' : '' }}">
-                                <strong>Email: <span class = "required_fields">*</span>
-                                </strong>
-                                {!! Form::text('email', null, array('id'=>'email','placeholder' => 'Email','class' => 'form-control', 'tabindex' => '4')) !!}
-                                @if ($errors->has('email'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('email') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+                    <div class="form-group {{ $errors->has('working_hours') ? 'has-error' : '' }}">
+                        <strong>Working Hours :</strong>
+                        {!! Form::select('working_hours',$hours_array,$selected_working_hours, array('placeholder' => 'Select Hours','id' => 'working_hours', 'class' => 'form-control','tabindex' => '12')) !!}
+                        @if ($errors->has('working_hours'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('working_hours') }}</strong>
+                            </span>
+                        @endif
+                    </div>
 
-                            <div class="form-group {{ $errors->has('semail') ? 'has-error' : '' }}">
-                                <strong>Secondary Gmail: </strong>
-                                {!! Form::text('semail',$semail, array('id'=>'semail','placeholder' => 'Secondary Email','class' => 'form-control', 'tabindex' => '5')) !!}
-                                @if ($errors->has('semail'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('semail') }}</strong>
-                                    </span>
-                                @endif
+                    <div class="form-group {{ $errors->has('joining_date') ? 'has-error' : '' }}">
+                        <strong>Joining Date : <span class = "required_fields">*</span>
+                        </strong>
+                        <div class="input-group date">
+                            <div class="input-group-addon">
+                                <i class="fa fa-calendar"></i>
                             </div>
+                            {!! Form::text('joining_date', null, array('id'=>'joining_date','placeholder' => 'Joining Date','class' => 'form-control','tabindex' => '14', 'onchange' => 'getProEndDate();')) !!}
+                        </div>
+                    </div>
 
-                            <div class="form-group {{ $errors->has('password') ? 'has-error' : '' }}">
-                                <strong>Password: <span class = "required_fields">*</span>
-                                </strong>
-                                {!! Form::password('password', array('id'=>'password','placeholder' => 'Password','class' => 'form-control','tabindex' => '6')) !!}
-                                @if ($errors->has('password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+                    <div class="form-group {{ $errors->has('status') ? 'has-error' : '' }}">
+                        <strong> Status : </strong> <br/>
+                        {!! Form::radio('status','Active', true) !!}
+                        {!! Form::label('Active') !!} &nbsp;&nbsp;
+                        {!! Form::radio('status','Inactive') !!}
+                        {!! Form::label('Inactive') !!}
+                        @if ($errors->has('status'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('status') }}</strong>
+                            </span>
+                        @endif
+                    </div>
 
-                            <div class="form-group {{ $errors->has('confirm-password') ? 'has-error' : '' }}">
-                                <strong>Confirm Password: </strong>
-                                {!! Form::password('confirm-password', array('id'=>'confirm-password', 'placeholder' => 'Confirm Password','class' => 'form-control','tabindex' => '7')) !!}
-                                @if ($errors->has('confirm-password'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('confirm-password') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+                    <div class="form-group">
+                        <strong> Generate Report : </strong> <br/>
+                        {!! Form::radio('daily_report','Yes', true, array('onclick' => 'reportSelection();')) !!}
+                        {!! Form::label('Yes') !!} &nbsp;&nbsp;
+                        {!! Form::radio('daily_report','No',false,array('onclick' => 'reportSelection();')) !!}
+                        {!! Form::label('No') !!}
+                    </div>
 
-                            <div class="form-group {{ $errors->has('company_id') ? 'has-error' : '' }}">
-                                <strong>Select Company : <span class = "required_fields">*
-                                </span></strong>
-                                {!! Form::select('company_id', $companies,isset($user->compnay_id) ? $user->compnay_id : null, array('id'=>'company_id','class' => 'form-control','tabindex' => '8')) !!}
-                                @if ($errors->has('company_id'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('company_id') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+                    <div class="form-group {{ $errors->has('work_location') ? 'has-error' : '' }}">
+                        <strong>Select Work Location : <span class = "required_fields">*</span></strong>
+                        {!! Form::select('work_location',$work_type,$selected_work_type, array('id' => 'work_location', 'class' => 'form-control')) !!}
+                        @if ($errors->has('work_location'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('work_location') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+                </div>
 
-                            <!-- <div class="form-group {{ $errors->has('floor_incharge') ? 'has-error' : '' }}">
-                                <strong>Floor Incharge :</strong>
-                                {!! Form::select('floor_incharge', $floor_incharge, isset($userFloorIncharge) ? $userFloorIncharge : 0, array('id'=>'floor_incharge','class' => 'form-control','tabindex' => '9' )) !!}
-                                @if ($errors->has('floor_incharge'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('floor_incharge') }}</strong>
-                                    </span>
-                                @endif
-                            </div> -->
+                <div class="box-body col-xs-4 col-sm-4 col-md-4">
+                    <div class="form-group {{ $errors->has('last_name') ? 'has-error' : '' }}">
+                        <strong>Last Name: <span class = "required_fields">*</span> </strong>
+                        {!! Form::text('last_name', null, array('id'=>'last_name','placeholder' => 'Last Name','class' => 'form-control', 'tabindex' => '2','onfocusout' => 'getFullName();')) !!}
+                        @if ($errors->has('last_name'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('last_name') }}</strong>
+                            </span>
+                        @endif
+                    </div>
 
-                            <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
-                                <strong>Department : <span class = "required_fields">*</span> </strong>
-                                {!! Form::select('type', $departments,null, array('id'=>'type','class' => 'form-control','tabindex' => '9','onchange' => 'getRoles()')) !!}
-                                @if ($errors->has('type'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('type') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+                    <div class="form-group {{ $errors->has('password') ? 'has-error' : '' }}">
+                        <strong>Password: <span class = "required_fields">*</span> </strong>
+                        {!! Form::password('password', array('id'=>'password','placeholder' => 'Password','class' => 'form-control','tabindex' => '6')) !!}
+                        @if ($errors->has('password'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('password') }}</strong>
+                            </span>
+                        @endif
+                    </div>
 
-                            <div class="form-group hr_adv" style="display: none;">
-                                <strong> HR Advisory With or Without Recruitment : </strong> &nbsp;&nbsp;
-                                {!! Form::radio('hr_adv_recruitemnt','Yes', $hr_adv_recruitemnt) !!}
-                                {!! Form::label('With Recruitment') !!} &nbsp;&nbsp;
-                                {!! Form::radio('hr_adv_recruitemnt','No',$hr_adv_recruitemnt) !!}
-                                {!! Form::label('Without Recruitment') !!}
-                            </div>
+                    <div class="form-group {{ $errors->has('company_id') ? 'has-error' : '' }}">
+                        <strong>Select Company : <span class = "required_fields">*</span> </strong>
+                        {!! Form::select('company_id', $companies,isset($user->compnay_id) ? $user->compnay_id : null, array('id'=>'company_id','class' => 'form-control','tabindex' => '8')) !!}
+                        @if ($errors->has('company_id'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('company_id') }}</strong>
+                            </span>
+                        @endif
+                    </div>
 
-                            <div class="form-group {{ $errors->has('roles') ? 'has-error' : '' }}">
-                                <strong> Role : <span class = "required_fields">*</span>
-                                </strong>
-                                {!! Form::select('roles',$roles,$roles_id, array('id'=>'roles','class' => 'form-control', 'tabindex' => '10')) !!}
-                                @if ($errors->has('roles'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('roles') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+                    <div class="form-group {{ $errors->has('reports_to') ? 'has-error' : '' }}">
+                        <strong>Reports To :</strong>
+                        {!! Form::select('reports_to', $reports_to,null, array('id'=>'reports_to','class' => 'form-control','tabindex' => '11')) !!}
+                        @if ($errors->has('reports_to'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('reports_to') }}</strong>
+                            </span>
+                        @endif
+                    </div>
 
+                    <div class="form-group {{ $errors->has('half_day_working_hours') ? 'has-error' : '' }}">
+                        <strong>Half Day Working Hours :</strong>
+                        {!! Form::select('half_day_working_hours',$hours_array,$selected_half_day_working_hours, array('placeholder' => 'Select Hours','id' => 'half_day_working_hours', 'class' => 'form-control','tabindex' => '13')) !!}
+                        @if ($errors->has('half_day_working_hours'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('half_day_working_hours') }}</strong>
+                            </span>
+                        @endif
+                    </div>
 
-                            <div class="form-group {{ $errors->has('reports_to') ? 'has-error' : '' }}">
-                                <strong>Reports To :</strong>
-                                {!! Form::select('reports_to', $reports_to,isset($userReportsTo) ? $userReportsTo : null, array('id'=>'reports_to','class' => 'form-control','tabindex' => '11')) !!}
-                                @if ($errors->has('reports_to'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('reports_to') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+                    <div class="form-group {{ $errors->has('probation_end_date') ? 'has-error' : '' }}">
+                        <strong>Probation End Date : <span class = "required_fields">*</span></strong>
+                        <div class="input-group probation_end_date">
+                            <div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+                            {!! Form::text('probation_end_date', null, array('id'=>'probation_end_date','placeholder' => 'Probation End Date','class' => 'form-control')) !!}
+                        </div>
+                    </div>
 
-                            <div class="form-group {{ $errors->has('working_hours') ? 'has-error' : '' }}">
-                                <strong>Working Hours :</strong>
-                                {!! Form::select('working_hours',$hours_array,$selected_working_hours, array('placeholder' => 'Select Hours','id' => 'working_hours', 'class' => 'form-control','tabindex' => '12')) !!}
-                                @if ($errors->has('working_hours'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('working_hours') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
+                    <div class="form-group {{ $errors->has('account_manager') ? 'has-error' : '' }}">
+                        <strong> Account Manager : </strong> <br/>
+                        {!! Form::radio('account_manager','Yes') !!}
+                        {!! Form::label('Yes') !!} &nbsp;&nbsp;
+                        {!! Form::radio('account_manager','No') !!}
+                        {!! Form::label('No') !!}
+                        @if ($errors->has('account_manager'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('account_manager') }}</strong>
+                            </span>
+                        @endif
+                    </div>
 
-                            <div class="form-group {{ $errors->has('half_day_working_hours') ? 'has-error' : '' }}">
-                                <strong>Half Day Working Hours :</strong>
-                                {!! Form::select('half_day_working_hours',$hours_array,$selected_half_day_working_hours, array('placeholder' => 'Select Hours','id' => 'half_day_working_hours', 'class' => 'form-control','tabindex' => '13')) !!}
-                                @if ($errors->has('half_day_working_hours'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('half_day_working_hours') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-
-                            <div class="form-group {{ $errors->has('employment_type') ? 'has-error' : '' }}">
-                                <strong>Employment Type : <span class = "required_fields">*</span></strong>
-                                {!! Form::select('employment_type', $employment_type,null, array('id'=>'employment_type','class' => 'form-control', 'tabindex' => '14','onchange' => 'getInternMonth()')) !!}
-                                @if ($errors->has('employment_type'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('employment_type') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-
-                            <div class="form-group intern_months" style="display: none;">
-                                <strong>Intern for How Many Month?: </strong> &nbsp;&nbsp;
-                                {!! Form::radio('intern_month','3', $intern_month) !!}
-                                {!! Form::label('3 Month') !!} &nbsp;&nbsp;
-                                {!! Form::radio('intern_month','6',$intern_month) !!}
-                                {!! Form::label('6 Month') !!}
-                            </div>
-
-                            <div class="form-group {{ $errors->has('joining_date') ? 'has-error' : '' }}">
-                                <strong>Joining Date : <span class = "required_fields">*</span>
-                                </strong>
-                                <div class="input-group date">
-                                    <div class="input-group-addon">
-                                        <i class="fa fa-calendar"></i>
-                                    </div>
-                                    {!! Form::text('joining_date', isset($joining_date) ? $joining_date : null, array('id'=>'joining_date','placeholder' => 'Joining Date','class' => 'form-control','tabindex' => '14')) !!}
-                                </div>
-                            </div>
-
-                            <!-- <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
-                                <strong> Type : <span class = "required_fields">*</span> </strong>
-                                {!! Form::select('type', $type,null, array('class' => 'form-control','tabindex' => '12' )) !!}
-                                @if ($errors->has('type'))
-                                    <span class="help-block">
-                                        <strong>{{ $errors->first('type') }}</strong>
-                                    </span>
-                                @endif
-                            </div> -->
-
-<!--                             <div class="form-group">
-                                <strong> Floor Incharge : </strong> &nbsp;&nbsp;
-                                {!! Form::radio('check_floor_incharge','Yes', true) !!}
-                                {!! Form::label('Yes') !!} &nbsp;&nbsp;
-                                {!! Form::radio('check_floor_incharge','No',false) !!}
-                                {!! Form::label('No') !!}
-                            </div>
- -->
-                            <div class="form-group">
-                                <strong> Generate Report : </strong> &nbsp;&nbsp;
-                                {!! Form::radio('daily_report','Yes', true, array('onclick' => 'reportSelection();')) !!}
-                                {!! Form::label('Yes') !!} &nbsp;&nbsp;
-                                {!! Form::radio('daily_report','No','',array('onclick' => 'reportSelection();')) !!}
-                                {!! Form::label('No') !!}
-                            </div>
-       
-                            <div class="report_class" style="display:none;">
-                                <div class="form-group">
-                                    <strong> Report Status : </strong> &nbsp;&nbsp;
-                                    {!! Form::checkbox('cv_report','Yes', $cv_report, array('id' => 'cv_report')) !!}
-                                    {!! Form::label('CVs Associated') !!} &nbsp;&nbsp;
-                                   
-                                    {!! Form::checkbox('interview_report','Yes', $interview_report, array('id' => 'interview_report')) !!}
-                                    {!! Form::label('Interviews Scheduled') !!}&nbsp;&nbsp;
-                                   
-                                    {!! Form::checkbox('lead_report','Yes', $lead_report, array('id' => 'lead_report')) !!}
-                                    {!! Form::label('Leads Added') !!}
-                                </div>
-                            </div>
-       
-                            <div class="form-group">
-                                <strong>Status:</strong>&nbsp;&nbsp;
-                                {!! Form::radio('status','Active') !!}
-                                {!! Form::label('Active') !!} &nbsp;&nbsp;
-                                {!! Form::radio('status','Inactive') !!}
-                                {!! Form::label('Inactive') !!}
-                            </div>
-
-                            <div class="form-group">
-                                <strong>Account Manager:</strong>&nbsp;&nbsp;
-                                {!! Form::radio('account_manager','Yes') !!}
-                                {!! Form::label('Yes') !!} &nbsp;&nbsp;
-                                {!! Form::radio('account_manager','No') !!}
-                                {!! Form::label('No') !!}
-                            </div>
+                    <div class="report_class" style="display:none;">
+                        <div class="form-group">
+                            <strong> Report Status : </strong> <br/>
+                            {!! Form::checkbox('cv_report','Yes', true, array('id' => 'cv_report')) !!}
+                            {!! Form::label('CVs Associated') !!} &nbsp;&nbsp;
+                            {!! Form::checkbox('interview_report','Yes',true, array('id' => 'interview_report')) !!}
+                            {!! Form::label('Interviews Scheduled') !!}&nbsp;&nbsp;
+                            {!! Form::checkbox('lead_report','Yes',true, array('id' => 'lead_report')) !!}
+                            {!! Form::label('Leads Added') !!}
                         </div>
                     </div>
                 </div>
+
+                <div class="box-body col-xs-4 col-sm-4 col-md-4">
+                    <div class="form-group {{ $errors->has('name') ? 'has-error' : '' }}">
+                        <strong>Full Name: <span class = "required_fields">*</span> </strong>
+                        {!! Form::text('name', null, array('id'=>'name','placeholder' => 'Full Name','class' => 'form-control', 'tabindex' => '3', 'readonly' => 'true')) !!}
+                        @if ($errors->has('name'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('name') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+
+                    <div class="form-group {{ $errors->has('confirm-password') ? 'has-error' : '' }}">
+                        <strong>Confirm Password: </strong>
+                        {!! Form::password('confirm-password', array('id'=>'confirm-password', 'placeholder' => 'Confirm Password','class' => 'form-control','tabindex' => '7')) !!}
+                        @if ($errors->has('confirm-password'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('confirm-password') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+
+                    <div class="form-group {{ $errors->has('type') ? 'has-error' : '' }}">
+                        <strong>Department : <span class = "required_fields">*</span> </strong>
+                        {!! Form::select('type', $departments,null, array('id'=>'type','class' => 'form-control','tabindex' => '9','onchange' => 'getRoles()')) !!}
+                        @if ($errors->has('type'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('type') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+
+                    <div class="form-group {{ $errors->has('cluster_head') ? 'has-error' : '' }}">
+                        <strong>Cluster Head :</strong>
+                        {!! Form::select('cluster_head', $reports_to,isset($user->cluster_head) ? $user->cluster_head : null, array('id'=>'cluster_head','class' => 'form-control','tabindex' => '11')) !!}
+                        @if ($errors->has('cluster_head'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('cluster_head') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+
+                    <div class="form-group {{ $errors->has('employment_type') ? 'has-error' : '' }}">
+                        <strong>Employment Type : <span class = "required_fields">*</span> </strong>
+                        {!! Form::select('employment_type', $employment_type,null, array('id'=>'employment_type','class' => 'form-control','tabindex' => '14','onchange' => 'getInternMonth()')) !!}
+                        @if ($errors->has('employment_type'))
+                            <span class="help-block">
+                                <strong>{{ $errors->first('employment_type') }}</strong>
+                            </span>
+                        @endif
+                    </div>
+
+                    <div class="form-group {{ $errors->has('leave_applicable_date') ? 'has-error' : '' }}">
+                        <strong>Leave Applicable Date : <span class = "required_fields">*</span></strong>
+                        <div class="input-group leave_applicable_date">
+                            <div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+                            {!! Form::text('leave_applicable_date', null, array('id'=>'leave_applicable_date','placeholder' => 'Leave Applicable Date','class' => 'form-control')) !!}
+                        </div>
+                    </div>
+
+                    <div class="form-group intern_months" style="display: none;">
+                        <strong>Intern for How Many Month?: </strong> <br/>
+                        {!! Form::radio('intern_month','3', false) !!}
+                        {!! Form::label('3 Month') !!} &nbsp;&nbsp;
+                        {!! Form::radio('intern_month','6',false) !!}
+                        {!! Form::label('6 Month') !!}
+                    </div>
+
+                    <div class="form-group hr_adv" style="display: none;">
+                        <strong> HR Advisory With or Without Recruitment : </strong> <br/>
+                        {!! Form::radio('hr_adv_recruitemnt','Yes', false) !!}
+                        {!! Form::label('With Recruitment') !!} &nbsp;&nbsp;
+                        {!! Form::radio('hr_adv_recruitemnt','No',true) !!}
+                        {!! Form::label('Without Recruitment') !!}
+                    </div>
+
+                    <div class="form-group {{ $errors->has('effect_from_date') ? 'has-error' : '' }}">
+                        <strong>Effect From Date : <span class = "required_fields">*</span></strong>
+                        <div class="input-group effect_from_date">
+                            <div class="input-group-addon"> <i class="fa fa-calendar"></i> </div>
+                            {!! Form::text('effect_from_date', null, array('id'=>'effect_from_date','placeholder' => 'Leave Applicable Date','class' => 'form-control')) !!}
+                        </div>
+                    </div>
+                </div>
+                
             </div>
         </div>
 
         <div class="col-xs-12 col-sm-12 col-md-12 text-center">
-            <button type="submit" class="btn btn-primary">Update</button>
+            <input type="submit" name="submit" id="update" value="Update" class="btn btn-primary">
+            <input type="submit" name="submit" id="update_as_new" value="Update as a New" class="btn btn-warning">
         </div>
 
         <input type="hidden" id="user_id" name="user_id" value="{{ $id }}">
@@ -303,6 +319,9 @@
         <input type="hidden" id="operations" name="operations" value="{{ $operations }}">
         <input type="hidden" id="bizpos_user_id" name="bizpos_user_id" value="{{ $bizpos_user_id }}">
         <input type="hidden" id="userReportsTo" name="userReportsTo" value="{{ $userReportsTo }}">
+        <input type="hidden" name="get_probation_end_date" id="get_probation_end_date" value="{{ $probation_end_date }}">
+        <input type="hidden" name="get_leave_applicable_date" id="get_leave_applicable_date" value="{{ $leave_applicable_date }}">
+        <input type="hidden" name="get_effect_from_date" id="get_effect_from_date" value="{{ $effect_from_date }}">
     </div>
 
     {!! Form::close() !!}
@@ -316,19 +335,45 @@
 
             getRoles();
             getInternMonth();
+            reportSelection();
 
             $("#type").select2();
             $("#roles").select2({placeholder: 'Select Role'});
             $("#reports_to").select2();
+            $("#cluster_head").select2();
             $("#company_id").select2();
             $("#working_hours").select2();
             $("#half_day_working_hours").select2();
             $("#employment_type").select2();
+            $("#work_location").select2();
 
             $("#joining_date").datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true,
             });
+            var get_joining_date = $("#get_joining_date").val();
+            $('#joining_date').datepicker("setDate", get_joining_date);
+
+            $("#probation_end_date").datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+            });
+            var get_probation_end_date = $("#get_probation_end_date").val();
+            $('#probation_end_date').datepicker("setDate", get_probation_end_date);
+
+            $("#leave_applicable_date").datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+            });
+            var get_leave_applicable_date = $("#get_leave_applicable_date").val();
+            $('#leave_applicable_date').datepicker("setDate", get_leave_applicable_date);
+
+            $("#effect_from_date").datepicker({
+                format: "dd-mm-yyyy",
+                autoclose: true,
+            });
+            var get_effect_from_date = $("#get_effect_from_date").val();
+            $('#effect_from_date').datepicker("setDate", get_effect_from_date);
 
             $('.fa-calendar').click(function() {
                 $("#joining_date").focus();
@@ -362,8 +407,20 @@
                     "joining_date": {
                         required: true
                     },
+                    "probation_end_date": {
+                        required: true
+                    },
+                    "leave_applicable_date": {
+                        required: true
+                    },
+                    "effect_from_date": {
+                        required: true
+                    },
                     "employment_type": {
                         required: true
+                    },
+                    "work_location": {
+                        required: true,
                     },
                 },
                 messages: {
@@ -388,14 +445,29 @@
                     "joining_date": {
                         required: "Please Select Joining Date."
                     },
+                    "probation_end_date": {
+                        required: "Probation End Date required."
+                    },
+                    "leave_applicable_date": {
+                        required: "Please Select Leave Applicable Date."
+                    },
+                    "effect_from_date": {
+                        required: "Please Select Effect From Date."
+                    },
                     "employment_type": {
                         required: "Please Select Type of Employment."
                     },
+                    "work_location": {
+                        required: "Please Select Work Location."
+                    }
                 }
             });
-
-            reportSelection();
         });
+
+        function getProEndDate() {
+            
+
+        }
 
         function getRoles() {
 
@@ -501,15 +573,15 @@
         function getInternMonth() {
 
             var employment_type = $("#employment_type").val();
-
             if(employment_type == 'Intern') {
-
                 $(".intern_months").show();
-            }
-            else {
-
+            } else {
                 $(".intern_months").hide();
             }
         }
+
+        jQuery('#user_old_data_table').DataTable({
+            responsive: true,
+        });
     </script>
 @stop

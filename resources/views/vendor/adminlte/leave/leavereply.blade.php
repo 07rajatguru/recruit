@@ -26,15 +26,7 @@
             		<table class="table table-bordered">
                         <tr>
                             <th>User Name</th>
-                            @if(isset($leave_details['is_leave_cancel']) && $leave_details['is_leave_cancel'] == '1' && $leave_details['leave_cancel_status'] == '0')
-                                <td style="background-color:#FFCC00;">{{ $leave_details['uname'] }}</td>
-                            @elseif(isset($leave_details['is_leave_cancel']) && $leave_details['is_leave_cancel'] == '1' && $leave_details['leave_cancel_status'] == '1')
-                                <td style="background-color:#e87992;">{{ $leave_details['uname'] }}</td>
-                            @elseif(isset($leave_details['is_leave_cancel']) && $leave_details['is_leave_cancel'] == '1' && $leave_details['leave_cancel_status'] == '2')
-                                <td style="background-color:#f17a40;">{{ $leave_details['uname'] }}</td>
-                            @else
-                                <td>{{ $leave_details['uname'] }}</td>
-                            @endif
+                            <td>{{ $leave_details['uname'] }}</td>
                             <th>From Date</th>
                             <td>{{ $leave_details['from_date'] }}</td>
                             <th>To Date</th>
@@ -54,12 +46,22 @@
                             <td>{{ $leave_details['category'] }}</td>
                             <th>Status</th>
 
-                            @if($leave_details['status'] == 0)
-                                <td style="background-color:#8FB1D5;">Pending</td>
-                            @elseif($leave_details['status'] == 1)
-                                <td style="background-color:#32CD32;">Approved</td>
-                            @elseif($leave_details['status'] == 2)
-                                <td style="background-color:#F08080;">Rejected</td>
+                            @if(isset($leave_details['is_leave_cancel']) && $leave_details['is_leave_cancel'] == '1')
+                                @if($leave_details['leave_cancel_status'] == '0')
+                                    <td style="background-color:#FFCC00;">Cancelled</td>
+                                @elseif($leave_details['leave_cancel_status'] == '1')
+                                    <td style="background-color:#e87992;">Cancelled Approved</td>
+                                @elseif($leave_details['leave_cancel_status'] == '2')
+                                    <td style="background-color:#f17a40;">Cancelled Rejected</td>
+                                @endif
+                            @else
+                                @if($leave_details['status'] == 0)
+                                    <td style="background-color:#8FB1D5;">Pending</td>
+                                @elseif($leave_details['status'] == 1)
+                                    <td style="background-color:#32CD32;">Approved</td>
+                                @elseif($leave_details['status'] == 2)
+                                    <td style="background-color:#F08080;">Rejected</td>
+                                @endif
                             @endif
                         </tr>
                         
@@ -243,7 +245,7 @@
 <script type="text/javascript">
 
     function permission(check) {
-        
+    
         var leave_id = $("#leave_id").val();
         var app_url = "{!! env('APP_URL') !!}";
         var token = $("input[name=_token]").val();

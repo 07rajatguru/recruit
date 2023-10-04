@@ -59,7 +59,7 @@
                     <a title="Show" class="fa fa-circle"  href="{{ route('expense.show',$value['id']) }}"></a>
 
                     @permission(('expense-edit'))          
-                    <a class="fa fa-edit" href="{{ route('expense.edit',$value['id']) }}" title="Edit"></a>
+                    <a class="fa fa-edit" href="{{ route('expense.edit',\Crypt::encrypt($value['id'])) }}" title="Edit"></a>
                     @endpermission
 
                     @permission(('expense-delete'))

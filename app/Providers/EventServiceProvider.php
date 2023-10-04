@@ -1,7 +1,8 @@
 <?php
 
 namespace App\Providers;
-
+use App\Events\sendMail;
+use App\Listeners\NotificationEventListener;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
 
@@ -22,6 +23,10 @@ class EventServiceProvider extends ServiceProvider
         'App\Events\NotificationMail' => [
             'App\Listeners\NotificationMailListener',
         ],
+
+        // sendMail::class => [
+        //     NotificationEventListener::class,  
+        // ],
     ];
 
     /**

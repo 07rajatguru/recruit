@@ -16,61 +16,74 @@
 
 @section('content')
     <div class="row">
-        <div class="col-md-2 month_div">
-            <select class="form-control" name="month" id="month">
-                @foreach($month_list as $key=>$value)
-                    <option value={{ $key }} @if($key==$month) selected="selected" @endif>{{ $value}}</option>
-                @endforeach
-            </select>
-        </div>
+        <div class="col-md-12">
+            <div class="col-md-2 month_div">
+                <select class="form-control" name="month" id="month">
+                    @foreach($month_list as $key=>$value)
+                        <option value={{ $key }} @if($key==$month) selected="selected" @endif>{{ $value}}</option>
+                    @endforeach
+                </select>
+            </div>
 
-        <div class="col-md-2 year_div">
-            <select class="form-control" name="year" id="year">
-                @foreach($year_list as $key=>$value)
-                    <option value={{ $key }} @if($key==$year) selected="selected" @endif>{{ $value}}</option>
-                @endforeach
-            </select>
-        </div>
+            <div class="col-md-2 year_div">
+                <select class="form-control" name="year" id="year">
+                    @foreach($year_list as $key=>$value)
+                        <option value={{ $key }} @if($key==$year) selected="selected" @endif>{{ $value}}</option>
+                    @endforeach
+                </select>
+            </div>
 
-        <div class="col-md-2 year_div">
-            <select class="form-control" name="attendance_type" id="attendance_type">
-                @foreach($attendance_type as $key=>$value)
-                    <option value={{ $key }} @if($key==$selected_attendance_type) selected="selected" @endif>{{ $value}}</option>
-                @endforeach
-            </select>
-        </div>
+            <div class="col-md-2 year_div">
+                <select class="form-control" name="attendance_type" id="attendance_type">
+                    @foreach($attendance_type as $key=>$value)
+                        <option value={{ $key }} @if($key==$selected_attendance_type) selected="selected" @endif>{{ $value}}</option>
+                    @endforeach
+                </select>
+            </div>
 
-        <div class="col-md-1 attendance_submit">
-            <input class="btn btn-primary" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" style="width:100px;"/>
+            <div class="col-md-1 attendance_submit">
+                <input class="btn btn-primary" type="button" value="Filter" name ="filter" id="filter" onClick="filter_data()" style="width:100px;"/>
+            </div>
+
+            <div class="col-md-2 attendance_submit">
+                <input class="btn btn-primary" type="button" value="As per New Policy" name ="filter" id="filter" onClick="filter_data_new();"/>
+            </div>
         </div>
 
         {{-- <div class="col-md-1">
             @include('adminlte::partials.userRemarks', ['name' => $department_nm,'users' => $users_name,'month' => $month,'year' => $year])
         </div> --}}
 
-        @if(isset($list) && sizeof($list)>0)
-            @permission(('display-attendance-of-all-users-in-admin-panel'))
-                <div class="col-md-2" style="margin-left: 10px;">
-                    <input class="btn bg-maroon" type="button" value="Download Excel Sheet" name ="excel" id="excel" onClick="export_data()" style="width:170px;"/>
-                </div>
-            @endpermission
-        @endif
+        <div class="col-md-12" style="margin-top: 10px;">
+            <div class="col-md-6"></div>
+            @if(isset($list) && sizeof($list)>0)
+                @permission(('display-attendance-of-all-users-in-admin-panel'))
+                    <div class="col-md-2">
+                        <input class="btn bg-maroon" type="button" value="Download Excel Sheet" name ="excel" id="excel" onClick="export_data()" style="width:170px;"/>
+                    </div>
 
-        @permission('edit-user-attendance')
-            @if($user_id == $superadmin_userid || $user_id == $hr_user_id)
-                <div class="col-md-1" style="margin-left: -40px;">
-                    @include('adminlte::partials.editUserAttendance', ['users' => $users_name,'attendance_value' => $attendance_value,'name' => $department_nm,'month' => $month,'year' => $year])
-                </div>
-            @else        
-                @if(isset($edit_date_valid) && $edit_date_valid != '')
-                    @if(date('Y-m-d') <= $edit_date_valid)
-                        <div class="col-md-1" style="margin-left: -40px;">
-                            @include('adminlte::partials.editUserAttendance', ['users' => $users_name,'attendance_value' => $attendance_value,'name' => $department_nm,'month' => $month,'year' => $year])
-                        </div>
+                    <div class="col-md-3">
+                        <input class="btn bg-maroon" type="button" value="Download Excel As Per New Policy" name ="excel" id="excel" onClick="export_new_data()"/>
+                    </div>
+                @endpermission
+            @endif
+
+            @permission('edit-user-attendance')
+                @if($user_id == $superadmin_userid || $user_id == $hr_user_id)
+                    <div class="col-md-1" style="margin-left: -40px;">
+                        @include('adminlte::partials.editUserAttendance', ['users' => $users_name,'attendance_value' => $attendance_value,'name' => $department_nm,'month' => $month,'year' => $year])
+                    </div>
+                @else        
+                    @if(isset($edit_date_valid) && $edit_date_valid != '')
+                        @if(date('Y-m-d') <= $edit_date_valid)
+                            <div class="col-md-1" style="margin-left: -40px;">
+                                @include('adminlte::partials.editUserAttendance', ['users' => $users_name,'attendance_value' => $attendance_value,'name' => $department_nm,'month' => $month,'year' => $year])
+                            </div>
+                        @endif
                     @endif
                 @endif
-            @endif
-        @endpermission
+            @endpermission
+        </div>
     </div><br/>
 
     @if($message = Session::get('success'))
@@ -1039,6 +1052,26 @@
             form.submit();
         }
 
+        function filter_data_new() {
+
+            var month = $("#month :selected").val();
+            var year = $("#year :selected").val();
+            var attendance_type = $("#attendance_type :selected").val();
+            var app_url = "{!! env('APP_URL'); !!}";
+
+            var url = app_url+'/users-attendance-new/'+attendance_type+'/'+month+'/'+year;
+
+            var form = $('<form action="' + url + '" method="post">' +
+            '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+            '<input type="hidden" name="month" value="'+month+'" />' +
+            '<input type="hidden" name="year" value="'+year+'" />' +
+            '<input type="hidden" name="attendance_type" value="'+attendance_type+'" />' +
+            '</form>');
+
+            $('body').append(form);
+            form.submit();
+        }
+
         function export_data() {
 
             var month = $("#month :selected").val();
@@ -1047,6 +1080,26 @@
             var app_url = "{!! env('APP_URL'); !!}";
 
             var url = app_url+'/attendance/export';
+
+            var form = $('<form action="' + url + '" method="post">' +
+            '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+            '<input type="hidden" name="month" value="'+month+'" />' +
+            '<input type="hidden" name="year" value="'+year+'" />' +
+            '<input type="hidden" name="attendance_type" value="'+attendance_type+'" />' +
+            '</form>');
+
+            $('body').append(form);
+            form.submit();
+        }
+
+        function export_new_data() {
+
+            var month = $("#month :selected").val();
+            var year = $("#year :selected").val();
+            var attendance_type = $("#attendance_type :selected").val();
+            var app_url = "{!! env('APP_URL'); !!}";
+
+            var url = app_url+'/attendance/export-new';
 
             var form = $('<form action="' + url + '" method="post">' +
             '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +

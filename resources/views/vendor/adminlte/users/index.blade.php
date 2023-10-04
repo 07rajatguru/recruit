@@ -64,8 +64,8 @@
                 <tr>
                     <td>{{ ++$i }}</td>
                     <td>
-                        <a class="fa fa-eye" title="Show" href="{{ route('users.show',$user->id) }}"></a>
-                        <a class="fa fa-edit" title="Edit" href="{{ route('users.edit',$user->id) }}"></a>
+                        <a class="fa fa-eye" title="Show" href="{{ route('users.show',\Crypt::encrypt($user->id)) }}"></a>
+                        <a class="fa fa-edit" title="Edit" href="{{ route('users.edit',\Crypt::encrypt($user->id)) }}"></a>
 
                         @permission(('user-delete'))
                             @include('adminlte::partials.deleteModalUser', ['data' => $user, 'name' => 'users','display_name'=>'User'])
@@ -73,7 +73,7 @@
                         
                         @permission(('edit-user-profile'))
 
-                            <a class="fa fa-user" title="View Profile" href="{{ route('users.myprofile',$user->id) }}" target="_blank"></a>
+                            <a class="fa fa-user" title="View Profile" href="{{ route('users.myprofile',\Crypt::encrypt($user->id)) }}" target="_blank"></a>
 
                         @endpermission
                     </td>

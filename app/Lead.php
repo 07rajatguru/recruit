@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\LeadPost;
 
 class Lead extends Model
 {
@@ -53,7 +54,60 @@ class Lead extends Model
         return $statusArray;
     }
 
-    public static function getAllLeads($all=0,$user_id,$limit=0,$offset=0,$search=NULL,$order=NULL,$type='desc',$service='') {
+    public static function getLatestRemarks($id) {
+
+        // Get Latest Remarks time
+        $remarks_res = LeadPost::getLeadLatestRemarks($id);
+
+        if(isset($remarks_res) && $remarks_res != '') {
+
+            $remarks_time = explode(" ", $remarks_res->updated_date);
+            $remarks_new_time = Date::converttime($remarks_time[1]);
+            $remarks_date = date('d-m-Y' ,strtotime($remarks_res->updated_date)) . " " . date('h:i A' ,$remarks_new_time);
+            $remarks_front_date = date('d/m/Y' ,strtotime($remarks_res->updated_date));
+            $remarks_user_name = User::getUserNameById($remarks_res->user_id);
+        }
+        else {
+            $remarks_date = '';
+            $remarks_front_date = '';
+            $remarks_user_name = '';
+        }
+
+        // Get Latest Comments time
+        $comments_res = LeadComments::getLeadLatestComments($id);
+      
+        if(isset($comments_res) && $comments_res != '') {
+
+            $comments_time = explode(" ", $comments_res->comments_updated_date);
+            $comments_new_time = Date::converttime($comments_time[1]);
+            $comments_date = date('d-m-Y' ,strtotime($comments_res->comments_updated_date)) . " " . date('h:i A' ,$comments_new_time);
+            $comments_front_date = date('d/m/Y' ,strtotime($comments_res->comments_updated_date));
+            $comments_user_name = User::getUserNameById($comments_res->user_id);
+        }
+        else {
+            $comments_date = '';
+            $comments_front_date = '';
+            $comments_user_name = '';
+        }
+
+        // Check Dates
+
+        if($remarks_date > $comments_date) {
+            return $remarks_res->content . ' - ' . $remarks_front_date . ' - ' . $remarks_user_name;
+        }
+        if($comments_date > $remarks_date) {
+            return $comments_res->comment_body . ' - ' . $comments_front_date . ' - ' . $comments_user_name;
+        }
+        if($remarks_date == $comments_date && $remarks_date != '' && $comments_date != '') {
+            return $remarks_res->content . ' - ' . $remarks_front_date . ' - ' . $remarks_user_name;
+        }
+    }
+
+    public function post() {
+        return $this->hasMany('App\LeadPost','lead_id');
+    }
+
+    public static function getAllLeads($all=0,$user_id,$limit=0,$offset=0,$search=NULL,$order=NULL,$type='desc',$service='',$data_source = null) {
 
         $superadmin_user_id = env('SUPERADMINUSERID');
         $strategy_user_id = env('STRATEGYUSERID');
@@ -63,6 +117,11 @@ class Lead extends Model
         $query = $query->leftjoin('users','users.id','=','lead_management.referredby');
         $query = $query->select('lead_management.*', 'users.name as referredby');
         $query = $query->where('cancel_lead',$cancel_lead);
+
+          // Add a condition to filter data_source if provided
+        if ($data_source) {
+            $query = $query->where('lead_management.data_source', $data_source);
+        }
 
         if (isset($order) && $order != '') {
             $query = $query->orderBy($order,$type);
@@ -144,13 +203,18 @@ class Lead extends Model
         return $leads_array;
     }
 
-    public static function getAllLeadsCount($all=0,$user_id,$search=NULL,$service='') {
+    public static function getAllLeadsCount($all=0,$user_id,$search=NULL,$service='',$data_source = null) {
 
         $cancel_lead = 0;
         $query = Lead::query();
         $query = $query->leftjoin('users','users.id','=','lead_management.referredby');
         $query = $query->select('lead_management.*', 'users.name as referredby');
         $query = $query->where('cancel_lead',$cancel_lead);
+
+        // Add a condition to filter data_source if provided
+        if ($data_source) {
+            $query = $query->where('lead_management.data_source', $data_source);
+        }
 
         if($all==0) {
             $query = $query->where('account_manager_id',$user_id);

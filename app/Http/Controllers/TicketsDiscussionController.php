@@ -18,13 +18,11 @@ class TicketsDiscussionController extends Controller
         $user =  \Auth::user();
         $all_perm = $user->can('display-ticket');
         $userwise_perm = $user->can('display-user-wise-ticket');
+        $hemali_user_id = getenv('HEMALIUSERID');
 
-        if($all_perm) {
-
+        if($all_perm || $hemali_user_id == $user->id) {
             $tickets_res = TicketsDiscussion::getAllTicketDetails(1,$user->id,NULL);
-        }
-        else if($userwise_perm) {
-
+        } else if($userwise_perm) {
             $tickets_res = TicketsDiscussion::getAllTicketDetails(0,$user->id,NULL);
         }
 
@@ -39,11 +37,9 @@ class TicketsDiscussionController extends Controller
 
             if($ticket['status'] == 'Open') {
                 $open++;
-            }
-            else if ($ticket['status'] == 'In Progress') {
+            } else if ($ticket['status'] == 'In Progress') {
                 $in_progress++;
-            }
-            else if($ticket['status'] == 'Closed') {
+            } else if($ticket['status'] == 'Closed') {
                 $closed++;
             }
         }
@@ -58,14 +54,12 @@ class TicketsDiscussionController extends Controller
         $user =  \Auth::user();
         $all_perm = $user->can('display-ticket');
         $userwise_perm = $user->can('display-user-wise-ticket');
+        $hemali_user_id = getenv('HEMALIUSERID');
 
-        if($all_perm) {
-
+        if($all_perm || $hemali_user_id == $user->id) {
             $all_tickets_res = TicketsDiscussion::getAllTicketDetails(1,$user->id);
             $tickets_res = TicketsDiscussion::getAllTicketDetails(1,$user->id,$status);
-        }
-        else if($userwise_perm) {
-
+        } else if($userwise_perm) {
             $all_tickets_res = TicketsDiscussion::getAllTicketDetails(0,$user->id);
             $tickets_res = TicketsDiscussion::getAllTicketDetails(0,$user->id,$status);
         }
@@ -196,14 +190,18 @@ class TicketsDiscussionController extends Controller
 
         $it1 = 'saloni@trajinfotech.com';
         $it2 = 'dhara@trajinfotech.com';
+        $it3 = 'e2hteam01@gmail.com';
         // get superadmin email id
         $superadminuserid = getenv('SUPERADMINUSERID');
         $superadminemail = User::getUserEmailById($superadminuserid);
         // get manager email id
         $manager_user_id = env('MANAGERUSERID');
         $manager_email = User::getUserEmailById($manager_user_id);
+        // Get Hemali email id
+        $hemali_user_id = env('HEMALIUSERID');
+        $hemali_email = User::getUserEmailById($hemali_user_id);
 
-        $cc_users_array = array($it1,$it2,$superadminemail,$manager_email);
+        $cc_users_array = array($it1,$it2,$it3,$superadminemail,$manager_email,$hemali_email);
 
         $module = "Ticket Discussion";
         $sender_name = $user_id;
@@ -221,6 +219,7 @@ class TicketsDiscussionController extends Controller
 
     public function show($id) {
 
+        $id = \Crypt::decrypt($id);
         $ticket_res = TicketsDiscussion::getTicketDetailsById($id);
         $ticket_res_doc = TicketsDiscussionDoc::getTicketDocsById($id);
 
@@ -229,6 +228,7 @@ class TicketsDiscussionController extends Controller
 
     public function edit($id) {
 
+        $id = \Crypt::decrypt($id);
         $action = 'edit';
         
         $ticket_res = TicketsDiscussion::find($id);
@@ -284,14 +284,18 @@ class TicketsDiscussionController extends Controller
 
             $it1 = 'saloni@trajinfotech.com';
             $it2 = 'dhara@trajinfotech.com';
+            $it3 = 'e2hteam01@gmail.com';
             // get superadmin email id
             $superadminuserid = getenv('SUPERADMINUSERID');
             $superadminemail = User::getUserEmailById($superadminuserid);
             // get manager email id
             $manager_user_id = env('MANAGERUSERID');
             $manager_email = User::getUserEmailById($manager_user_id);
+            // Get Hemali email id
+            $hemali_user_id = env('HEMALIUSERID');
+            $hemali_email = User::getUserEmailById($hemali_user_id);
 
-            $cc_users_array = array($it1,$it2,$superadminemail,$manager_email,$loggedin_useremail);
+            $cc_users_array = array($it1,$it2,$it3,$superadminemail,$manager_email,$loggedin_useremail,$hemali_email);
 
             $module = "Ticket Discussion Closed";
             $sender_name = $user_id;
@@ -390,6 +394,8 @@ class TicketsDiscussionController extends Controller
     }
 
     public function remarks($id) {
+
+        $id = \Crypt::decrypt($id);
 
         $user_id = \Auth::user()->id;
         $tickets_discussion_id = $id;
@@ -491,7 +497,7 @@ class TicketsDiscussionController extends Controller
 
         event(new NotificationMail($module,$sender_name,$to,$subject,$message,$module_id,$cc));
 
-        return redirect()->route('ticket.remarks',[$tickets_discussion_id]);
+        return redirect()->route('ticket.remarks',[\Crypt::encrypt($$tickets_discussion_id)]);
     }
 
     public function updateRemarks(Request $request, $tickets_discussion_id,$post_id) {
@@ -505,7 +511,7 @@ class TicketsDiscussionController extends Controller
         $returnValue["message"] = "Content Updated";
         $returnValue["id"] = $post_id;
 
-       return redirect()->route('ticket.remarks',[$tickets_discussion_id])->with('success','Ticket Comment Updated Successfully.');
+       return redirect()->route('ticket.remarks',[\Crypt::encrypt($tickets_discussion_id)])->with('success','Ticket Comment Updated Successfully.');
     }
 
     public function postDestroy($id) {
@@ -555,14 +561,18 @@ class TicketsDiscussionController extends Controller
 
             $it1 = 'saloni@trajinfotech.com';
             $it2 = 'dhara@trajinfotech.com';
+            $it3 = 'e2hteam01@gmail.com';
             // get superadmin email id
             $superadminuserid = getenv('SUPERADMINUSERID');
             $superadminemail = User::getUserEmailById($superadminuserid);
             // get manager email id
             $manager_user_id = env('MANAGERUSERID');
             $manager_email = User::getUserEmailById($manager_user_id);
+            // Get Hemali email id
+            $hemali_user_id = env('HEMALIUSERID');
+            $hemali_email = User::getUserEmailById($hemali_user_id);
 
-            $cc_users_array = array($it1,$it2,$superadminemail,$manager_email,$loggedin_useremail);
+            $cc_users_array = array($it1,$it2,$it3,$superadminemail,$manager_email,$loggedin_useremail,$hemali_email);
 
             $module = "Ticket Discussion Closed";
             $sender_name = $user_id;

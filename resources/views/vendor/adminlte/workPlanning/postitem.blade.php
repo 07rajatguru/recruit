@@ -77,7 +77,7 @@
 
         <div class="ui-block-content">
             {!! Form::open(['route' => ['workplanning.post.update', $wp_id,$per_post->id], 'name' => 'update_a_review', 'id' => 'update_a_review', 'files' => 'true']) !!}
-            {!! Form::hidden('wp_id', $wp_id) !!}
+            {!! Form::hidden('wp_id', \Crypt::encrypt($wp_id)) !!}
             {!! Form::hidden('user_id', auth()->id()) !!}
 
             {!!Form::textarea('content',$per_post->content, array('placeholder' =>'Add Comment','id' => 'update-review-textarea-'.$per_post->id,'class' => 'form-control update-review-textarea','rows' => 5, 'required' => true)) !!}

@@ -48,10 +48,11 @@
                 <tr>
                     <td>{{ ++$i }}</td>
                     <td>
-                        <a class="fa fa-circle" title="Show" href="{{ route('userrole.show',$role->id) }}"></a>
+                        <a class="fa fa-circle" title="Show" href="{{ route('userrole.show',\Crypt::encrypt($role->id)) }}"></a>
 
-                        <a class="fa fa-edit" title="Edit" href="{{ 
-                        route('userrole.edit',$role->id) }}"></a>
+                        <a class="fa fa-edit" title="Edit" href="{{ route('userrole.edit',\Crypt::encrypt($role->id)) }}"></a>
+
+                        <a class="fa fa-clone" title="Clone" href="{{ route('userrole.clone',\Crypt::encrypt($role->id)) }}"></a>
                         
                         @include('adminlte::partials.deleteModalUser', ['data' => $role, 'name' => 'userrole','display_name'=>'Role'])
                     </td>

@@ -65,6 +65,10 @@
                             <td>{{ isset($comments)? $comments : null }}</td>
                         </tr>
                         <tr>
+                            <th>Remarks :</th>
+                            <td width="500px">{!! isset($remarks)? $remarks : null !!}</td> 
+                        </tr>
+                        <tr>
                             @if(isset($skype_id) && $skype_id != '')
                                 <th>Interview Round :</th>
                                 <td>{{ isset($interview_round)? $interview_round : null }}</td>

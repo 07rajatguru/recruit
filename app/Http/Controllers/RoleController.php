@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Crypt;
 use App\Role;
 use App\Permission;
 use DB;
@@ -90,6 +91,8 @@ class RoleController extends Controller
 
     public function show($id) {
 
+        $id = Crypt::decrypt($id);
+
         $role = \DB::table('roles')
         ->leftjoin('department','department.id','=','roles.department')
         ->select('roles.*','department.name as department')->where('roles.id','=',$id)->first();
@@ -107,6 +110,8 @@ class RoleController extends Controller
      */
 
     public function edit($id) {
+
+        $id = Crypt::decrypt($id);
 
         $role = Role::find($id);
         $permission = Permission::get();

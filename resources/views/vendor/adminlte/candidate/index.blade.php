@@ -17,7 +17,9 @@
                  <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#searchmodal">Master Search</button>
 
                 <a class="btn btn-primary" href="{{ route('all.jobs') }}"> Advanced Search</a>
-
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-mail" onclick="checkIdsforMail()">Send Mail</button>
+                <!-- <a class="btn btn-primary" href="{{ route('candidate.import') }}">Import Candidates</a>  -->
+                <!-- <a class="btn btn-success" href="javascript:void(0);" onClick="export_data()">Export excel</a>   -->
                 <a class="btn btn-success" href="{{ route('candidate.create') }}"> Create New Candidate</a>
             </div>
         </div>
@@ -314,5 +316,16 @@
                 form.submit();
             }
         }
-    </script>
+        function export_data() {
+
+var url = '/candidate/export';
+
+var form = $('<form action="'+url+ '" method="post">' +
+'<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+'</form>');
+
+$('body').append(form);
+form.submit();
+}
+    </script>   
 @endsection

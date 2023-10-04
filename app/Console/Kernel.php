@@ -66,6 +66,8 @@ class Kernel extends ConsoleKernel
         'App\Console\Commands\InterviewReminder',
         'App\Console\Commands\DailyWorkPlanningSummary',
         'App\Console\Commands\TicketWeeklyReport',
+        'App\Console\Commands\WeeklyProductivityReport',
+
     ];
 
     /**

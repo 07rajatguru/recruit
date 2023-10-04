@@ -125,7 +125,7 @@
                         <thead>
                             <tr style="border:1px solid black;">
                                <th width="5%" style="border:1px solid black;">Sr No.</th>
-                               <th width="20%" style="border:1px solid black;">Task</th>
+                               <th width="20%" style="border:1px solid black;">Task Name / Sub Task Name</th>
                                <th width="10%" style="border:1px solid black;">Projected Time / <br/>Actual Time</th>
                                <!-- <th style="border:1px solid black;">Actual Time </th> -->
                                <th width="30%" style="border:1px solid black;">Remarks</th>
@@ -141,8 +141,8 @@
                                         {{ $i }}
                                     </td>
 
-                                    <td style="border:1px solid black;">
-                                        {!!Form::textarea('task[]',null, array('placeholder' => 'Task','id' => 'task_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'rows' => 3)) !!}
+                                    <td style="border: 1px solid black;">
+                                    {!!Form::textarea('task[]',null, array('placeholder' => 'Task','id' => 'task_'.$i,'class' => 'form-control','tabindex' => $tabindex++,'rows' => 3)) !!}
                                     </td>
 
                                     <td style="border:1px solid black;">
@@ -504,7 +504,7 @@
         $.ajax({
 
             type: 'GET',
-            url: app_url+'/work-planning/getlist',
+            url: '/work-planning/getlist',
             data:{work_planning_id:work_planning_id},
             dataType: 'json',
             async:true,
@@ -703,30 +703,21 @@
         return true;
     }
 
-    function setDateValue(day) {
+   function setDateValue(day) {
         
-        if(day == 'Today') {
-            
-            // var utc_date = new Date().toJSON().slice(0,10).replace(/-/g,'-');
-            var utc_date = moment().format('YYYY-MM-D');
-            $("#date_value").val(utc_date);
-        }
-        else if(day == 'Yesterday') {
-            
-            // var a = new Date(new Date().setDate(new Date().getDate() - 1));
-            // var utc_date = a.toJSON().slice(0,10).replace(/-/g,'-');
-            var utc_date = moment().add(-1, 'd');
-            var y_date = utc_date.format('YYYY-MM-D');
-            $("#date_value").val(y_date);
-        }
-        else if(day == 'Tomorrow') {
-            
-            // var a = new Date(new Date().setDate(new Date().getDate() + 1));
-            // var utc_date = a.toJSON().slice(0,10).replace(/-/g,'-');
-            var utc_date = moment().add(+1, 'd');
-            var tom_date = utc_date.format('YYYY-MM-D');
-            $("#date_value").val(tom_date);
-        }
+    if(day == 'Today') {
+        var utc_date = moment().format('YYYY-MM-DD');
+        document.getElementById("date_value").value = utc_date;
     }
+    else if(day == 'Yesterday') {
+        var utc_date = moment().subtract(1, 'days').format('YYYY-MM-DD');
+        document.getElementById("date_value").value = utc_date;
+    }
+    else if(day == 'Tomorrow') {
+        var utc_date = moment().add(1, 'days').format('YYYY-MM-DD');
+        document.getElementById("date_value").value = utc_date;
+    }
+}
+
 </script>
 @endsection

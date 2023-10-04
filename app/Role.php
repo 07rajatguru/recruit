@@ -3,10 +3,10 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
-use Zizaco\Entrust\EntrustRole;
+use Spatie\Permission\Models\Role as SpatieRole;
 use App\Module;
 
-class Role extends EntrustRole
+class Role extends SpatieRole
 {
     public static function getModulesByUserRoleId($user_role_id) {
 
@@ -110,6 +110,13 @@ class Role extends EntrustRole
 
         $roles_array = array();
         $hr_role_id = getenv('HR');
+
+        // Get the role with ID 1
+         $role_id = Role::find(1);
+
+          if ($role_id) {
+              $roles_array[$role_id->id] = $role_id->display_name;
+          }
 
         if(isset($response) && sizeof($response) > 0) {
 

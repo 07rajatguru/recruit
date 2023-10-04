@@ -42,7 +42,7 @@
                 <td>{{ ++$i }}</td>
                 <td>
                     @permission(('companies-edit'))
-                        <a class="fa fa-edit" href="{{ route('companies.edit',$value->id) }}"></a>
+                        <a class="fa fa-edit" href="{{ route('companies.edit',\Crypt::encrypt($value->id)) }}"></a>
                     @endpermission
                 </td>
                 <td>{{ $value->name }}</td>

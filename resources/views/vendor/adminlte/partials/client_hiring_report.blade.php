@@ -30,10 +30,10 @@
             <input type="hidden" name="source" id="source" value="{{ $source }}">
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-primary" onclick="generateLastestHiringReport({{ $data['id'] }})">Generate Last 15 Days Hiring Report</button>
-                <button type="button" class="btn btn-primary" onclick="generateHiringReport({{ $data['id'] }})">Generate Hiring Report</button>
-                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel
-                </button>
+                <button type="button" class="btn btn-primary" onclick="generateLastestHiringReport({{ $data['id'] }})" style="margin-bottom: 5px;">Generate Last 15 Days Hiring Report</button>
+                <button type="button" class="btn btn-primary" onclick="generateHiringReport({{ $data['id'] }})" style="margin-bottom: 5px;">Generate Hiring Report</button>
+                <button type="button" class="btn btn-primary" onclick="downloadHiringReport({{ $data['id'] }})" style="margin-bottom: 5px;">Download Excel</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal" style="float: right;" >Cancel</button>
             </div>
         </div>
     </div>

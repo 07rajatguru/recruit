@@ -52,7 +52,7 @@
                 <td>
 
                     @permission(('holiday-edit'))
-                        <a title="Edit" class="fa fa-edit" href="{{ route('holidays.edit',$value['id']) }}"></a>
+                        <a title="Edit" class="fa fa-edit" href="{{ route('holidays.edit',\Crypt::encrypt($value['id'])) }}"></a>
                     @endpermission
 
                     @permission(('holiday-delete'))

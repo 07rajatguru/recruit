@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Date;
 use App\Events\NotificationEvent;
+use Illuminate\Support\Facades\Crypt;
 use App\JobVisibleUsers;
 use Illuminate\Http\Request;
 use App\Industry;
+use Illuminate\Validation\Rule;
+use Validator;
 use App\ClientBasicinfo;
 use App\User;
 use App\JobOpen;
@@ -648,11 +651,11 @@ class JobOpenController extends Controller
             $action = '';
             $checkbox = '';
 
-            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
+            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',\Crypt::encrypt($value['id'])).'" style="margin:3px;"></a>';
             $action .= '<a title="Send Vacancy Details"  class="fa fa-send" href="'.route('jobs.sendvd',$value['id']).'" style="margin:3px;"></a>';
 
             if(isset($value['access']) && $value['access'] == 1) {
-                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobopen.edit',$value['id']).'" style="margin:3px;"></a>';
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobopen.edit',\Crypt::encrypt($value['id'])).'" style="margin:3px;"></a>';
                 if($change_priority_perm) {
                     $status_view = \View::make('adminlte::partials.jobstatus',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job Open','job_priority' => $job_priority]);
                     $status = $status_view->render();
@@ -668,7 +671,7 @@ class JobOpenController extends Controller
 
             if(isset($value['access']) && $value['access'] == 1) {
                 if($clone_perm) {
-                    $action .= '<a title="Clone Job"  class="fa fa-clone" href="'.route('jobopen.clone',$value['id']).'"></a>';
+                    $action .= '<a title="Clone Job"  class="fa fa-clone" href="'.route('jobopen.clone',\Crypt::encrypt($value['id'])).'"></a>';
                 }
             }
 
@@ -686,7 +689,7 @@ class JobOpenController extends Controller
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'</a>';
             $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['posting_title'].'</a>';
             $qual = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['qual'].'</a>';
-            $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+            $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',\Crypt::encrypt($value['id'])).'">'.$value['associate_candidate_cnt'].'</a>';
 
             $data = array(++$j,$checkbox,$action,$managed_by,$company_name,$posting_title,$associated_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['updated_date'],$value['no_of_positions'],$qual,$value['coordinator_name'],$value['industry'],$value['desired_candidate'],$value['priority']);
             $jobs[$i] = $data;
@@ -836,11 +839,11 @@ class JobOpenController extends Controller
             $action = '';
             $checkbox = '';
 
-            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
+            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',\Crypt::encrypt($value['id'])).'" style="margin:3px;"></a>';
             $action .= '<a title="Send Vacancy Details"  class="fa fa-send" href="'.route('jobs.sendvd',$value['id']).'" style="margin:3px;"></a>';
 
             if(isset($value['access']) && $value['access'] == 1) {
-                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobopen.edit',$value['id']).'" style="margin:3px;"></a>';
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobopen.edit',\Crypt::encrypt($value['id'])).'" style="margin:3px;"></a>';
                 if($change_priority_perm) {
                     $status_view = \View::make('adminlte::partials.jobstatus',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job Open','job_priority' => $job_priority]);
                     $status = $status_view->render();
@@ -856,7 +859,7 @@ class JobOpenController extends Controller
 
             if(isset($value['access']) && $value['access'] == 1) {
                 if($clone_perm) {
-                    $action .= '<a title="Clone Job"  class="fa fa-clone" href="'.route('jobopen.clone',$value['id']).'"></a>';
+                    $action .= '<a title="Clone Job"  class="fa fa-clone" href="'.route('jobopen.clone',\Crypt::encrypt($value['id'])).'"></a>';
                 }
             }
 
@@ -874,7 +877,7 @@ class JobOpenController extends Controller
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'</a>';
             $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['posting_title'].'</a>';
             $qual = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['qual'].'</a>';
-            $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+            $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',\Crypt::encrypt($value['id'])).'">'.$value['associate_candidate_cnt'].'</a>';
 
             $data = array(++$j,$checkbox,$action,$managed_by,$company_name,$posting_title,$associated_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['updated_date'],$value['no_of_positions'],$qual,$value['coordinator_name'],$value['industry'],$value['desired_candidate'],$value['priority']);
             $jobs[$i] = $data;
@@ -1318,7 +1321,8 @@ class JobOpenController extends Controller
             $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'10-20',$current_year,$next_year,1,$client_heirarchy,0,$mb_name,$company_name,$posting_title,$location,$min_ctc,$max_ctc,$added_date,$no_of_positions);
             $above_twenty_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'20',$current_year,$next_year,1,$client_heirarchy,0,$mb_name,$company_name,$posting_title,$location,$min_ctc,$max_ctc,$added_date,$no_of_positions);
         }
-
+         // dd($count);
+         
         $jobs = array();
         $i = 0;$j = 0;
         foreach ($job_response as $key => $value) {
@@ -1326,13 +1330,13 @@ class JobOpenController extends Controller
             $action = '';
             $checkbox = '';
 
-            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
+            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',\Crypt::encrypt($value['id'])).'" style="margin:3px;"></a>';
 
             $action .= '<a title="Send Vacancy Details"  class="fa fa-send" href="'.route('jobs.sendvd',$value['id']).'" style="margin:3px;"></a>';
 
             if(isset($value['access']) && $value['access'] == 1) {
 
-                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobopen.edit',$value['id']).'" style="margin:3px;"></a>';
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobopen.edit',\Crypt::encrypt($value['id'])).'" style="margin:3px;"></a>';
         
                 /*$status_view = \View::make('adminlte::partials.jobstatus',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job Open', 'job_priority' => $job_priority,'year' => $year]);*/
 
@@ -1358,7 +1362,7 @@ class JobOpenController extends Controller
             if(isset($value['access']) && $value['access'] == 1) {
 
                 if($clone_perm) {
-                    $action .= '<a title="Clone Job"  class="fa fa-clone" href="'.route('jobopen.clone',$value['id']).'"></a>';
+                    $action .= '<a title="Clone Job"  class="fa fa-clone" href="'.route('jobopen.clone',\Crypt::encrypt($value['id'])).'"></a>';
                 }
 
                 if($change_multiple_priority_perm) {
@@ -1369,23 +1373,298 @@ class JobOpenController extends Controller
                 }
             }
 
+            $jobopenData = JobOpen::find($value['id']);  // Assuming 'id' is the primary key
+            $data_source = $jobopenData->data_source;
+
+            if ($data_source === "Import") {
+
+                $fontColor = 'grey';
+            } else {
+                $fontColor = 'black'; 
+            }
+
             $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
 
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'</a>';
 
-            $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['posting_title'].'</a>';
+            $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:'.$fontColor.'; text-decoration:none;">'.$value['posting_title'].'</a>';
 
             $qual = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['qual'].'</a>';
 
             if ($isClient) {
 
-                $associated_count = '<a title="Show Candidates Details" href="'.route('jobopen.candidates_details_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+                $associated_count = '<a title="Show Candidates Details" href="'.route('jobopen.candidates_details_get',\Crypt::encrypt($value['id'])).'">'.$value['associate_candidate_cnt'].'</a>';
             }
             else {
-                $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+                $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',\Crypt::encrypt($value['id'])).'">'.$value['associate_candidate_cnt'].'</a>';
             }
 
+            
+
             $data = array(++$j,$checkbox,$action,$managed_by,$company_name,$posting_title,$associated_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['updated_date'],$value['no_of_positions'],$qual,$value['coordinator_name'],$value['industry'],$value['desired_candidate'],$value['priority']);
+            $jobs[$i] = $data;
+            $i++;
+        }
+
+        $priority_0 = 0; $priority_1 = 0; $priority_2 = 0; $priority_3 = 0;
+        $priority_5 = 0; $priority_6 = 0; $priority_7 = 0; $priority_8 = 0;
+
+        foreach ($job_priority_data as $value) {
+
+            if($value['priority'] == 0) {
+                $priority_0++;
+            }
+            else if($value['priority'] == 1) {
+                $priority_1++;
+            }
+            else if($value['priority'] == 2) {
+                $priority_2++;
+            }
+            else if($value['priority'] == 3) {
+                $priority_3++;
+            }
+            else if($value['priority'] == 5) {
+                $priority_5++;
+            }
+            else if($value['priority'] == 6) {
+                $priority_6++;
+            }
+            else if($value['priority'] == 7) {
+                $priority_7++;
+            }
+            else if($value['priority'] == 8) {
+                $priority_8++;
+            }
+        }
+
+        $priority = array();
+        $priority['priority_0'] = $priority_0;
+        $priority['priority_1'] = $priority_1;
+        $priority['priority_2'] = $priority_2;
+        $priority['priority_3'] = $priority_3;
+        $priority['priority_5'] = $priority_5;
+        $priority['priority_6'] = $priority_6;
+        $priority['priority_7'] = $priority_7;
+        $priority['priority_8'] = $priority_8;
+
+        // For salary wise display
+
+        $job_salary = JobOpen::getSalaryArray();
+
+        $priority['under_ten_lacs'] = $under_ten_lacs;
+        $priority['between_ten_to_twenty_lacs'] = $between_ten_to_twenty_lacs;
+        $priority['above_twenty_lacs'] = $above_twenty_lacs;
+
+        $json_data = array(
+            'draw' => intval($draw),
+            'recordsTotal' => intval($count),
+            'recordsFiltered' => intval($count),
+            "data" => $jobs,
+            "priority" => $priority,
+            "job_priority" => $job_priority,
+            "job_salary" => $job_salary,
+            //'year' => $year,
+        );
+
+        echo json_encode($json_data);exit;
+    }
+
+    public function getAllJobs() {
+
+        $limit = $_GET['length'];
+        $offset = $_GET['start'];
+        $draw = $_GET['draw'];
+        $search = $_GET['search']['value'];
+        $order = $_GET['order'][0]['column'];
+        $type = $_GET['order'][0]['dir'];
+        
+        $client_heirarchy = isset($_GET['client_heirarchy']) ? $_GET['client_heirarchy'] : null;
+        $mb_name = isset($_GET['mb_name']) ? $_GET['mb_name'] : null;
+        $company_name = isset($_GET['company_name']) ? $_GET['company_name'] : null;
+        $posting_title = isset($_GET['posting_title']) ? $_GET['posting_title'] : null;
+        $location = isset($_GET['location']) ? $_GET['location'] : null;
+        $min_ctc = isset($_GET['min_ctc']) ? $_GET['min_ctc'] : null;
+        $max_ctc = isset($_GET['max_ctc']) ? $_GET['max_ctc'] : null;
+        $added_date = isset($_GET['added_date']) ? $_GET['added_date'] : null;
+        $no_of_positions = isset($_GET['no_of_positions']) ? $_GET['no_of_positions'] : null;
+
+
+        // echo $mb_name;exit;
+
+        if (isset($_GET['year']) && $_GET['year'] != '') {
+
+            $year = $_GET['year'];
+
+            if (isset($year) && $year != 0) {
+                $year_data = explode(", ", $year);
+                $year1 = $year_data[0];
+                $year2 = $year_data[1];
+                $current_year = date('Y-m-d h:i:s',strtotime("first day of $year1"));
+                $next_year = date('Y-m-d 23:59:59',strtotime("last day of $year2"));
+            }
+            else {
+                $year = NULL;
+                $current_year = NULL;
+                $next_year = NULL;    
+            }
+        }
+        else {
+            $year = NULL;
+            $current_year = NULL;
+            $next_year = NULL;
+        }
+
+        $order_column_name = self::getJobOrderColumnName($order);
+
+        $user = \Auth::user();
+        $user_id = $user->id;
+
+        $all_jobs_perm = $user->can('display-jobs');
+        $user_jobs_perm = $user->can('display-jobs-by-loggedin-user');
+        $change_priority_perm = $user->can('change-job-priority');
+        $change_multiple_priority_perm = $user->can('update-multiple-jobs-priority');
+        $clone_perm = $user->can('clone-job');
+        $delete_perm = $user->can('job-delete');
+
+        $userRole = $user->roles->pluck('id','id')->toArray();
+        $role_id = key($userRole);
+        $user_obj = new User();
+        $isClient = $user_obj::isClient($role_id);
+
+        // for get client id by email
+        $user_email = $user->email;
+        $client_id = ClientBasicinfo::getClientIdByEmail($user_email);
+
+        $job_priority = JobOpen::getJobPriorities();
+
+        // For salary wise count
+
+        $under_ten_lacs = 0;
+        $between_ten_to_twenty_lacs = 0;
+        $above_twenty_lacs = 0;
+        $data_source = 'Import';
+
+
+        if($all_jobs_perm) {
+            
+            $job_response = JobOpen::getAllJobs(1,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$client_heirarchy,$mb_name,$company_name,$posting_title,$location,$min_ctc,$max_ctc,$added_date,$no_of_positions,$data_source);
+            $count = JobOpen::getAllJobsCount(1,$user_id,$search,$current_year,$next_year,$client_heirarchy,$mb_name,$company_name,$posting_title,$location,$min_ctc,$max_ctc,$added_date,$no_of_positions,$data_source);
+
+            $job_priority_data = JobOpen::getPriorityWiseJobs(1,$user_id,NULL,$current_year,$next_year,$client_heirarchy,0,$mb_name,$company_name,$posting_title,$location,$min_ctc,$max_ctc,$added_date,$no_of_positions);
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'10',$current_year,$next_year,1,$client_heirarchy,0,$mb_name,$company_name,$posting_title,$location,$min_ctc,$max_ctc,$added_date,$no_of_positions);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'10-20',$current_year,$next_year,1,$client_heirarchy,0,$mb_name,$company_name,$posting_title,$location,$min_ctc,$max_ctc,$added_date,$no_of_positions);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCount(1,$user_id,'20',$current_year,$next_year,1,$client_heirarchy,0,$mb_name,$company_name,$posting_title,$location,$min_ctc,$max_ctc,$added_date,$no_of_positions);
+        }
+        else if ($isClient) {
+
+            $job_response = JobOpen::getAllJobsByCLient($client_id,$limit,$offset,$search,$order_column_name,$type,$client_heirarchy,$mb_name,$company_name,$posting_title,$location,$min_ctc,$max_ctc,$added_date,$no_of_positions);
+            $count = sizeof($job_response);
+
+            $job_priority_data = JobOpen::getPriorityWiseJobsByClient($client_id,NULL,$current_year,$next_year,$client_heirarchy,$mb_name,$company_name,$posting_title,$location,$min_ctc,$max_ctc,$added_date,$no_of_positions);
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'10',$current_year,$next_year,1,$client_heirarchy,$mb_name,$company_name,$posting_title,$location,$min_ctc,$max_ctc,$added_date,$no_of_positions);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'10-20',$current_year,$next_year,1,$client_heirarchy,$mb_name,$company_name,$posting_title,$location,$min_ctc,$max_ctc,$added_date,$no_of_positions);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCountByClient($client_id,'20',$current_year,$next_year,1,$client_heirarchy,$mb_name,$company_name,$posting_title,$location,$min_ctc,$max_ctc,$added_date,$no_of_positions);
+        }
+        else if ($user_jobs_perm) {
+
+            $job_response = JobOpen::getAllJobs(0,$user_id,$limit,$offset,$search,$order_column_name,$type,$current_year,$next_year,$client_heirarchy,$mb_name,$company_name,$posting_title,$location,$min_ctc,$max_ctc,$added_date,$no_of_positions,$data_source);
+            $count = JobOpen::getAllJobsCount(0,$user_id,$search,$current_year,$next_year,$client_heirarchy,$mb_name,$company_name,$posting_title,$location,$min_ctc,$max_ctc,$added_date,$no_of_positions,$data_source);
+
+            $job_priority_data = JobOpen::getPriorityWiseJobs(0,$user_id,NULL,$current_year,$next_year,$client_heirarchy,0,$mb_name,$company_name,$posting_title,$location,$min_ctc,$max_ctc,$added_date,$no_of_positions);
+
+            // For salary wise count
+
+            $under_ten_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'10',$current_year,$next_year,1,$client_heirarchy,0,$mb_name,$company_name,$posting_title,$location,$min_ctc,$max_ctc,$added_date,$no_of_positions);
+            $between_ten_to_twenty_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'10-20',$current_year,$next_year,1,$client_heirarchy,0,$mb_name,$company_name,$posting_title,$location,$min_ctc,$max_ctc,$added_date,$no_of_positions);
+            $above_twenty_lacs = JobOpen::getSalaryWiseJobsCount(0,$user_id,'20',$current_year,$next_year,1,$client_heirarchy,0,$mb_name,$company_name,$posting_title,$location,$min_ctc,$max_ctc,$added_date,$no_of_positions);
+        }
+
+        $jobs = array();
+        $i = 0;$j = 0;
+        foreach ($job_response as $key => $value) {
+
+            $action = '';
+            $checkbox = '';
+
+            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',\Crypt::encrypt($value['id'])).'" style="margin:3px;"></a>';
+
+            $action .= '<a title="Send Vacancy Details"  class="fa fa-send" href="'.route('jobs.sendvd',$value['id']).'" style="margin:3px;"></a>';
+
+            if(isset($value['access']) && $value['access'] == 1) {
+
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobopen.edit',\Crypt::encrypt($value['id'])).'" style="margin:3px;"></a>';
+        
+                /*$status_view = \View::make('adminlte::partials.jobstatus',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job Open', 'job_priority' => $job_priority,'year' => $year]);*/
+
+                if($change_priority_perm) {
+
+                    $status_view = \View::make('adminlte::partials.jobstatus',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job Open','job_priority' => $job_priority]);
+                    $status = $status_view->render();
+                    $action .= $status;
+                }
+            }
+
+            if ($delete_perm) {
+
+                /*$delete_view = \View::make('adminlte::partials.jobdelete',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job','year' => $year,'title' => 'Job Open']);
+                $delete = $delete_view->render();
+                $action .= $delete;*/
+
+                $delete_view = \View::make('adminlte::partials.jobdelete',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job','title' => 'Job Open']);
+                $delete = $delete_view->render();
+                $action .= $delete;
+            }
+
+            if(isset($value['access']) && $value['access'] == 1) {
+
+                if($clone_perm) {
+                    $action .= '<a title="Clone Job"  class="fa fa-clone" href="'.route('jobopen.clone',\Crypt::encrypt($value['id'])).'"></a>';
+                }
+
+                if($change_multiple_priority_perm) {
+                    $checkbox .= '<input type=checkbox name=job_ids value='.$value['id'].' class=multiple_jobs id='.$value['id'].'/>';
+                }
+                else {
+                    $checkbox .= '';
+                }
+            }
+
+            $jobopenData = JobOpen::find($value['id']);  // Assuming 'id' is the primary key
+            $data_source = $jobopenData->data_source;
+
+            if ($data_source === "Import") {
+
+                $fontColor = 'grey';
+            } else {
+                $fontColor = 'black'; 
+            }
+
+
+            $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
+
+            $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'</a>';
+
+            $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:'. $fontColor.'; text-decoration:none;">'.$value['posting_title'].'</a>';
+
+            $qual = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['qual'].'</a>';
+
+            if ($isClient) {
+
+                $associated_count = '<a title="Show Candidates Details" href="'.route('jobopen.candidates_details_get',\Crypt::encrypt($value['id'])).'">'.$value['associate_candidate_cnt'].'</a>';
+            }
+            else {
+                $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',\Crypt::encrypt($value['id'])).'">'.$value['associate_candidate_cnt'].'</a>';
+            }
+
+            
+
+            $data = array(++$j,$checkbox,$action,$managed_by,$company_name,$posting_title,$associated_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['no_of_positions'],$qual,$value['coordinator_name'],$value['industry'],$value['desired_candidate'],$value['priority']);
             $jobs[$i] = $data;
             $i++;
         }
@@ -1552,8 +1831,11 @@ class JobOpenController extends Controller
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $operations = getenv('OPERATIONS');
+        $bhagyashree_user_id = getenv('BHAGYASHREEUSERID');
+        $super_admin_role_id = getenv('SUPERADMIN');
+        $bizpos_user_id = getenv('BIZPOSUSERID');
 
-        if($hr_role_id == $get_role_id) {
+        if($hr_role_id == $get_role_id || $bhagyashree_user_id == $user_id || $super_admin_role_id == $get_role_id || $bizpos_user_id == $user_id) {
             $type_array = array($recruitment,$hr_advisory,$operations);
         }
         else {
@@ -1702,6 +1984,7 @@ class JobOpenController extends Controller
         $thousand_to = $input['thousand_to'];
         $work_exp_from = $input['work_experience_from'];
         $work_exp_to = $input['work_experience_to'];
+        $data_source = isset($input['data_source']) ? $input['data_source'] : null;
 
         if($hr_role_id == $get_role_id) {
 
@@ -1821,6 +2104,7 @@ class JobOpenController extends Controller
         $job_open->work_exp_from = $work_exp_from;
         $job_open->work_exp_to = $work_exp_to;
         $job_open->open_to_all_date = $open_to_all;
+        $job_open->data_source = empty($data_source) ? null : $data_source;
         $job_open->level_id = $level_id;
         $job_open->job_open_checkbox = $job_open_checkbox;
         $job_open->adler_career_checkbox = $adler_career_checkbox;
@@ -1973,7 +2257,7 @@ class JobOpenController extends Controller
                     $module_id = $job_id;
                     $module = 'Job Openings';
                     $message = $user_name . " added new job";
-                    $link = route('jobopen.show',$job_id);
+                    $link = route('jobopen.show',\Crypt::encrypt($job_id));
                     $user_arr = trim($value);
 
                     event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
@@ -2020,6 +2304,8 @@ class JobOpenController extends Controller
     }
 
     public function show($id) {
+
+        $id = \Crypt::decrypt($id);
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -2216,6 +2502,8 @@ class JobOpenController extends Controller
     /*public function edit($id,$year)*/
     public function edit($id) {
 
+        $id = \Crypt::decrypt($id);
+
         $dateClass = new Date();
 
         // get all industry
@@ -2317,8 +2605,11 @@ class JobOpenController extends Controller
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $operations = getenv('OPERATIONS');
+        $bhagyashree_user_id = getenv('BHAGYASHREEUSERID');
+        $super_admin_role_id = getenv('SUPERADMIN');
+        $bizpos_user_id = getenv('BIZPOSUSERID');
 
-        if($hr_role_id == $get_role_id) {
+        if($hr_role_id == $get_role_id || $bhagyashree_user_id == $loggedin_user_id || $super_admin_role_id == $get_role_id || $bizpos_user_id == $loggedin_user_id) {
             $type_array = array($recruitment,$hr_advisory,$operations);
         }
         else {
@@ -2859,7 +3150,8 @@ class JobOpenController extends Controller
                 $jobopen_doc->updated_at = time();
                 $jobopen_doc->save();
             }
-            return redirect('jobs/'.$id.'/edit')->with('success','Attachment Uploaded Successfully.');
+            $encrypted_id = Crypt::encrypt($id);
+            return redirect('jobs/'.$encrypted_id.'/edit')->with('success','Attachment Uploaded Successfully.');
         }
 
         // If Client Status is Passive then set it to Active
@@ -2882,6 +3174,8 @@ class JobOpenController extends Controller
     }
 
     public function jobClone($id) {
+
+        $id = \Crypt::decrypt($id);
 
         $user = \Auth::user();
         $user_id = $user->id;
@@ -2982,8 +3276,11 @@ class JobOpenController extends Controller
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $operations = getenv('OPERATIONS');
+        $bhagyashree_user_id = getenv('BHAGYASHREEUSERID');
+        $super_admin_role_id = getenv('SUPERADMIN');
+        $bizpos_user_id = getenv('BIZPOSUSERID');
 
-        if($hr_role_id == $get_role_id) {
+        if($hr_role_id == $get_role_id || $bhagyashree_user_id == $user_id || $super_admin_role_id == $get_role_id || $bizpos_user_id == $user_id) {
             $type_array = array($recruitment,$hr_advisory,$operations);
         }
         else {
@@ -3331,7 +3628,7 @@ class JobOpenController extends Controller
                         $module_id = $job_id;
                         $module = 'Job Openings';
                         $message = $user_name . " added new job";
-                        $link = route('jobopen.show',$job_id);
+                        $link = route('jobopen.show',\Crypt::encrypt($job_id));
                         $user_arr = trim($value);
 
                         event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
@@ -3447,16 +3744,17 @@ class JobOpenController extends Controller
                 $jobopen_doc->save();
             }
         }
-        return redirect()->route('jobopen.show', [$job_id])->with('success', 'Attachment Uploaded Successfully.');
+        return redirect()->route('jobopen.show', [\Crypt::encrypt($job_id)])->with('success', 'Attachment Uploaded Successfully.');
     }
 
     public function attachmentsDestroy(Request $request,$docid) {
 
         $file_name = JobOpenDoc::where('id', $docid)->first();
-        $delete_file_name = $file_name->file;
-
-        if (isset($delete_file_name) && $delete_file_name != '') {
-            unlink("$delete_file_name");
+        if (isset($file_name) && $file_name != '') {
+            $delete_file_name = $file_name->file;
+            if (isset($delete_file_name) && $delete_file_name != '' && file_exists($delete_file_name)) {
+                unlink("$delete_file_name");
+            }
         }
 
         JobOpenDoc::where('id', $docid)->delete();
@@ -3465,14 +3763,16 @@ class JobOpenController extends Controller
         $type = $_POST['type'];
 
         if ($type == 'show') {
-            return redirect()->route('jobopen.show', [$id])->with('success', 'Attachment Deleted Successfully.');
+            return redirect()->route('jobopen.show', [\Crypt::encrypt($id)])->with('success', 'Attachment Deleted Successfully.');
         }
         else if($type == 'edit') {
-            return redirect()->route('jobopen.edit', [$id])->with('success', 'Attachment Deleted Successfully.');   
+            return redirect()->route('jobopen.edit', [\Crypt::encrypt($id)])->with('success', 'Attachment Deleted Successfully.');   
         }
     }
 
     public function associateCandidate($id) {
+
+        $id = \Crypt::decrypt($id);
 
         // get job name from id
         $jobopen_response = JobOpen::where('id', $id)->first();
@@ -3586,12 +3886,29 @@ class JobOpenController extends Controller
 
         if($title == 'Applicant') {
 
-            return redirect()->route('jobopen.applicant_candidates_get', [$job_id])->with('success', 'Candidate Associated Successfully.');
+            return redirect()->route('jobopen.applicant_candidates_get', [\Crypt::encrypt($job_id)])->with('success', 'Candidate Associated Successfully.');
         }
 
         if($title == 'Associate') {
-            return redirect()->route('jobopen.associate_candidate_get', [$job_id])->with('success', 'Candidate Associated Successfully.');
+            return redirect()->route('jobopen.associate_candidate_get', [\Crypt::encrypt($job_id)])->with('success', 'Candidate Associated Successfully.');
         }
+    }
+
+    public function duplicatedCandidates(Request $request) {
+
+        $user_id = \Auth::user()->id;
+        $input = $request->all();
+
+        $job_id = $_POST['dup_job_id'];
+        $all_can_ids = $_POST['dup_all_can_ids'];
+        $today_date = date('Y-m-d');
+        $ids = explode(",", $all_can_ids);
+        foreach ($ids as $key => $value) {
+            DB::statement("UPDATE job_associate_candidates SET is_duplicates = '1'  WHERE candidate_id = $value AND job_id = $job_id");
+        }
+        $encryptedJobId = Crypt::encrypt($job_id);
+
+        return redirect()->route('jobopen.associated_candidates_get', [$encryptedJobId])->with('success','Candidates Duplicate Updated Successfully.');
     }
 
     public function associateCandidateCount() {
@@ -3609,6 +3926,8 @@ class JobOpenController extends Controller
 
     public function associatedCandidates($id) {
 
+        $id = \Crypt::decrypt($id);
+        
         $user = \Auth::user();
         $user_id = $user->id;
         $all_jobs_perm = $user->can('display-jobs');
@@ -3690,7 +4009,9 @@ class JobOpenController extends Controller
         JobAssociateCandidates::where('candidate_id',$candidate_id)->where('job_id',$job_id)
         ->forceDelete();
 
-        return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success', 'Candidate Deassociated Successfully.');
+        $encryptedJobId = Crypt::encrypt($job_id);
+
+        return redirect()->route('jobopen.associated_candidates_get', [$encryptedJobId])->with('success', 'Candidate Deassociated Successfully.');
     }
 
     public function updateCandidateStatus() {
@@ -3706,7 +4027,10 @@ class JobOpenController extends Controller
         ->where('job_id',$job_id)->first();
 
         if($status_id == '1') {
-
+            // for set shortlisted_date same as 
+            if (isset($response->shortlisted_date) && $response->shortlisted_date != '') {
+                $today_date = $response->shortlisted_date;
+            }
             if($response->shortlisted == '0') {
 
                 DB::statement("UPDATE job_associate_candidates SET shortlisted = '1', status_id = '1', shortlisted_date = '$today_date' WHERE candidate_id = $candidate_id AND job_id = $job_id");
@@ -3721,7 +4045,10 @@ class JobOpenController extends Controller
             }
         }
         else if($status_id == '2') {
-
+            // for set shortlisted_date same as 
+            if (isset($response->shortlisted_date) && $response->shortlisted_date != '') {
+                $today_date = $response->shortlisted_date;
+            }
             if($response->shortlisted == '0') {
 
                 DB::statement("UPDATE job_associate_candidates SET shortlisted = '1', status_id = '2', shortlisted_date = '$today_date' WHERE candidate_id = $candidate_id AND job_id = $job_id");
@@ -3737,7 +4064,8 @@ class JobOpenController extends Controller
         }
         else if ($status_id == '3') {
 
-            DB::statement("UPDATE job_associate_candidates SET shortlisted = '3', selected_date = '$today_date', status_id = '3', shortlisted_date = '$today_date' WHERE candidate_id = $candidate_id AND job_id = $job_id");
+            DB::statement("UPDATE job_associate_candidates SET shortlisted = '3', selected_date = '$today_date', status_id = '3' WHERE candidate_id = $candidate_id AND job_id = $job_id");
+            // DB::statement("UPDATE job_associate_candidates SET shortlisted = '3', selected_date = '$today_date', status_id = '3', shortlisted_date = '$today_date' WHERE candidate_id = $candidate_id AND job_id = $job_id");
 
             // Email Notification : After Clear 3rd Round of Interview
 
@@ -3757,13 +4085,13 @@ class JobOpenController extends Controller
         // For show interview modal popup        
         if ($status_id == '2') {
 
-            return redirect()->route('jobopen.associated_candidates_get', [$job_id])
+            return redirect()->route('jobopen.associated_candidates_get', [\Crypt::encrypt($job_id)])
             ->with('success','Candidates Shortlisted & Scheduled Interview.')
             ->with('candidate_id',$candidate_id);
         }
         else {
 
-            return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success', 'Candidate Status Update Successfully.');
+            return redirect()->route('jobopen.associated_candidates_get', [\Crypt::encrypt($job_id)])->with('success', 'Candidate Status Update Successfully.');
         }
     }
 
@@ -3804,7 +4132,10 @@ class JobOpenController extends Controller
             $response = JobAssociateCandidates::where('candidate_id',$value)->where('job_id',$job_id)->first();
 
             if($update_status_id == '1') {
-
+                // for set shortlisted_date same as 
+                if (isset($response->shortlisted_date) && $response->shortlisted_date != '') {
+                    $today_date = $response->shortlisted_date;
+                }
                 if($response->shortlisted == '0') {
 
                     DB::statement("UPDATE job_associate_candidates SET shortlisted = '1', status_id = '1', shortlisted_date = '$today_date' WHERE candidate_id = $value AND job_id = $job_id");
@@ -3819,7 +4150,10 @@ class JobOpenController extends Controller
                 }
             }
             else if ($update_status_id == '2') {
-
+                // for set shortlisted_date same as 
+                if (isset($response->shortlisted_date) && $response->shortlisted_date != '') {
+                    $today_date = $response->shortlisted_date;
+                }
                 if($response->shortlisted == '0') {
 
                     DB::statement("UPDATE job_associate_candidates SET shortlisted = '1', status_id = '2', shortlisted_date = '$today_date' WHERE candidate_id = $value AND job_id = $job_id");
@@ -3835,7 +4169,8 @@ class JobOpenController extends Controller
             }
             else if ($update_status_id == '3') {
 
-                DB::statement("UPDATE job_associate_candidates SET shortlisted = '3', status_id = '3', shortlisted_date = '$today_date', selected_date = '$today_date'  WHERE candidate_id = $value AND job_id = $job_id");
+                DB::statement("UPDATE job_associate_candidates SET shortlisted = '3', status_id = '3', selected_date = '$today_date'  WHERE candidate_id = $value AND job_id = $job_id");
+                // DB::statement("UPDATE job_associate_candidates SET shortlisted = '3', status_id = '3', shortlisted_date = '$today_date', selected_date = '$today_date'  WHERE candidate_id = $value AND job_id = $job_id");
 
                 // Email Notification : After Clear 3rd Round of Interview
 
@@ -3860,12 +4195,12 @@ class JobOpenController extends Controller
         
         if ($update_status_id == '2') {
 
-            return redirect()->route('jobopen.associated_candidates_get', [$job_id])
+            return redirect()->route('jobopen.associated_candidates_get', [\Crypt::encrypt($job_id)])
             ->with('success','Candidates Shortlisted & Scheduled Interview.')
             ->with('candidate_id',$value);
         }
         else {
-            return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Candidates Status Updated Successfully.');
+            return redirect()->route('jobopen.associated_candidates_get', [\Crypt::encrypt($job_id)])->with('success','Candidates Status Updated Successfully.');
         }
     }
 
@@ -3893,6 +4228,7 @@ class JobOpenController extends Controller
         $data['candidate_location'] = $request->get('candidate_location');
         $data['interview_location'] = $request->get('interview_location');
         $data['candidate_id'] = $candidate_id;
+        $data['remarks'] = '';
 
         // For single candidate
         if($candidate_id != '') {
@@ -3901,6 +4237,11 @@ class JobOpenController extends Controller
 
             $response = JobAssociateCandidates::where('candidate_id',$candidate_id)
             ->where('job_id',$job_id)->first();
+
+            // for set shortlisted_date same as 
+            if (isset($response->shortlisted_date) && $response->shortlisted_date != '') {
+                $today_date = $response->shortlisted_date;
+            }
 
             // Set Interview Round
             if($response->shortlisted == '0') {
@@ -4011,8 +4352,9 @@ class JobOpenController extends Controller
                 }
             }
         }
+        $encryptedJobId = Crypt::encrypt($job_id);
 
-        return redirect('jobs/'.$job_id.'/associated_candidates')->with('success','Interview Scheduled Successfully.');
+        return redirect('jobs/'.$encryptedJobId.'/associated_candidates')->with('success','Interview Scheduled Successfully.');
     }
 
     public function addJoiningDate() {
@@ -4039,7 +4381,9 @@ class JobOpenController extends Controller
             $jobCandidateJoiningDate->save();
         }
 
-        return redirect('jobs/'.$_POST['jobid'].'/associated_candidates')->with('success','Joining Date Added Successfully.');
+        $encryptedJobId = Crypt::encrypt($jobid);
+
+        return redirect('jobs/'.$encryptedJobId.'/associated_candidates')->with('success','Joining Date Added Successfully.');
     }
 
     public function shortlisted(Request $request,$job_id) {
@@ -4051,7 +4395,7 @@ class JobOpenController extends Controller
 
         DB::statement("UPDATE job_associate_candidates SET shortlisted = $shortlist where candidate_id = $candidate_id and job_id = $job_id");
 
-        return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Candidate Shortlisted Successfully.');
+        return redirect()->route('jobopen.associated_candidates_get', [\Crypt::encrypt($job_id)])->with('success','Candidate Shortlisted Successfully.');
     }
 
     public function undoshortlisted(Request $request,$job_id) {
@@ -4067,7 +4411,7 @@ class JobOpenController extends Controller
 
         DB::statement("UPDATE job_associate_candidates SET shortlisted_date = NULL, selected_date = NULL where candidate_id = $candidate_id and job_id = $job_id");
 
-        return redirect()->route('jobopen.associated_candidates_get', [$job_id])->with('success','Undo Shortlisted Candidate Successfully.');
+        return redirect()->route('jobopen.associated_candidates_get', [\Crypt::encrypt($job_id)])->with('success','Undo Shortlisted Candidate Successfully.');
     }
 
     public function moreOptions(Request $request) {
@@ -4116,10 +4460,10 @@ class JobOpenController extends Controller
         $response = $job_open->save();
 
         if($response) {
-            return redirect()->route('jobopen.show', [$job_id])->with('success', 'Job Opening additional Information Added Successfully.');
+            return redirect()->route('jobopen.show', [\Crypt::encrypt($job_id)])->with('success', 'Job Opening additional Information Added Successfully.');
         }
         else {
-            return redirect()->route('jobopen.show', [$job_id])->with('success', 'Error while updating data.');
+            return redirect()->route('jobopen.show', [\Crypt::encrypt($job_id)])->with('success', 'Error while updating data.');
         }
     }
 
@@ -4503,12 +4847,12 @@ class JobOpenController extends Controller
 
             $action = '';
 
-            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
+            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',\Crypt::encrypt($value['id'])).'" style="margin:3px;"></a>';
 
-            $action .= '<a title="Send Vacancy Details"  class="fa fa-send" href="'.route('jobs.sendvd',$value['id']).'" style="margin:3px;"></a>';
+            $action .= '<a title="Send Vacancy Details"  class="fa fa-send" href="'.route('jobs.sendvd',\Crypt::encrypt($value['id'])).'" style="margin:3px;"></a>';
 
             if(isset($value['access']) && $value['access'] == 1) {
-                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobclose.edit',['id' => $value['id'],'year' => $year]).'" style="margin:3px;"></a>';
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobclose.edit',['id' => \Crypt::encrypt($value['id']),'year' => $year]).'" style="margin:3px;"></a>';
         
                 if($change_priority_perm) {
                     $status_view = \View::make('adminlte::partials.jobstatus',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job Close', 'job_priority' => $job_priority,'year' => $year]);
@@ -4533,15 +4877,26 @@ class JobOpenController extends Controller
             } else {
                 $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
             }
+
+            $jobopenData = JobOpen::find($value['id']);  // Assuming 'id' is the primary key
+            $data_source = $jobopenData->data_source;
+
+            if ($data_source === "Import") {
+
+                $fontColor = 'grey';
+            } else {
+                $fontColor = 'black'; 
+            }
+
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'</a>';
-            $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['posting_title'].'</a>';
+            $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:'. $fontColor .'; text-decoration:none;">'.$value['posting_title'].'</a>';
             $qual = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['qual'].'</a>';
 
             if ($isClient) {
                 $associated_count = '<a title="Show Candidates Details" href="'.route('jobopen.candidates_details_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
             }
             else {
-                $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+                $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',\Crypt::encrypt($value['id'])).'">'.$value['associate_candidate_cnt'].'</a>';
             }
 
             $data = array(++$j,$action,$job_priority[$value['priority']],$managed_by,$company_name,$posting_title,$associated_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['no_of_positions'],$qual,$value['coordinator_name'],$value['industry'],$value['desired_candidate'],$value['priority']);
@@ -4566,138 +4921,278 @@ class JobOpenController extends Controller
     }
 
     public function importExport() {
+        
         return view('adminlte::jobopen.import');
     }
 
-    public function importExcel(Request $request) {
+    public function importExcel(Request $request){
+       
+     if($request->hasFile('import_file')) {
+       $path = $request->file('import_file')->getRealPath();
+       $data = Excel::selectSheets('Sheet1')->load($path, function ($reader) {})->get();
+       $messages = array();
+       $successCount = 0; 
 
-        $dateClass = new Date();
+       if(!empty($data) && $data->count()) {
+        $validator = Validator::make([], []);
 
-        if ($request->hasFile('import_file')) {
-            $path = $request->file('import_file')->getRealPath();
+           foreach($data->toArray() as $key => $value) {
 
-            $data = Excel::load($path, function ($reader) {
-            })->get();
+               if(!empty($value)) {   
 
-            $messages = array();
+                       $user = \Auth::user();
+                       $user_id = $user->id;
+                    
+                       $max_id = JobOpen::find(\DB::table('job_openings')->max('id'));
+                       if (isset($max_id->id) && $max_id->id != '')
+                           $max_id = $max_id->id;
+                       else
+                           $max_id = 0;
 
-            if (!empty($data) && $data->count()) {
+                       $id = $value['id'];
+                       $posting_title = $value['posting_title'];
+                       $city = $value['city'];
+                       $lacs_from = $value['lacs_from'];
+                       $thousand_from = $value['thousand_from'];
+                       $lacs_to = $value['lacs_to'];
+                       $thousand_to = $value['thousand_to'];
+                       $no_of_positions = $value['no_of_positions'];
+                       $qualifications = $value['qualifications'];
+                       $target_date = $value['target_date'];
+                       $date_opened = $value['date_opened'];
+                       $job_type = $value['job_type'];
+                       $target_date = $value['target_date'];
+                       $work_exp_from = $value['work_exp_from'];
+                       $work_exp_to = $value['work_exp_to'];
+                       $priorityName = $value['priority'];
+                       $priorityIds = JobOpen::getJobPriorities();
+                       $priorityId = array_search($priorityName, $priorityIds);
+           
+                       if ($priorityId === false) {
+                           continue;
+                       }
 
-                foreach ($data->toArray() as $key => $value) {
+                       $industryName = $value['industry_id'];
+                       $industry_id = null;
 
-                    if (!empty($value)) {
-                        //foreach ($value as $v) {
+                       $industryModel = Industry::where('name', $industryName)->first();
+  
+                      if ($industryModel) {
+                          $industry_id = $industryModel->id;
+                      }
+                      if ($industry_id === null) {
+                          continue;
+                      }
 
-                            $max_id = JobOpen::find(\DB::table('job_openings')->max('id'));
-                            if (isset($max_id->id) && $max_id->id != '')
-                                $max_id = $max_id->id;
-                            else
-                                $max_id = 0;
+                      $validationData = $value;
+                      $rules = [
+                          'posting_title' => 'required|string|max:255',
+                          'city' => 'required|string|max:255',
+                          'industry_id' => 'required|string|max:255',
+                          'lacs from' => 'nullable|numeric',
+                          'lacs_to' => 'nullable|numeric',
+                          'date_opened' => 'nullable|date',
 
-                            $job_show = 0;
-                            $title = $value['title'];
-                            $hiring_manager_id = $value['hiring_manager_id'];
-                            $job_priority = $value['job_priority'];
-                            $industry = $value['industry'];
-                            $client_id = $value['client_id'];
-                            $no_of_positions = $value['positions'];
-                            $status = $value['status'];
-                            $date_opened = $value['date_opened'];
-                            $salary_min = $value['salary_min'];
-                            $salary_max = $value['salary_max'];
-                            $country = $value['country'];
-                            $visible_user_id = $value['visible_user_id'];
-                            $desired_candidate = $value['desired_candidate'];
-                            $qualifications = $value['qualifications'];
-                            $posting_status = $value['posting_status'];
-                            $mass_mail = $value['mass_mail'];
+                      ];
+                      $validator = Validator::make($validationData, $rules);
+ 
+                      if ($validator->fails()) {
+                          $messages[] = "Error in row {$key}: " . implode(', ', $validator->errors()->all());
+                          continue;
+                      }
+   
+                       $increment_id = $max_id + 1;
+                       $job_unique_id = "TT-JO-$increment_id";
+                       $job_open = new JobOpen();
+                       $job_open->job_id = $job_unique_id;
+                       $job_open->department_ids = '1,2,3';
+                       $job_open->hiring_manager_id = $user_id;
+                       $job_open->remote_working = 0;
+                       $job_open->job_open_checkbox = 0;
+                       $job_open->adler_career_checkbox = 0;
+                       $job_open->adler_job_disclosed_checkbox = 0;
+                       $job_open->job_show = 0;
+                       $job_open->level_id = 1;
+                       $job_open->client_id = 898;
+                       $job_open->open_to_all = 0;
+                       $job_open->industry_id = $industry_id;
+                       $job_open->priority = $priorityId;
+                       $job_open->data_source = "Import";
+                       $job_open->hiring_manager_id = $user_id;
+                       $job_open->posting_title = $posting_title;
+                       $job_open->no_of_positions = $no_of_positions;
+                       $job_open->target_date = $target_date; 
+                       $job_open->date_opened = $date_opened;
+                       $job_open->job_type = $job_type;
+                       $job_open->city = $city;
+                       $job_open->qualifications = $qualifications;
+                       $job_open->lacs_from = $lacs_from;
+                       $job_open->thousand_from = $thousand_from;
+                       $job_open->lacs_to = $lacs_to;
+                       $job_open->thousand_to = $thousand_to;
+                       $job_open->work_exp_from = $work_exp_from;
+                       $job_open->work_exp_to = $work_exp_to;
 
-                            $work_experience_from = 0;
-                            $work_experience_to = 0;
-                            if (isset($salary_min) && $salary_min == '')
-                                $salary_min = 0;
-                            if (isset($salary_max) && $salary_max == '')
-                                $salary_max = 0;
-                            if (isset($qualifications) && $qualifications == '')
-                                $qualifications = '';
-                            if (isset($desired_candidate) && $desired_candidate == '')
-                                $desired_candidate = '';
-
-                            $increment_id = $max_id + 1;
-                            $job_unique_id = "TT-JO-$increment_id";
-                            $job_open = new JobOpen();
-                            $job_open->job_id = $job_unique_id;
-                            $job_open->job_show = $job_show;
-                            $job_open->posting_title = $title;
-                            $job_open->hiring_manager_id = $hiring_manager_id;
-                            $job_open->job_opening_status = $status;
-                            $job_open->industry_id = $industry;
-                            $job_open->client_id = $client_id;
-                            $job_open->no_of_positions = $no_of_positions;
-                            $date_opened = (array)$date_opened;
-                            $date_new = $date_opened['date'];
-                            $job_open->date_opened = $date_new; //'2016-01-01';//$formatted_date_open;
-                            //$job_open->job_type = $job_type;
-                            $job_open->work_experience_from = $work_experience_from;
-                            $job_open->work_experience_to = $work_experience_to;
-                            $job_open->salary_from = $salary_min;
-                            $job_open->salary_to = $salary_max;
-                            $job_open->country = $country;
-                            $job_open->priority = $job_priority;
-                            $job_open->desired_candidate = $desired_candidate;
-                            $job_open->qualifications = $qualifications;
-
-                            $validator = \Validator::make(Input::all(),$job_open::$rules);
-                            print_r($validator->errors());exit;
-                            if($validator->fails()){
-                                return redirect('jobs/create')->withInput(Input::all())->withErrors($validator->errors());
-                            }
-
-                            $job_open->save();
-                            $job_id = $job_open->id;
-
-                            if (isset($job_id) && $job_id > 0) {
-
-                                $job_visible_users = new JobVisibleUsers();
-                                $job_visible_users->job_id = $job_id;
-                                $job_visible_users->user_id = $visible_user_id;
-                                $job_visible_users->save();
-
-                                $posting = '';
-                                if (isset($posting_status) && sizeof($posting_status)>0){
-                                    foreach ($posting_status as $k=>$v) {
-                                        if($posting=='')
-                                            $posting .= $v;
-                                        else
-                                            $posting .= ','.$v;
-                                    }
-                                }
-
-                                $mm = '';
-                                if (isset($mass_mail) && sizeof($mass_mail)>0){
-                                    foreach ($mass_mail as $k=>$v) {
-                                        if($mm=='')
-                                            $mm .= $v;
-                                        else
-                                            $mm .= ','.$v;
-                                    }
-                                }
-
-                                $job_open->posting = $posting;
-                                $job_open->mass_mail = $mm;
-                                $job_open->job_search = '';
-
-                                $response = $job_open->save();
-
-                            }
-                        //}
+                       if($job_open->save()) {                  
+                          $successCount++; 
+                       }else {
+                        $messages[] = "Error while inserting the record $id";
+                        break; // Break the loop on error
                     }
                 }
+             }
+               if ($successCount > 0) {
+                   $messages[] = "$successCount records inserted successfully.";
+               } else {
+                   $messages[] = "No records inserted.";
+               }
             }
-
+           return view('adminlte::jobopen.import',compact('messages'));
         }
-        echo "Done";exit;
+        else {
+           return redirect()->route('jobopen.import')->with('error','Please Select Excel file.');
+        }
     }
+    
+    // public function importExcel(Request $request) {
+
+    //     $dateClass = new Date();
+
+    //     if ($request->hasFile('import_file')) {
+    //         $path = $request->file('import_file')->getRealPath();
+
+    //         $data = Excel::load($path, function ($reader) {
+    //         })->get();
+
+    //         $messages = array();
+
+    //         if (!empty($data) && $data->count()) {
+
+    //             foreach ($data->toArray() as $key => $value) {
+
+    //                 if (!empty($value)) {
+    //                     //foreach ($value as $v) {
+
+    //                         $max_id = JobOpen::find(\DB::table('job_openings')->max('id'));
+    //                         if (isset($max_id->id) && $max_id->id != '')
+    //                             $max_id = $max_id->id;
+    //                         else
+    //                             $max_id = 0;
+
+    //                         $job_show = 0;
+    //                         $posting_title = $value['posting_title'];
+    //                         $hiring_manager_id = $value['hiring_manager_id'];
+    //                         $priority = $value['priority'];
+    //                         $job_opening_status = $value['job_opening_status'];
+    //                         $industry_id = $value['industry_id'];
+    //                         $client_id = $value['client_id'];
+    //                         $no_of_positions = $value['no_of_positions'];
+    //                         $job_type = $value['job_type'];
+
+    //                         $date_opened = $value['date_opened'];
+    //                         $lacs_from = $value['lacs_from'];
+    //                         $thousand_from = $value['thousand_from'];
+    //                         $lacs_to = $value['lacs_to'];
+    //                         $thousand_to = $value['thousand_to'];
+    //                         $country = $value['country'];
+    //                         $visible_user_id = $value['visible_user_id'];
+    //                         $desired_candidate = $value['desired_candidate'];
+    //                         $qualifications = $value['qualifications'];
+    //                         $posting_status = $value['posting_status'];
+    //                         $mass_mail = $value['mass_mail'];
+    //                         $salary_from = $value['salary_from'];
+    //                         $salary_to = $value['salary_to'];
+
+    //                         $work_experience_from = 0;
+    //                         $work_experience_to = 0;
+    //                         if (isset($salary_from) && $salary_from == '')
+    //                             $salary_from = 0;
+    //                         if (isset($salary_to) && $salary_to == '')
+    //                             $salary_to = 0;
+    //                         if (isset($qualifications) && $qualifications == '')
+    //                             $qualifications = '';
+    //                         if (isset($desired_candidate) && $desired_candidate == '')
+    //                             $desired_candidate = '';
+
+    //                         $increment_id = $max_id + 1;
+    //                         $job_unique_id = "TT-JO-$increment_id";
+    //                         $job_open = new JobOpen();
+    //                         $job_open->job_id = $job_unique_id;
+    //                         $job_open->job_show = $job_show;
+    //                         $job_open->posting_title = $posting_title;
+    //                         $job_open->hiring_manager_id = $hiring_manager_id;
+    //                         $job_open->job_opening_status = $job_opening_status;
+    //                         $job_open->industry_id = $industry_id;
+    //                         $job_open->client_id = $client_id;
+    //                         $job_open->no_of_positions = $no_of_positions;
+    //                         $date_opened = (array)$date_opened;
+    //                         $date_new = $date_opened['date'];
+    //                         $job_open->date_opened = $date_new; //'2016-01-01';//$formatted_date_open;
+    //                         $job_open->job_type = $job_type;
+    //                         $job_open->work_experience_from = $work_experience_from;
+    //                         $job_open->work_experience_to = $work_experience_to;
+    //                         $job_open->salary_from = $salary_from;
+    //                         $job_open->salary_to = $salary_to;
+    //                         $job_open->lacs_from = $lacs_from;
+    //                         $job_open->thousand_from = $thousand_from;
+    //                         $job_open->lacs_to = $lacs_to;
+    //                         $job_open->thousand_to = $thousand_to;
+    //                         $job_open->country = $country;
+    //                         $job_open->priority = $priority;
+    //                         $job_open->desired_candidate = $desired_candidate;
+    //                         $job_open->qualifications = $qualifications;
+
+    //                         $validator = \Validator::make(Input::all(),$job_open::$rules);
+    //                         // print_r($validator->errors());exit;
+    //                         if($validator->fails()){
+    //                             return redirect('jobs/create')->withInput(Input::all())->withErrors($validator->errors());
+    //                         }
+
+    //                         $job_open->save();
+    //                         $job_id = $job_open->id;
+
+    //                         if (isset($job_id) && $job_id > 0) {
+
+    //                             $job_visible_users = new JobVisibleUsers();
+    //                             $job_visible_users->job_id = $job_id;
+    //                             $job_visible_users->user_id = $visible_user_id;
+    //                             $job_visible_users->save();
+
+    //                             $posting = '';
+    //                             if (isset($posting_status) && sizeof($posting_status)>0){
+    //                                 foreach ($posting_status as $k=>$v) {
+    //                                     if($posting=='')
+    //                                         $posting .= $v;
+    //                                     else
+    //                                         $posting .= ','.$v;
+    //                                 }
+    //                             }
+
+    //                             $mm = '';
+    //                             if (isset($mass_mail) && sizeof($mass_mail)>0){
+    //                                 foreach ($mass_mail as $k=>$v) {
+    //                                     if($mm=='')
+    //                                         $mm .= $v;
+    //                                     else
+    //                                         $mm .= ','.$v;
+    //                                 }
+    //                             }
+
+    //                             $job_open->posting = $posting;
+    //                             $job_open->mass_mail = $mm;
+    //                             $job_open->job_search = '';
+
+    //                             $response = $job_open->save();
+
+    //                         }
+    //                     //}
+    //                 }
+    //             }
+    //         }
+
+    //     }
+    //     echo "Done";exit;
+    // }
 
     public function getAssociatedcandidates() {
 
@@ -4738,6 +5233,9 @@ class JobOpenController extends Controller
             }
             else if($user_jobs_perm) {
                 $response = JobAssociateCandidates::getAssociatedCvsByUseridMonthWise($user_id,$month,$year,$department_id);
+            }
+            else {
+                $response = array();
             }
         }
         else {
@@ -4913,8 +5411,9 @@ class JobOpenController extends Controller
                 }
             }
         });
+        $encryptedJobId = Crypt::encrypt($job_id);
 
-        return redirect('/jobs/'.$job_id.'/associated_candidates')->with('success', 'Email Sent Successfully.');
+        return redirect('/jobs/'.$encryptedJobId.'/associated_candidates')->with('success', 'Email Sent Successfully.');
     }
 
     // Function for associated candidates details by job for clinet login show page 
@@ -5367,13 +5866,13 @@ class JobOpenController extends Controller
             $action = '';
             $checkbox = '';
 
-            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
+            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',\Crypt::encrypt($value['id'])).'" style="margin:3px;"></a>';
 
-            $action .= '<a title="Send Vacancy Details"  class="fa fa-send" href="'.route('jobs.sendvd',$value['id']).'" style="margin:3px;"></a>';
+            $action .= '<a title="Send Vacancy Details"  class="fa fa-send" href="'.route('jobs.sendvd',\Crypt::encrypt($value['id'])).'" style="margin:3px;"></a>';
 
             if(isset($value['access']) && $value['access'] == 1) {
 
-                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobopen.edit',$value['id']).'" style="margin:3px;"></a>';
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobopen.edit',\Crypt::encrypt($value['id'])).'" style="margin:3px;"></a>';
 
                 if($change_priority_perm) {
 
@@ -5404,11 +5903,22 @@ class JobOpenController extends Controller
                 }
             }
 
+            $jobopenData = JobOpen::find($value['id']);  // Assuming 'id' is the primary key
+            $data_source = $jobopenData->data_source;
+
+            if ($data_source === "Import") {
+
+                $fontColor = 'grey';
+            } else {
+                $fontColor = 'black'; 
+            }
+
+
             $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
 
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'</a>';
 
-            $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['posting_title'].'</a>';
+            $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:'. $fontColor .'; text-decoration:none;">'.$value['posting_title'].'</a>';
 
             $qual = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['qual'].'</a>';
 
@@ -5419,7 +5929,7 @@ class JobOpenController extends Controller
             }
             else {
 
-                $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+                $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',\Crypt::encrypt($value['id'])).'">'.$value['associate_candidate_cnt'].'</a>';
 
                 $applicant_count = '<a title="Show Applicant Candidates" href="'.route('jobopen.applicant_candidates_get',$value['id']).'">'.$value['applicant_count'].'</a>';
             }
@@ -5591,11 +6101,11 @@ class JobOpenController extends Controller
             $action = '';
             $checkbox = '';
 
-            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
-            $action .= '<a title="Send Vacancy Details"  class="fa fa-send" href="'.route('jobs.sendvd',$value['id']).'" style="margin:3px;"></a>';
+            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',\Crypt::encrypt($value['id'])).'" style="margin:3px;"></a>';
+            $action .= '<a title="Send Vacancy Details"  class="fa fa-send" href="'.route('jobs.sendvd',\Crypt::encrypt($value['id'])).'" style="margin:3px;"></a>';
 
             if(isset($value['access']) && $value['access'] == 1) {
-                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobopen.edit',$value['id']).'" style="margin:3px;"></a>';
+                $action .= '<a title="Edit" class="fa fa-edit" href="'.route('jobopen.edit',\Crypt::encrypt($value['id'])).'" style="margin:3px;"></a>';
                 if($change_priority_perm) {
                     $status_view = \View::make('adminlte::partials.jobstatus',['data' => $value, 'name' => 'jobopen', 'display_name'=>'Job Open','job_priority' => $job_priority]);
                     $status = $status_view->render();
@@ -5621,16 +6131,26 @@ class JobOpenController extends Controller
                 $checkbox .= '';
             }
 
+            $jobopenData = JobOpen::find($value['id']);  // Assuming 'id' is the primary key
+            $data_source = $jobopenData->data_source;
+
+            if ($data_source === "Import") {
+
+                $fontColor = 'grey';
+            } else {
+                $fontColor = 'black'; 
+            }
+
             $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
             $company_name = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['display_name'].'</a>';
-            $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['posting_title'].'</a>';
+            $posting_title = '<a style="white-space: pre-wrap; word-wrap: break-word; color:'. $fontColor .'; text-decoration:none;">'.$value['posting_title'].'</a>';
             $qual = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['qual'].'</a>';
             
             if ($isClient) {
                 $associated_count = '<a title="Show Candidates Details" href="'.route('jobopen.candidates_details_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
                 $applicant_count = '<a title="Show Applicant Candidates" href="'.route('applicantjobopen.candidates_details_get',$value['id']).'">'.$value['applicant_count'].'</a>';
             } else {
-                $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+                $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',\Crypt::encrypt($value['id'])).'">'.$value['associate_candidate_cnt'].'</a>';
 
                 $applicant_count = '<a title="Show Applicant Candidates" href="'.route('jobopen.applicant_candidates_get',$value['id']).'">'.$value['applicant_count'].'</a>';
             }
@@ -5908,7 +6428,7 @@ class JobOpenController extends Controller
 
             $action = '';
 
-            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
+            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',\Crypt::encrypt($value['id'])).'" style="margin:3px;"></a>';
 
             $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
 
@@ -5918,7 +6438,7 @@ class JobOpenController extends Controller
 
             $qual = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['qual'].'</a>';
 
-            $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+            $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',\Crypt::encrypt($value['id'])).'">'.$value['associate_candidate_cnt'].'</a>';
             
             $data = array(++$j,$action,$managed_by,$company_name,$posting_title,$associated_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['updated_date'],$value['no_of_positions'],$qual,$value['coordinator_name'],$value['desired_candidate'],$value['priority']);
             $jobs[$i] = $data;
@@ -6044,7 +6564,7 @@ class JobOpenController extends Controller
 
             $action = '';
 
-            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
+            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',\Crypt::encrypt($value['id'])).'" style="margin:3px;"></a>';
 
             $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
 
@@ -6054,7 +6574,7 @@ class JobOpenController extends Controller
 
             $qual = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['qual'].'</a>';
 
-            $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+            $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',\Crypt::encrypt($value['id'])).'">'.$value['associate_candidate_cnt'].'</a>';
             
             $data = array(++$j,$action,$managed_by,$company_name,$posting_title,$associated_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['updated_date'],$value['no_of_positions'],$qual,$value['coordinator_name'],$value['desired_candidate'],$value['priority']);
             $jobs[$i] = $data;
@@ -6530,7 +7050,7 @@ class JobOpenController extends Controller
 
             $action = '';
 
-            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',$value['id']).'" style="margin:3px;"></a>';
+            $action .= '<a title="Show"  class="fa fa-circle" href="'.route('jobopen.show',\Crypt::encrypt($value['id'])).'" style="margin:3px;"></a>';
 
             $managed_by = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['am_name'].'</a>';
 
@@ -6540,7 +7060,7 @@ class JobOpenController extends Controller
 
             $qual = '<a style="white-space: pre-wrap; word-wrap: break-word; color:black; text-decoration:none;">'.$value['qual'].'</a>';
 
-            $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',$value['id']).'">'.$value['associate_candidate_cnt'].'</a>';
+            $associated_count = '<a title="Show Associated Candidates" href="'.route('jobopen.associated_candidates_get',\Crypt::encrypt($value['id'])).'">'.$value['associate_candidate_cnt'].'</a>';
             
             $data = array(++$j,$action,$managed_by,$company_name,$posting_title,$associated_count,$value['city'],$value['min_ctc'],$value['max_ctc'],$value['created_date'],$value['updated_date'],$value['no_of_positions'],$qual,$value['coordinator_name'],$value['desired_candidate'],$value['priority']);
             $jobs[$i] = $data;

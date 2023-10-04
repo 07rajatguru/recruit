@@ -81,12 +81,12 @@
             <tr>
                 <td>{{ ++$i }}</td>
                 <td>
-                    <a class="fa fa-circle" href="{{ route('ticket.show',$value['id']) }}" title="Show"></a>
-                    <a class="fa fa-edit" href="{{ route('ticket.edit',$value['id']) }}" title="Edit"></a>
+                    <a class="fa fa-circle" href="{{ route('ticket.show',\Crypt::encrypt($value['id'])) }}" title="Show"></a>
+                    <a class="fa fa-edit" href="{{ route('ticket.edit',\Crypt::encrypt($value['id'])) }}" title="Edit"></a>
 
                     @include('adminlte::partials.ticketstatus', ['data' => $value, 'name' => 'ticket'])
 
-                    <a class="fa fa-plus" href="{{ route('ticket.remarks',$value['id']) }}" title="Add Comment" target="_blank"></a>
+                    <a class="fa fa-plus" href="{{ route('ticket.remarks',\Crypt::encrypt($value['id'])) }}" title="Add Comment" target="_blank"></a>
                 </td>
 
                 <td>{{ $value['ticket_no'] }}</td>

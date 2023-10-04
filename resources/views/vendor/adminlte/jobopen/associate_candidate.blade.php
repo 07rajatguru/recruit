@@ -21,7 +21,7 @@
             </div>
 
             <div class="pull-right">
-                <a class="btn bg-blue" href="/jobs/{{$job_id}}">Back</a>
+                <a class="btn bg-blue" href="/jobs/{{\Crypt::encrypt( $job_id )}}">Back</a>
                 <a class="btn btn-info" onclick="associate_candidates({{ $job_id }});">Submit</a>
             </div>
         </div>
@@ -62,7 +62,7 @@
     <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="pull-right">
-                <a class="btn bg-blue" href="/jobs/{{$job_id}}">Back</a>
+            <a class="btn bg-blue" href="/jobs/{{\Crypt::encrypt( $job_id )}}">Back</a>
                 <a class="btn btn-info"  onclick="associate_candidates({{ $job_id }});">Submit</a>
             </div>  
         </div>

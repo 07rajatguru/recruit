@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Date;
 use App\JobOpenDoc;
 
+
 class CandidateBasicInfo extends Model
 {
     public $table = "candidate_basicinfo";

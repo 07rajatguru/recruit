@@ -39,11 +39,13 @@ class PermissionsController extends Controller
     }
 
     public function show($id) {
+        $id = \Crypt::decrypt($id);
 
     }
 
     public function edit($id) {
-        
+        $id = \Crypt::decrypt($id);
+
         $permission = Permission::find($id);
 
         $viewVariable = array();

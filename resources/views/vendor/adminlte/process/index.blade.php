@@ -56,11 +56,11 @@
                     <td>{{ $value['department'] }}</td>
                     
                     <td>
-                        <a class="fa fa-circle" title="show" href="{{ route('process.show',$value['id']) }}"></a>
+                        <a class="fa fa-circle" title="show" href="{{ route('process.show',\Crypt::encrypt($value['id'])) }}"></a>
 
                         @permission('process-manual-edit')
                             @if(isset($value['access']) && $value['access']==1)
-                                <a class="fa fa-edit" title="Edit" href="{{route('process.edit',$value['id']) }}"></a>
+                                <a class="fa fa-edit" title="Edit" href="{{route('process.edit',\Crypt::encrypt($value['id'])) }}"></a>
                             @endif
                         @endpermission
 

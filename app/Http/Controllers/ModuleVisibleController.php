@@ -46,6 +46,8 @@ class ModuleVisibleController extends Controller
 
     public function edit($id) {
 
+        $id = \Crypt::decrypt($id);
+
         $users = User::getAllUsers();
         $modules = Module::getAllModulesName();
 

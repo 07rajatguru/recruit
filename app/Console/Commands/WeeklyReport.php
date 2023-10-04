@@ -13,6 +13,7 @@ use App\UsersLog;
 
 class WeeklyReport extends Command
 {
+    
     /**
      * The name and signature of the console command.
      *
@@ -25,6 +26,7 @@ class WeeklyReport extends Command
      *
      * @var string
      */
+
     protected $description = 'Command to Sent Weekly Report';
 
     /**

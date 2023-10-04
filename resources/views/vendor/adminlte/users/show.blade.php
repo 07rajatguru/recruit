@@ -13,6 +13,7 @@
                 <h2>Users Details</h2>
             </div>
            <div class="pull-right">
+                @include('adminlte::users.UserOldData', ['old_data' => $user_old_data, 'display_name'=>'User Old Data'])
                 <a class="btn btn-primary" href="{{ route('users.index') }}">Back</a>
             </div>
         </div>
@@ -69,4 +70,15 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('customscripts')
+    <script type="text/javascript">
+        jQuery(document).ready(function(){
+            
+            jQuery('#user_old_data_table').DataTable({
+                responsive: true,
+            });
+        });
+    </script>
 @endsection

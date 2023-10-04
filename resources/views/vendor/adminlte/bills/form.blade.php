@@ -321,17 +321,17 @@
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group">
                             <strong>Candidate Unedited Resume : <span class = "required_fields">*</span> [Allow only .doc, .docx, .pdf extension files.]</strong>
-                            <input type="file" name="unedited_resume" id="unedited_resume" class="form-control" tabindex="27">
+                            <input type="file" name="unedited_resume" id="unedited_resume" class="form-control" tabindex="27" accept=".pdf,.jpg,.jpeg,.png,.gif,.xls,.xlsx,.doc,.docx,.ppt,.pptx,.txt" multiple class="form-control" onchange="FormValidation.validateFile(this)"/>
                         </div>
 
                         <div class="form-group">
                             <strong>Offer Letter : [Allow only .doc, .docx, .pdf extension files.]</strong>
-                            <input type="file" name="offer_letter" id="offer_letter" class="form-control" tabindex="28">
+                            <input type="file" name="offer_letter" id="offer_letter" class="form-control" tabindex="28" accept=".pdf,.jpg,.jpeg,.png,.gif,.xls,.xlsx,.doc,.docx,.ppt,.pptx,.txt" multiple class="form-control" onchange="FormValidation.validateFile(this)"/>
                         </div>
 
                         <div class="form-group">
                             <strong>Other Documents :</strong>
-                            <input type="file" name="upload_documents[]" id="upload_documents" class="form-control" tabindex="29" multiple>
+                            <input type="file" name="upload_documents[]" id="upload_documents" class="form-control" tabindex="29" accept=".pdf,.jpg,.jpeg,.png,.gif,.xls,.xlsx,.doc,.docx,.ppt,.pptx,.txt" multiple class="form-control" onchange="FormValidation.validateFile(this)"/>
                         </div>
                     </div>
                 </div>
@@ -387,6 +387,7 @@
 {!! Form::close() !!}
 
 @section('customscripts')
+<script src="{{ asset('js/validation_file.js') }}"></script>
     <script type="text/javascript">
         jQuery(document).ready(function () {
 

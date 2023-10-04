@@ -809,15 +809,9 @@ class WorkPlanningController extends Controller
         // Add Listing Rows
         $work_planning_id = $work_planning->id;
         
-        $task = array();
-        $task = Input::get('task');
-
-        $projected_time = array();
-        $projected_time = Input::get('projected_time');
-
-        $remarks = array();
-        $remarks = Input::get('remarks');
-
+        $task = request('task');
+        $projected_time = request('projected_time');
+        $remarks = request('remarks');
         // Calculate Total Hours
         $projected_time_array = array();
         $actual_time_array = array();
@@ -861,23 +855,23 @@ class WorkPlanningController extends Controller
         // Get Vibhuti gmail id
         $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
 
-        if(isset($report_res->remail) && $report_res->remail != '') {
-            
+        if(isset($report_res->remail) && $report_res->remail != '') {  
             $report_email = $report_res->remail;
-            $to_email = $report_email;
-            $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
+            // $to_email = $report_email;
+            // $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
         }
         else {
-            
             $report_email = '';
-            $to_email = $superadminemail;
-            $cc_users_array = array($hremail,$vibhuti_gmail_id);
+            // $to_email = $superadminemail;
+            // $cc_users_array = array($hremail,$vibhuti_gmail_id);
         }
+        $user_details = User::getAllDetailsByUserID($user_id);
+        $to_email = $user_details->email;
 
         $module = "Work Planning";
         $sender_name = $user_id;
         $to = $to_email;
-        $cc = implode(",",$cc_users_array);
+        $cc = '';//implode(",",$cc_users_array);
 
         $date = date('d/m/Y');
 
@@ -892,7 +886,7 @@ class WorkPlanningController extends Controller
 
             if($report_delay == 'There is delay of Sending Report' || $report_delay == 'Others') {
 
-                if($report_email == '') {
+                if(isset($report_email) && $report_email == '') {
                     $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
                 }
                 else {
@@ -921,6 +915,8 @@ class WorkPlanningController extends Controller
     }
 
     public function show($id) {
+        
+        $id = \Crypt::decrypt($id);
         
         $loggedin_user_id = \Auth::user()->id;
         $wp_id = $id;
@@ -1116,6 +1112,7 @@ class WorkPlanningController extends Controller
 
     public function edit($id) {
 
+        $id = \Crypt::decrypt($id);
         $action = 'edit';
 
         $work_planning_res = WorkPlanning::find($id);
@@ -1235,22 +1232,18 @@ class WorkPlanningController extends Controller
         $work_planning->save();
 
         // Add Listing Rows
-        $task = array();
-        $task = Input::get('task');
 
-        $projected_time = array();
-        $projected_time = Input::get('projected_time');
+        $task = request('task');
 
-        $actual_time = array();
-        $actual_time = Input::get('actual_time');
+        $projected_time = request('projected_time');
+        
+        $remarks = request('remarks');
+     
+        $actual_time = request('actual_time');
 
-        $remarks = array();
-        $remarks = Input::get('remarks');
+        $rm_hr_remarks = request('rm_hr_remarks');
 
-        $rm_hr_remarks = array();
-        $rm_hr_remarks = Input::get('rm_hr_remarks');
-
-        $row_cnt = Input::get('row_cnt');
+        $row_cnt = request('row_cnt');
 
         // Get Added By ID
         $added_by_id = $work_planning->added_by;
@@ -1322,22 +1315,21 @@ class WorkPlanningController extends Controller
                 $vibhuti_gmail_id = getenv('VIBHUTI_GMAIL_ID');
 
                 if(isset($report_res->remail) && $report_res->remail != '') {
-                    
                     $report_email = $report_res->remail;
-                    $to_email = $report_email;
-                    $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
-                }
-                else {
-                    
+                    // $to_email = $report_email;
+                    // $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
+                } else {
                     $report_email = '';
-                    $to_email = $superadminemail;
-                    $cc_users_array = array($hremail,$vibhuti_gmail_id);
+                    // $to_email = $superadminemail;
+                    // $cc_users_array = array($hremail,$vibhuti_gmail_id);
                 }
+                $user_details = User::getAllDetailsByUserID($user_id);
+                $to_email = $user_details->email;
 
                 $module = "Work Planning";
                 $sender_name = $user_id;
                 $to = $to_email;
-                $cc = implode(",",$cc_users_array);
+                $cc = '';//implode(",",$cc_users_array);
 
                 $date = date('d/m/Y',strtotime($work_planning['added_date']));
 
@@ -1601,6 +1593,8 @@ class WorkPlanningController extends Controller
         $wp_id = $_POST['wp_id'];
         $reply = $_POST['check'];
 
+        $wp_id = \Crypt::decrypt($wp_id);
+
         $user_id = \Auth::user()->id;
         $manager_user_id = env('MANAGERUSERID');
 
@@ -1675,33 +1669,41 @@ class WorkPlanningController extends Controller
         //3rd Condition Check Work From Home
         //Get previous WFH requests for set attendance from 3rd date
         $work_from_home_res = WorkFromHome::getApprovedWFHRequests($added_by_id,$month,$year);
-
         if(isset($work_from_home_res) && sizeof($work_from_home_res) > 0 && $work_type == 'WFH') {
-
-            $dates_string = '';
+            $dates_string = ''; $no_of_days = 0;
             foreach ($work_from_home_res as $key => $value) {
-                        
-                if($dates_string == '') {
-                    $dates_string = $value['selected_dates'];
-                }
-                else {
-                    $dates_string .= "," . $value['selected_dates'];
+                // if($dates_string == '') {
+                //     $dates_string = $value['selected_dates'];
+                // } else {
+                //     $dates_string .= "," . $value['selected_dates'];
+                // }
+                $dates_array = explode(",", $value['selected_dates']);
+                $dates_array = array_unique($dates_array);
+                // For get no of days by no of dates (Applied 3 days in one entry then 1.5(no_of_days)/3(total_dates))
+                $days_count = $value['no_of_days'] / sizeof($dates_array);
+                if(isset($dates_array) && sizeof($dates_array) > 0) {
+                    foreach ($dates_array as $key1 => $value1) {
+                        $no_of_days = $no_of_days + $days_count;
+                        if ($no_of_days > 2) {
+                            $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($value1,$added_by_id);
+                            if(isset($get_work_planning_res) && $get_work_planning_res != '') {
+                                $get_wp_id = $get_work_planning_res->id;
+
+                                \DB::statement("UPDATE `work_planning` SET `attendance` = 'HD' WHERE `id` = $get_wp_id;");
+                            }
+                        }
+                    }
                 }
             }
 
-            $dates_array = explode(",", $dates_string);
+            /*$dates_array = explode(",", $dates_string);
             $dates_array = array_unique($dates_array);
-
-            if(isset($dates_array) && sizeof($dates_array) > 2) {
-
-                $i = 0;
+            if((isset($dates_array) && sizeof($dates_array) > 2) && $no_of_days > 2) {
                 foreach ($dates_array as $key1 => $value1) {
-
                     $get_work_planning_res = WorkPlanning::getWorkPlanningByAddedDateAndUserID($value1,$added_by_id);
-
                     if(isset($get_work_planning_res) && $get_work_planning_res != '') {
-
                         $get_wp_id = $get_work_planning_res->id;
+
                         $get_total_Actual_time = $get_work_planning_res->total_actual_time;
                         $day = date("l",strtotime($get_work_planning_res->added_date));
                             
@@ -1747,7 +1749,7 @@ class WorkPlanningController extends Controller
                     }
                     $i++;
                 }
-            }
+            }*/
         }
 
         //4th Condition Check Delay Report
@@ -1894,6 +1896,8 @@ class WorkPlanningController extends Controller
         $rm_hr_remarks = $_POST['rm_hr_remarks'];
         $action = $_POST['action'];
 
+        $wp_id = \Crypt::decrypt($wp_id);
+
         \DB::statement("UPDATE `work_planning_list` SET `rm_hr_remarks` = '$rm_hr_remarks' WHERE `id` = '$task_id'");
 
         if(isset($action) && $action == 'Add') {
@@ -1909,6 +1913,7 @@ class WorkPlanningController extends Controller
     public function sendRemarksEmail() {
 
         $wp_id = $_POST['wp_id'];
+        $wp_id = \Crypt::decrypt($wp_id);
 
         // Send Email Notification
 
@@ -2084,6 +2089,7 @@ class WorkPlanningController extends Controller
         $user_id = $input['user_id'];
         $wp_id = $input['wp_id'];
         $content = $input['content'];
+        $wp_id = \Crypt::decrypt($wp_id);
 
         $user =  \Auth::user();
         $user_name = $user->name;
@@ -2114,7 +2120,7 @@ class WorkPlanningController extends Controller
 
         event(new NotificationEvent($module_id, $module, $message, $link, $user_arr));
 
-        return redirect()->route('workplanning.show',[$wp_id])->with('success','Remarks Added Successfully.');
+        return redirect()->route('workplanning.show',[\Crypt::encrypt($wp_id)])->with('success','Remarks Added Successfully.');
     }
 
     public function updatePost(Request $request, $wp_id,$post_id) {
@@ -2122,13 +2128,14 @@ class WorkPlanningController extends Controller
         $input = $request->all();
         $user_id = $input['user_id'];
         $wp_id = $input['wp_id'];
+        $wp_id = \Crypt::decrypt($wp_id);
 
         $response = WorkPlanningPost::updatePost($post_id,$input["content"]);
         $returnValue["success"] = true;
         $returnValue["message"] = "Remarks Updated";
         $returnValue["id"] = $post_id;
 
-       return redirect()->route('workplanning.show',[$wp_id])->with('success','Remarks Updated Successfully.');
+       return redirect()->route('workplanning.show',[\Crypt::encrypt($wp_id)])->with('success','Remarks Updated Successfully.');
     }
 
     public function destroyPost($id) {

@@ -1,5 +1,4 @@
 <?php
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -12,9 +11,12 @@
 */
 
 
-Route::get('/', function () {
-    return view('auth.login');
-});
+// Route::get('/', function () {
+//     return view('auth.login');
+// });
+
+Route::view('/', 'auth.login');
+
 
 Route::get('/addpercentagecharged',  [
     'uses' => 'BillsController@addPercentageCharged'
@@ -240,6 +242,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'HolidaysController@selectedHolidays'
     ]);
 
+    Route::post('/holidays/updatedholidays',[
+        'as' => 'holidays.updatedholidays',
+        'uses' => 'HolidaysController@updateHolidays'
+    ]);
+
     Route::get('work-from-home-request/{id}/{month}/{year}', [
         'as' => 'workfromhome.request',
         'uses' => 'WorkFromHomeController@getAllRequests',
@@ -255,6 +262,16 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard/opentoalljob',[
         'as' => 'open.toall',
         'uses' => 'HomeController@openToAllJob'
+    ]);
+
+    Route::get('/dashboard/tracking-log-data-ajax',[
+        'as' => 'dashboard.trakingLogData',
+        'uses' => 'HomeController@trackingLogDataAjax'
+    ]);
+
+    Route::get('/dashboard/tracking-alllog',[
+        'as' => 'dashboard.trakingAllLog',
+        'uses' => 'HomeController@trackingAllLogs'
     ]);
 
     Route::any('dashboard/monthwise',[
@@ -355,6 +372,10 @@ Route::group(['middleware' => ['auth']], function () {
 
     Route::any('/users-attendance/{department_nm}/{month}/{year}', array (
         'uses' => 'HomeController@usersAttendance'
+    ));
+
+    Route::any('/users-attendance-new/{department_nm}/{month}/{year}', array (
+        'uses' => 'HomeController@usersAttendanceNew'
     ));
 
     Route::any('/my-attendance', array (
@@ -544,6 +565,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-lead|display-user-wise-lead']
     ]);
 
+    Route::get('lead/alls',[
+        'as' => 'lead.alls',
+        'uses' => 'LeadController@getAllLeads',
+        'middleware' => ['permission:display-lead|display-user-wise-lead']
+    ]);
+
     Route::get('lead-list/{service}', [
         'as' => 'lead.list',
         'uses' => 'LeadController@getAllLeadsByService',
@@ -572,6 +599,29 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'lead.store',
         'uses' => 'LeadController@store',
         'middleware' => ['permission:lead-add'],
+    ]);
+
+    Route::get('lead/{id}/remarks', [
+        'as' => 'lead.remarks',
+        'uses' => 'LeadController@remarks'
+    ]);
+
+    Route::post('lead/export',[
+        'as' => 'lead.export',
+        'uses' => 'LeadController@exportlead',
+        'middleware' => ['permission:display-lead|display-user-wise-lead']
+    ]);
+
+    Route::get('lead/importExport',[ 
+        'as' => 'lead.import',
+        'uses' => 'LeadController@import',
+        'middleware' => ['permission:display-lead|display-user-wise-lead']
+    ]);
+
+    Route::post('lead/importExcel',[
+        'as' => 'lead.importExcel',
+        'uses' => 'LeadController@importExcel',
+        'middleware' => ['permission:display-lead|display-user-wise-lead']
     ]);
 
     Route::get('lead/{id}/show', [
@@ -616,6 +666,51 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:cancel-lead'],
     ]);
 
+
+     // Lead Remarks Section Start
+
+     Route::get('lead/{id}/remarks', [
+        'as' => 'lead.remarks',
+        'uses' => 'LeadController@leadremarks'
+    ]);
+
+    Route::post('lead/{lead_id}/post',[
+        'as'=>'lead.post.write',
+        'uses'=>'LeadController@leadwritePost'
+    ]);
+
+    Route::post('lead/update/{lead_id}/{leadpost_id}',[
+        'as'=>'lead.post.update',
+        'uses'=>'LeadController@updateleadRemarks'
+    ]);
+
+    Route::post('lead/leadpost/delete/{id}',[
+        'as'=>'lead.reviewdestroy',
+        'uses'=>'LeadController@leadpostDestroy'
+    ]);
+
+    Route::post('lead/leadpost/{leadpost_id}',[
+        'as'=>'lead.comment.write',
+        'uses'=>'LeadController@leadwriteComment'
+    ]);
+    
+    Route::post('lead/comment/update',[
+        'as'=>'lead.comment.update',
+        'uses'=>'LeadController@leadupdateComment'
+    ]);
+
+    Route::post('lead/comment/delete/{id}', [
+        'as' => 'lead.comment.delete',
+        'uses' => 'LeadController@leadcommentDestroy'
+    ]);
+    
+
+
+
+    // Lead Remarks Section End
+
+
+
     //User Profile
     
     Route::get('users/editprofile/{id}',[
@@ -651,6 +746,21 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:user-profile']
     ]);
 
+    Route::get('users/importExport/{id}',[ 
+        'as' => 'users.importExport',
+        'uses' => 'UserController@importExport',
+    ]);
+
+    Route::post('users/importExcel',[
+        'as' => 'users.importExcel',
+        'uses' => 'UserController@importExcel',
+    ]);
+
+    Route::post('users/export',[
+        'as' => 'users.export',
+        'uses' => 'UserController@exportUser',
+    ]);
+
     Route::post('usersattachments/upload/{id}',[
         'as' => 'usersattachments.upload',
         'uses' => 'UserController@Upload'
@@ -659,7 +769,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('users/myprofile/signature/{id}',[
         'as' => 'users.signature',
         'uses' => 'UserController@addSignature',
-        'middleware' => ['permission:user-profile']
     ]);
 
     Route::post('users/signature/{id}',[
@@ -1076,7 +1185,9 @@ Route::group(['middleware' => ['auth']], function () {
         ]);
     });
 
+
     // Admin > Candidate Source
+    
     Route::get('candidateSource', [
         'as' => 'candidateSource.index',
         'uses' => 'CandidateSourceController@index',
@@ -1233,6 +1344,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-client|display-account-manager-wise-client']
     ]);
 
+    Route::get('client/alls', [
+        'as' => 'client.alls',
+        'uses' => 'ClientController@getClients',
+        'middleware' => ['permission:display-client|display-account-manager-wise-client']
+    ]);
+
     Route::get('client-search/all', [
         'as' => 'clientsearch.all',
         'uses' => 'ClientController@getAllClientsDetailsBySearch',
@@ -1287,7 +1404,14 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:client-add']
     ]);
 
+ 
+    Route::post('client/export',[
+        'as' => 'client.export',
+        'uses' => 'ClientController@exportClient',
+    ]);
+
     Route::get('client/importExport', 'ClientController@importExport');
+    // Route::get('client/importExport', 'ClientController@importExport');
     Route::post('client/importExcel', 'ClientController@importExcel');
 
     Route::get('client/{id}', [
@@ -1300,6 +1424,11 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'client.edit',
         'uses' => 'ClientController@edit',
         'middleware' => ['permission:client-edit']
+    ]);
+
+    Route::post('getUsersByClientID', [
+        'as' => 'getusers.byClientid',
+        'uses' => 'ClientController@getUsersByClientID',
     ]);
 
     // Client Remarks Section Start
@@ -1381,6 +1510,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-client|display-account-manager-wise-client']
     ]);
 
+    Route::match(['get', 'post'], 'download-hiring-report', [
+        'as' => 'client.downloadhiringreport',
+        'uses' => 'ClientController@downloadHiringReport',
+        // 'middleware' => ['permission:display-client|display-account-manager-wise-client']
+    ]);
+
     // Candidate
     Route::get('candidate', [
         'as' => 'candidate.index',
@@ -1403,6 +1538,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('candidate/all', [
         'as' => 'candidate.all',
         'uses' => 'CandidateController@getAllCandidates',
+        'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
+    ]);
+
+    Route::get('candidate/alls', [
+        'as' => 'candidate.alls',
+        'uses' => 'CandidateController@getCandidates',
         'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
     ]);
 
@@ -1492,9 +1633,30 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'CandidateController@candidatejoinBySelectedMonth',
         'middleware' => ['permission:display-candidates|display-candidates-by-loggedin-user']
     ]);
+    Route::post('candidate/importExcel',[
+        'as' => 'candidate.importExcel',
+        'uses' => 'candidateController@importExcel',
+        'middleware' => ['permission:candidate-add']
+    ]);
 
-    Route::get('candidate/importExport', 'CandidateController@importExport');
-    Route::post('candidate/importExcel', 'CandidateController@importExcel');
+    Route::post('candidate/export',[
+        'as' => 'candidate.export',
+        'uses' => 'CandidateController@exportCandidate',
+        'middleware' => ['permission:candidate-add']
+    ]);
+
+    Route::get('candidate/import',[
+        'as' => 'candidate.import',
+        'uses' =>  'candidateController@import',
+        'middleware' => ['permission:candidate-add']
+    ]);
+
+    Route::get('candidate-send-vd/{candidate_id}', [
+        'as' => 'candidate.sendvd',
+        'uses' => 'CandidateController@sendVacancyDetailsEmail',
+        'middleware' => ['permission:display-candidate|display-candidate-by-loggedin-user']
+    ]);
+
     Route::get('candidate/fullname', 'CandidateController@fullname');
     Route::get('candidatejoin/salary', 'CandidateController@candidatesalary');
 
@@ -1599,6 +1761,12 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('jobs/all', [
         'as' => 'jobopen.all',
         'uses' => 'JobOpenController@getAllJobsDetails',
+        'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
+    ]);
+    
+    Route::get('jobs/alls', [
+        'as' => 'jobopen.alls',
+        'uses' => 'JobOpenController@getAllJobs',
         'middleware' => ['permission:display-jobs|display-jobs-by-loggedin-user']
     ]);
 
@@ -1929,6 +2097,11 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'JobOpenController@shortlistedCandidates'
     ]);
 
+    Route::post('/jobs/duplicatedcandidate',[
+        'as' => 'jobs.duplicatedcandidate',
+        'uses' => 'JobOpenController@duplicatedCandidates'
+    ]);
+
     Route::get('getUsersByJobID', [
         'as' => 'getusers.byjobid',
         'uses' => 'JobOpenController@getUsersByJobID',
@@ -2058,6 +2231,19 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'InterviewController@multipleInterviewScheduleMail',
         'middleware' => ['permission:send-consolidated-schedule']
     ]);
+
+    Route::any('interview-search', [
+        'as' => 'interview.mastersearch',
+        'uses' => 'InterviewController@masterSearch',
+        'middleware' => ['permission:display-interview|display-interviews-by-loggedin-user']
+    ]);
+
+    Route::get('interview-search/all', [
+        'as' => 'interviewsearch.all',
+        'uses' => 'InterviewController@getAllInterviewsDetailsBySearch',
+        'middleware' => ['permission:display-interview|display-account-manager-wise-client']
+    ]);
+
 
     // Bills Module
     Route::get('forecasting/create', [
@@ -2395,6 +2581,106 @@ Route::group(['middleware' => ['auth']], function () {
     ]);
 
     // To do's Routes End
+
+    // Admin > work planning master
+
+       
+    Route::get('work-planning-master', [
+        'as' => 'workplanningmaster.index',
+        'uses' => 'WorkPlanningMasterController@index',
+        'middleware' => ['permission:workplanningmaster-index']
+    ]);
+
+    Route::get('work-planning-master/create', [
+        'as' => 'workplanningmaster.create',
+        'uses' => 'WorkPlanningMasterController@create',
+        'middleware' => ['permission:workplanningmaster-index']
+    ]);
+    
+    Route::get('work-planning-master/form_new', [
+        'as' => 'workplanningmaster.form_new',
+        'uses' => 'WorkPlanningMasterController@createSubtask',
+        'middleware' => ['permission:workplanningmaster-index']
+    ]);
+
+    Route::post('work-planning-master/form_new', [
+        'as' => 'workplanningmaster.storetask',
+        'uses' => 'WorkPlanningMasterController@storetask',
+        'middleware' => ['permission:workplanningmaster-index']
+    ]);
+
+    Route::post('work-planning-master/create', [
+        'as' => 'workplanningmaster.store',
+        'uses' => 'WorkPlanningMasterController@store',
+        'middleware' => ['permission:workplanningmaster-index']
+    ]);
+
+    Route::get('work-planning-master/all', [
+        'as' => 'workplanningmaster.all',
+        'uses' => 'WorkPlanningMasterController@getAllWorkplanningMasterdetails',
+        'middleware' => ['permission:workplanningmaster-index']
+    ]);
+
+    Route::get('work-planning-master/{id}', [
+        'as' => 'workplanningmaster.show',
+        'uses' => 'WorkPlanningMasterController@show',
+        'middleware' => ['permission:workplanningmaster-index']
+    ]);
+
+    // Route::get('work-planning-master/task/{id}', [
+    //     'as' => 'workplanningmaster.taskshow',
+    //     'uses' => 'WorkPlanningMasterController@taskshow',
+    //     // 'middleware' => ['permission:workplanningmaster-index']
+    // ]);
+
+    Route::get('work-planning-master/{id}/edit', [
+        'as' => 'workplanningmaster.edit',
+        'uses' => 'WorkPlanningMasterController@edit',
+        'middleware' => ['permission:workplanningmaster-index']
+    ]);
+
+    Route::get('work-planning-master/task/{id}/editsubtask', [
+        'as' => 'workplanningmaster.editsubtask',
+        'uses' => 'WorkPlanningMasterController@editsubtask',
+        'middleware' => ['permission:workplanningmaster-index']
+    ]);
+
+    Route::patch('work-planning-master/{id}', [
+        'as' => 'workplanningmaster.update',
+        'uses' => 'WorkPlanningMasterController@update',
+        'middleware' => ['permission:workplanningmaster-index']
+    ]);
+
+    Route::patch('work-planning-master/task/{id}updatesubtask', [
+        'as' => 'workplanningmaster.updatesubtask',
+        'uses' => 'WorkPlanningMasterController@updatesubtask',
+        'middleware' => ['permission:workplanningmaster-index']
+    ]);
+
+    Route::delete('work-planning-master/{id}', [
+        'as' => 'workplanningmaster.destroy',
+        'uses' => 'WorkPlanningMasterController@Destroy',
+        'middleware' => ['permission:workplanningmaster-index']
+    ]);
+
+    Route::delete('work-planning-master/{id}', [
+        'as' => 'workplanningmasterSubtask.destroy',
+        'uses' => 'WorkPlanningMasterController@DestroySubTask',
+    ]);
+    
+    Route::delete('work-planning-master/task/{id}', [
+        'as' => 'workplanningmaster1.destroy',
+        'uses' => 'WorkPlanningMasterController@Destroy1',
+        'middleware' => ['permission:workplanningmaster-index']
+    ]);
+
+    Route::get('getUsersByWorkPlanningMasterID', [
+        'as' => 'getusers.byworkplanningmasterid',
+        'uses' => 'WorkPlanningMasterController@getUsersByWorkPlanningMasterID',
+        'middleware' => ['permission:workplanningmaster-index']
+    ]);
+
+    //End work planning master
 
     // Admin > Company
 
@@ -2773,11 +3059,12 @@ Route::group(['middleware' => ['auth']], function () {
         'middleware' => ['permission:display-user-report']
     ]);
 
-    Route::any('daily-report',[
+    Route::any('daily-report/{selected_user_id?}',[
         'as' => 'report.dailyreportindex',
         'uses' => 'ReportController@dailyreportIndex',
         'middleware' => ['permission:display-daily-report-of-loggedin-user']
     ]);
+    
 
     Route::any('weekly-report',[
         'as' => 'report.weeklyreportindex',
@@ -3463,6 +3750,18 @@ Route::group(['middleware' => ['auth']], function () {
         'uses' => 'NewRoleController@userWiseModuleAjax'
     ]);
 
+    Route::get('user-role/{id}/clone', [
+        'as' => 'userrole.clone',
+        'uses' => 'NewRoleController@newRoleClone',
+        'middleware' => ['permission:contactsphere-to-lead'],
+    ]);
+    
+    Route::post('user-role/{id}', [
+        'as' => 'userrole.clonestore',
+        'uses' => 'NewRoleController@newRolecloneStore',
+        'middleware' => ['permission:contactsphere-to-lead'],
+    ]);
+
     // User Bench Mark Routes
 
     Route::get('user-bench-mark',[
@@ -3595,37 +3894,37 @@ Route::group(['middleware' => ['auth']], function () {
     Route::any('work-planning',[
         'as' => 'workplanning.index',
         'uses' => 'WorkPlanningController@index',
-        'middleware' => ['permission:display-work-planning|display-user-wise-work-planning|work-planning-add|work-planning-edit|work-planning-delete']
+        // 'middleware' => ['permission:display-work-planning|display-user-wise-work-planning|work-planning-add|work-planning-edit|work-planning-delete']
     ]);
 
     Route::any('work-planning/{status}/{month}/{year}', [
         'as' => 'workplanning.status',
         'uses' => 'WorkPlanningController@getWorkPlanningDetailsByStatus',
-        'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
+        // 'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
     ]);
 
     Route::any('team-work-planning',[
         'as' => 'teamworkplanning.index',
         'uses' => 'WorkPlanningController@teamIndex',
-        'middleware' => ['permission:display-work-planning|display-user-wise-work-planning|work-planning-add|work-planning-edit|work-planning-delete']
+        // 'middleware' => ['permission:display-work-planning|display-user-wise-work-planning|work-planning-add|work-planning-edit|work-planning-delete']
     ]);
 
     Route::any('team-work-planning/{status}/{month}/{year}', [
         'as' => 'teamworkplanning.status',
         'uses' => 'WorkPlanningController@getTeamWorkPlanningDetailsByStatus',
-        'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
+        // 'middleware' => ['permission:display-work-planning|display-user-wise-work-planning']
     ]);
 
     Route::get('work-planning/add',[
         'as' => 'workplanning.create',
         'uses' => 'WorkPlanningController@create',
-        'middleware' => ['permission:work-planning-add']
+        // 'middleware' => ['permission:work-planning-add']
     ]);
 
     Route::post('work-planning/add',[
         'as' => 'workplanning.store',
         'uses' => 'WorkPlanningController@store',
-        'middleware' => ['permission:work-planning-add']
+        // 'middleware' => ['permission:work-planning-add']
     ]);
 
     Route::get('work-planning/{id}/show', [
@@ -3688,6 +3987,8 @@ Route::group(['middleware' => ['auth']], function () {
         'as' => 'workplanning.rejection',
         'uses' => 'WorkPlanningController@workPlanningRejection'
     ]);
+
+    Route::get('/getSubData', 'WorkPlanningController@getSubData')->name('getSubData');
 
     // Work Planning Comment Section
 

@@ -8,6 +8,14 @@ class WorkPlanningList extends Model
 {
     public $table = "work_planning_list";
 
+    protected $fillable = [
+    'task_name',
+    'sub_task',
+    'projected_time',
+    'remarks',
+    'added_by',
+];
+
     public static function getWorkPlanningList($work_planning_id) {
 
         $query = WorkPlanningList::query();
@@ -22,7 +30,8 @@ class WorkPlanningList extends Model
 
             $work_planning_list[$i]['work_planning_list_id'] = $v->id;
             $work_planning_list[$i]['work_planning_id'] = $v->work_planning_id;
-            $work_planning_list[$i]['task'] = $v->task;
+            $work_planning_list[$i]['task_name'] = $v->task_name;
+            $work_planning_list[$i]['sub_task'] = $v->sub_task;
             $work_planning_list[$i]['projected_time'] = $v->projected_time;
             $work_planning_list[$i]['actual_time'] = $v->actual_time;
             $work_planning_list[$i]['remarks'] = $v->remarks;
@@ -46,7 +55,8 @@ class WorkPlanningList extends Model
         if(isset($response) && $response != '') {
 
             $work_planning_task['work_planning_id'] = $response->work_planning_id;
-            $work_planning_task['task'] = $response->task;
+            $work_planning_task['task_name'] = $response->task_name;
+            $work_planning_task['sub_task'] = $response->sub_task;
             $work_planning_task['projected_time'] = $response->projected_time;
             $work_planning_task['actual_time'] = $response->actual_time;
             $work_planning_task['remarks'] = strip_tags($response->remarks);

@@ -44,6 +44,7 @@
             <th><center>Offer Acceptance <br/> Ratio</center></th>
             <th><center>Joining <br/> Ratio</center></th>
             <th><center>After Joining <br/> Success Ratio</center></th>
+            <th><center>Applicable <br/> Date</center></th>
             <th width="10%">Action</th>
         </tr>
         </thead>
@@ -64,9 +65,10 @@
                     <td><center>{{ $value['offer_acceptance_ratio'] }}</center></td>
                     <td><center>{{ $value['joining_ratio'] }}</center></td>
                     <td><center>{{ $value['after_joining_success_ratio'] }}</center></td>
+                    <td><center>{{ $value['applicable_date'] }}</center></td>
                    
                     <td>
-                        <a class = "fa fa-edit" title = "Edit" href="{{ route('rolewisebenchmark.edit',$value['id']) }}"></a>
+                        <a class = "fa fa-edit" title = "Edit" href="{{ route('rolewisebenchmark.edit',\Crypt::encrypt($value['id'])) }}"></a>
 
                         @permission(('user-benchmark-delete'))
                             @include('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'rolewisebenchmark','display_name'=>'Benchmark'])

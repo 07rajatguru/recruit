@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Crypt;
 use App\WorkFromHome;
 use App\Events\NotificationMail;
 use App\User;
@@ -261,7 +262,7 @@ class WorkFromHomeController extends Controller
         else {
         
             $to_email = $report_email;
-            $cc_users_array = array($superadminemail,$hremail,$vibhuti_gmail_id);
+            $cc_users_array = array($superadminemail, $hremail, $vibhuti_gmail_id, 'rajat.e2h@outlook.com');
         }
 
         $module = "Work From Home Request";
@@ -291,6 +292,8 @@ class WorkFromHomeController extends Controller
 
     public function show($id) {
         
+        $id = Crypt::decrypt($id);
+
         $loggedin_user_id = \Auth::user()->id;
         $work_from_home_id = $id;
 
@@ -377,6 +380,8 @@ class WorkFromHomeController extends Controller
     }
 
     public function edit($id) {
+
+        $id = Crypt::decrypt($id);
 
         $action = 'edit';
 

@@ -77,16 +77,17 @@
 <table class="table table-striped table-bordered nowrap" cellspacing="0" width="100%" id="work_planning_table">
     <thead>
         <tr>
-	       <th width="5%">No</th>
+           <th width="5%">No</th>
            <th width="8%">Action</th>
            <th>Date</th>
            <th>Username</th>
            <th>Work Location</th>
            <th>Logged-in Time</th>
-	       <th>Logged-out Time</th>
+           <th>Logged-out Time</th>
            <th>Work Planning Time</th>
            <th>Status Time</th>
-	    </tr>
+           <th>Working Hours</th>
+        </tr>
     </thead>
     <tbody>
         <?php $i=0; ?>
@@ -135,6 +136,7 @@
                     $holiday_data = App\Holidays::getHolidayByDateAndID($added_date,$value['added_by_id'],'');
 
                     $half_day_leave_data = App\UserLeave::getLeaveByDateAndID($added_date,$value['added_by_id'],'1','Half Day');
+
                     $leave_data = App\UserLeave::getLeaveByDateAndID($added_date,$value['added_by_id'],'1','Full Day');
                     $unapproved_leave_data = App\UserLeave::getLeaveByDateAndID($added_date,$value['added_by_id'],'2','Full Day');
 
@@ -156,10 +158,10 @@
 
                         <td>{{ ++$i }}</td>
                         <td>
-                            <a class="fa fa-circle" href="{{ route('workplanning.show',$value['id']) }}" title="Show"></a>
+                            <a class="fa fa-circle" href="{{ route('workplanning.show', \Crypt::encrypt($value['id'])) }}" title="Show"></a>
 
                             @if(date('Y-m-d') <= $edit_date_valid)
-                                <a class="fa fa-edit" href="{{ route('workplanning.edit',$value['id']) }}" title="Edit"></a>
+                                <a class="fa fa-edit" href="{{ route('workplanning.edit', \Crypt::encrypt($value['id'])) }}" title="Edit"></a>
 
                                 @if($user_id == $value['added_by_id'])
                                     @include('adminlte::partials.sendWorkPlanningReport', ['data' => $value, 'name' => 'workplanning'])
@@ -190,18 +192,12 @@
                         @endif
 
                         @if($value['added_day'] == 'Saturday')
-
                             @if($value['actual_login_time'] > '10:30:00')
                                 <td style="background-color:lightpink;cursor: pointer;" title="Login After 10:30">{{ $value['loggedin_time'] }}</td>
-                            @elseif($value['total_actual_time'] == '')
-                                <td>{{ $value['loggedin_time'] }}</td>
-                            @elseif($value['total_actual_time'] > '06:00:00')
-                                <td style="background-color:#B0E0E6;cursor: pointer;" title="Working Hours More than 06:00">{{ $value['loggedin_time'] }}</td>
+                            @elseif($value['total_actual_time'] < '10:30:00')
+                                <td style="background-color:;cursor: pointer">{{ $value['loggedin_time'] }}</td>
                             @elseif($value['total_actual_time'] == '04:30:00')
-                                <td style="background-color:#fff59a;cursor: pointer;" title="Late in / Early Go">{{ $value['loggedin_time'] }}</td>
-                            @elseif($value['total_actual_time'] < '05:00:00')
-                                <td style="background-color:#d99594;cursor: pointer;" title="Working Hours Less than 05:00">{{ $value['loggedin_time'] }}
-                                </td>
+                                <td style="background-color:#fff59a;cursor: pointer;" title="Late in">{{ $value['loggedin_time'] }}</td>
                             @else
                                 <td>{{ $value['loggedin_time'] }}</td>
                             @endif
@@ -209,64 +205,118 @@
                         @else
 
                             @if($value['added_by_id'] == $manager_user_id)
-
                                 @if($value['actual_login_time'] > '10:30:00')
                                     <td style="background-color:lightpink;cursor: pointer" title="Login After 10:30">{{ $value['loggedin_time'] }}</td>
-                                @elseif($value['total_actual_time'] == '')
-                                    <td>{{ $value['loggedin_time'] }}</td>
-                                @elseif($value['total_actual_time'] > '07:30:00')
-                                    <td style="background-color:#B0E0E6;cursor: pointer;" title="Working Hours More than 07:30">{{ $value['loggedin_time'] }}
-                                    </td>
+                                @elseif($value['total_actual_time'] < '10:30:00')
+                                    <td style="background-color:;cursor: pointer">{{ $value['loggedin_time'] }}</td>
                                 @elseif($value['total_actual_time'] == '06:00:00')
-                                    <td style="background-color:#fff59a;cursor: pointer;" title="Late in / Early Go">{{ $value['loggedin_time'] }}</td>
-                                @elseif($value['total_actual_time'] < '07:00:00')
-                                    <td style="background-color:#d99594;cursor: pointer;" title="Working Hours Less than 07:00">{{ $value['loggedin_time'] }}
-                                    </td>
+                                    <td style="background-color:#fff59a;cursor: pointer;" title="Late in">{{ $value['loggedin_time'] }}</td>
                                 @else
                                     <td>{{ $value['loggedin_time'] }}</td>
                                 @endif
                             @else
                                 @if($value['actual_login_time'] > '10:30:00')
                                     <td style="background-color:lightpink;cursor: pointer" title="Login After 10:30">{{ $value['loggedin_time'] }}</td>
-                                @elseif($value['total_actual_time'] == '')
-                                    <td>{{ $value['loggedin_time'] }}</td>
-                                @elseif($value['total_actual_time'] > '08:30:00')
-                                    <td style="background-color:#B0E0E6;cursor: pointer;" title="Working Hours More than 08:30">{{ $value['loggedin_time'] }}</td>
+                                @elseif($value['actual_login_time'] < '10:30:00')
+                                    <td style="background-color:;cursor: pointer">{{ $value['loggedin_time'] }}</td>
                                 @elseif($value['total_actual_time'] == '07:00:00')
-                                    <td style="background-color:#fff59a;cursor: pointer;" title="Late in / Early Go">{{ $value['loggedin_time'] }}</td>
-                                @elseif($value['total_actual_time'] < '08:00:00')
-                                    <td style="background-color:#d99594;cursor: pointer;" title="Working Hours Less than 08:00">{{ $value['loggedin_time'] }}</td>
+                                    <td style="background-color:#fff59a;cursor: pointer;" title="Late in">{{ $value['loggedin_time'] }}</td>
                                 @else
                                     <td>{{ $value['loggedin_time'] }}</td>
                                 @endif
                             @endif
                         @endif
 
-                        <td>{{ $value['loggedout_time'] }}</td>
-                        <td>{{ $value['created_at'] }} - {{ $value['work_planning_time'] }}</td>
+                        @php
+                           $loginTime = strtotime($value['loggedin_time']);
+                           $logoutTime = strtotime($value['loggedout_time']);
+                           $timeDifference = ($logoutTime - $loginTime) / 3600; // Difference in hours
+                        @endphp
 
-                        @if(isset($value['status_date']) && $value['status_date'] != '')
-                            <td>{{ $value['status_date'] }} - {{ $value['work_planning_status_time'] }}</td>
+                        @if($value['added_day'] == 'Saturday')
+                            @if(isset($half_day_leave_data) && $half_day_leave_data != '')
+                                <td style="background-color:#D8BFD8;cursor: pointer" title="HD">{{ $value['loggedout_time'] }}</td>
+                            @elseif($timeDifference < 6 && $value['total_actual_time'] != '04:30:00')
+                                <td style="background-color:#FF7E74;cursor: pointer;" title="Log-out Time < 6 hours">{{ $value['loggedout_time'] }}</td>
+                            @elseif($timeDifference >= 6)
+                                <td style="background-color: ;cursor: pointer;" title="Log-out Time > 6 hours">{{ $value['loggedout_time'] }}</td>
+                            @elseif($value['total_actual_time'] == 4)
+                                <td style="background-color:#fff59a;cursor: pointer;" title="Early Go">{{ $value['loggedout_time'] }}</td>
+                            @else
+                                <td>{{ $value['loggedout_time'] }}</td>
+                            @endif
                         @else
-                            <td>{{ $value['work_planning_status_time'] }}</td>
+                            @if(isset($half_day_leave_data) && $half_day_leave_data != '')
+                                <td style="background-color:#D8BFD8;cursor: pointer" title="HD">{{ $value['loggedout_time'] }}</td>
+                            @elseif($timeDifference < 9  && $value['total_actual_time'] != '07:00:00')
+                                <td style="background-color:#FF7E74;cursor: pointer;" title="Log-out Time < 9 hours">{{ $value['loggedout_time'] }}</td>
+                            @elseif($timeDifference >= 9)
+                                <td style="background-color: ;cursor: pointer;" title="Log-out Time > 9 hours">{{ $value['loggedout_time'] }}</td>
+                            @elseif($value['total_actual_time'] == '07:00:00')
+                                <td style="background-color:#fff59a;cursor: pointer;" title="Early Go">{{ $value['loggedout_time'] }}</td>
+                            @else
+                                <td>{{ $value['loggedout_time'] }}</td>
+                            @endif
                         @endif
 
+                        @if($value['loggedin_time'] != '' && $value['work_planning_time'] != '')
+                            @php
+                                $loginTime = strtotime($value['loggedin_time']);
+                                $workPlanningTime = strtotime($value['work_planning_time']);
+                                $timeDifference = ($workPlanningTime - $loginTime) / 60; // Difference in minutes
+                            @endphp
+                            @if($timeDifference <= 60)
+                                <td>{{ $value['created_at'] }} - {{ $value['work_planning_time'] }}</td>
+                            @else
+                                <td style="background-color: #FFBB70;" title="Work Planning Delayed">{{ $value['created_at'] }} - {{ $value['work_planning_time'] }}</td>
+                            @endif
+                        @endif
+
+                        @if(isset($value['status_date']) && $value['status_date'] != '')
+                            <td >{{ $value['status_date'] }} - {{ $value['work_planning_status_time'] }}</td>
+                        @else
+                            <td style="background-color: #FFBB70;" title="Status Not Updated">{{ $value['work_planning_status_time'] }}</td>
+                        @endif
+
+                        @if($value['added_day'] == 'Saturday')
+                            @if(isset($half_day_leave_data) && $half_day_leave_data != '')
+                                <td style="background-color:#D8BFD8;cursor: pointer" title="HD">{{ $value['total_actual_time'] }}</td>
+                            @elseif($value['total_actual_time'] > '05:00:00')
+                                <td style="background-color:#90EE90;cursor: pointer;" title="Working Hours > 6 hours">{{ $value['total_actual_time'] }}</td>
+                            @elseif($value['total_actual_time'] < '05:00:00')
+                                <td style="background-color:#E2A76F ;cursor: pointer;" title=" Working Hours < 6 hours">{{ $value['total_actual_time'] }}</td>
+                            @elseif($value['total_actual_time'] == '05:00:00')
+                                <td style="background-color:;cursor: pointer;" >{{ $value['total_actual_time'] }}</td>
+                            @else
+                                <td>{{ $value['total_actual_time'] }}</td>
+                            @endif
+                        @else
+                           @if(isset($half_day_leave_data) && $half_day_leave_data != '')
+                                 <td style="background-color:#D8BFD8;cursor: pointer" title="HD">{{ $value['total_actual_time'] }}</td>
+                            @elseif($value['total_actual_time'] > '08:00:00')
+                                <td style="background-color:#90EE90;cursor: pointer;" title="Working Hours > 8 hours">{{ $value['total_actual_time'] }}</td>
+                            @elseif($value['total_actual_time'] < '08:00:00')
+                                <td style="background-color:#E2A76F ;cursor: pointer;" title="Working Hours < 8 hours">{{ $value['total_actual_time'] }}</td>
+                            @elseif($value['total_actual_time'] == '08:00:00')
+                                <td style="background-color:;cursor: pointer;" >{{ $value['total_actual_time'] }}</td>
+                            @else
+                                <td>{{ $value['total_actual_time'] }}</td>
+                          @endif
+                        @endif
+                        
                     @elseif(isset($leave_data) && $leave_data != '')
 
                         <td>{{ ++$i }}</td><td></td>
 
                         @if($leave_data->category == 'Privilege Leave')
                             <td style="background-color:#8db3e2;">{{ $value['added_date'] }}</td>
-                            <td colspan="7"><center><b>{{ $leave_data->category }}</b></center>
-                            </td>
+                            <td colspan="7"><center><b>{{ $leave_data->category }}</b></center></td>
                         @elseif($leave_data->category == 'Sick Leave')
                             <td style="background-color:#c075f8;">{{ $value['added_date'] }}</td>
-                            <td colspan="7"><center><b>{{ $leave_data->category }}</b></center>
-                            </td>
+                            <td colspan="7"><center><b>{{ $leave_data->category }}</b></center></td>
                         @elseif($leave_data->category == 'LWP')
                             <td style="background-color:#fd5e53;">{{ $value['added_date'] }}</td>
-                            <td colspan="7"><center><b>{{ $leave_data->category }}</b></center>
-                            </td>
+                            <td colspan="7"><center><b>{{ $leave_data->category }}</b></center></td>
                         @else
                             <td style="background-color:#fd5e53;">{{ $value['added_date'] }}</td>
                             <td colspan="7"><center><b>Absent</b></center></td>
@@ -285,8 +335,7 @@
 
                             <td>{{ ++$i }}</td><td></td>
                             <td style="background-color:#E6812F;">{{ $value['added_date'] }}</td>
-                            <td colspan="7"><center><b>{{ $holiday_data['title'] }}
-                            </b></center></td>
+                            <td colspan="7"><center><b>{{ $holiday_data['title'] }}</b></center></td>
                         @else
 
                             <td>{{ ++$i }}</td><td></td>

@@ -23,7 +23,7 @@
             <div class="pull-right">
                 @permission(('send-consolidated-schedule'))
                     <button type="button" class="btn btn-success" data-toggle="modal" data-target="#modal-mail" onclick="checkIdsforMail()">Send Mail</button>
-
+                    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#mastersearchmodal">Master Search</button>
                     <button type="button" class="btn bg-maroon" data-toggle="modal" data-target="#modal-status" onclick="multipleInterviewStatus()">Update Status</button>
                 @endpermission
                 <a class="btn btn-success" href="{{ route('interview.create') }}">Add New Interview</a>
@@ -92,14 +92,14 @@
                 <th>Candidate <br/>Contact No.</th>
                 <th>Candidate Email</th>
                 <th>Interview Date</th>
+                <th>Interview Venue</th>
                 <th>Candidate <br/>Owner</th>
                 <th>Status</th>
-                <th>Interview Venue</th>
+                <th>Remarks</th>
             </tr>
         </thead>
         <tbody></tbody>
     </table>
-
     <div id="modal-mail" class="modal text-left fade interview-mail" style="display: none;">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -171,10 +171,21 @@
                 }
             });
 
-            $(".date").datepicker({
+            var year = $("#year").val();
+            var posting_title = $("#posting_title").val();
+            var full_name = $("#full_name").val();
+            var mobile = $("#mobile").val();
+            var email = $("#email").val();
+            var interview_date = $("#interview_date").val();
+            var candidate_owner = $("#candidate_owner").val();
+            var status = $("#status").val();
+
+            $("#interview_date").attr("autocomplete", "off");
+            $("#interview_date").datepicker({
                 format: "dd-mm-yyyy",
                 autoclose: true
             });
+
 
             var year = $("#year").val();
 
@@ -188,7 +199,15 @@
                             ],
                 "ajax" : {
                     'url' : 'interview/all',
-                    data : {year:year},
+                    data : {
+                        posting_title:posting_title,
+                        full_name:full_name,
+                        mobile:mobile,
+                        email:email,
+                        interview_date:interview_date,
+                        candidate_owner:candidate_owner,
+                        status:status,
+                    },
                     'type' : 'get',
                     error: function(){
 
@@ -203,7 +222,7 @@
                 "pagingType": "full_numbers",
                 stateSave : true,
                 "fnRowCallback": function( Row, Data ) {
-                    $('td:eq(3)', Row).css('background-color', Data[11]);
+                    $('td:eq(3)', Row).css('background-color', Data[12]);
                 }
             });
 
@@ -262,7 +281,7 @@
                 "pagingType": "full_numbers",
                 stateSave : true,
                 "fnRowCallback": function( Row, Data ) {
-                    $('td:eq(3)', Row).css('background-color', Data[11]);
+                    $('td:eq(3)', Row).css('background-color', Data[12]);
                 }
             });
         }
@@ -302,6 +321,233 @@
                 }
             });
         }
+
+        function displaySelectedField() {
+
+            var selected_field = $("#selected_field").val();
+            if(selected_field == 'Posting Title') {
+
+                $(".posting_title").show();
+                $(".full_name").hide();
+                $(".mobile").hide();
+                $(".email").hide();
+                $(".interview_date").hide();
+                $(".candidate_owner").hide();
+                $(".status").hide();
+
+                $("#posting_title").val('');            
+            $("#full_name").val("");
+            $("#mobile").val("");
+            $("#email").val("");
+            $("#interview_date").val("");
+
+            $("#candidate_owner").val('');
+            $("#candidate_owner")[0].selectedIndex = '';
+
+            $("#status").val('');
+            $("#status")[0].selectedIndex = '';
+
+                resetInputFields();
+            }
+
+            if(selected_field == 'Candidate Name') {
+                $(".posting_title").hide();
+                $(".full_name").show();
+                $(".mobile").hide();
+                $(".email").hide();
+                $(".interview_date").hide();
+                $(".candidate_owner").hide();
+                $(".status").hide();
+
+                $("#posting_title").val('');            
+            $("#full_name").val("");
+            $("#mobile").val("");
+            $("#email").val("");
+            $("#interview_date").val("");
+
+            $("#candidate_owner").val('');
+            $("#candidate_owner")[0].selectedIndex = '';
+
+            $("#status").val('');
+            $("#status")[0].selectedIndex = '';
+
+                resetInputFields();
+            }
+
+            if(selected_field == 'Mobile Number') {
+
+                $(".posting_title").hide();
+                $(".full_name").hide();
+                $(".mobile").show();
+                $(".email").hide();
+                $(".interview_date").hide();
+                $(".candidate_owner").hide();
+                $(".status").hide();
+
+                $("#posting_title").val('');            
+            $("#full_name").val("");
+            $("#mobile").val("");
+            $("#email").val("");
+            $("#interview_date").val("");
+
+            $("#candidate_owner").val('');
+            $("#candidate_owner")[0].selectedIndex = '';
+
+            $("#status").val('');
+            $("#status")[0].selectedIndex = '';
+
+                resetInputFields();
+            }
+
+            if(selected_field == 'Email') {
+
+                $(".posting_title").hide();
+                $(".full_name").hide();
+                $(".mobile").hide();
+                $(".email").show();
+                $(".interview_date").hide();
+                $(".candidate_owner").hide();
+                $(".status").hide();
+
+                $("#posting_title").val('');            
+            $("#full_name").val("");
+            $("#mobile").val("");
+            $("#email").val("");
+            $("#interview_date").val("");
+
+            $("#candidate_owner").val('');
+            $("#candidate_owner")[0].selectedIndex = '';
+            
+            $("#status").val('');
+            $("#status")[0].selectedIndex = '';
+
+                resetInputFields();
+            }
+
+            if(selected_field == 'Interview Date') {
+
+                $(".posting_title").hide();
+                $(".full_name").hide();
+                $(".mobile").hide();
+                $(".email").hide();
+                $(".interview_date").show();
+                $(".candidate_owner").hide();
+                $(".status").hide();
+
+                $("#posting_title").val('');            
+            $("#full_name").val("");
+            $("#mobile").val("");
+            $("#email").val("");
+            $("#interview_date").val("");
+
+            $("#candidate_owner").val('');
+            $("#candidate_owner")[0].selectedIndex = '';
+
+            $("#status").val('');
+            $("#status")[0].selectedIndex = '';
+
+                resetInputFields();
+            }
+
+            if(selected_field == 'Candidate Owner') {
+
+                $(".posting_title").hide();
+                $(".full_name").hide();
+                $(".mobile").hide();
+                $(".email").hide();
+                $(".interview_date").hide();
+                $(".candidate_owner").show();
+                $(".status").hide();
+
+                $("#posting_title").val('');            
+            $("#full_name").val("");
+            $("#mobile").val("");
+            $("#email").val("");
+            $("#interview_date").val("");
+            $("#candidate_owner").val('');
+            $("#candidate_owner")[0].selectedIndex = ''; 
+
+            $("#status").val('');
+            $("#status")[0].selectedIndex = '';
+
+                resetInputFields();
+            }
+
+            if(selected_field == 'Status') {
+
+                $(".posting_title").hide();
+                $(".full_name").hide();
+                $(".mobile").hide();
+                $(".email").hide();
+                $(".interview_date").hide();
+                $(".candidate_owner").hide();
+                $(".status").show();
+
+                $("#posting_title").val('');            
+            $("#full_name").val("");
+            $("#mobile").val("");
+            $("#email").val("");
+            $("#interview_date").val("");
+
+            $("#candidate_owner").val('');
+            $("#candidate_owner")[0].selectedIndex = '';
+
+            $("#status").val('');
+            $("#status")[0].selectedIndex = '';
+
+                resetInputFields();
+            }
+        }
+
+        function displayresults() {
+           var posting_title = $("#posting_title").val();
+           var full_name = $("#full_name").val();
+           var mobile = $("#mobile").val();
+           var email = $("#email").val();
+           var interview_date = $("#interview_date").val();
+           var candidate_owner = $("#candidate_owner").val();
+           var status = $("#status").val();
+
+
+         console.log(posting_title);
+
+         if(posting_title == '' && full_name == '' && mobile == '' && email == '' && interview_date == '' && candidate_owner == '' && status == '') {
+
+        alert("Please enter field value.");
+          return false;
+        }
+         else {
+    
+            $("#posting_title").val('');            
+            $("#full_name").val("");
+            $("#mobile").val("");
+            $("#email").val("");
+            $("#interview_date").val("");
+            
+            $("#candidate_owner").val('');
+            $("#candidate_owner")[0].selectedIndex = '';
+            
+            $("#status").val('');
+            $("#status")[0].selectedIndex = '';
+
+
+    var url = '/interview-search';
+
+    var form = $('<form action="' + url + '" method="post">' +
+    '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
+    '<input type="text" name="posting_title" value="'+posting_title+'" />' +
+    '<input type="text" name="full_name" value="'+full_name+'" />' +
+    '<input type="text" name="mobile" value="'+mobile+'" />' +
+    '<input type="text" name="email" value="'+email+'" />' +
+    '<input type="text" name="interview_date" value="'+interview_date+'" />' +
+    '<input type="text" name="candidate_owner" value="'+candidate_owner+'" />' +
+    '<input type="text" name="status" value="'+status+'" />' +
+    '</form>');
+
+    $('body').append(form);
+    form.submit();
+}
+}
 
         function multipleInterviewStatus() {
 

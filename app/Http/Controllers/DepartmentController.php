@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use App\Http\Controllers\Controller;
 use App\Department;
 use DB;
@@ -37,6 +38,8 @@ class DepartmentController extends Controller
     }
 
     public function edit($id) {
+
+        $id = Crypt::decrypt($id);
 
         $departments = Department::find($id);
         $action = 'edit';

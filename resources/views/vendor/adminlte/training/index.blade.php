@@ -56,11 +56,11 @@
                     <td>{{ $value['department'] }}</td>
                     
                     <td>
-                        <a class="fa fa-circle" title="show" href="{{ route('training.show',$value['id']) }}"></a>
+                        <a class="fa fa-circle" title="show" href="{{ route('training.show',\Crypt::encrypt($value['id'])) }}"></a>
                        
                         @permission(('training-material-edit'))
                             @if(isset($value['access']) && $value['access']==1)
-                                <a class="fa fa-edit" title="Edit" href="{{route('training.edit',$value['id']) }}"></a>
+                                <a class="fa fa-edit" title="Edit" href="{{route('training.edit',\Crypt::encrypt($value['id'])) }}"></a>
                             @endif
                         @endpermission
 

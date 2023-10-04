@@ -144,4 +144,19 @@ class Date
 
         return $ts;
     }
+
+    // Get All Sundays dates in selected month
+    public static function getAllSundayDateOfMonth($month,$year) {
+        
+        $date = "$year-$month-01";
+        $first_day = date('N',strtotime($date));
+        $first_day = 7 - $first_day + 1;
+        $last_day =  date('t',strtotime($date));
+        $sundays = array();
+        for($i = $first_day; $i <= $last_day; $i = $i+7 ) {
+            $sundays[] = $i;
+        }
+
+        return $sundays;
+    }
 }

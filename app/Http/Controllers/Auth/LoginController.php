@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\UsersLog;
 use Illuminate\Http\Request;
+// use App\Trackerlog;
 
 class LoginController extends Controller
 {
@@ -57,6 +58,9 @@ class LoginController extends Controller
         {
             $user = \Auth::user();
             
+            // Tracker log entry
+            //TrackerLog::getInsertTrackerLog($user->id,'logged-in successfully.');
+
             // For set Session Variable
             $new_sessionid = \Session::getId(); //get new session_id after user sign in
 
@@ -76,6 +80,9 @@ class LoginController extends Controller
             $user_status = $user->status;
             if ($user_status == 'Inactive') {
                 \Auth::logout();
+
+                // Tracker log entry
+                //TrackerLog::getInsertTrackerLog($user->id,'User status inactive error');
 
                 return redirect('/login')
                     ->withInput($request->only('email', 'remember'))
@@ -115,6 +122,9 @@ class LoginController extends Controller
             //return redirect()->intended($this->redirectPath());
         }
 
+        // Tracker log entry
+        //TrackerLog::getInsertTrackerLog(0,'Credentials do not match.');
+
         return redirect('/login')
             ->withInput($request->only('email', 'remember'))
             ->withErrors([
@@ -146,6 +156,10 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         $user_id = \Auth::user()->id;
+        
+        // Tracker log entry
+        //TrackerLog::getInsertTrackerLog($user_id,'logged-out successfully.');
+
         // Entry of login
         $users_log= new UsersLog();
         $users_log->user_id = $user_id;

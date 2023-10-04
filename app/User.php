@@ -4,13 +4,12 @@ namespace App;
 
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
-use Zizaco\Entrust\Traits\EntrustUserTrait;
+use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
     use Notifiable;
-    use EntrustUserTrait; // add this trait to your user model
-
+    use HasRoles;
     /**
      * The attributes that are mass assignable.
      *
@@ -28,6 +27,12 @@ class User extends Authenticatable
     protected $hidden = [
         'password', 'remember_token',
     ];
+    
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+    
 
     public $users_upload_type = array(
 
@@ -177,7 +182,8 @@ class User extends Authenticatable
         $recruitment = getenv('RECRUITMENT');
         $hr_advisory = getenv('HRADVISORY');
         $management = getenv('MANAGEMENT');
-        $type_array = array($recruitment,$hr_advisory,$management);
+        $operations = getenv('OPERATIONS');
+        $type_array = array($recruitment,$hr_advisory,$management,$operations);
         
         $user_query = User::query();
 
@@ -234,6 +240,7 @@ class User extends Authenticatable
         }
         return $userArr;
     }
+    
 
     public static function getAllUsers($type=NULL,$am=NULL) {
 
@@ -278,7 +285,8 @@ class User extends Authenticatable
 
         $superadmin = getenv('SUPERADMINUSERID');
         $saloni_user_id = getenv('SALONIUSERID');
-        $super_array = array($superadmin,$saloni_user_id);
+        $manager_user_id = getenv('MANAGERUSERID');
+        $super_array = array($superadmin,$saloni_user_id,$manager_user_id);
 
         $user_query = User::query();
 
@@ -327,6 +335,8 @@ class User extends Authenticatable
 
         return $type;
     }
+
+
 
     public static function getInterviewerArray() {
 
@@ -509,7 +519,7 @@ class User extends Authenticatable
         return $user_email;
     }
 
-    public static function getAssignedUsers($user_id,$type='') {
+    public static function getAssignedUsers($user_id,$type='',$report='') {
 
         $status = 'Inactive';
         $status_array = array($status);
@@ -521,6 +531,10 @@ class User extends Authenticatable
 
         if($type!=NULL) {
             $user_query = $user_query->where('type','=',$type);
+        }
+
+        if(isset($report) && $report!=NULL) {
+            $user_query = $user_query->where('daily_report','=',$report);
         }
         
         $user_query = $user_query->where(function($user_query) use ($user_id) {
@@ -856,7 +870,7 @@ class User extends Authenticatable
         return $full_name_array;
     }
 
-    public static function getUsersByDepartmentId($department_id) {
+    public static function getUsersByDepartmentId($department_id=0,$am='') {
 
         $status = 'Inactive';
         $status_array = array($status);
@@ -872,6 +886,10 @@ class User extends Authenticatable
 
         if(isset($department_id) && $department_id > 0) {
             $query = $query->where('users.type',$department_id);
+        }
+
+        if($am != NULL) {
+            $query = $query->where('account_manager','=',$am);
         }
 
         $query = $query->where('id','!=',$saloni_user_id);
@@ -896,7 +914,7 @@ class User extends Authenticatable
         return $user_name_array;
     }
 
-    public static function getUsersByDepartmentIDArray($department_ids) {
+    public static function getUsersByDepartmentIDArray($department_ids,$am='') {
 
         $department_ids_array = explode(",", $department_ids);
         
@@ -915,6 +933,9 @@ class User extends Authenticatable
         $query = $query->where('id','!=',$saloni_user_id);
         $query = $query->select('users.id','users.name','users.type');
         $query = $query->orderBy('users.name');
+        if($am != NULL) {
+            $query = $query->where('account_manager','=',$am);
+        }
         $response = $query->get();
 
         $user_name_array = array();
@@ -1431,35 +1452,34 @@ class User extends Authenticatable
     }
 
     // Get All Report to User and users under that report to user
-    public static function getAllUsersDataWithReportsTo() {
+    public static function getAllUsersDataWithReportsTo($daily_report='') {
         
         // Remove Saloni User ID
         $saloni_user_id = getenv('SALONIUSERID');
-        $super_array = array($saloni_user_id);
+        $manager_user_id = getenv('MANAGERUSERID');
+        $super_array = array($saloni_user_id,$manager_user_id);
 
         $query = User::query();
         $query = $query->select('users.id','u1.email as remail','u1.secondary_email as rsemail','u1.id as rid','u1.name as rname');
         $query = $query->join('users as u1','u1.id','=','users.reports_to');
         $query = $query->groupBy('users.reports_to');
         $query = $query->whereNotIn('users.reports_to',$super_array);
+        if($daily_report != '') {
+            $query = $query->where('users.daily_report','=',$daily_report);
+        }
         $res = $query->get();
 
         $users = array();
         if (isset($res) && sizeof($res) > 0) {
             foreach ($res as $key => $value) {
-
-                $manager_user_id = getenv('MANAGERUSERID');
                 $superadminuserid = getenv('SUPERADMINUSERID');
-
                 $recruitment = getenv('RECRUITMENT');
                 $hr_advisory = getenv('HRADVISORY');
-                if ($value->rid == $manager_user_id) {
-                    // For Manager Role Data
-                    $type_array = array($recruitment);
-                    $report_id = 0;
-                } else if($value->rid == $superadminuserid) {
+                $management = getenv('MANAGEMENT');
+                $operations = getenv('OPERATIONS');
+                if($value->rid == $superadminuserid) {
                     // For Super Admin Role Data
-                    $type_array = array($recruitment,$hr_advisory);
+                    $type_array = array($recruitment,$hr_advisory,$management,$operations);
                     $report_id = 0;
                 } else {
                     // For remaining all reports to
@@ -1470,9 +1490,31 @@ class User extends Authenticatable
                     $i=0;
                     foreach ($type_array as $key_t => $value_t) {
                         // Get All users whos work under that report id with type
-                        $user_data = User::getAllUsersEmails($value_t,'','',$report_id);
+                        $user_data = User::getAllUsersEmails($value_t,$daily_report,'',$report_id);
                         if (isset($user_data) && sizeof($user_data)>0) {
                             foreach ($user_data as $key_u => $value_u) {
+                                // Check hr_adv_recruitment yes OR No
+                                // $user_details = User::getAllDetailsByUserID($key_u);
+                                // if($user_details->type == '2') {
+                                //     if($user_details->hr_adv_recruitemnt == 'Yes') {
+                                //         $users[$value->rid][$i]['id'] = $key_u;
+                                //         $users[$value->rid][$i]['email'] = $value_u;
+                                //     }
+                                // } else {
+                                    $users[$value->rid][$i]['id'] = $key_u;
+                                    $users[$value->rid][$i]['email'] = $value_u;
+                                // }
+                                $i++;
+                            }
+                        }
+                    }
+                } else {
+                    // Get All users whos work under that report id
+                    $user_data = User::getAssignedUsers($report_id,$type_array,$daily_report);
+                    if (isset($user_data) && sizeof($user_data)>0) {
+                        $i=0;
+                        foreach ($user_data as $key_u => $value_u) {
+                            if (isset($daily_report) && $daily_report == 'Yes') {
                                 // Check hr_adv_recruitment yes OR No
                                 $user_details = User::getAllDetailsByUserID($key_u);
                                 if($user_details->type == '2') {
@@ -1484,18 +1526,10 @@ class User extends Authenticatable
                                     $users[$value->rid][$i]['id'] = $key_u;
                                     $users[$value->rid][$i]['email'] = $value_u;
                                 }
-                                $i++;
+                            } else {
+                                $users[$value->rid][$i]['id'] = $key_u;
+                                $users[$value->rid][$i]['email'] = $value_u;
                             }
-                        }
-                    }
-                } else {
-                    // Get All users whos work under that report id
-                    $user_data = User::getAssignedUsers($report_id,$type_array);
-                    if (isset($user_data) && sizeof($user_data)>0) {
-                        $i=0;
-                        foreach ($user_data as $key_u => $value_u) {
-                            $users[$value->rid][$i]['id'] = $key_u;
-                            $users[$value->rid][$i]['email'] = $value_u;
                             $i++;
                         }
                     }

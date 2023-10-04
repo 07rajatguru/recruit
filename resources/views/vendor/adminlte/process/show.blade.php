@@ -28,7 +28,7 @@
 
            <div class="pull-right">
                 @if(isset($process['access']) && $process['access']==1)
-                    <a class="btn btn-primary" href="{{ route('process.edit',$process['id']) }}">
+                    <a class="btn btn-primary" href="{{ route('process.edit',\Crypt::encrypt($process['id'])) }}">
                     Edit</a>
                 @endif
                 <a class="btn btn-primary" href="{{ route('process.index') }}">Back</a>

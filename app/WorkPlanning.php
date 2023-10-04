@@ -84,6 +84,7 @@ class WorkPlanning extends Model
 
         return $work_type;
     }
+    
 
     public static function getWorkPlanningDetails($user_id,$month,$year,$status='',$post_discuss_status='') {
 
@@ -148,8 +149,9 @@ class WorkPlanning extends Model
 
                 if (in_array($get_date,$holidays_dates) && $value->loggedin_time == '' && $get_date >= $current_date) {
                 }
-                else if($added_day == 'Sunday' && $value->loggedin_time == '' && $get_date > $current_date) {
-                }
+                else if ($added_day == 'Sunday' && !in_array($get_date, $holidays_dates) && $value->loggedin_time == '' && $get_date > $current_date) {
+                    
+                                  }
                 // else if($added_day == 'Saturday' && $value->loggedin_time == '' && $get_date == $saturday_date) {
                 // }
                 else if($value->loggedin_time == 'CO') {
@@ -436,7 +438,7 @@ class WorkPlanning extends Model
             }
         }
 
-        $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','users.working_hours as working_hours','work_planning.added_date','work_planning.attendance','users.joining_date','department.name as department_name','work_planning.status','work_planning.loggedin_time','users.employment_type as employment_type');
+        $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','users.working_hours as working_hours','work_planning.added_date','work_planning.attendance','users.joining_date','department.name as department_name','work_planning.status','work_planning.loggedin_time','work_planning.loggedout_time','work_planning.total_actual_time','users.employment_type as employment_type','work_planning.work_type','work_planning.total_actual_time');
         
         $response = $query->get();
         return $response;
@@ -606,7 +608,7 @@ class WorkPlanning extends Model
         $check_date = $year."-".$month."-31";
         $query = $query->where('users.joining_date','<=',$check_date);
 
-        $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','users.working_hours as working_hours','work_planning.added_date','work_planning.attendance','users_otherinfo.date_of_joining as joining_date','department.name as department_name','work_planning.status','work_planning.loggedin_time','users.employment_type as employment_type');
+        $query = $query->select('users.id' ,'users.name','users.first_name','users.last_name','users.working_hours as working_hours','work_planning.added_date','work_planning.attendance','users_otherinfo.date_of_joining as joining_date','department.name as department_name','work_planning.status','work_planning.loggedin_time','users.employment_type as employment_type','work_planning.work_type','work_planning.total_actual_time');
 
         $response = $query->get();
         return $response;
@@ -890,6 +892,11 @@ class WorkPlanning extends Model
             $work_planning_res['report_delay_content'] = $response->report_delay_content;
             $work_planning_res['total_projected_time'] = $response->total_projected_time;
             $work_planning_res['total_actual_time'] = $response->total_actual_time;
+            $work_planning_res['attendance'] = $response->attendance;
+            $work_planning_res['added_by'] = $response->added_by;
+            $work_planning_res['late_in_early_go'] = $response->late_in_early_go;
+            $work_planning_res['half_leave_type'] = $response->half_leave_type;
+
 
         }
         return $work_planning_res;

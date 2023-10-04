@@ -5,7 +5,7 @@ use App\User;
 
 use LaravelArdent\Ardent\Ardent;
 
-class ClientBasicinfo extends Ardent
+class ClientBasicinfo 
 {
     public $table = "client_basicinfo";
 
@@ -60,7 +60,7 @@ class ClientBasicinfo extends Ardent
         return $field_list;
     }
 
-    public static function getAllClients($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=0,$type='asc',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city,$client_industry) {
+    public static function getAllClients($all=0,$user_id,$limit=0,$offset=0,$search=0,$order=0,$type='asc',$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city,$client_industry, $data_source = null) {
 
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
@@ -68,6 +68,10 @@ class ClientBasicinfo extends Ardent
         $query = $query->leftjoin('users as u1','u1.id','=', 'client_basicinfo.second_line_am');
         $query = $query->leftjoin('industry', 'industry.id', '=', 'client_basicinfo.industry_id');
 
+        
+        if ($data_source) {
+            $query->where('data_source', $data_source);
+        }
         if ($all == 1) {
 
             $query = $query->leftJoin('client_doc',function($join) {
@@ -352,13 +356,17 @@ class ClientBasicinfo extends Ardent
         return $client_array;
     }
 
-    public static function getAllClientsCount($all=0,$user_id,$search=0,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city,$client_industry) {
+    public static function getAllClientsCount($all=0,$user_id,$search=0,$client_owner,$client_company,$client_contact_point,$client_cat,$client_status,$client_city,$client_industry, $data_source = null) {
 
         $query = ClientBasicinfo::query();
         $query = $query->leftjoin('client_address','client_address.client_id','=','client_basicinfo.id');
         $query = $query->leftjoin('users','users.id','=', 'client_basicinfo.account_manager_id');
         $query = $query->leftjoin('users as u1','u1.id','=', 'client_basicinfo.second_line_am');
         $query = $query->leftjoin('industry', 'industry.id', '=', 'client_basicinfo.industry_id');
+
+        if ($data_source) {
+            $query->where('data_source', $data_source);
+        }
 
         if ($all == 1) {
 

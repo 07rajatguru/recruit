@@ -108,7 +108,7 @@
                         <tr style="background-color:#ACACAC;">
                             <td>{{ ++$i }}</td>
                             <td>
-                                <a class="fa fa-edit" href="{{ route('leave.userwiseedit',['id' => $value['id'],'month' => $month,'year' => $year]) }}" title="Edit"></a>
+                                <a class="fa fa-edit" href="{{ route('leave.userwiseedit',['id' => \Crypt::encrypt($value['id'])),'month' => $month,'year' => $year]) }}" title="Edit"></a>
                             </td>
                             <td>{{ $value['user_name'] }}</td>
                             <td>{{ $value['pl_total'] }}</td>
@@ -123,7 +123,7 @@
                         <tr>
                             <td>{{ ++$i }}</td>
                             <td>
-                                <a class="fa fa-edit" href="{{ route('leave.userwiseedit',['id' => $value['id'],'month' => $month,'year' => $year]) }}" title="Edit"></a>
+                                <a class="fa fa-edit" href="{{ route('leave.userwiseedit',['id' => \Crypt::encrypt($value['id'])),'month' => $month,'year' => $year]) }}" title="Edit"></a>
                             </td>
                             <td>{{ $value['user_name'] }}</td>
                             <td>{{ $value['pl_total'] }}</td>

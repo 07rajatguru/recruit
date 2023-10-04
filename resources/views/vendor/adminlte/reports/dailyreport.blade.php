@@ -24,7 +24,7 @@
 		    @endif
         	<div class="box-body col-xs-2 col-sm-5 col-md-2">
         		<div class="form-group">
-		        	{{Form::select('users_id',$users,$user_id, array('id'=>'users_id','class'=>'form-control users_append'))}}
+					{{ Form::select('users_id', $users, $selected_user_id, ['id' => 'users_id', 'class' => 'form-control users_append']) }}
 	        	</div>
     		</div>
 
@@ -43,7 +43,6 @@
     </div>
 
 	<div style="padding: 10px;">
-
 		@if(isset($user_details->cv_report) && $user_details->cv_report == 'Yes')
 			<table width="100%" cellspacing="0">
 				<tr>
@@ -180,7 +179,7 @@
 	</div>
 
 	<input type="hidden" name="csrf_token" id="csrf_token" value="{{ csrf_token() }}">
-	<input type="hidden" name="selected_user_id" id="selected_user_id" value="{{ $user_id }}">
+	<input type="hidden" name="selected_user_id" id="selected_user_id" value="{{ $selected_user_id }}">
     <input type="hidden" name="superadmin" id="superadmin" value="{{ $superadmin }}">
 @stop
 
@@ -212,29 +211,30 @@
 			});
 
 			if ( ! table1.data().any() ) {
-			}
-			else{
+			} else {
 				new jQuery.fn.dataTable.FixedHeader( table1 );
 			}
 
 			if ( ! table2.data().any() ) {
-			}
-			else{
+			} else {
 				new jQuery.fn.dataTable.FixedHeader( table2 );
 			}
 
 			if ( ! table3.data().any() ) {
-			}
-			else{
+			} else {
 				new jQuery.fn.dataTable.FixedHeader( table3 );
 			}
 			
 			var selected_user_id = $("#selected_user_id").val();
             var superadmin = $("#superadmin").val();
-
             if(superadmin == selected_user_id) {
-                teamWiseUser();
+                teamWiseUser(selected_user_id);
             }
+			// Get the user ID from the URL
+			var url_users_id = window.location.href.substring(window.location.href.lastIndexOf('/') + 1);
+            // Use the user ID from the URL if available, otherwise use the selected user ID from the dropdown
+			var users_id = url_users_id || $("#users_id").val();
+            teamWiseUser(users_id);
 		});
 
         function select_data(){
@@ -244,9 +244,15 @@
             var team_type = $("#team_type :selected").val();
             var app_url = "{!! env('APP_URL'); !!}";
 
-            var url = app_url+'/daily-report';
+			if (users_id > 0) {
 
-            if (users_id > 0) {
+				var user_name = $("#users_id option:selected").text().trim();
+
+				var random_string_1 = generateRandomString(74);
+                var random_string_2 = generateRandomString(74);
+
+				var url = app_url + '/daily-report/' + random_string_1 + users_id + random_string_2;
+
 	            var form = $('<form action="' + url + '" method="post">' +
 	                '<input type="hidden" name="_token" value="<?php echo csrf_token() ?>">' +
 	                '<input type="hidden" name="users_id" value="'+users_id+'" />' +
@@ -259,16 +265,29 @@
 	        } 
 	        else {
 	        	alert("Please Select User");
-	        }
+	        }			
         }
 
-        function teamWiseUser() {
+		function generateRandomString(length) {
+
+            const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+            let result = '';
+            const charactersLength = characters.length;
+    
+              for (let i = 0; i < length; i++) {
+                  result += characters.charAt(Math.floor(Math.random() * charactersLength));
+            }
+            return result;
+        }
+
+        function teamWiseUser(selectedUserId) {
             
             var token = $('input[name="csrf_token"]').val();
             var team = $("#team_type").val();
             var app_url = "{!! env('APP_URL'); !!}";
-            var selected_user_id = $("#selected_user_id").val();
-
+            // var selected_user_id = $("#selected_user_id").val();
+			var selected_user_id = users_id;			
+						 
             $.ajax({
                 type: 'POST',
                 url: app_url+'/team-wise-uses',
@@ -280,6 +299,6 @@
                     $("#users_id").select2();
                 },
             });
-        }
+        }	
 	</script>
 @endsection

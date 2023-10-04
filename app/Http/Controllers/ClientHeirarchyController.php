@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use App\ClientHeirarchy;
 
 class ClientHeirarchyController extends Controller
@@ -37,6 +38,8 @@ class ClientHeirarchyController extends Controller
     }
 
     public function edit($id) {
+
+        $id = Crypt::decrypt($id);
 
         $action = 'edit';
     	$client_heirarchy = ClientHeirarchy::find($id);

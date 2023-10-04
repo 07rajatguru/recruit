@@ -44,7 +44,7 @@
             <tr>
                 <td>{{ ++$i }}</td>
                 <td>
-                    <a class="fa fa-edit" href="{{ route('clientremarks.edit',$value['id']) }}"></a>
+                    <a class="fa fa-edit" href="{{ route('clientremarks.edit',\Crypt::encrypt($value['id'])) }}"></a>
 
                     @permission(('client-remarks-delete'))
                         @include('adminlte::partials.deleteModalNew', ['data' => $value, 

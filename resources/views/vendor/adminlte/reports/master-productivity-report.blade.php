@@ -7,7 +7,7 @@
 @stop
 
 @section('content')
-	<div class="row">
+    <div class="row">
         <div class="col-lg-12 margin-tb">
             <div class="col-md-12">
                 <div class="col-md-4">
@@ -259,7 +259,7 @@
                         </td>
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="shortlist_ratio">
                             <p align="center" style="text-align: center;">
-                                <span>50% (of Total CVs)</span>
+                                <span>{{ $role_shortlist_ratio or 0 }}% (of Total CVs)</span>
                             </p>
                         </td>
                         <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
@@ -337,7 +337,7 @@
                         </td>
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="interview_ratio">
                             <p align="center" style="text-align: center;">
-                                <span>50% (Shortlist Ratio)</span>
+                                <span>{{ $role_interview_ratio or 0 }}% (Shortlist Ratio)</span>
                             </p>
                         </td>
                         <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
@@ -415,7 +415,7 @@
                         </td>
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="selection_ratio">
                             <p align="center" style="text-align: center;">
-                                <span>20% (of Interview Ratio)</span>
+                                <span>{{ $role_selection_ratio or 0 }}% (of Interview Ratio)</span>
                             </p>
                         </td>
                         <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
@@ -494,7 +494,7 @@
                         </td>
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="offer_acceptance_ratio">
                             <p align="center" style="text-align: center;">
-                                <span>70% (of Selection Ratio)</span>
+                                <span>{{ $role_offer_acceptance_ratio or 0 }}% (of Selection Ratio)</span>
                             </p>
                         </td>
                         <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
@@ -572,7 +572,7 @@
                         </td>
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="joining_ratio">
                             <p align="center" style="text-align: center;">
-                                <span>80% (of offer acceptance)</span>
+                                <span>{{ $role_joining_ratio or 0 }}% (of offer acceptance)</span>
                             </p>
                         </td>
                         <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
@@ -650,7 +650,7 @@
                         </td>
                         <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;" class="after_joining_success_ratio">
                             <p align="center" style="text-align: center;">
-                                <span>80% (Joining Ratio)</span>
+                                <span>{{ $role_after_joining_success_ratio or 0 }}% (Joining Ratio)</span>
                             </p>
                         </td>
                         <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;">
@@ -783,8 +783,8 @@
 @stop
 
 @section('customscripts')
-	<script type="text/javascript">
-		$(document).ready(function() {
+    <script type="text/javascript">
+        $(document).ready(function() {
 
             $("#month").select2({width : '90px'});
             $("#year").select2({width : '90px'});
@@ -792,18 +792,18 @@
             // Call Function for calculate ratio
             calCulation();
            
-			var table = jQuery("#productivity_report_table").DataTable({
-				responsive: true,
-				"pageLength": 100,
-				stateSave: true
-			});
+            var table = jQuery("#productivity_report_table").DataTable({
+                responsive: true,
+                "pageLength": 100,
+                stateSave: true
+            });
             
-			if ( ! table.data().any() ) {
+            if ( ! table.data().any() ) {
             }
             else {
                 new jQuery.fn.dataTable.FixedHeader( table );
             }
-		});
+        });
 
         function select_data() {
 
@@ -960,5 +960,5 @@
                 $(".after_joining_success_ratio_monthly_achievement").text(after_joining_success_ratio_weeks);
             }
         }
-	</script>
+    </script>
 @endsection

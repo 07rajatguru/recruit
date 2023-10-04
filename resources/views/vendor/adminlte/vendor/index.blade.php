@@ -55,11 +55,11 @@
                 <td style="white-space: pre-wrap; word-wrap: break-word;">{{ $vendor['contact_point'] }}</td>
                 <td>{{ $vendor['category'] }}</td>
                 <td>
-                    <a title="Show" class="fa fa-circle"  href="{{ route('vendor.show',$vendor['id']) }}">
+                    <a title="Show" class="fa fa-circle"  href="{{ route('vendor.show',\Crypt::encrypt($vendor['id'])) }}">
                     </a>
 
                     @permission(('vendor-edit'))
-                        <a title="Edit" class="fa fa-edit" href="{{ route('vendor.edit',$vendor['id']) }}"></a>
+                        <a title="Edit" class="fa fa-edit" href="{{ route('vendor.edit',\Crypt::encrypt($vendor['id'])) }}"></a>
                     @endpermission
 
                     @permission(('vendor-delete'))

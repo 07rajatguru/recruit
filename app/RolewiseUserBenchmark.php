@@ -34,6 +34,7 @@ class RolewiseUserBenchmark extends Model
                 $bench_mark_array[$i]['offer_acceptance_ratio'] = $value->offer_acceptance_ratio;
                 $bench_mark_array[$i]['joining_ratio'] = $value->joining_ratio;
                 $bench_mark_array[$i]['after_joining_success_ratio'] = $value->after_joining_success_ratio;
+                $bench_mark_array[$i]['applicable_date'] = (isset($value->applicable_date) && $value->applicable_date != '') ? date('d-m-Y', strtotime($value->applicable_date)) : '';
                 
                 $i++;
             }
@@ -41,30 +42,37 @@ class RolewiseUserBenchmark extends Model
         return $bench_mark_array;
     }
 
-    public static function getBenchMarkByRoleID($role_id) {
+    public static function getBenchMarkByRoleID($role_id,$date='') {
 
-        $query = RolewiseUserBenchmark::query();
-        $query = $query->select('rolewise_user_bench_mark.*');
+        if (isset($date) && $date != '') {
+            $response = \DB::select("select `rolewise_user_bench_mark`.* from `rolewise_user_bench_mark` where `rolewise_user_bench_mark`.`role_id` = '".$role_id."' and IF(end_date IS NOT NULL, '".$date."' BETWEEN `applicable_date` AND `end_date`, applicable_date <= '".$date."') order by `rolewise_user_bench_mark`.`id` desc");
+            if (!empty($response)) {
+                $response = json_decode(json_encode($response[0]), true);
+            } else {
+                $response = null; 
+            }
+        } else {
+            $query = RolewiseUserBenchmark::query();
+            $query = $query->select('rolewise_user_bench_mark.*');
 
-        if(isset($role_id) && $role_id > 0) {
-            $query = $query->where('rolewise_user_bench_mark.role_id','=',$role_id);
+            if(isset($role_id) && $role_id > 0) {
+                $query = $query->where('rolewise_user_bench_mark.role_id','=',$role_id);
+            }
+            $response = $query->first();
         }
-
-        $response = $query->first();
-
         $bench_mark = array();
 
         if(isset($response) && $response != '') {
-
-            $bench_mark['id'] = $response->id;
-            $bench_mark['role_id'] = $response->role_id;
-            $bench_mark['no_of_resumes'] = $response->no_of_resumes;
-            $bench_mark['shortlist_ratio'] = $response->shortlist_ratio;
-            $bench_mark['interview_ratio'] = $response->interview_ratio;
-            $bench_mark['selection_ratio'] = $response->selection_ratio;
-            $bench_mark['offer_acceptance_ratio'] = $response->offer_acceptance_ratio;
-            $bench_mark['joining_ratio'] = $response->joining_ratio;
-            $bench_mark['after_joining_success_ratio'] = $response->after_joining_success_ratio;
+            $bench_mark['id'] = $response['id'];
+            $bench_mark['role_id'] = $response['role_id'];
+            $bench_mark['no_of_resumes'] = $response['no_of_resumes'];
+            $bench_mark['shortlist_ratio'] = $response['shortlist_ratio'];
+            $bench_mark['interview_ratio'] = $response['interview_ratio'];
+            $bench_mark['selection_ratio'] = $response['selection_ratio'];
+            $bench_mark['offer_acceptance_ratio'] = $response['offer_acceptance_ratio'];
+            $bench_mark['joining_ratio'] = $response['joining_ratio'];
+            $bench_mark['after_joining_success_ratio'] = $response['after_joining_success_ratio'];
+            $bench_mark['applicable_date'] = (isset($response['applicable_date']) && $response['applicable_date'] != '') ? date('d-m-Y', strtotime($response['applicable_date'])) : '';
         }
         return $bench_mark;
     }

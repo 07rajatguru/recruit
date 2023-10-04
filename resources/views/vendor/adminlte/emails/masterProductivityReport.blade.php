@@ -206,7 +206,7 @@
                                             </td>
                                             <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: white;" class="shortlist_ratio">
                                                 <p align="center" style="text-align: center;">
-                                                    <span>50% (of Total CVs)</span>
+                                                <span>{{ $role_shortlist_ratio or 0 }}% (of Total CVs)</span>
                                                 </p>
                                             </td>
                                             <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: white;">
@@ -280,7 +280,7 @@
                                             </td>
                                             <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: white;" class="interview_ratio">
                                                 <p align="center" style="text-align: center;">
-                                                    <span>50% (Shortlist Ratio)</span>
+                                                <span>{{ $role_interview_ratio or 0 }}% (Shortlist Ratio)</span>
                                                 </p>
                                             </td>
                                             <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: white;">
@@ -354,7 +354,7 @@
                                             </td>
                                             <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: white;" class="selection_ratio">
                                                 <p align="center" style="text-align: center;">
-                                                    <span>20% (of Interview Ratio)</span>
+                                                <span>{{ $role_selection_ratio or 0 }}% (of Interview Ratio)</span>
                                                 </p>
                                             </td>
                                             <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: white;">
@@ -429,7 +429,7 @@
                                             </td>
                                             <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: white;" class="offer_acceptance_ratio">
                                                 <p align="center" style="text-align: center;">
-                                                    <span>70% (of Selection Ratio)</span>
+                                                <span>{{ $role_offer_acceptance_ratio or 0 }}% (of Selection Ratio)</span>
                                                 </p>
                                             </td>
                                             <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: white;">
@@ -503,7 +503,7 @@
                                             </td>
                                             <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: white;" class="joining_ratio">
                                                 <p align="center" style="text-align: center;">
-                                                    <span>80% (of offer acceptance)</span>
+                                                <span>{{ $role_after_joining_success_ratio or 0 }}% (Joining Ratio)</span>
                                                 </p>
                                             </td>
                                             <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 1px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: white;">
@@ -577,7 +577,7 @@
                                             </td>
                                             <td valign="bottom" style="border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: white;" class="after_joining_success_ratio">
                                                 <p align="center" style="text-align: center;">
-                                                    <span>80% (Joining Ratio)</span>
+                                                <span>{{ $role_after_joining_success_ratio or 0 }}% (Joining Ratio)</span>
                                                 </p>
                                             </td>
                                             <td width="122" style="width: 91.25pt;border-top: none;border-left: none;border-bottom: solid black 2px;border-right: solid black 1px;padding: 1.5pt 2.25pt 1.5pt 2.25pt;height: 15px;background-color: white;">

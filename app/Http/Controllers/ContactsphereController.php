@@ -28,10 +28,12 @@ class ContactsphereController extends Controller
         }
         else if($userwise_perm) {
 
-            $count = Contactsphere::getAllContactsCount(0,$user->id);
 
             $convert_lead_count = Contactsphere::getConvertedLead(0,$user->id);
         }
+        $count = Contactsphere::getAllContactsCount(0,$user->id);
+        $convert_lead_count = Contactsphere::getConvertedLead(0,$user->id);
+
 
         return view('adminlte::contactsphere.index',compact('count','convert_lead_count'));
     }
@@ -91,6 +93,7 @@ class ContactsphereController extends Controller
         $forbid_perm = $user->can('forbid-contactsphere');
         $contact_to_lead_perm = $user->can('contactsphere-to-lead');
         $delete_perm = $user->can('contactsphere-delete');
+        dd($all_perm, $userwise_perm);
 
         if($all_perm) {
 
@@ -110,10 +113,10 @@ class ContactsphereController extends Controller
 
             $action = '';
 
-            $action .= '<a class="fa fa-circle" title="Show" href="'.route('contactsphere.show',$value['id']).'" style="margin:2px;"></a>';
+            $action .= '<a class="fa fa-circle" title="Show" href="'.route('contactsphere.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
             if($all_perm || $userwise_perm) {
-                $action .= '<a class="fa fa-edit" title="Edit" href="'.route('contactsphere.edit',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a class="fa fa-edit" title="Edit" href="'.route('contactsphere.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
 
             if ($delete_perm) {
@@ -141,7 +144,7 @@ class ContactsphereController extends Controller
 
                 if($contact_to_lead_perm) {
 
-                    $action .= '<a title="Convert Contact to Lead"  class="fa fa-clone" href="'.route('contactsphere.clone',$value['id']).'" style="margin:2px;"></a>';
+                    $action .= '<a title="Convert Contact to Lead"  class="fa fa-clone" href="'.route('contactsphere.clone',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
                 }
             }
 
@@ -284,10 +287,10 @@ class ContactsphereController extends Controller
 
             $action = '';
 
-            $action .= '<a class="fa fa-circle" title="Show" href="'.route('contactsphere.show',$value['id']).'" style="margin:2px;"></a>';
+            $action .= '<a class="fa fa-circle" title="Show" href="'.route('contactsphere.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
             if($all_perm || $userwise_perm) {
-                $action .= '<a class="fa fa-edit" title="Edit" href="'.route('contactsphere.edit',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a class="fa fa-edit" title="Edit" href="'.route('contactsphere.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
 
             if ($hold_perm) {
@@ -484,10 +487,10 @@ class ContactsphereController extends Controller
 
             $action = '';
 
-            $action .= '<a class="fa fa-circle" title="Show" href="'.route('contactsphere.show',$value['id']).'" style="margin:2px;"></a>';
+            $action .= '<a class="fa fa-circle" title="Show" href="'.route('contactsphere.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
             if($all_perm || $userwise_perm) {
-                $action .= '<a class="fa fa-edit" title="Edit" href="'.route('contactsphere.edit',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a class="fa fa-edit" title="Edit" href="'.route('contactsphere.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
 
             if ($forbid_perm) {
@@ -677,12 +680,16 @@ class ContactsphereController extends Controller
 
     public function show($id) {
 
+        $id = \Crypt::decrypt($id);
+
         $contact_details = Contactsphere::getContactDetailsById($id);
 
         return view('adminlte::contactsphere.show',compact('contact_details'));
     }
 
     public function edit($id) {
+
+        $id = \Crypt::decrypt($id);
 
         $action = 'edit';
         $generate_contact = '0';
@@ -751,6 +758,8 @@ class ContactsphereController extends Controller
 
     public function contactsphereClone($id) {
 
+        $id = \Crypt::decrypt($id);
+        
         $user = \Auth::user();
         $user_id = $user->id;
         $action = 'contact';

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use App\Companies;
 
 class CompaniesController extends Controller
@@ -60,6 +61,9 @@ class CompaniesController extends Controller
 
     public function edit($id) {
 
+        $id = Crypt::decrypt($id);
+        // print_r($decryptedId);exit;
+                
         $companies = Companies::find($id);
         $action = 'edit';
         return view('adminlte::companies.edit',compact('companies','action'));

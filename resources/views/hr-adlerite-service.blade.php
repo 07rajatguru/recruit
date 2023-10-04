@@ -197,7 +197,7 @@
                                             <td style="border: 1px solid #00c0ef;">
                                             {{ $value['leave_type'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">
-                                                <a title="View Details" href="{{ route('late-early.reply',$value['id']) }}" target="_blank">View</a>
+                                                <a title="View Details" href="{{ route('late-early.reply',\Crypt::encrypt($value['id'])) }}" target="_blank">View</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -218,7 +218,7 @@
                                             <td style="border: 1px solid #00c0ef;">
                                             {{ $value['leave_type'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">
-                                                <a title="View Details" href="{{ route('late-early.reply',$value['id']) }}" target="_blank">View</a>
+                                                <a title="View Details" href="{{ route('late-early.reply',\Crypt::encrypt($value['id'])) }}" target="_blank">View</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -240,7 +240,7 @@
                                             <td style="border: 1px solid #00c0ef;">
                                             {{ $value['leave_type'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">
-                                                <a title="View Details" href="{{ route('late-early.reply',$value['id']) }}" target="_blank">View</a>
+                                                <a title="View Details" href="{{ route('late-early.reply',\Crypt::encrypt($value['id'])) }}" target="_blank">View</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -349,7 +349,7 @@
                                             <td style="border: 1px solid #00c0ef;">
                                             {{ $value['to_date'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">
-                                                <a title="View Details" href="{{ route('leave.reply',$value['id']) }}" target="_blank">View</a>
+                                                <a title="View Details" href="{{ route('leave.reply',\Crypt::encrypt($value['id'])) }}" target="_blank">View</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -369,7 +369,7 @@
                                             <td style="border: 1px solid #00c0ef;">
                                             {{ $value['to_date'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">
-                                                <a title="View Details" href="{{ route('leave.reply',$value['id']) }}" target="_blank">View</a>
+                                                <a title="View Details" href="{{ route('leave.reply',\Crypt::encrypt($value['id'])) }}" target="_blank">View</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -390,7 +390,7 @@
                                             <td style="border: 1px solid #00c0ef;">
                                             {{ $value['to_date'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">
-                                                <a title="View Details" href="{{ route('leave.reply',$value['id']) }}" target="_blank">View</a>
+                                                <a title="View Details" href="{{ route('leave.reply',\Crypt::encrypt($value['id'])) }}" target="_blank">View</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -502,7 +502,7 @@
                                             <td style="border: 1px solid #00c0ef;">
                                             {{ $value['to_date'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">
-                                                <a title="View Details" href="{{ route('workfromhome.show',$value['id']) }}" target="_blank">View</a>
+                                                <a title="View Details" href="{{ route('workfromhome.show',\Crypt::encrypt($value['id'])) }}" target="_blank">View</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -522,7 +522,7 @@
                                             <td style="border: 1px solid #00c0ef;">
                                             {{ $value['to_date'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">
-                                                <a title="View Details" href="{{ route('workfromhome.show',$value['id']) }}" target="_blank">View</a>
+                                                <a title="View Details" href="{{ route('workfromhome.show',\Crypt::encrypt($value['id'])) }}" target="_blank">View</a>
                                             </td>
                                         </tr>
                                     @endforeach
@@ -543,7 +543,7 @@
                                             <td style="border: 1px solid #00c0ef;">
                                             {{ $value['to_date'] }} </td>
                                             <td style="border: 1px solid #00c0ef;">
-                                                <a title="View Details" href="{{ route('workfromhome.show',$value['id']) }}" target="_blank">View</a>
+                                                <a title="View Details" href="{{ route('workfromhome.show',\Crypt::encrypt($value['id'])) }}" target="_blank">View</a>
                                             </td>
                                         </tr>
                                     @endforeach

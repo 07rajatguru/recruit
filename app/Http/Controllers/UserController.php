@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\User;
 use Illuminate\Support\Facades\Input;
+use Illuminate\Support\Facades\Log;
+use Maatwebsite\Excel\Facades\Excel;
 use App\Role;
 use DB;
 use Hash;
@@ -34,6 +36,7 @@ use App\RolewiseUserBenchmark;
 use App\Holidays;
 use App\HolidaysUsers;
 use App\WorkPlanning;
+use App\UserOldData;
 
 class UserController extends Controller
 {
@@ -124,7 +127,10 @@ class UserController extends Controller
         $employment_type  = User::getEmploymentType();
         $employment_type = array_fill_keys(array(''),'Select Employment Type')+$employment_type;
 
-        return view('adminlte::users.create',compact('roles','roles_id','reports_to','companies','company_id','type','floor_incharge','departments','department_id','hours_array','selected_working_hours','selected_half_day_working_hours','employment_type','operations','bizpos_user_id'));
+        $work_type = WorkPlanning::getWorkType();
+        $selected_work_type = '';
+
+        return view('adminlte::users.create',compact('roles','roles_id','reports_to','companies','company_id','type','floor_incharge','departments','department_id','hours_array','selected_working_hours','selected_half_day_working_hours','employment_type','operations','bizpos_user_id','work_type','selected_work_type'));
     }
 
     /**
@@ -166,6 +172,8 @@ class UserController extends Controller
 
         $type = $request->input('type');
         $hr_adv_recruitemnt = $request->input('hr_adv_recruitemnt');
+        $cluster_head = $request->input('cluster_head');
+        $work_location = $request->input('work_location');
 
         // Start Report Status
 
@@ -232,13 +240,31 @@ class UserController extends Controller
 
         if(isset($joining_date) && $joining_date != '') {
             $user->joining_date = $dateClass->changeDMYtoYMD($joining_date);
+            $user->effect_from_date = $dateClass->changeDMYtoYMD($joining_date);
         }
         else {
             $user->joining_date = NULL;
+            $user->effect_from_date = NULL;
+        }
+
+        $probation_end_date = $request->input('probation_end_date');
+        if(isset($probation_end_date) && $probation_end_date != '') {
+            $user->probation_end_date = $dateClass->changeDMYtoYMD($probation_end_date);
+        } else {
+            $user->probation_end_date = NULL;
+        }
+
+        $leave_applicable_date = $request->input('leave_applicable_date');
+        if(isset($leave_applicable_date) && $leave_applicable_date != '') {
+            $user->leave_applicable_date = $dateClass->changeDMYtoYMD($leave_applicable_date);
+        } else {
+            $user->leave_applicable_date = NULL;
         }
 
         $user->employment_type = $employment_type;
         $user->intern_month = $intern_month;
+        $user->cluster_head = $cluster_head;
+        $user->work_location = $work_location;
 
         $users = $user->save();
 
@@ -497,7 +523,9 @@ class UserController extends Controller
         ->leftjoin('roles','roles.id','=','role_user.role_id')
         ->select('users.*','department.name as department','roles.display_name as display_name')->where('users.id','=',$id)->first();
 
-        return view('adminlte::users.show',compact('user'));
+        $user_old_data = UserOldData::getUserOldDetailsbyUserId($id);
+
+        return view('adminlte::users.show',compact('user','user_old_data'));
     }
 
     /**
@@ -570,34 +598,45 @@ class UserController extends Controller
 
         if($user->cv_report == 'Yes') {
             $cv_report = '1';
-        }
-        else {
+        } else {
             $cv_report = '0';
         }
 
         if($user->interview_report == 'Yes') {
             $interview_report = '1';
-        }
-        else {
+        } else {
             $interview_report = '0';
         }
 
         if($user->lead_report == 'Yes') {
             $lead_report = '1';
-        }
-        else {
+        } else {
             $lead_report = '0';
         }
 
         if(isset($user->joining_date) && $user->joining_date != NULL) {
-
             $joining_date = date('d-m-Y',strtotime($user->joining_date));
-        }
-        else {
-
+        } else {
             $joining_date = NULL;
         }
-        
+
+        if(isset($user->probation_end_date) && $user->probation_end_date != NULL) {
+            $probation_end_date = date('d-m-Y',strtotime($user->probation_end_date));
+        } else {
+            $probation_end_date = NULL;
+        }
+
+        if(isset($user->leave_applicable_date) && $user->leave_applicable_date != NULL) {
+            $leave_applicable_date = date('d-m-Y',strtotime($user->leave_applicable_date));
+        } else {
+            $leave_applicable_date = NULL;
+        }
+
+        if(isset($user->effect_from_date) && $user->effect_from_date != NULL) {
+            $effect_from_date = date('d-m-Y',strtotime($user->effect_from_date));
+        } else {
+            $effect_from_date = NULL;
+        }
 
         $hours_array = User::getHoursArray();
         $selected_working_hours = $user->working_hours;
@@ -607,7 +646,12 @@ class UserController extends Controller
         $employment_type = array_fill_keys(array(''),'Select Employment Type')+$employment_type;
         $intern_month = $user->intern_month;
 
-        return view('adminlte::users.edit',compact('id','user','roles','roles_id', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge','semail','departments','department_id','hr_adv_recruitemnt','cv_report','interview_report','lead_report','hours_array','selected_working_hours','selected_half_day_working_hours','joining_date','employment_type','intern_month','operations','bizpos_user_id'));
+        $work_type = WorkPlanning::getWorkType();
+        $selected_work_type = '';
+
+        $user_old_data = UserOldData::getUserOldDetailsbyUserId($id);
+
+        return view('adminlte::users.edit',compact('id','user','roles','roles_id', 'reports_to', 'userReportsTo','userFloorIncharge','companies','type','floor_incharge','semail','departments','department_id','hr_adv_recruitemnt','cv_report','interview_report','lead_report','hours_array','selected_working_hours','selected_half_day_working_hours','joining_date','employment_type','intern_month','operations','bizpos_user_id','work_type','selected_work_type','probation_end_date','leave_applicable_date','effect_from_date','user_old_data'));
     }
 
     /**
@@ -641,8 +685,9 @@ class UserController extends Controller
             $input = array_except($input,array('reports_to'));
         }
 
-        // Get New Value
+        $submit_btn = $request->input('submit');
 
+        // Get New Value
         $first_name = $request->input('first_name');
         $last_name = $request->input('last_name');
         $name = $request->input('name');
@@ -664,6 +709,8 @@ class UserController extends Controller
         $lead_report = $request->input('lead_report');
         $status = $request->input('status');
         $account_manager = $request->input('account_manager');
+        $cluster_head = $request->input('cluster_head');
+        $work_location = $request->input('work_location');
 
         // Get Joining Date
         $dateClass = new Date();
@@ -699,7 +746,6 @@ class UserController extends Controller
             }
         }
         else {
-
             $set_cv_report = 'No';
             $set_interview_report = 'No';
             $set_lead_report = 'No';
@@ -799,191 +845,289 @@ class UserController extends Controller
 
         if($first_name != $old_first_name) {
             $first_name_value = 1;
-        }
-        else {
+        } else {
             $first_name_value = 0;
         }
 
         if($last_name != $old_last_name) {
             $last_name_value = 1;
-        }
-        else {
+        } else {
             $last_name_value = 0;
         }
 
         if($name != $old_name) {
             $name_value = 1;
-        }
-        else {
+        } else {
             $name_value = 0;
         }
 
         if($email != $old_email) {
             $email_value = 1;
-        }
-        else {
+        } else {
             $email_value = 0;
         }
 
         if($semail != $old_semail) {
             $semail_value = 1;
-        }
-        else {
+        } else {
             $semail_value = 0;
         }
 
         if($company_id != $old_company_id) {
             $company_id_value = 1;
-        }
-        else {
+        } else {
             $company_id_value = 0;
         }
 
         if($department_id != $old_department) {
             $department_value = 1;
-        }
-        else {
+        } else {
             $department_value = 0;
         }
 
         if($hr_adv_recruitemnt != $old_hr_adv_recruitemnt) {
             $hr_adv_recruitemnt_value = 1;
-        }
-        else {
+        } else {
             $hr_adv_recruitemnt_value = 0;
         }
 
         if($role != $old_role_id) {
             $role_id_value = 1;
-        }
-        else {
+        } else {
             $role_id_value = 0;
         }
 
         if($reports_to != $old_reports_to) {
             $reports_to_value = 1;
-        }
-        else {
+        } else {
             $reports_to_value = 0;
         }
 
         if($check_report != $old_check_report) {
             $check_report_value = 1;
-        }
-        else {
+        } else {
             $check_report_value = 0;
         }
 
         if($cv_report != $old_cv_report) {
             $cv_report_value = 1;
-        }
-        else {
+        } else {
             $cv_report_value = 0;
         }
 
         if($interview_report != $old_interview_report) {
             $interview_report_value = 1;
-        }
-        else {
+        } else {
             $interview_report_value = 0;
         }
 
         if($lead_report != $old_lead_report) {
             $lead_report_value = 1;
-        }
-        else {
+        } else {
             $lead_report_value = 0;
         }
 
         if($status != $old_status) {
             $status_value = 1;
-        }
-        else {
+        } else {
             $status_value = 0;
         }
 
         if($account_manager != $old_account_manager) {
             $account_manager_value = 1;
-        }
-        else {
+        } else {
             $account_manager_value = 0;
         }
 
         if($working_hours != $old_working_hours) {
             $working_hours_value = 1;
-        }
-        else {
+        } else {
             $working_hours_value = 0;
         }
 
         if($half_day_working_hours != $old_half_day_working_hours) {
             $half_day_working_hours_value = 1;
-        }
-        else {
+        } else {
             $half_day_working_hours_value = 0;
         }
 
         if($joining_date != $old_joining_date) {
             $joining_date_value = 1;
-        }
-        else {
+        } else {
             $joining_date_value = 0;
         }
 
         if($employment_type != $old_employment_type) {
             $employment_type_value = 1;
-        }
-        else {
+        } else {
             $employment_type_value = 0;
         }
 
         if($intern_month != $old_intern_month) {
             $intern_month_value = 1;
-        }
-        else {
+        } else {
             $intern_month_value = 0;
         }
-        
-        // Save new value
 
-        // Delete Old Role
-        //DB::table('role_user')->where('user_id',$id)->delete();
-        DB::statement("UPDATE role_user SET role_id = '$role' where user_id = '$id'");
+        // Save data as per click on btn
+        if ($submit_btn == 'Update as a New') {
+            $effect_from_date = $request->input('effect_from_date');
+            if(isset($effect_from_date) && $effect_from_date != '') {
+                $effect_from_date = $dateClass->changeDMYtoYMD($effect_from_date);
+                $end_date = date('Y-m-d', strtotime("-1 days $effect_from_date"));
+            } else {
+                $effect_from_date = NULL;
+                $end_date = NULL;
+            }
 
-        $user = User::find($id);
-        $user->update($input);
+            // Save old user records in user_old_details table and update in main users table
+            $old_user_data = User::find($id);
 
-        $user->first_name = $first_name;
-        $user->last_name = $last_name;
-        $user->name = $name;
-        $user->email = $email;
-        $user->secondary_email = $semail;
-        $user->hr_adv_recruitemnt = $hr_adv_recruitemnt;
-        //$user->attachRole($role);
-        $user->reports_to = $reports_to;
-        $user->daily_report = $check_report;
-        $user->cv_report = $set_cv_report;
-        $user->interview_report = $set_interview_report;
-        $user->lead_report = $set_lead_report;
-        $user->account_manager = $account_manager;
-        $user->status = $status;
-        $user->working_hours = $working_hours;
-        $user->half_day_working_hours = $half_day_working_hours;
+            // save in user_old_details
+            $user_old_save = new UserOldData();
+            $user_old_save->user_id = $id;
+            $user_old_save->role_id = $old_role_id;
+            $user_old_save->job_open_to_all = $old_user_data->job_open_to_all;
+            $user_old_save->employment_type = $old_user_data->employment_type;
+            $user_old_save->intern_month = $old_user_data->intern_month;
+            $user_old_save->joining_date = $old_user_data->joining_date;
+            $user_old_save->working_hours = $old_user_data->working_hours;
+            $user_old_save->half_day_working_hours = $old_user_data->half_day_working_hours;
+            $user_old_save->name = $old_user_data->name;
+            $user_old_save->first_name = $old_user_data->first_name;
+            $user_old_save->last_name = $old_user_data->last_name;
+            $user_old_save->reports_to = $old_user_data->reports_to;
+            $user_old_save->email = $old_user_data->email;
+            $user_old_save->check_floor_incharge = $old_user_data->check_floor_incharge;
+            $user_old_save->daily_report = $old_user_data->daily_report;
+            $user_old_save->cv_report = $old_user_data->cv_report;
+            $user_old_save->interview_report = $old_user_data->interview_report;
+            $user_old_save->interview_report = $old_user_data->interview_report;
+            $user_old_save->eligibility_report = $old_user_data->eligibility_report;
+            $user_old_save->password = $old_user_data->password;
+            $user_old_save->remember_token = $old_user_data->remember_token;
+            $user_old_save->company_id = $old_user_data->company_id;
+            $user_old_save->type = $old_user_data->type;
+            $user_old_save->hr_adv_recruitemnt = $old_user_data->hr_adv_recruitemnt;
+            $user_old_save->floor_incharge = $old_user_data->floor_incharge;
+            $user_old_save->status = $old_user_data->status;
+            $user_old_save->secondary_email = $old_user_data->secondary_email;
+            $user_old_save->account_manager = $old_user_data->account_manager;
+            $user_old_save->session_id = $old_user_data->session_id;
+            $user_old_save->cluster_head = $old_user_data->cluster_head;
+            $user_old_save->probation_end_date = $old_user_data->probation_end_date;
+            $user_old_save->leave_applicable_date = $old_user_data->leave_applicable_date;
+            $user_old_save->work_location = $old_user_data->work_location;
+            $user_old_save->effect_from_date = $old_user_data->effect_from_date;
+            $user_old_save->end_date = $end_date;
+            $user_old = $user_old_save->save();
 
-        if(isset($joining_date) && $joining_date != '') {
-            $user->joining_date = $dateClass->changeDMYtoYMD($joining_date);
+            // Update new Role
+            DB::statement("UPDATE role_user SET role_id = '$role' where user_id = '$id'");
+
+            $user = User::find($id);
+            $user->first_name = $first_name;
+            $user->last_name = $last_name;
+            $user->name = $name;
+            $user->email = $email;
+            $user->secondary_email = $semail;
+            $user->hr_adv_recruitemnt = $hr_adv_recruitemnt;
+            $user->reports_to = $reports_to;
+            $user->daily_report = $check_report;
+            $user->cv_report = $set_cv_report;
+            $user->interview_report = $set_interview_report;
+            $user->lead_report = $set_lead_report;
+            $user->account_manager = $account_manager;
+            $user->status = $status;
+            $user->working_hours = $working_hours;
+            $user->half_day_working_hours = $half_day_working_hours;
+
+            if(isset($joining_date) && $joining_date != '') {
+                $user->joining_date = $dateClass->changeDMYtoYMD($joining_date);
+            }
+            else {
+                $user->joining_date = NULL;
+            }
+
+            $probation_end_date = $request->input('probation_end_date');
+            if(isset($probation_end_date) && $probation_end_date != '') {
+                $user->probation_end_date = $dateClass->changeDMYtoYMD($probation_end_date);
+            } else {
+                $user->probation_end_date = NULL;
+            }
+
+            $leave_applicable_date = $request->input('leave_applicable_date');
+            if(isset($leave_applicable_date) && $leave_applicable_date != '') {
+                $user->leave_applicable_date = $dateClass->changeDMYtoYMD($leave_applicable_date);
+            } else {
+                $user->leave_applicable_date = NULL;
+            }
+            $user->effect_from_date = $effect_from_date;
+            $user->employment_type = $employment_type;
+            $user->intern_month = $intern_month;
+            $user->cluster_head = $cluster_head;
+            $user->work_location = $work_location;
+            $user->save();
+            
+        } else {
+            // Save new value
+
+            // Delete Old Role
+            //DB::table('role_user')->where('user_id',$id)->delete();
+            DB::statement("UPDATE role_user SET role_id = '$role' where user_id = '$id'");
+
+            $user = User::find($id);
+            $user->update($input);
+
+            $user->first_name = $first_name;
+            $user->last_name = $last_name;
+            $user->name = $name;
+            $user->email = $email;
+            $user->secondary_email = $semail;
+            $user->hr_adv_recruitemnt = $hr_adv_recruitemnt;
+            //$user->attachRole($role);
+            $user->reports_to = $reports_to;
+            $user->daily_report = $check_report;
+            $user->cv_report = $set_cv_report;
+            $user->interview_report = $set_interview_report;
+            $user->lead_report = $set_lead_report;
+            $user->account_manager = $account_manager;
+            $user->status = $status;
+            $user->working_hours = $working_hours;
+            $user->half_day_working_hours = $half_day_working_hours;
+
+            if(isset($joining_date) && $joining_date != '') {
+                $user->joining_date = $dateClass->changeDMYtoYMD($joining_date);
+                $user->effect_from_date = $dateClass->changeDMYtoYMD($joining_date);
+            }
+            else {
+                $user->joining_date = NULL;
+                $user->effect_from_date = NULL;
+            }
+
+            $probation_end_date = $request->input('probation_end_date');
+            if(isset($probation_end_date) && $probation_end_date != '') {
+                $user->probation_end_date = $dateClass->changeDMYtoYMD($probation_end_date);
+            } else {
+                $user->probation_end_date = NULL;
+            }
+
+            $leave_applicable_date = $request->input('leave_applicable_date');
+            if(isset($leave_applicable_date) && $leave_applicable_date != '') {
+                $user->leave_applicable_date = $dateClass->changeDMYtoYMD($leave_applicable_date);
+            } else {
+                $user->leave_applicable_date = NULL;
+            }
+
+            $user->employment_type = $employment_type;
+            $user->intern_month = $intern_month;
+            $user->cluster_head = $cluster_head;
+            $user->work_location = $work_location;
+
+            $user->save();
         }
-        else {
-            $user->joining_date = NULL;
-        }
-
-        $user->employment_type = $employment_type;
-        $user->intern_month = $intern_month;
-
-        $user->save();
         
         // Send email notification when user information is update
-
         if($first_name_value != 0 || $last_name_value != 0 || $name_value != 0 || $email_value != 0 || $semail_value != 0 || $company_id_value != 0 || $department_value != 0 || $hr_adv_recruitemnt_value != 0 || $role_id_value != 0 || $reports_to_value != 0 || $check_report_value != 0 || $cv_report_value != 0 || $interview_report_value != 0 || $lead_report_value != 0 || $status_value != 0 || $account_manager_value != 0 || $working_hours_value != 0 || $half_day_working_hours_value != 0 || $joining_date_value != 0 || $employment_type_value != 0 || $intern_month_value != 0) {
 
             $logged_in_user_id = \Auth::user()->id;
@@ -1221,6 +1365,9 @@ class UserController extends Controller
         $loggedin_user_id =  \Auth::user()->id;
         $edit_perm = $user->can('edit-user-profile');
 
+        $user_id = \Crypt::decrypt($user_id);
+
+
         if ($loggedin_user_id == $user_id || $edit_perm) {
 
             $dateClass = new Date();
@@ -1326,6 +1473,8 @@ class UserController extends Controller
         $user = \Auth::user();
         $loggedin_user_id =  \Auth::user()->id;
         $edit_perm = $user->can('edit-user-profile');
+
+        $user_id = \Crypt::decrypt($user_id);
 
         if ($loggedin_user_id == $user_id || $edit_perm) {
 
@@ -1494,6 +1643,7 @@ class UserController extends Controller
         $userRole = $users->roles->pluck('id','id')->toArray();
         $role_id = key($userRole);
         $superadmin_role_id = env('SUPERADMIN');
+
 
         //  Update in main table
         $user_basic_info = User::find($user_id);
@@ -2495,7 +2645,7 @@ class UserController extends Controller
         }
         //Personal Credentials End
 
-        return redirect()->route('users.myprofile',$user_id)->with('success','Profile Updated Successfully.'); 
+        return redirect()->route('users.myprofile',[\Crypt::encrypt($user_id)])->with('success','Profile Updated Successfully.'); 
     }
 
     public function Upload(Request $request) {
@@ -2532,7 +2682,7 @@ class UserController extends Controller
             }
         }
 
-        return redirect()->route('users.myprofile',$id)->with('success','Attachment Uploaded Successfully.'); 
+        return redirect()->route('users.myprofile',[\Crypt::encrypt($id)])->with('success','Attachment Uploaded Successfully.'); 
     }
 
     public function attachmentsDestroy($docid,Request $request) {
@@ -2556,12 +2706,12 @@ class UserController extends Controller
 
         if($type == 'EditProfile') {
 
-            return redirect()->route('users.editprofile',$user_id)->with('success','Attachment Deleted Successfully.'); 
+            return redirect()->route('users.editprofile',[\Crypt::encrypt($user_id)])->with('success','Attachment Deleted Successfully.'); 
         }
 
         if($type == 'MyProfile') {
 
-            return redirect()->route('users.myprofile',$user_id)->with('success','Attachment Deleted Successfully.'); 
+            return redirect()->route('users.myprofile',[\Crypt::encrypt($user_id)])->with('success','Attachment Deleted Successfully.'); 
         }
     }
 
@@ -2601,6 +2751,129 @@ class UserController extends Controller
         return redirect()->route('users.attendance')->with('success','Added Successfully');
     }
 
+    public function importExport() {
+
+        return view('adminlte::users.import');
+    }
+
+    public function importExcel(Request $request) {
+
+        if($request->hasFile('import_file')) {
+
+            $path = $request->file('import_file')->getRealPath();
+            $data = Excel::load($path, function ($reader) {})->get();
+            $messages = array();
+
+            if(!empty($data) && $data->count()) {
+
+                foreach($data->toArray() as $key => $value) {
+
+                    if(!empty($value)) {
+
+                        $user = \Auth::user();
+                        $user_id = $user->id;
+
+                        $personal_email = $value['personal_email'];
+                        $date_of_birth = $value['date_of_birth'];
+                        $blood_group = $value['blood_group'];
+                        $date_of_joining = $value['date_of_joining'];
+                        $date_of_anniversary = $value['date_of_anniversary'];
+                        $date_of_exit = $value['date_of_exit'];
+                        $contact_number = $value['contact_number'];
+                        $contact_no_official = $value['contact_no_official'];
+                        $current_address = $value['current_address'];
+                        $permanent_address = $value['permanent_address'];
+                        $signature = $value['signature'];
+                        $user_full_name = $value['user_full_name'];
+                        $bank_name = $value['bank_name'];
+                        $acc_no = $value['acc_no'];
+                        $branch_name = $value['branch_name'];
+                        $ifsc_code = $value['ifsc_code'];
+                        $payment_mode = $value['payment_mode'];
+
+                        $name = $value['name'];
+                        $relationship = $value['relationship'];
+                        $occupation = $value['occupation'];
+                        $contact_no = $value['contact_no'];
+                        
+                        $myprofile = new UserOthersInfo();
+                        $myprofile->user_id = $user_id;
+                        $myprofile->personal_email = $personal_email;
+                        $myprofile->date_of_birth = $date_of_birth;
+                        $myprofile->blood_group = $blood_group;
+                        $myprofile->date_of_joining = $date_of_joining;
+                        $myprofile->date_of_anniversary = $date_of_anniversary;
+                        $myprofile->date_of_exit = $date_of_exit;
+                        $myprofile->contact_number = $contact_number;
+                        $myprofile->contact_no_official = $contact_no_official;
+                        $myprofile->current_address = $current_address;
+                        $myprofile->permanent_address = $permanent_address;
+                        $myprofile->signature = $signature;
+
+                        $myprofile->user_full_name = $user_full_name;
+                        $myprofile->bank_name = $bank_name;
+                        $myprofile->acc_no = $acc_no;
+                        $myprofile->branch_name = $branch_name;
+                        $myprofile->ifsc_code = $ifsc_code;
+                        $myprofile->payment_mode = $payment_mode;           
+
+                        if($myprofile->save()) {
+
+                            $myprofile_family = new UsersFamily();
+                            $myprofile_family->user_id = $myprofile->user_id; 
+                            $myprofile_family->name = $name;
+                            $myprofile_family->relationship = $relationship;
+                            $myprofile_family->occupation = $occupation;
+                            $myprofile_family->contact_no = $contact_no;
+                            $myprofile_family->save();
+
+                            $messages[] = "Record inserted successfully.";
+                        }
+                        else {
+                            $messages[] = "Error while inserting record.";  
+                        }
+                    }
+                    else {
+                        $messages[] = "No Data in file.";
+                    }
+                }
+            }
+            return view('adminlte::users.import',compact('messages'));
+        }
+        else {
+            return redirect()->route('users.importExport')->with('error','Please Select Excel file.');
+        }
+    }
+
+    public function exportUser() {
+        $user = \Auth::user();
+        $user_id = $user->id;
+    
+        $myprofile_info = User::getProfileInfo($user_id);
+    
+        $users_family = [];
+        for ($i = 1; $i <= 5; $i++) {
+            $family_member = UsersFamily::getFamilyDetailsofUser($user_id, $i);
+           if ($family_member) {
+                $users_family[] = $family_member;
+            }
+        } 
+        // dd($myprofile_info);
+    
+        if ($myprofile_info && !empty($users_family)) {
+            Excel::create('UserProfile', function ($excel) use ($myprofile_info, $users_family) {
+                $excel->sheet('sheet 1', function ($sheet) use ($myprofile_info, $users_family) {
+                    $sheet->loadView('adminlte::users.myprofile-export', [
+                        'myprofile_info' => $myprofile_info,
+                        'users_family' => $users_family,
+                    ]);
+                });
+            })->export('xls');
+        }
+    }
+    
+    
+    
     public function setJobOpentoAll() {
 
         $user_id = $_POST['id'];
@@ -2669,9 +2942,10 @@ class UserController extends Controller
     public function getUsersByDepartment() {
 
         $department_id = $_GET['department_id'];
+        $am = (isset($_GET['am']) && $_GET['am'] != '') ? $_GET['am'] : NULL;
 
         // get user names
-        $users = User::getUsersByDepartmentId($department_id);
+        $users = User::getUsersByDepartmentId($department_id,$am);
 
         return $users;
     }
@@ -2705,6 +2979,7 @@ class UserController extends Controller
         $loggedin_user_id =  \Auth::user()->id;
         $superadmin_user_id = getenv('SUPERADMINUSERID');
         $saloni_user_id = getenv('SALONIUSERID');
+        $user_id = \Crypt::decrypt($user_id);
 
         if ($loggedin_user_id == $user_id || $superadmin_user_id == $loggedin_user_id || $saloni_user_id == $loggedin_user_id) {
 
@@ -2736,7 +3011,7 @@ class UserController extends Controller
         $users_otherinfo_update->signature = $signature;
         $users_otherinfo_update->save();
 
-        return redirect()->route('users.myprofile',$user_id)->with('success','Signature Updated Successfully.'); 
+        return redirect()->route('users.myprofile',[\Crypt::encrypt($user_id)])->with('success','Signature Updated Successfully.'); 
     }
 
     public function getTeamWiseUsersAjax(Request $req) {

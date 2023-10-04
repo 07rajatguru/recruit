@@ -256,21 +256,21 @@
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group">
                             <strong>Document 1:</strong>
-                            {!! Form::file('document1', null, array('id'=>'document1','class' => 'form-control')) !!}
+                            <input type="file" name="document1" id="document1" class="form-control" accept=".pdf, .jpg, .jpeg, .png, .gif, .xls, .xlsx, .doc, .docx, .ppt, .pptx, .txt" onchange="FormValidation.validateFile(this)">
                         </div>
                     </div>
 
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group">
                             <strong>Document 2:</strong>
-                            {!! Form::file('document2', null, array('id'=>'document2','class' => 'form-control')) !!}
+                            <input type="file" name="document2" id="document2" class="form-control" accept=".pdf, .jpg, .jpeg, .png, .gif, .xls, .xlsx, .doc, .docx, .ppt, .pptx, .txt" onchange="FormValidation.validateFile(this)">
                         </div>
                     </div>
 
                     <div class="col-xs-12 col-sm-12 col-md-12">
                         <div class="form-group">
                             <strong>Document 3:</strong>
-                            {!! Form::file('document3', null, array('id'=>'document3','class' => 'form-control')) !!}
+                            <input type="file" name="document3" id="document3" class="form-control" accept=".pdf, .jpg, .jpeg, .png, .gif, .xls, .xlsx, .doc, .docx, .ppt, .pptx, .txt" onchange="FormValidation.validateFile(this)">
                         </div>
                     </div>
                 </div>
@@ -286,6 +286,7 @@
     </div>
 
 @section('customscripts')
+<script src="{{ asset('js/validation_file.js') }}"></script>
     <script>
         $(document).ready(function() {
 

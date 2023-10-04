@@ -9,6 +9,7 @@ use App\ClientBasicinfo;
 use App\Date;
 use App\Events\NotificationEvent;
 use App\Events\NotificationMail;
+use Illuminate\Support\Facades\Crypt;
 use App\Interview;
 use App\JobOpen;
 use App\Status;
@@ -302,10 +303,10 @@ class ToDosController extends Controller
         foreach ($todos as $key => $value) {
 
             $action = '';
-            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('todos.show',$value['id']).'" style="margin:2px;"></a>';
+            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('todos.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
             if(($value['task_owner'] == $user_id)) {
-                $action .= '<a title="Edit" class="fa fa-edit"  href="'.route('todos.edit',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a title="Edit" class="fa fa-edit"  href="'.route('todos.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
 
             if($delete_perm) {
@@ -572,6 +573,8 @@ class ToDosController extends Controller
     public function show($id) {
 
        $dateClass = new Date();
+       $id = Crypt::decrypt($id);
+
 
        $toDos = ToDos::getShowTodo($id);
        $frequency_type = $toDos['frequency_type'];
@@ -616,6 +619,8 @@ class ToDosController extends Controller
         $dateClass = new Date();
         $user = \Auth::user();
         $user_id = $user->id;
+
+        $id = Crypt::decrypt($id);
 
         $toDos = ToDos::find($id);
         $users = User::getAllUsers();
@@ -889,11 +894,11 @@ class ToDosController extends Controller
         foreach ($todos as $key => $value) {
 
             $action = '';
-            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('todos.show',$value['id']).'" style="margin:2px;"></a>';
+            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('todos.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
             if(($value['task_owner'] == $user_id)) {
 
-                $action .= '<a title="Edit" class="fa fa-edit"  href="'.route('todos.edit',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a title="Edit" class="fa fa-edit"  href="'.route('todos.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
 
             if($delete_perm) {
@@ -984,11 +989,11 @@ class ToDosController extends Controller
         foreach ($todos as $key => $value) {
 
             $action = '';
-            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('todos.show',$value['id']).'" style="margin:2px;"></a>';
+            $action .= '<a title="Show" class="fa fa-circle"  href="'.route('todos.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
             if(($value['task_owner'] == $user_id)) {
                 
-                $action .= '<a title="Edit" class="fa fa-edit"  href="'.route('todos.edit',$value['id']).'" style="margin:2px;"></a>';
+                $action .= '<a title="Edit" class="fa fa-edit"  href="'.route('todos.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
             }
 
             if($delete_perm) {

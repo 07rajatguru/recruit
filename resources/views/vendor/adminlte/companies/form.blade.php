@@ -27,6 +27,7 @@
     {!! Form::open(array('route' => 'companies.store','method'=>'POST','id' => 'company_form')) !!}
 @endif
 
+
 <div class="row">
     <div class="col-xs-12 col-sm-12 col-md-12">
         <div class="box box-warning col-xs-12 col-sm-12 col-md-12">

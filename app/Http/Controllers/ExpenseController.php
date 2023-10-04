@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Crypt;
 use Illuminate\Support\Facades\Input;
 use App\Expense;
 use App\AccountingHeads;
@@ -79,8 +80,8 @@ class ExpenseController extends Controller
         foreach ($expense as $key => $value) {
 
             $action = '';
-            $action .= '<a title="Show" class="fa fa-circle" href="'.route('expense.show',$value['id']).'" style="margin:2px;"></a>';
-            $action .= '<a title="Edit" class="fa fa-edit" href="'.route('expense.edit',$value['id']).'" style="margin:2px;"></a>';
+            $action .= '<a title="Show" class="fa fa-circle" href="'.route('expense.show',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
+            $action .= '<a title="Edit" class="fa fa-edit" href="'.route('expense.edit',\Crypt::encrypt($value['id'])).'" style="margin:2px;"></a>';
 
             if($delete_perm) {
                 $delete_view = \View::make('adminlte::partials.deleteModal', ['data' => $value, 'name' => 'expense','display_name'=>'expense']);
@@ -349,6 +350,8 @@ class ExpenseController extends Controller
 
     public function edit($id) {
 
+        $id = Crypt::decrypt($id);
+
         $vendor_res = VendorBasicInfo::orderBy('id','ASC')->get();
         $vendor = array();
 
@@ -518,6 +521,7 @@ class ExpenseController extends Controller
     public function show($id) {
 
         $dateClass = new Date();
+        $id = Crypt::decrypt($id);
 
         $expense = array();
         $expense_info  = \DB::table('expense')
@@ -607,7 +611,7 @@ class ExpenseController extends Controller
                 $expense_doc->save();
             }
         }
-        return redirect()->route('expense.show',[$id])->with('success','Attachment Uploaded Successfully');
+        return redirect()->route('expense.show',[\Crypt::encrypt($id)])->with('success','Attachment Uploaded Successfully');
     }
 
     public function attachmentsDestroy($docid) {
@@ -621,7 +625,7 @@ class ExpenseController extends Controller
             $id = $expense_attach->expence_id;
             ExpenseDoc::where('id','=',$docid)->delete();
         }
-        return redirect()->route('expense.show',[$id])->with('success','Attachment Deleted Successfully');
+        return redirect()->route('expense.show',[\Crypt::encrypt($id)])->with('success','Attachment Deleted Successfully');
     }
 
     public function importExport() {
